@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test Select
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      AvailabilityZone: !Select
+      - a
+      - !GetAZs
+        Ref: AWS::Region
+  myInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      AvailabilityZone:
+        Fn::Select:
+        - 0
+        - 'Value1'
+        - 'value2'
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      AvailabilityZone:
+        Fn::Select:
+        - 1
+        - !Join [ ',', [ 'a', 'b' ] ]

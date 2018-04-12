@@ -1,0 +1,57 @@
+"""
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this
+  software and associated documentation files (the "Software"), to deal in the Software
+  without restriction, including without limitation the rights to use, copy, modify,
+  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+  permit persons to whom the Software is furnished to do so.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
+from cfnlint import CloudFormationLintRule
+from cfnlint import RuleMatch
+import cfnlint.helpers
+
+
+class GetAtt(CloudFormationLintRule):
+    """Check if GetAtt values are correct"""
+    id = 'E1010'
+    shortdesc = 'GetAtt validation of parameters'
+    description = 'Making sure the function GetAtt is of list'
+    tags = ['base', 'functions', 'getatt']
+
+    def __init__(self):
+        resourcespecs = cfnlint.helpers.load_resources()
+        self.resourcetypes = resourcespecs['ResourceTypes']
+        self.propertytypes = resourcespecs['PropertyTypes']
+
+    def match(self, cfn):
+        """Check CloudFormation GetAtt"""
+
+        matches = list()
+
+        getatts = cfn.search_deep_keys('Fn::GetAtt')
+        valid_getatts = cfn.get_valid_getatts()
+        for getatt in getatts:
+            if len(getatt[-1]) < 2:
+                message = "Invalid GetAtt for {0}"
+                matches.append(RuleMatch(getatt, message.format('/'.join(map(str, getatt[:-1])))))
+                continue
+            resname = getatt[-1][0]
+            restype = '.'.join(getatt[-1][1:])
+            if resname in valid_getatts:
+                if restype not in valid_getatts[resname] and '*' not in valid_getatts[resname]:
+                    message = "Invalid GetAtt {0}.{1} for resource {2}"
+                    matches.append(RuleMatch(
+                        getatt[:-1], message.format(resname, restype, getatt[1])))
+            else:
+                message = "Invalid GetAtt {0}.{1} for resource {2}"
+                matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
+
+        return matches

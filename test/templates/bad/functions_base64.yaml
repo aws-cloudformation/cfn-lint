@@ -1,0 +1,12 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Exclusive Property types
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [ amimap, !Ref "AWS::Region", !GetAtt myInstance.AvailabilityZone ]
+      UserData:
+        Fn::Base64:
+        - Random String

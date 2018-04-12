@@ -1,0 +1,16 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Exclusive Property types
+Conditions:
+  isRegion: !If [!Ref 'AWS::Region', 'us-east-1']
+  isNotRegion: !Not isRegion
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      SubnetId: subnet-123456
+      NetworkInterfaces:
+      -
+        DeviceIndex: String

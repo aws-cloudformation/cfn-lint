@@ -1,0 +1,268 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: '(qs-1nltbq5f8) OpenShift, License: Apache 2.0 (Please do not remove)
+  November, 29, 2017'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Network Configuration
+      Parameters:
+      - AvailabilityZones
+      - VPCCIDR
+      - PrivateSubnet1CIDR
+      - PrivateSubnet2CIDR
+      - PrivateSubnet3CIDR
+      - PublicSubnet1CIDR
+      - PublicSubnet2CIDR
+      - PublicSubnet3CIDR
+      - RemoteAccessCIDR
+    - Label:
+        default: Amazon EC2 Configuration
+      Parameters:
+      - KeyPairName
+    - Label:
+        default: OpenShift Nodes Configuration
+      Parameters:
+      - NumberOfMaster
+      - MasterInstanceType
+      - OpenShiftAdminPassword
+    - Label:
+        default: Red Hat Subscription Information
+      Parameters:
+      - RedhatSubscriptionUserName
+      - RedhatSubscriptionPassword
+      - RedhatSubscriptionPoolID
+    - Label:
+        default: AWS Quick Start Configuration
+      Parameters:
+      - QSS3BucketName
+      - QSS3KeyPrefix
+    ParameterLabels:
+      KeyPairName:
+        default: SSH Key Name
+      MasterInstanceType:
+        default: Master Instance Type
+      NumberOfMaster:
+        default: Number of Masters
+      OpenShiftAdminPassword:
+        default: OpenShift UI Password
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
+      RedhatSubscriptionPassword:
+        default: Red Hat Subscription Password
+      RedhatSubscriptionPoolID:
+        default: Red Hat Pool ID
+      RedhatSubscriptionUserName:
+        default: Red Hat Subscription User Name
+      RemoteAccessCIDR:
+        default: Allowed External Access CIDR (OCP UI)
+      VPCCIDR:
+        default: VPC CIDR
+Parameters:
+  AvailabilityZones:
+    Description: List of Availability Zones to use for the subnets in the VPC. Three
+      Availability Zones are used for this deployment, and the logical order of your
+      selections is preserved.
+    Type: List<AWS::EC2::AvailabilityZone::Name>
+  KeyPairName:
+    Description: The name of an existing public/private key pair, which allows you
+      to securely connect to your instance after it launches
+    Type: AWS::EC2::KeyPair::KeyName
+  MasterInstanceType:
+    AllowedValues:
+    - t2.large
+    - m4.xlarge
+    - m4.2xlarge
+    - m4.4xlarge
+    - m4.10xlarge
+    - c4.large
+    - c4.xlarge
+    - c4.2xlarge
+    - c4.4xlarge
+    - c4.8xlarge
+    ConstraintDescription: Must contain valid instance type
+    Default: m4.xlarge
+    Description: Type of EC2 instance for the Master instances
+    Type: String
+  NumberOfMaster:
+    AllowedValues:
+    - '3'
+    Default: '3'
+    Description: This Deployment requires 3 OpenShift Master instances
+    Type: Number
+  OpenShiftAdminPassword:
+    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
+    Description: Password for OpenShift Admin UI Must be at least 8 characters containing
+      letters and (minimum 1 capital letter), numbers and symbols
+    MaxLength: '12'
+    MinLength: '8'
+    NoEcho: 'true'
+    Type: String
+  PrivateSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.0.0/19
+    Description: CIDR block for private subnet 1 located in Availability Zone 1
+    Type: String
+  PrivateSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.32.0/19
+    Description: CIDR block for private subnet 2 located in Availability Zone 2
+    Type: String
+  PrivateSubnet3CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.64.0/19
+    Description: CIDR block for private subnet 2 located in Availability Zone 3
+    Type: String
+  PublicSubnet1CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.128.0/20
+    Description: CIDR block for the public (DMZ) subnet 1 located in Availability
+      Zone 1
+    Type: String
+  PublicSubnet2CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.144.0/20
+    Description: CIDR block for the public (DMZ) subnet 2 located in Availability
+      Zone 2
+    Type: String
+  PublicSubnet3CIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.160.0/20
+    Description: CIDR block for the public (DMZ) subnet 2 located in Availability
+      Zone 3
+    Type: String
+  QSS3BucketName:
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: Quick Start bucket name can include numbers, lowercase
+      letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen
+      (-).
+    Default: quickstart-reference
+    Description: S3 bucket name for the Quick Start assets. This string can include
+      numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start
+      or end with a hyphen (-).
+    Type: String
+  QSS3KeyPrefix:
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: Quick Start key prefix can include numbers, lowercase letters,
+      uppercase letters, hyphens (-), and forward slash (/).
+    Default: redhat/openshift/latest/
+    Description: S3 key prefix for the Quick Start assets. Quick Start key prefix
+      can include numbers, lowercase letters, uppercase letters, hyphens (-), and
+      forward slash (/).
+    Type: String
+  RedhatSubscriptionPassword:
+    Description: Enter Redhat RHN Password
+    NoEcho: 'true'
+    Type: String
+  RedhatSubscriptionPoolID:
+    Description: Enter Redhat RHN PoolID
+    Type: String
+  RedhatSubscriptionUserName:
+    Description: Enter Redhat RHN User Name
+    Type: String
+  RemoteAccessCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
+    Description: The CIDR IP range that is permitted to access the instances We recommend
+      that you set this value to a trusted IP range.
+    Type: String
+  VPCCIDR:
+    AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.0.0.0/16
+    Description: CIDR block for the VPC
+    Type: String
+Resources:
+  OpenShiftStack:
+    Properties:
+      Parameters:
+        ContainerAccessCIDR:
+          Ref: RemoteAccessCIDR
+        KeyPairName:
+          Ref: KeyPairName
+        MasterInstanceType:
+          Ref: MasterInstanceType
+        NumberOfMaster:
+          Ref: NumberOfMaster
+        OpenShiftAdminPassword:
+          Ref: OpenShiftAdminPassword
+        PrivateSubnet1ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PrivateSubnet1AID
+        PrivateSubnet2ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PrivateSubnet2AID
+        PrivateSubnet3ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PrivateSubnet3AID
+        PublicSubnet1ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PublicSubnet1ID
+        PublicSubnet2ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PublicSubnet2ID
+        PublicSubnet3ID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.PublicSubnet3ID
+        QSS3BucketName:
+          Ref: QSS3BucketName
+        QSS3KeyPrefix:
+          Ref: QSS3KeyPrefix
+        RedhatSubscriptionPassword:
+          Ref: RedhatSubscriptionPassword
+        RedhatSubscriptionPoolID:
+          Ref: RedhatSubscriptionPoolID
+        RedhatSubscriptionUserName:
+          Ref: RedhatSubscriptionUserName
+        RemoteAccessCIDR:
+          Ref: RemoteAccessCIDR
+        VPCCIDR:
+          Ref: VPCCIDR
+        VPCID:
+          Fn::GetAtt:
+          - VPCStack
+          - Outputs.VPCID
+      TemplateURL:
+        Fn::Sub: https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}templates/openshift.template
+    Type: AWS::CloudFormation::Stack
+  VPCStack:
+    Properties:
+      Parameters:
+        AvailabilityZones:
+          Fn::Join:
+          - ','
+          - Ref: AvailabilityZones
+        KeyPairName:
+          Ref: KeyPairName
+        NumberOfAZs: '3'
+        PrivateSubnet1ACIDR:
+          Ref: PrivateSubnet1CIDR
+        PrivateSubnet2ACIDR:
+          Ref: PrivateSubnet2CIDR
+        PrivateSubnet3ACIDR:
+          Ref: PrivateSubnet3CIDR
+        PublicSubnet1CIDR:
+          Ref: PublicSubnet1CIDR
+        PublicSubnet2CIDR:
+          Ref: PublicSubnet2CIDR
+        PublicSubnet3CIDR:
+          Ref: PublicSubnet3CIDR
+        VPCCIDR:
+          Ref: VPCCIDR
+      TemplateURL:
+        Fn::Sub: https://${QSS3BucketName}.s3.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template
+    Type: AWS::CloudFormation::Stack

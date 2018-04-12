@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Conditions
+Parameters:
+  myEnvironment:
+    Type: String
+    AllowedValues:
+      - prod
+      - dev
+Conditions:
+  isProd:
+    "Fn::Equals":
+    - !Ref myEnvironment
+    - "prod"
+  isDev:
+    "Fn::Equals":
+    - !Ref myEnvironment
+    - "dev"
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !If [ isProd, 'ami-1234567', 'ami-abcdefg']
+      Tags:
+      -
+        Key: TestKey
+        Value: TestValue
+      - Fn::If:
+        - isProd
+        - Key: Environment1
+          Value: Prod
+        - Fn::If:
+          - isDev
+          - Key: Environment2
+            Value: Dev
+          - !Ref AWS::NoValue
