@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample bad output yaml
+Parameters:
+  myNumbers:
+    Type: List<Number>
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-blah
+  myVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: String
+Outputs:
+  myOutput:
+    Value: !Ref myInstance
+    Export:
+      Name: instance
+  myBadOutput:
+    BadValue: 'Test'
+  myBadMissingOutput:
+    Export:
+      Name: Missing
+  myBadExport:
+    Value: !Ref myInstance
+    Export:
+      BadName: instance
+  myBadArrayOutput:
+    Value: !GetAtt [ myVpc, CidrBlockAssociations ]
+  myGoodArrayOutput:
+    Value:
+      Fn::Join: [ ',', !GetAtt [ myVpc, CidrBlockAssociations ]]
+  myBadRefArrayOutput:
+    Value: !Ref myNumbers
+  myGoodRefArrayOutput:
+    Value:
+      Fn::Join: [ ',', !Ref myNumbers]

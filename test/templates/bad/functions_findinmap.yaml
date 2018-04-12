@@ -1,0 +1,23 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Exclusive Property types
+Mappings:
+  amimap:
+    us-east-1:
+      32: ami-123456
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [ amimap, !Ref "AWS::Region", !GetAtt myInstance.AvailabilityZone ]
+      SubnetId:
+        Fn::FindInMap:
+          MapName: subnetmap
+          TopLevelKey: !Ref "AWS::Region"
+          SecondLevelKey: 32
+      AvailabilityZone:
+        Fn::FindInMap:
+          - azmap
+          - !Ref "AWS::Region"
+          - 0

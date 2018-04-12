@@ -1,0 +1,690 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  cNeedNatInstance:
+    Fn::Equals:
+    - Ref: pSupportsNatGateway
+    - 'false'
+  cSupportsNatGateway:
+    Fn::Equals:
+    - Ref: pSupportsNatGateway
+    - 'true'
+Description: Provides networking configuration for a standard, public facing application,
+  separates private-public subnets and enforces traffic with NACL rules
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Region Config
+      Parameters:
+      - pRegionDomain
+      - pRegionAZ1Name
+      - pRegionAZ2Name
+    - Label:
+        default: Production VPC Config
+      Parameters:
+      - pBastionSSHCIDR
+      - pProductionVPCName
+      - pProductionCIDR
+      - pDMZSubnetACIDR
+      - pDMZSubnetBCIDR
+      - pAppPrivateSubnetACIDR
+      - pAppPrivateSubnetBCIDR
+      - pDBPrivateSubnetACIDR
+      - pDBPrivateSubnetBCIDR
+      - pEC2KeyPair
+    ParameterLabels:
+      pAppPrivateSubnetACIDR:
+        default: CIDR block of Application B subnet (private)
+      pAppPrivateSubnetBCIDR:
+        default: CIDR block of Application A subnet (private)
+      pDBPrivateSubnetACIDR:
+        default: CIDR block of Database A subnet (private)
+      pDBPrivateSubnetBCIDR:
+        default: CIDR block of Database B subnet (private)
+      pDMZSubnetACIDR:
+        default: CIDR block of DMZ A subnet (internet facing)
+      pDMZSubnetBCIDR:
+        default: CIDR block of DMZ B subnet (internet facing)
+      pEC2KeyPair:
+        default: Name of existing SSH Key for NAT Instance
+      pProductionCIDR:
+        default: Production VPC CIDR block
+      pProductionVPCName:
+        default: Name of Production VPC
+  Identifier:
+    Value: template-vpc-production
+  Input:
+    Description: CIDR blocks, VPC names, KeyName, EC2 instance size
+  Output:
+    Description: Outputs ID of all deployed resources
+  Stack:
+    Value: '2'
+  VersionDate:
+    Value: '20160510'
+Outputs:
+  rAppPrivateSubnetA:
+    Value:
+      Ref: rAppPrivateSubnetA
+  rAppPrivateSubnetB:
+    Value:
+      Ref: rAppPrivateSubnetB
+  rDBPrivateSubnetA:
+    Value:
+      Ref: rDBPrivateSubnetA
+  rDBPrivateSubnetB:
+    Value:
+      Ref: rDBPrivateSubnetB
+  rDMZSubnetA:
+    Value:
+      Ref: rDMZSubnetA
+  rDMZSubnetB:
+    Value:
+      Ref: rDMZSubnetB
+  rRouteTableProdPrivate:
+    Value:
+      Ref: rRouteTableProdPrivate
+  rRouteTableProdPublic:
+    Value:
+      Ref: rRouteTableMain
+  rSecurityGroupSSHFromProd:
+    Value:
+      Ref: rSecurityGroupSSHFromProd
+  rSecurityGroupVpcNat:
+    Value:
+      Ref: rSecurityGroupVpcNat
+  rVPCProduction:
+    Value:
+      Ref: rVPCProduction
+Parameters:
+  pAppPrivateSubnetACIDR:
+    Default: 10.100.96.0/21
+    Description: CIDR block for Application AZ-1a subnet
+    Type: String
+  pAppPrivateSubnetBCIDR:
+    Default: 10.100.119.0/21
+    Description: CIDR block for Application AZ-1b subnet
+    Type: String
+  pBastionSSHCIDR:
+    Default: 0.0.0.0/0
+    Description: CIDR block to allow access to bastion SSH
+    Type: String
+  pDBPrivateSubnetACIDR:
+    Default: 10.100.194.0/21
+    Description: CIDR block for Private AZ-1a subnet
+    Type: String
+  pDBPrivateSubnetBCIDR:
+    Default: 10.100.212.0/21
+    Description: CIDR block for Private AZ-1b subnet
+    Type: String
+  pDMZSubnetACIDR:
+    Default: 10.100.10.0/24
+    Description: CIDR block for DMZ AZ-1b subnet
+    Type: String
+  pDMZSubnetBCIDR:
+    Default: 10.100.20.0/24
+    Description: CIDR block for DMZ AZ-1b subnet
+    Type: String
+  pEC2KeyPair:
+    Default: ''
+    Description: Name of existing EC2 key pair for production hosts
+    Type: String
+  pEnvironment:
+    Default: development
+    Description: Environment (development, test, or production)
+    Type: String
+  pManagementCIDR:
+    Description: CIDR of Management VPC
+    Type: String
+  pNatAmi:
+    Default: ''
+    Description: AMI to use for the NAT intstance if the region does not support NAT
+      Gateway (this value is determined by the main stack if it is invoked from there)
+    Type: String
+  pNatInstanceType:
+    Default: ''
+    Description: Instance type to use for the NAT intstance if the region does not
+      support NAT Gateway (this value is determined by the main stack if it is invoked
+      from there)
+    Type: String
+  pProductionCIDR:
+    Default: 10.100.0.0/16
+    Description: CIDR block for Production VPC
+    Type: String
+  pProductionVPCName:
+    Default: CommandCentral-Production
+    Description: Production VPC Name
+    Type: String
+  pRegionAZ1Name:
+    Description: Availability Zone 1 Name in Region
+    Type: AWS::EC2::AvailabilityZone::Name
+  pRegionAZ2Name:
+    Description: Availability Zone 2 Name in Region
+    Type: AWS::EC2::AvailabilityZone::Name
+  pRegionDomain:
+    Default: us-east-1.compute.internal
+    Description: Region name where resources will deploy
+    Type: String
+  pSupportsNatGateway:
+    Default: 'true'
+    Description: Specifies whether this region supports NAT Gateway (this value is
+      determined by the main stack if it is invoked from there)
+    Type: String
+  pTemplateUrlPrefix:
+    Default: ''
+    Description: URL prefix used to call the NAT instance template (this value is
+      determined by the main stack if it is invoked from there)
+    Type: String
+Resources:
+  rAppPrivateSubnetA:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ1Name
+      CidrBlock:
+        Ref: pAppPrivateSubnetACIDR
+      Tags:
+      - Key: Name
+        Value: Production App Subnet A
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rAppPrivateSubnetAssociationA:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableProdPrivate
+      SubnetId:
+        Ref: rAppPrivateSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rAppPrivateSubnetAssociationB:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableProdPrivate
+      SubnetId:
+        Ref: rAppPrivateSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rAppPrivateSubnetB:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ2Name
+      CidrBlock:
+        Ref: pAppPrivateSubnetBCIDR
+      Tags:
+      - Key: Name
+        Value: Production App Subnet B
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rDBPrivateSubnetA:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ1Name
+      CidrBlock:
+        Ref: pDBPrivateSubnetACIDR
+      Tags:
+      - Key: Name
+        Value: Production DB Subnet A
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rDBPrivateSubnetB:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ2Name
+      CidrBlock:
+        Ref: pDBPrivateSubnetBCIDR
+      Tags:
+      - Key: Name
+        Value: Production DB Subnet B
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rDHCPOptionsAssocProd:
+    Properties:
+      DhcpOptionsId:
+        Ref: rDHCPoptions
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+  rDHCPoptions:
+    Properties:
+      DomainName:
+        Ref: pRegionDomain
+      DomainNameServers:
+      - AmazonProvidedDNS
+      Tags:
+      - Key: Name
+        Value: dhcp-amazon-dns
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+    Type: AWS::EC2::DHCPOptions
+  rDMZSubnetA:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ1Name
+      CidrBlock:
+        Ref: pDMZSubnetACIDR
+      Tags:
+      - Key: Name
+        Value: Production DMZ Subnet A
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rDMZSubnetB:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ2Name
+      CidrBlock:
+        Ref: pDMZSubnetBCIDR
+      Tags:
+      - Key: Name
+        Value: Production DMZ Subnet B
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::Subnet
+  rEIPProdNAT:
+    Condition: cSupportsNatGateway
+    Properties:
+      Domain: vpc
+    Type: AWS::EC2::EIP
+  rGWAttachmentProdIGW:
+    DependsOn: rIGWProd
+    Properties:
+      InternetGatewayId:
+        Ref: rIGWProd
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::VPCGatewayAttachment
+  rIGWProd:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: igw-production
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+    Type: AWS::EC2::InternetGateway
+  rNACLAssocAppPrivSubnetA:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPrivate
+      SubnetId:
+        Ref: rAppPrivateSubnetA
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLAssocAppPrivSubnetB:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPrivate
+      SubnetId:
+        Ref: rAppPrivateSubnetB
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLAssocDBPrivSubnetA:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPrivate
+      SubnetId:
+        Ref: rDBPrivateSubnetA
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLAssocDBPrivSubnetB:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPrivate
+      SubnetId:
+        Ref: rDBPrivateSubnetB
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLAssocDMZPubSubnetA:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPublic
+      SubnetId:
+        Ref: rDMZSubnetA
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLAssocDMZPubSubnetB:
+    Properties:
+      NetworkAclId:
+        Ref: rNACLPublic
+      SubnetId:
+        Ref: rDMZSubnetB
+    Type: AWS::EC2::SubnetNetworkAclAssociation
+  rNACLPrivate:
+    Properties:
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::NetworkAcl
+  rNACLPublic:
+    Properties:
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::NetworkAcl
+  rNACLRuleAllowALLEgressPublic:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '1'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '100'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowALLfromPrivEgress:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId:
+        Ref: rNACLPrivate
+      PortRange:
+        From: '1'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '120'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowAllReturnTCP:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '1024'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '140'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowAllTCPInternal:
+    Properties:
+      CidrBlock:
+        Ref: pProductionCIDR
+      NetworkAclId:
+        Ref: rNACLPrivate
+      PortRange:
+        From: '1'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '120'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowAllTCPInternalEgress:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId:
+        Ref: rNACLPrivate
+      PortRange:
+        From: '1'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '100'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowBastionSSHAccess:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '22'
+        To: '22'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '210'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowEgressReturnTCP:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      Egress: true
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '1024'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '140'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowHTTPSPublic:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '443'
+        To: '443'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '100'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowHTTPfromProd:
+    Properties:
+      CidrBlock:
+        Ref: pProductionCIDR
+      NetworkAclId:
+        Ref: rNACLPublic
+      PortRange:
+        From: '80'
+        To: '80'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '200'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowMgmtAccessSSHtoPrivate:
+    Properties:
+      CidrBlock:
+        Ref: pManagementCIDR
+      NetworkAclId:
+        Ref: rNACLPrivate
+      PortRange:
+        From: '22'
+        To: '22'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '125'
+    Type: AWS::EC2::NetworkAclEntry
+  rNACLRuleAllowReturnTCPPriv:
+    Properties:
+      CidrBlock: 0.0.0.0/0
+      NetworkAclId:
+        Ref: rNACLPrivate
+      PortRange:
+        From: '1024'
+        To: '65535'
+      Protocol: '6'
+      RuleAction: allow
+      RuleNumber: '140'
+    Type: AWS::EC2::NetworkAclEntry
+  rNATGateway:
+    Condition: cSupportsNatGateway
+    DependsOn: rIGWProd
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+        - rEIPProdNAT
+        - AllocationId
+      SubnetId:
+        Ref: rDMZSubnetA
+    Type: AWS::EC2::NatGateway
+  rNatInstanceTemplate:
+    Condition: cNeedNatInstance
+    Properties:
+      Parameters:
+        pDMZSubnetA:
+          Ref: rDMZSubnetA
+        pEC2KeyPair:
+          Ref: pEC2KeyPair
+        pNatAmi:
+          Ref: pNatAmi
+        pNatInstanceType:
+          Ref: pNatInstanceType
+        pRouteTablePrivate:
+          Ref: rRouteTableProdPrivate
+        pSecurityGroupSSHFromVpc:
+          Ref: rSecurityGroupSSHFromProd
+        pSecurityGroupVpcNat:
+          Ref: rSecurityGroupVpcNat
+        pVpcId:
+          Ref: rVPCProduction
+        pVpcName:
+          Ref: pProductionVPCName
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Ref: pTemplateUrlPrefix
+          - templates/template-nat-instance.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  rRouteAssocDBPrivateA:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableProdPrivate
+      SubnetId:
+        Ref: rDBPrivateSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteAssocDBPrivateB:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableProdPrivate
+      SubnetId:
+        Ref: rDBPrivateSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteAssocProdDMZA:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMain
+      SubnetId:
+        Ref: rDMZSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteAssocProdDMZB:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMain
+      SubnetId:
+        Ref: rDMZSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteProdIGW:
+    DependsOn: rGWAttachmentProdIGW
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: rIGWProd
+      RouteTableId:
+        Ref: rRouteTableMain
+    Type: AWS::EC2::Route
+  rRouteProdPrivateNatGateway:
+    Condition: cSupportsNatGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: rNATGateway
+      RouteTableId:
+        Ref: rRouteTableProdPrivate
+    Type: AWS::EC2::Route
+  rRouteTableMain:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: rt-production-dmz
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::RouteTable
+  rRouteTableProdPrivate:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: rt-private-network
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::RouteTable
+  rSecurityGroupMgmtBastion:
+    Properties:
+      GroupDescription: Allow Bastion from Management Network
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pBastionSSHCIDR
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      Tags:
+      - Key: Name
+        Value: sg-ssh-access-from-management-vpc
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::SecurityGroup
+  rSecurityGroupSSHFromProd:
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pProductionCIDR
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      Tags:
+      - Key: Name
+        Value: sg-enable-ssh-access
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::SecurityGroup
+  rSecurityGroupVpcNat:
+    Properties:
+      GroupDescription: Allow NAT from production
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pProductionCIDR
+        FromPort: '80'
+        IpProtocol: tcp
+        ToPort: '80'
+      - CidrIp:
+          Ref: pProductionCIDR
+        FromPort: '443'
+        IpProtocol: tcp
+        ToPort: '443'
+      Tags:
+      - Key: Name
+        Value: sg-web-access-ports-from-production
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+      VpcId:
+        Ref: rVPCProduction
+    Type: AWS::EC2::SecurityGroup
+  rVPCProduction:
+    Properties:
+      CidrBlock:
+        Ref: pProductionCIDR
+      EnableDnsHostnames: 'true'
+      EnableDnsSupport: 'true'
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value:
+          Ref: pProductionVPCName
+      - Key: Environment
+        Value:
+          Ref: pEnvironment
+    Type: AWS::EC2::VPC

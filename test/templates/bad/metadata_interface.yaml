@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  AWS::CloudFormation::Interface:
+    BadLabels: Label1
+    ParameterGroups:
+    - Label: TestLabel
+      Parameters:
+        - myParameter
+    - BadLabel: BadLabel
+    - Label: MissingParameter
+      Parameters:
+        - dneParameter
+    ParameterLabels:
+      myParameter: My String
+      dneParameter: Doesn't exist
+Parameters:
+  myParameter:
+    Type: String
+    Default: Value
+    Description: Type String
+Resources:
+  # Helps tests map resource types
+  IamPipeline:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Sub 'https://s3.${AWS::Region}.amazonaws.com/bucket-dne-${AWS::Region}/${AWS::AccountId}/pipeline.yaml'
+      Parameters:
+        DeploymentName: iam-pipeline
+        Deploy: 'auto'
