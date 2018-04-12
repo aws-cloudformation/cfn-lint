@@ -1,6 +1,7 @@
 # CloudFormation Linter
 
-Python code to create a binary that can be used to lint check CloudFormation templates.  
+Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
+checks.  Includes checking valid values for resource properties and best practices.
 
 ### Warning
 This is an attempt to provide validation for CloudFormation templates properties and
