@@ -1,0 +1,69 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myVpcId:
+    Description: MyVpc Id
+    Type: AWS::EC2::VPC::Id
+Resources:
+  mySecurityGroupVpc1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 'Security Group Vpc 1'
+      VpcId: !Ref myVpcId
+      SecurityGroupIngress:
+      -
+        IpProtocol: 1
+        SourceSecurityGroupId: 'sg-1234567'
+      -
+        IpProtocol: 1
+        SourceSecurityGroupId: !Ref mySecurityGroupVpc2
+  mySecurityGroupVpc2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: 'Security Group Vpc 2'
+      VpcId: !Ref myVpcId
+      SecurityGroupIngress:
+      -
+        IpProtocol: 1
+        SourceSecurityGroupId: !Ref mySecurityGroupVpc1
+  MyEC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: t1.micro
+      KeyName: testkey
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: io1
+            Iops: !Ref pIops
+            DeleteOnTermination: false
+            VolumeSize: 20
+      NetworkInterfaces:
+        - DeviceIndex: "1"
+      # Package doesn't exist as parameter
+      UserData: !Sub |
+        yum install ${Package}
+  AnotherInstance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: t1.micro
+      KeyName: testkey
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: io1
+            Iops: !Ref pIops
+            DeleteOnTermination: false
+            VolumeSize: 20
+      NetworkInterfaces:
+        - DeviceIndex: "1"
+      # Package doesn't exist as parameter
+      UserData:
+        Fn::Sub:
+        - "yum install ${myPackage} ${Package}"
+        -
+          myPackage: !Ref httpdPackage

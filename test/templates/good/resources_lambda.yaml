@@ -1,0 +1,56 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Bad Lambda Template
+Parameters:
+  myParameterMemorySize:
+    Type: Number
+    Description: Memory Size
+    MinValue: 128
+    MaxValue: 1024
+  myParameterRuntime:
+    Type: String
+    Description: Runtime
+    AllowedValues:
+      - nodejs4.3
+Resources:
+  myLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:*
+            Resource: arn:aws:logs:*:*:*
+  myLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: "index.handler"
+      Role: !GetAtt myLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: "lambda-functions"
+        S3Key: "amilookup.zip"
+      Runtime: "nodejs4.3"
+      Timeout: "25"
+      MemorySize: "1536"
+  myLambdaTwo:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt myLambdaExecutionRole.Arn
+      Runtime: !Ref myParameterRuntime
+      MemorySize: !Ref myParameterMemorySize

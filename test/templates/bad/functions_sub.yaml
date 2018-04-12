@@ -1,0 +1,33 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test Sub Functions
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-asdfef
+      UserData:
+        Fn::Base64:
+          Fn::Sub: !Ref myInstance2
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      UserData:
+        Fn::Base64:
+          Fn::Sub:
+          - yum install ${package}"
+          - package: !Split [ ',', 'test, test1' ]
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      UserData:
+        Fn::Base64:
+          Fn::Sub:
+          - yum install ${package}; echo ${AWS::Region}; echo ${!Literal}"
+          - mypackage: httpd
+Outputs:
+  myOutput:
+    Value: !Sub "${myInstance3.PrivateDnsName1}"

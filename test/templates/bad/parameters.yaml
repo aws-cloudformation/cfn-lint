@@ -1,0 +1,22 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  myParameter:
+    # Type not string
+    Type: NotString
+    Default: Value
+    Description: Type not String
+  myInvalidParameter:
+    # invalid Property
+    NotType: String
+  mySsmParam:
+    Type: AWS::SSM::Parameter::Value<Test>
+Resources:
+  # Helps tests map resource types
+  IamPipeline:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Sub 'https://s3.${AWS::Region}.amazonaws.com/bucket-dne-${AWS::Region}/${AWS::AccountId}/pipeline.yaml'
+      Parameters:
+        DeploymentName: iam-pipeline
+        Deploy: 'auto'

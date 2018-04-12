@@ -1,0 +1,768 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  cCreatePeeringProduction:
+    Fn::Not:
+    - Fn::Equals:
+      - Ref: pProductionVPC
+      - ''
+  cNeedNatInstance:
+    Fn::Equals:
+    - Ref: pSupportsNatGateway
+    - 'false'
+  cRegionIsUsGovWest1:
+    Fn::Equals:
+    - Ref: AWS::Region
+    - us-gov-west-1
+  cSupportsNatGateway:
+    Fn::Equals:
+    - Ref: pSupportsNatGateway
+    - 'true'
+Description: Provides networking configuration for a standard management VPC
+Mappings:
+  DSMSIZE:
+    ap-northeast-1:
+      '1': m3.large
+    ap-northeast-2:
+      '1': m4.large
+    ap-southeast-1:
+      '1': m3.large
+    ap-southeast-2:
+      '1': m3.large
+    eu-central-1:
+      '1': m3.large
+    eu-west-1:
+      '1': m3.large
+    sa-east-1:
+      '1': m3.large
+    us-east-1:
+      '1': m3.large
+    us-gov-west-1:
+      '1': m3.large
+    us-west-1:
+      '1': m3.large
+    us-west-2:
+      '1': m3.large
+  Parameters:
+    CfnUrlPrefix:
+      CommericalPrefix: https://s3.amazonaws.com/trend-micro-quick-start/NIST/
+      GovCloudPrefix: https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/NIST/
+  RDSInstanceSize:
+    ap-northeast-1:
+      '1': db.m4.large
+    ap-northeast-2:
+      '1': db.m4.large
+    ap-southeast-1:
+      '1': db.m4.large
+    ap-southeast-2:
+      '1': db.m3.large
+    eu-central-1:
+      '1': db.m4.large
+    eu-west-1:
+      '1': db.m4.large
+    sa-east-1:
+      '1': db.m3.large
+    us-east-1:
+      '1': db.m4.large
+    us-gov-west-1:
+      '1': db.m3.large
+    us-west-1:
+      '1': db.m4.large
+    us-west-2:
+      '1': db.m4.large
+  RDSMultiAZ:
+    ap-northeast-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    ap-northeast-2:
+      MSSQL: 'false'
+      Oracle: 'true'
+    ap-southeast-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    ap-southeast-2:
+      MSSQL: 'false'
+      Oracle: 'true'
+    eu-central-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    eu-west-1:
+      MSSQL: 'true'
+      Oracle: 'true'
+    sa-east-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    us-east-1:
+      MSSQL: 'true'
+      Oracle: 'true'
+    us-gov-west-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    us-west-1:
+      MSSQL: 'false'
+      Oracle: 'true'
+    us-west-2:
+      MSSQL: 'true'
+      Oracle: 'true'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Region Config
+      Parameters:
+      - pRegionAZ1Name
+      - pRegionAZ2Name
+    - Label:
+        default: Management VPC Configuration
+      Parameters:
+      - pManagementVPCName
+      - pManagementCIDR
+      - pManagementDMZSubnetACIDR
+      - pManagementDMZSubnetBCIDR
+    - Label:
+        default: Deep Security Configuration
+      Parameters:
+      - pDeepSecurityAdminUserName
+      - pDeepSecurityAdminPass
+    ParameterLabels:
+      pDeepSecurityAdminPass:
+        default: Password for Deep Security Manager Admin user
+      pDeepSecurityAdminUserName:
+        default: Username for Deep Security Manager Web Console Administrator
+      pManagementCIDR:
+        default: CIDR block of Management VPC
+      pManagementDMZSubnetACIDR:
+        default: CIDR block of Management DMZ SubnetA
+      pManagementDMZSubnetBCIDR:
+        default: CIDR block of Management DMZ SubnetB
+      pManagementVPCName:
+        default: Name of Management VPC to create
+  Identifier:
+    Value: template-vpc-management
+  Input:
+    Description: CIDR blocks, VPC names, KeyName, EC2 instance size
+  Output:
+    Description: Outputs ID of all deployed resources
+  Stack:
+    Value: '2'
+  VersionDate:
+    Value: '20160615'
+Outputs:
+  rBastionInstanceIP:
+    Value:
+      Fn::GetAtt:
+      - rMgmtBastionInstance
+      - PublicIp
+  rDeepSecurityAgentDownload:
+    Value:
+      Fn::GetAtt:
+      - rDeepSecurityInfrastructureTemplate
+      - Outputs.DeepSecurityAgentDownload
+  rDeepSecurityConsole:
+    Value:
+      Fn::GetAtt:
+      - rDeepSecurityInfrastructureTemplate
+      - Outputs.DeepSecurityConsole
+  rDeepSecurityHeartbeat:
+    Value:
+      Fn::GetAtt:
+      - rDeepSecurityInfrastructureTemplate
+      - Outputs.DeepSecurityHeartbeat
+  rManagementDMZSubnetA:
+    Value:
+      Ref: rManagementDMZSubnetA
+  rManagementDMZSubnetB:
+    Value:
+      Ref: rManagementDMZSubnetB
+  rManagementPrivateSubnetA:
+    Value:
+      Ref: rManagementPrivateSubnetA
+  rManagementPrivateSubnetB:
+    Value:
+      Ref: rManagementPrivateSubnetB
+  rRouteTableMgmtPrivate:
+    Value:
+      Ref: rRouteTableMgmtPrivate
+  rSecurityGroupVpcNat:
+    Value:
+      Ref: rSecurityGroupVpcNat
+  rVPCManagement:
+    Value:
+      Ref: rVPCManagement
+Parameters:
+  pBastionAmi:
+    Default: ''
+    Description: AMI to use for bastion host
+    Type: String
+  pBastionInstanceType:
+    Default: m3.large
+    Description: Bastion EC2 instance type
+    Type: String
+  pBastionSSHCIDR:
+    Default: 0.0.0.0/0
+    Type: String
+  pDeepSecurityAdminPass:
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+    Description: The Deep Security Manager administrator password. Must be 8-41 characters
+      long and can only contain alphanumeric characters or the following special characters
+      !^*-_+
+    MaxLength: 41
+    MinLength: 8
+    NoEcho: true
+    Type: String
+  pDeepSecurityAdminUserName:
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric
+      characters. Min length 1, max length 16
+    Description: The Deep Security Manager administrator username for Web Console
+      Access.
+    MaxLength: 16
+    MinLength: 1
+    NoEcho: false
+    Type: String
+  pEC2KeyPair:
+    Default: ''
+    Description: Name of existing EC2 key pair for production hosts
+    Type: String
+  pEC2KeyPairBastion:
+    Default: ''
+    Description: Name of existing EC2 key pair for BASTION hosts
+    Type: String
+  pManagementCIDR:
+    Default: 10.10.0.0/16
+    Description: CIDR block for Management VPC
+    Type: String
+  pManagementDMZSubnetACIDR:
+    Default: 10.10.10.0/24
+    Description: CIDR block for Management AZ-1a subnet
+    Type: String
+  pManagementDMZSubnetBCIDR:
+    Default: 10.10.20.0/24
+    Description: CIDR block for Management AZ-1b subnet
+    Type: String
+  pManagementPrivateSubnetACIDR:
+    Default: 10.10.10.0/24
+    Description: CIDR block for Management AZ-1a subnet
+    Type: String
+  pManagementPrivateSubnetBCIDR:
+    Default: 10.10.20.0/24
+    Description: CIDR block for Management AZ-1b subnet
+    Type: String
+  pManagementVPCName:
+    Default: Management VPC
+    Description: Management VPC Name
+    Type: String
+  pNatAmi:
+    Default: ''
+    Description: AMI to use for the NAT intstance if the region does not support NAT
+      Gateway (this value is determined by the main stack if it is invoked from there)
+    Type: String
+  pNatInstanceType:
+    Default: ''
+    Description: Instance type to use for the NAT intstance if the region does not
+      support NAT Gateway (this value is determined by the main stack if it is invoked
+      from there)
+    Type: String
+  pProductionCIDR:
+    Default: ''
+    Description: CIDR of Production VPC
+    Type: String
+  pProductionVPC:
+    Default: ''
+    Description: Production VPC to peer with (optional)
+    Type: String
+  pRegionAZ1Name:
+    Default: us-east-1b
+    Description: Availability Zone 1 Name in Region
+    Type: String
+  pRegionAZ2Name:
+    Default: us-west-1c
+    Description: Availability Zone 2 Name in Region
+    Type: String
+  pRouteTableProdPrivate:
+    Default: ''
+    Description: Route Table ID for Prod VPC Private
+    Type: String
+  pRouteTableProdPublic:
+    Default: ''
+    Description: Route Table ID for Prod VPC Public
+    Type: String
+  pSupportsNatGateway:
+    Default: 'true'
+    Description: Specifies whether this region supports NAT Gateway (this value is
+      determined by the main stack if it is invoked from there)
+    Type: String
+  pTemplateUrlPrefix:
+    Default: ''
+    Description: URL prefix used to call the NAT instance template (this value is
+      determined by the main stack if it is invoked from there)
+    Type: String
+Resources:
+  AssociaterEIPProdBastion:
+    DependsOn: rGWAttachmentMgmtIGW
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+        - rEIPProdBastion
+        - AllocationId
+      NetworkInterfaceId:
+        Ref: rENIProductionBastion
+    Type: AWS::EC2::EIPAssociation
+  rDHCPOptionsAssocMgmt:
+    Properties:
+      DhcpOptionsId:
+        Ref: rDHCPoptions
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::VPCDHCPOptionsAssociation
+  rDHCPoptions:
+    Properties:
+      DomainName:
+        Fn::Join:
+        - ''
+        - - Ref: AWS::Region
+          - .compute.internal
+      DomainNameServers:
+      - AmazonProvidedDNS
+      Tags:
+      - Key: Name
+        Value: dhcp-internal-dns
+    Type: AWS::EC2::DHCPOptions
+  rDeepSecurityInfrastructureTemplate:
+    DependsOn:
+    - rRouteMgmtProdDMZ
+    - rGWAttachmentMgmtIGW
+    Properties:
+      Parameters:
+        AWSIKeyPairName:
+          Ref: pEC2KeyPair
+        AWSIVPC:
+          Ref: rVPCManagement
+        CfnUrlPrefix:
+          Fn::Join:
+          - ''
+          - - Ref: pTemplateUrlPrefix
+            - templates/deepsecurity/
+        DBICAdminName: dsmadmin
+        DBICAdminPassword:
+          Ref: pDeepSecurityAdminPass
+        DBIInstanceIdentifier: deep-security
+        DBIRDSInstanceSize:
+          Fn::FindInMap:
+          - RDSInstanceSize
+          - Ref: AWS::Region
+          - '1'
+        DBIStorageAllocation: '200'
+        DBISubnet1:
+          Ref: rManagementPrivateSubnetA
+        DBISubnet2:
+          Ref: rManagementPrivateSubnetB
+        DBPBackupDays: '5'
+        DBPCreateDbInstance: 'Yes'
+        DBPEndpoint: ''
+        DBPEngine: SQL
+        DBPMultiAZ:
+          Fn::FindInMap:
+          - RDSMultiAZ
+          - Ref: AWS::Region
+          - MSSQL
+        DBPName: dsm
+        DSCAdminName:
+          Ref: pDeepSecurityAdminUserName
+        DSCAdminPassword:
+          Ref: pDeepSecurityAdminPass
+        DSELBPosture: Internal
+        DSIMultiNode: '2'
+        DSIPGUIPort: '443'
+        DSIPHeartbeatPort: '4120'
+        DSIPInstanceType:
+          Fn::FindInMap:
+          - DSMSIZE
+          - Ref: AWS::Region
+          - '1'
+        DSIPLicenseKey: DX-82B9-VRK9C-RWY98-XS4JZ-F6523-H8C5G
+        DSISubnetID:
+          Ref: rManagementDMZSubnetA
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Ref: pTemplateUrlPrefix
+          - templates/deepsecurity/RHEL/MasterRH96.template
+    Type: AWS::CloudFormation::Stack
+  rEIPProdBastion:
+    DependsOn: rGWAttachmentMgmtIGW
+    Properties:
+      Domain: vpc
+    Type: AWS::EC2::EIP
+  rEIPProdNAT:
+    Condition: cSupportsNatGateway
+    DependsOn: rGWAttachmentMgmtIGW
+    Properties:
+      Domain: vpc
+    Type: AWS::EC2::EIP
+  rENIProductionBastion:
+    DependsOn: rGWAttachmentMgmtIGW
+    Properties:
+      Description: Interface for Bastion device
+      GroupSet:
+      - Ref: rSecurityGroupBastion
+      SubnetId:
+        Ref: rManagementDMZSubnetA
+      Tags:
+      - Key: Network
+        Value: ProductionBastionDevice
+    Type: AWS::EC2::NetworkInterface
+  rGWAttachmentMgmtIGW:
+    DependsOn: rIGWManagement
+    Properties:
+      InternetGatewayId:
+        Ref: rIGWManagement
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::VPCGatewayAttachment
+  rIGWManagement:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: igw-management
+    Type: AWS::EC2::InternetGateway
+  rManagementDMZSubnetA:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ1Name
+      CidrBlock:
+        Ref: pManagementDMZSubnetACIDR
+      Tags:
+      - Key: Name
+        Value: Management DMZ Subnet A
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::Subnet
+  rManagementDMZSubnetB:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ2Name
+      CidrBlock:
+        Ref: pManagementDMZSubnetBCIDR
+      Tags:
+      - Key: Name
+        Value: Management DMZ Subnet B
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::Subnet
+  rManagementPrivateSubnetA:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ1Name
+      CidrBlock:
+        Ref: pManagementPrivateSubnetACIDR
+      Tags:
+      - Key: Name
+        Value: Management Private Subnet A
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::Subnet
+  rManagementPrivateSubnetB:
+    Properties:
+      AvailabilityZone:
+        Ref: pRegionAZ2Name
+      CidrBlock:
+        Ref: pManagementPrivateSubnetBCIDR
+      Tags:
+      - Key: Name
+        Value: Management Private Subnet B
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::Subnet
+  rMgmtBastionInstance:
+    DependsOn:
+    - rDeepSecurityInfrastructureTemplate
+    - rGWAttachmentMgmtIGW
+    Metadata:
+      AWS::CloudFormation::Init:
+        configSets:
+          default:
+          - installDeepSecurityAgent
+        installDeepSecurityAgent:
+          commands:
+            0-download-DSA:
+              command:
+                Fn::Join:
+                - ''
+                - - 'curl -k '
+                  - Fn::GetAtt:
+                    - rDeepSecurityInfrastructureTemplate
+                    - Outputs.DeepSecurityAgentDownload
+                  - software/agent/amzn1/x86_64/ -o /tmp/agent.rpm
+            1-install-DSA:
+              command: rpm -ivh /tmp/agent.rpm
+            2-sleep-for-rpm-install:
+              command: sleep 10
+            3-activate-DSA:
+              command:
+                Fn::Join:
+                - ''
+                - - '/opt/ds_agent/dsa_control -a '
+                  - Fn::GetAtt:
+                    - rDeepSecurityInfrastructureTemplate
+                    - Outputs.DeepSecurityHeartbeat
+                  - ' "policy:Linux Server"'
+    Properties:
+      ImageId:
+        Ref: pBastionAmi
+      InstanceType:
+        Ref: pBastionInstanceType
+      KeyName:
+        Ref: pEC2KeyPairBastion
+      NetworkInterfaces:
+      - DeviceIndex: '0'
+        NetworkInterfaceId:
+          Ref: rENIProductionBastion
+      Tags:
+      - Key: Name
+        Value: Bastion Server
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - - '#!/bin/bash
+
+              '
+            - 'yum update -y aws-cfn-bootstrap
+
+              '
+            - '/opt/aws/bin/cfn-init -v '
+            - '         --stack '
+            - Ref: AWS::StackName
+            - '         --resource rMgmtBastionInstance'
+            - '         --region '
+            - Ref: AWS::Region
+            - '
+
+              '
+    Type: AWS::EC2::Instance
+  rNATGateway:
+    Condition: cSupportsNatGateway
+    DependsOn: rIGWManagement
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+        - rEIPProdNAT
+        - AllocationId
+      SubnetId:
+        Ref: rManagementDMZSubnetA
+    Type: AWS::EC2::NatGateway
+  rNatInstanceTemplate:
+    Condition: cNeedNatInstance
+    Properties:
+      Parameters:
+        pDMZSubnetA:
+          Ref: rManagementDMZSubnetA
+        pEC2KeyPair:
+          Ref: pEC2KeyPair
+        pNatAmi:
+          Ref: pNatAmi
+        pNatInstanceType:
+          Ref: pNatInstanceType
+        pRouteTablePrivate:
+          Ref: rRouteTableMgmtPrivate
+        pSecurityGroupSSHFromVpc:
+          Ref: rSecurityGroupSSHFromMgmt
+        pSecurityGroupVpcNat:
+          Ref: rSecurityGroupVpcNat
+        pVpcId:
+          Ref: rVPCManagement
+        pVpcName:
+          Ref: pManagementVPCName
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Ref: pTemplateUrlPrefix
+          - templates/template-nat-instance.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  rPeeringConnectionProduction:
+    Condition: cCreatePeeringProduction
+    Properties:
+      PeerVpcId:
+        Ref: pProductionVPC
+      Tags:
+      - Key: Name
+        Value: vpc-peer-production-management
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::VPCPeeringConnection
+  rRouteAssocMgmtDMZA:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMgmtDMZ
+      SubnetId:
+        Ref: rManagementDMZSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteAssocMgmtPrivA:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMgmtPrivate
+      SubnetId:
+        Ref: rManagementPrivateSubnetA
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteAssocMgmtPrivB:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMgmtPrivate
+      SubnetId:
+        Ref: rManagementPrivateSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  rRouteMgmtIGW:
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: rIGWManagement
+      RouteTableId:
+        Ref: rRouteTableMgmtDMZ
+    Type: AWS::EC2::Route
+  rRouteMgmtProdDMZ:
+    Condition: cCreatePeeringProduction
+    Properties:
+      DestinationCidrBlock:
+        Ref: pProductionCIDR
+      RouteTableId:
+        Ref: rRouteTableMgmtDMZ
+      VpcPeeringConnectionId:
+        Ref: rPeeringConnectionProduction
+    Type: AWS::EC2::Route
+  rRouteMgmtProdPrivate:
+    Condition: cCreatePeeringProduction
+    Properties:
+      DestinationCidrBlock:
+        Ref: pProductionCIDR
+      RouteTableId:
+        Ref: rRouteTableMgmtPrivate
+      VpcPeeringConnectionId:
+        Ref: rPeeringConnectionProduction
+    Type: AWS::EC2::Route
+  rRouteProdMgmt:
+    Condition: cCreatePeeringProduction
+    Properties:
+      DestinationCidrBlock:
+        Ref: pManagementCIDR
+      RouteTableId:
+        Ref: pRouteTableProdPrivate
+      VpcPeeringConnectionId:
+        Ref: rPeeringConnectionProduction
+    Type: AWS::EC2::Route
+  rRouteProdMgmtPublic:
+    Condition: cCreatePeeringProduction
+    Properties:
+      DestinationCidrBlock:
+        Ref: pManagementCIDR
+      RouteTableId:
+        Ref: pRouteTableProdPublic
+      VpcPeeringConnectionId:
+        Ref: rPeeringConnectionProduction
+    Type: AWS::EC2::Route
+  rRouteTableMgmtDMZ:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: rt-management-vpc-dmz
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::RouteTable
+  rRouteTableMgmtPrivate:
+    Properties:
+      Tags:
+      - Key: Name
+        Value: rt-management-vpc-private
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::RouteTable
+  rSecurityGroupBastion:
+    Properties:
+      GroupDescription: SG for Bastion Instances
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: '1'
+        IpProtocol: tcp
+        ToPort: '65535'
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pBastionSSHCIDR
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      Tags:
+      - Key: Name
+        Value: sg-ssh-access-from-bastion
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::SecurityGroup
+  rSecurityGroupPeered:
+    Properties:
+      GroupDescription: Allow ingress into peered security groups
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      Tags:
+      - Key: Name
+        Value: sg-peered-ingress
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::SecurityGroup
+  rSecurityGroupSSHFromMgmt:
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pManagementCIDR
+        FromPort: '22'
+        IpProtocol: tcp
+        ToPort: '22'
+      Tags:
+      - Key: Name
+        Value: sg-ssh-access-from-management
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::SecurityGroup
+  rSecurityGroupVpcNat:
+    Properties:
+      GroupDescription: Allow NAT from Management VPC
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: pManagementCIDR
+        FromPort: '80'
+        IpProtocol: tcp
+        ToPort: '80'
+      - CidrIp:
+          Ref: pManagementCIDR
+        FromPort: '443'
+        IpProtocol: tcp
+        ToPort: '443'
+      Tags:
+      - Key: Name
+        Value: sg-web-access-ports-from-production
+      VpcId:
+        Ref: rVPCManagement
+    Type: AWS::EC2::SecurityGroup
+  rVPCManagement:
+    Properties:
+      CidrBlock:
+        Ref: pManagementCIDR
+      EnableDnsHostnames: 'true'
+      EnableDnsSupport: 'true'
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value:
+          Ref: pManagementVPCName
+    Type: AWS::EC2::VPC
+  rrRouteAssocMgmtDMZB:
+    Properties:
+      RouteTableId:
+        Ref: rRouteTableMgmtDMZ
+      SubnetId:
+        Ref: rManagementDMZSubnetB
+    Type: AWS::EC2::SubnetRouteTableAssociation
