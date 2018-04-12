@@ -12,6 +12,13 @@ all the things that could be going on.
 ## Install
 From a command prompt run `python setup.py clean --all` then `python setup.py install`
 
+### Pip Install
+Working on the pip package currently.
+
+## Uninstall
+If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
+may need to manually remove the cfn-lint binary.
+
 ## Parameters
 From a command prompt run `cfn-lint --template <path to yaml template>`
 optional arguments:
