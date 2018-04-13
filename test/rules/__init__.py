@@ -48,17 +48,20 @@ class BaseRuleTestCase(BaseTestCase):
 
     def helper_file_positive(self):
         """Success test"""
-        for template in self.success_templates:
-            good_runner = Runner(self.collection, template, [], ['us-east-1'], [])
+        for filename in self.success_templates:
+            template = self.load_template(filename)
+            good_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
             self.assertEqual([], good_runner.run())
 
-    def helper_file_positive_template(self, template):
+    def helper_file_positive_template(self, filename):
         """Success test with template parameter"""
-        good_runner = Runner(self.collection, template, [], ['us-east-1'], [])
+        template = self.load_template(filename)
+        good_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
         self.assertEqual([], good_runner.run())
 
-    def helper_file_negative(self, template, err_count):
+    def helper_file_negative(self, filename, err_count):
         """Failure test"""
-        bad_runner = Runner(self.collection, template, [], ['us-east-1'], [])
+        template = self.load_template(filename)
+        bad_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
         errs = bad_runner.run()
         self.assertEqual(err_count, len(errs))

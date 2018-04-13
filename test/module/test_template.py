@@ -22,7 +22,9 @@ class TestTemplate(BaseTestCase):
     """Test Template Class in cfnlint """
     def setUp(self):
         """ SetUp template object"""
-        self.template = Template('templates/good/generic.yaml')
+        filename = 'templates/good/generic.yaml'
+        template = self.load_template(filename)
+        self.template = Template(template)
         self.resource_names = [
             'IamPipeline',
             'RootInstanceProfile',

@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from unittest import TestCase
+from cfnlint.parser import MarkedLoader, multi_constructor
 
 
 class BaseTestCase(TestCase):
@@ -24,4 +25,10 @@ class BaseTestCase(TestCase):
     subclasses. This facilitates the ability to update in one spot
     and allow all tests to get the update for easy maintenance.
     """
-    pass
+
+    def load_template(self, filename):
+        """Return teplate"""
+        fp = open(filename)
+        loader = MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", multi_constructor)
+        return loader.get_single_data()
