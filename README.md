@@ -20,12 +20,8 @@ Working on the pip package currently.
 If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
 may need to manually remove the cfn-lint binary.
 
-<<<<<<< HEAD
 ## Configuration
 ### Parameters
-=======
-## Parameters
->>>>>>> 94ff4c302e43ba55fdc7d383297236ca17b853ab
 From a command prompt run `cfn-lint --template <path to yaml template>`
 optional arguments:
 * -h, --help - Show this help message and exit
@@ -39,7 +35,6 @@ optional arguments:
 * --log-level {info,debug} - Log Level
 * --version - Version of cfn-lint
 
-<<<<<<< HEAD
 ### Metadata
 Inside the root level Metadata key you can configure cfn-lint using the same parameters as above.  The configurable values are equivalent to the parameters with underscores '\_' in place of '-'.
 ```
@@ -56,8 +51,6 @@ Metadata:
 ### Precedence
 cfn-lint applies the configuration from the CloudFormation Metadata first and then overrides those values with anything specified in the CLI.
 
-=======
->>>>>>> 94ff4c302e43ba55fdc7d383297236ca17b853ab
 ## Examples
 ### Basic usage
 ```cfn-lint --template template.yaml```
