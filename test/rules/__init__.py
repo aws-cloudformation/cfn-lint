@@ -37,7 +37,8 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/transform.yaml',
         'templates/good/conditions.yaml',
         'templates/good/properties_elb.yaml',
-        'templates/good/function_sub.yaml',
+        'templates/good/functions_sub.yaml',
+        'templates/good/functions_cidr.yaml',
         'templates/good/resources_lambda.yaml',
     ]
 
