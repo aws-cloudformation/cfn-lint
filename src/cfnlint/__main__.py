@@ -67,7 +67,6 @@ def main():
         '--regions', dest='regions', default=['us-east-1'], nargs='*',
         help="list the regions to validate against."
     )
-
     parser.add_argument(
         '--append-rules', dest='rulesdir', default=[], nargs='*',
         help="specify one or more rules directories using "
