@@ -155,21 +155,9 @@ class Template(object):
                'sa-east-1']
 
     # pylint: disable=dangerous-default-value
-    def __init__(self, filename, regions=['us-east-1'], ignore_bad_template=True):
-        try:
-            fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
-            self.template = loader.get_single_data()
-            self.filename = filename
-            self.regions = regions
-        except ParserError as err:
-            if ignore_bad_template:
-                self.template = None
-                LOGGER.info('Template %s is maflormed: %s', filename, err)
-            else:
-                LOGGER.error('Template %s is maflormed: %s', filename, err)
-                sys.exit(1)
+    def __init__(self, template, regions=['us-east-1']):
+        self.template = template
+        self.regions = regions
 
     def get_resources(self, resource_type=[]):
         """
@@ -554,14 +542,13 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, ignore_checks, regions,
-            ignore_bad_template, verbosity=0):
+            self, rules, filename, template, ignore_checks, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
         self.ignore_checks = ignore_checks
         self.verbosity = verbosity
-        self.cfn = Template(self.filename, regions, ignore_bad_template)
+        self.cfn = Template(template, regions)
 
     def run(self):
         """Run rules"""

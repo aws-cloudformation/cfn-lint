@@ -28,10 +28,10 @@ Resources:
       CidrBlock:
         Fn::Select:
         - 0
-        - !Cidr [!GetAtt myVpc2.CidrBlock, 3, 16]
+        - !Cidr [!Ref cidrBlock, 3, 16]
       VpcId: vpc-1234567
   mySubnet2-2:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: String
+      CidrBlock: !Ref cidrBlock
       VpcId: vpc-1234567

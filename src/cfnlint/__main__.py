@@ -18,6 +18,7 @@ import sys
 import argparse
 import logging
 import json
+from yaml.parser import ParserError
 import cfnlint.helpers
 from cfnlint import RulesCollection
 from cfnlint import Match
@@ -33,6 +34,29 @@ def main():
     parser.add_argument(
         '--template', help='CloudFormation Template')
     parser.add_argument(
+        '--ignore-bad-template', help='Ignore failures with Bad template',
+        action='store_true'
+    )
+
+    defaults = {}
+    args = parser.parse_known_args()
+    template = {}
+    if vars(args[0])['template']:
+        try:
+            filename = vars(args[0])['template']
+            fp = open(filename)
+            loader = cfnlint.parser.MarkedLoader(fp.read())
+            loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+            template = loader.get_single_data()
+            defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+        except ParserError as err:
+            if vars(args)['ignore_bad_template']:
+                LOGGER.info('Template %s is maflormed: %s', filename, err)
+            else:
+                LOGGER.error('Template %s is maflormed: %s', filename, err)
+                sys.exit(1)
+
+    parser.add_argument(
         '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
     )
     parser.add_argument(
@@ -43,10 +67,7 @@ def main():
         '--regions', dest='regions', default=['us-east-1'], nargs='*',
         help="list the regions to validate against."
     )
-    parser.add_argument(
-        '--ignore-bad-template', help='Ignore failures with Bad template',
-        action='store_true'
-    )
+
     parser.add_argument(
         '--append-rules', dest='rulesdir', default=[], nargs='*',
         help="specify one or more rules directories using "
@@ -64,6 +85,7 @@ def main():
         version='%(prog)s {version}'.format(version=__version__)
     )
 
+    parser.set_defaults(**defaults)
     args = parser.parse_args()
 
     if vars(args)['format']:
@@ -75,16 +97,17 @@ def main():
     else:
         formatter = formatters.Formatter()
 
-    if vars(args)['log_level']:
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        if vars(args)['log_level'] == 'info':
-            LOGGER.setLevel(logging.INFO)
-        elif vars(args)['log_level'] == 'debug':
-            LOGGER.setLevel(logging.DEBUG)
-        log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        ch.setFormatter(log_formatter)
-        LOGGER.addHandler(ch)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    if vars(args)['log_level'] == 'info':
+        LOGGER.setLevel(logging.INFO)
+    elif vars(args)['log_level'] == 'debug':
+        LOGGER.setLevel(logging.DEBUG)
+    else:
+        LOGGER.setLevel(logging.ERROR)
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(log_formatter)
+    LOGGER.addHandler(ch)
 
     rules = RulesCollection()
     rulesdirs = [cfnlint.DEFAULT_RULESDIR] + vars(args)['rulesdir']
@@ -115,14 +138,14 @@ def main():
         ]
         for region in vars(args)['regions']:
             if region not in supported_regions:
-                print('Supported regions are %s' % supported_regions)
+                LOGGER.error('Supported regions are %s', supported_regions)
                 return(1)
 
     if vars(args)['template']:
         matches = list()
         runner = cfnlint.Runner(
-            rules, vars(args)['template'], vars(args)['ignore_checks'],
-            vars(args)['regions'], vars(args)['ignore_bad_template'])
+            rules, vars(args)['template'], template, vars(args)['ignore_checks'],
+            vars(args)['regions'])
         matches.extend(runner.run())
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
