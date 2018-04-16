@@ -1,0 +1,6 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - docker run -i --rm -v "${PWD}:/cfnlint" -w /cfnlint python:2.7-alpine3.7 sh -c "pip install tox;tox -e py27"
+      - docker run -i --rm -v "${PWD}:/cfnlint" -w /cfnlint python:3.6-alpine3.7 sh -c "pip install tox;tox -e py36,pylint"

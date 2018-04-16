@@ -20,8 +20,8 @@ import os
 import glob
 import imp
 import logging
-import requests
 import pkg_resources
+import requests
 
 LOGGER = logging.getLogger(__name__)
 

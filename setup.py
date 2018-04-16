@@ -41,7 +41,7 @@ setup(
     ]},
     packages=find_packages('src'),
     zip_safe=False,
-    install_requires=['pyyaml', 'six'],
+    install_requires=['pyyaml', 'six', 'requests'],
     entry_points={
         'console_scripts': [
             'cfn-lint = cfnlint.__main__:main'
