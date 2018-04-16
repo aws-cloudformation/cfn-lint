@@ -31,7 +31,7 @@ setup(
     description=('checks cloudformation for practices and behaviour \
         that could potentially be improved'),
     keywords='aws, lint',
-    author='Kevin DeJong',
+    author='kddejong',
     author_email='kddejong@amazon.com',
     url='https://github.com/awslabs/cfn-python-lint',
     package_dir={'': 'src'},
