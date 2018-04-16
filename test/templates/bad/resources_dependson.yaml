@@ -1,0 +1,26 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  DependsOn
+Resources:
+  myInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+  myInstance2:
+    DependsOn: badInstance
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+  myInstance3:
+    DependsOn:
+    - badInstance
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+  myInstance4:
+    DependsOn:
+    - Resource: badInstance
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String

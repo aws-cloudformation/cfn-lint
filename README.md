@@ -22,21 +22,26 @@ may need to manually remove the cfn-lint binary.
 
 ## Configuration
 ### Parameters
+
+| Command Line  | Metadata | Options | Description |
+| ------------- | ------------- |
+| -h, --help  |   | | Get description of cfn-lint |
+| --template  |   | filename | Template file path to the file that needs to be tested by cfn-lint |
+| --format    | format | quiet, parseable, json | Output format |
+| --list-rules | | | List all the rules |
+| --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
+| --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
+| --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
+| --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose id do not match these values |
+| --log-level | log_level | {info, debug} | Log Level |
+| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command | 
+| --version | | | Version of cfn-lint |
+
+### Command Line
 From a command prompt run `cfn-lint --template <path to yaml template>`
-optional arguments:
-* -h, --help - Show this help message and exit
-* --template TEMPLATE - CloudFormation Template
-* --format {quiet,parseable,json} - Output Format
-* --list-rules - List all the rules
-* --regions [REGIONS [REGIONS ...]] - List the regions to validate against.
-* --ignore-bad-template - Ignore failures with Bad template
-* --append-rules [RULESDIR [RULESDIR ...]] - Specify one or more rules directories using one or more --append-rules arguments.
-* --ignore-checks [IGNORE_CHECKS [IGNORE_CHECKS ...]] - Only check rules whose id do not match these values
-* --log-level {info,debug} - Log Level
-* --version - Version of cfn-lint
 
 ### Metadata
-Inside the root level Metadata key you can configure cfn-lint using the same parameters as above.  The configurable values are equivalent to the parameters with underscores '\_' in place of '-'.
+Inside the root level Metadata key you can configure cfn-lint using the supported parameters.
 ```
 Metadata:
   cfn-lint:

@@ -83,6 +83,10 @@ def main():
         '--version', help='Version of cfn-lint', action='version',
         version='%(prog)s {version}'.format(version=__version__)
     )
+    parser.add_argument(
+        '--update-specs', help='Update the CloudFormation Specs',
+        action='store_true'
+    )
 
     parser.set_defaults(**defaults)
     args = parser.parse_args()
@@ -107,6 +111,10 @@ def main():
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
     LOGGER.addHandler(ch)
+
+    if vars(args)['update_specs']:
+        cfnlint.helpers.update_resource_specs()
+        exit(0)
 
     rules = RulesCollection()
     rulesdirs = [cfnlint.DEFAULT_RULESDIR] + vars(args)['rulesdir']

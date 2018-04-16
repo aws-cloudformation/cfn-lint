@@ -32,11 +32,36 @@ class Configuration(CloudFormationLintRule):
 
         matches = list()
 
+        valid_attributes = [
+            'CreationPolicy',
+            'DeletionPolicy',
+            'DependsOn',
+            'Metadata',
+            'UpdatePolicy',
+            'Properties',
+            'Type',
+            'Condition',
+        ]
         region_specs = {}
         for region in cfn.regions:
             region_specs[region] = cfnlint.helpers.load_resources('/data/CloudSpecs/%s.json' % region)
         for resource_name, resource_values in cfn.get_resources().items():
             self.logger.debug("Validating resource %s base configuration", resource_name)
+            if not isinstance(resource_values, dict):
+                message = "Resource not properly configured at {0}"
+                matches.append(RuleMatch(
+                    ['Resources', resource_name],
+                    message.format(resource_name)
+                ))
+                continue
+            for property_key, _ in resource_values.items():
+                if property_key not in valid_attributes:
+                    message = "Invalid resource attribute {0} for resource {1}"
+                    matches.append(RuleMatch(
+                        ['Resources', resource_name, property_key],
+                        message.format(property_key, resource_name)
+                    ))
+
             resource_type = resource_values.get('Type')
             if not resource_type:
                 message = "Type not defined for resource {0}"
