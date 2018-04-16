@@ -24,7 +24,7 @@ may need to manually remove the cfn-lint binary.
 ### Parameters
 
 | Command Line  | Metadata | Options | Description |
-| ------------- | ------------- |
+| ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
 | --template  |   | filename | Template file path to the file that needs to be tested by cfn-lint |
 | --format    | format | quiet, parseable, json | Output format |
