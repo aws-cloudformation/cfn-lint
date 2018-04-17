@@ -13,10 +13,11 @@ validate those values but the promise is to not fail if we can't understand or t
 all the things that could be going on.
 
 ## Install
+### Command line
 From a command prompt run `python setup.py clean --all` then `python setup.py install`
 
 ### Pip Install
-Working on the pip package currently.
+`pip install cfn-lint`.  You may need to use sudo.
 
 ## Uninstall
 If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
