@@ -49,10 +49,13 @@ class SecurityGroupIngress(CloudFormationLintRule):
             parameter_type = parameter_properties.get('Type')
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = "Security Group Id Parameter should be of type AWS::EC2::SecurityGroup::Id " \
-                          "or AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id> for {0}"
+                message = "Security Group Id Parameter should be of type [{0}] for {1}"
                 matches.append(
-                    RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
+                    RuleMatch(
+                        path_error,
+                        message.format(
+                            ', '.join(map(str, allowed_types)),
+                            '/'.join(map(str, path_error)))))
         if value in resources:
             resource = resources.get(value, {})
             resource_type = resource.get('Type', "")
