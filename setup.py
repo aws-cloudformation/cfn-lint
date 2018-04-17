@@ -26,18 +26,18 @@ sys.path.insert(0, os.path.abspath('src'))
 exec(open('src/cfnlint/version.py').read())
 
 
-def readme():
-    """ Read Reamde file"""
-    with open('README.md') as f:
-        return f.read()
-
+try:
+    import pypandoc
+    long_description = pypandoc.convert('README.md', 'rst')
+except (IOError, ImportError):
+    long_description = ''
 
 setup(
     name='cfn-lint',
     version=__version__,
     description=('checks cloudformation for practices and behaviour \
         that could potentially be improved'),
-    long_description=readme(),
+    long_description=long_description,
     keywords='aws, lint',
     author='kddejong',
     author_email='kddejong@amazon.com',
