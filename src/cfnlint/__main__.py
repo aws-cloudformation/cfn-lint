@@ -148,6 +148,7 @@ def main():
                 LOGGER.error('Supported regions are %s', supported_regions)
                 return(1)
 
+    exit_code = 0
     if vars(args)['template']:
         matches = list()
         runner = cfnlint.Runner(
@@ -155,7 +156,7 @@ def main():
             vars(args)['regions'])
         matches.extend(runner.run())
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
-
+        exit_code = len(matches)
         if vars(args)['format'] == 'json':
             print(json.dumps(matches, indent=4, cls=CustomEncoder))
         else:
@@ -164,7 +165,7 @@ def main():
     else:
         parser.print_help()
 
-    return 0
+    return exit_code
 
 
 class CustomEncoder(json.JSONEncoder):
