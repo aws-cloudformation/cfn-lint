@@ -39,12 +39,18 @@ class SecurityGroupIngress(CloudFormationLintRule):
     def check_sgid_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = list()
+
+        allowed_types = [
+            'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
+            'AWS::EC2::SecurityGroup::Id'
+        ]
         if value in parameters:
             parameter_properties = parameters.get(value)
             parameter_type = parameter_properties.get('Type')
-            if parameter_type != 'AWS::EC2::SecurityGroup::Id':
+            if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = "Security Group Id Parameter should be of type AWS::EC2::SecurityGroup::Id for {0}"
+                message = "Security Group Id Parameter should be of type AWS::EC2::SecurityGroup::Id " \
+                          "or AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id> for {0}"
                 matches.append(
                     RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
         if value in resources:

@@ -55,6 +55,6 @@ setup(
             'cfn-lint = cfnlint.__main__:main'
         ]
     },
-    license='MIT',
+    license='MIT no attribution',
     test_suite="unittest"
 )
