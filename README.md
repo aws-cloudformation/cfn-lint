@@ -1,5 +1,7 @@
 # CloudFormation Linter
 
+[![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibm1lNzczajZWcGw3UE5JRkhhcTBVZzBWTVRMYUtBU2lNcjdPNDVMK2JFM1RERGNDRjJlY2FQMVIrdFFpamx3M3ZaSDF5UCtrRGxkV1BrYU96YTdGNUE4PSIsIml2UGFyYW1ldGVyU3BlYyI6Im1DZklveUk5dXY0dTBucEsiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://github.com/awslabs/cfn-python-lint)
+
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
 checks.  Includes checking valid values for resource properties and best practices.
 
@@ -34,7 +36,7 @@ may need to manually remove the cfn-lint binary.
 | --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
 | --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose id do not match these values |
 | --log-level | log_level | {info, debug} | Log Level |
-| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command | 
+| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | --version | | | Version of cfn-lint |
 
 ### Command Line

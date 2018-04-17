@@ -15,4 +15,4 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
