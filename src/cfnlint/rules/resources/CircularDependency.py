@@ -18,7 +18,6 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.parser import str_node
 
 
 class CircularDependency(CloudFormationLintRule):
@@ -84,7 +83,7 @@ class CircularDependency(CloudFormationLintRule):
                 if len(value) == 2:
                     sub_parameter_values = value[1]
                 sub_parameters = self.searchstring(value[0])
-            elif isinstance(value, (six.text_type, str_node)):
+            elif isinstance(value, (six.text_type, six.string_types)):
                 sub_parameters = self.searchstring(value)
 
             for sub_parameter in sub_parameters:

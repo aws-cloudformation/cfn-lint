@@ -56,7 +56,7 @@ class Ebs(CloudFormationLintRule):
                                             iops_value = int(iops)
                                             if iops_value < 100 or iops_value > 2000:
                                                 pathmessage = path[:] + ['Iops']
-                                                message = "Propert Iops should be Int between 100 to 20000 {0}"
+                                                message = "Property Iops should be Int between 100 to 20000 {0}"
                                                 matches.append(
                                                     RuleMatch(
                                                         pathmessage,
@@ -95,7 +95,7 @@ class Ebs(CloudFormationLintRule):
                 virtual_name = properties.get('VirtualName')
                 ebs = properties.get('Ebs')
                 if not virtual_name and not ebs:
-                    pathmessage = path[:] + [index, 'Ebs', 'VolumeType']
+                    pathmessage = path[:] + [index]
                     message = "Property ebs and virtual_name cannot be used together for {0}"
                     matches.append(
                         RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))

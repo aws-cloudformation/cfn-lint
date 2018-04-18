@@ -113,7 +113,7 @@ class Cidr(CloudFormationLintRule):
                                     message = "Cidr ipBlock should be Cidr Range, Ref, or Select for {0}"
                                     matches.append(RuleMatch(
                                         tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
-                    elif isinstance(ip_block_obj, six.text_type):
+                    elif isinstance(ip_block_obj, (six.text_type, six.string_types)):
                         # pylint: disable=C0301
                         pattern = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
                         pattern = re.compile(pattern)
