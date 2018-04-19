@@ -29,6 +29,10 @@ TAG_MAP = "tag:yaml.org,2002:map"
 UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
 FN_PREFIX = "Fn::"
 CONDITION_FUNCTIONS = ['Fn::If']
+REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
+           'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
+           'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
+           'sa-east-1']
 
 
 def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
@@ -42,6 +46,11 @@ def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
     data = json.load(open(filename))
 
     return data
+
+
+RESOURCE_SPECS = {}
+for reg in REGIONS:
+    RESOURCE_SPECS[reg] = load_resources(filename=("/data/CloudSpecs/%s.json" % reg))
 
 
 def update_resource_specs():
