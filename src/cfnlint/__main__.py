@@ -48,7 +48,8 @@ def main():
             loader = cfnlint.parser.MarkedLoader(fp.read())
             loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
             template = loader.get_single_data()
-            defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+            if template is dict:
+                defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
         except ParserError as err:
             if vars(args)['ignore_bad_template']:
                 LOGGER.info('Template %s is maflormed: %s', filename, err)
