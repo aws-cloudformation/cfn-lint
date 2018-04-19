@@ -46,6 +46,7 @@ setup(
     package_data={'cfnlint': [
         'data/CloudSpecs/*.json',
         'data/ResourcePropertiesExclusive.json',
+        'data/ResourcePropertiesInclusive.json',
     ]},
     packages=find_packages('src'),
     zip_safe=False,
