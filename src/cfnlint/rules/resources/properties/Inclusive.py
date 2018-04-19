@@ -23,9 +23,9 @@ import cfnlint.helpers
 class Inclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
     id = 'E2521'
-    shortdesc = 'Check Properties that are mutually exclusive'
-    description = 'Making sure CloudFormation properties ' + \
-                  'that are exclusive are not defined'
+    shortdesc = 'Check Properties that are required together'
+    description = 'Make sure CloudFormation resource properties ' + \
+                  'are included together when required'
     tags = ['base', 'resources']
 
     def __init__(self):
