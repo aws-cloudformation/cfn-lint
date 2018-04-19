@@ -19,7 +19,6 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.parser import str_node
 
 
 class Used(CloudFormationLintRule):
@@ -37,7 +36,7 @@ class Used(CloudFormationLintRule):
     def isparaminref(self, subs, parameter):
         """Search sub strings for paramters"""
         for sub in subs:
-            if isinstance(sub, (six.text_type, str_node)):
+            if isinstance(sub, (six.text_type, six.string_types)):
                 if self.searchstring(sub, parameter):
                     return True
 

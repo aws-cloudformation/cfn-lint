@@ -40,8 +40,8 @@ class Password(CloudFormationLintRule):
             trees = [x for x in trees if x[0] == 'Resources']
             for tree in trees:
                 obj = tree[-1]
-                if isinstance(obj, six.text_type):
-                    message = "Password shouln't be hardcoded for %s" % (
+                if isinstance(obj, (six.text_type, six.string_types)):
+                    message = "Password shouldn't be hardcoded for %s" % (
                         '/'.join(map(str, tree[:-1])))
                     matches.append(RuleMatch(tree[:-1], message))
                 elif isinstance(obj, dict):
