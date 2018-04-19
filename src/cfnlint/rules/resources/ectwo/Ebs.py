@@ -94,12 +94,7 @@ class Ebs(CloudFormationLintRule):
             for index, properties in enumerate(result['Value']):
                 virtual_name = properties.get('VirtualName')
                 ebs = properties.get('Ebs')
-                if not virtual_name and not ebs:
-                    pathmessage = path[:] + [index]
-                    message = "Property ebs and virtual_name cannot be used together for {0}"
-                    matches.append(
-                        RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                elif virtual_name:
+                if virtual_name:
                     # switch to regex
                     if not re.match(r'^ephemeral[0-9]$', virtual_name):
                         pathmessage = path[:] + [index, 'VirtualName']

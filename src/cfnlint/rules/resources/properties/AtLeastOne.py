@@ -19,37 +19,40 @@ from cfnlint import RuleMatch
 import cfnlint.helpers
 
 
-class Exclusive(CloudFormationLintRule):
+class AtLeastOne(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
-    id = 'E2520'
-    shortdesc = 'Check Properties that are mutually exclusive'
+    id = 'E2522'
+    shortdesc = 'Check Properties that need at least one of a list of properties'
     description = 'Making sure CloudFormation properties ' + \
-                  'that are exclusive are not defined'
+                  'that require at least one property from a list. ' + \
+                  'More than one can be included.'
     tags = ['base', 'resources']
 
     def __init__(self):
         """Init"""
-        exclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Exclusive.json')
-        self.resource_types_specs = exclusivespec['ResourceTypes']
-        self.property_types_specs = exclusivespec['PropertyTypes']
+        atleastonespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/AtLeastOne.json')
+        self.resource_types_specs = atleastonespec['ResourceTypes']
+        self.property_types_specs = atleastonespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, exclusions, path):
+    def check(self, properties, atleastoneprops, path):
         """Check itself"""
         matches = list()
+        for atleastoneprop in atleastoneprops:
+            count = 0
+            for prop in atleastoneprop:
+                if prop in properties:
+                    count += 1
 
-        for prop in properties:
-            if prop in exclusions:
-                for excl_property in exclusions[prop]:
-                    if excl_property in properties:
-                        message = "Parameter {0} should NOT exist with {1} for {2}"
-                        matches.append(RuleMatch(
-                            path + [prop],
-                            message.format(excl_property, prop, '/'.join(map(str, path)))
-                        ))
+            if count == 0:
+                message = "At least one of [{0}] should be specified for {1}"
+                matches.append(RuleMatch(
+                    path,
+                    message.format(', '.join(map(str, atleastoneprop)), '/'.join(map(str, path)))
+                ))
 
         return matches
 
@@ -57,8 +60,8 @@ class Exclusive(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        exclusions = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        atleastoneprops = self.property_types_specs.get(property_type, {})
+        matches.extend(self.check(properties, atleastoneprops, path))
 
         return matches
 
@@ -66,7 +69,7 @@ class Exclusive(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        exclusions = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        atleastoneprops = self.resource_types_specs.get(resource_type, {})
+        matches.extend(self.check(properties, atleastoneprops, path))
 
         return matches

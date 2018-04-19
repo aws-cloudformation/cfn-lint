@@ -42,9 +42,7 @@ class Configuration(CloudFormationLintRule):
             'Type',
             'Condition',
         ]
-        region_specs = {}
-        for region in cfn.regions:
-            region_specs[region] = cfnlint.helpers.load_resources('/data/CloudSpecs/%s.json' % region)
+
         for resource_name, resource_values in cfn.get_resources().items():
             self.logger.debug("Validating resource %s base configuration", resource_name)
             if not isinstance(resource_values, dict):
@@ -71,17 +69,18 @@ class Configuration(CloudFormationLintRule):
                 ))
             else:
                 self.logger.debug("Check resource types by region...")
-                for region, specs in region_specs.items():
-                    if resource_type not in specs['ResourceTypes']:
-                        if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
-                            message = "Invalid Type {0} for resource {1} in {2}"
-                            matches.append(RuleMatch(
-                                ['Resources', resource_name, 'Type'],
-                                message.format(resource_type, resource_name, region)
-                            ))
+                for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
+                    if region in cfn.regions:
+                        if resource_type not in specs['ResourceTypes']:
+                            if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
+                                message = "Invalid Type {0} for resource {1} in {2}"
+                                matches.append(RuleMatch(
+                                    ['Resources', resource_name, 'Type'],
+                                    message.format(resource_type, resource_name, region)
+                                ))
 
             if 'Properties' not in resource_values:
-                resource_spec = region_specs['us-east-1']
+                resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
                 if resource_type in resource_spec['ResourceTypes']:
                     properties_spec = resource_spec['ResourceTypes'][resource_type]['Properties']
                     # pylint: disable=len-as-condition

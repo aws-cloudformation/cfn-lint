@@ -44,8 +44,8 @@ class ImageId(CloudFormationLintRule):
                         if key == 'Ref':
                             if paramname in valid_refs:
                                 if valid_refs[paramname]['Type'] != 'AWS::EC2::Image::Id':
-                                    message = "Parameter %s should be of type \
-AWS::EC2::Image::Id" % (paramname)
+                                    message = "Parameter %s should be of type " \
+                                              "AWS::EC2::Image::Id" % (paramname)
                                     tree = ['Parameters', paramname]
                                     matches.append(RuleMatch(tree, message))
                 else:
