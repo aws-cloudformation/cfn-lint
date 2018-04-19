@@ -50,6 +50,15 @@ def main():
             template = loader.get_single_data()
             if template is dict:
                 defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+        except FileNotFoundError:
+            LOGGER.error("Template file not found: %s", filename)
+            sys.exit(1)
+        except PermissionError:
+            LOGGER.error("Permission denied when accessing template file: %s", filename)
+            sys.exit(1)
+        except IsADirectoryError:
+            LOGGER.error("Template references a directory, not a file: %s", filename)
+            sys.exit(1)
         except ParserError as err:
             if vars(args)['ignore_bad_template']:
                 LOGGER.info('Template %s is maflormed: %s', filename, err)
