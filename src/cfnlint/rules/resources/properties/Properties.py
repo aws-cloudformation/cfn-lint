@@ -181,7 +181,7 @@ class Properties(CloudFormationLintRule):
         matches = list()
         self.cfn = cfn
 
-        resourcespecs = cfnlint.helpers.load_resources('/data/CloudSpecs/%s.json' % cfn.regions[0])
+        resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
         self.parameternames = self.cfn.get_parameter_names()

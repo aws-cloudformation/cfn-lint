@@ -48,88 +48,72 @@ class CloudFormationLintRule(object):
     match_resource_properties = None
     match_resource_sub_properties = None
 
+    # pylint: disable=E0213
+    def matching(match_function):
+        """
+            Does Logging for match functions
+        """
+        def wrapper(self, filename, cfn, *args, **kwargs):
+            """Wrapper"""
+            matches = []
+
+            start = datetime.now()
+            LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
+            # pylint: disable=E1102
+            results = match_function(self, filename, cfn, *args, **kwargs)
+            LOGGER.debug("Complete match function for rule %s at %s.  Ran in %s",
+                         self.id, datetime.now(), datetime.now() - start)
+            LOGGER.debug("Results from rule %s are %s: ", self.id, results)
+
+            if results:
+                for result in results:
+                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                    if linenumbers:
+                        matches.append(Match(
+                            linenumbers[0] + 1, linenumbers[1] + 1,
+                            linenumbers[2] + 1, linenumbers[3] + 1,
+                            filename, self, result.message))
+                    else:
+                        matches.append(Match(
+                            1, 1,
+                            1, 1,
+                            filename, self, result.message))
+
+            return matches
+        return wrapper
+
+    @matching
+    # pylint: disable=W0613
     def matchall(self, filename, cfn):
         """Match the entire file"""
-        matches = []
         if not self.match:
-            return matches
+            return []
 
-        start = datetime.now()
-        LOGGER.debug("Call match function for rule %s", self.id)
-        results = self.match(cfn)  # pylint: disable=E1102
-        LOGGER.debug("Match function returned for rule %s.  Ran in %s", self.id, datetime.now() - start)
-        LOGGER.debug("Results from match function are %s: ", results)
-        if results:
-            for result in results:
-                linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                if linenumbers:
-                    matches.append(Match(
-                        linenumbers[0] + 1, linenumbers[1] + 1,
-                        linenumbers[2] + 1, linenumbers[3] + 1,
-                        filename, self, result.message))
-                else:
-                    matches.append(Match(
-                        1, 1,
-                        1, 1,
-                        filename, self, result.message))
+        return self.match(cfn)  # pylint: disable=E1102
 
-        return matches
-
+    @matching
+    # pylint: disable=W0613
     def matchall_resource_properties(self, filename, cfn, resource_properties, property_type, path):
         """ Check for resource properties type """
-        matches = []
         if not self.match_resource_properties:
-            return matches
+            return []
 
         if property_type in self.resource_property_types:
-            start = datetime.now()
-            LOGGER.debug("Call match function for rule %s", self.id)
-            results = self.match_resource_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
-            LOGGER.debug("Match function returned for rule %s.  Ran in %s", self.id, datetime.now() - start)
-            LOGGER.debug("Results from match function are %s: ", results)
-            if results:
-                for result in results:
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                    if linenumbers:
-                        matches.append(Match(
-                            linenumbers[0] + 1, linenumbers[1] + 1,
-                            linenumbers[2] + 1, linenumbers[3] + 1,
-                            filename, self, result.message))
-                    else:
-                        matches.append(Match(
-                            1, 1,
-                            1, 1,
-                            filename, self, result.message))
+            return self.match_resource_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
-        return matches
+        return []
 
+    @matching
+    # pylint: disable=W0613
     def matchall_resource_sub_properties(self, filename, cfn, resource_properties, property_type, path):
         """ Check for resource properties type """
-        matches = []
         if not self.match_resource_sub_properties:
-            return matches
+            return []
 
         if property_type in self.resource_sub_property_types:
-            start = datetime.now()
-            LOGGER.debug("Call match function for rule %s", self.id)
-            results = self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
-            LOGGER.debug("Match function returned for rule %s.  Ran in %s", self.id, datetime.now() - start)
-            LOGGER.debug("Results from match function are %s: ", results)
-            if results:
-                for result in results:
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                    if linenumbers:
-                        matches.append(Match(
-                            linenumbers[0] + 1, linenumbers[1] + 1,
-                            linenumbers[2] + 1, linenumbers[3] + 1,
-                            filename, self, result.message))
-                    else:
-                        matches.append(Match(
-                            1, 1,
-                            1, 1,
-                            filename, self, result.message))
+            return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
-        return matches
+        return []
 
 
 class RulesCollection(object):

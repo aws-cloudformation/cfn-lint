@@ -17,7 +17,7 @@
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import load_resources
+from cfnlint.helpers import RESOURCE_SPECS
 
 
 class Value(CloudFormationLintRule):
@@ -28,7 +28,7 @@ class Value(CloudFormationLintRule):
     tags = ['base', 'outputs']
 
     def __init__(self):
-        resourcespecs = load_resources()
+        resourcespecs = RESOURCE_SPECS['us-east-1']
         self.resourcetypes = resourcespecs['ResourceTypes']
 
     def match(self, cfn):
