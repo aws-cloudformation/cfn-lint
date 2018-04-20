@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint import RulesCollection, Template, DEFAULT_RULESDIR  # pylint: disable=E0401
+import cfnlint.parser  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -35,4 +36,41 @@ class TestTemplate(BaseTestCase):
             self.assertFalse(rule.id in existing_rules)
             existing_rules.append(rule.id)
 
-    
+    def test_success_run(self):
+        """ Test Run Logic"""
+        filename = 'templates/good/generic.yaml'
+        fp = open(filename)
+        loader = cfnlint.parser.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        template = loader.get_single_data()
+        cfn = Template(template, ['us-east-1'])
+
+        matches = list()
+        matches.extend(self.rules.run(filename, cfn, []))
+        assert(matches == [])
+
+    def test_fail_run(self):
+        """Test failure run"""
+        filename = 'templates/bad/generic.yaml'
+        fp = open(filename)
+        loader = cfnlint.parser.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        template = loader.get_single_data()
+        cfn = Template(template, ['us-east-1'])
+
+        matches = list()
+        matches.extend(self.rules.run(filename, cfn, []))
+        assert(len(matches) == 24)
+
+    def test_fail_sub_properties_run(self):
+        """Test failure run"""
+        filename = 'templates/bad/properties_onlyone.yaml'
+        fp = open(filename)
+        loader = cfnlint.parser.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        template = loader.get_single_data()
+        cfn = Template(template, ['us-east-1'])
+
+        matches = list()
+        matches.extend(self.rules.run(filename, cfn, []))
+        assert(len(matches) == 2)
