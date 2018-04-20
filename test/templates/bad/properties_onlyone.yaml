@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  At Least One Property types
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-1234567
+      BlockDeviceMappings:
+      -
+        DeviceName: myDevice
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+        RoutingRules:
+        - RedirectRule:
+            HostName: test
+          RoutingRuleCondition:
+            HttpErrorCodeReturnedEquals: 404
+            KeyPrefixEquals: docs/

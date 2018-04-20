@@ -27,7 +27,7 @@ class GetAtt(CloudFormationLintRule):
     tags = ['base', 'functions', 'getatt']
 
     def __init__(self):
-        resourcespecs = cfnlint.helpers.load_resources()
+        resourcespecs = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
 

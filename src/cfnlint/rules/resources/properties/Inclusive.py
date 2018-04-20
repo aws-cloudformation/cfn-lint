@@ -19,36 +19,35 @@ from cfnlint import RuleMatch
 import cfnlint.helpers
 
 
-class Exclusive(CloudFormationLintRule):
+class Inclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
-    id = 'E2520'
-    shortdesc = 'Check Properties that are mutually exclusive'
-    description = 'Making sure CloudFormation properties ' + \
-                  'that are exclusive are not defined'
+    id = 'E2521'
+    shortdesc = 'Check Properties that are required together'
+    description = 'Make sure CloudFormation resource properties ' + \
+                  'are included together when required'
     tags = ['base', 'resources']
 
     def __init__(self):
         """Init"""
-        exclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Exclusive.json')
-        self.resource_types_specs = exclusivespec['ResourceTypes']
-        self.property_types_specs = exclusivespec['PropertyTypes']
+        inclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Inclusive.json')
+        self.resource_types_specs = inclusivespec['ResourceTypes']
+        self.property_types_specs = inclusivespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, exclusions, path):
+    def check(self, properties, inclusions, path):
         """Check itself"""
         matches = list()
-
         for prop in properties:
-            if prop in exclusions:
-                for excl_property in exclusions[prop]:
-                    if excl_property in properties:
-                        message = "Parameter {0} should NOT exist with {1} for {2}"
+            if prop in inclusions:
+                for incl_property in inclusions[prop]:
+                    if incl_property not in properties:
+                        message = "Parameter {0} should exist with {1} for {2}"
                         matches.append(RuleMatch(
                             path + [prop],
-                            message.format(excl_property, prop, '/'.join(map(str, path)))
+                            message.format(incl_property, prop, '/'.join(map(str, path)))
                         ))
 
         return matches
@@ -57,8 +56,8 @@ class Exclusive(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        exclusions = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        inclusions = self.property_types_specs.get(property_type, {})
+        matches.extend(self.check(properties, inclusions, path))
 
         return matches
 
@@ -66,7 +65,7 @@ class Exclusive(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        exclusions = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        inclusions = self.resource_types_specs.get(resource_type, {})
+        matches.extend(self.check(properties, inclusions, path))
 
         return matches
