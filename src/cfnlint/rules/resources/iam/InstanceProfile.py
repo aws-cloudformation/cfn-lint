@@ -34,6 +34,8 @@ class InstanceProfile(CloudFormationLintRule):
         # Build the list of keys
         trees = cfn.search_deep_keys('Fn::GetAtt')
         # Filter only resoureces
+        # Disable pylint for Pylint 2
+        # pylint: disable=W0110
         trees = filter(lambda x: x[0] == 'Resources', trees)
         for tree in trees:
             if any(e == 'IamInstanceProfile' for e in tree):

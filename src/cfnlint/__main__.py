@@ -18,7 +18,7 @@ import sys
 import argparse
 import logging
 import json
-from yaml.parser import ParserError
+from yaml.parser import ParserError, ScannerError
 import cfnlint.helpers
 from cfnlint import RulesCollection
 from cfnlint import Match
@@ -37,10 +37,28 @@ def main():
         '--ignore-bad-template', help='Ignore failures with Bad template',
         action='store_true'
     )
+    parser.add_argument(
+        '--log-level', help='Log Level', choices=['info', 'debug']
+    )
 
     defaults = {}
     args = parser.parse_known_args()
     template = {}
+
+    # Setup Logging
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    if vars(args[0])['log_level'] == 'info':
+        LOGGER.setLevel(logging.INFO)
+    elif vars(args[0])['log_level'] == 'debug':
+        LOGGER.setLevel(logging.DEBUG)
+    else:
+        LOGGER.setLevel(logging.ERROR)
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(log_formatter)
+    LOGGER.addHandler(ch)
+
+    # Read template to get configuration items
     if vars(args[0])['template']:
         try:
             filename = vars(args[0])['template']
@@ -50,17 +68,18 @@ def main():
             template = loader.get_single_data()
             if template is dict:
                 defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
-        except FileNotFoundError:
-            LOGGER.error("Template file not found: %s", filename)
-            sys.exit(1)
-        except PermissionError:
-            LOGGER.error("Permission denied when accessing template file: %s", filename)
-            sys.exit(1)
-        except IsADirectoryError:
-            LOGGER.error("Template references a directory, not a file: %s", filename)
-            sys.exit(1)
-        except ParserError as err:
-            if vars(args)['ignore_bad_template']:
+        except IOError as e:
+            if e.errno == 2:
+                LOGGER.error("Template file not found: %s", filename)
+                sys.exit(1)
+            elif e.errno == 21:
+                LOGGER.error("Template references a directory, not a file: %s", filename)
+                sys.exit(1)
+            elif e.errno == 13:
+                LOGGER.error("Permission denied when accessing template file: %s", filename)
+                sys.exit(1)
+        except (ParserError, ScannerError) as err:
+            if vars(args[0])['ignore_bad_template']:
                 LOGGER.info('Template %s is maflormed: %s', filename, err)
             else:
                 LOGGER.error('Template %s is maflormed: %s', filename, err)
@@ -86,9 +105,7 @@ def main():
         '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
         help="only check rules whose id do not match these values"
     )
-    parser.add_argument(
-        '--log-level', help='Log Level', choices=['info', 'debug']
-    )
+
     parser.add_argument(
         '--version', help='Version of cfn-lint', action='version',
         version='%(prog)s {version}'.format(version=__version__)
@@ -109,18 +126,6 @@ def main():
             formatter = formatters.ParseableFormatter()
     else:
         formatter = formatters.Formatter()
-
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    if vars(args)['log_level'] == 'info':
-        LOGGER.setLevel(logging.INFO)
-    elif vars(args)['log_level'] == 'debug':
-        LOGGER.setLevel(logging.DEBUG)
-    else:
-        LOGGER.setLevel(logging.ERROR)
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(log_formatter)
-    LOGGER.addHandler(ch)
 
     if vars(args)['update_specs']:
         cfnlint.helpers.update_resource_specs()
