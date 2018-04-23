@@ -60,7 +60,7 @@ class TestTemplate(BaseTestCase):
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn, []))
-        assert(len(matches) == 24)
+        assert(len(matches) == 25)
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""

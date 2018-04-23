@@ -80,9 +80,9 @@ def main():
                 sys.exit(1)
         except (ParserError, ScannerError) as err:
             if vars(args[0])['ignore_bad_template']:
-                LOGGER.info('Template %s is maflormed: %s', filename, err)
+                LOGGER.info('Template %s is malformed: %s', filename, err)
             else:
-                LOGGER.error('Template %s is maflormed: %s', filename, err)
+                LOGGER.error('Template %s is malformed: %s', filename, err)
                 sys.exit(1)
 
     parser.add_argument(

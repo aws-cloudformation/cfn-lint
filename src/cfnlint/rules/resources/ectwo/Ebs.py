@@ -74,11 +74,6 @@ class Ebs(CloudFormationLintRule):
                                     RuleMatch(
                                         pathmessage,
                                         message.format(volume_type, '/'.join(map(str, pathmessage)))))
-        else:
-            pathmessage = path[:]
-            message = "Ebs should be a type dict for {0}"
-            matches.append(
-                RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
 
         return matches
 

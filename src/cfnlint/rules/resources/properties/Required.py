@@ -52,7 +52,9 @@ class Required(CloudFormationLintRule):
                 resourcetype = str.format("{0}.{1}", parenttype, proptype)
 
         resourcespec = specs[resourcetype]['Properties']
-
+        if not isinstance(text, dict):
+            # Covered with Properties not with Required
+            return matches
         for prop in resourcespec:
             if resourcespec[prop]['Required']:
                 if prop not in text:
