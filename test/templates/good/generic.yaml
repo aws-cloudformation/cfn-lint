@@ -98,7 +98,14 @@ Resources:
             DeleteOnTermination: false
             VolumeSize: 20
       NetworkInterfaces:
-        - DeviceIndex: "1"
+      -
+        DeviceIndex: "1"
+        PrivateIpAddresses:
+        -
+          PrivateIpAddress: 1.1.1.1
+          Primary: true
+        - PrivateIpAddress: 1.1.1.2
+          Primary: false
       UserData:
         Fn::Sub:
         - "yum install ${myPackage}"
