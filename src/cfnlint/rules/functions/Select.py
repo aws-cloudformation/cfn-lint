@@ -58,9 +58,12 @@ class Select(CloudFormationLintRule):
                                     matches.append(RuleMatch(
                                         tree, message.format('/'.join(map(str, tree)))))
                     elif not isinstance(index_obj, six.integer_types):
-                        message = "Select index should be int, Ref, FindInMap for {0}"
-                        matches.append(RuleMatch(
-                            tree, message.format('/'.join(map(str, tree)))))
+                        try:
+                            int(index_obj)
+                        except ValueError:
+                            message = "Select index should be int, Ref, FindInMap for {0}"
+                            matches.append(RuleMatch(
+                                tree, message.format('/'.join(map(str, tree)))))
                     if isinstance(list_of_objs, dict):
                         if len(list_of_objs) == 1:
                             for key, _ in list_of_objs.items():

@@ -49,7 +49,7 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc": {
                 "filename": 'templates/quickstart/vpc.json',
-                "failures": 12
+                "failures": 1
             }
         }
 
@@ -63,6 +63,8 @@ class TestCfnJson(BaseTestCase):
 
             matches = list()
             matches.extend(self.rules.run(filename, cfn, []))
+            print(filename)
+            print(len(matches))
             assert(len(matches) == failures)
 
     def test_fail_run(self):
