@@ -33,47 +33,45 @@ class Properties(CloudFormationLintRule):
         self.propertytypes = {}
         self.parameternames = {}
 
-    def primitivetypecheck(self, text, prop, primtype, proppath):
+    def primitivetypecheck(self, value, primtype, proppath):
         """Check primitive types"""
         matches = list()
-        if isinstance(text[prop], dict) and primtype != 'Json':
-            if len(text[prop]) == 1:
-                for sub_key, sub_value in text[prop].items():
+        if isinstance(value, dict) and primtype == 'Json':
+            return matches
+        elif isinstance(value, dict):
+            if len(value) == 1:
+                for sub_key, sub_value in value.items():
                     if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                         cond_values = self.cfn.get_condition_values(sub_value)
                         for cond_value in cond_values:
-                            sub_dict = {}
-                            sub_dict[prop] = cond_value['Value']
                             matches.extend(self.primitivetypecheck(
-                                sub_dict, prop, primtype, proppath + cond_value['Path']))
+                                cond_value['Value'], primtype, proppath + cond_value['Path']))
                     elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
                                          'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
                                          'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']:
                         message = "Property %s has an illegal function %s" % ('/'.join(map(str, proppath)), sub_key)
                         matches.append(RuleMatch(proppath, message))
-
-            # LOGGER.info("Probably a ref or getatt")
-        elif isinstance(text[prop], str):
+        elif isinstance(value, str):
             if primtype in ['Integer', 'Double']:
                 try:
-                    int(text[prop])
+                    int(value)
                 except ValueError:
                     # LOGGER.error("Tried to convert %s to int. %s",
                     #             text[prop], Exception)
                     message = "Property %s should be of type Int/Boolean" % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))
             elif primtype == "Boolean":
-                if text[prop] not in ['true', 'false', 'True', 'False']:
+                if value not in ['true', 'false', 'True', 'False']:
                     message = "Property %s should be of type Boolean" % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))
             elif primtype != "String":
                 message = "Property %s should be of type String" % ('/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
-        elif isinstance(text[prop], bool):
+        elif isinstance(value, bool):
             if primtype != "Boolean" and primtype != "String":
                 message = "Property %s should be of type %s" % ('/'.join(map(str, proppath)), primtype)
                 matches.append(RuleMatch(proppath, message))
-        elif isinstance(text[prop], int):
+        elif isinstance(value, int):
             if primtype in ["String", "Double"]:
                 pass
                 # LOGGER.info("%s is an int but should be %s for resource %s",
@@ -81,6 +79,9 @@ class Properties(CloudFormationLintRule):
             elif primtype != "Integer":
                 message = "Property %s should be of type Integer" % ('/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
+        elif isinstance(value, list):
+            message = "Property should be of type %s not List at %s" % (primtype, '/'.join(map(str, proppath)))
+            matches.append(RuleMatch(proppath, message))
 
         return matches
 
@@ -105,6 +106,12 @@ class Properties(CloudFormationLintRule):
                 resourcetype = str.format("{0}.{1}", parenttype, proptype)
 
         resourcespec = specs[resourcetype].get('Properties', {})
+        if text == 'AWS::NoValue':
+            return matches
+        if not isinstance(text, dict):
+            message = "Expecting an object at %s" % ('/'.join(map(str, path)))
+            matches.append(RuleMatch(path, message))
+            return matches
         for prop in text:
             proppath = path[:]
             proppath.append(prop)
@@ -141,7 +148,7 @@ class Properties(CloudFormationLintRule):
                                 for index, item in enumerate(text[prop]):
                                     arrproppath = proppath[:]
                                     arrproppath.append(index)
-                                    matches.extend(self.primitivetypecheck(text, prop, primtype, arrproppath))
+                                    matches.extend(self.primitivetypecheck(item, primtype, arrproppath))
                             elif isinstance(text[prop], dict):
                                 if 'Ref' in text[prop]:
                                     ref = text[prop]['Ref']
@@ -172,7 +179,7 @@ class Properties(CloudFormationLintRule):
                                 resourcename, proppath, False))
                 elif 'PrimitiveType' in resourcespec[prop]:
                     primtype = resourcespec[prop]['PrimitiveType']
-                    matches.extend(self.primitivetypecheck(text, prop, primtype, proppath))
+                    matches.extend(self.primitivetypecheck(text[prop], primtype, proppath))
 
         return matches
 
