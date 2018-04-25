@@ -33,7 +33,7 @@ class Subnet(CloudFormationLintRule):
         """Check AZ Values"""
         matches = list()
 
-        message = "Don't harcode {0} for AvailabilityZones at {1}"
+        message = "Don't hardcode {0} for AvailabilityZones at {1}"
         matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
         return matches
 
