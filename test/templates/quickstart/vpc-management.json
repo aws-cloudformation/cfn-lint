@@ -1,0 +1,1088 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Provides networking configuration for a standard management VPC",
+	"Metadata": {
+		"AWS::CloudFormation::Interface": {
+			"ParameterGroups": [{
+				"Label": {
+					"default": "Region Config"
+				},
+				"Parameters": ["pRegionAZ1Name", "pRegionAZ2Name"]
+			}, {
+				"Label": {
+					"default": "Management VPC Configuration"
+				},
+				"Parameters": ["pManagementVPCName", "pManagementCIDR", "pManagementDMZSubnetACIDR", "pManagementDMZSubnetBCIDR"]
+			}, {
+				"Label": {
+					"default": "Deep Security Configuration"
+				},
+				"Parameters": ["pDeepSecurityAdminUserName", "pDeepSecurityAdminPass"]
+			}],
+			"ParameterLabels": {
+				"pManagementVPCName": {
+					"default": "Name of Management VPC to create"
+				},
+				"pManagementCIDR": {
+					"default": "CIDR block of Management VPC"
+				},
+				"pManagementDMZSubnetACIDR": {
+					"default": "CIDR block of Management DMZ SubnetA"
+				},
+				"pManagementDMZSubnetBCIDR": {
+					"default": "CIDR block of Management DMZ SubnetB"
+				},
+				"pDeepSecurityAdminUserName": {
+					"default": "Username for Deep Security Manager Web Console Administrator"
+				},
+				"pDeepSecurityAdminPass": {
+					"default": "Password for Deep Security Manager Admin user"
+				}
+			}
+		},
+		"Stack": {
+			"Value": "2"
+		},
+		"VersionDate": {
+			"Value": "20160615"
+		},
+		"Identifier": {
+			"Value": "template-vpc-management"
+		},
+		"Input": {
+			"Description": "CIDR blocks, VPC names, KeyName, EC2 instance size"
+		},
+		"Output": {
+			"Description": "Outputs ID of all deployed resources"
+		}
+	},
+	"Parameters": {
+		"pProductionVPC": {
+			"Description": "Production VPC to peer with (optional)",
+			"Type": "String",
+			"Default": ""
+		},
+		"pProductionCIDR": {
+			"Description": "CIDR of Production VPC",
+			"Type": "String",
+			"Default": ""
+		},
+		"pRouteTableProdPrivate": {
+			"Description": "Route Table ID for Prod VPC Private",
+			"Type": "String",
+			"Default": ""
+		},
+		"pRouteTableProdPublic": {
+			"Description": "Route Table ID for Prod VPC Public",
+			"Type": "String",
+			"Default": ""
+		},
+		"pRegionAZ1Name": {
+			"Description": "Availability Zone 1 Name in Region",
+			"Type": "String",
+			"Default": "us-east-1b"
+		},
+		"pRegionAZ2Name": {
+			"Description": "Availability Zone 2 Name in Region",
+			"Type": "String",
+			"Default": "us-west-1c"
+		},
+		"pEC2KeyPairBastion": {
+			"Description": "Name of existing EC2 key pair for BASTION hosts",
+			"Type": "String",
+			"Default": ""
+		},
+		"pBastionInstanceType": {
+			"Description": "Bastion EC2 instance type",
+			"Type": "String",
+			"Default": "m3.large"
+		},
+		"pManagementVPCName": {
+			"Description": "Management VPC Name",
+			"Type": "String",
+			"Default": "Management VPC"
+		},
+		"pManagementCIDR": {
+			"Description": "CIDR block for Management VPC",
+			"Type": "String",
+			"Default": "10.10.0.0/16"
+		},
+		"pManagementDMZSubnetACIDR": {
+			"Description": "CIDR block for Management AZ-1a subnet",
+			"Type": "String",
+			"Default": "10.10.10.0/24"
+		},
+		"pManagementDMZSubnetBCIDR": {
+			"Description": "CIDR block for Management AZ-1b subnet",
+			"Type": "String",
+			"Default": "10.10.20.0/24"
+		},
+		"pManagementPrivateSubnetACIDR": {
+			"Description": "CIDR block for Management AZ-1a subnet",
+			"Type": "String",
+			"Default": "10.10.10.0/24"
+		},
+		"pManagementPrivateSubnetBCIDR": {
+			"Description": "CIDR block for Management AZ-1b subnet",
+			"Type": "String",
+			"Default": "10.10.20.0/24"
+		},
+		"pBastionSSHCIDR": {
+			"Type": "String",
+			"Default": "0.0.0.0/0"
+		},
+		"pBastionAmi": {
+			"Description": "AMI to use for bastion host",
+			"Type": "String",
+			"Default": ""
+		},
+		"pEC2KeyPair": {
+			"Description": "Name of existing EC2 key pair for production hosts",
+			"Type": "String",
+			"Default": ""
+		},
+		"pEnvironment": {
+			"Description": "Environment (development, test, or production)",
+			"Type": "String",
+			"Default": "development"
+		},
+		"pSupportsNatGateway": {
+			"Description": "Specifies whether this region supports NAT Gateway (this value is determined by the main stack if it is invoked from there)",
+			"Type": "String",
+			"Default": "true"
+		},
+		"pTemplateUrlPrefix": {
+			"Description": "URL prefix used to call the NAT instance template (this value is determined by the main stack if it is invoked from there)",
+			"Type": "String",
+			"Default": ""
+		},
+		"pNatInstanceType": {
+			"Description": "Instance type to use for the NAT intstance if the region does not support NAT Gateway (this value is determined by the main stack if it is invoked from there)",
+			"Type": "String",
+			"Default": ""
+		},
+		"pNatAmi": {
+			"Description": "AMI to use for the NAT intstance if the region does not support NAT Gateway (this value is determined by the main stack if it is invoked from there)",
+			"Type": "String",
+			"Default": ""
+		},
+		"pDeepSecurityAdminUserName": {
+			"NoEcho": false,
+			"Description": "The Deep Security Manager administrator username for Web Console Access.",
+			"Type": "String",
+			"MinLength": 1,
+			"MaxLength": 16,
+			"AllowedPattern": "[a-zA-Z][a-zA-Z0-9]*",
+			"ConstraintDescription": "Must begin with a letter and contain only alphanumeric characters. Min length 1, max length 16"
+		},
+		"pDeepSecurityAdminPass": {
+			"NoEcho": true,
+			"Description": "The Deep Security Manager administrator password. Must be 8-41 characters long and can only contain alphanumeric characters or the following special characters !^*-_+",
+			"Type": "String",
+			"MinLength": 8,
+			"MaxLength": 41,
+			"AllowedPattern": "[a-zA-Z0-9!^*\\-_+]*",
+			"ConstraintDescription": "Can only contain alphanumeric characters or the following special characters !^*-_+ Min length 8, max length 41"
+		}
+	},
+	"Conditions": {
+		"cCreatePeeringProduction": {
+			"Fn::Not": [{
+				"Fn::Equals": [{
+						"Ref": "pProductionVPC"
+					},
+					""
+				]
+			}]
+		},
+		"cNeedNatInstance": {
+			"Fn::Equals": [{
+				"Ref": "pSupportsNatGateway"
+			}, "false"]
+		},
+		"cSupportsNatGateway": {
+			"Fn::Equals": [{
+				"Ref": "pSupportsNatGateway"
+			}, "true"]
+		},
+		"cRegionIsUsGovWest1": {
+			"Fn::Equals": [{
+				"Ref": "AWS::Region"
+			}, "us-gov-west-1"]
+		}
+	},
+	"Mappings": {
+		"Parameters": {
+			"CfnUrlPrefix": {
+				"CommericalPrefix": "https://s3.amazonaws.com/trend-micro-quick-start/NIST/",
+				"GovCloudPrefix": "https://s3-us-gov-west-1.amazonaws.com/trend-micro-quick-start/NIST/"
+			}
+		},
+		"RDSInstanceSize": {
+			"us-east-1": {
+				"1": "db.m4.large"
+			},
+			"us-west-1": {
+				"1": "db.m4.large"
+			},
+			"us-west-2": {
+				"1": "db.m4.large"
+			},
+			"eu-west-1": {
+				"1": "db.m4.large"
+			},
+			"eu-central-1": {
+				"1": "db.m4.large"
+			},
+			"sa-east-1": {
+				"1": "db.m3.large"
+			},
+			"ap-northeast-1": {
+				"1": "db.m4.large"
+			},
+			"ap-southeast-1": {
+				"1": "db.m4.large"
+			},
+			"ap-southeast-2": {
+				"1": "db.m3.large"
+			},
+			"ap-northeast-2": {
+				"1": "db.m4.large"
+			},
+			"us-gov-west-1": {
+				"1": "db.m3.large"
+ 			}
+		},
+		"DSMSIZE": {
+			"us-east-1": {
+				"1": "m3.large"
+			},
+			"us-west-1": {
+				"1": "m3.large"
+			},
+			"us-west-2": {
+				"1": "m3.large"
+			},
+			"eu-west-1": {
+				"1": "m3.large"
+			},
+			"eu-central-1": {
+				"1": "m3.large"
+			},
+			"sa-east-1": {
+				"1": "m3.large"
+			},
+			"ap-northeast-1": {
+				"1": "m3.large"
+			},
+			"ap-southeast-1": {
+				"1": "m3.large"
+			},
+			"ap-southeast-2": {
+				"1": "m3.large"
+			},
+			"ap-northeast-2": {
+				"1": "m4.large"
+			},
+			"us-gov-west-1": {
+				"1": "m3.large"
+			}
+		},
+		"RDSMultiAZ": {
+			"us-east-1": {
+				"Oracle": "true",
+				"MSSQL": "true"
+			},
+			"us-west-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"us-west-2": {
+				"Oracle": "true",
+				"MSSQL": "true"
+			},
+			"eu-west-1": {
+				"Oracle": "true",
+				"MSSQL": "true"
+			},
+			"eu-central-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"sa-east-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"ap-northeast-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"ap-southeast-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"ap-southeast-2": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"ap-northeast-2": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			},
+			"us-gov-west-1": {
+				"Oracle": "true",
+				"MSSQL": "false"
+			}
+		}
+	},
+	"Resources": {
+		"rVPCManagement": {
+			"Type": "AWS::EC2::VPC",
+			"Properties": {
+				"CidrBlock": {
+					"Ref": "pManagementCIDR"
+				},
+				"InstanceTenancy": "default",
+				"EnableDnsSupport": "true",
+				"EnableDnsHostnames": "true",
+				"Tags": [{
+					"Key": "Name",
+					"Value": {
+						"Ref": "pManagementVPCName"
+					}
+				}]
+			}
+		},
+		"rIGWManagement": {
+			"Type": "AWS::EC2::InternetGateway",
+			"Properties": {
+				"Tags": [{
+					"Key": "Name",
+					"Value": "igw-management"
+				}]
+			}
+		},
+		"rGWAttachmentMgmtIGW": {
+			"Type": "AWS::EC2::VPCGatewayAttachment",
+			"DependsOn" : "rIGWManagement",
+			"Properties": {
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"InternetGatewayId": {
+					"Ref": "rIGWManagement"
+				}
+			}
+		},
+		"rNatInstanceTemplate": {
+			"Type": "AWS::CloudFormation::Stack",
+			"Condition": "cNeedNatInstance",
+			"Properties": {
+				"TemplateURL": {
+					"Fn::Join": ["", [{
+						"Ref": "pTemplateUrlPrefix"
+					}, "templates/template-nat-instance.json"]]
+				},
+				"TimeoutInMinutes": "20",
+				"Parameters": {
+					"pDMZSubnetA": {
+						"Ref": "rManagementDMZSubnetA"
+					},
+					"pSecurityGroupSSHFromVpc": {
+						"Ref": "rSecurityGroupSSHFromMgmt"
+					},
+					"pSecurityGroupVpcNat": {
+						"Ref": "rSecurityGroupVpcNat"
+					},
+					"pNatInstanceType": {
+						"Ref": "pNatInstanceType"
+					},
+					"pNatAmi": {
+						"Ref": "pNatAmi"
+					},
+					"pEC2KeyPair": {
+						"Ref": "pEC2KeyPair"
+					},
+					"pVpcId": {
+						"Ref": "rVPCManagement"
+					},
+					"pVpcName": {
+						"Ref": "pManagementVPCName"
+					},
+					"pRouteTablePrivate": {
+						"Ref": "rRouteTableMgmtPrivate"
+					}
+				}
+			}
+		},
+		"rSecurityGroupPeered": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Allow ingress into peered security groups",
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"SecurityGroupIngress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "22",
+					"ToPort": "22",
+					"CidrIp": "0.0.0.0/0"
+				}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "sg-peered-ingress"
+				}]
+			}
+		},
+		"rSecurityGroupVpcNat": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Allow NAT from Management VPC",
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"SecurityGroupIngress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "80",
+					"ToPort": "80",
+					"CidrIp": {
+						"Ref": "pManagementCIDR"
+					}
+				}, {
+					"IpProtocol": "tcp",
+					"FromPort": "443",
+					"ToPort": "443",
+					"CidrIp": {
+						"Ref": "pManagementCIDR"
+					}
+				}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "sg-web-access-ports-from-production"
+				}]
+			}
+		},
+		"rManagementDMZSubnetA": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"CidrBlock": {
+					"Ref": "pManagementDMZSubnetACIDR"
+				},
+				"AvailabilityZone": {
+					"Ref": "pRegionAZ1Name"
+				},
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Management DMZ Subnet A"
+				}]
+			}
+		},
+		"rManagementDMZSubnetB": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"CidrBlock": {
+					"Ref": "pManagementDMZSubnetBCIDR"
+				},
+				"AvailabilityZone": {
+					"Ref": "pRegionAZ2Name"
+				},
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Management DMZ Subnet B"
+				}]
+			}
+		},
+		"rManagementPrivateSubnetA": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"CidrBlock": {
+					"Ref": "pManagementPrivateSubnetACIDR"
+				},
+				"AvailabilityZone": {
+					"Ref": "pRegionAZ1Name"
+				},
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Management Private Subnet A"
+				}]
+			}
+		},
+		"rManagementPrivateSubnetB": {
+			"Type": "AWS::EC2::Subnet",
+			"Properties": {
+				"CidrBlock": {
+					"Ref": "pManagementPrivateSubnetBCIDR"
+				},
+				"AvailabilityZone": {
+					"Ref": "pRegionAZ2Name"
+				},
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Management Private Subnet B"
+				}]
+			}
+		},
+
+		"rDHCPoptions": {
+			"Type": "AWS::EC2::DHCPOptions",
+			"Properties": {
+				"DomainName": {
+					"Fn::Join": ["", [{
+						"Ref": "AWS::Region"
+					}, ".compute.internal"]]
+				},
+				"DomainNameServers": [
+					"AmazonProvidedDNS"
+				],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "dhcp-internal-dns"
+				}]
+			}
+		},
+		"rRouteTableMgmtPrivate": {
+			"Type": "AWS::EC2::RouteTable",
+			"Properties": {
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "rt-management-vpc-private"
+				}]
+			}
+		},
+		"rRouteTableMgmtDMZ": {
+			"Type": "AWS::EC2::RouteTable",
+			"Properties": {
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "rt-management-vpc-dmz"
+				}]
+			}
+		},
+		"rRouteMgmtIGW": {
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtDMZ"
+				},
+				"GatewayId": {
+					"Ref": "rIGWManagement"
+				},
+				"DestinationCidrBlock": "0.0.0.0/0"
+			}
+		},
+		"rRouteAssocMgmtDMZA": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtDMZ"
+				},
+				"SubnetId": {
+					"Ref": "rManagementDMZSubnetA"
+				}
+			}
+		},
+		"rrRouteAssocMgmtDMZB": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtDMZ"
+				},
+				"SubnetId": {
+					"Ref": "rManagementDMZSubnetB"
+				}
+			}
+		},
+		"rRouteAssocMgmtPrivA": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtPrivate"
+				},
+				"SubnetId": {
+					"Ref": "rManagementPrivateSubnetA"
+				}
+			}
+		},
+		"rRouteAssocMgmtPrivB": {
+			"Type": "AWS::EC2::SubnetRouteTableAssociation",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtPrivate"
+				},
+				"SubnetId": {
+					"Ref": "rManagementPrivateSubnetB"
+				}
+			}
+		},
+		"rENIProductionBastion": {
+			"Type": "AWS::EC2::NetworkInterface",
+			"DependsOn": "rGWAttachmentMgmtIGW",
+			"Properties": {
+				"SubnetId": {
+					"Ref": "rManagementDMZSubnetA"
+				},
+				"GroupSet": [{
+					"Ref": "rSecurityGroupBastion"
+				}],
+				"Description": "Interface for Bastion device",
+				"Tags": [{
+					"Key": "Network",
+					"Value": "MgmtBastionDevice"
+				}]
+			}
+		},
+		"rMgmtBastionInstance": {
+			"Type": "AWS::EC2::Instance",
+			"DependsOn": ["rDeepSecurityInfrastructureTemplate", "rGWAttachmentMgmtIGW"],
+			"Properties": {
+				"InstanceType": {
+					"Ref": "pBastionInstanceType"
+				},
+				"KeyName": {
+					"Ref": "pEC2KeyPairBastion"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "Bastion Server"
+				}],
+				"ImageId": {
+					"Ref": "pBastionAmi"
+				},
+				"NetworkInterfaces": [{
+					"NetworkInterfaceId": {
+						"Ref": "rENIProductionBastion"
+					},
+					"DeviceIndex": "0"
+				}],
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": ["", [
+							"#!/bin/bash\n",
+
+							"yum update -y aws-cfn-bootstrap\n",
+							"/opt/aws/bin/cfn-init -v ",
+							"         --stack ", {
+								"Ref": "AWS::StackName"
+							},
+							"         --resource rMgmtBastionInstance",
+							"         --region ", {
+								"Ref": "AWS::Region"
+							}, "\n"
+						]]
+					}
+				}
+			},
+			"Metadata": {
+				"AWS::CloudFormation::Init": {
+					"configSets": {
+						"default": [
+							"installDeepSecurityAgent"
+						]
+					},
+					"installDeepSecurityAgent": {
+						"commands": {
+							"0-download-DSA": {
+								"command": {
+									"Fn::Join": [
+										"", [
+											"curl -k ", {
+												"Fn::GetAtt": ["rDeepSecurityInfrastructureTemplate", "Outputs.DeepSecurityAgentDownload"]
+											},
+											"software/agent/amzn1/x86_64/ -o /tmp/agent.rpm"
+										]
+									]
+								}
+							},
+							"1-install-DSA": {
+								"command": "rpm -ivh /tmp/agent.rpm"
+							},
+							"2-sleep-for-rpm-install": {
+								"command": "sleep 10"
+							},
+							"3-activate-DSA": {
+								"command": {
+									"Fn::Join": [
+										"", [
+											"/opt/ds_agent/dsa_control -a ", {
+												"Fn::GetAtt": ["rDeepSecurityInfrastructureTemplate", "Outputs.DeepSecurityHeartbeat"]
+											},
+											" \"policy:Linux Server\""
+										]
+									]
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"rEIPProdBastion": {
+			"Type": "AWS::EC2::EIP",
+			"DependsOn" : "rGWAttachmentMgmtIGW",
+			"Properties": {
+				"Domain": "vpc"
+			}
+		},
+		"AssociaterEIPProdBastion": {
+			"Type": "AWS::EC2::EIPAssociation",
+			"DependsOn" : "rGWAttachmentMgmtIGW",
+			"Properties": {
+				"AllocationId": {
+					"Fn::GetAtt": [
+						"rEIPProdBastion",
+						"AllocationId"
+					]
+				},
+				"NetworkInterfaceId": {
+					"Ref": "rENIProductionBastion"
+				}
+			}
+		},
+		"rSecurityGroupSSHFromMgmt": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Enable SSH access via port 22",
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"SecurityGroupIngress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "22",
+					"ToPort": "22",
+					"CidrIp": {
+						"Ref": "pManagementCIDR"
+					}
+				}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "sg-ssh-access-from-management"
+				}]
+			}
+		},
+		"rEIPProdNAT": {
+			"Type": "AWS::EC2::EIP",
+			"DependsOn" : "rGWAttachmentMgmtIGW",
+			"Condition": "cSupportsNatGateway",
+			"Properties": {
+				"Domain": "vpc"
+			}
+		},
+		"rNATGateway": {
+			"Type": "AWS::EC2::NatGateway",
+			"Condition": "cSupportsNatGateway",
+			"DependsOn": "rIGWManagement",
+			"Properties": {
+				"AllocationId": {
+					"Fn::GetAtt": ["rEIPProdNAT", "AllocationId"]
+				},
+				"SubnetId": {
+					"Ref": "rManagementDMZSubnetA"
+				}
+			}
+		},
+		"rENIProductionBastion": {
+			"Type": "AWS::EC2::NetworkInterface",
+			"DependsOn" : "rGWAttachmentMgmtIGW",
+			"Properties": {
+				"SubnetId": {
+					"Ref": "rManagementDMZSubnetA"
+				},
+				"GroupSet": [{
+					"Ref": "rSecurityGroupBastion"
+				}],
+				"Description": "Interface for Bastion device",
+				"Tags": [{
+					"Key": "Network",
+					"Value": "ProductionBastionDevice"
+				}]
+			}
+		},
+		"rSecurityGroupBastion": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "SG for Bastion Instances",
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"SecurityGroupIngress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "22",
+					"ToPort": "22",
+					"CidrIp": {
+						"Ref": "pBastionSSHCIDR"
+					}
+				}],
+				"SecurityGroupEgress": [{
+					"IpProtocol": "tcp",
+					"FromPort": "1",
+					"ToPort": "65535",
+					"CidrIp": "0.0.0.0/0"
+				}],
+				"Tags": [{
+					"Key": "Name",
+					"Value": "sg-ssh-access-from-bastion"
+				}]
+			}
+		},
+		"rDHCPOptionsAssocMgmt": {
+			"Type": "AWS::EC2::VPCDHCPOptionsAssociation",
+			"Properties": {
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"DhcpOptionsId": {
+					"Ref": "rDHCPoptions"
+				}
+			}
+		},
+		"rPeeringConnectionProduction": {
+			"Type": "AWS::EC2::VPCPeeringConnection",
+			"Condition": "cCreatePeeringProduction",
+			"Properties": {
+				"PeerVpcId": {
+					"Ref": "pProductionVPC"
+				},
+				"VpcId": {
+					"Ref": "rVPCManagement"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": "vpc-peer-production-management"
+				}]
+			}
+		},
+		"rRouteMgmtProdPrivate": {
+			"Condition": "cCreatePeeringProduction",
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtPrivate"
+				},
+				"VpcPeeringConnectionId": {
+					"Ref": "rPeeringConnectionProduction"
+				},
+				"DestinationCidrBlock": {
+					"Ref": "pProductionCIDR"
+				}
+			}
+		},
+		"rRouteProdMgmt": {
+			"Condition": "cCreatePeeringProduction",
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "pRouteTableProdPrivate"
+				},
+				"VpcPeeringConnectionId": {
+					"Ref": "rPeeringConnectionProduction"
+				},
+				"DestinationCidrBlock": {
+					"Ref": "pManagementCIDR"
+				}
+			}
+		},
+		"rRouteProdMgmtPublic": {
+			"Condition": "cCreatePeeringProduction",
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "pRouteTableProdPublic"
+				},
+				"VpcPeeringConnectionId": {
+					"Ref": "rPeeringConnectionProduction"
+				},
+				"DestinationCidrBlock": {
+					"Ref": "pManagementCIDR"
+				}
+			}
+		},
+		"rRouteMgmtProdDMZ": {
+			"Condition": "cCreatePeeringProduction",
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"RouteTableId": {
+					"Ref": "rRouteTableMgmtDMZ"
+				},
+				"VpcPeeringConnectionId": {
+					"Ref": "rPeeringConnectionProduction"
+				},
+				"DestinationCidrBlock": {
+					"Ref": "pProductionCIDR"
+				}
+			}
+		},
+		"rDeepSecurityInfrastructureTemplate": {
+			"Type": "AWS::CloudFormation::Stack",
+			"DependsOn": [
+				"rRouteMgmtProdDMZ", "rGWAttachmentMgmtIGW"
+			],
+			"Properties": {
+			   "TemplateURL": {
+				   "Fn::Join": [
+					   "",
+					   [
+						   {"Ref" : "pTemplateUrlPrefix" },
+						   "templates/deepsecurity/RHEL/MasterRH96.template"
+					   ]
+				   ]
+			   },
+				"Parameters": {
+					"AWSIKeyPairName": {
+						"Ref": "pEC2KeyPair"
+					},
+					"AWSIVPC": {
+						"Ref": "rVPCManagement"
+					},
+					"DSISubnetID": {
+						"Ref": "rManagementDMZSubnetA"
+					},
+					"DBIRDSInstanceSize": {
+						"Fn::FindInMap": [
+							"RDSInstanceSize", {
+								"Ref": "AWS::Region"
+							},
+							"1"
+						]
+					},
+					"DBIStorageAllocation": "200",
+					"DBPBackupDays": "5",
+					"DBPCreateDbInstance": "Yes",
+					"DBICAdminName": "dsmadmin",
+					"DBICAdminPassword": {
+						"Ref": "pDeepSecurityAdminPass"
+					},
+					"DBPEngine": "SQL",
+					"DBPEndpoint": "",
+					"DBPName": "dsm",
+					"DSCAdminName": {
+						"Ref": "pDeepSecurityAdminUserName"
+					},
+					"DSCAdminPassword": {
+						"Ref": "pDeepSecurityAdminPass"
+					},
+					"DSIMultiNode": "2",
+					"DSIPLicenseKey": "DX-82B9-VRK9C-RWY98-XS4JZ-F6523-H8C5G",
+					"DSIPHeartbeatPort": "4120",
+					"DSIPGUIPort": "443",
+					"DSIPInstanceType": {
+						"Fn::FindInMap": [
+							"DSMSIZE", {
+								"Ref": "AWS::Region"
+							},
+							"1"
+						]
+					},
+					"DBISubnet1": {
+						"Ref": "rManagementPrivateSubnetA"
+					},
+					"DBISubnet2": {
+						"Ref": "rManagementPrivateSubnetB"
+					},
+					"DBIInstanceIdentifier": "deep-security",
+					"DBPMultiAZ": {
+						"Fn::FindInMap": [
+							"RDSMultiAZ", {
+								"Ref": "AWS::Region"
+							},
+							"MSSQL"
+						]
+					},
+					"CfnUrlPrefix": {
+						"Fn::Join": [
+							"",
+							[
+								{"Ref" : "pTemplateUrlPrefix" },
+								"templates/deepsecurity/"
+							]
+						]
+					},
+					"DSELBPosture": "Internal"
+				}
+			}
+		}
+	},
+	"Outputs": {
+		"rVPCManagement": {
+			"Value": {
+				"Ref": "rVPCManagement"
+			}
+		},
+		"rBastionInstanceIP": {
+			"Value": {
+				"Fn::GetAtt": ["rMgmtBastionInstance", "PublicIp"]
+			}
+		},
+		"rManagementDMZSubnetA": {
+			"Value": {
+				"Ref": "rManagementDMZSubnetA"
+			}
+		},
+		"rManagementDMZSubnetB": {
+			"Value": {
+				"Ref": "rManagementDMZSubnetB"
+			}
+		},
+		"rManagementPrivateSubnetA": {
+			"Value": {
+				"Ref": "rManagementPrivateSubnetA"
+			}
+		},
+		"rManagementPrivateSubnetB": {
+			"Value": {
+				"Ref": "rManagementPrivateSubnetB"
+			}
+		},
+		"rRouteTableMgmtPrivate": {
+			"Value": {
+				"Ref": "rRouteTableMgmtPrivate"
+			}
+		},
+		"rSecurityGroupVpcNat": {
+			"Value": {
+				"Ref": "rSecurityGroupVpcNat"
+			}
+		},
+		"rDeepSecurityConsole": {
+			"Value": {
+				"Fn::GetAtt": [
+					"rDeepSecurityInfrastructureTemplate",
+					"Outputs.DeepSecurityConsole"
+				]
+			}
+		},
+		"rDeepSecurityAgentDownload": {
+			"Value": {
+				"Fn::GetAtt": [
+					"rDeepSecurityInfrastructureTemplate",
+					"Outputs.DeepSecurityAgentDownload"
+				]
+			}
+		},
+		"rDeepSecurityHeartbeat": {
+			"Value": {
+				"Fn::GetAtt": [
+					"rDeepSecurityInfrastructureTemplate",
+					"Outputs.DeepSecurityHeartbeat"
+				]
+			}
+		}
+	}
+}

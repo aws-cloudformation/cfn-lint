@@ -1,0 +1,330 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Sets up AWS Config Rules",
+	"Metadata": {
+		"Stack": {
+			"Value": "0"
+		},
+		"VersionDate": {
+			"Value": "04012016"
+		},
+		"Identifier": {
+			"Value": "template-config-rules"
+		},
+		"Input": {
+			"Description": "optional tag key"
+		},
+		"Output": {
+			"Description": "Outputs ID of all deployed resources"
+		},
+		"RegionSupport": {
+			"Value": "NOTGOVCLOUD"
+		}
+	},
+	"Parameters": {
+		"pRequiredTagKey": {
+			"Description": "Tag key to check for with EC2/EBS REQUIRED_TAGS rule (optional, leave blank to ignore)",
+			"Type": "String"
+		}
+	},
+	"Conditions": {
+		"cRequiredTagsRule": {
+			"Fn::Not": [{
+				"Fn::Equals": [{
+					"Ref": "pRequiredTagKey"
+				}, ""]
+			}]
+		},
+		"cApprovedAMIsRule": {
+			"Fn::Not": [{
+				"Fn::Equals": ["", ""]
+			}]
+		}
+	},
+	"Resources": {
+		"rConfigRuleForSSH": {
+			"Type": "AWS::Config::ConfigRule",
+			"Properties": {
+				"ConfigRuleName": "check-for-unrestricted-ssh-access",
+				"Description": "Checks whether security groups that are in use disallow unrestricted incoming SSH traffic.",
+				"Scope": {
+					"ComplianceResourceTypes": ["AWS::EC2::SecurityGroup"]
+				},
+				"Source": {
+					"Owner": "AWS",
+					"SourceIdentifier": "INCOMING_SSH_DISABLED"
+				}
+			}
+		},
+		"rConfigRuleForRequiredTags": {
+			"Type": "AWS::Config::ConfigRule",
+			"Condition": "cRequiredTagsRule",
+			"Properties": {
+				"ConfigRuleName": "check-ec2-for-required-tag",
+				"Description": "Checks whether EC2 instances and volumes use the required tag.",
+				"InputParameters": {
+					"tag1Key": {
+						"Ref": "pRequiredTagKey"
+					}
+				},
+				"Scope": {
+					"ComplianceResourceTypes": ["AWS::EC2::Volume", "AWS::EC2::Instance"]
+				},
+				"Source": {
+					"Owner": "AWS",
+					"SourceIdentifier": "REQUIRED_TAGS"
+				}
+			}
+		},
+		"rConfigRuleForUnrestrictedPorts": {
+			"Type": "AWS::Config::ConfigRule",
+			"Condition": "cRequiredTagsRule",
+			"Properties": {
+				"ConfigRuleName": "check-for-unrestricted-ports",
+				"Description": "Checks whether security groups that are in use disallow unrestricted incoming TCP traffic to the specified ports.",
+				"InputParameters": {
+					"blockedPort1": "3389"
+				},
+				"Scope": {
+					"ComplianceResourceTypes": ["AWS::EC2::SecurityGroup"]
+				},
+				"Source": {
+					"Owner": "AWS",
+					"SourceIdentifier": "RESTRICTED_INCOMING_TRAFFIC"
+				}
+			}
+		},
+		"rConfigRulesLambdaRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [{
+						"Effect": "Allow",
+						"Principal": {
+							"Service": ["lambda.amazonaws.com"]
+						},
+						"Action": ["sts:AssumeRole"]
+					}]
+				},
+				"Path": "/"
+			}
+		},
+		"rConfigRulesLambdaPolicy": {
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"PolicyName": "configrules",
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [{
+						"Effect": "Allow",
+						"Action": "*",
+						"Resource": "*"
+					}]
+				},
+				"Roles": [{
+					"Ref": "rConfigRulesLambdaRole"
+				}]
+			}
+		},
+		"rConfigRulesLambdaProfile": {
+			"Type": "AWS::IAM::InstanceProfile",
+			"Properties": {
+				"Path": "/",
+				"Roles": [{
+					"Ref": "rConfigRulesLambdaRole"
+				}]
+			}
+		},
+		"rAMIComplianceFunction": {
+			"Type": "AWS::Lambda::Function",
+			"DependsOn": "rConfigRulesLambdaRole",
+			"Condition": "cApprovedAMIsRule",
+			"Properties": {
+				"Code": {
+					"ZipFile": {
+						"Fn::Join": ["\n", [
+							"var aws = require('aws-sdk');",
+							"var config = new aws.ConfigService();",
+							"// Custom rule for evaluating pre-approved AMI use",
+							"function evaluateCompliance(configurationItem, ruleParameters, context) {",
+							"if(configurationItem.resourceType !== 'AWS::EC2::Instance')",
+							"return 'NOT_APPLICABLE';",
+							"var amiIDs = ruleParameters.amiList.split(',');",
+							"if (amiIDs.indexOf(configurationItem.configuration.imageId) > -1) {",
+							"return 'COMPLIANT';",
+							"}",
+							"else return 'NON_COMPLIANT';",
+							"}",
+							"function isApplicable(configurationItem, event) {",
+							"var status = configurationItem.configurationItemStatus;",
+							"var eventLeftScope = event.eventLeftScope;",
+							"return (status === 'OK' || status === 'ResourceDiscovered') && eventLeftScope === false;",
+							"}",
+							"exports.handler = function(event, context) {",
+							"var invokingEvent = JSON.parse(event.invokingEvent);",
+							"var ruleParameters = JSON.parse(event.ruleParameters);",
+							"var compliance = 'NOT_APPLICABLE';",
+							"if (isApplicable(invokingEvent.configurationItem, event))",
+							"compliance = evaluateCompliance(invokingEvent.configurationItem, ruleParameters, context); // Invoke the compliance checking function.",
+							"var putEvaluationsRequest = {",
+							"Evaluations: [",
+							"{",
+							"ComplianceResourceType: invokingEvent.configurationItem.resourceType,",
+							"ComplianceResourceId: invokingEvent.configurationItem.resourceId,",
+							"ComplianceType: compliance,",
+							"OrderingTimestamp: invokingEvent.configurationItem.configurationItemCaptureTime",
+							"}",
+							"],",
+							"ResultToken: event.resultToken",
+							"};",
+							"config.putEvaluations(putEvaluationsRequest, function (err, data) {",
+							"if (err) {",
+							"context.fail(err);",
+							"} else {",
+							"context.succeed(data);",
+							"}",
+							"});",
+							"};",
+							""
+						]]
+					}
+				},
+				"Handler": "index.handler",
+				"Runtime": "nodejs",
+				"Timeout": "30",
+				"Role": {
+					"Fn::GetAtt": ["rConfigRulesLambdaRole", "Arn"]
+				}
+			}
+		},
+		"rConfigRuleForAMICompliance": {
+			"Type": "AWS::Config::ConfigRule",
+			"Condition": "cApprovedAMIsRule",
+			"Properties": {
+				"ConfigRuleName": "check-for-ami-compliance",
+				"Description": "Checks whether approved AMIs are used.",
+				"Scope": {
+					"ComplianceResourceTypes": ["AWS::EC2::Instance"]
+				},
+				"InputParameters": {
+					"amiList": ""
+				},
+				"Source": {
+					"Owner": "CUSTOM_LAMBDA",
+					"SourceDetails": [{
+						"EventSource": "aws.config",
+						"MessageType": "ConfigurationItemChangeNotification"
+					}],
+					"SourceIdentifier": {
+						"Fn::GetAtt": ["rAMIComplianceFunction", "Arn"]
+					}
+				}
+			},
+			"DependsOn": "rConfigPermissionToCallLambdaAMICompliance"
+		},
+		"rConfigPermissionToCallLambdaAMICompliance": {
+			"Type": "AWS::Lambda::Permission",
+			"Condition": "cApprovedAMIsRule",
+			"Properties": {
+				"FunctionName": {
+					"Fn::GetAtt": ["rAMIComplianceFunction", "Arn"]
+				},
+				"Action": "lambda:InvokeFunction",
+				"Principal": "config.amazonaws.com"
+			}
+		},
+		"rCloudTrailValidationFunction": {
+			"Type": "AWS::Lambda::Function",
+			"DependsOn": "rConfigRulesLambdaRole",
+			"Properties": {
+				"Code": {
+					"ZipFile": {
+						"Fn::Join": ["\n", [
+							"var aws = require('aws-sdk');",
+							"var config = new aws.ConfigService();",
+							"// Custom rule for evaluating CloudTrail configuration compliance",
+							"// 3 config parameters for Trail must be true: Multi-Region, Global Services Events, and Log File Validation",
+							"function evaluateCompliance(configurationItem, ruleParameters, context) {",
+							"if(configurationItem.resourceType !== 'AWS::CloudTrail::Trail')",
+							"return 'NOT_APPLICABLE';",
+							"if((configurationItem.configuration.logFileValidationEnabled) && (configurationItem.configuration.includeGlobalServiceEvents) && (configurationItem.configuration.isMultiRegionTrail)) {",
+							"return 'COMPLIANT';",
+							"}",
+							"else return 'NON_COMPLIANT';",
+							"}",
+							"function isApplicable(configurationItem, event) {",
+							"var status = configurationItem.configurationItemStatus;",
+							"var eventLeftScope = event.eventLeftScope;",
+							"return (status === 'OK' || status === 'ResourceDiscovered') && eventLeftScope === false;",
+							"}",
+							"exports.handler = function(event, context) {",
+							"var invokingEvent = JSON.parse(event.invokingEvent);",
+							"var ruleParameters = JSON.parse(event.ruleParameters);",
+							"var compliance = 'NOT_APPLICABLE';",
+							"if (isApplicable(invokingEvent.configurationItem, event))",
+							"compliance = evaluateCompliance(invokingEvent.configurationItem, ruleParameters, context); // Invoke the compliance checking function.",
+							"var putEvaluationsRequest = {",
+							"Evaluations: [",
+							"{",
+							"ComplianceResourceType: invokingEvent.configurationItem.resourceType,",
+							"ComplianceResourceId: invokingEvent.configurationItem.resourceId,",
+							"ComplianceType: compliance,",
+							"OrderingTimestamp: invokingEvent.configurationItem.configurationItemCaptureTime",
+							"}",
+							"],",
+							"ResultToken: event.resultToken",
+							"};",
+							"config.putEvaluations(putEvaluationsRequest, function (err, data) {",
+							"if (err) {",
+							"context.fail(err);",
+							"} else {",
+							"context.succeed(data);",
+							"}",
+							"});",
+							"};",
+							""
+						]]
+					}
+				},
+				"Handler": "index.handler",
+				"Runtime": "nodejs",
+				"Timeout": "30",
+				"Role": {
+					"Fn::GetAtt": ["rConfigRulesLambdaRole", "Arn"]
+				}
+			}
+		},
+		"rConfigRuleForCloudTrail": {
+			"Type": "AWS::Config::ConfigRule",
+			"Properties": {
+				"ConfigRuleName": "check-whether-cloudtrail-is-enabled",
+				"Description": "Checks whether CloudTrail is enabled in this region.",
+				"Scope": {
+					"ComplianceResourceTypes": ["AWS::EC2::Instance"]
+				},
+				"Source": {
+					"Owner": "CUSTOM_LAMBDA",
+					"SourceDetails": [{
+						"EventSource": "aws.config",
+						"MessageType": "ConfigurationItemChangeNotification"
+					}],
+					"SourceIdentifier": {
+						"Fn::GetAtt": ["rCloudTrailValidationFunction", "Arn"]
+					}
+				}
+			},
+			"DependsOn": "rConfigPermissionToCallLambdaCloudTrail"
+		},
+		"rConfigPermissionToCallLambdaCloudTrail": {
+			"Type": "AWS::Lambda::Permission",
+			"Properties": {
+				"FunctionName": {
+					"Fn::GetAtt": ["rCloudTrailValidationFunction", "Arn"]
+				},
+				"Action": "lambda:InvokeFunction",
+				"Principal": "config.amazonaws.com"
+			}
+		}
+	}
+}
