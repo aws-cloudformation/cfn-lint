@@ -23,6 +23,7 @@ import cfnlint.helpers
 from cfnlint import RulesCollection
 from cfnlint import Match
 import cfnlint.formatters as formatters
+import cfnlint.cfn_json
 from cfnlint.version import __version__
 
 LOGGER = logging.getLogger('cfnlint')
@@ -79,11 +80,17 @@ def main():
                 LOGGER.error("Permission denied when accessing template file: %s", filename)
                 sys.exit(1)
         except (ParserError, ScannerError) as err:
-            if vars(args[0])['ignore_bad_template']:
-                LOGGER.info('Template %s is malformed: %s', filename, err)
-            else:
-                LOGGER.error('Template %s is malformed: %s', filename, err)
-                sys.exit(1)
+            try:
+                template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+            except Exception as json_err:  # pylint: disable=W0703
+                if vars(args[0])['ignore_bad_template']:
+                    LOGGER.info('Template %s is malformed: %s', filename, err)
+                    print(dir(json_err))
+                    LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                else:
+                    LOGGER.error('Template %s is malformed: %s', filename, err)
+                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                    sys.exit(1)
 
     parser.add_argument(
         '--format', help='Output Format', choices=['quiet', 'parseable', 'json']

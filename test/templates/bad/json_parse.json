@@ -1,0 +1,167 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Launches a NAT instance for regions that don't support NAT Gateway",
+	"Metadata": {
+		"Stack" {
+			"Value": "2"
+		},
+		"VersionDate": {
+			"Value": "20160510"
+		},
+		"Identifier": {
+			"Value": "template-nat-instance"
+		},
+		"Input": {
+			"Description": "CIDR blocks, VPC names, KeyName, EC2 instance size"
+		},
+		"Output": {
+			"Description": "Outputs ID of all deployed resources"
+		}
+	},
+	"Parameters": {
+		"pDMZSubnetA": {
+			"Description": "Subnet for the DMZ",
+			"Type": "String",
+			"Default": ""
+		},
+		"pSecurityGroupSSHFromVpc": {
+			"Description": "Enable SSH access via port 22",
+			"Type": "String",
+			"Default": ""
+		},
+		"pSecurityGroupVpcNat": {
+			"Description": "Allow NAT from production",
+			"Type": "String",
+			"Default": ""
+		},
+		"pEC2KeyPair": {
+			"Description": "Key Name for Instance",
+			"Type": "String",
+			"Default": ""
+		},
+		"pNatInstanceType": {
+			"Description": "NAT EC2 instance type",
+			"Type": "String",
+			"Default": "m3.large"
+		},
+		"pNatAmi": {
+			"Description": "AMI to use for the NAT instnace",
+			"Type": "String",
+			"Default": ""
+		},
+		"pVpcName": {
+			"Description": "Name of VPC used for naming resources",
+			"Type": "String",
+			"Default": ""
+		},
+		"pVpcId": {
+			"Description": "ID of VPC used for routing",
+			"Type": "String",
+			"Default": ""
+		},
+		"pRouteTablePrivate": {
+			"Description": "Routing table used for the NAT instance",
+			"Type": "String",
+			"Default": ""
+		}
+	},
+	"Resources": {
+		"rEipNat": {
+			"Type": "AWS::EC2::EIP",
+			"Properties": {
+				"Domain": "vpc"
+			}
+		},
+		"rNatInstanceEni": {
+			"Type": "AWS::EC2::NetworkInterface",
+			"Properties": {
+				"SubnetId": {
+					"Ref": "pDMZSubnetA"
+				},
+				"GroupSet": [{
+					"Ref": "pSecurityGroupSSHFromVpc"
+				}, {
+					"Ref": "pSecurityGroupVpcNat"
+				}],
+				"Description": "Interface for ProductionNat device",
+				"Tags": [{
+					"Key": "Network",
+					"Value": "ProductionNatDevice"
+				}]
+			}
+		},
+		"rNatInstance": {
+			"Type": "AWS::EC2::Instance",
+			"Properties": {
+				"InstanceType": {
+					"Ref": "pNatInstanceType"
+				},
+				"SourceDestCheck": false,
+				"KeyName": {
+					"Ref": "pEC2KeyPair"
+				},
+				"Tags": [{
+					"Key": "Name",
+					"Value": {
+						"Fn::Join": ["", [{
+							"Ref": "pVpcName"
+						}, " ", "NAT device used for patching"]]
+					}
+				}],
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": [
+							"", [
+								"#!/bin/sh\n",
+								"echo 1 > /proc/sys/net/ipv4/ip_forward\n",
+								"echo 0 > /proc/sys/net/ipv4/conf/eth0/send_redirects\n",
+								"/sbin/iptables -t nat -A POSTROUTING -o eth0 -s 0.0.0.0/0 -j MASQUERADE\n",
+								"/sbin/iptables-save > /etc/sysconfig/iptables\n",
+								"mkdir -p /etc/sysctl.d/\n",
+								"cat <<EOF > /etc/sysctl.d/nat.conf\n",
+								"net.ipv4.ip_forward = 1 \n",
+								"net.ipv4.conf.eth0.send_redirects = 0\n",
+								"EOF\n"
+							]
+						]
+					}
+				},
+				"ImageId": {
+					"Ref": "pNatAmi"
+				},
+				"NetworkInterfaces": [{
+					"NetworkInterfaceId": {
+						"Ref": "rNatInstanceEni"
+					},
+					"DeviceIndex": "0"
+				}]
+			}
+		},
+		"AssociateEipNat": {
+			"Type": "AWS::EC2::EIPAssociation",
+			"Properties": {
+				"AllocationId": {
+					"Fn::GetAtt": [
+						"rEipNat",
+						"AllocationId"
+					]
+				},
+				"NetworkInterfaceId": {
+					"Ref": "rNatInstanceEni"
+				}
+			}
+		},
+		"rRouteProdPrivateNatInstance": {
+			"Type": "AWS::EC2::Route",
+			"Properties": {
+				"DestinationCidrBlock": "0.0.0.0/0",
+				"RouteTableId": {
+					"Ref": "pRouteTablePrivate"
+				},
+				"InstanceId": {
+					"Ref": "rNatInstance"
+				}
+			}
+		}
+	}
+}
