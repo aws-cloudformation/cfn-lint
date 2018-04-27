@@ -1,0 +1,79 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  myFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs4.3
+      CodeUri: 's3://testBucket/mySourceCode.zip'
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Linear10PercentEvery10Minutes
+      Events:
+        ThumbnailApi:
+          Type: Api
+          Properties:
+            Path: /thumbnail
+            Method: GET
+        S3Trigger:
+          Type: S3
+          Properties:
+            Bucket: !Ref myBucket
+            Events: s3:ObjectCreated:*
+        MySnsTrigger:
+          Type: SNS
+          Properties:
+            Topic: arn:aws:sns:us-east-1:123456789012:my_topic
+        MyKinesisTrigger:
+          Type: Kinesis
+          Properties:
+            Stream: arn:aws:kinesis:us-east-1:123456789012:stream/my-stream
+            StartingPosition: TRIM_HORIZON
+        MyDynamoDbTrigger:
+          Type: DynamoDb
+          Properties:
+            Stream: arn:aws:dynamodb:us-east-1:123456789012:table/TestTable/stream/2016-08-11T21:21:33.291
+            StartingPosition: TRIM_HORIZON
+        MyTimer:
+          Type: Schedule
+          Properties:
+            Input: rate(5 minutes)
+        OnTerminate:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              detail:
+                state:
+                  - terminated
+  myBucket:
+    Type: AWS::S3::Bucket
+    Properties: {}
+  myFunctionRole:
+    Type: AWS::DynamoDB::Table
+    Properties:
+
+      KeySchema:
+      -
+        AttributeName: String
+        KeyType: String
+      ProvisionedThroughput:
+        WriteCapacityUnits: 5
+        ReadCapacityUnits: 10
+  myIamPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: "CFNUsers"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action:
+              - "cloudformation:Describe*"
+              - "cloudformation:List*"
+              - "cloudformation:Get*"
+            Resource: "*"
+      Roles:
+      - !Ref ServerlessRestApi

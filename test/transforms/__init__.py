@@ -14,3 +14,20 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from cfnlint import Runner, TransformsCollection, DEFAULT_TRANSFORMSDIR
+from testlib.testcase import BaseTestCase
+
+
+class BaseTransformTestCase(BaseTestCase):
+    """Used for Testing Transforms"""
+    def setUp(self):
+        """Setup"""
+        self.transforms = TransformsCollection()
+        self.transforms.extend(
+            TransformsCollection.create_from_directory(DEFAULT_TRANSFORMSDIR))
+
+    def helper_transform_template(self, template, test_function):
+        """Success test with template parameter"""
+        good_runner = Runner([], self.transforms, 'test', template, [], ['us-east-1'], [])
+        good_runner.transform()
+        self.assertTrue(test_function(good_runner.cfn.template))

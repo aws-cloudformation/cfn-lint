@@ -21,6 +21,8 @@ from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
 import cfnlint.parser
+import cfnlint.transforms
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -151,10 +153,24 @@ class TransformsCollection(object):
         """Extend rules"""
         self.transforms.extend(more)
 
-    def run(self, cfn):
+    def run(self, filename, cfn, transform_type):
         """Run the transforms"""
+        matches = list()
         for transform in self.transforms:
-            transform.resource_transform_all(cfn)
+            if transform_type == transform.type:
+                try:
+                    transform.resource_transform_all(cfn)
+                except cfnlint.transforms.TransformError as err:
+                    rule = CloudFormationLintRule()
+                    rule.id = 'E0001'
+                    rule.shortdesc = 'Transform Error'
+                    rule.description = 'Transform failed to complete'
+                    matches.append(Match(
+                        err.location[0] + 1, err.location[1] + 1,
+                        err.location[2] + 1, err.location[3] + 1,
+                        filename, rule, "While Performing a Transform got error: %s" % err.value))
+
+        return matches
 
     @classmethod
     def create_from_directory(cls, transformdir):
@@ -730,14 +746,16 @@ class Runner(object):
         self.verbosity = verbosity
         self.transforms = transforms
         self.cfn = Template(template, regions)
-        self.transform()
 
     def transform(self):
         """Transform logic"""
         LOGGER.debug('Transform templates if needed')
-        transform = self.cfn.template.get('Transform')
-        if transform:
-            self.transforms.run(self.cfn)
+        transform_type = self.cfn.template.get('Transform')
+        matches = list()
+        if transform_type:
+            matches = self.transforms.run(self.filename, self.cfn, transform_type)
+
+        return matches
 
     def run(self):
         """Run rules"""

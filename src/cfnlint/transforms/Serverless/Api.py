@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import CloudFormationTransform
+from cfnlint import CloudFormationTransform, transforms
 
 
 class Api(CloudFormationTransform):
@@ -29,15 +29,24 @@ class Api(CloudFormationTransform):
         for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::API').items():
             resource_properties = resource_values.get('Properties', {})
             stage_name = resource_properties.get('StageName', 'Prod')
-            cfn.template['Resources'][resource_name] = {
-                "Type": "AWS::ApiGateway::RestApi",
-                "Properties": {}
-            }
-            cfn.template['Resources'][("%s%sStage" % (resource_name, stage_name))] = {
-                "Type": "AWS::ApiGateway::Stage",
-                "Properties": {}
-            }
-            cfn.template['Resources']['%sDeployment%s' % (resource_name, "SHA")] = {
-                "Type": "AWS::ApiGateway::Deployment",
-                "Properties": {}
-            }
+            transforms.add_resource(
+                cfn, cfn.template['Resources'][resource_name],
+                {
+                    "Type": "AWS::ApiGateway::RestApi",
+                    "Properties": {}
+                }
+            )
+            transforms.add_resource(
+                cfn, "%s%sStage" % (resource_name, stage_name),
+                {
+                    "Type": "AWS::ApiGateway::Stage",
+                    "Properties": {}
+                }
+            )
+            transforms.add_resource(
+                cfn, '%sDeployment%s' % (resource_name, "SHA"),
+                {
+                    "Type": "AWS::ApiGateway::Deployment",
+                    "Properties": {}
+                }
+            )

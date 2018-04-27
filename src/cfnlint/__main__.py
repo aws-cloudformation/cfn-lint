@@ -181,7 +181,10 @@ def main():
         runner = cfnlint.Runner(
             rules, transforms, vars(args)['template'], template,
             vars(args)['ignore_checks'], vars(args)['regions'])
-        matches.extend(runner.run())
+        matches.extend(runner.transform())
+        # Only do rule analysis if Transform was successful
+        if not matches:
+            matches.extend(runner.run())
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
         exit_code = len(matches)
         if vars(args)['format'] == 'json':
