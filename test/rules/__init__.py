@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection
+from cfnlint import Runner, RulesCollection, TransformsCollection, DEFAULT_TRANSFORMSDIR
 from testlib.testcase import BaseTestCase
 
 
@@ -40,28 +40,34 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/functions_sub.yaml',
         'templates/good/functions_cidr.yaml',
         'templates/good/resources_lambda.yaml',
+        'templates/good/transform_serverless_api.yaml',
+        'templates/good/transform_serverless_function.yaml',
+        'templates/good/transform_serverless_globals.yaml',
     ]
 
     def setUp(self):
         """Setup"""
         self.collection = RulesCollection()
+        self.transforms = TransformsCollection()
+        self.transforms.extend(
+            TransformsCollection.create_from_directory(DEFAULT_TRANSFORMSDIR))
 
     def helper_file_positive(self):
         """Success test"""
         for filename in self.success_templates:
             template = self.load_template(filename)
-            good_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
+            good_runner = Runner(self.collection, self.transforms, filename, template, [], ['us-east-1'], [])
             self.assertEqual([], good_runner.run())
 
     def helper_file_positive_template(self, filename):
         """Success test with template parameter"""
         template = self.load_template(filename)
-        good_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
+        good_runner = Runner(self.collection, self.transforms, filename, template, [], ['us-east-1'], [])
         self.assertEqual([], good_runner.run())
 
     def helper_file_negative(self, filename, err_count):
         """Failure test"""
         template = self.load_template(filename)
-        bad_runner = Runner(self.collection, filename, template, [], ['us-east-1'], [])
+        bad_runner = Runner(self.collection, self.transforms, filename, template, [], ['us-east-1'], [])
         errs = bad_runner.run()
         self.assertEqual(err_count, len(errs))

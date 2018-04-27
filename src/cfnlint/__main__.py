@@ -20,8 +20,7 @@ import logging
 import json
 from yaml.parser import ParserError, ScannerError
 import cfnlint.helpers
-from cfnlint import RulesCollection
-from cfnlint import Match
+from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
 import cfnlint.cfn_json
 from cfnlint.version import __version__
@@ -148,6 +147,12 @@ def main():
         print(rules)
         return 0
 
+    transforms = TransformsCollection()
+    transformdirs = [cfnlint.DEFAULT_TRANSFORMSDIR]
+    for transformdir in transformdirs:
+        transforms.extend(
+            TransformsCollection.create_from_directory(transformdir))
+
     if vars(args)['regions']:
         supported_regions = [
             'ap-south-1',
@@ -174,8 +179,8 @@ def main():
     if vars(args)['template']:
         matches = list()
         runner = cfnlint.Runner(
-            rules, vars(args)['template'], template, vars(args)['ignore_checks'],
-            vars(args)['regions'])
+            rules, transforms, vars(args)['template'], template,
+            vars(args)['ignore_checks'], vars(args)['regions'])
         matches.extend(runner.run())
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
         exit_code = len(matches)

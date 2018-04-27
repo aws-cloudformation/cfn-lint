@@ -25,6 +25,7 @@ import cfnlint.parser
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'rules')
+DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'transforms')
 
 
 class CloudFormationLintRule(object):
@@ -114,6 +115,55 @@ class CloudFormationLintRule(object):
             return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
         return []
+
+
+class CloudFormationTransform(object):
+    """CloudFormation Transform Support"""
+    type = ""
+
+    resource_transform = None
+
+    def resource_transform_all(self, template):
+        """Generic transform"""
+        if not self.resource_transform:
+            return []
+
+        return self.resource_transform(template)  # pylint: disable=E1102
+
+
+class TransformsCollection(object):
+    """Collection of transforms"""
+
+    def __init__(self):
+        self.transforms = []
+
+    def register(self, obj):
+        """Register transforms"""
+        self.transforms.append(obj)
+
+    def __iter__(self):
+        return iter(self.transforms)
+
+    def __len__(self):
+        return len(self.transforms)
+
+    def extend(self, more):
+        """Extend rules"""
+        self.transforms.extend(more)
+
+    def run(self, cfn):
+        """Run the transforms"""
+        for transform in self.transforms:
+            transform.resource_transform_all(cfn)
+
+    @classmethod
+    def create_from_directory(cls, transformdir):
+        """Create transforms from directory"""
+        result = cls()
+        if transformdir != "":
+            result.transforms = cfnlint.helpers.load_plugins(os.path.expanduser(transformdir))
+
+        return result
 
 
 class RulesCollection(object):
@@ -277,6 +327,18 @@ class Template(object):
     def __init__(self, template, regions=['us-east-1']):
         self.template = template
         self.regions = regions
+        self.sections = [
+            'AWSTemplateFormatVersion',
+            'Description',
+            'Metadata',
+            'Parameters',
+            'Mappings',
+            'Conditions',
+            'Transform',
+            'Resources',
+            'Outputs',
+            'Rules'
+        ]
 
     def get_resources(self, resource_type=[]):
         """
@@ -660,13 +722,22 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, ignore_checks, regions, verbosity=0):
+            self, rules, transforms, filename, template, ignore_checks, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
         self.ignore_checks = ignore_checks
         self.verbosity = verbosity
+        self.transforms = transforms
         self.cfn = Template(template, regions)
+        self.transform()
+
+    def transform(self):
+        """Transform logic"""
+        LOGGER.debug('Transform templates if needed')
+        transform = self.cfn.template.get('Transform')
+        if transform:
+            self.transforms.run(self.cfn)
 
     def run(self):
         """Run rules"""
