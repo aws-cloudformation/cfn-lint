@@ -26,27 +26,28 @@ class Api(CloudFormationTransform):
             Add resources based on the criteria inside
             https://awslabs.github.io/serverless-application-model/internals/generated_resources.html
         """
-        for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::API').items():
+        for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::Api').items():
             resource_properties = resource_values.get('Properties', {})
             stage_name = resource_properties.get('StageName', 'Prod')
-            transforms.add_resource(
-                cfn, cfn.template['Resources'][resource_name],
-                {
-                    "Type": "AWS::ApiGateway::RestApi",
-                    "Properties": {}
-                }
-            )
             transforms.add_resource(
                 cfn, "%s%sStage" % (resource_name, stage_name),
                 {
                     "Type": "AWS::ApiGateway::Stage",
-                    "Properties": {}
+                    "Properties": {
+                        "RestApiId": {
+                            "Ref": resource_name
+                        }
+                    }
                 }
             )
             transforms.add_resource(
                 cfn, '%sDeployment%s' % (resource_name, "SHA"),
                 {
                     "Type": "AWS::ApiGateway::Deployment",
-                    "Properties": {}
+                    "Properties": {
+                        "RestApiId": {
+                            "Ref": resource_name
+                        }
+                    }
                 }
             )

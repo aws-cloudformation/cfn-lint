@@ -31,3 +31,9 @@ class BaseTransformTestCase(BaseTestCase):
         good_runner = Runner([], self.transforms, 'test', template, [], ['us-east-1'], [])
         good_runner.transform()
         self.assertTrue(test_function(good_runner.cfn.template))
+
+    def helper_transform_cfn(self, template, test_function):
+        """Test the bigger CFN template"""
+        good_runner = Runner([], self.transforms, 'test', template, [], ['us-east-1'], [])
+        good_runner.transform()
+        self.assertTrue(test_function(good_runner.cfn))
