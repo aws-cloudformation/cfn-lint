@@ -38,6 +38,7 @@ may need to manually remove the cfn-lint binary.
 | --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose id do not match these values |
 | --log-level | log_level | {info, debug} | Log Level |
 | --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
+| --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation definitions |
 | --version | | | Version of cfn-lint |
 
 ### Command Line
