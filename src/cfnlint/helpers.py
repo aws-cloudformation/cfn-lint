@@ -15,9 +15,9 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+import fnmatch
 import json
 import os
-import glob
 import imp
 import logging
 import requests
@@ -49,8 +49,36 @@ def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
 
 
 RESOURCE_SPECS = {}
-for reg in REGIONS:
-    RESOURCE_SPECS[reg] = load_resources(filename=('/data/CloudSpecs/%s.json' % reg))
+
+
+def merge_spec(source, destination):
+    """ Recursive merge spec dict """
+
+    for key, value in source.items():
+        if isinstance(value, dict):
+            node = destination.setdefault(key, {})
+            merge_spec(value, node)
+        else:
+            destination[key] = value
+
+    return destination
+
+
+def override_specs(override_spec_data):
+    """ Override Resource Specs """
+
+    # Merge override spec file into the AWS Resource specification
+    for region, spec in RESOURCE_SPECS.items():
+        RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
+
+
+def initialize_specs():
+    """ Reload Resource Specs """
+    for reg in REGIONS:
+        RESOURCE_SPECS[reg] = load_resources(filename=('/data/CloudSpecs/%s.json' % reg))
+
+
+initialize_specs()
 
 
 def update_resource_specs():
@@ -89,16 +117,11 @@ def load_plugins(directory):
     result = []
     fh = None
 
-    paths = [
-        '*/[A-Za-z]*.py',
-        '*/*/[A-Za-z]*.py',
-    ]
-    for path in paths:
-        for pluginfile in glob.glob(os.path.join(directory, path)):
-            pluginname = os.path.basename(pluginfile.replace('.py', ''))
-            dir_name = os.path.dirname(pluginfile)
+    for root, _, filenames in os.walk(directory):
+        for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
+            pluginname = filename.replace('.py', '')
             try:
-                fh, filename, desc = imp.find_module(pluginname, [dir_name])
+                fh, filename, desc = imp.find_module(pluginname, [root])
                 mod = imp.load_module(pluginname, fh, filename, desc)
                 obj = getattr(mod, pluginname)()
                 result.append(obj)

@@ -114,6 +114,11 @@ def main():
     )
 
     parser.add_argument(
+        '--override-spec', dest='override_spec',
+        help='A CloudFormation Spec override file that allows customization'
+    )
+
+    parser.add_argument(
         '--version', help='Version of cfn-lint', action='version',
         version='%(prog)s {version}'.format(version=__version__)
     )
@@ -133,6 +138,27 @@ def main():
             formatter = formatters.ParseableFormatter()
     else:
         formatter = formatters.Formatter()
+
+    if vars(args)['override_spec']:
+        try:
+            filename = vars(args)['override_spec']
+            custom_spec_data = json.load(open(filename))
+
+            cfnlint.helpers.override_specs(custom_spec_data)
+
+        except IOError as e:
+            if e.errno == 2:
+                LOGGER.error('Override spec file not found: %s', filename)
+                sys.exit(1)
+            elif e.errno == 21:
+                LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+                sys.exit(1)
+            elif e.errno == 13:
+                LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+                sys.exit(1)
+        except (ValueError) as err:
+            LOGGER.error('Override spec file %s is malformed: %s', filename, err)
+            sys.exit(1)
 
     if vars(args)['update_specs']:
         cfnlint.helpers.update_resource_specs()
