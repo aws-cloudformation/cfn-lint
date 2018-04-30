@@ -70,5 +70,27 @@ cfn-lint applies the configuration from the CloudFormation Metadata first and th
 > E3001 Invalid Type AWS::Batch::ComputeEnvironment for resource testBatch in ap-south-1
 
 
+## Rule IDs
+
+### Errors
+Errors will start with the letter E.  Errors should result in a hard failure of the template being run.
+
+### Warnings
+Warnings start with the letter W.  Warnings alert you when the template doesn't follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
+
+
+| Rule Numbers  | Category |
+| ------------- | ------------- |
+| (E&#124;W)0XXX  | Basic Template Errors. Examples: Not parseable, main sections (Outputs, Resources, etc.)  |
+| (E&#124;W)1XXX  | Functions (Ref, GetAtt, etc.)  |
+| (E&#124;W)2XXX  | Parameters |
+| (E&#124;W)3XXX  | Resources |
+| (E&#124;W)4XXX  | Metadata |
+| (E&#124;W)6xxx  | Outputs |
+| (E&#124;W)7xxx  | Mappings |
+| (E&#124;W)8xxx  | Conditions |
+| (E&#124;W)9xxx  | Reserved for users rules |
+
+
 ## Credit
 Will Thames and ansible-lint at https://github.com/willthames/ansible-lint
