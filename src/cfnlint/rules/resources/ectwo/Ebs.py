@@ -39,13 +39,13 @@ class Ebs(CloudFormationLintRule):
                     if isinstance(volume_type, six.string_types):
                         if volume_type not in ['standard', 'io1', 'gp2', 'sc1', 'st1']:
                             pathmessage = path[:] + ['VolumeType', volume_type['Path']]
-                            message = "VolumeType should be of standard | io1 | gp2 | sc1 | st1] for {0}"
+                            message = 'VolumeType should be of standard | io1 | gp2 | sc1 | st1] for {0}'
                             matches.append(
                                 RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                         elif volume_type == 'io1':
                             if iops_obj is None:
                                 pathmessage = path[:] + ['VolumeType']
-                                message = "VolumeType io1 requires Iops to be specified for {0}"
+                                message = 'VolumeType io1 requires Iops to be specified for {0}'
                                 matches.append(
                                     RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                             else:
@@ -56,20 +56,20 @@ class Ebs(CloudFormationLintRule):
                                             iops_value = int(iops)
                                             if iops_value < 100 or iops_value > 2000:
                                                 pathmessage = path[:] + ['Iops']
-                                                message = "Property Iops should be Int between 100 to 20000 {0}"
+                                                message = 'Property Iops should be Int between 100 to 20000 {0}'
                                                 matches.append(
                                                     RuleMatch(
                                                         pathmessage,
                                                         message.format('/'.join(map(str, pathmessage)))))
                                 except ValueError:
                                     pathmessage = path[:] + ['Iops']
-                                    message = "Property Iops should be Int between 100 to 20000 {0}"
+                                    message = 'Property Iops should be Int between 100 to 20000 {0}'
                                     matches.append(
                                         RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                         elif volume_type:
                             if iops_obj is not None:
                                 pathmessage = path[:] + ['Iops']
-                                message = "Iops shouldn't be defined for type {0} for {1}"
+                                message = 'Iops shouldn\'t be defined for type {0} for {1}'
                                 matches.append(
                                     RuleMatch(
                                         pathmessage,
@@ -93,7 +93,7 @@ class Ebs(CloudFormationLintRule):
                     # switch to regex
                     if not re.match(r'^ephemeral[0-9]$', virtual_name):
                         pathmessage = path[:] + [index, 'VirtualName']
-                        message = "Property VirtualName should be of type ephemeral(n) for {0}"
+                        message = 'Property VirtualName should be of type ephemeral(n) for {0}'
                         matches.append(
                             RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                 elif ebs:

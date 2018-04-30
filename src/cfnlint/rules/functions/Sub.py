@@ -53,13 +53,13 @@ class Sub(CloudFormationLintRule):
             valid_params.append(key)
         for resource, attributes in get_atts.items():
             for attribute_name, _ in attributes.items():
-                valid_params.append("%s.%s" % (resource, attribute_name))
+                valid_params.append('%s.%s' % (resource, attribute_name))
 
         for string_param in string_params:
             string_param = string_param[2:-1]
             if isinstance(string_param, six.string_types):
                 if string_param not in valid_params:
-                    message = "String parameter {0} not found in string for {1}"
+                    message = 'String parameter {0} not found in string for {1}'
                     matches.append(RuleMatch(
                         tree, message.format(string_param, '/'.join(map(str, tree)))))
 
@@ -87,15 +87,15 @@ class Sub(CloudFormationLintRule):
                 if len(parameter_value_obj) == 1:
                     for key, _ in parameter_value_obj.items():
                         if key not in supported_functions:
-                            message = "Sub parameter should use a valid function for {0}"
+                            message = 'Sub parameter should use a valid function for {0}'
                             matches.append(RuleMatch(
                                 param_tree, message.format('/'.join(map(str, tree)))))
                 else:
-                    message = "Sub parameter should be an object of 1 for {0}"
+                    message = 'Sub parameter should be an object of 1 for {0}'
                     matches.append(RuleMatch(
                         param_tree, message.format('/'.join(map(str, tree)))))
             elif not isinstance(parameter_value_obj, six.string_types):
-                message = "Sub parameter should be an object of 1 or string for {0}"
+                message = 'Sub parameter should be an object of 1 or string for {0}'
                 matches.append(RuleMatch(
                     param_tree, message.format('/'.join(map(str, tree)))))
 
@@ -118,22 +118,22 @@ class Sub(CloudFormationLintRule):
                     sub_string = sub_value_obj[0]
                     parameters = sub_value_obj[1]
                     if not isinstance(sub_string, six.string_types):
-                        message = "Subs first element should be of type string for {0}"
+                        message = 'Subs first element should be of type string for {0}'
                         matches.append(RuleMatch(
                             tree + [0], message.format('/'.join(map(str, tree)))))
                     if not isinstance(parameters, dict):
-                        message = "Subs second element should be an object for {0}"
+                        message = 'Subs second element should be an object for {0}'
                         matches.append(RuleMatch(
                             tree + [1], message.format('/'.join(map(str, tree)))))
                     else:
                         matches.extend(self._test_string(cfn, sub_string, parameters, tree + [0]))
                         matches.extend(self._test_parameters(parameters, tree))
                 else:
-                    message = "Sub should be an array of 2 for {0}"
+                    message = 'Sub should be an array of 2 for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree)))))
             else:
-                message = "Sub should be a string or array of 2 items for {0}"
+                message = 'Sub should be a string or array of 2 items for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))
 

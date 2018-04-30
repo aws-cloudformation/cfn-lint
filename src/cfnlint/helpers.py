@@ -25,9 +25,9 @@ import pkg_resources
 
 LOGGER = logging.getLogger(__name__)
 
-TAG_MAP = "tag:yaml.org,2002:map"
-UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
-FN_PREFIX = "Fn::"
+TAG_MAP = 'tag:yaml.org,2002:map'
+UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
+FN_PREFIX = 'Fn::'
 CONDITION_FUNCTIONS = ['Fn::If']
 REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
            'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
@@ -47,7 +47,9 @@ def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
 
     return data
 
+
 RESOURCE_SPECS = {}
+
 
 def merge_spec(source, destination):
     """ Recursive merge spec dict """
@@ -61,6 +63,7 @@ def merge_spec(source, destination):
 
     return destination
 
+
 def override_specs(override_spec_data):
     """ Override Resource Specs """
 
@@ -68,12 +71,15 @@ def override_specs(override_spec_data):
     for region, spec in RESOURCE_SPECS.items():
         RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
 
+
 def initialize_specs():
     """ Reload Resource Specs """
     for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resources(filename=("/data/CloudSpecs/%s.json" % reg))
+        RESOURCE_SPECS[reg] = load_resources(filename=('/data/CloudSpecs/%s.json' % reg))
+
 
 initialize_specs()
+
 
 def update_resource_specs():
     """ Update Resource Specs """
