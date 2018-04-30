@@ -47,11 +47,33 @@ def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
 
     return data
 
-
 RESOURCE_SPECS = {}
-for reg in REGIONS:
-    RESOURCE_SPECS[reg] = load_resources(filename=("/data/CloudSpecs/%s.json" % reg))
 
+def merge_spec(source, destination):
+    """ Recursive merge spec dict """
+
+    for key, value in source.items():
+        if isinstance(value, dict):
+            node = destination.setdefault(key, {})
+            merge_spec(value, node)
+        else:
+            destination[key] = value
+
+    return destination
+
+def override_specs(override_spec_data):
+    """ Override Resource Specs """
+
+    # Merge override spec file into the AWS Resource specification
+    for region, spec in RESOURCE_SPECS.items():
+        RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
+
+def initialize_specs():
+    """ Reload Resource Specs """
+    for reg in REGIONS:
+        RESOURCE_SPECS[reg] = load_resources(filename=("/data/CloudSpecs/%s.json" % reg))
+
+initialize_specs()
 
 def update_resource_specs():
     """ Update Resource Specs """
