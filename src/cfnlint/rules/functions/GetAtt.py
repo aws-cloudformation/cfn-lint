@@ -40,18 +40,18 @@ class GetAtt(CloudFormationLintRule):
         valid_getatts = cfn.get_valid_getatts()
         for getatt in getatts:
             if len(getatt[-1]) < 2:
-                message = "Invalid GetAtt for {0}"
+                message = 'Invalid GetAtt for {0}'
                 matches.append(RuleMatch(getatt, message.format('/'.join(map(str, getatt[:-1])))))
                 continue
             resname = getatt[-1][0]
             restype = '.'.join(getatt[-1][1:])
             if resname in valid_getatts:
                 if restype not in valid_getatts[resname] and '*' not in valid_getatts[resname]:
-                    message = "Invalid GetAtt {0}.{1} for resource {2}"
+                    message = 'Invalid GetAtt {0}.{1} for resource {2}'
                     matches.append(RuleMatch(
                         getatt[:-1], message.format(resname, restype, getatt[1])))
             else:
-                message = "Invalid GetAtt {0}.{1} for resource {2}"
+                message = 'Invalid GetAtt {0}.{1} for resource {2}'
                 matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
 
         return matches

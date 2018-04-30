@@ -42,7 +42,7 @@ class Configuration(CloudFormationLintRule):
             for output_name, output_value in outputs.items():
                 for prop in output_value:
                     if prop not in self.valid_keys:
-                        message = "Output {0} has invalid property {1}"
+                        message = 'Output {0} has invalid property {1}'
                         matches.append(RuleMatch(
                             ['Outputs', output_name, prop],
                             message.format(output_name, prop)

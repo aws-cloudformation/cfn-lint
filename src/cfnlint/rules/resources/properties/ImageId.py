@@ -44,12 +44,12 @@ class ImageId(CloudFormationLintRule):
                         if key == 'Ref':
                             if paramname in valid_refs:
                                 if valid_refs[paramname]['Type'] != 'AWS::EC2::Image::Id':
-                                    message = "Parameter %s should be of type " \
-                                              "AWS::EC2::Image::Id" % (paramname)
+                                    message = 'Parameter %s should be of type ' \
+                                              'AWS::EC2::Image::Id' % (paramname)
                                     tree = ['Parameters', paramname]
                                     matches.append(RuleMatch(tree, message))
                 else:
-                    message = "Innappropriate map found for imageid on %s" % (
+                    message = 'Innappropriate map found for imageid on %s' % (
                         '/'.join(map(str, imageidtree[:-1])))
                     matches.append(RuleMatch(imageidtree[:-1], message))
 

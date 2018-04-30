@@ -36,13 +36,13 @@ HTTPS has certificate HTTP has no certificate'
             protocol = result['Value'].get('Protocol')
             if protocol:
                 if protocol not in ['HTTP', 'HTTPS', 'TCP']:
-                    message = "Protocol is invalid for {0}"
+                    message = 'Protocol is invalid for {0}'
                     path = result['Path'] + ['Protocol']
                     matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
                 elif protocol in ['HTTPS']:
                     certificate = result['Value'].get('Certificates')
                     if not certificate:
-                        message = "Certificates should be specified when using HTTPS for {0}"
+                        message = 'Certificates should be specified when using HTTPS for {0}'
                         path = result['Path'] + ['Protocol']
                         matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
 
@@ -53,13 +53,13 @@ HTTPS has certificate HTTP has no certificate'
                     protocol = listener.get('Protocol')
                     if protocol:
                         if protocol not in ['HTTP', 'HTTPS', 'TCP', 'SSL']:
-                            message = "Protocol is invalid for {0}"
+                            message = 'Protocol is invalid for {0}'
                             path = result['Path'] + [index, 'Protocol']
                             matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
                         elif protocol in ['HTTPS', 'SSL']:
                             certificate = listener.get('SSLCertificateId')
                             if not certificate:
-                                message = "Certificates should be specified when using HTTPS for {0}"
+                                message = 'Certificates should be specified when using HTTPS for {0}'
                                 path = result['Path'] + [index, 'Protocol']
                                 matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
 

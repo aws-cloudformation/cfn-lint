@@ -48,7 +48,7 @@ class AtLeastOne(CloudFormationLintRule):
                     count += 1
 
             if count == 0:
-                message = "At least one of [{0}] should be specified for {1}"
+                message = 'At least one of [{0}] should be specified for {1}'
                 matches.append(RuleMatch(
                     path,
                     message.format(', '.join(map(str, atleastoneprop)), '/'.join(map(str, path)))

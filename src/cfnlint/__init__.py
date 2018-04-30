@@ -38,11 +38,11 @@ class CloudFormationLintRule(object):
     resource_sub_property_types = []
 
     def __repr__(self):
-        return "%s: %s" % (self.id, self.shortdesc)
+        return '%s: %s' % (self.id, self.shortdesc)
 
     def verbose(self):
         """Verbose output"""
-        return "%s: %s\n%s" % (self.id, self.shortdesc, self.description)
+        return '%s: %s\n%s' % (self.id, self.shortdesc, self.description)
 
     match = None
     match_resource_properties = None
@@ -58,12 +58,12 @@ class CloudFormationLintRule(object):
             matches = []
 
             start = datetime.now()
-            LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
+            LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
             # pylint: disable=E1102
             results = match_function(self, filename, cfn, *args, **kwargs)
-            LOGGER.debug("Complete match function for rule %s at %s.  Ran in %s",
+            LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
                          self.id, datetime.now(), datetime.now() - start)
-            LOGGER.debug("Results from rule %s are %s: ", self.id, results)
+            LOGGER.debug('Results from rule %s are %s: ', self.id, results)
 
             if results:
                 for result in results:
@@ -137,14 +137,14 @@ class RulesCollection(object):
         self.rules.extend(more)
 
     def __repr__(self):
-        return "\n".join([rule.verbose()
+        return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
     def resource_property(self, filename, cfn, ignore_checks, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
         matches = list()
         property_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
-        property_spec_name = "%s.%s" % (resource_type, property_type)
+        property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
                 if rule.id not in ignore_checks:
@@ -234,7 +234,7 @@ class RulesCollection(object):
     def create_from_directory(cls, rulesdir):
         """Create rules from directory"""
         result = cls()
-        if rulesdir != "":
+        if rulesdir != '':
             result.rules = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
         return result
 
@@ -265,7 +265,7 @@ class Match(object):
 
     def __repr__(self):
         """Represent"""
-        formatstr = u"[{0}] ({1}) matched {2}:{3}"
+        formatstr = u'[{0}] ({1}) matched {2}:{3}'
         return formatstr.format(self.rule, self.message,
                                 self.filename, self.linenumber)
 
@@ -283,7 +283,7 @@ class Template(object):
             Get Resources
             Filter on type when specified
         """
-        LOGGER.debug("Get resources from template...")
+        LOGGER.debug('Get resources from template...')
         resources = self.template.get('Resources', {})
         if isinstance(resource_type, list):
             return {k: v for (k, v) in resources.items()
@@ -294,7 +294,7 @@ class Template(object):
 
     def get_parameters(self):
         """Get Resources"""
-        LOGGER.debug("Get parameters from template...")
+        LOGGER.debug('Get parameters from template...')
         parameters = self.template.get('Parameters', {})
         if not parameters:
             return {}
@@ -303,7 +303,7 @@ class Template(object):
 
     def get_mappings(self):
         """Get Resources"""
-        LOGGER.debug("Get mapping from template...")
+        LOGGER.debug('Get mapping from template...')
         mappings = self.template.get('Mappings', {})
         if not mappings:
             return {}
@@ -312,7 +312,7 @@ class Template(object):
 
     def get_resource_names(self):
         """Get all the Resource Names"""
-        LOGGER.debug("Get the names of all resources from template...")
+        LOGGER.debug('Get the names of all resources from template...')
         results = list()
         resources = self.template.get('Resources', {})
         if isinstance(resources, dict):
@@ -323,7 +323,7 @@ class Template(object):
 
     def get_parameter_names(self):
         """Get all Parameter Names"""
-        LOGGER.debug("Get names of all parameters from template...")
+        LOGGER.debug('Get names of all parameters from template...')
         results = list()
         parameters = self.template.get('Parameters', {})
         if isinstance(parameters, dict):
@@ -334,7 +334,7 @@ class Template(object):
 
     def get_valid_refs(self):
         """Get all valid Refs"""
-        LOGGER.debug("Get all valid REFs from template...")
+        LOGGER.debug('Get all valid REFs from template...')
         results = {}
         parameters = self.template.get('Parameters', {})
         if parameters:
@@ -372,7 +372,7 @@ class Template(object):
 
     def get_valid_getatts(self):
         """Get all valid GetAtts"""
-        LOGGER.debug("Get valid GetAtts from template...")
+        LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         if 'Resources' in self.template:
@@ -395,7 +395,7 @@ class Template(object):
 
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
-        LOGGER.debug("Get Sub Resource Properties from %s", keys)
+        LOGGER.debug('Get Sub Resource Properties from %s', keys)
         if not keys:
             result = {}
             result['Path'] = path
@@ -440,7 +440,7 @@ class Template(object):
 
     def get_resource_properties(self, keys):
         """Filter keys of template"""
-        LOGGER.debug("Get Properties from a resource: %s", keys)
+        LOGGER.debug('Get Properties from a resource: %s', keys)
         matches = list()
         resourcetype = keys.pop(0)
         for resource_name, resource_value in self.get_resources(resourcetype).items():
@@ -482,7 +482,7 @@ class Template(object):
         """
             Search for keys in all parts of the templates
         """
-        LOGGER.debug("Search for key %s as far down as the template goes", searchText)
+        LOGGER.debug('Search for key %s as far down as the template goes', searchText)
         return (self._search_deep_keys(searchText, self.template, []))
 
     def get_condition_values(self, template, path=[]):
@@ -526,7 +526,7 @@ class Template(object):
             Returns the value if its just a string, int, boolean, etc.
 
         """
-        LOGGER.debug("Get the value for key %s in %s", key, obj)
+        LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = list()
         value = obj.get(key)
         if not value:

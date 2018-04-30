@@ -43,12 +43,12 @@ class InstanceProfile(CloudFormationLintRule):
                 objtype = cfn.template.get('Resources', {}).get(obj[0], {}).get('Type')
                 if objtype:
                     if objtype != 'AWS::IAM::InstanceProfile':
-                        message = "Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s" % (
+                        message = 'Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
                     else:
                         if obj[1] == 'Arn':
-                            message = "Property IamInstanceProfile shouldn't be an ARN for %s" % (
+                            message = 'Property IamInstanceProfile shouldn\'t be an ARN for %s' % (
                                 '/'.join(map(str, tree[:-1])))
                             matches.append(RuleMatch(tree[:-1], message))
 
@@ -62,7 +62,7 @@ class InstanceProfile(CloudFormationLintRule):
                 objtype = cfn.template.get('Resources', {}).get(obj, {}).get('Type')
                 if objtype:
                     if objtype != 'AWS::IAM::InstanceProfile':
-                        message = "Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s" % (
+                        message = 'Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
 

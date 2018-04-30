@@ -39,15 +39,15 @@ class Base64(CloudFormationLintRule):
                 if len(value_obj) == 1:
                     for key, _ in value_obj.items():
                         if key == 'Fn::Split':
-                            message = "Base64 needs a string at {0}"
+                            message = 'Base64 needs a string at {0}'
                             matches.append(RuleMatch(
                                 tree[:], message.format('/'.join(map(str, tree)))))
                 else:
-                    message = "Base64 needs a string not a map or list at {0}"
+                    message = 'Base64 needs a string not a map or list at {0}'
                     matches.append(RuleMatch(
                         tree[:], message.format('/'.join(map(str, tree)))))
             elif not isinstance(value_obj, six.string_types):
-                message = "Base64 needs a string at {0}"
+                message = 'Base64 needs a string at {0}'
                 matches.append(RuleMatch(
                     tree[:], message.format('/'.join(map(str, tree)))))
 

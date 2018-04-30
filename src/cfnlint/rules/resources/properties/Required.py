@@ -41,15 +41,15 @@ class Required(CloudFormationLintRule):
             resourcetype = parenttype
         else:
             specs = self.propertytypes
-            resourcetype = str.format("{0}.{1}", parenttype, proptype)
+            resourcetype = str.format('{0}.{1}', parenttype, proptype)
             # handle tags
             if resourcetype not in specs:
                 if proptype in specs:
                     resourcetype = proptype
                 else:
-                    resourcetype = str.format("{0}.{1}", parenttype, proptype)
+                    resourcetype = str.format('{0}.{1}', parenttype, proptype)
             else:
-                resourcetype = str.format("{0}.{1}", parenttype, proptype)
+                resourcetype = str.format('{0}.{1}', parenttype, proptype)
 
         resourcespec = specs[resourcetype]['Properties']
         if not isinstance(text, dict):
@@ -65,11 +65,11 @@ class Required(CloudFormationLintRule):
                         if specs[resourcetype]['Properties'][prop]['PrimitiveType'] == 'Json':
                             skip = True
                         else:
-                            message = "Property {0} missing from resource {1}"
+                            message = 'Property {0} missing from resource {1}'
                             matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
                     if isinstance(text, dict) and not skip:
                         if not text:
-                            message = "Property {0} missing from resource {1}"
+                            message = 'Property {0} missing from resource {1}'
                             matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
                         for key in text:
                             if key in resourcespec:
@@ -83,7 +83,7 @@ class Required(CloudFormationLintRule):
                                         text[key][2], proptype,
                                         parenttype, resourcename, arrproptree, False))
                     else:
-                        message = "Property {0} missing from resource {1}"
+                        message = 'Property {0} missing from resource {1}'
                         matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
         for prop in text:
             proptree = tree[:]
