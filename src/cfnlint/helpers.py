@@ -15,9 +15,9 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+import fnmatch
 import json
 import os
-import glob
 import imp
 import logging
 import requests
@@ -89,16 +89,11 @@ def load_plugins(directory):
     result = []
     fh = None
 
-    paths = [
-        '*/[A-Za-z]*.py',
-        '*/*/[A-Za-z]*.py',
-    ]
-    for path in paths:
-        for pluginfile in glob.glob(os.path.join(directory, path)):
-            pluginname = os.path.basename(pluginfile.replace('.py', ''))
-            dir_name = os.path.dirname(pluginfile)
+    for root, _, filenames in os.walk(directory):
+        for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
+            pluginname = filename.replace('.py', '')
             try:
-                fh, filename, desc = imp.find_module(pluginname, [dir_name])
+                fh, filename, desc = imp.find_module(pluginname, [root])
                 mod = imp.load_module(pluginname, fh, filename, desc)
                 obj = getattr(mod, pluginname)()
                 result.append(obj)
