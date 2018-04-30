@@ -53,30 +53,30 @@ class Split(CloudFormationLintRule):
                     split_delimiter = split_value_obj[0]
                     split_string = split_value_obj[1]
                     if not isinstance(split_delimiter, six.string_types):
-                        message = "Split delimiter has to be of type string for {0}"
+                        message = 'Split delimiter has to be of type string for {0}'
                         matches.append(RuleMatch(
                             tree + [0], message.format('/'.join(map(str, tree)))))
                     if isinstance(split_string, dict):
                         if len(split_string) == 1:
                             for key, _ in split_string.items():
                                 if key not in supported_functions:
-                                    message = "Split unsupported function for {0}"
+                                    message = 'Split unsupported function for {0}'
                                     matches.append(RuleMatch(
                                         tree + [key], message.format('/'.join(map(str, tree)))))
                         else:
-                            message = "Split list of singular function or string for {0}"
+                            message = 'Split list of singular function or string for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree)))))
                     elif not isinstance(split_string, six.string_types):
-                        message = "Split has to be of type string or valid function for {0}"
+                        message = 'Split has to be of type string or valid function for {0}'
                         matches.append(RuleMatch(
                             tree, message.format('/'.join(map(str, tree)))))
                 else:
-                    message = "Split should be an array of 2 for {0}"
+                    message = 'Split should be an array of 2 for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree)))))
             else:
-                message = "Split should be an array of 2 for {0}"
+                message = 'Split should be an array of 2 for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))
         return matches

@@ -30,23 +30,23 @@ class Api(CloudFormationTransform):
             resource_properties = resource_values.get('Properties', {})
             stage_name = resource_properties.get('StageName', 'Prod')
             transforms.add_resource(
-                cfn, "%s%sStage" % (resource_name, stage_name),
+                cfn, '%s%sStage' % (resource_name, stage_name),
                 {
-                    "Type": "AWS::ApiGateway::Stage",
-                    "Properties": {
-                        "RestApiId": {
-                            "Ref": resource_name
+                    'Type': 'AWS::ApiGateway::Stage',
+                    'Properties': {
+                        'RestApiId': {
+                            'Ref': resource_name
                         }
                     }
                 }
             )
             transforms.add_resource(
-                cfn, '%sDeployment%s' % (resource_name, "SHA"),
+                cfn, '%sDeployment%s' % (resource_name, 'SHA'),
                 {
-                    "Type": "AWS::ApiGateway::Deployment",
-                    "Properties": {
-                        "RestApiId": {
-                            "Ref": resource_name
+                    'Type': 'AWS::ApiGateway::Deployment',
+                    'Properties': {
+                        'RestApiId': {
+                            'Ref': resource_name
                         }
                     }
                 }

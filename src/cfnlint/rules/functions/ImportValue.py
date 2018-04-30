@@ -51,15 +51,15 @@ class ImportValue(CloudFormationLintRule):
                 if len(iv_value) == 1:
                     for key, _ in iv_value.items():
                         if key not in supported_functions:
-                            message = "ImportValue should be using supported function for {0}"
+                            message = 'ImportValue should be using supported function for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree[:-1])))))
                 else:
-                    message = "ImportValue should have one mapping for {0}"
+                    message = 'ImportValue should have one mapping for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree[:-1])))))
             elif not isinstance(iv_value, six.string_types):
-                message = "ImportValue should have supported function or string for {0}"
+                message = 'ImportValue should have supported function or string for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))
         return matches

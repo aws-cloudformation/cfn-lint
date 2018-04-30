@@ -50,7 +50,7 @@ class CircularDependency(CloudFormationLintRule):
                         resources[ref_name] = []
                     resources[ref_name].append(value)
                     if ref_name in resources.get(value, []) or ref_name == value:
-                        message = "Refs cannot create circular dependencies on resources for {0}"
+                        message = 'Refs cannot create circular dependencies on resources for {0}'
                         matches.append(RuleMatch(ref_obj, message.format('/'.join(map(str, ref_obj)))))
 
         getatt_objs = cfn.search_deep_keys('Fn::GetAtt')
@@ -69,7 +69,7 @@ class CircularDependency(CloudFormationLintRule):
                     resources[res_name].append(ref_name)
                     if res_name in resources.get(ref_name, []) or ref_name == res_name:
                         path_error = getatt_obj[:-1]
-                        message = "GetAtt cannot create circular dependencies on resources for {0}"
+                        message = 'GetAtt cannot create circular dependencies on resources for {0}'
                         matches.append(RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
 
         sub_objs = cfn.search_deep_keys('Fn::Sub')
@@ -96,7 +96,7 @@ class CircularDependency(CloudFormationLintRule):
                         resources[res_name].append(sub_parameter)
                         if res_name in resources.get(sub_parameter, []) or res_name == sub_parameter:
                             path_error = sub_obj[:-1]
-                            message = "GetAtt cannot create circular dependencies on resources for {0}"
+                            message = 'GetAtt cannot create circular dependencies on resources for {0}'
                             matches.append(RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
 
         return matches

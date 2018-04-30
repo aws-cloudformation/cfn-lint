@@ -54,37 +54,37 @@ class Select(CloudFormationLintRule):
                         if len(index_obj) == 1:
                             for index_key, _ in index_obj:
                                 if index_key not in ['Ref', 'Fn::FindInMap']:
-                                    message = "Select index should be int, Ref, FindInMap for {0}"
+                                    message = 'Select index should be int, Ref, FindInMap for {0}'
                                     matches.append(RuleMatch(
                                         tree, message.format('/'.join(map(str, tree)))))
                     elif not isinstance(index_obj, six.integer_types):
                         try:
                             int(index_obj)
                         except ValueError:
-                            message = "Select index should be int, Ref, FindInMap for {0}"
+                            message = 'Select index should be int, Ref, FindInMap for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree)))))
                     if isinstance(list_of_objs, dict):
                         if len(list_of_objs) == 1:
                             for key, _ in list_of_objs.items():
                                 if key not in supported_functions:
-                                    message = "Key {0} should be a list for {1}"
+                                    message = 'Key {0} should be a list for {1}'
                                     matches.append(RuleMatch(
                                         tree, message.format(key, '/'.join(map(str, tree)))))
                         else:
-                            message = "Select should be a list of 2 elements for {0}"
+                            message = 'Select should be a list of 2 elements for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree)))))
                     else:
-                        message = "Select should be an array of values for {0}"
+                        message = 'Select should be an array of values for {0}'
                         matches.append(RuleMatch(
                             tree, message.format('/'.join(map(str, tree)))))
                 else:
-                    message = "Select should be a list of 2 elements for {0}"
+                    message = 'Select should be a list of 2 elements for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree)))))
             else:
-                message = "Select should be a list of 2 elements for {0}"
+                message = 'Select should be a list of 2 elements for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))
         return matches

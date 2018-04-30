@@ -47,7 +47,7 @@ class Configuration(CloudFormationLintRule):
         for paramname, paramvalue in cfn.get_parameters().items():
             for propname, _ in paramvalue.items():
                 if propname not in self.valid_keys:
-                    message = "Parameter {0} has invalid property {1}"
+                    message = 'Parameter {0} has invalid property {1}'
                     matches.append(RuleMatch(
                         ['Parameters', paramname, propname],
                         message.format(paramname, propname)

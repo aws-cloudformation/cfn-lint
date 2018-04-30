@@ -29,18 +29,18 @@ class Functions(CloudFormationTransform):
         for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::Function').items():
             resource_properties = resource_values.get('Properties', {})
             transforms.add_resource(
-                cfn, "%sRole" % resource_name,
+                cfn, '%sRole' % resource_name,
                 {
-                    "Type": "AWS::IAM::Role",
-                    "Properties": {
-                        "AssumeRolePolicyDocument": {
-                            "Version": "2012-10-17",
-                            "Statement": [{
-                                "Effect": "Allow",
-                                "Principal": {
-                                    "Service": ["lambda.amazonaws.com"]
+                    'Type': 'AWS::IAM::Role',
+                    'Properties': {
+                        'AssumeRolePolicyDocument': {
+                            'Version': '2012-10-17',
+                            'Statement': [{
+                                'Effect': 'Allow',
+                                'Principal': {
+                                    'Service': ['lambda.amazonaws.com']
                                 },
-                                "Action": ["sts:AssumeRole"]
+                                'Action': ['sts:AssumeRole']
                             }]
                         }
                     }
@@ -51,22 +51,22 @@ class Functions(CloudFormationTransform):
                 if key_value:
                     # Need to figure out SHA256 hashing
                     transforms.add_resource(
-                        cfn, "%sVersion%s" % (resource_name, key_value),
+                        cfn, '%sVersion%s' % (resource_name, key_value),
                         {
-                            "Type": "AWS::Lambda::Version",
-                            "Properties": {
-                                "FunctionName": resource_name
+                            'Type': 'AWS::Lambda::Version',
+                            'Properties': {
+                                'FunctionName': resource_name
                             }
                         }
                     )
                     transforms.add_resource(
-                        cfn, "%sAlias%s" % (resource_name, key_value),
+                        cfn, '%sAlias%s' % (resource_name, key_value),
                         {
-                            "Type": "AWS::Lambda::Alias",
-                            "Properties": {
-                                "FunctionName": resource_name,
-                                "FunctionVersion": "latest",
-                                "Name": key_value
+                            'Type': 'AWS::Lambda::Alias',
+                            'Properties': {
+                                'FunctionName': resource_name,
+                                'FunctionVersion': 'latest',
+                                'Name': key_value
                             }
                         }
                     )
@@ -76,20 +76,20 @@ class Functions(CloudFormationTransform):
                     transforms.add_resource(
                         cfn, 'ServerlessDeploymentApplication',
                         {
-                            "Type": "AWS::CodeDeploy::Application",
-                            "Properties": {}
+                            'Type': 'AWS::CodeDeploy::Application',
+                            'Properties': {}
                         }
                     )
                     transforms.add_resource(
-                        cfn, "%sDeploymentGroup" % resource_name,
+                        cfn, '%sDeploymentGroup' % resource_name,
                         {
-                            "Type": "AWS::CodeDeploy::DeploymentGroup",
-                            "Properties": {
-                                "ApplicationName": {
-                                    "Ref": resource_name
+                            'Type': 'AWS::CodeDeploy::DeploymentGroup',
+                            'Properties': {
+                                'ApplicationName': {
+                                    'Ref': resource_name
                                 },
-                                "ServiceRoleArn": {
-                                    "Ref": "CodeDeployServiceRole"
+                                'ServiceRoleArn': {
+                                    'Ref': 'CodeDeployServiceRole'
                                 }
                             }
                         }
@@ -97,16 +97,16 @@ class Functions(CloudFormationTransform):
                     transforms.add_resource(
                         cfn, 'CodeDeployServiceRole',
                         {
-                            "Type": "AWS::IAM::Role",
-                            "Properties": {
-                                "AssumeRolePolicyDocument": {
-                                    "Version": "2012-10-17",
-                                    "Statement": [{
-                                        "Effect": "Allow",
-                                        "Principal": {
-                                            "Service": ["codedeploy.amazonaws.com"]
+                            'Type': 'AWS::IAM::Role',
+                            'Properties': {
+                                'AssumeRolePolicyDocument': {
+                                    'Version': '2012-10-17',
+                                    'Statement': [{
+                                        'Effect': 'Allow',
+                                        'Principal': {
+                                            'Service': ['codedeploy.amazonaws.com']
                                         },
-                                        "Action": ["sts:AssumeRole"]
+                                        'Action': ['sts:AssumeRole']
                                     }]
                                 }
                             }
@@ -122,44 +122,44 @@ class Functions(CloudFormationTransform):
                             transforms.add_resource(
                                 cfn, 'ServerlessRestApi',
                                 {
-                                    "Type": "AWS::ApiGateway::RestApi",
-                                    "Properties": {}
+                                    'Type': 'AWS::ApiGateway::RestApi',
+                                    'Properties': {}
                                 }
                             )
                             transforms.add_resource(
                                 cfn, 'ServerlessRestApi%sStage' % 'Prod',
                                 {
-                                    "Type": "AWS::ApiGateway::Stage",
-                                    "Properties": {
-                                        "RestApiId": {
-                                            "Ref": "ServerlessRestApi"
+                                    'Type': 'AWS::ApiGateway::Stage',
+                                    'Properties': {
+                                        'RestApiId': {
+                                            'Ref': 'ServerlessRestApi'
                                         }
                                     }
                                 }
                             )
                             transforms.add_resource(
-                                cfn, 'ServerlessRestApiDeployment%s' % ("SHA"),
+                                cfn, 'ServerlessRestApiDeployment%s' % ('SHA'),
                                 {
-                                    "Type": "AWS::ApiGateway::Deployment",
-                                    "Properties": {
-                                        "RestApiId": {
-                                            "Ref": "ServerlessRestApi"
+                                    'Type': 'AWS::ApiGateway::Deployment',
+                                    'Properties': {
+                                        'RestApiId': {
+                                            'Ref': 'ServerlessRestApi'
                                         }
                                     }
                                 }
                             )
 
                         transforms.add_resource(
-                            cfn, '%s%sPermission%s' % (resource_name, event_name, "Prod"),
+                            cfn, '%s%sPermission%s' % (resource_name, event_name, 'Prod'),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "apigateway.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'apigateway.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -169,14 +169,14 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "s3.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 's3.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -186,14 +186,14 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "sns.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'sns.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -202,22 +202,22 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%s' % (resource_name, event_name),
                             {
-                                "Type": "AWS::SNS::Subscription",
-                                "Properties": {}
+                                'Type': 'AWS::SNS::Subscription',
+                                'Properties': {}
                             }
                         )
                     elif event_type == 'Kinesis':
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "kinesis.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'kinesis.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -226,13 +226,13 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%s' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::EventSourceMapping",
-                                "Properties": {
-                                    "FunctionName": {
-                                        "Ref": resource_name
+                                'Type': 'AWS::Lambda::EventSourceMapping',
+                                'Properties': {
+                                    'FunctionName': {
+                                        'Ref': resource_name
                                     },
-                                    "EventSourceArn": "anArn",
-                                    "StartingPosition": "1"
+                                    'EventSourceArn': 'anArn',
+                                    'StartingPosition': '1'
                                 }
                             }
                         )
@@ -240,14 +240,14 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "dynamodb.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'dynamodb.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -256,13 +256,13 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%s' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::EventSourceMapping",
-                                "Properties": {
-                                    "FunctionName": {
-                                        "Ref": resource_name
+                                'Type': 'AWS::Lambda::EventSourceMapping',
+                                'Properties': {
+                                    'FunctionName': {
+                                        'Ref': resource_name
                                     },
-                                    "EventSourceArn": "anArn",
-                                    "StartingPosition": "1"
+                                    'EventSourceArn': 'anArn',
+                                    'StartingPosition': '1'
                                 }
                             }
                         )
@@ -270,14 +270,14 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "events.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'events.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -286,22 +286,22 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%s' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Events::Rule",
-                                "Properties": {}
+                                'Type': 'AWS::Events::Rule',
+                                'Properties': {}
                             }
                         )
                     elif event_type == 'CloudWatchEvent':
                         transforms.add_resource(
                             cfn, '%s%sPermission' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Lambda::Permission",
-                                "Properties": {
-                                    "Principal": "events.amazonaws.com",
-                                    "Action": "lambda:InvokeFunction",
-                                    "FunctionName": {
-                                        "Fn::GetAtt": [
+                                'Type': 'AWS::Lambda::Permission',
+                                'Properties': {
+                                    'Principal': 'events.amazonaws.com',
+                                    'Action': 'lambda:InvokeFunction',
+                                    'FunctionName': {
+                                        'Fn::GetAtt': [
                                             resource_name,
-                                            "Arn"
+                                            'Arn'
                                         ]
                                     }
                                 }
@@ -310,7 +310,7 @@ class Functions(CloudFormationTransform):
                         transforms.add_resource(
                             cfn, '%s%s' % (resource_name, event_name),
                             {
-                                "Type": "AWS::Events::Rule",
-                                "Properties": {}
+                                'Type': 'AWS::Events::Rule',
+                                'Properties': {}
                             }
                         )

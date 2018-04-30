@@ -29,9 +29,9 @@ class FunctionMemorySize(CloudFormationLintRule):
         """ Check memory size value """
         matches = list()
 
-        message = "You must specify a value that is greater than or equal to 128, " \
-                  "and it must be a multiple of 64. You cannot specify a size " \
-                  "larger than 1536. The default value is 128 MB at {0}"
+        message = 'You must specify a value that is greater than or equal to 128, ' \
+                  'and it must be a multiple of 64. You cannot specify a size ' \
+                  'larger than 1536. The default value is 128 MB at {0}'
 
         try:
             value = int(value)
@@ -50,7 +50,7 @@ class FunctionMemorySize(CloudFormationLintRule):
 
         matches = list()
         if value in resources:
-            message = "MemorySize can't use a Ref to a resource for {0}"
+            message = 'MemorySize can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
@@ -59,8 +59,8 @@ class FunctionMemorySize(CloudFormationLintRule):
             max_value = parameter.get('MaxValue', 999999)
             if param_type != 'Number' or min_value < 128 or max_value > 1536:
                 param_path = ['Parameters', value, 'Type']
-                message = "Type for Parameter should be Integer, MinValue should be " \
-                          "at least 128, and MaxValue equal or less than 1536 at {0}"
+                message = 'Type for Parameter should be Integer, MinValue should be ' \
+                          'at least 128, and MaxValue equal or less than 1536 at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
         return matches

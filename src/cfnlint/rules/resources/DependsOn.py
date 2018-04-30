@@ -31,11 +31,11 @@ class DependsOn(CloudFormationLintRule):
         matches = list()
 
         if not isinstance(key, (six.text_type, six.string_types)):
-            message = "DependsOn values should be of string at {0}"
+            message = 'DependsOn values should be of string at {0}'
             matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
             return matches
         if key not in resources:
-            message = "DependsOn should reference other resources at {0}"
+            message = 'DependsOn should reference other resources at {0}'
             matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
 
         return matches
@@ -51,7 +51,7 @@ class DependsOn(CloudFormationLintRule):
             depends_ons = resource_values.get('DependsOn')
             if depends_ons:
                 path = ['Resources', resource_name, 'DependsOn']
-                self.logger.debug("Validating DependsOn for %s base configuration", resource_name)
+                self.logger.debug('Validating DependsOn for %s base configuration', resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
                         matches.extend(self.check_value(depends_on, path[:] + [index], resources))
