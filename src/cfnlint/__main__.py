@@ -156,7 +156,7 @@ def main():
             elif e.errno == 13:
                 LOGGER.error("Permission denied when accessing override spec file: %s", filename)
                 sys.exit(1)
-        except (json.decoder.JSONDecodeError, ScannerError) as err:
+        except (ValueError) as err:
             LOGGER.error('Override spec file %s is malformed: %s', filename, err)
             sys.exit(1)
 
