@@ -42,7 +42,8 @@ class SecurityGroupIngress(CloudFormationLintRule):
 
         allowed_types = [
             'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-            'AWS::EC2::SecurityGroup::Id'
+            'AWS::EC2::SecurityGroup::Id',
+            'String'
         ]
         if value in parameters:
             parameter_properties = parameters.get(value)
@@ -83,67 +84,11 @@ class SecurityGroupIngress(CloudFormationLintRule):
             RuleMatch(path, message.format('/'.join(map(str, path)))))
         return matches
 
-    def check_vpc_sg_exclusive_attributes(self, properties, path):
-        """Check Exclusive attributes for VPC Security Group"""
-        matches = list()
-        one_of = [
-            'CidrIp', 'CidrIpv6', 'DestinationPrefixListId',
-            'DestinationSecurityGroupId', 'SourceSecurityGroupId'
-        ]
-
-        count = 0
-        property_error = None
-        for property_name in properties:
-            if property_name in one_of:
-                count += 1
-                property_error = property_name
-
-        if count > 1:
-            path_error = path[:] + [property_error]
-            message = "Only one of 'CidrIp', 'CidrIpv6', 'DestinationPrefixListId', " \
-                      "'DestinationSecurityGroupId', 'SourceSecurityGroupId' " \
-                      "should be specified for {0}"
-            matches.append(
-                RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
-
-        return matches
-
-    def check_non_vpc_sg_exclusive_attributes(self, path, properties):
-        """Check non VPC exclusive attributes"""
-
-        matches = list()
-        one_of = [
-            'CidrIp', 'SourceSecurityGroupName'
-        ]
-
-        count = 0
-        property_error = None
-        for property_name in properties:
-            if property_name in one_of:
-                count += 1
-                property_error = property_name
-
-        if count > 1:
-            path_error = path[:] + [property_error]
-            message = "Only one of 'CidrIp', 'SourceSecurityGroupName' " \
-                      "should be specified for {0}"
-            matches.append(
-                RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
-
-        return matches
-
     def check_ingress_rule(self, vpc_id, properties, path, cfn):
         """Check ingress rule"""
 
         matches = list()
         if vpc_id:
-            # If Vpc Id is specified this is a VPC Security Group
-            # and has more exclusive attributes
-            matches.extend(
-                self.check_vpc_sg_exclusive_attributes(
-                    path=path, properties=properties
-                )
-            )
 
             # Check that SourceSecurityGroupName isn't specified
             if properties.get('SourceSecurityGroupName', None):
@@ -164,13 +109,6 @@ class SecurityGroupIngress(CloudFormationLintRule):
             )
 
         else:
-            # if VPC Id isn't specified this is a non VPC Security Group
-            # and means there are other attributes that should be specified
-            matches.extend(
-                self.check_non_vpc_sg_exclusive_attributes(
-                    path=path, properties=properties
-                )
-            )
 
             if properties.get('SourceSecurityGroupId', None):
                 path_error = path[:] + ['SourceSecurityGroupId']
@@ -212,18 +150,11 @@ class SecurityGroupIngress(CloudFormationLintRule):
         for resource_name, resource_object in resources.items():
             properties = resource_object.get('Properties', {})
             group_id = properties.get('GroupId', None)
-            group_name = properties.get('GroupName', None)
             path = ['Resources', resource_name, 'Properties']
-            if group_id and not group_name:
+            if group_id:
                 vpc_id = 'vpc-1234567'
-            elif group_name and not group_id:
-                vpc_id = None
             else:
-                message = "GroupId and GroupName shouldn't be specified together " \
-                          "at {0}"
-                matches.append(
-                    RuleMatch(path, message.format('/'.join(map(str, path)))))
-                continue
+                vpc_id = None
 
             if properties:
                 path = ['Resources', resource_name, 'Properties']

@@ -31,4 +31,4 @@ class TestPropertySgIngress(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/properties_sg_ingress.yaml', 8)
+        self.helper_file_negative('templates/bad/properties_sg_ingress.yaml', 5)

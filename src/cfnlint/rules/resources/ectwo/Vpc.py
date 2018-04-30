@@ -41,15 +41,24 @@ class Vpc(CloudFormationLintRule):
     def check_vpc_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = list()
+        allowed_types = [
+            'String'
+        ]
         if value in resources:
             message = "DefaultTenancy can't use a Ref to a resource for {0}"
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
-            allowed_values = parameter.get('AllowedValues', '')
-            if allowed_values != ['default', 'dedicated']:
-                message = "AllowedValues for Parameter should be default or dedicated for {0}"
-                matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
+            parameter_type = parameter.get('Type', None)
+            if parameter_type not in allowed_types:
+                path_error = ['Parameters', value, 'Type']
+                message = "Security Group Id Parameter should be of type [{0}] for {1}"
+                matches.append(
+                    RuleMatch(
+                        path_error,
+                        message.format(
+                            ', '.join(map(str, allowed_types)),
+                            '/'.join(map(str, path_error)))))
         return matches
 
     def check_cidr_value(self, value, path):
@@ -65,6 +74,10 @@ class Vpc(CloudFormationLintRule):
     def check_cidr_ref(self, value, path, parameters, resources):
         """Check CidrBlock for VPC"""
         matches = list()
+
+        allowed_types = [
+            'String'
+        ]
         if value in resources:
             resource_obj = resources.get(value, {})
             if resource_obj:
@@ -74,11 +87,16 @@ class Vpc(CloudFormationLintRule):
                     matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         if value in parameters:
             parameter = parameters.get(value, {})
-            allowed_pattern = parameter.get('AllowedPattern', None)
-            if not allowed_pattern:
-                param_path = ['Parameters', value]
-                message = "AllowedPattern for Parameter should be specified at {1}. Example '{0}'"
-                matches.append(RuleMatch(param_path, message.format(self.cidr_regex, ('/'.join(param_path)))))
+            parameter_type = parameter.get('Type', None)
+            if parameter_type not in allowed_types:
+                path_error = ['Parameters', value, 'Type']
+                message = "Security Group Id Parameter should be of type [{0}] for {1}"
+                matches.append(
+                    RuleMatch(
+                        path_error,
+                        message.format(
+                            ', '.join(map(str, allowed_types)),
+                            '/'.join(map(str, path_error)))))
         return matches
 
     def match(self, cfn):

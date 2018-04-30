@@ -17,6 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+from cfnlint.helpers import AVAILABILITY_ZONES
 
 
 class Subnet(CloudFormationLintRule):
@@ -33,23 +34,33 @@ class Subnet(CloudFormationLintRule):
         """Check AZ Values"""
         matches = list()
 
-        message = "Don't hardcode {0} for AvailabilityZones at {1}"
-        matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+        if value not in AVAILABILITY_ZONES:
+            message = "Not a valid Availbility Zone {0} at {1}"
+            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
         return matches
 
     def check_az_ref(self, value, path, parameters, resources):
         """Check ref for AZ"""
         matches = list()
+        allowed_types = [
+            'AWS::EC2::AvailabilityZone::Name',
+            'String'
+        ]
         if value in resources:
             message = "AvailabilityZone can't use a Ref to a resource for {0}"
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
-            if param_type != 'AWS::EC2::AvailabilityZone::Name':
+            if param_type not in allowed_types:
                 param_path = ['Parameters', value, 'Type']
-                message = "Type for Parameter should be AWS::EC2::AvailabilityZone::Name for {0}"
-                matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
+                message = "Availability Zone should be of type [{0}] for {1}"
+                matches.append(
+                    RuleMatch(
+                        param_path,
+                        message.format(
+                            ', '.join(map(str, allowed_types)),
+                            '/'.join(map(str, param_path)))))
         return matches
 
     def check_cidr_value(self, value, path):
@@ -65,6 +76,11 @@ class Subnet(CloudFormationLintRule):
     def check_cidr_ref(self, value, path, parameters, resources):
         """Check CidrBlock for VPC"""
         matches = list()
+
+        allowed_types = [
+            'String'
+        ]
+
         if value in resources:
             resource_obj = resources.get(value, {})
             if resource_obj:
@@ -74,11 +90,16 @@ class Subnet(CloudFormationLintRule):
                     matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         if value in parameters:
             parameter = parameters.get(value, {})
-            allowed_pattern = parameter.get('AllowedPattern', None)
-            if not allowed_pattern:
+            parameter_type = parameter.get('Type', None)
+            if parameter_type not in allowed_types:
                 param_path = ['Parameters', value]
-                message = "AllowedPattern for Parameter should be specified at {1}. Example '{0}'"
-                matches.append(RuleMatch(param_path, message.format(self.cidr_regex, ('/'.join(param_path)))))
+                message = "Security Group Id Parameter should be of type [{0}] for {1}"
+                matches.append(
+                    RuleMatch(
+                        param_path,
+                        message.format(
+                            ', '.join(map(str, allowed_types)),
+                            '/'.join(map(str, param_path)))))
         return matches
 
     def check_vpc_value(self, value, path):
