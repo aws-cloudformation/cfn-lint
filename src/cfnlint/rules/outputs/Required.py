@@ -34,14 +34,14 @@ class Required(CloudFormationLintRule):
         if outputs:
             for output_name, output_value in outputs.items():
                 if 'Value' not in output_value:
-                    message = "Output {0} is missing property {1}"
+                    message = 'Output {0} is missing property {1}'
                     matches.append(RuleMatch(
                         ['Outputs', output_name, 'Value'],
                         message.format(output_name, 'Value')
                     ))
                 if 'Export' in output_value:
                     if 'Name' not in output_value['Export']:
-                        message = "Output {0} is missing property {1}"
+                        message = 'Output {0} is missing property {1}'
                         matches.append(RuleMatch(
                             ['Outputs', output_name, 'Export'],
                             message.format(output_name, 'Name')

@@ -35,7 +35,7 @@ class Subnet(CloudFormationLintRule):
         matches = list()
 
         if value not in AVAILABILITY_ZONES:
-            message = "Not a valid Availbility Zone {0} at {1}"
+            message = 'Not a valid Availbility Zone {0} at {1}'
             matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
         return matches
 
@@ -47,14 +47,14 @@ class Subnet(CloudFormationLintRule):
             'String'
         ]
         if value in resources:
-            message = "AvailabilityZone can't use a Ref to a resource for {0}"
+            message = 'AvailabilityZone can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
             if param_type not in allowed_types:
                 param_path = ['Parameters', value, 'Type']
-                message = "Availability Zone should be of type [{0}] for {1}"
+                message = 'Availability Zone should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         param_path,
@@ -69,7 +69,7 @@ class Subnet(CloudFormationLintRule):
 
         regex = re.compile(self.cidr_regex)
         if not regex.match(value):
-            message = "CidrBlock needs to be of x.x.x.x/y at {0}"
+            message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         return matches
 
@@ -86,14 +86,14 @@ class Subnet(CloudFormationLintRule):
             if resource_obj:
                 resource_type = resource_obj.get('Type', '')
                 if not resource_type.startswith('Custom::'):
-                    message = "CidrBlock needs to be a valid Cidr Range at {0}"
+                    message = 'CidrBlock needs to be a valid Cidr Range at {0}'
                     matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         if value in parameters:
             parameter = parameters.get(value, {})
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 param_path = ['Parameters', value]
-                message = "Security Group Id Parameter should be of type [{0}] for {1}"
+                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         param_path,
@@ -107,7 +107,7 @@ class Subnet(CloudFormationLintRule):
         matches = list()
 
         if not value.startswith('vpc-'):
-            message = "VpcId needs to be of format vpc-xxxxxxxx at {1}"
+            message = 'VpcId needs to be of format vpc-xxxxxxxx at {1}'
             matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
         return matches
 
@@ -116,14 +116,14 @@ class Subnet(CloudFormationLintRule):
         matches = list()
         if value in resources:
             # Check if resource is a VPC
-            message = "VpcId can't use a Ref to a resource for {0}"
+            message = 'VpcId can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
             if param_type != 'AWS::EC2::AvailabilityZone::Name':
                 param_path = ['Parameters', value, 'Type']
-                message = "Type for Parameter should be AWS::EC2::AvailabilityZone::Name for {0}"
+                message = 'Type for Parameter should be AWS::EC2::AvailabilityZone::Name for {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
         return matches
 

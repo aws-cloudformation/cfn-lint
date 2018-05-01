@@ -61,7 +61,7 @@ class Used(CloudFormationLintRule):
         for paramname, _ in cfn.get_parameters().items():
             if paramname not in refs:
                 if not self.isparaminref(subs, paramname):
-                    message = "Parameter {0} not used."
+                    message = 'Parameter {0} not used.'
                     matches.append(RuleMatch(
                         ['Parameters', paramname],
                         message.format(paramname)

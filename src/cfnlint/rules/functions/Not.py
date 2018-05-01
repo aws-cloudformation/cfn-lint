@@ -33,7 +33,7 @@ class Not(CloudFormationLintRule):
         fnnots = cfn.search_deep_keys('Fn::Not')
         for fnnot in fnnots:
             if not isinstance(fnnot[-1], list):
-                message = "Function Not {0} should be a list"
+                message = 'Function Not {0} should be a list'
                 matches.append(RuleMatch(fnnot, message.format('/'.join(map(str, fnnot[:-2])))))
 
         return matches

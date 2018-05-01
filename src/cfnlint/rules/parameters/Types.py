@@ -64,7 +64,7 @@ class Types(CloudFormationLintRule):
             paramtype = paramvalue.get('Type', 'String')
             if paramtype not in self.valid_types:
                 if not paramtype.startswith('AWS::SSM::Parameter::Value'):
-                    message = "Parameter {0} has invalid type {1}"
+                    message = 'Parameter {0} has invalid type {1}'
                     matches.append(RuleMatch(
                         ['Parameters', paramname, 'Type'],
                         message.format(paramname, paramtype)

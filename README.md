@@ -38,6 +38,7 @@ may need to manually remove the cfn-lint binary.
 | --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose id do not match these values |
 | --log-level | log_level | {info, debug} | Log Level |
 | --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
+| --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation definitions |
 | --version | | | Version of cfn-lint |
 
 ### Command Line
@@ -67,6 +68,28 @@ cfn-lint applies the configuration from the CloudFormation Metadata first and th
 ```cfn-lint --regions us-east-1 ap-south-1 --template template.yaml```
 
 > E3001 Invalid Type AWS::Batch::ComputeEnvironment for resource testBatch in ap-south-1
+
+
+## Rule IDs
+
+### Errors
+Errors will start with the letter E.  Errors should result in a hard failure of the template being run.
+
+### Warnings
+Warnings start with the letter W.  Warnings alert you when the template doesn't follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
+
+
+| Rule Numbers  | Category |
+| ------------- | ------------- |
+| (E&#124;W)0XXX  | Basic Template Errors. Examples: Not parseable, main sections (Outputs, Resources, etc.)  |
+| (E&#124;W)1XXX  | Functions (Ref, GetAtt, etc.)  |
+| (E&#124;W)2XXX  | Parameters |
+| (E&#124;W)3XXX  | Resources |
+| (E&#124;W)4XXX  | Metadata |
+| (E&#124;W)6xxx  | Outputs |
+| (E&#124;W)7xxx  | Mappings |
+| (E&#124;W)8xxx  | Conditions |
+| (E&#124;W)9xxx  | Reserved for users rules |
 
 
 ## Credit

@@ -44,7 +44,7 @@ class Inclusive(CloudFormationLintRule):
             if prop in inclusions:
                 for incl_property in inclusions[prop]:
                     if incl_property not in properties:
-                        message = "Parameter {0} should exist with {1} for {2}"
+                        message = 'Parameter {0} should exist with {1} for {2}'
                         matches.append(RuleMatch(
                             path + [prop],
                             message.format(incl_property, prop, '/'.join(map(str, path)))

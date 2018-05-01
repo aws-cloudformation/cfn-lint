@@ -9,6 +9,21 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.0.8
+###### Features
+- Added a rule to check for only one resource property in a set
+- Added a rule for more than one of resource properties in a set
+- Added a rule for mutually exclusive resource properties
+
+###### Fixes
+- Support parsing JSON files that have tabs
+- Better error handling for when a property is a list instead of an object
+- Error handling for when files can't be read or don't exist
+
+### 0.0.7
+###### Features
+- Fix for supporting more parameter types when checking REFs to parameters for Security Groups
+
 ### 0.0.6
 ###### Features
 - Exit code non zero on errors or warnings

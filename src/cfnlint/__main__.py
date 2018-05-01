@@ -65,19 +65,19 @@ def main():
             filename = vars(args[0])['template']
             fp = open(filename)
             loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
             template = loader.get_single_data()
             if template is dict:
                 defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
         except IOError as e:
             if e.errno == 2:
-                LOGGER.error("Template file not found: %s", filename)
+                LOGGER.error('Template file not found: %s', filename)
                 sys.exit(1)
             elif e.errno == 21:
-                LOGGER.error("Template references a directory, not a file: %s", filename)
+                LOGGER.error('Template references a directory, not a file: %s', filename)
                 sys.exit(1)
             elif e.errno == 13:
-                LOGGER.error("Permission denied when accessing template file: %s", filename)
+                LOGGER.error('Permission denied when accessing template file: %s', filename)
                 sys.exit(1)
         except (ParserError, ScannerError) as err:
             try:
@@ -97,20 +97,25 @@ def main():
     )
     parser.add_argument(
         '--list-rules', dest='listrules', default=False,
-        action='store_true', help="list all the rules"
+        action='store_true', help='list all the rules'
     )
     parser.add_argument(
         '--regions', dest='regions', default=['us-east-1'], nargs='*',
-        help="list the regions to validate against."
+        help='list the regions to validate against.'
     )
     parser.add_argument(
         '--append-rules', dest='rulesdir', default=[], nargs='*',
-        help="specify one or more rules directories using "
-             "one or more --append-rules arguments. "
+        help='specify one or more rules directories using '
+             'one or more --append-rules arguments. '
     )
     parser.add_argument(
         '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
-        help="only check rules whose id do not match these values"
+        help='only check rules whose id do not match these values'
+    )
+
+    parser.add_argument(
+        '--override-spec', dest='override_spec',
+        help='A CloudFormation Spec override file that allows customization'
     )
 
     parser.add_argument(
@@ -133,6 +138,27 @@ def main():
             formatter = formatters.ParseableFormatter()
     else:
         formatter = formatters.Formatter()
+
+    if vars(args)['override_spec']:
+        try:
+            filename = vars(args)['override_spec']
+            custom_spec_data = json.load(open(filename))
+
+            cfnlint.helpers.override_specs(custom_spec_data)
+
+        except IOError as e:
+            if e.errno == 2:
+                LOGGER.error('Override spec file not found: %s', filename)
+                sys.exit(1)
+            elif e.errno == 21:
+                LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+                sys.exit(1)
+            elif e.errno == 13:
+                LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+                sys.exit(1)
+        except (ValueError) as err:
+            LOGGER.error('Override spec file %s is malformed: %s', filename, err)
+            sys.exit(1)
 
     if vars(args)['update_specs']:
         cfnlint.helpers.update_resource_specs()
@@ -223,7 +249,7 @@ class CustomEncoder(json.JSONEncoder):
         return {'__{}__'.format(o.__class__.__name__): o.__dict__}
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         sys.exit(main())
     except (ValueError, TypeError):

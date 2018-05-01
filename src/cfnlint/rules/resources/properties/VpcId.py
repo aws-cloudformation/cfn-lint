@@ -51,12 +51,12 @@ class VpcId(CloudFormationLintRule):
                                     if paramtype != correct_type:
                                         fix_param_types.add(paramname)
                 else:
-                    message = "Innappropriate map found for vpcid on %s" % (
+                    message = 'Innappropriate map found for vpcid on %s' % (
                         '/'.join(map(str, tree[:-1])))
                     matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_param_types:
-            message = "Parameter %s should be of type %s" % (paramname, correct_type)
+            message = 'Parameter %s should be of type %s' % (paramname, correct_type)
             tree = ['Parameters', paramname]
             matches.append(RuleMatch(tree, message))
         return matches

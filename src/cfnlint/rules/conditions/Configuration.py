@@ -42,14 +42,14 @@ class Configuration(CloudFormationLintRule):
         if conditions:
             for condname, condobj in conditions.items():
                 if not isinstance(condobj, dict):
-                    message = "Condition {0} has invalid property"
+                    message = 'Condition {0} has invalid property'
                     matches.append(RuleMatch(
                         ['Conditions', condname],
                         message.format(condname)
                     ))
                 else:
                     if len(condobj) != 1:
-                        message = "Condition {0} has to many intrinsic conditions"
+                        message = 'Condition {0} has to many intrinsic conditions'
                         matches.append(RuleMatch(
                             ['Conditions', condname],
                             message.format(condname)

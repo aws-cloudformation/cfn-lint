@@ -98,7 +98,7 @@ def py_scanstring(s, end, strict=True,
     while 1:
         chunk = _m(s, end)
         if chunk is None:
-            raise JSONDecodeError("Unterminated string starting at", s, begin)
+            raise JSONDecodeError('Unterminated string starting at', s, begin)
         end = chunk.end()
         content, terminator = chunk.groups()
         # Content is contains zero or more unescaped string characters
@@ -110,7 +110,7 @@ def py_scanstring(s, end, strict=True,
             break
         elif terminator != '\\':
             if strict:
-                msg = "Invalid control character {0!r} at".format(terminator)
+                msg = 'Invalid control character {0!r} at'.format(terminator)
                 raise JSONDecodeError(msg, s, end)
             else:
                 _append(terminator)
@@ -118,13 +118,13 @@ def py_scanstring(s, end, strict=True,
         try:
             esc = s[end]
         except IndexError:
-            raise JSONDecodeError("Unterminated string starting at", s, begin)
+            raise JSONDecodeError('Unterminated string starting at', s, begin)
         # If not a unicode escape sequence, must be in the lookup table
         if esc != 'u':
             try:
                 char = _b[esc]
             except KeyError:
-                msg = "Invalid \\escape: {0!r}".format(esc)
+                msg = 'Invalid \\escape: {0!r}'.format(esc)
                 raise JSONDecodeError(msg, s, end)
             end += 1
         else:
@@ -147,7 +147,7 @@ def _decode_uXXXX(s, pos):
             return int(esc, 16)
         except ValueError:
             pass
-    msg = "Invalid \\uXXXX escape"
+    msg = 'Invalid \\uXXXX escape'
     raise JSONDecodeError(msg, s, pos)
 
 
@@ -194,7 +194,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if s[end:end + 1] != ':':
             end = _w(s, end).end()
             if s[end:end + 1] != ':':
-                raise JSONDecodeError("Expecting ':' delimiter", s, end)
+                raise JSONDecodeError('Expecting \':\' delimiter', s, end)
         end += 1
 
         try:
@@ -215,7 +215,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         try:
             value, end = scan_once(s, end)
         except StopIteration as err:
-            raise JSONDecodeError("Expecting value", s, str(err))
+            raise JSONDecodeError('Expecting value', s, str(err))
         key_str = str_node(key, beg_mark, end_mark)
         pairs_append((key_str, value))
         try:
@@ -230,13 +230,13 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             break
         elif nextchar != ',':
-            raise JSONDecodeError("Expecting ',' delimiter", s, end - 1)
+            raise JSONDecodeError('Expecting \',\' delimiter', s, end - 1)
         end = _w(s, end).end()
         nextchar = s[end:end + 1]
         end += 1
         if nextchar != '"':
             raise JSONDecodeError(
-                "Expecting property name enclosed in double quotes", s, end - 1)
+                'Expecting property name enclosed in double quotes', s, end - 1)
     if object_pairs_hook is not None:
         result = object_pairs_hook(pairs)
         return result, end

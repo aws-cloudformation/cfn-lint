@@ -26,8 +26,8 @@ from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 
-UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
-FN_PREFIX = "Fn::"
+UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
+FN_PREFIX = 'Fn::'
 
 LOGGER = logging.getLogger(__name__)
 
@@ -114,11 +114,11 @@ def multi_constructor(loader, tag_suffix, node):
     """
 
     if tag_suffix not in UNCONVERTED_SUFFIXES:
-        tag_suffix = "{}{}".format(FN_PREFIX, tag_suffix)
+        tag_suffix = '{}{}'.format(FN_PREFIX, tag_suffix)
 
     constructor = None
 
-    if tag_suffix == "Fn::GetAtt":
+    if tag_suffix == 'Fn::GetAtt':
         constructor = construct_getatt
     elif isinstance(node, ScalarNode):
         constructor = loader.construct_scalar
@@ -127,7 +127,7 @@ def multi_constructor(loader, tag_suffix, node):
     elif isinstance(node, MappingNode):
         constructor = loader.construct_mapping
     else:
-        raise "Bad tag: !{}".format(tag_suffix)
+        raise 'Bad tag: !{}'.format(tag_suffix)
 
     return {tag_suffix: constructor(node)}
 
@@ -138,8 +138,8 @@ def construct_getatt(node):
     """
 
     if isinstance(node.value, (six.text_type, six.string_types)):
-        return node.value.split(".")
+        return node.value.split('.')
     elif isinstance(node.value, list):
         return [s.value for s in node.value]
     else:
-        raise ValueError("Unexpected node type: {}".format(type(node.value)))
+        raise ValueError('Unexpected node type: {}'.format(type(node.value)))

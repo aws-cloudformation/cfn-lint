@@ -48,7 +48,7 @@ class InterfaceParameterExists(CloudFormationLintRule):
                         if 'Parameters' in value:
                             for paramindex, paramvalue in enumerate(value['Parameters']):
                                 if paramvalue not in parameters:
-                                    message = "Metadata Interface parameter doesn't exist {0}"
+                                    message = 'Metadata Interface parameter doesn\'t exist {0}'
                                     matches.append(RuleMatch(
                                         ['Metadata', strinterface, 'ParameterGroups',
                                          index, 'Parameters', paramindex],
@@ -58,7 +58,7 @@ class InterfaceParameterExists(CloudFormationLintRule):
                 if isinstance(paramlabels, dict):
                     for param in paramlabels:
                         if param not in parameters:
-                            message = "Metadata Interface parameter doesn't exist {0}"
+                            message = 'Metadata Interface parameter doesn\'t exist {0}'
                             matches.append(RuleMatch(
                                 ['Metadata', strinterface, 'ParameterLabels', param],
                                 message.format(param)

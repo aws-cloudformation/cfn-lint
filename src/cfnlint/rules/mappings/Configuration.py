@@ -34,7 +34,7 @@ class Configuration(CloudFormationLintRule):
         if mappings:
             for mapname, mapobj in mappings.items():
                 if not isinstance(mapobj, dict):
-                    message = "Mapping {0} has invalid property"
+                    message = 'Mapping {0} has invalid property'
                     matches.append(RuleMatch(
                         ['Mappings', mapname],
                         message.format(mapname)
@@ -43,7 +43,7 @@ class Configuration(CloudFormationLintRule):
                     for firstkey in mapobj:
                         firstkeyobj = mapobj[firstkey]
                         if not isinstance(firstkeyobj, dict):
-                            message = "Mapping {0} has invalid property at {1}"
+                            message = 'Mapping {0} has invalid property at {1}'
                             matches.append(RuleMatch(
                                 ['Mappings', mapname, firstkey],
                                 message.format(mapname, firstkeyobj)
@@ -51,7 +51,7 @@ class Configuration(CloudFormationLintRule):
                         else:
                             for secondkey in firstkeyobj:
                                 if isinstance(firstkeyobj[secondkey], (dict, list)):
-                                    message = "Mapping {0} has invalid property at {1}"
+                                    message = 'Mapping {0} has invalid property at {1}'
                                     matches.append(RuleMatch(
                                         ['Mappings', mapname, firstkey, secondkey],
                                         message.format(mapname, secondkey)

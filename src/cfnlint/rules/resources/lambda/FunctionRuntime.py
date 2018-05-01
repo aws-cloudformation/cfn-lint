@@ -34,7 +34,7 @@ class FunctionRuntime(CloudFormationLintRule):
         """ Check runtime value """
         matches = list()
 
-        message = "You must specify a valid value for runtime at {0}"
+        message = 'You must specify a valid value for runtime at {0}'
 
         if value not in self.runtimes:
             matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
@@ -46,7 +46,7 @@ class FunctionRuntime(CloudFormationLintRule):
 
         matches = list()
         if value in resources:
-            message = "Runtime can't use a Ref to a resource for {0}"
+            message = 'Runtime can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
@@ -54,7 +54,7 @@ class FunctionRuntime(CloudFormationLintRule):
 
             if param_type != 'String':
                 param_path = ['Parameters', value, 'Type']
-                message = "Type for Parameter should be String at {0}"
+                message = 'Type for Parameter should be String at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
         return matches

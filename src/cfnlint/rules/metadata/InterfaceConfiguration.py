@@ -43,7 +43,7 @@ class InterfaceConfiguration(CloudFormationLintRule):
             if isinstance(interfaces, dict):
                 for interface in interfaces:
                     if interface not in self.valid_keys:
-                        message = "Metadata Interface has invalid property {0}"
+                        message = 'Metadata Interface has invalid property {0}'
                         matches.append(RuleMatch(
                             ['Metadata', strinterface, interface],
                             message.format(interface)
@@ -52,7 +52,7 @@ class InterfaceConfiguration(CloudFormationLintRule):
                 for index, value in enumerate(parameter_groups):
                     for key in value:
                         if key not in ['Label', 'Parameters']:
-                            message = "Metadata Interface has invalid property {0}"
+                            message = 'Metadata Interface has invalid property {0}'
                             matches.append(RuleMatch(
                                 ['Metadata', strinterface, 'ParameterGroups', index, key],
                                 message.format(key)
