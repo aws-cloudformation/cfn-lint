@@ -147,7 +147,12 @@ class RulesCollection(object):
         property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                if rule.id not in ignore_checks:
+                ignore = False
+                # Allowing ignoring of rules based on prefix to ignore checks
+                for ignore_check in ignore_checks:
+                    if rule.id.startswith(ignore_check) and ignore_check:
+                        ignore = True
+                if rule.id not in ignore_checks and not ignore:
                     rule_definition = set(rule.tags)
                     rule_definition.add(rule.id)
                     matches.extend(
@@ -185,7 +190,12 @@ class RulesCollection(object):
         matches = list()
 
         for rule in self.rules:
-            if rule.id not in ignore_checks:
+            ignore = False
+            # Allowing ignoring of rules based on prefix to ignore checks
+            for ignore_check in ignore_checks:
+                if rule.id.startswith(ignore_check) and ignore_check:
+                    ignore = True
+            if rule.id not in ignore_checks and not ignore:
                 rule_definition = set(rule.tags)
                 rule_definition.add(rule.id)
                 matches.extend(rule.matchall(filename, cfn))

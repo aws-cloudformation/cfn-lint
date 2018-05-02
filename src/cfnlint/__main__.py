@@ -29,9 +29,16 @@ from cfnlint.version import __version__
 LOGGER = logging.getLogger('cfnlint')
 
 
+class ArgumentParser(argparse.ArgumentParser):
+    """ Override Argument Parser so we can control the exit code"""
+    def error(self, message):
+        self.print_help(sys.stderr)
+        self.exit(32, '%s: error: %s\n' % (self.prog, message))
+
+
 def main():
     """Main Function"""
-    parser = argparse.ArgumentParser(description='CloudFormation Linter')
+    parser = ArgumentParser(description='CloudFormation Linter')
     parser.add_argument(
         '--template', help='CloudFormation Template')
     parser.add_argument(
@@ -85,7 +92,6 @@ def main():
             except Exception as json_err:  # pylint: disable=W0703
                 if vars(args[0])['ignore_bad_template']:
                     LOGGER.info('Template %s is malformed: %s', filename, err)
-                    print(dir(json_err))
                     LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                 else:
                     LOGGER.error('Template %s is malformed: %s', filename, err)
@@ -194,17 +200,26 @@ def main():
         for region in vars(args)['regions']:
             if region not in supported_regions:
                 LOGGER.error('Supported regions are %s', supported_regions)
-                return(1)
+                return(32)
 
     exit_code = 0
     if vars(args)['template']:
         matches = list()
-        runner = cfnlint.Runner(
-            rules, vars(args)['template'], template, vars(args)['ignore_checks'],
-            vars(args)['regions'])
-        matches.extend(runner.run())
+        try:
+            runner = cfnlint.Runner(
+                rules, vars(args)['template'], template, vars(args)['ignore_checks'],
+                vars(args)['regions'])
+            matches.extend(runner.run())
+        except Exception as err:  # pylint: disable=W0703
+            LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+            exit(1)
+
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
-        exit_code = len(matches)
+        for match in matches:
+            if match.rule.id[0] == 'W':
+                exit_code = exit_code | 4
+            elif match.rule.id[0] == 'E':
+                exit_code = exit_code | 2
         if vars(args)['format'] == 'json':
             print(json.dumps(matches, indent=4, cls=CustomEncoder))
         else:
