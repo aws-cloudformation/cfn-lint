@@ -20,8 +20,7 @@ import logging
 import json
 from yaml.parser import ParserError, ScannerError
 import cfnlint.helpers
-from cfnlint import RulesCollection
-from cfnlint import Match
+from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
 import cfnlint.cfn_json
 from cfnlint.version import __version__
@@ -180,6 +179,12 @@ def main():
         print(rules)
         return 0
 
+    transforms = TransformsCollection()
+    transformdirs = [cfnlint.DEFAULT_TRANSFORMSDIR]
+    for transformdir in transformdirs:
+        transforms.extend(
+            TransformsCollection.create_from_directory(transformdir))
+
     if vars(args)['regions']:
         supported_regions = [
             'ap-south-1',
@@ -205,15 +210,17 @@ def main():
     exit_code = 0
     if vars(args)['template']:
         matches = list()
-        try:
-            runner = cfnlint.Runner(
-                rules, vars(args)['template'], template, vars(args)['ignore_checks'],
-                vars(args)['regions'])
-            matches.extend(runner.run())
-        except Exception as err:  # pylint: disable=W0703
-            LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
-            exit(1)
-
+        runner = cfnlint.Runner(
+            rules, transforms, vars(args)['template'], template,
+            vars(args)['ignore_checks'], vars(args)['regions'])
+        matches.extend(runner.transform())
+        # Only do rule analysis if Transform was successful
+        if not matches:
+            try:
+                matches.extend(runner.run())
+            except Exception as err:  # pylint: disable=W0703
+                LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+                exit(1)
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
         for match in matches:
             if match.rule.id[0] == 'W':

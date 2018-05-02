@@ -21,10 +21,13 @@ from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
 import cfnlint.parser
+import cfnlint.transforms
+
 
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'rules')
+DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'transforms')
 
 
 class CloudFormationLintRule(object):
@@ -114,6 +117,69 @@ class CloudFormationLintRule(object):
             return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
         return []
+
+
+class CloudFormationTransform(object):
+    """CloudFormation Transform Support"""
+    type = ''
+
+    resource_transform = None
+
+    def resource_transform_all(self, template):
+        """Generic transform"""
+        if not self.resource_transform:
+            return []
+
+        return self.resource_transform(template)  # pylint: disable=E1102
+
+
+class TransformsCollection(object):
+    """Collection of transforms"""
+
+    def __init__(self):
+        self.transforms = []
+
+    def register(self, obj):
+        """Register transforms"""
+        self.transforms.append(obj)
+
+    def __iter__(self):
+        return iter(self.transforms)
+
+    def __len__(self):
+        return len(self.transforms)
+
+    def extend(self, more):
+        """Extend rules"""
+        self.transforms.extend(more)
+
+    def run(self, filename, cfn, transform_type):
+        """Run the transforms"""
+        matches = list()
+        for transform in self.transforms:
+            if transform_type == transform.type:
+                try:
+                    transform.resource_transform_all(cfn)
+                except cfnlint.transforms.TransformError as err:
+                    rule = CloudFormationLintRule()
+                    rule.id = 'E0001'
+                    rule.shortdesc = 'Transform Error'
+                    rule.description = 'Transform failed to complete'
+                    matches.append(Match(
+                        err.location[0] + 1, err.location[1] + 1,
+                        err.location[2] + 1, err.location[3] + 1,
+                        filename, rule, 'While Performing a Transform got error: %s' % err.value))
+
+        return matches
+
+    @classmethod
+    def create_from_directory(cls, transformdir):
+        """Create transforms from directory"""
+        result = cls()
+        if transformdir != '':
+            result.transforms = cfnlint.helpers.load_plugins(os.path.expanduser(transformdir))
+
+        return result
 
 
 class RulesCollection(object):
@@ -287,6 +353,18 @@ class Template(object):
     def __init__(self, template, regions=['us-east-1']):
         self.template = template
         self.regions = regions
+        self.sections = [
+            'AWSTemplateFormatVersion',
+            'Description',
+            'Metadata',
+            'Parameters',
+            'Mappings',
+            'Conditions',
+            'Transform',
+            'Resources',
+            'Outputs',
+            'Rules'
+        ]
 
     def get_resources(self, resource_type=[]):
         """
@@ -670,13 +748,24 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, ignore_checks, regions, verbosity=0):
+            self, rules, transforms, filename, template, ignore_checks, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
         self.ignore_checks = ignore_checks
         self.verbosity = verbosity
+        self.transforms = transforms
         self.cfn = Template(template, regions)
+
+    def transform(self):
+        """Transform logic"""
+        LOGGER.debug('Transform templates if needed')
+        transform_type = self.cfn.template.get('Transform')
+        matches = list()
+        if transform_type:
+            matches = self.transforms.run(self.filename, self.cfn, transform_type)
+
+        return matches
 
     def run(self):
         """Run rules"""

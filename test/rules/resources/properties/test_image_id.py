@@ -23,7 +23,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
     """Test Password Property Configuration"""
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
+        super(TestPropertyVpcId, self).setUp()
         self.collection.register(ImageId())
 
     success_templates = [

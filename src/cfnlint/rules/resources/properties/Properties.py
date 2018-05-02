@@ -76,7 +76,7 @@ class Properties(CloudFormationLintRule):
                 pass
                 # LOGGER.info('%s is an int but should be %s for resource %s',
                 #            text[prop], primtype, resourcename)
-            elif primtype != 'Integer':
+            elif primtype not in ['Integer', 'Long']:
                 message = 'Property %s should be of type Integer' % ('/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
         elif isinstance(value, list):
