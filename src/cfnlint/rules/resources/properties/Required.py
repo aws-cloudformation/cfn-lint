@@ -55,36 +55,42 @@ class Required(CloudFormationLintRule):
         if not isinstance(text, dict):
             # Covered with Properties not with Required
             return matches
+
+        # Check if all required properties are specified
         for prop in resourcespec:
             if resourcespec[prop]['Required']:
                 if prop not in text:
                     proptree = tree[:]
                     proptree.pop()
-                    skip = False
-                    if 'PrimitiveType' in specs[resourcetype]['Properties'][prop]:
-                        if specs[resourcetype]['Properties'][prop]['PrimitiveType'] == 'Json':
-                            skip = True
-                        else:
-                            message = 'Property {0} missing from resource {1}'
-                            matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
-                    if isinstance(text, dict) and not skip:
-                        if not text:
-                            message = 'Property {0} missing from resource {1}'
-                            matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
-                        for key in text:
-                            if key in resourcespec:
-                                arrproptree = tree[:]
-                                arrproptree.append(key)
-                                if key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                                    matches.extend(self.propertycheck(
-                                        text[key][1], proptype,
-                                        parenttype, resourcename, arrproptree, False))
-                                    matches.extend(self.propertycheck(
-                                        text[key][2], proptype,
-                                        parenttype, resourcename, arrproptree, False))
-                    else:
+
+                    # The property is not found if it's a confitional,
+                    skip_conditional = False
+                    for key in text:
+                        arrproptree = tree[:]
+                        arrproptree.append(key)
+
+                        # If the property is a conditional, check the positive
+                        # and negative individually
+                        if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            skip_conditional = True
+                            if text[key][1].get('Ref') != 'AWS::NoValue':
+                                matches.extend(self.propertycheck(
+                                    text[key][1], proptype,
+                                    parenttype, resourcename, arrproptree, False))
+                            if text[key][2].get('Ref') != 'AWS::NoValue':
+                                matches.extend(self.propertycheck(
+                                    text[key][2], proptype,
+                                    parenttype, resourcename, arrproptree, False))
+
+                    # If it wasn't a conditional, it was just missing
+                    if not skip_conditional:
                         message = 'Property {0} missing from resource {1}'
                         matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
+                    else:
+                        # Break the loop, the conditional has handled this
+                        break
+
+        # For all specified properties, check all nested properties
         for prop in text:
             proptree = tree[:]
             proptree.append(prop)
