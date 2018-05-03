@@ -20,6 +20,7 @@ import json
 import os
 import imp
 import logging
+import re
 import requests
 import pkg_resources
 
@@ -67,10 +68,49 @@ def merge_spec(source, destination):
 def override_specs(override_spec_data):
     """ Override Resource Specs """
 
-    # Merge override spec file into the AWS Resource specification
-    for region, spec in RESOURCE_SPECS.items():
-        RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
+    excludes = []
+    includes = []
 
+    # Extract the exclude list from the override file
+    if 'ExcludeResourceTypes' in override_spec_data:
+        excludes = override_spec_data.pop('ExcludeResourceTypes')
+    if 'IncludeResourceTypes' in override_spec_data:
+        includes = override_spec_data.pop('IncludeResourceTypes')
+
+    for region, spec in RESOURCE_SPECS.items():
+
+        # Merge override spec file into the AWS Resource specification
+        if override_spec_data:
+            RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
+
+        # Grab a list of all resources
+        all_resources = list(RESOURCE_SPECS[region]['ResourceTypes'].keys())[:]
+
+        resources = []
+
+        # Remove unsupported resource using includes
+        if includes:
+            for include in includes:
+                regex = re.compile(include.replace('*', '(.*)') + '$')
+                matches = [string for string in all_resources if re.match(regex, string)]
+
+                resources.extend(matches)
+        else:
+            resources = all_resources[:]
+
+        # Remove unsupported resources using the excludes
+        if excludes:
+            for exclude in excludes:
+                regex = re.compile(exclude.replace('*', '(.*)') + '$')
+                matches = [string for string in resources if re.match(regex, string)]
+
+                for match in matches:
+                    resources.remove(match)
+
+        # Remove unsupported resources
+        for resource in all_resources:
+            if not resource in resources:
+                del RESOURCE_SPECS[region]['ResourceTypes'][resource]
 
 def initialize_specs():
     """ Reload Resource Specs """
