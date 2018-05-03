@@ -20,7 +20,7 @@ from testlib.testcase import BaseTestCase
 import cfnlint.helpers
 import json
 
-class BaseRuleTestCase(BaseTestCase):
+class TestOverrideRequired(BaseTestCase):
     """Used for Testing Rules"""
 
     def setUp(self):
@@ -35,7 +35,7 @@ class BaseRuleTestCase(BaseTestCase):
 
     def test_success_run(self):
         """Success test"""
-        filename = 'templates/good/override_required.yaml'
+        filename = 'templates/good/override/required.yaml'
         template = self.load_template(filename)
         custom_spec = json.load(open('templates/override_spec/required.json'))
 
@@ -45,8 +45,8 @@ class BaseRuleTestCase(BaseTestCase):
         self.assertEqual([], good_runner.run())
 
     def test_fail_run(self):
-        """Failure test"""
-        filename = 'templates/bad/override_required.yaml'
+        """Failure test required"""
+        filename = 'templates/bad/override/required.yaml'
         template = self.load_template(filename)
         custom_spec = json.load(open('templates/override_spec/required.json'))
 
