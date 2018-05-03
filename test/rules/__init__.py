@@ -41,6 +41,7 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/functions_cidr.yaml',
         'templates/good/functions_findinmap.yaml',
         'templates/good/resources_lambda.yaml',
+        'templates/good/resources_codepipeline.yaml',
         'templates/good/transform_serverless_api.yaml',
         'templates/good/transform_serverless_function.yaml',
         'templates/good/transform_serverless_globals.yaml',
