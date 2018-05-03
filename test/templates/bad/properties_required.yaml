@@ -1,0 +1,43 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Custom required property
+Parameters:
+  Environment:
+    Type: "String"
+    Default: "production"
+Conditions:
+  IsProduction: !Equals [ !Ref Environment, "production" ]
+Resources:
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "my-bucket-name"
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - "*"
+          # Missing: AllowedHeaders
+  myConstraintSet:
+    Type: "AWS::WAF::SizeConstraintSet"
+    Properties:
+      Name: "constraint-set"
+      # Missing: SizeConstraints
+  ApplicationLoadBalancerCertificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "example.com"
+      DomainValidationOptions:
+        - DomainName: "mydomain.example.com"
+          ValidationDomain: "example.com"
+        - !If
+          - AddCustomComain
+          -
+            DomainName: "*.customdomain.com"
+            # Missing: #ValidationDomain
+          - !Ref "AWS::NoValue"
+      SubjectAlternativeNames:
+        - !If
+          - AddCustomComain
+          - "*.customdomain.com"
+          - !Ref "AWS::NoValue"
