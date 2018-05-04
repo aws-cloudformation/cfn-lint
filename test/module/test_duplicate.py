@@ -47,6 +47,7 @@ class TestDuplocate(BaseTestCase):
 
         assert(True)
 
+<<<<<<< HEAD
     def test_fail_json_run(self):
         """Test failure run"""
 
@@ -66,6 +67,11 @@ class TestDuplocate(BaseTestCase):
     def test_fail_yaml_run(self):
         """Test failure run"""
 
+=======
+    def test_fail_run(self):
+        """Test failure run"""
+
+>>>>>>> Check for duplicates
         filename = 'templates/bad/duplicate.yaml'
 
         try:
