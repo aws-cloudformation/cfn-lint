@@ -25,12 +25,18 @@ from yaml import ScalarNode
 from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
+from yaml.constructor import ConstructorError
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
 
 LOGGER = logging.getLogger(__name__)
 
+class DuplicateError(ConstructorError):
+    """
+    Error thrown when the template contains duplicates
+    """
+    pass
 
 def create_node_class(cls):
     """
@@ -68,6 +74,19 @@ class NodeConstructor(SafeConstructor):
     # construction") by first exhausting iterators, then yielding
     # copies.
     def construct_yaml_map(self, node):
+
+        # Check for duplicate keys on the current level, this is not desirable
+        # because a dict does not support this. It overwrites it with the last
+        # occurance, which can give unexpted results
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, False)
+            value = self.construct_object(value_node, False)
+
+            if key in mapping:
+                raise DuplicateError('"{}" (line {})'.format(key, key_node.start_mark.line+1))
+            mapping[key] = value
+
         obj, = SafeConstructor.construct_yaml_map(self, node)
         return dict_node(obj, node.start_mark, node.end_mark)
 
