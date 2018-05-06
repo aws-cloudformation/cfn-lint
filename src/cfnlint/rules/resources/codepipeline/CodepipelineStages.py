@@ -18,7 +18,7 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class Stages(CloudFormationLintRule):
+class CodepipelineStages(CloudFormationLintRule):
     """Check if CodePipeline Stages are set up properly."""
     id = 'E2540'
     shortdesc = 'CodePipeline Stages'
@@ -65,7 +65,9 @@ class Stages(CloudFormationLintRule):
 
         for sidx, stage in enumerate(value):
             if stage['Name'] in stage_names:
-                message = 'All stage names within a pipeline must be unique.'
+                message = 'All stage names within a pipeline must be unique. ({name})'.format(
+                    name=stage['Name']
+                )
                 matches.append(RuleMatch(path + [sidx, 'Name'], message))
             stage_names.add(stage['Name'])
 
