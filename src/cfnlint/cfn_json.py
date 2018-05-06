@@ -22,6 +22,19 @@ from json.scanner import NUMBER_RE
 
 LOGGER = logging.getLogger(__name__)
 
+def check_duplicates(ordered_pairs):
+    """
+        Check for duplicate keys on the current level, this is not desirable
+        because a dict does not support this. It overwrites it with the last
+        occurance, which can give unexpected results
+    """
+    mapping = {}
+    for key, value in ordered_pairs:
+        if key in mapping:
+            raise Exception('"{}"'.format(key))
+        else:
+            mapping[key] = value
+    return mapping
 
 class JSONDecodeError(ValueError):
     """Subclass of ValueError with the following additional properties:
@@ -172,16 +185,18 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         # Trivial empty object
         if nextchar == '}':
             if object_pairs_hook is not None:
-                result = object_pairs_hook(pairs)
-                return result, end + 1
+                try:
+                    result = object_pairs_hook(pairs)
+                    return result, end + 1
+                except Exception as err:
+                    raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+
             pairs = {}
             if object_hook is not None:
                 pairs = object_hook(pairs, s)
             return pairs, end + 1
         elif nextchar != '"':
             raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
-            # raise JSONDecodeError(
-            #    "Expecting property name enclosed in double quotes", s, end)
     end += 1
     while True:
         begin = end - 1
@@ -238,7 +253,10 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
             raise JSONDecodeError(
                 'Expecting property name enclosed in double quotes', s, end - 1)
     if object_pairs_hook is not None:
-        result = object_pairs_hook(pairs)
+        try:
+            result = object_pairs_hook(pairs)
+        except Exception as err:
+            raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
         return result, end
     pairs = dict(pairs)
     if object_hook is not None:
@@ -324,4 +342,5 @@ class CfnJSONDecoder(json.JSONDecoder):
         self.parse_object = CfnJSONObject
         self.parse_string = py_scanstring
         self.memo = {}
+        self.object_pairs_hook = check_duplicates
         self.scan_once = py_make_scanner(self)

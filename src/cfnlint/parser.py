@@ -77,7 +77,7 @@ class NodeConstructor(SafeConstructor):
 
         # Check for duplicate keys on the current level, this is not desirable
         # because a dict does not support this. It overwrites it with the last
-        # occurance, which can give unexpted results
+        # occurance, which can give unexpected results
         mapping = {}
         for key_node, value_node in node.value:
             key = self.construct_object(key_node, False)

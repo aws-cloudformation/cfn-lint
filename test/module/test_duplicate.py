@@ -17,6 +17,7 @@
 import json
 from cfnlint import Template, RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.parser  # pylint: disable=E0401
+import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -46,7 +47,23 @@ class TestDuplocate(BaseTestCase):
 
         assert(True)
 
+    def test_fail_json_run(self):
+        """Test failure run"""
+
     def test_fail_run(self):
+        """Test failure run"""
+
+        filename = 'templates/bad/duplicate.json'
+
+        try:
+            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+        except cfnlint.cfn_json.JSONDecodeError:
+            assert(True)
+            return
+
+        assert(False)
+
+    def test_fail_yaml_run(self):
         """Test failure run"""
 
         filename = 'templates/bad/duplicate.yaml'
