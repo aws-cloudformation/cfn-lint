@@ -19,6 +19,7 @@ import argparse
 import logging
 import json
 from yaml.parser import ParserError, ScannerError
+from cfnlint.parser import DuplicateError
 import cfnlint.helpers
 from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
@@ -78,6 +79,9 @@ def main():
             elif e.errno == 13:
                 LOGGER.error('Permission denied when accessing template file: %s', filename)
                 sys.exit(1)
+        except DuplicateError as err:
+            LOGGER.error('Template %s contains duplicates: %s', filename, err)
+            sys.exit(1)
         except (ParserError, ScannerError) as err:
             try:
                 template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
@@ -144,7 +148,6 @@ def main():
             custom_spec_data = json.load(open(filename))
 
             cfnlint.helpers.override_specs(custom_spec_data)
-
         except IOError as e:
             if e.errno == 2:
                 LOGGER.error('Override spec file not found: %s', filename)

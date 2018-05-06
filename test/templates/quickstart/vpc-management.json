@@ -632,23 +632,6 @@
 				}
 			}
 		},
-		"rENIProductionBastion": {
-			"Type": "AWS::EC2::NetworkInterface",
-			"DependsOn": "rGWAttachmentMgmtIGW",
-			"Properties": {
-				"SubnetId": {
-					"Ref": "rManagementDMZSubnetA"
-				},
-				"GroupSet": [{
-					"Ref": "rSecurityGroupBastion"
-				}],
-				"Description": "Interface for Bastion device",
-				"Tags": [{
-					"Key": "Network",
-					"Value": "MgmtBastionDevice"
-				}]
-			}
-		},
 		"rMgmtBastionInstance": {
 			"Type": "AWS::EC2::Instance",
 			"DependsOn": ["rDeepSecurityInfrastructureTemplate", "rGWAttachmentMgmtIGW"],
