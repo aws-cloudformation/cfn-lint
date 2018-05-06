@@ -48,6 +48,7 @@ class TestDuplocate(BaseTestCase):
         assert(True)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def test_fail_json_run(self):
         """Test failure run"""
 
@@ -72,6 +73,27 @@ class TestDuplocate(BaseTestCase):
         """Test failure run"""
 
 >>>>>>> Check for duplicates
+=======
+    def test_fail_json_run(self):
+        """Test failure run"""
+
+    def test_fail_run(self):
+        """Test failure run"""
+
+        filename = 'templates/bad/duplicate.json'
+
+        try:
+            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+        except cfnlint.cfn_json.JSONDecodeError:
+            assert(True)
+            return
+
+        assert(False)
+
+    def test_fail_yaml_run(self):
+        """Test failure run"""
+
+>>>>>>> Add duplicate resources check to JSON
         filename = 'templates/bad/duplicate.yaml'
 
         try:
