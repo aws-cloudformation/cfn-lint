@@ -32,11 +32,20 @@ FN_PREFIX = 'Fn::'
 
 LOGGER = logging.getLogger(__name__)
 
+
 class DuplicateError(ConstructorError):
     """
     Error thrown when the template contains duplicates
     """
     pass
+
+
+class NullError(ConstructorError):
+    """
+    Error thrown when the template contains Nulls
+    """
+    pass
+
 
 def create_node_class(cls):
     """
@@ -84,7 +93,7 @@ class NodeConstructor(SafeConstructor):
             value = self.construct_object(value_node, False)
 
             if key in mapping:
-                raise DuplicateError('"{}" (line {})'.format(key, key_node.start_mark.line+1))
+                raise DuplicateError('"{}" (line {})'.format(key, key_node.start_mark.line + 1))
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
@@ -99,6 +108,10 @@ class NodeConstructor(SafeConstructor):
         assert isinstance(obj, str)
         return str_node(obj, node.start_mark, node.end_mark)
 
+    def construct_yaml_null_error(self, node):
+        """Throw a null error"""
+        raise NullError('Null value at line {0} column {1}'.format(node.start_mark.line, node.start_mark.column))
+
 
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:map',
@@ -111,6 +124,10 @@ NodeConstructor.add_constructor(
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:str',
     NodeConstructor.construct_yaml_str)
+
+NodeConstructor.add_constructor(
+    u'tag:yaml.org,2002:null',
+    NodeConstructor.construct_yaml_null_error)
 
 
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):

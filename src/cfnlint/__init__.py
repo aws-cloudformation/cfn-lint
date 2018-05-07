@@ -453,21 +453,21 @@ class Template(object):
         LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
-        if 'Resources' in self.template:
-            for name, value in self.template['Resources'].items():
-                if 'Type' in value:
-                    valtype = value['Type']
-                    if valtype.startswith(('Custom::', 'AWS::CloudFormation::Stack', 'AWS::Serverless::')):
-                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                        results[name] = {'*': {'PrimitiveItemType': 'String'}}
-                    else:
-                        if value['Type'] in resourcetypes:
-                            if 'Attributes' in resourcetypes[valtype]:
-                                results[name] = {}
-                                for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
-                                    element = {}
-                                    element.update(attvalue)
-                                    results[name][attname] = element
+        resources = self.template.get('Resources', {})
+        for name, value in resources.items():
+            if 'Type' in value:
+                valtype = value['Type']
+                if valtype.startswith(('Custom::', 'AWS::CloudFormation::Stack', 'AWS::Serverless::')):
+                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                    results[name] = {'*': {'PrimitiveItemType': 'String'}}
+                else:
+                    if value['Type'] in resourcetypes:
+                        if 'Attributes' in resourcetypes[valtype]:
+                            results[name] = {}
+                            for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
+                                element = {}
+                                element.update(attvalue)
+                                results[name][attname] = element
 
         return results
 
