@@ -14,16 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.functions.RefExist import RefExist  # pylint: disable=E0401
+from cfnlint.rules.functions.IfExist import IfExist  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestRulesRefExist(BaseRuleTestCase):
-    """Test Rules Ref exists """
+class TestRulesIfExist(BaseRuleTestCase):
+    """Test Rules If conditions exist """
     def setUp(self):
         """Setup"""
-        super(TestRulesRefExist, self).setUp()
-        self.collection.register(RefExist())
+        super(TestRulesIfExist, self).setUp()
+        self.collection.register(IfExist())
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +31,4 @@ class TestRulesRefExist(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/functions_ref.yaml', 5)
+        self.helper_file_negative('templates/bad/conditions.yaml', 2)
