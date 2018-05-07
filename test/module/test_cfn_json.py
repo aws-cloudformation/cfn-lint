@@ -49,7 +49,7 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc": {
                 "filename": 'templates/quickstart/vpc.json',
-                "failures": 1
+                "failures": 0
             }
         }
 

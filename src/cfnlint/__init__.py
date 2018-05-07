@@ -576,9 +576,11 @@ class Template(object):
             result = {}
             result['Path'] = path[:] + [index + 1]
             if not isinstance(item, (dict, list)):
+                # Just straight values and pass them through
                 result['Value'] = item
                 matches.append(result)
             elif len(item) == 1:
+                # Checking for conditions inside of conditions
                 for sub_key, sub_value in item.items():
                     if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                         results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
@@ -590,8 +592,13 @@ class Template(object):
                             result['Path'] += ['Ref']
                             matches.append(result)
                     else:
-                        result['Value'] = sub_value
+                        # Return entire Item
+                        result['Value'] = item
                         matches.append(result)
+            else:
+                # Length longer than 1 means a list or object that should be fully returned
+                result['Value'] = item
+                matches.append(result)
 
         return matches
 
