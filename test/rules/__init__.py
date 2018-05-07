@@ -22,12 +22,10 @@ class BaseRuleTestCase(BaseTestCase):
     """Used for Testing Rules"""
     success_templates = [
         'templates/good/generic.yaml',
-        'templates/quickstart/nist_high_master.yaml',
         'templates/quickstart/nist_application.yaml',
         'templates/quickstart/nist_config_rules.yaml',
         'templates/quickstart/nist_iam.yaml',
         'templates/quickstart/nist_logging.yaml',
-        'templates/quickstart/nist_vpc_management.yaml',
         'templates/quickstart/nist_vpc_production.yaml',
         'templates/quickstart/openshift_master.yaml',
         'templates/quickstart/openshift.yaml',
