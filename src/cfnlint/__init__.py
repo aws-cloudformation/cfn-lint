@@ -576,22 +576,34 @@ class Template(object):
             result = {}
             result['Path'] = path[:] + [index + 1]
             if not isinstance(item, (dict, list)):
+                # Just straight values and pass them through
                 result['Value'] = item
                 matches.append(result)
             elif len(item) == 1:
-                for sub_key, sub_value in item.items():
-                    if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                        results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
-                        if isinstance(results, list):
-                            matches.extend(results)
-                    elif sub_key == 'Ref':
-                        if sub_value != 'AWS::NoValue':
-                            result['Value'] = sub_value
-                            result['Path'] += ['Ref']
+                # Checking for conditions inside of conditions
+                if isinstance(item, dict):
+                    for sub_key, sub_value in item.items():
+                        if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
+                            if isinstance(results, list):
+                                matches.extend(results)
+                        elif sub_key == 'Ref':
+                            if sub_value != 'AWS::NoValue':
+                                result['Value'] = sub_value
+                                result['Path'] += ['Ref']
+                                matches.append(result)
+                        else:
+                            # Return entire Item
+                            result['Value'] = item
                             matches.append(result)
-                    else:
-                        result['Value'] = sub_value
-                        matches.append(result)
+                else:
+                    # Return entire Item
+                    result['Value'] = item
+                    matches.append(result)
+            else:
+                # Length longer than 1 means a list or object that should be fully returned
+                result['Value'] = item
+                matches.append(result)
 
         return matches
 
