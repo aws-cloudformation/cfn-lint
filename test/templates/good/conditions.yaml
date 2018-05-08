@@ -20,6 +20,10 @@ Conditions:
     - !Ref myEnvironment
     - "dev"
   EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
+  PrimaryRegion:
+    "Fn::Equals":
+    - !Ref AWS::Region
+    - 'us-east-1'
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
@@ -50,7 +54,10 @@ Resources:
               -
                 RestrictionType: whitelist
                 Locations:
-                  - BE
-                  - LU
-                  - NL
+                  !If
+                    - PrimaryRegion
+                    - - EN
+                    - - BE
+                      - LU
+                      - NL
               - RestrictionType: none
