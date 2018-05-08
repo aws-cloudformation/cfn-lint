@@ -19,7 +19,7 @@ import argparse
 import logging
 import json
 from yaml.parser import ParserError, ScannerError
-from cfnlint.parser import DuplicateError
+from cfnlint.parser import DuplicateError, NullError
 import cfnlint.helpers
 from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
@@ -89,15 +89,26 @@ def main():
         except DuplicateError as err:
             LOGGER.error('Template %s contains duplicates: %s', filename, err)
             sys.exit(1)
+        except NullError as err:
+            LOGGER.error('Template %s contains nulls: %s', filename, err)
+            sys.exit(1)
         except (ParserError, ScannerError) as err:
             try:
                 template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+            except cfnlint.cfn_json.JSONDecodeError as json_err:
+                if vars(args[0])['ignore_bad_template']:
+                    LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                else:
+                    LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                sys.exit(1)
             except Exception as json_err:  # pylint: disable=W0703
                 if vars(args[0])['ignore_bad_template']:
-                    LOGGER.info('Template %s is malformed: %s', filename, err)
+                    LOGGER.info('Template %s is malformed: %s', filename, err.problem)
                     LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                 else:
-                    LOGGER.error('Template %s is malformed: %s', filename, err)
+                    LOGGER.error('Template %s is malformed: %s', filename, err.problem)
                     LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                     sys.exit(1)
 

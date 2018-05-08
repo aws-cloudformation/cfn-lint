@@ -73,7 +73,7 @@ class Configuration(CloudFormationLintRule):
                     if region in cfn.regions:
                         if resource_type not in specs['ResourceTypes']:
                             if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
-                                message = 'Invalid Type {0} for resource {1} in {2}'
+                                message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                                 matches.append(RuleMatch(
                                     ['Resources', resource_name, 'Type'],
                                     message.format(resource_type, resource_name, region)

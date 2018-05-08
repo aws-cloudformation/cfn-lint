@@ -15,43 +15,32 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from cfnlint import Runner, RulesCollection
-from cfnlint.rules.resources.properties.Required import Required  # pylint: disable=E0401
+from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 import cfnlint.helpers
 import json
 
-class BaseRuleTestCase(BaseTestCase):
+class TestInclude(BaseTestCase):
     """Used for Testing Rules"""
 
     def setUp(self):
         """Setup"""
         self.collection = RulesCollection()
-        self.collection.register(Required())
+        self.collection.register(Configuration())
 
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
         cfnlint.helpers.initialize_specs()
 
-    def test_success_run(self):
-        """Success test"""
-        filename = 'templates/good/override_required.yaml'
-        template = self.load_template(filename)
-        custom_spec = json.load(open('templates/override_spec/required.json'))
-
-        cfnlint.helpers.override_specs(custom_spec)
-
-        good_runner = Runner(self.collection, [], filename, template, [], ['us-east-1'], [])
-        self.assertEqual([], good_runner.run())
-
     def test_fail_run(self):
-        """Failure test"""
-        filename = 'templates/bad/override_required.yaml'
+        """Failure test required"""
+        filename = 'templates/bad/override/include.yaml'
         template = self.load_template(filename)
-        custom_spec = json.load(open('templates/override_spec/required.json'))
 
+        custom_spec = json.load(open('templates/override_spec/include.json'))
         cfnlint.helpers.override_specs(custom_spec)
 
         bad_runner = Runner(self.collection, [], filename, template, [], ['us-east-1'], [])
         errs = bad_runner.run()
-        self.assertEqual(1, len(errs))
+        self.assertEqual(2, len(errs))

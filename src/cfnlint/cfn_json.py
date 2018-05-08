@@ -18,9 +18,11 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
+from cfnlint.parser import DuplicateError, NullError
 
 
 LOGGER = logging.getLogger(__name__)
+
 
 def check_duplicates(ordered_pairs):
     """
@@ -30,11 +32,14 @@ def check_duplicates(ordered_pairs):
     """
     mapping = {}
     for key, value in ordered_pairs:
+        if value is None:
+            raise NullError('"{}"'.format(key))
         if key in mapping:
-            raise Exception('"{}"'.format(key))
+            raise DuplicateError('"{}"'.format(key))
         else:
             mapping[key] = value
     return mapping
+
 
 class JSONDecodeError(ValueError):
     """Subclass of ValueError with the following additional properties:
@@ -188,9 +193,10 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                 try:
                     result = object_pairs_hook(pairs)
                     return result, end + 1
-                except Exception as err:
+                except DuplicateError as err:
                     raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
-
+                except NullError as err:
+                    raise JSONDecodeError('Null Error {}'.format(err), s, end)
             pairs = {}
             if object_hook is not None:
                 pairs = object_hook(pairs, s)
@@ -255,8 +261,10 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
     if object_pairs_hook is not None:
         try:
             result = object_pairs_hook(pairs)
-        except Exception as err:
+        except DuplicateError as err:
             raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+        except NullError as err:
+            raise JSONDecodeError('Null Error {}'.format(err), s, end)
         return result, end
     pairs = dict(pairs)
     if object_hook is not None:

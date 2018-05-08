@@ -4,6 +4,21 @@ Parameters:
   myVpcId:
     Description: MyVpc Id
     Type: AWS::EC2::VPC::Id
+  myBucketName:
+    Type: String
+    Description: "Name of the S3 bucket."
+  KeyAdminRole:
+    Type: String
+    Description: "Name of the role that will act as Key Administrator for the KMS CMK created in this stack."
+  Ec2ImageId:
+    Type: AWS::EC2::Image::Id
+    Description: "ImageId to use when launching the Linux EC2 instance"
+  Ec2SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: "Subnet to associate myInstance EC2 Instance with."
+  Ec2SecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: "Existing Security Group that allows SSH access from your machine."
 Resources:
   mySecurityGroupVpc1:
     Type: AWS::EC2::SecurityGroup
@@ -16,9 +31,6 @@ Resources:
         SourceSecurityGroupId: 'sg-1234567'
       -
         IpProtocol: 1
-        SourceSecurityGroupId: !Ref mySecurityGroupVpc2
-      -
-        IpProtocol: 1
         SourceSecurityGroupId: !Sub "${mySecurityGroupVpc2.GroupId}"
   mySecurityGroupVpc2:
     Type: AWS::EC2::SecurityGroup
@@ -26,9 +38,6 @@ Resources:
       GroupDescription: 'Security Group Vpc 2'
       VpcId: !Ref myVpcId
       SecurityGroupIngress:
-      -
-        IpProtocol: 1
-        SourceSecurityGroupId: !Ref mySecurityGroupVpc1
       -
         IpProtocol: 1
         SourceSecurityGroupId: !GetAtt mySecurityGroupVpc1.GroupId
@@ -41,35 +50,170 @@ Resources:
       -
         IpProtocol: 1
         SourceSecurityGroupId: !Ref mySecurityGroupVpc3
-  MyEC2Instance:
-    Type: "AWS::EC2::Instance"
+  myInstance:
+    Type: AWS::EC2::Instance
+    DependsOn: myInstanceProfile
     Properties:
-      ImageId: "ami-2f726546"
-      InstanceType: t1.micro
-      KeyName: testkey
-      BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
-          Ebs:
-            VolumeType: io1
-            Iops: 1024
-            DeleteOnTermination: false
-            VolumeSize: 20
+      IamInstanceProfile: !Ref myInstanceProfile
+      ImageId: !Ref Ec2ImageId
+      InstanceType: t2.micro
       NetworkInterfaces:
-        - DeviceIndex: "1"
-  AnotherInstance:
-    Type: "AWS::EC2::Instance"
+      - AssociatePublicIpAddress: true
+        GroupSet:
+          - !Ref Ec2SecurityGroupId
+        SubnetId: !Ref Ec2SubnetId
+        DeviceIndex: 0
+  myBucket:
+    Type: AWS::S3::Bucket
+    DependsOn: myKms
     Properties:
-      ImageId: "ami-2f726546"
-      InstanceType: t1.micro
-      KeyName: testkey
-      BlockDeviceMappings:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            KMSMasterKeyID: !Ref myKms
+            SSEAlgorithm: aws:kms
+      BucketName: !Ref myBucketName
+  myBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Id: PutObjPolicy
+        Statement:
+        - Sid: DenyIncorrectEncryptionHeader
+          Effect: Deny
+          Principal: "*"
+          Action: s3:PutObject
+          Resource: !Sub arn:aws:s3:::${myBucketName}/*
+          Condition:
+            StringNotEquals:
+              s3:x-amz-server-side-encryption: aws:kms
+        - Sid: DenyUnEncryptedObjectUploads
+          Effect: Deny
+          Principal: "*"
+          Action: s3:PutObject
+          Resource: !Sub arn:aws:s3:::${myBucketName}/*
+          Condition:
+            'Null':
+              s3:x-amz-server-side-encryption: true
+  myRoleToWriteToS3:
+    Type: AWS::IAM::Role
+    DependsOn: myKms
+    Properties:
+      RoleName: WriteToS3
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "ec2.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
         -
-          DeviceName: /dev/sdm
-          Ebs:
-            VolumeType: io1
-            Iops: 1024
-            DeleteOnTermination: false
-            VolumeSize: 20
-      NetworkInterfaces:
-        - DeviceIndex: "1"
+          PolicyName: !Sub AllowWriteTo${myBucketName}
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Sid: AllowPutObjectOnlyWithmyKms
+              Effect: Allow
+              Action: s3:PutObject
+              Resource: arn:aws:s3:::*/*
+              Condition:
+                StringEquals:
+                  s3:x-amz-server-side-encryption: aws:kms
+                  s3:x-amz-server-side-encryption-aws-kms-key-id: !Ref myKms
+            - Sid: AllowWriteToBucket
+              Effect: Allow
+              Action:
+              - s3:GetObjectAcl
+              - s3:GetObject
+              - s3:AbortMultipartUpload
+              - s3:PutObjectVersionTagging
+              - s3:ListBucket
+              - s3:PutObjectTagging
+              - s3:GetBucketAcl
+              - s3:GetObjectVersion
+              Resource:
+              - arn:aws:s3:::testbucket
+              - arn:aws:s3:::*/*
+            - Sid: AllowListBuckets
+              Effect: Allow
+              Action:
+              - s3:ListAllMyBuckets
+              - s3:HeadBucket
+              - s3:ListObjects
+              Resource: "*"
+  myInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    DependsOn: myRoleToWriteToS3
+    Properties:
+      InstanceProfileName: InstanceProfile
+      Path: "/"
+      Roles:
+        -
+          !Ref myRoleToWriteToS3
+  myKms:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: "Key used to encrypt objects on S3"
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: KmsKeyPolicy
+        Statement:
+        - Sid: Enable IAM User Permissions
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${AWS::AccountId}:root
+          Action: kms:*
+          Resource: "*"
+        - Sid: Allow access for Key Administrators
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${AWS::AccountId}:role/${KeyAdminRole}
+          Action:
+          - kms:Create*
+          - kms:Describe*
+          - kms:Enable*
+          - kms:List*
+          - kms:Put*
+          - kms:Update*
+          - kms:Revoke*
+          - kms:Disable*
+          - kms:Get*
+          - kms:Delete*
+          - kms:TagResource
+          - kms:UntagResource
+          - kms:ScheduleKeyDeletion
+          - kms:CancelKeyDeletion
+          Resource: "*"
+        - Sid: Allow use of the key
+          Effect: Allow
+          Principal:
+            AWS:
+            - !Sub arn:aws:iam::${AWS::AccountId}:role/${KeyAdminRole}
+            - !Sub arn:aws:iam::${AWS::AccountId}:instanceprofile/${myInstanceProfile}
+          Action:
+          - kms:Encrypt
+          - kms:Decrypt
+          - kms:ReEncrypt*
+          - kms:GenerateDataKey*
+          - kms:DescribeKey
+          Resource: "*"
+        - Sid: Allow attachment of persistent resources
+          Effect: Allow
+          Principal:
+            AWS: !Sub arn:aws:iam::${AWS::AccountId}:role/${KeyAdminRole}
+          Action:
+          - kms:CreateGrant
+          - kms:ListGrants
+          - kms:RevokeGrant
+          Resource: "*"
+          Condition:
+            Bool:
+              kms:GrantIsForAWSResource: "True"
