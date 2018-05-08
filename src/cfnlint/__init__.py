@@ -631,7 +631,7 @@ class Template(object):
         value = obj.get(key)
         if not value:
             return None
-        if isinstance(value, (dict, list)):
+        if isinstance(value, (dict)):
             if len(value) == 1:
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
@@ -643,6 +643,24 @@ class Template(object):
                         result['Path'] = path[:] + [obj_key]
                         result['Value'] = obj_value
                         matches.append(result)
+        elif isinstance(value, (list)):
+            for list_index, list_value in enumerate(value):
+                if isinstance(list_value, dict):
+                    for obj_key, obj_value in list_value.items():
+                        if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
+                            if isinstance(results, list):
+                                matches.extend(results)
+                        else:
+                            result = {}
+                            result['Path'] = path[:] + [list_index, obj_key]
+                            result['Value'] = obj_value
+                            matches.append(result)
+                else:
+                    result = {}
+                    result['Path'] = path[:] + [list_index]
+                    result['Value'] = list_value
+                    matches.append(result)
         else:
             result = {}
             result['Path'] = path[:]
