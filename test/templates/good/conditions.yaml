@@ -8,6 +8,8 @@ Parameters:
     AllowedValues:
       - prod
       - dev
+  EnableGeoBlocking:
+    Type: String
 Conditions:
   isProd:
     "Fn::Equals":
@@ -17,6 +19,11 @@ Conditions:
     "Fn::Equals":
     - !Ref myEnvironment
     - "dev"
+  EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
+  PrimaryRegion:
+    "Fn::Equals":
+    - !Ref AWS::Region
+    - 'us-east-1'
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
@@ -35,3 +42,22 @@ Resources:
           - Key: Environment2
             Value: Dev
           - !Ref AWS::NoValue
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Restrictions:
+          GeoRestriction:
+            !If
+              - EnableGeoBlocking
+              -
+                RestrictionType: whitelist
+                Locations:
+                  !If
+                    - PrimaryRegion
+                    - - EN
+                    - - BE
+                      - LU
+                      - NL
+              - RestrictionType: none
