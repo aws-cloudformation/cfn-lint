@@ -155,7 +155,8 @@ class Properties(CloudFormationLintRule):
                                     if ref in parameternames:
                                         if 'Type' in self.cfn.template['Parameters'][ref]:
                                             if not self.cfn.template['Parameters'][ref]['Type'].startswith('List<'):
-                                                message = 'Property {0} should be of type List for resource {1}'
+                                                message = 'Property {0} should be of type List or Parameter should ' \
+                                                          'be a list for resource {1}'
                                                 matches.append(
                                                     RuleMatch(
                                                         proppath,

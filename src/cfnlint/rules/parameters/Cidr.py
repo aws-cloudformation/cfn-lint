@@ -18,33 +18,34 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class SecurityGroups(CloudFormationLintRule):
-    """Check if EC2 Security Group Ingress Properties"""
-    id = 'W2507'
-    shortdesc = 'Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id'
-    description = 'Check if a parameter is being used in a resource for Security ' \
-                  'Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id'
-    tags = ['base', 'parameters', 'securitygroup']
+class Cidr(CloudFormationLintRule):
+    """Check Availibility Zone parameter checks """
+    id = 'W2509'
+    shortdesc = 'CIDR Parameters have allowed values'
+    description = 'Check if a parameter is being used as a CIDR. ' \
+                  'If it is make sure it has allowed values regex comparisons'
+    tags = ['base', 'parameters', 'availabilityzone']
+
+    # pylint: disable=C0301
+    cidr_regex = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
 
     def __init__(self):
         """Init"""
         resource_type_specs = [
-            'AWS::ElasticLoadBalancingV2::LoadBalancer',
-            'AWS::AutoScaling::LaunchConfiguration',
-            'AWS::ElasticLoadBalancingV2::LoadBalancer',
-            'AWS::EC2::Instance',
-            'AWS::ElastiCache::ReplicationGroup',
-            'AWS::DAX::Cluster',
-            'AWS::ElastiCache::ReplicationGroup',
-            'AWS::Glue::DevEndpoint',
+            'AWS::EC2::Subnet',
+            'AWS::EC2::Vpc',
+            'AWS::RDS::DBSecurityGroupIngress',
+            'AWS::EC2::NetworkAclEntry',
             'AWS::EC2::SecurityGroupIngress',
+            'AWS::EC2::SecurityGroupEgress',
+            'AWS::Redshift::ClusterSecurityGroupIngress',
+            'AWS::EC2::VPCCidrBlock',
         ]
+
         property_type_specs = [
-            'AWS::EC2::LaunchTemplate.LaunchTemplateData',
-            'AWS::Elasticsearch::Domain.VPCOptions',
-            'AWS::Lambda::Function.VpcConfig',
-            'AWS::Batch::ComputeEnvironment.ComputeResources',
-            'AWS::CodeBuild::Project.VpcConfig',
+            'AWS::RDS::DBSecurityGroup.Ingress',
+            'AWS::EC2::SecurityGroup.Egress',
+            'AWS::SES::ReceiptFilter.IpFilter',
             'AWS::EC2::SecurityGroup.Ingress',
         ]
 
@@ -54,37 +55,17 @@ class SecurityGroups(CloudFormationLintRule):
             self.resource_sub_property_types.append(property_type_spec)
 
     # pylint: disable=W0613
-    def check_sgid_ref(self, value, path, parameters, resources):
+    def check_cidr_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = list()
-        if 'SourceSecurityGroupId' in path:
-            allowed_types = [
-                'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-                'AWS::EC2::SecurityGroup::Id'
-            ]
-        elif isinstance(path[-2], int):
-            allowed_types = [
-                'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-                'AWS::EC2::SecurityGroup::Id'
-            ]
-        else:
-            allowed_types = [
-                'AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>',
-                'List<AWS::EC2::SecurityGroup::Id>'
-            ]
 
         if value in parameters:
-            parameter_properties = parameters.get(value)
-            parameter_type = parameter_properties.get('Type')
-            if parameter_type not in allowed_types:
-                path_error = ['Parameters', value, 'Type']
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
-                matches.append(
-                    RuleMatch(
-                        path_error,
-                        message.format(
-                            ', '.join(map(str, allowed_types)),
-                            '/'.join(map(str, path_error)))))
+            parameter = parameters.get(value, {})
+            allowed_pattern = parameter.get('AllowedPattern', None)
+            if not allowed_pattern:
+                param_path = ['Parameters', value]
+                message = 'AllowedPattern for Parameter should be specified at {1}. Example "{0}"'
+                matches.append(RuleMatch(param_path, message.format(self.cidr_regex, ('/'.join(param_path)))))
 
         return matches
 
@@ -94,22 +75,29 @@ class SecurityGroups(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                properties, 'SecurityGroupIds', path,
-                check_value=None, check_ref=self.check_sgid_ref,
+                properties, 'CIDRIP', path,
+                check_value=None, check_ref=self.check_cidr_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
-                properties, 'SecurityGroups', path,
-                check_value=None, check_ref=self.check_sgid_ref,
+                properties, 'Cidr', path,
+                check_value=None, check_ref=self.check_cidr_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
-                properties, 'SourceSecurityGroupId', path,
-                check_value=None, check_ref=self.check_sgid_ref,
+                properties, 'CidrBlock', path,
+                check_value=None, check_ref=self.check_cidr_ref,
+                check_mapping=None, check_split=None, check_join=None
+            )
+        )
+        matches.extend(
+            cfn.check_value(
+                properties, 'CidrIp', path,
+                check_value=None, check_ref=self.check_cidr_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )

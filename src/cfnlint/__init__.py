@@ -323,6 +323,14 @@ class RuleMatch(object):
         self.path = path
         self.message = message
 
+    def __eq__(self, item):
+        """Override unique"""
+        return ((self.path, self.message) == (item.path, item.message))
+
+    def __hash__(self):
+        """Hash for comparisons"""
+        return hash((self.path, self.message))
+
 
 class Match(object):
     """Match Classes"""
@@ -344,6 +352,16 @@ class Match(object):
         formatstr = u'[{0}] ({1}) matched {2}:{3}'
         return formatstr.format(self.rule, self.message,
                                 self.filename, self.linenumber)
+
+    def __eq__(self, item):
+        """Override equal to compare matches"""
+        return (
+            (
+                self.linenumber, self.columnnumber, self.rule.id
+            ) ==
+            (
+                item.linenumber, item.columnnumber, item.rule.id
+            ))
 
 
 class Template(object):
@@ -805,4 +823,10 @@ class Runner(object):
             matches.extend(
                 self.rules.run(
                     self.filename, self.cfn, self.ignore_checks))
-        return matches
+
+        # uniq the list of incidents
+        return_matches = list()
+        for _, match in enumerate(matches):
+            if not any(match == u for u in return_matches):
+                return_matches.append(match)
+        return return_matches

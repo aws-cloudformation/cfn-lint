@@ -18,59 +18,66 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class SecurityGroups(CloudFormationLintRule):
-    """Check if EC2 Security Group Ingress Properties"""
-    id = 'W2507'
-    shortdesc = 'Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id'
+class AvailabilityZone(CloudFormationLintRule):
+    """Check Availibility Zone parameter checks """
+    id = 'W2508'
+    shortdesc = 'Availability Zone Parameters are of correct type AWS::EC2::SecurityGroup::Id'
     description = 'Check if a parameter is being used in a resource for Security ' \
-                  'Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id'
-    tags = ['base', 'parameters', 'securitygroup']
+                  'Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name'
+    tags = ['base', 'parameters', 'availabilityzone']
 
     def __init__(self):
         """Init"""
-        resource_type_specs = [
-            'AWS::ElasticLoadBalancingV2::LoadBalancer',
-            'AWS::AutoScaling::LaunchConfiguration',
-            'AWS::ElasticLoadBalancingV2::LoadBalancer',
-            'AWS::EC2::Instance',
-            'AWS::ElastiCache::ReplicationGroup',
+        self.multiple_resource_type_specs = [
             'AWS::DAX::Cluster',
-            'AWS::ElastiCache::ReplicationGroup',
-            'AWS::Glue::DevEndpoint',
-            'AWS::EC2::SecurityGroupIngress',
-        ]
-        property_type_specs = [
-            'AWS::EC2::LaunchTemplate.LaunchTemplateData',
-            'AWS::Elasticsearch::Domain.VPCOptions',
-            'AWS::Lambda::Function.VpcConfig',
-            'AWS::Batch::ComputeEnvironment.ComputeResources',
-            'AWS::CodeBuild::Project.VpcConfig',
-            'AWS::EC2::SecurityGroup.Ingress',
+            'AWS::AutoScaling::AutoScalingGroup',
+            'AWS::RDS::DBCluster',
+            'AWS::ElasticLoadBalancing::LoadBalancer',
         ]
 
-        for resoruce_type_spec in resource_type_specs:
+        self.singular_resource_type_specs = [
+            'AWS::OpsWorks::Instance',
+            'AWS::RDS::DBInstance',
+            'AWS::EC2::Host',
+            'AWS::DMS::ReplicationInstance',
+            'AWS::EC2::Instance'
+        ]
+
+        self.singular_property_type_specs = [
+            # Singular
+            'AWS::EC2::LaunchTemplate.Placement',
+            'AWS::EC2::SpotFleet.SpotPlacement',
+            'AWS::EMR::Cluster.PlacementType',
+            'AWS::Glue::Connection.PhysicalConnectionRequirements',
+            'AWS::ElasticLoadBalancingV2::TargetGroup.TargetDescription',
+            'AWS::EC2::SpotFleet.LaunchTemplateOverrides',
+        ]
+
+        for resoruce_type_spec in self.singular_resource_type_specs:
             self.resource_property_types.append(resoruce_type_spec)
-        for property_type_spec in property_type_specs:
+        for resoruce_type_spec in self.multiple_resource_type_specs:
+            self.resource_property_types.append(resoruce_type_spec)
+        for property_type_spec in self.singular_property_type_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
     # pylint: disable=W0613
     def check_sgid_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = list()
-        if 'SourceSecurityGroupId' in path:
+        if 'AvailabilityZone' in path:
             allowed_types = [
-                'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-                'AWS::EC2::SecurityGroup::Id'
+                'AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>',
+                'AWS::EC2::AvailabilityZone::Name'
             ]
         elif isinstance(path[-2], int):
             allowed_types = [
-                'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-                'AWS::EC2::SecurityGroup::Id'
+                'AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>',
+                'AWS::EC2::AvailabilityZone::Name'
             ]
         else:
             allowed_types = [
-                'AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>',
-                'List<AWS::EC2::SecurityGroup::Id>'
+                'AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>',
+                'List<AWS::EC2::AvailabilityZone::Name>'
             ]
 
         if value in parameters:
@@ -78,7 +85,7 @@ class SecurityGroups(CloudFormationLintRule):
             parameter_type = parameter_properties.get('Type')
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
+                message = 'Availbility Zone Parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         path_error,
@@ -94,21 +101,14 @@ class SecurityGroups(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                properties, 'SecurityGroupIds', path,
+                properties, 'AvailabilityZone', path,
                 check_value=None, check_ref=self.check_sgid_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
-                properties, 'SecurityGroups', path,
-                check_value=None, check_ref=self.check_sgid_ref,
-                check_mapping=None, check_split=None, check_join=None
-            )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'SourceSecurityGroupId', path,
+                properties, 'AvailabilityZones', path,
                 check_value=None, check_ref=self.check_sgid_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
