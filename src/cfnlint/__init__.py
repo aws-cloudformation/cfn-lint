@@ -357,10 +357,10 @@ class Match(object):
         """Override equal to compare matches"""
         return (
             (
-                self.linenumber, self.columnnumber, self.rule.id
+                self.linenumber, self.columnnumber, self.rule.id, self.message
             ) ==
             (
-                item.linenumber, item.columnnumber, item.rule.id
+                item.linenumber, item.columnnumber, item.rule.id, item.message
             ))
 
 

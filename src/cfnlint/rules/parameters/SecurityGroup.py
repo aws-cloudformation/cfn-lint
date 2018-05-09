@@ -18,7 +18,7 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class SecurityGroups(CloudFormationLintRule):
+class SecurityGroup(CloudFormationLintRule):
     """Check if EC2 Security Group Ingress Properties"""
     id = 'W2507'
     shortdesc = 'Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id'
