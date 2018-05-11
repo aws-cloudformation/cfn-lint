@@ -31,17 +31,17 @@ class FunctionMemorySize(CloudFormationLintRule):
 
         message = 'You must specify a value that is greater than or equal to 128, ' \
                   'and it must be a multiple of 64. You cannot specify a size ' \
-                  'larger than 1536. The default value is 128 MB at {0}'
+                  'larger than 3008. Error at {0}'
 
         try:
             value = int(value)
 
-            if value < 128 or value > 1536:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            if value < 128 or value > 3008:
+                matches.append(RuleMatch(path, message.format(('/'.join(path)))))
             elif value % 64 != 0:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+                matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         except ValueError:
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
 
         return matches
 
@@ -57,10 +57,10 @@ class FunctionMemorySize(CloudFormationLintRule):
             param_type = parameter.get('Type', '')
             min_value = parameter.get('MinValue', 0)
             max_value = parameter.get('MaxValue', 999999)
-            if param_type != 'Number' or min_value < 128 or max_value > 1536:
+            if param_type != 'Number' or min_value < 128 or max_value > 3008:
                 param_path = ['Parameters', value, 'Type']
                 message = 'Type for Parameter should be Integer, MinValue should be ' \
-                          'at least 128, and MaxValue equal or less than 1536 at {0}'
+                          'at least 128, and MaxValue equal or less than 3008 at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
         return matches
