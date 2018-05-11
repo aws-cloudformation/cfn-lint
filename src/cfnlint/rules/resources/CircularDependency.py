@@ -129,14 +129,15 @@ class CircularDependency(CloudFormationLintRule):
             elif isinstance(value, (six.text_type, six.string_types)):
                 sub_parameters = self.searchstring(value)
 
-            for sub_parameter in sub_parameters:
-                if sub_parameter not in sub_parameter_values:
-                    if '.' in sub_parameter:
-                        sub_parameter = sub_parameter.split('.')[0]
-                    if cfn.template.get('Resources', {}).get(sub_parameter, {}):
-                        if not resources.get(res_name):
-                            resources[res_name] = []
-                        resources[res_name].append(sub_parameter)
+            if res_type == 'Resources':
+                for sub_parameter in sub_parameters:
+                    if sub_parameter not in sub_parameter_values:
+                        if '.' in sub_parameter:
+                            sub_parameter = sub_parameter.split('.')[0]
+                        if cfn.template.get('Resources', {}).get(sub_parameter, {}):
+                            if not resources.get(res_name):
+                                resources[res_name] = []
+                            resources[res_name].append(sub_parameter)
 
         matches.extend(self.check_circular_dependencies(resources))
         return matches
