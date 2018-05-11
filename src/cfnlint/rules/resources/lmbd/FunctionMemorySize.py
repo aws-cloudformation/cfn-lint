@@ -24,24 +24,35 @@ class FunctionMemorySize(CloudFormationLintRule):
     shortdesc = 'Check Lambda Memory Size Properties'
     description = 'See if Lambda Memory Size is valid'
     tags = ['base', 'resources', 'lambda']
+    min_memory = 128
+    max_memory = 3008
 
     def check_value(self, value, path):
         """ Check memory size value """
         matches = list()
 
-        message = 'You must specify a value that is greater than or equal to 128, ' \
+        message = 'You must specify a value that is greater than or equal to {0}, ' \
                   'and it must be a multiple of 64. You cannot specify a size ' \
-                  'larger than 3008. Error at {0}'
+                  'larger than {1}. Error at {2}'
 
         try:
             value = int(value)
 
             if value < 128 or value > 3008:
-                matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
             elif value % 64 != 0:
-                matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
         except ValueError:
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(
+                RuleMatch(
+                    path, message.format(
+                        self.min_memory, self.max_memory, ('/'.join(path)))))
 
         return matches
 
@@ -60,8 +71,11 @@ class FunctionMemorySize(CloudFormationLintRule):
             if param_type != 'Number' or min_value < 128 or max_value > 3008:
                 param_path = ['Parameters', value, 'Type']
                 message = 'Type for Parameter should be Integer, MinValue should be ' \
-                          'at least 128, and MaxValue equal or less than 3008 at {0}'
-                matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
+                          'at least {0}, and MaxValue equal or less than {1} at {2}'
+                matches.append(
+                    RuleMatch(
+                        param_path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(param_path)))))
 
         return matches
 
