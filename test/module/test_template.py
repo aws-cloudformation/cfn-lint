@@ -45,7 +45,7 @@ class TestTemplate(BaseTestCase):
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
         resources = self.template.get_resources()
-        assert len(resources) == 8
+        assert len(resources) == 9
 
     def test_get_resource_names(self):
         """ Test Resource Names"""
@@ -65,7 +65,7 @@ class TestTemplate(BaseTestCase):
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
         refs = self.template.get_valid_refs()
-        assert len(refs) == 20
+        assert len(refs) == 21
 
     def test_conditions_return_object_success(self):
         """Test condition object response and nested IFs"""
