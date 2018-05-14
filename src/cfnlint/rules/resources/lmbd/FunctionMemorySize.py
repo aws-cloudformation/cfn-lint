@@ -24,24 +24,35 @@ class FunctionMemorySize(CloudFormationLintRule):
     shortdesc = 'Check Lambda Memory Size Properties'
     description = 'See if Lambda Memory Size is valid'
     tags = ['base', 'resources', 'lambda']
+    min_memory = 128
+    max_memory = 3008
 
     def check_value(self, value, path):
         """ Check memory size value """
         matches = list()
 
-        message = 'You must specify a value that is greater than or equal to 128, ' \
+        message = 'You must specify a value that is greater than or equal to {0}, ' \
                   'and it must be a multiple of 64. You cannot specify a size ' \
-                  'larger than 1536. The default value is 128 MB at {0}'
+                  'larger than {1}. Error at {2}'
 
         try:
             value = int(value)
 
-            if value < 128 or value > 1536:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            if value < self.min_memory or value > self.max_memory:
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
             elif value % 64 != 0:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
         except ValueError:
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            matches.append(
+                RuleMatch(
+                    path, message.format(
+                        self.min_memory, self.max_memory, ('/'.join(path)))))
 
         return matches
 
