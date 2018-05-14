@@ -38,7 +38,7 @@ class FunctionMemorySize(CloudFormationLintRule):
         try:
             value = int(value)
 
-            if value < 128 or value > 3008:
+            if value < self.min_memory or value > self.max_memory:
                 matches.append(
                     RuleMatch(
                         path, message.format(
