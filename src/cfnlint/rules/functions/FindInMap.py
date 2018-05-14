@@ -26,16 +26,22 @@ class FindInMap(CloudFormationLintRule):
     description = 'Making sure the function is a list of appropriate config'
     tags = ['base', 'functions', 'getatt']
 
-    def check_ref(self, obj, tree):
+    def check_dict(self, obj, tree):
         """
             Check that obj is a dict with Ref as the only key
             Mappings only support Ref inside them
         """
         matches = list()
+
+        supported_functions = [
+            'Fn::FindInMap',
+            'Ref'
+        ]
+
         if isinstance(obj, dict):
             if len(obj) == 1:
                 for key_name, _ in obj.items():
-                    if key_name not in ['Ref', 'Fn::FindInMap']:
+                    if key_name not in supported_functions:
                         message = 'FindInMap only supports Ref and Fn::FindInMap for {0}'
                         matches.append(RuleMatch(
                             tree[:] + [key_name], message.format('/'.join(map(str, tree)))))
@@ -61,7 +67,9 @@ class FindInMap(CloudFormationLintRule):
                 map_name = map_obj[0]
                 first_key = map_obj[1]
                 second_key = map_obj[2]
-                if not isinstance(map_name, six.string_types):
+                if isinstance(map_name, dict):
+                    matches.extend(self.check_dict(first_key, tree[:] + [1]))
+                elif not isinstance(map_name, six.string_types):
                     message = 'Map Name should be a string for {0}'
                     matches.append(RuleMatch(
                         tree[:] + [0], message.format('/'.join(map(str, tree)))))
@@ -73,7 +81,7 @@ class FindInMap(CloudFormationLintRule):
 
                 if isinstance(first_key, (six.string_types, dict, int)):
                     if isinstance(first_key, dict):
-                        matches.extend(self.check_ref(first_key, tree[:] + [1]))
+                        matches.extend(self.check_dict(first_key, tree[:] + [1]))
                 else:
                     message = 'Map Name should be a string, int, FindInMap, or Ref for {0}'
                     matches.append(RuleMatch(
@@ -81,7 +89,7 @@ class FindInMap(CloudFormationLintRule):
 
                 if isinstance(second_key, (six.string_types, dict, int)):
                     if isinstance(second_key, dict):
-                        matches.extend(self.check_ref(second_key, tree[:] + [2]))
+                        matches.extend(self.check_dict(second_key, tree[:] + [2]))
                 else:
                     message = 'Map Name should be a string, int, FindInMap, or Ref for {0}'
                     matches.append(RuleMatch(
