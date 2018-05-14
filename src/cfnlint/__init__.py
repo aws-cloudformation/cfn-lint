@@ -541,7 +541,7 @@ class Template(object):
                 if key == searchText:
                     pathprop.append(cfndict[key])
                     keys.append(pathprop)
-                elif isinstance(cfndict[key], dict):
+                if isinstance(cfndict[key], dict):
                     keys.extend(self._search_deep_keys(searchText, cfndict[key], pathprop))
                 elif isinstance(cfndict[key], list):
                     for index, item in enumerate(cfndict[key]):
