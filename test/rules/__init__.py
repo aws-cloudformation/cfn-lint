@@ -39,6 +39,7 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/properties_elb.yaml',
         'templates/good/functions_sub.yaml',
         'templates/good/functions_cidr.yaml',
+        'templates/good/functions_findinmap.yaml',
         'templates/good/resources_lambda.yaml',
         'templates/good/transform_serverless_api.yaml',
         'templates/good/transform_serverless_function.yaml',

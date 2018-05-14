@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  RDSOptionGroup:
+    Type: "AWS::RDS::OptionGroup"
+    Properties:
+      EngineName: "oracle-se2"
+      MajorEngineVersion: "12.1"
+      OptionGroupDescription: "SSL and Timezone options"
+      OptionConfigurations:
+        - OptionName: "SSL"
+          VpcSecurityGroupMemberships:
+            - !Ref "PrivateSecurityGroup"
+        - OptionName: "Timezone"
+          OptionSettings:
+            - Name: "TIME_ZONE"
+              Value: "Europe/Amsterdam"

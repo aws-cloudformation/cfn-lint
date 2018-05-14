@@ -21,3 +21,16 @@ Resources:
           - azmap
           - !Ref "AWS::Region"
           - 0
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [ !FindInMap [ myMapDne, !Ref 'AWS::Region', !Ref 'AWS::Region' ], !Ref 'AWS::Region', 32 ]
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - Ref: myInstance
+          Fn::FindInMap: [ amimap, !Ref 'AWS::Region', !Ref 'AWS::Region' ]
+        - TopLevelKey
+        - SecondLevelKey
