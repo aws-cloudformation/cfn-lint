@@ -18,29 +18,25 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class FunctionMemorySize(CloudFormationLintRule):
+class FunctionRuntime(CloudFormationLintRule):
     """Check if Lambda Function Memory Size"""
-    id = 'E2530'
-    shortdesc = 'Check Lambda Memory Size Properties'
-    description = 'See if Lambda Memory Size is valid'
+    id = 'E2531'
+    shortdesc = 'Check Lambda Runtime Properties'
+    description = 'See if Lambda Runtime is in valid'
     tags = ['base', 'resources', 'lambda']
 
+    runtimes = [
+        'nodejs', 'nodejs4.3', 'nodejs6.10', 'java8', 'python2.7', 'python3.6',
+        'dotnetcore1.0', 'dotnetcore2.0', 'nodejs4.3-edge', 'go1.x'
+    ]
+
     def check_value(self, value, path):
-        """ Check memory size value """
+        """ Check runtime value """
         matches = list()
 
-        message = 'You must specify a value that is greater than or equal to 128, ' \
-                  'and it must be a multiple of 64. You cannot specify a size ' \
-                  'larger than 1536. The default value is 128 MB at {0}'
+        message = 'You must specify a valid value for runtime at {0}'
 
-        try:
-            value = int(value)
-
-            if value < 128 or value > 1536:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
-            elif value % 64 != 0:
-                matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
-        except ValueError:
+        if value not in self.runtimes:
             matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
 
         return matches
@@ -50,17 +46,15 @@ class FunctionMemorySize(CloudFormationLintRule):
 
         matches = list()
         if value in resources:
-            message = 'MemorySize can\'t use a Ref to a resource for {0}'
+            message = 'Runtime can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
-            min_value = parameter.get('MinValue', 0)
-            max_value = parameter.get('MaxValue', 999999)
-            if param_type != 'Number' or min_value < 128 or max_value > 1536:
+
+            if param_type != 'String':
                 param_path = ['Parameters', value, 'Type']
-                message = 'Type for Parameter should be Integer, MinValue should be ' \
-                          'at least 128, and MaxValue equal or less than 1536 at {0}'
+                message = 'Type for Parameter should be String at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
         return matches
@@ -71,7 +65,7 @@ class FunctionMemorySize(CloudFormationLintRule):
         matches = list()
         matches.extend(
             cfn.check_resource_property(
-                'AWS::Lambda::Function', 'MemorySize',
+                'AWS::Lambda::Function', 'Runtime',
                 check_value=self.check_value,
                 check_ref=self.check_ref,
             )

@@ -18,68 +18,66 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class FunctionRuntime(CloudFormationLintRule):
-    """Check if Lambda Function Memory Size"""
-    id = 'E2531'
-    shortdesc = 'Check Lambda Runtime Properties'
-    description = 'See if Lambda Runtime is in valid'
-    tags = ['base', 'resources', 'lambda']
+class LambdaRuntime(CloudFormationLintRule):
+    """Check Lambda Runtime """
+    id = 'W2512'
+    shortdesc = 'Parameter Lambda Runtime has allowed values set'
+    description = 'Check if a parameter that is used for Lambda runtime ' \
+                  ' has allowed values constraint defined'
+    tags = ['base', 'parameters', 'lambda']
 
-    runtimes = [
-        'nodejs', 'nodejs4.3', 'nodejs6.10', 'java8', 'python2.7', 'python3.6',
-        'dotnetcore1.0', 'dotnetcore2.0', 'nodejs4.3-edge', 'go1.x'
-    ]
+    def __init__(self):
+        """Init"""
+        resource_type_specs = [
+            'AWS::Lambda::Function',
+        ]
 
-    def check_value(self, value, path):
-        """ Check runtime value """
+        for resoruce_type_spec in resource_type_specs:
+            self.resource_property_types.append(resoruce_type_spec)
+
+    # pylint: disable=W0613
+    def check_lambda_memory_size_ref(self, value, path, parameters, resources):
+        """Check ref for VPC"""
         matches = list()
+        runtimes = [
+            'nodejs', 'nodejs4.3', 'nodejs6.10', 'java8', 'python2.7', 'python3.6',
+            'dotnetcore1.0', 'dotnetcore2.0', 'nodejs4.3-edge', 'go1.x'
+        ]
 
-        message = 'You must specify a valid value for runtime at {0}'
-
-        if value not in self.runtimes:
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
-
-        return matches
-
-    def check_ref(self, value, path, parameters, resources):
-        """ Check Memory Size Ref """
-
-        matches = list()
-        if value in resources:
-            message = 'Runtime can\'t use a Ref to a resource for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
-        elif value in parameters:
+        if value in parameters:
             parameter = parameters.get(value, {})
-            param_type = parameter.get('Type', '')
             allowed_values = parameter.get('AllowedValues', {})
-
-            if param_type != 'String':
-                param_path = ['Parameters', value, 'Type']
-                message = 'Type for Parameter should be String at {0}'
-                matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
             if not allowed_values:
                 param_path = ['Parameters', value]
                 message = 'Parameter should have allowed values at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
             for index, allowed_value in enumerate(allowed_values):
-                if allowed_value not in self.runtimes:
+                if allowed_value not in runtimes:
                     param_path = ['Parameters', value, 'AllowedValues', index]
-                    message = 'Allowed value should have proper types at {0}'
+                    message = 'Allowed value should have valid runtimes at {0}'
                     matches.append(RuleMatch(param_path, message.format(('/'.join(map(str, param_path))))))
 
         return matches
 
-    def match(self, cfn):
-        """Check Lambda Function Memory Size Resource Parameters"""
-
+    def check(self, properties, resource_type, path, cfn):
+        """Check itself"""
         matches = list()
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::Lambda::Function', 'Runtime',
-                check_value=self.check_value,
-                check_ref=self.check_ref,
+            cfn.check_value(
+                properties, 'Runtime', path,
+                check_value=None, check_ref=self.check_lambda_memory_size_ref,
+                check_mapping=None, check_split=None, check_join=None
             )
         )
+
+        return matches
+
+    def match_resource_properties(self, properties, resource_type, path, cfn):
+        """Check CloudFormation Properties"""
+        matches = list()
+
+        matches.extend(self.check(properties, resource_type, path, cfn))
 
         return matches

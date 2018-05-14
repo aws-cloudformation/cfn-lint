@@ -19,7 +19,7 @@ from .. import BaseRuleTestCase
 
 
 class TestRulesRefExist(BaseRuleTestCase):
-    """Test Rules Get Att """
+    """Test Rules Ref exists """
     def setUp(self):
         """Setup"""
         super(TestRulesRefExist, self).setUp()

@@ -213,7 +213,12 @@ class RulesCollection(object):
         property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                if rule.id not in ignore_checks:
+                ignore = False
+                # Allowing ignoring of rules based on prefix to ignore checks
+                for ignore_check in ignore_checks:
+                    if rule.id.startswith(ignore_check) and ignore_check:
+                        ignore = True
+                if rule.id not in ignore_checks and not ignore:
                     rule_definition = set(rule.tags)
                     rule_definition.add(rule.id)
                     matches.extend(
@@ -251,7 +256,12 @@ class RulesCollection(object):
         matches = list()
 
         for rule in self.rules:
-            if rule.id not in ignore_checks:
+            ignore = False
+            # Allowing ignoring of rules based on prefix to ignore checks
+            for ignore_check in ignore_checks:
+                if rule.id.startswith(ignore_check) and ignore_check:
+                    ignore = True
+            if rule.id not in ignore_checks and not ignore:
                 rule_definition = set(rule.tags)
                 rule_definition.add(rule.id)
                 matches.extend(rule.matchall(filename, cfn))
@@ -313,6 +323,14 @@ class RuleMatch(object):
         self.path = path
         self.message = message
 
+    def __eq__(self, item):
+        """Override unique"""
+        return ((self.path, self.message) == (item.path, item.message))
+
+    def __hash__(self):
+        """Hash for comparisons"""
+        return hash((self.path, self.message))
+
 
 class Match(object):
     """Match Classes"""
@@ -334,6 +352,16 @@ class Match(object):
         formatstr = u'[{0}] ({1}) matched {2}:{3}'
         return formatstr.format(self.rule, self.message,
                                 self.filename, self.linenumber)
+
+    def __eq__(self, item):
+        """Override equal to compare matches"""
+        return (
+            (
+                self.linenumber, self.columnnumber, self.rule.id, self.message
+            ) ==
+            (
+                item.linenumber, item.columnnumber, item.rule.id, item.message
+            ))
 
 
 class Template(object):
@@ -541,7 +569,7 @@ class Template(object):
                 if key == searchText:
                     pathprop.append(cfndict[key])
                     keys.append(pathprop)
-                elif isinstance(cfndict[key], dict):
+                if isinstance(cfndict[key], dict):
                     keys.extend(self._search_deep_keys(searchText, cfndict[key], pathprop))
                 elif isinstance(cfndict[key], list):
                     for index, item in enumerate(cfndict[key]):
@@ -621,7 +649,7 @@ class Template(object):
         value = obj.get(key)
         if not value:
             return None
-        if isinstance(value, (dict, list)):
+        if isinstance(value, (dict)):
             if len(value) == 1:
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
@@ -633,6 +661,24 @@ class Template(object):
                         result['Path'] = path[:] + [obj_key]
                         result['Value'] = obj_value
                         matches.append(result)
+        elif isinstance(value, (list)):
+            for list_index, list_value in enumerate(value):
+                if isinstance(list_value, dict):
+                    for obj_key, obj_value in list_value.items():
+                        if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
+                            if isinstance(results, list):
+                                matches.extend(results)
+                        else:
+                            result = {}
+                            result['Path'] = path[:] + [list_index, obj_key]
+                            result['Value'] = obj_value
+                            matches.append(result)
+                else:
+                    result = {}
+                    result['Path'] = path[:] + [list_index]
+                    result['Value'] = list_value
+                    matches.append(result)
         else:
             result = {}
             result['Path'] = path[:]
@@ -777,4 +823,10 @@ class Runner(object):
             matches.extend(
                 self.rules.run(
                     self.filename, self.cfn, self.ignore_checks))
-        return matches
+
+        # uniq the list of incidents
+        return_matches = list()
+        for _, match in enumerate(matches):
+            if not any(match == u for u in return_matches):
+                return_matches.append(match)
+        return return_matches
