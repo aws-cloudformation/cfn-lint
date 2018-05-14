@@ -26,6 +26,11 @@ class FindInMap(CloudFormationLintRule):
     description = 'Making sure the function is a list of appropriate config'
     tags = ['base', 'functions', 'getatt']
 
+    supported_functions = [
+        'Fn::FindInMap',
+        'Ref'
+    ]
+
     def check_dict(self, obj, tree):
         """
             Check that obj is a dict with Ref as the only key
@@ -33,18 +38,16 @@ class FindInMap(CloudFormationLintRule):
         """
         matches = list()
 
-        supported_functions = [
-            'Fn::FindInMap',
-            'Ref'
-        ]
-
         if isinstance(obj, dict):
             if len(obj) == 1:
                 for key_name, _ in obj.items():
-                    if key_name not in supported_functions:
-                        message = 'FindInMap only supports Ref and Fn::FindInMap for {0}'
+                    if key_name not in self.supported_functions:
+                        message = 'FindInMap only supports [{0}] functions at {1}'
                         matches.append(RuleMatch(
-                            tree[:] + [key_name], message.format('/'.join(map(str, tree)))))
+                            tree[:] + [key_name],
+                            message.format(
+                                ', '.join(map(str, self.supported_functions)),
+                                '/'.join(map(str, tree)))))
 
         return matches
 
@@ -83,17 +86,23 @@ class FindInMap(CloudFormationLintRule):
                     if isinstance(first_key, dict):
                         matches.extend(self.check_dict(first_key, tree[:] + [1]))
                 else:
-                    message = 'Map Name should be a string, int, FindInMap, or Ref for {0}'
+                    message = 'Map Name should be a {0}, string, or int at {1}'
                     matches.append(RuleMatch(
-                        tree[:] + [1], message.format('/'.join(map(str, tree)))))
+                        tree[:] + [1],
+                        message.format(
+                            ', '.join(map(str, self.supported_functions)),
+                            '/'.join(map(str, tree)))))
 
                 if isinstance(second_key, (six.string_types, dict, int)):
                     if isinstance(second_key, dict):
                         matches.extend(self.check_dict(second_key, tree[:] + [2]))
                 else:
-                    message = 'Map Name should be a string, int, FindInMap, or Ref for {0}'
+                    message = 'Map Name should be a {0}, string, or int at {1}'
                     matches.append(RuleMatch(
-                        tree[:] + [2], message.format('/'.join(tree))))
+                        tree[:] + [2],
+                        message.format(
+                            ', '.join(map(str, self.supported_functions)),
+                            '/'.join(tree))))
 
             else:
                 message = 'FindInMap is a list with 3 values for {0}'
