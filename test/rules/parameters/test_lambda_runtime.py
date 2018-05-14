@@ -14,21 +14,21 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.ectwo.SecurityGroupIngress import SecurityGroupIngress  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.parameters.LambdaRuntime import LambdaRuntime  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestPropertySgIngress(BaseRuleTestCase):
-    """Test Ec2 Security Group Ingress Rules"""
+class TestParameterLambdaRuntime(BaseRuleTestCase):
+    """Test template parameter configurations"""
     def setUp(self):
         """Setup"""
-        super(TestPropertySgIngress, self).setUp()
-        self.collection.register(SecurityGroupIngress())
+        super(TestParameterLambdaRuntime, self).setUp()
+        self.collection.register(LambdaRuntime())
 
-    def test_file_positive(self):
+    def atest_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/properties_sg_ingress.yaml', 5)
+        self.helper_file_negative('templates/bad/resources_lambda.yaml', 1)

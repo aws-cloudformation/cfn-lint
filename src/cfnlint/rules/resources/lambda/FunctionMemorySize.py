@@ -55,12 +55,9 @@ class FunctionMemorySize(CloudFormationLintRule):
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
-            min_value = parameter.get('MinValue', 0)
-            max_value = parameter.get('MaxValue', 999999)
-            if param_type != 'Number' or min_value < 128 or max_value > 1536:
+            if param_type != 'Number':
                 param_path = ['Parameters', value, 'Type']
-                message = 'Type for Parameter should be Integer, MinValue should be ' \
-                          'at least 128, and MaxValue equal or less than 1536 at {0}'
+                message = 'Type for Parameter should be Number at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
 
         return matches

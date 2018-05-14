@@ -29,9 +29,16 @@ from cfnlint.version import __version__
 LOGGER = logging.getLogger('cfnlint')
 
 
+class ArgumentParser(argparse.ArgumentParser):
+    """ Override Argument Parser so we can control the exit code"""
+    def error(self, message):
+        self.print_help(sys.stderr)
+        self.exit(32, '%s: error: %s\n' % (self.prog, message))
+
+
 def main():
     """Main Function"""
-    parser = argparse.ArgumentParser(description='CloudFormation Linter')
+    parser = ArgumentParser(description='CloudFormation Linter')
     parser.add_argument(
         '--template', help='CloudFormation Template')
     parser.add_argument(
@@ -212,7 +219,7 @@ def main():
         for region in vars(args)['regions']:
             if region not in supported_regions:
                 LOGGER.error('Supported regions are %s', supported_regions)
-                return(1)
+                return(32)
 
     exit_code = 0
     if vars(args)['template']:
@@ -223,9 +230,17 @@ def main():
         matches.extend(runner.transform())
         # Only do rule analysis if Transform was successful
         if not matches:
-            matches.extend(runner.run())
+            try:
+                matches.extend(runner.run())
+            except Exception as err:  # pylint: disable=W0703
+                LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+                exit(1)
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
-        exit_code = len(matches)
+        for match in matches:
+            if match.rule.id[0] == 'W':
+                exit_code = exit_code | 4
+            elif match.rule.id[0] == 'E':
+                exit_code = exit_code | 2
         if vars(args)['format'] == 'json':
             print(json.dumps(matches, indent=4, cls=CustomEncoder))
         else:

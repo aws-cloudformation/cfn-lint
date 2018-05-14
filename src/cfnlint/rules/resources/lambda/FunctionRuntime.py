@@ -51,22 +51,11 @@ class FunctionRuntime(CloudFormationLintRule):
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
-            allowed_values = parameter.get('AllowedValues', {})
 
             if param_type != 'String':
                 param_path = ['Parameters', value, 'Type']
                 message = 'Type for Parameter should be String at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
-
-            if not allowed_values:
-                param_path = ['Parameters', value]
-                message = 'Parameter should have allowed values at {0}'
-                matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
-            for index, allowed_value in enumerate(allowed_values):
-                if allowed_value not in self.runtimes:
-                    param_path = ['Parameters', value, 'AllowedValues', index]
-                    message = 'Allowed value should have proper types at {0}'
-                    matches.append(RuleMatch(param_path, message.format(('/'.join(map(str, param_path))))))
 
         return matches
 

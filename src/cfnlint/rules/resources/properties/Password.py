@@ -21,7 +21,7 @@ from cfnlint import RuleMatch
 
 class Password(CloudFormationLintRule):
     """Check if Password Properties are properly configured"""
-    id = 'E2501'
+    id = 'W2501'
     shortdesc = 'Check if Password Properties are correctly configured'
     description = 'Password properties should be strings and if parameter using NoEcho'
     tags = ['base', 'parameters', 'passwords']
