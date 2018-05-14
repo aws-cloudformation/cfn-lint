@@ -46,9 +46,10 @@ class CodepipelineStages(CloudFormationLintRule):
         categories = set()
 
         for sidx, stage in enumerate(value):
-            for aidx, action in enumerate(stage['Actions']):
-                categories.add(action['ActionTypeId']['Category'])
-                if sidx > 0 and action['ActionTypeId']['Category'] == 'Source':
+            for aidx, action in enumerate(stage.get('Actions', [])):
+                action_type_id = action.get('ActionTypeId', {})
+                categories.add(action_type_id.get('Category'))
+                if sidx > 0 and action_type_id.get('Category') == 'Source':
                     message = 'Only the first stage of a pipeline may contain source actions.'
                     matches.append(RuleMatch(path + [sidx, 'Actions', aidx], message))
 
@@ -64,12 +65,12 @@ class CodepipelineStages(CloudFormationLintRule):
         stage_names = set()
 
         for sidx, stage in enumerate(value):
-            if stage['Name'] in stage_names:
+            if stage.get('Name') in stage_names:
                 message = 'All stage names within a pipeline must be unique. ({name})'.format(
-                    name=stage['Name']
+                    name=stage.get('Name')
                 )
                 matches.append(RuleMatch(path + [sidx, 'Name'], message))
-            stage_names.add(stage['Name'])
+            stage_names.add(stage.get('Name'))
 
         return matches
 
@@ -82,18 +83,19 @@ class CodepipelineStages(CloudFormationLintRule):
             path = resource['Path']
             properties = resource['Value']
 
-            if len(properties['Stages']) < 2:
+            stages = properties.get('Stages', [])
+            if len(stages) < 2:
                 message = 'A pipeline must contain at least two stages.'
                 matches.append(RuleMatch(path, message))
 
             matches.extend(
-                self.check_first_stage(properties['Stages'], path + ['Stages'])
+                self.check_first_stage(stages, path + ['Stages'])
             )
             matches.extend(
-                self.check_source_actions(properties['Stages'], path + ['Stages'])
+                self.check_source_actions(stages, path + ['Stages'])
             )
             matches.extend(
-                self.check_names_unique(properties['Stages'], path + ['Stages'])
+                self.check_names_unique(stages, path + ['Stages'])
             )
 
         return matches

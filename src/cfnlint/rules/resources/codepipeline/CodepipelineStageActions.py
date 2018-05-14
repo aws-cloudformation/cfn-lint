@@ -105,13 +105,22 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that artifact counts are within valid ranges."""
         matches = []
 
-        owner = action['ActionTypeId']['Owner']
+        action_type_id = action.get('ActionTypeId', {})
+        owner = action_type_id.get('Owner')
         if owner not in self.CONSTRAINTS.keys():
             return matches
 
-        category = action['ActionTypeId']['Category']
-        provider = action['ActionTypeId']['Provider']
-        constraints = self.CONSTRAINTS[owner][category][provider]
+        category = action_type_id.get('Category')
+        if not category:
+            return matches
+
+        provider = action_type_id.get('Provider')
+        if not provider:
+            return matches
+
+        constraints = self.CONSTRAINTS.get(owner, {}).get(category, {}).get(provider, {})
+        if not constraints:
+            return matches
         artifact_count = len(action.get(artifact_type, []))
 
         constraint_key = self.KEY_MAP[artifact_type]
@@ -154,7 +163,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action type owner is valid."""
         matches = []
 
-        owner = action['ActionTypeId']['Owner']
+        owner = action.get('ActionTypeId', {}).get('Owner')
         if owner not in self.VALID_OWNER_STRINGS:
             message = (
                 'For all currently supported action types, the only valid owner '
@@ -173,7 +182,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action type version is valid."""
         matches = []
 
-        if action['ActionTypeId']['Version'] != 1:
+        if action.get('ActionTypeId', {}).get('Version') != 1:
             message = 'For all currently supported action types, the only valid version is 1.'
             matches.append(RuleMatch(
                 path + ['ActionTypeId', 'Version'],
@@ -186,12 +195,12 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action names are unique."""
         matches = []
 
-        if action['Name'] in action_names:
+        if action.get('Name') in action_names:
             message = 'All action names within a stage must be unique. ({name})'.format(
-                name=action['Name']
+                name=action.get('Name')
             )
             matches.append(RuleMatch(path + ['Name'], message))
-        action_names.add(action['Name'])
+        action_names.add(action.get('Name'))
 
         return matches
 
