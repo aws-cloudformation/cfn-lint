@@ -14,21 +14,21 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import RulesCollection  # pylint: disable=E0401
-from cfnlint.rules.resources.properties.ImageId import ImageId  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.parameters.AvailabilityZone import AvailabilityZone  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestPropertyVpcId(BaseRuleTestCase):
-    """Test Password Property Configuration"""
+class TestParameterAvailabilityZone(BaseRuleTestCase):
+    """Test template parameter configurations"""
     def setUp(self):
         """Setup"""
-        super(TestPropertyVpcId, self).setUp()
-        self.collection.register(ImageId())
+        super(TestParameterAvailabilityZone, self).setUp()
+        self.collection.register(AvailabilityZone())
 
     success_templates = [
         'templates/good/generic.yaml',
         'templates/quickstart/nist_high_master.yaml',
+        'templates/quickstart/nist_application.yaml',
         'templates/quickstart/nist_config_rules.yaml',
         'templates/quickstart/nist_iam.yaml',
         'templates/quickstart/nist_logging.yaml',
@@ -36,23 +36,27 @@ class TestPropertyVpcId(BaseRuleTestCase):
         'templates/quickstart/openshift_master.yaml',
         'templates/quickstart/openshift.yaml',
         'templates/quickstart/cis_benchmark.yaml',
+        'templates/good/properties_ec2_vpc.yaml',
         'templates/good/minimal.yaml',
         'templates/good/transform.yaml',
-        'templates/good/conditions.yaml'
+        'templates/good/conditions.yaml',
+        'templates/good/properties_elb.yaml',
+        'templates/good/functions_sub.yaml',
+        'templates/good/functions_cidr.yaml',
+        'templates/good/resources_lambda.yaml',
+        'templates/good/transform_serverless_api.yaml',
+        'templates/good/transform_serverless_function.yaml',
+        'templates/good/transform_serverless_globals.yaml',
     ]
 
     def test_file_positive(self):
-        """Success test"""
+        """Test Positive"""
         self.helper_file_positive()
-
-    def test_file_negative_nist_app(self):
-        """Failure test"""
-        self.helper_file_negative('templates/quickstart/nist_application.yaml', 2)
 
     def test_file_negative_nist_mgmt(self):
         """Failure test"""
-        self.helper_file_negative('templates/quickstart/nist_vpc_management.yaml', 1)
+        self.helper_file_negative('templates/quickstart/nist_vpc_management.yaml', 2)
 
     def test_file_negative(self):
-        """Failure test"""
-        self.helper_file_negative('templates/bad/properties_imageid.yaml', 1)
+        """Test failure"""
+        self.helper_file_negative('templates/bad/properties_az.yaml', 3)

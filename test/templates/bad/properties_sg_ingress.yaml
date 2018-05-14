@@ -7,6 +7,15 @@ Parameters:
   mySecurityGroup:
     Description: Security group to allow traffic from
     Type: String
+  mySecurity2Group:
+    Description: Second Security Group
+    Type: String
+  mySecurity3Group:
+    Description: Third Security Group
+    Type: String
+  mySecurityGroupList:
+    Description: Security Group List
+    Type: List<Number>
 Resources:
   mySecurityGroupNonVpc:
     Type: AWS::EC2::SecurityGroup
@@ -41,8 +50,31 @@ Resources:
       GroupId: !Ref mySecurityGroupVpc
       IpProtocol: 1
       SourceSecurityGroupId: !Ref mySecurityGroupNonVpc
+  mySecurityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref mySecurityGroupVpc
+      IpProtocol: 1
+      SourceSecurityGroupId: !Ref mySecurity3Group
   mySecurityGroupIngressExclusive:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       GroupId: !Ref mySecurityGroupVpc
       GroupName: BadGroup
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      SecurityGroupIds:
+      - !Ref mySecurityGroup
+  myLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        SecurityGroupIds:
+        - !Ref mySecurity2Group
+  myLaunchTemplate2:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        SecurityGroupIds: !Ref mySecurityGroupList

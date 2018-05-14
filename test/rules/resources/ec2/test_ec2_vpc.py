@@ -25,31 +25,9 @@ class TestPropertyEc2Vpc(BaseRuleTestCase):
         super(TestPropertyEc2Vpc, self).setUp()
         self.collection.register(Vpc())
 
-    success_templates = [
-        'templates/good/generic.yaml',
-        'templates/quickstart/nist_high_master.yaml',
-        'templates/quickstart/nist_config_rules.yaml',
-        'templates/quickstart/nist_iam.yaml',
-        'templates/quickstart/nist_logging.yaml',
-        'templates/quickstart/openshift_master.yaml',
-        'templates/quickstart/openshift.yaml',
-        'templates/quickstart/cis_benchmark.yaml',
-        'templates/good/minimal.yaml',
-        'templates/good/transform.yaml',
-        'templates/good/conditions.yaml'
-    ]
-
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
-
-    def test_file_nist_negative(self):
-        """Test failure"""
-        self.helper_file_negative('templates/quickstart/nist_vpc_management.yaml', 1)
-
-    def test_file_nist_prod_negative(self):
-        """Test failure"""
-        self.helper_file_negative('templates/quickstart/nist_vpc_production.yaml', 1)
 
     def test_file_negative(self):
         """Test failure"""
