@@ -783,11 +783,10 @@ class Template(object):
                         check_split(
                             value=value, path=new_path[:] + child_path, **kwargs))
             elif isinstance(child_path[-1], int):
-                if child_path[-2] == 'Fn::If':
-                    if check_value:
-                        matches.extend(
-                            check_value(
-                                value=value, path=new_path[:] + child_path, **kwargs))
+                if check_value:
+                    matches.extend(
+                        check_value(
+                            value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
 
