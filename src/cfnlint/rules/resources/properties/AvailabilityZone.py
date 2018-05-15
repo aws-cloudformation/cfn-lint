@@ -58,8 +58,12 @@ class AvailabilityZone(CloudFormationLintRule):
     def check_az_value(self, value, path):
         """Check ref for VPC"""
         matches = list()
-        message = 'Don\'t hardcode {0} for AvailabilityZones at {1}'
-        matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+
+        if path[-1] != 'Fn::GetAZs':
+            message = 'Don\'t hardcode {0} for AvailabilityZones at {1}'
+            full_path = ('/'.join(str(x) for x in path))
+            matches.append(RuleMatch(path, message.format(value, full_path)))
+
         return matches
 
     def check(self, properties, resource_type, path, cfn):
