@@ -114,11 +114,12 @@ class Functions(CloudFormationTransform):
                     )
 
                 events = resource_properties.get('Events', {})
+                generated_api = False
                 for event_name, event_value in events.items():
                     event_type = event_value.get('Type', None)
                     if event_type == 'Api':
                         rest_api_id = event_value.get('Properties', {}).get('RestApiId')
-                        if not rest_api_id:
+                        if (not generated_api) and (not rest_api_id):
                             transforms.add_resource(
                                 cfn, 'ServerlessRestApi',
                                 {
@@ -148,6 +149,12 @@ class Functions(CloudFormationTransform):
                                     }
                                 }
                             )
+                            # Generate only 1 RestApi resource:
+                            # If not defined, a default AWS::Serverless::Api resource is
+                            # created using a generated Swagger document contains a union of
+                            # all paths and methods defined by Api events defined in this template
+                            # that do not specify a RestApiId.
+                            generated_api = True
 
                         transforms.add_resource(
                             cfn, '%s%sPermission%s' % (resource_name, event_name, 'Prod'),
