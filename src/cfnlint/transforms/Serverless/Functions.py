@@ -117,7 +117,7 @@ class Functions(CloudFormationTransform):
                 for event_name, event_value in events.items():
                     event_type = event_value.get('Type', None)
                     if event_type == 'Api':
-                        rest_api_id = event_value.get('Properties', {}).get('RestApidId')
+                        rest_api_id = event_value.get('Properties', {}).get('RestApiId')
                         if not rest_api_id:
                             transforms.add_resource(
                                 cfn, 'ServerlessRestApi',
