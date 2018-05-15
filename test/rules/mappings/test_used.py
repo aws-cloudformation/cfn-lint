@@ -27,6 +27,7 @@ class TestUsedMappings(BaseRuleTestCase):
 
     success_templates = [
         'templates/good/generic.yaml',
+        'templates/quickstart/nist_high_master.yaml',
         'templates/quickstart/nist_application.yaml',
         'templates/quickstart/nist_config_rules.yaml',
         'templates/quickstart/nist_iam.yaml',
@@ -41,6 +42,7 @@ class TestUsedMappings(BaseRuleTestCase):
         'templates/good/properties_elb.yaml',
         'templates/good/functions_sub.yaml',
         'templates/good/functions_cidr.yaml',
+        'templates/good/functions_findinmap.yaml',
         'templates/good/resources_lambda.yaml',
         'templates/good/transform_serverless_api.yaml',
         'templates/good/transform_serverless_function.yaml',
@@ -50,6 +52,15 @@ class TestUsedMappings(BaseRuleTestCase):
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
+
+    # Some QuickStarts contain this warning, so we move them to negative tests
+    def test_file_negative_nist_mgmt(self):
+        """Test failure: nist_vpc_management.yaml"""
+        self.helper_file_negative('templates/quickstart/nist_vpc_management.yaml', 1)
+
+    def test_file_negative_openshift(self):
+        """Test failure: openshift.yaml"""
+        self.helper_file_negative('templates/quickstart/openshift.yaml', 1)
 
     def test_file_negative(self):
         """Test failure"""

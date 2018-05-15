@@ -45,12 +45,6 @@ class Used(CloudFormationLintRule):
                 else:
                     ref_mappings.append(maptree[-1])
 
-#            # Get resource's Mappings (I don't think this applies?)
-#            for _, resource_values in cfn.get_resources().items():
-#
-#                if 'Condition' in resource_values:
-#                    ref_conditions.append(resource_values['Condition'])
-
             # Check if the mappings are used
             for mapname, _ in mappings.items():
                 if mapname not in ref_mappings:
