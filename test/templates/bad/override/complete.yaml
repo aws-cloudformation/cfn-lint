@@ -1,0 +1,24 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Custom required property
+Resources:
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # Missing Bucketname
+      AccessControl: "Private"
+  untaggedInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+  VPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: "127.0.0.1/32"
+  # Unsupported resource tyoe
+  mySpotFleet:
+    Type: "AWS::EC2::SpotFleet"
+  # Unsupported resource tyoe
+  mySnsTopic:
+    Type: AWS::SNS::Topic

@@ -21,10 +21,13 @@ from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
 import cfnlint.parser
+import cfnlint.transforms
+
 
 LOGGER = logging.getLogger(__name__)
 
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'rules')
+DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'transforms')
 
 
 class CloudFormationLintRule(object):
@@ -38,11 +41,11 @@ class CloudFormationLintRule(object):
     resource_sub_property_types = []
 
     def __repr__(self):
-        return "%s: %s" % (self.id, self.shortdesc)
+        return '%s: %s' % (self.id, self.shortdesc)
 
     def verbose(self):
         """Verbose output"""
-        return "%s: %s\n%s" % (self.id, self.shortdesc, self.description)
+        return '%s: %s\n%s' % (self.id, self.shortdesc, self.description)
 
     match = None
     match_resource_properties = None
@@ -58,12 +61,12 @@ class CloudFormationLintRule(object):
             matches = []
 
             start = datetime.now()
-            LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
+            LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
             # pylint: disable=E1102
             results = match_function(self, filename, cfn, *args, **kwargs)
-            LOGGER.debug("Complete match function for rule %s at %s.  Ran in %s",
+            LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
                          self.id, datetime.now(), datetime.now() - start)
-            LOGGER.debug("Results from rule %s are %s: ", self.id, results)
+            LOGGER.debug('Results from rule %s are %s: ', self.id, results)
 
             if results:
                 for result in results:
@@ -116,6 +119,69 @@ class CloudFormationLintRule(object):
         return []
 
 
+class CloudFormationTransform(object):
+    """CloudFormation Transform Support"""
+    type = ''
+
+    resource_transform = None
+
+    def resource_transform_all(self, template):
+        """Generic transform"""
+        if not self.resource_transform:
+            return []
+
+        return self.resource_transform(template)  # pylint: disable=E1102
+
+
+class TransformsCollection(object):
+    """Collection of transforms"""
+
+    def __init__(self):
+        self.transforms = []
+
+    def register(self, obj):
+        """Register transforms"""
+        self.transforms.append(obj)
+
+    def __iter__(self):
+        return iter(self.transforms)
+
+    def __len__(self):
+        return len(self.transforms)
+
+    def extend(self, more):
+        """Extend rules"""
+        self.transforms.extend(more)
+
+    def run(self, filename, cfn, transform_type):
+        """Run the transforms"""
+        matches = list()
+        for transform in self.transforms:
+            if transform_type == transform.type:
+                try:
+                    transform.resource_transform_all(cfn)
+                except cfnlint.transforms.TransformError as err:
+                    rule = CloudFormationLintRule()
+                    rule.id = 'E0001'
+                    rule.shortdesc = 'Transform Error'
+                    rule.description = 'Transform failed to complete'
+                    matches.append(Match(
+                        err.location[0] + 1, err.location[1] + 1,
+                        err.location[2] + 1, err.location[3] + 1,
+                        filename, rule, 'While Performing a Transform got error: %s' % err.value))
+
+        return matches
+
+    @classmethod
+    def create_from_directory(cls, transformdir):
+        """Create transforms from directory"""
+        result = cls()
+        if transformdir != '':
+            result.transforms = cfnlint.helpers.load_plugins(os.path.expanduser(transformdir))
+
+        return result
+
+
 class RulesCollection(object):
     """Collection of rules"""
 
@@ -137,17 +203,22 @@ class RulesCollection(object):
         self.rules.extend(more)
 
     def __repr__(self):
-        return "\n".join([rule.verbose()
+        return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
     def resource_property(self, filename, cfn, ignore_checks, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
         matches = list()
         property_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
-        property_spec_name = "%s.%s" % (resource_type, property_type)
+        property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                if rule.id not in ignore_checks:
+                ignore = False
+                # Allowing ignoring of rules based on prefix to ignore checks
+                for ignore_check in ignore_checks:
+                    if rule.id.startswith(ignore_check) and ignore_check:
+                        ignore = True
+                if rule.id not in ignore_checks and not ignore:
                     rule_definition = set(rule.tags)
                     rule_definition.add(rule.id)
                     matches.extend(
@@ -185,7 +256,12 @@ class RulesCollection(object):
         matches = list()
 
         for rule in self.rules:
-            if rule.id not in ignore_checks:
+            ignore = False
+            # Allowing ignoring of rules based on prefix to ignore checks
+            for ignore_check in ignore_checks:
+                if rule.id.startswith(ignore_check) and ignore_check:
+                    ignore = True
+            if rule.id not in ignore_checks and not ignore:
                 rule_definition = set(rule.tags)
                 rule_definition.add(rule.id)
                 matches.extend(rule.matchall(filename, cfn))
@@ -234,7 +310,7 @@ class RulesCollection(object):
     def create_from_directory(cls, rulesdir):
         """Create rules from directory"""
         result = cls()
-        if rulesdir != "":
+        if rulesdir != '':
             result.rules = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
         return result
 
@@ -246,6 +322,14 @@ class RuleMatch(object):
         """Init"""
         self.path = path
         self.message = message
+
+    def __eq__(self, item):
+        """Override unique"""
+        return ((self.path, self.message) == (item.path, item.message))
+
+    def __hash__(self):
+        """Hash for comparisons"""
+        return hash((self.path, self.message))
 
 
 class Match(object):
@@ -265,9 +349,19 @@ class Match(object):
 
     def __repr__(self):
         """Represent"""
-        formatstr = u"[{0}] ({1}) matched {2}:{3}"
+        formatstr = u'[{0}] ({1}) matched {2}:{3}'
         return formatstr.format(self.rule, self.message,
                                 self.filename, self.linenumber)
+
+    def __eq__(self, item):
+        """Override equal to compare matches"""
+        return (
+            (
+                self.linenumber, self.columnnumber, self.rule.id, self.message
+            ) ==
+            (
+                item.linenumber, item.columnnumber, item.rule.id, item.message
+            ))
 
 
 class Template(object):
@@ -277,13 +371,25 @@ class Template(object):
     def __init__(self, template, regions=['us-east-1']):
         self.template = template
         self.regions = regions
+        self.sections = [
+            'AWSTemplateFormatVersion',
+            'Description',
+            'Metadata',
+            'Parameters',
+            'Mappings',
+            'Conditions',
+            'Transform',
+            'Resources',
+            'Outputs',
+            'Rules'
+        ]
 
     def get_resources(self, resource_type=[]):
         """
             Get Resources
             Filter on type when specified
         """
-        LOGGER.debug("Get resources from template...")
+        LOGGER.debug('Get resources from template...')
         resources = self.template.get('Resources', {})
         if isinstance(resource_type, list):
             return {k: v for (k, v) in resources.items()
@@ -294,7 +400,7 @@ class Template(object):
 
     def get_parameters(self):
         """Get Resources"""
-        LOGGER.debug("Get parameters from template...")
+        LOGGER.debug('Get parameters from template...')
         parameters = self.template.get('Parameters', {})
         if not parameters:
             return {}
@@ -303,7 +409,7 @@ class Template(object):
 
     def get_mappings(self):
         """Get Resources"""
-        LOGGER.debug("Get mapping from template...")
+        LOGGER.debug('Get mapping from template...')
         mappings = self.template.get('Mappings', {})
         if not mappings:
             return {}
@@ -312,7 +418,7 @@ class Template(object):
 
     def get_resource_names(self):
         """Get all the Resource Names"""
-        LOGGER.debug("Get the names of all resources from template...")
+        LOGGER.debug('Get the names of all resources from template...')
         results = list()
         resources = self.template.get('Resources', {})
         if isinstance(resources, dict):
@@ -323,7 +429,7 @@ class Template(object):
 
     def get_parameter_names(self):
         """Get all Parameter Names"""
-        LOGGER.debug("Get names of all parameters from template...")
+        LOGGER.debug('Get names of all parameters from template...')
         results = list()
         parameters = self.template.get('Parameters', {})
         if isinstance(parameters, dict):
@@ -334,7 +440,7 @@ class Template(object):
 
     def get_valid_refs(self):
         """Get all valid Refs"""
-        LOGGER.debug("Get all valid REFs from template...")
+        LOGGER.debug('Get all valid REFs from template...')
         results = {}
         parameters = self.template.get('Parameters', {})
         if parameters:
@@ -372,30 +478,30 @@ class Template(object):
 
     def get_valid_getatts(self):
         """Get all valid GetAtts"""
-        LOGGER.debug("Get valid GetAtts from template...")
+        LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
-        if 'Resources' in self.template:
-            for name, value in self.template['Resources'].items():
-                if 'Type' in value:
-                    valtype = value['Type']
-                    if valtype.startswith(('Custom::', 'AWS::CloudFormation::Stack', 'AWS::Serverless::')):
-                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                        results[name] = {'*': {'PrimitiveItemType': 'String'}}
-                    else:
-                        if value['Type'] in resourcetypes:
-                            if 'Attributes' in resourcetypes[valtype]:
-                                results[name] = {}
-                                for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
-                                    element = {}
-                                    element.update(attvalue)
-                                    results[name][attname] = element
+        resources = self.template.get('Resources', {})
+        for name, value in resources.items():
+            if 'Type' in value:
+                valtype = value['Type']
+                if valtype.startswith(('Custom::', 'AWS::CloudFormation::Stack', 'AWS::Serverless::')):
+                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                    results[name] = {'*': {'PrimitiveItemType': 'String'}}
+                else:
+                    if value['Type'] in resourcetypes:
+                        if 'Attributes' in resourcetypes[valtype]:
+                            results[name] = {}
+                            for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
+                                element = {}
+                                element.update(attvalue)
+                                results[name][attname] = element
 
         return results
 
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
-        LOGGER.debug("Get Sub Resource Properties from %s", keys)
+        LOGGER.debug('Get Sub Resource Properties from %s', keys)
         if not keys:
             result = {}
             result['Path'] = path
@@ -440,7 +546,7 @@ class Template(object):
 
     def get_resource_properties(self, keys):
         """Filter keys of template"""
-        LOGGER.debug("Get Properties from a resource: %s", keys)
+        LOGGER.debug('Get Properties from a resource: %s', keys)
         matches = list()
         resourcetype = keys.pop(0)
         for resource_name, resource_value in self.get_resources(resourcetype).items():
@@ -463,7 +569,10 @@ class Template(object):
                 if key == searchText:
                     pathprop.append(cfndict[key])
                     keys.append(pathprop)
-                elif isinstance(cfndict[key], dict):
+                    # pop the last element off for nesting of found elements for
+                    # dict and list checks
+                    pathprop = pathprop[:-1]
+                if isinstance(cfndict[key], dict):
                     keys.extend(self._search_deep_keys(searchText, cfndict[key], pathprop))
                 elif isinstance(cfndict[key], list):
                     for index, item in enumerate(cfndict[key]):
@@ -482,7 +591,7 @@ class Template(object):
         """
             Search for keys in all parts of the templates
         """
-        LOGGER.debug("Search for key %s as far down as the template goes", searchText)
+        LOGGER.debug('Search for key %s as far down as the template goes', searchText)
         return (self._search_deep_keys(searchText, self.template, []))
 
     def get_condition_values(self, template, path=[]):
@@ -498,22 +607,34 @@ class Template(object):
             result = {}
             result['Path'] = path[:] + [index + 1]
             if not isinstance(item, (dict, list)):
+                # Just straight values and pass them through
                 result['Value'] = item
                 matches.append(result)
             elif len(item) == 1:
-                for sub_key, sub_value in item.items():
-                    if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                        results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
-                        if isinstance(results, list):
-                            matches.extend(results)
-                    elif sub_key == 'Ref':
-                        if sub_value != 'AWS::NoValue':
-                            result['Value'] = sub_value
-                            result['Path'] += ['Ref']
+                # Checking for conditions inside of conditions
+                if isinstance(item, dict):
+                    for sub_key, sub_value in item.items():
+                        if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
+                            if isinstance(results, list):
+                                matches.extend(results)
+                        elif sub_key == 'Ref':
+                            if sub_value != 'AWS::NoValue':
+                                result['Value'] = sub_value
+                                result['Path'] += ['Ref']
+                                matches.append(result)
+                        else:
+                            # Return entire Item
+                            result['Value'] = item
                             matches.append(result)
-                    else:
-                        result['Value'] = sub_value
-                        matches.append(result)
+                else:
+                    # Return entire Item
+                    result['Value'] = item
+                    matches.append(result)
+            else:
+                # Length longer than 1 means a list or object that should be fully returned
+                result['Value'] = item
+                matches.append(result)
 
         return matches
 
@@ -526,12 +647,12 @@ class Template(object):
             Returns the value if its just a string, int, boolean, etc.
 
         """
-        LOGGER.debug("Get the value for key %s in %s", key, obj)
+        LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = list()
         value = obj.get(key)
         if not value:
             return None
-        if isinstance(value, (dict, list)):
+        if isinstance(value, (dict)):
             if len(value) == 1:
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
@@ -543,6 +664,24 @@ class Template(object):
                         result['Path'] = path[:] + [obj_key]
                         result['Value'] = obj_value
                         matches.append(result)
+        elif isinstance(value, (list)):
+            for list_index, list_value in enumerate(value):
+                if isinstance(list_value, dict):
+                    for obj_key, obj_value in list_value.items():
+                        if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
+                            if isinstance(results, list):
+                                matches.extend(results)
+                        else:
+                            result = {}
+                            result['Path'] = path[:] + [list_index, obj_key]
+                            result['Value'] = obj_value
+                            matches.append(result)
+                else:
+                    result = {}
+                    result['Path'] = path[:] + [list_index]
+                    result['Value'] = list_value
+                    matches.append(result)
         else:
             result = {}
             result['Path'] = path[:]
@@ -660,13 +799,24 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, ignore_checks, regions, verbosity=0):
+            self, rules, transforms, filename, template, ignore_checks, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
         self.ignore_checks = ignore_checks
         self.verbosity = verbosity
+        self.transforms = transforms
         self.cfn = Template(template, regions)
+
+    def transform(self):
+        """Transform logic"""
+        LOGGER.debug('Transform templates if needed')
+        transform_type = self.cfn.template.get('Transform')
+        matches = list()
+        if transform_type:
+            matches = self.transforms.run(self.filename, self.cfn, transform_type)
+
+        return matches
 
     def run(self):
         """Run rules"""
@@ -676,4 +826,10 @@ class Runner(object):
             matches.extend(
                 self.rules.run(
                     self.filename, self.cfn, self.ignore_checks))
-        return matches
+
+        # uniq the list of incidents
+        return_matches = list()
+        for _, match in enumerate(matches):
+            if not any(match == u for u in return_matches):
+                return_matches.append(match)
+        return return_matches

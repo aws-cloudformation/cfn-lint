@@ -53,7 +53,7 @@ class Value(CloudFormationLintRule):
                                 objtype, {}).get('Attributes', {}).get(obj[1], {}).get('Type')
                             if attribute == 'List':
                                 if getatt[-4] != 'Fn::Join' and getatt[-3] != 1:
-                                    message = "Output {0} value {1} is of type list"
+                                    message = 'Output {0} value {1} is of type list'
                                     matches.append(RuleMatch(
                                         getatt,
                                         message.format(getatt[1], '/'.join(obj))
@@ -72,7 +72,7 @@ class Value(CloudFormationLintRule):
                             if paramtype:
                                 if paramtype.startswith('List<'):
                                     if ref[-4] != 'Fn::Join' and ref[-3] != 1:
-                                        message = "Output {0} value {1} is of type list"
+                                        message = 'Output {0} value {1} is of type list'
                                         matches.append(RuleMatch(
                                             ref,
                                             message.format(ref[1], obj)

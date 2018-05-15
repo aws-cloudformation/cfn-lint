@@ -18,26 +18,41 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class FunctionRuntime(CloudFormationLintRule):
+class FunctionMemorySize(CloudFormationLintRule):
     """Check if Lambda Function Memory Size"""
-    id = 'E2531'
-    shortdesc = 'Check Lambda Runtime Properties'
-    description = 'See if Lambda Runtime is in valid'
+    id = 'E2530'
+    shortdesc = 'Check Lambda Memory Size Properties'
+    description = 'See if Lambda Memory Size is valid'
     tags = ['base', 'resources', 'lambda']
-
-    runtimes = [
-        'nodejs', 'nodejs4.3', 'nodejs6.10', 'java8', 'python2.7', 'python3.6',
-        'dotnetcore1.0', 'dotnetcore2.0', 'nodejs4.3-edge', 'go1.x'
-    ]
+    min_memory = 128
+    max_memory = 3008
 
     def check_value(self, value, path):
-        """ Check runtime value """
+        """ Check memory size value """
         matches = list()
 
-        message = "You must specify a valid value for runtime at {0}"
+        message = 'You must specify a value that is greater than or equal to {0}, ' \
+                  'and it must be a multiple of 64. You cannot specify a size ' \
+                  'larger than {1}. Error at {2}'
 
-        if value not in self.runtimes:
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+        try:
+            value = int(value)
+
+            if value < self.min_memory or value > self.max_memory:
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
+            elif value % 64 != 0:
+                matches.append(
+                    RuleMatch(
+                        path, message.format(
+                            self.min_memory, self.max_memory, ('/'.join(path)))))
+        except ValueError:
+            matches.append(
+                RuleMatch(
+                    path, message.format(
+                        self.min_memory, self.max_memory, ('/'.join(path)))))
 
         return matches
 
@@ -46,27 +61,15 @@ class FunctionRuntime(CloudFormationLintRule):
 
         matches = list()
         if value in resources:
-            message = "Runtime can't use a Ref to a resource for {0}"
+            message = 'MemorySize can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
-            allowed_values = parameter.get('AllowedValues', {})
-
-            if param_type != 'String':
+            if param_type != 'Number':
                 param_path = ['Parameters', value, 'Type']
-                message = "Type for Parameter should be String at {0}"
+                message = 'Type for Parameter should be Number at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
-
-            if not allowed_values:
-                param_path = ['Parameters', value]
-                message = "Parameter should have allowed values at {0}"
-                matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
-            for index, allowed_value in enumerate(allowed_values):
-                if allowed_value not in self.runtimes:
-                    param_path = ['Parameters', value, 'AllowedValues', index]
-                    message = "Allowed value should have proper types at {0}"
-                    matches.append(RuleMatch(param_path, message.format(('/'.join(map(str, param_path))))))
 
         return matches
 
@@ -76,7 +79,7 @@ class FunctionRuntime(CloudFormationLintRule):
         matches = list()
         matches.extend(
             cfn.check_resource_property(
-                'AWS::Lambda::Function', 'Runtime',
+                'AWS::Lambda::Function', 'MemorySize',
                 check_value=self.check_value,
                 check_ref=self.check_ref,
             )

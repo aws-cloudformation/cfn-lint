@@ -44,9 +44,9 @@ class Configuration(CloudFormationLintRule):
         ]
 
         for resource_name, resource_values in cfn.get_resources().items():
-            self.logger.debug("Validating resource %s base configuration", resource_name)
+            self.logger.debug('Validating resource %s base configuration', resource_name)
             if not isinstance(resource_values, dict):
-                message = "Resource not properly configured at {0}"
+                message = 'Resource not properly configured at {0}'
                 matches.append(RuleMatch(
                     ['Resources', resource_name],
                     message.format(resource_name)
@@ -54,7 +54,7 @@ class Configuration(CloudFormationLintRule):
                 continue
             for property_key, _ in resource_values.items():
                 if property_key not in valid_attributes:
-                    message = "Invalid resource attribute {0} for resource {1}"
+                    message = 'Invalid resource attribute {0} for resource {1}'
                     matches.append(RuleMatch(
                         ['Resources', resource_name, property_key],
                         message.format(property_key, resource_name)
@@ -62,18 +62,18 @@ class Configuration(CloudFormationLintRule):
 
             resource_type = resource_values.get('Type')
             if not resource_type:
-                message = "Type not defined for resource {0}"
+                message = 'Type not defined for resource {0}'
                 matches.append(RuleMatch(
                     ['Resources', resource_name],
                     message.format(resource_name)
                 ))
             else:
-                self.logger.debug("Check resource types by region...")
+                self.logger.debug('Check resource types by region...')
                 for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                     if region in cfn.regions:
                         if resource_type not in specs['ResourceTypes']:
                             if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
-                                message = "Invalid Type {0} for resource {1} in {2}"
+                                message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                                 matches.append(RuleMatch(
                                     ['Resources', resource_name, 'Type'],
                                     message.format(resource_type, resource_name, region)
@@ -90,7 +90,7 @@ class Configuration(CloudFormationLintRule):
                             if property_spec.get('Required', False):
                                 required += 1
                         if required > 0:
-                            message = "Properties not defined for resource {0}"
+                            message = 'Properties not defined for resource {0}'
                             matches.append(RuleMatch(
                                 ['Resources', resource_name],
                                 message.format(resource_name)

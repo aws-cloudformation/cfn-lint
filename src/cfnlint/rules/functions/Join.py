@@ -55,7 +55,7 @@ class Join(CloudFormationLintRule):
                     join_string = join_value_obj[0]
                     join_string_objs = join_value_obj[1]
                     if not isinstance(join_string, six.string_types):
-                        message = "Join string has to be of type string for {0}"
+                        message = 'Join string has to be of type string for {0}'
                         matches.append(RuleMatch(
                             tree, message.format('/'.join(map(str, tree)))))
                     if isinstance(join_string_objs, dict):
@@ -63,19 +63,19 @@ class Join(CloudFormationLintRule):
                             if len(join_string_objs) == 1:
                                 for key, _ in join_string_objs.items():
                                     if key not in supported_functions:
-                                        message = "Join unsupported function for {0}"
+                                        message = 'Join unsupported function for {0}'
                                         matches.append(RuleMatch(
                                             tree, message.format('/'.join(map(str, tree)))))
                             else:
-                                message = "Join list of values should be singular for {0}"
+                                message = 'Join list of values should be singular for {0}'
                                 matches.append(RuleMatch(
                                     tree, message.format('/'.join(map(str, tree)))))
                         elif not isinstance(join_string_objs, six.string_types):
-                            message = "Join list of singular function or string for {0}"
+                            message = 'Join list of singular function or string for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree)))))
                     elif not isinstance(join_string_objs, list):
-                        message = "Join list of values for {0}"
+                        message = 'Join list of values for {0}'
                         matches.append(RuleMatch(
                             tree, message.format('/'.join(map(str, tree)))))
                     else:
@@ -84,23 +84,23 @@ class Join(CloudFormationLintRule):
                                 if len(string_obj) == 1:
                                     for key, _ in string_obj.items():
                                         if key not in supported_functions:
-                                            message = "Join unsupported function for {0}"
+                                            message = 'Join unsupported function for {0}'
                                             matches.append(RuleMatch(
                                                 tree, message.format('/'.join(map(str, tree)))))
                                 else:
-                                    message = "Join list of values should be singular for {0}"
+                                    message = 'Join list of values should be singular for {0}'
                                     matches.append(RuleMatch(
                                         tree, message.format('/'.join(map(str, tree)))))
                             elif not isinstance(string_obj, six.string_types):
-                                message = "Join list of singular function or string for {0}"
+                                message = 'Join list of singular function or string for {0}'
                                 matches.append(RuleMatch(
                                     tree, message.format('/'.join(map(str, tree)))))
                 else:
-                    message = "Join should be an array of 2 for {0}"
+                    message = 'Join should be an array of 2 for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree)))))
             else:
-                message = "Join should be an array of 2 for {0}"
+                message = 'Join should be an array of 2 for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))
         return matches

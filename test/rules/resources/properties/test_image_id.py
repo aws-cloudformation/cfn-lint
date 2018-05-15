@@ -23,7 +23,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
     """Test Password Property Configuration"""
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection()
+        super(TestPropertyVpcId, self).setUp()
         self.collection.register(ImageId())
 
     success_templates = [
@@ -47,7 +47,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
 
     def test_file_negative_nist_app(self):
         """Failure test"""
-        self.helper_file_negative('templates/quickstart/nist_application.yaml', 3)
+        self.helper_file_negative('templates/quickstart/nist_application.yaml', 2)
 
     def test_file_negative_nist_mgmt(self):
         """Failure test"""

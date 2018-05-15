@@ -18,9 +18,27 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
+from cfnlint.parser import DuplicateError, NullError
 
 
 LOGGER = logging.getLogger(__name__)
+
+
+def check_duplicates(ordered_pairs):
+    """
+        Check for duplicate keys on the current level, this is not desirable
+        because a dict does not support this. It overwrites it with the last
+        occurance, which can give unexpected results
+    """
+    mapping = {}
+    for key, value in ordered_pairs:
+        if value is None:
+            raise NullError('"{}"'.format(key))
+        if key in mapping:
+            raise DuplicateError('"{}"'.format(key))
+        else:
+            mapping[key] = value
+    return mapping
 
 
 class JSONDecodeError(ValueError):
@@ -98,7 +116,7 @@ def py_scanstring(s, end, strict=True,
     while 1:
         chunk = _m(s, end)
         if chunk is None:
-            raise JSONDecodeError("Unterminated string starting at", s, begin)
+            raise JSONDecodeError('Unterminated string starting at', s, begin)
         end = chunk.end()
         content, terminator = chunk.groups()
         # Content is contains zero or more unescaped string characters
@@ -110,7 +128,7 @@ def py_scanstring(s, end, strict=True,
             break
         elif terminator != '\\':
             if strict:
-                msg = "Invalid control character {0!r} at".format(terminator)
+                msg = 'Invalid control character {0!r} at'.format(terminator)
                 raise JSONDecodeError(msg, s, end)
             else:
                 _append(terminator)
@@ -118,13 +136,13 @@ def py_scanstring(s, end, strict=True,
         try:
             esc = s[end]
         except IndexError:
-            raise JSONDecodeError("Unterminated string starting at", s, begin)
+            raise JSONDecodeError('Unterminated string starting at', s, begin)
         # If not a unicode escape sequence, must be in the lookup table
         if esc != 'u':
             try:
                 char = _b[esc]
             except KeyError:
-                msg = "Invalid \\escape: {0!r}".format(esc)
+                msg = 'Invalid \\escape: {0!r}'.format(esc)
                 raise JSONDecodeError(msg, s, end)
             end += 1
         else:
@@ -147,7 +165,7 @@ def _decode_uXXXX(s, pos):
             return int(esc, 16)
         except ValueError:
             pass
-    msg = "Invalid \\uXXXX escape"
+    msg = 'Invalid \\uXXXX escape'
     raise JSONDecodeError(msg, s, pos)
 
 
@@ -172,16 +190,19 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         # Trivial empty object
         if nextchar == '}':
             if object_pairs_hook is not None:
-                result = object_pairs_hook(pairs)
-                return result, end + 1
+                try:
+                    result = object_pairs_hook(pairs)
+                    return result, end + 1
+                except DuplicateError as err:
+                    raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+                except NullError as err:
+                    raise JSONDecodeError('Null Error {}'.format(err), s, end)
             pairs = {}
             if object_hook is not None:
                 pairs = object_hook(pairs, s)
             return pairs, end + 1
         elif nextchar != '"':
             raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
-            # raise JSONDecodeError(
-            #    "Expecting property name enclosed in double quotes", s, end)
     end += 1
     while True:
         begin = end - 1
@@ -194,7 +215,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if s[end:end + 1] != ':':
             end = _w(s, end).end()
             if s[end:end + 1] != ':':
-                raise JSONDecodeError("Expecting ':' delimiter", s, end)
+                raise JSONDecodeError('Expecting \':\' delimiter', s, end)
         end += 1
 
         try:
@@ -215,7 +236,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         try:
             value, end = scan_once(s, end)
         except StopIteration as err:
-            raise JSONDecodeError("Expecting value", s, str(err))
+            raise JSONDecodeError('Expecting value', s, str(err))
         key_str = str_node(key, beg_mark, end_mark)
         pairs_append((key_str, value))
         try:
@@ -230,15 +251,20 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             break
         elif nextchar != ',':
-            raise JSONDecodeError("Expecting ',' delimiter", s, end - 1)
+            raise JSONDecodeError('Expecting \',\' delimiter', s, end - 1)
         end = _w(s, end).end()
         nextchar = s[end:end + 1]
         end += 1
         if nextchar != '"':
             raise JSONDecodeError(
-                "Expecting property name enclosed in double quotes", s, end - 1)
+                'Expecting property name enclosed in double quotes', s, end - 1)
     if object_pairs_hook is not None:
-        result = object_pairs_hook(pairs)
+        try:
+            result = object_pairs_hook(pairs)
+        except DuplicateError as err:
+            raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+        except NullError as err:
+            raise JSONDecodeError('Null Error {}'.format(err), s, end)
         return result, end
     pairs = dict(pairs)
     if object_hook is not None:
@@ -324,4 +350,5 @@ class CfnJSONDecoder(json.JSONDecoder):
         self.parse_object = CfnJSONObject
         self.parse_string = py_scanstring
         self.memo = {}
+        self.object_pairs_hook = check_duplicates
         self.scan_once = py_make_scanner(self)

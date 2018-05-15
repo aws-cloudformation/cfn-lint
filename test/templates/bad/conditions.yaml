@@ -34,12 +34,16 @@ Parameters:
       - prod
       - test
     ConstraintDescription: must specify prod or test.
+  EnableGeoBlocking:
+    Type: String
 Conditions:
   CreateProdResources: !Equals [ !Ref EnvType, prod ]
   BadCondition: String
+  UnusedCondition: !Equals [ !Ref EnvType, prod ]
   TooManyConditions:
     Fn::Equals: [ !Ref EnvType, prod ]
     Fn::Not: !Equals [ !Ref EnvType, prod ]
+  EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
 Resources:
   EC2Instance:
     Type: "AWS::EC2::Instance"
@@ -74,6 +78,27 @@ Resources:
       Size: 100
       AvailabilityZone:
         !GetAtt EC2Instance.AvailabilityZone
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Restrictions:
+          GeoRestriction:
+            !If
+              - EnableGeoBlocking
+              -
+                RestrictionType:
+                  !If
+                    - EnableGeoBlocking
+                    -
+                      - whitelist
+                    - whitelist
+                BadLocations:
+                  - BE
+                  - LU
+                  - NL
+              - RestrictionType: none
 Outputs:
   VolumeId:
     Condition: CreateProdResources

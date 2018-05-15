@@ -110,6 +110,10 @@ Resources:
         Fn::Sub:
         - "yum install ${myPackage}"
         - myPackage: !Ref Package1
+  ElasticIP:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "vpc"
   ElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
@@ -140,3 +144,8 @@ Resources:
       Parameters:
         DeploymentName: iam-pipeline
         Deploy: 'auto'
+Outputs:
+  ElasticIP:
+    Value: !Sub "${ElasticIP}/32"
+    Export:
+      Name: "elastic-ip-cidr"

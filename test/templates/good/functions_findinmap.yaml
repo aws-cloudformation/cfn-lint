@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test Good Sub Strings
+Mappings:
+  myMap:
+    us-east-1:
+      32: ami-1234567
+      64: ami-abcdefg
+Resources:
+  myInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !FindInMap [ !FindInMap [ myMap, !Ref 'AWS::Region', !Ref 'AWS::Region' ], !Ref 'AWS::Region', 32 ]
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - !FindInMap [ myMap, !Ref 'AWS::Region', !Ref 'AWS::Region'  ]
+        - !FindInMap [ myMap, !Ref 'AWS::Region', !Ref 'AWS::Region'  ]
+        - !FindInMap [ myMap, !Ref 'AWS::Region', !Ref 'AWS::Region'  ]
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::FindInMap:
+        - !Ref myInstance1
+        - !Ref myInstance1
+        - !Ref myInstance1

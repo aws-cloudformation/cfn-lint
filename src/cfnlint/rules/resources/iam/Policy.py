@@ -37,14 +37,14 @@ class Policy(CloudFormationLintRule):
         ]
 
         if not isinstance(policy, dict):
-            message = "IAM Policy Documents needs to be JSON"
+            message = 'IAM Policy Documents needs to be JSON'
             matches.append(
                 RuleMatch(branch[:], message))
             return matches
 
         for parent_key, parent_value in policy.items():
             if parent_key not in valid_keys:
-                message = "IAM Policy key %s doesn't exist." % (parent_key)
+                message = 'IAM Policy key %s doesn\'t exist.' % (parent_key)
                 matches.append(
                     RuleMatch(branch[:] + [parent_key], message))
             if parent_key == 'Statement':
@@ -57,7 +57,7 @@ class Policy(CloudFormationLintRule):
                             )
                         )
                 else:
-                    message = "IAM Policy statement should be of list."
+                    message = 'IAM Policy statement should be of list.'
                     matches.append(
                         RuleMatch(branch[:] + [parent_key], message))
         return matches
@@ -79,33 +79,33 @@ class Policy(CloudFormationLintRule):
 
         for key, _ in statement.items():
             if key not in statement_valid_keys:
-                message = "IAM Policy statement key %s isn't valid" % (key)
+                message = 'IAM Policy statement key %s isn\'t valid' % (key)
                 matches.append(
                     RuleMatch(branch[:] + [key], message))
         if 'Effect' not in statement:
-            message = "IAM Policy statement missing Effect"
+            message = 'IAM Policy statement missing Effect'
             matches.append(
                 RuleMatch(branch[:], message))
         else:
             effect = statement.get('Effect')
             if effect not in ['Allow', 'Deny']:
-                message = "IAM Policy Effect should be Allow or Deny"
+                message = 'IAM Policy Effect should be Allow or Deny'
                 matches.append(
                     RuleMatch(branch[:] + ['Effect'], message))
         if 'Action' not in statement and 'NotAction' not in statement:
-            message = "IAM Policy statement missing Action or NotAction"
+            message = 'IAM Policy statement missing Action or NotAction'
             matches.append(
                 RuleMatch(branch[:], message))
         if 'Principal' in statement:
-            message = "IAM Policy statement shouldn't have Principal"
+            message = 'IAM Policy statement shouldn\'t have Principal'
             matches.append(
                 RuleMatch(branch[:] + ['Principal'], message))
         if 'NotPrincipal' in statement:
-            message = "IAM Policy statement shouldn't have NotPrincipal"
+            message = 'IAM Policy statement shouldn\'t have NotPrincipal'
             matches.append(
                 RuleMatch(branch[:] + ['NotPrincipal'], message))
         if 'Resource' not in statement and 'NotResource' not in statement:
-            message = "IAM Policy statement missing Resource or NotResource"
+            message = 'IAM Policy statement missing Resource or NotResource'
             matches.append(
                 RuleMatch(branch[:], message))
 

@@ -21,7 +21,7 @@ from cfnlint import RuleMatch
 
 class Password(CloudFormationLintRule):
     """Check if Password Properties are properly configured"""
-    id = 'E2501'
+    id = 'W2501'
     shortdesc = 'Check if Password Properties are correctly configured'
     description = 'Password properties should be strings and if parameter using NoEcho'
     tags = ['base', 'parameters', 'passwords']
@@ -41,7 +41,7 @@ class Password(CloudFormationLintRule):
             for tree in trees:
                 obj = tree[-1]
                 if isinstance(obj, (six.text_type, six.string_types)):
-                    message = "Password shouldn't be hardcoded for %s" % (
+                    message = 'Password shouldn\'t be hardcoded for %s' % (
                         '/'.join(map(str, tree[:-1])))
                     matches.append(RuleMatch(tree[:-1], message))
                 elif isinstance(obj, dict):
@@ -56,12 +56,12 @@ class Password(CloudFormationLintRule):
                                     else:
                                         fix_params.add(value)
                     else:
-                        message = "Innappropriate map found for password on %s" % (
+                        message = 'Innappropriate map found for password on %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_params:
-            message = "Parameter %s should have NoEcho True" % (paramname)
+            message = 'Parameter %s should have NoEcho True' % (paramname)
             tree = ['Parameters', paramname]
             matches.append(RuleMatch(tree, message))
         return matches

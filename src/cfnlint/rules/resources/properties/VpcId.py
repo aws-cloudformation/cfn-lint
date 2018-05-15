@@ -23,7 +23,8 @@ class VpcId(CloudFormationLintRule):
     id = 'W2505'
     shortdesc = 'Check if VpcID Parameters have the correct type'
     description = 'See if there are any refs for VpcId to a parameter ' + \
-                  'of innapropriate type (not AWS::EC2::VPC::Id)'
+                  'of innapropriate type.  Appropriate Types are ' + \
+                  '[AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>]'
     tags = ['base', 'parameters', 'vpcid']
 
     def match(self, cfn):
@@ -34,7 +35,10 @@ class VpcId(CloudFormationLintRule):
         # Build the list of refs
         trees = cfn.search_deep_keys('VpcId')
         parameters = cfn.get_parameter_names()
-        correct_type = 'AWS::EC2::VPC::Id'
+        allowed_types = [
+            'AWS::EC2::VPC::Id',
+            'AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>'
+        ]
         fix_param_types = set()
         trees = [x for x in trees if x[0] == 'Resources']
         for tree in trees:
@@ -48,15 +52,15 @@ class VpcId(CloudFormationLintRule):
                                 param = cfn.template['Parameters'][paramname]
                                 if 'Type' in param:
                                     paramtype = param['Type']
-                                    if paramtype != correct_type:
+                                    if paramtype not in allowed_types:
                                         fix_param_types.add(paramname)
                 else:
-                    message = "Innappropriate map found for vpcid on %s" % (
+                    message = 'Innappropriate map found for vpcid on %s' % (
                         '/'.join(map(str, tree[:-1])))
                     matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_param_types:
-            message = "Parameter %s should be of type %s" % (paramname, correct_type)
+            message = 'Parameter %s should be of type %s' % (paramname, ', '.join(map(str, allowed_types)))
             tree = ['Parameters', paramname]
             matches.append(RuleMatch(tree, message))
         return matches

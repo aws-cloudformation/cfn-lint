@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Included resources
+Resources:
+  myVpc1:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "127.0.0.1/32"
+      InstanceTenancy: default
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+  myS3BucketPolicy:
+    DeletionPolicy: Retain
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: myS3Bucket
+      PolicyDocument:
+        Version: '2008-10-17'
+        Statement:
+        - Action:
+          - s3:PutObject
+          Effect: Allow
+          Resource:
+            - '*'
+  mySnsTopic:
+    Type: AWS::SNS::Topic

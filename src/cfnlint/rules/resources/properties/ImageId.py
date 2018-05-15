@@ -23,7 +23,8 @@ class ImageId(CloudFormationLintRule):
     id = 'W2506'
     shortdesc = 'Check if ImageId Parameters have the correct type'
     description = 'See if there are any refs for ImageId to a parameter ' + \
-                  'of innapropriate type (not AWS::EC2::Image::Id)'
+                  'of innapropriate type. Appropriate Types are ' + \
+                  '[AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>]'
     tags = ['base', 'parameters', 'imageid']
 
     def match(self, cfn):
@@ -34,6 +35,10 @@ class ImageId(CloudFormationLintRule):
         # Build the list of refs
         imageidtrees = cfn.search_deep_keys('ImageId')
         valid_refs = cfn.get_valid_refs()
+        allowed_types = [
+            'AWS::EC2::Image::Id',
+            'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+        ]
         # Filter only resoureces
         imageidtrees = [x for x in imageidtrees if x[0] == 'Resources']
         for imageidtree in imageidtrees:
@@ -43,13 +48,13 @@ class ImageId(CloudFormationLintRule):
                     for key, paramname in imageidobj.items():
                         if key == 'Ref':
                             if paramname in valid_refs:
-                                if valid_refs[paramname]['Type'] != 'AWS::EC2::Image::Id':
-                                    message = "Parameter %s should be of type " \
-                                              "AWS::EC2::Image::Id" % (paramname)
+                                if valid_refs[paramname]['Type'] not in allowed_types:
+                                    message = 'Parameter %s should be of type ' \
+                                              '[%s]' % (paramname, ', '.join(map(str, allowed_types)))
                                     tree = ['Parameters', paramname]
                                     matches.append(RuleMatch(tree, message))
                 else:
-                    message = "Innappropriate map found for imageid on %s" % (
+                    message = 'Innappropriate map found for imageid on %s' % (
                         '/'.join(map(str, imageidtree[:-1])))
                     matches.append(RuleMatch(imageidtree[:-1], message))
 

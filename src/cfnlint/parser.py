@@ -25,11 +25,26 @@ from yaml import ScalarNode
 from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
+from yaml.constructor import ConstructorError
 
-UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
-FN_PREFIX = "Fn::"
+UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
+FN_PREFIX = 'Fn::'
 
 LOGGER = logging.getLogger(__name__)
+
+
+class DuplicateError(ConstructorError):
+    """
+    Error thrown when the template contains duplicates
+    """
+    pass
+
+
+class NullError(ConstructorError):
+    """
+    Error thrown when the template contains Nulls
+    """
+    pass
 
 
 def create_node_class(cls):
@@ -68,6 +83,19 @@ class NodeConstructor(SafeConstructor):
     # construction") by first exhausting iterators, then yielding
     # copies.
     def construct_yaml_map(self, node):
+
+        # Check for duplicate keys on the current level, this is not desirable
+        # because a dict does not support this. It overwrites it with the last
+        # occurance, which can give unexpected results
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, False)
+            value = self.construct_object(value_node, False)
+
+            if key in mapping:
+                raise DuplicateError('"{}" (line {})'.format(key, key_node.start_mark.line + 1))
+            mapping[key] = value
+
         obj, = SafeConstructor.construct_yaml_map(self, node)
         return dict_node(obj, node.start_mark, node.end_mark)
 
@@ -79,6 +107,10 @@ class NodeConstructor(SafeConstructor):
         obj = SafeConstructor.construct_yaml_str(self, node)
         assert isinstance(obj, str)
         return str_node(obj, node.start_mark, node.end_mark)
+
+    def construct_yaml_null_error(self, node):
+        """Throw a null error"""
+        raise NullError('Null value at line {0} column {1}'.format(node.start_mark.line, node.start_mark.column))
 
 
 NodeConstructor.add_constructor(
@@ -92,6 +124,10 @@ NodeConstructor.add_constructor(
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:str',
     NodeConstructor.construct_yaml_str)
+
+NodeConstructor.add_constructor(
+    u'tag:yaml.org,2002:null',
+    NodeConstructor.construct_yaml_null_error)
 
 
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):
@@ -114,11 +150,11 @@ def multi_constructor(loader, tag_suffix, node):
     """
 
     if tag_suffix not in UNCONVERTED_SUFFIXES:
-        tag_suffix = "{}{}".format(FN_PREFIX, tag_suffix)
+        tag_suffix = '{}{}'.format(FN_PREFIX, tag_suffix)
 
     constructor = None
 
-    if tag_suffix == "Fn::GetAtt":
+    if tag_suffix == 'Fn::GetAtt':
         constructor = construct_getatt
     elif isinstance(node, ScalarNode):
         constructor = loader.construct_scalar
@@ -127,7 +163,7 @@ def multi_constructor(loader, tag_suffix, node):
     elif isinstance(node, MappingNode):
         constructor = loader.construct_mapping
     else:
-        raise "Bad tag: !{}".format(tag_suffix)
+        raise 'Bad tag: !{}'.format(tag_suffix)
 
     return {tag_suffix: constructor(node)}
 
@@ -138,8 +174,8 @@ def construct_getatt(node):
     """
 
     if isinstance(node.value, (six.text_type, six.string_types)):
-        return node.value.split(".")
+        return node.value.split('.')
     elif isinstance(node.value, list):
         return [s.value for s in node.value]
     else:
-        raise ValueError("Unexpected node type: {}".format(type(node.value)))
+        raise ValueError('Unexpected node type: {}'.format(type(node.value)))

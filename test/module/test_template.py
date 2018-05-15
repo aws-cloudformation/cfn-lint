@@ -45,7 +45,7 @@ class TestTemplate(BaseTestCase):
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
         resources = self.template.get_resources()
-        assert len(resources) == 8
+        assert len(resources) == 9
 
     def test_get_resource_names(self):
         """ Test Resource Names"""
@@ -65,4 +65,66 @@ class TestTemplate(BaseTestCase):
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
         refs = self.template.get_valid_refs()
-        assert len(refs) == 20
+        assert len(refs) == 21
+
+    def test_conditions_return_object_success(self):
+        """Test condition object response and nested IFs"""
+        template = [
+            'isProd',
+            {
+                'Key': 'Environment1',
+                'Value': 'Prod'
+            },
+            {
+                'Fn::If': [
+                    'isDev',
+                    {
+                        'Key': 'Environment2',
+                        'Value': 'Dev'
+                    },
+                    {
+                        "Ref": "AWS::NoValue"
+                    }
+                ]
+            }
+        ]
+
+        results = self.template.get_condition_values(template, [])
+        self.assertEqual(results, [
+            {'Path': [1], 'Value': {'Value': 'Prod', 'Key': 'Environment1'}},
+            {'Path': [2, 'Fn::If', 1], 'Value': {'Value': 'Dev', 'Key': 'Environment2'}}
+        ])
+
+    def test_conditions_return_list_success(self):
+        """Test condition list response"""
+        template = [
+            'PrimaryRegion',
+            [
+                'EN'
+            ],
+            [
+                'BE',
+                'LU',
+                'NL'
+            ]
+        ]
+
+        results = self.template.get_condition_values(template, [])
+        self.assertEqual(results, [
+            {'Value': ['EN'], 'Path': [1]}, {'Value': ['BE', 'LU', 'NL'], 'Path': [2]}
+        ])
+
+    def test_conditions_return_string_success(self):
+        """Test condition object response and nested IFs"""
+        template = [
+            'isProd',
+            {
+                'Ref': 'Sample'
+            },
+            'String'
+        ]
+
+        results = self.template.get_condition_values(template, [])
+        self.assertEqual(results, [
+            {'Path': [1, 'Ref'], 'Value': 'Sample'}, {'Path': [2], 'Value': 'String'}
+        ])

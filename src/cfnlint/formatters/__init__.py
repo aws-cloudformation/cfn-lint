@@ -20,7 +20,7 @@ class Formatter(object):
     """Generic Formatter"""
     def format(self, match):
         """Format output"""
-        formatstr = u"{0} {1}\n{2}:{3}:{4}\n"
+        formatstr = u'{0} {1}\n{2}:{3}:{4}\n'
         return formatstr.format(
             match.rule.id,
             match.message,
@@ -34,7 +34,7 @@ class QuietFormatter(object):
     """Quiet Formatter"""
     def format(self, match):
         """Format output"""
-        formatstr = u"{0} {1}:{2}"
+        formatstr = u'{0} {1}:{2}'
         return formatstr.format(
             match.rule,
             match.filename,
@@ -46,7 +46,7 @@ class ParseableFormatter(object):
     """Parseable Formmatter"""
     def format(self, match):
         """Format output"""
-        formatstr = u"{0}:{1}:{2}:{3}:{4}: [{5}] {6}"
+        formatstr = u'{0}:{1}:{2}:{3}:{4}: [{5}] {6}'
         return formatstr.format(
             match.filename,
             match.linenumber,

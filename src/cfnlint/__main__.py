@@ -19,9 +19,9 @@ import argparse
 import logging
 import json
 from yaml.parser import ParserError, ScannerError
+from cfnlint.parser import DuplicateError, NullError
 import cfnlint.helpers
-from cfnlint import RulesCollection
-from cfnlint import Match
+from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
 import cfnlint.cfn_json
 from cfnlint.version import __version__
@@ -29,9 +29,16 @@ from cfnlint.version import __version__
 LOGGER = logging.getLogger('cfnlint')
 
 
+class ArgumentParser(argparse.ArgumentParser):
+    """ Override Argument Parser so we can control the exit code"""
+    def error(self, message):
+        self.print_help(sys.stderr)
+        self.exit(32, '%s: error: %s\n' % (self.prog, message))
+
+
 def main():
     """Main Function"""
-    parser = argparse.ArgumentParser(description='CloudFormation Linter')
+    parser = ArgumentParser(description='CloudFormation Linter')
     parser.add_argument(
         '--template', help='CloudFormation Template')
     parser.add_argument(
@@ -65,30 +72,43 @@ def main():
             filename = vars(args[0])['template']
             fp = open(filename)
             loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
             template = loader.get_single_data()
             if template is dict:
                 defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
         except IOError as e:
             if e.errno == 2:
-                LOGGER.error("Template file not found: %s", filename)
+                LOGGER.error('Template file not found: %s', filename)
                 sys.exit(1)
             elif e.errno == 21:
-                LOGGER.error("Template references a directory, not a file: %s", filename)
+                LOGGER.error('Template references a directory, not a file: %s', filename)
                 sys.exit(1)
             elif e.errno == 13:
-                LOGGER.error("Permission denied when accessing template file: %s", filename)
+                LOGGER.error('Permission denied when accessing template file: %s', filename)
                 sys.exit(1)
+        except DuplicateError as err:
+            LOGGER.error('Template %s contains duplicates: %s', filename, err)
+            sys.exit(1)
+        except NullError as err:
+            LOGGER.error('Template %s contains nulls: %s', filename, err)
+            sys.exit(1)
         except (ParserError, ScannerError) as err:
             try:
                 template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+            except cfnlint.cfn_json.JSONDecodeError as json_err:
+                if vars(args[0])['ignore_bad_template']:
+                    LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                else:
+                    LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                sys.exit(1)
             except Exception as json_err:  # pylint: disable=W0703
                 if vars(args[0])['ignore_bad_template']:
-                    LOGGER.info('Template %s is malformed: %s', filename, err)
-                    print(dir(json_err))
+                    LOGGER.info('Template %s is malformed: %s', filename, err.problem)
                     LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                 else:
-                    LOGGER.error('Template %s is malformed: %s', filename, err)
+                    LOGGER.error('Template %s is malformed: %s', filename, err.problem)
                     LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                     sys.exit(1)
 
@@ -97,20 +117,25 @@ def main():
     )
     parser.add_argument(
         '--list-rules', dest='listrules', default=False,
-        action='store_true', help="list all the rules"
+        action='store_true', help='list all the rules'
     )
     parser.add_argument(
         '--regions', dest='regions', default=['us-east-1'], nargs='*',
-        help="list the regions to validate against."
+        help='list the regions to validate against.'
     )
     parser.add_argument(
         '--append-rules', dest='rulesdir', default=[], nargs='*',
-        help="specify one or more rules directories using "
-             "one or more --append-rules arguments. "
+        help='specify one or more rules directories using '
+             'one or more --append-rules arguments. '
     )
     parser.add_argument(
         '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
-        help="only check rules whose id do not match these values"
+        help='only check rules whose id do not match these values'
+    )
+
+    parser.add_argument(
+        '--override-spec', dest='override_spec',
+        help='A CloudFormation Spec override file that allows customization'
     )
 
     parser.add_argument(
@@ -134,6 +159,26 @@ def main():
     else:
         formatter = formatters.Formatter()
 
+    if vars(args)['override_spec']:
+        try:
+            filename = vars(args)['override_spec']
+            custom_spec_data = json.load(open(filename))
+
+            cfnlint.helpers.override_specs(custom_spec_data)
+        except IOError as e:
+            if e.errno == 2:
+                LOGGER.error('Override spec file not found: %s', filename)
+                sys.exit(1)
+            elif e.errno == 21:
+                LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+                sys.exit(1)
+            elif e.errno == 13:
+                LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+                sys.exit(1)
+        except (ValueError) as err:
+            LOGGER.error('Override spec file %s is malformed: %s', filename, err)
+            sys.exit(1)
+
     if vars(args)['update_specs']:
         cfnlint.helpers.update_resource_specs()
         exit(0)
@@ -147,6 +192,12 @@ def main():
     if vars(args)['listrules']:
         print(rules)
         return 0
+
+    transforms = TransformsCollection()
+    transformdirs = [cfnlint.DEFAULT_TRANSFORMSDIR]
+    for transformdir in transformdirs:
+        transforms.extend(
+            TransformsCollection.create_from_directory(transformdir))
 
     if vars(args)['regions']:
         supported_regions = [
@@ -168,17 +219,28 @@ def main():
         for region in vars(args)['regions']:
             if region not in supported_regions:
                 LOGGER.error('Supported regions are %s', supported_regions)
-                return(1)
+                return(32)
 
     exit_code = 0
     if vars(args)['template']:
         matches = list()
         runner = cfnlint.Runner(
-            rules, vars(args)['template'], template, vars(args)['ignore_checks'],
-            vars(args)['regions'])
-        matches.extend(runner.run())
+            rules, transforms, vars(args)['template'], template,
+            vars(args)['ignore_checks'], vars(args)['regions'])
+        matches.extend(runner.transform())
+        # Only do rule analysis if Transform was successful
+        if not matches:
+            try:
+                matches.extend(runner.run())
+            except Exception as err:  # pylint: disable=W0703
+                LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+                exit(1)
         matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
-        exit_code = len(matches)
+        for match in matches:
+            if match.rule.id[0] == 'W':
+                exit_code = exit_code | 4
+            elif match.rule.id[0] == 'E':
+                exit_code = exit_code | 2
         if vars(args)['format'] == 'json':
             print(json.dumps(matches, indent=4, cls=CustomEncoder))
         else:
@@ -223,7 +285,7 @@ class CustomEncoder(json.JSONEncoder):
         return {'__{}__'.format(o.__class__.__name__): o.__dict__}
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         sys.exit(main())
     except (ValueError, TypeError):
