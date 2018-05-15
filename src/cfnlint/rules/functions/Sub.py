@@ -51,19 +51,18 @@ class Sub(CloudFormationLintRule):
         valid_params.extend(cfn.get_resource_names())
         for key, _ in parameters.items():
             valid_params.append(key)
-        for resource, attributes in get_atts.items():
-            for attribute_name, _ in attributes.items():
-                valid_params.append('%s.%s' % (resource, attribute_name))
 
         for string_param in string_params:
             string_param = string_param[2:-1]
             if isinstance(string_param, (six.string_types, six.text_type)):
                 if string_param not in valid_params:
                     found = False
-                    for valid_param in valid_params:
-                        if len(valid_param.split('.')) > 1:
-                            if (string_param.split('.')[0] == valid_param.split('.')[0] and
-                                    valid_param.split('.')[1] == '*'):
+                    for resource, attributes in get_atts.items():
+                        for attribute_name, _ in attributes.items():
+                            if resource == string_param.split('.')[0] and attribute_name == '*':
+                                found = True
+                            elif (resource == string_param.split('.')[0] and
+                                  attribute_name == string_param.split('.')[1:]):
                                 found = True
                     if not found:
                         message = 'String parameter {0} not found in string for {1}'
