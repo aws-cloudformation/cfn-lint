@@ -39,7 +39,7 @@ class TestInclude(BaseTestCase):
         template = self.load_template(filename)
 
         custom_spec = json.load(open('templates/override_spec/include.json'))
-        cfnlint.helpers.override_specs(custom_spec)
+        cfnlint.helpers.set_specs(custom_spec)
 
         bad_runner = Runner(self.collection, [], filename, template, [], ['us-east-1'], [])
         errs = bad_runner.run()
