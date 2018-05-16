@@ -62,7 +62,7 @@ class Sub(CloudFormationLintRule):
                             if resource == string_param.split('.')[0] and attribute_name == '*':
                                 found = True
                             elif (resource == string_param.split('.')[0] and
-                                  attribute_name == string_param.split('.')[1:]):
+                                  attribute_name == '.'.join(string_param.split('.')[1:])):
                                 found = True
                     if not found:
                         message = 'String parameter {0} not found in string for {1}'

@@ -31,4 +31,4 @@ class TestRulesSub(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/functions_sub.yaml', 4)
+        self.helper_file_negative('templates/bad/functions_sub.yaml', 7)
