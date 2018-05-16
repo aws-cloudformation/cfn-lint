@@ -25,11 +25,45 @@ class CodepipelineStages(CloudFormationLintRule):
     description = 'See if CodePipeline stages are set correctly'
     tags = ['base', 'properties', 'codepipeline']
 
-    def check_first_stage(self, value, path):
+    def check_stage_count(self, stages, path):
+        """Check that there is minimum 2 stages."""
+        matches = []
+
+        if len(stages) < 2:
+            message = 'A pipeline must contain at least two stages.'
+            matches.append(RuleMatch(path, message))
+
+        return matches
+
+    def check_stage_keys(self, stages, path):
+        """Check that stage has required keys inside."""
+        matches = []
+
+        for idx, stage in enumerate(stages):
+            if 'Actions' not in stage:
+                message = 'Expecting Actions key in Stage.'
+                matches.append(RuleMatch(
+                    path + [idx],
+                    message
+                ))
+            if 'Name' not in stage:
+                message = 'Expecting Name key in Stage.'
+                matches.append(RuleMatch(
+                    path + [idx],
+                    message
+                ))
+
+        return matches
+
+    def check_first_stage(self, stages, path):
         """Validate the first stage of a pipeline has source actions."""
         matches = []
 
-        first_stage = set([a.get('ActionTypeId', {}).get('Category') for a in value[0]['Actions']])
+        if len(stages) < 1:
+            self.logger.debug('Stages was empty. Should have been caught by generic linting.')
+            return matches
+
+        first_stage = set([a.get('ActionTypeId').get('Category') for a in stages[0]['Actions']])
         if 'Source' not in first_stage:
             message = 'The first stage of a pipeline must contain at least one source action.'
             matches.append(RuleMatch(path + [0], message))
@@ -40,14 +74,18 @@ class CodepipelineStages(CloudFormationLintRule):
 
         return matches
 
-    def check_source_actions(self, value, path):
+    def check_source_actions(self, stages, path):
         """Validate the all of the stages."""
         matches = []
         categories = set()
 
-        for sidx, stage in enumerate(value):
+        if len(stages) < 1:
+            self.logger.debug('Stages was empty. Should have been caught by generic linting.')
+            return matches
+
+        for sidx, stage in enumerate(stages):
             for aidx, action in enumerate(stage.get('Actions', [])):
-                action_type_id = action.get('ActionTypeId', {})
+                action_type_id = action.get('ActionTypeId')
                 categories.add(action_type_id.get('Category'))
                 if sidx > 0 and action_type_id.get('Category') == 'Source':
                     message = 'Only the first stage of a pipeline may contain source actions.'
@@ -67,7 +105,7 @@ class CodepipelineStages(CloudFormationLintRule):
         for sidx, stage in enumerate(value):
             if stage.get('Name') in stage_names:
                 message = 'All stage names within a pipeline must be unique. ({name})'.format(
-                    name=stage.get('Name')
+                    name=stage.get('Name'),
                 )
                 matches.append(RuleMatch(path + [sidx, 'Name'], message))
             stage_names.add(stage.get('Name'))
@@ -83,19 +121,30 @@ class CodepipelineStages(CloudFormationLintRule):
             path = resource['Path']
             properties = resource['Value']
 
-            stages = properties.get('Stages', [])
-            if len(stages) < 2:
-                message = 'A pipeline must contain at least two stages.'
-                matches.append(RuleMatch(path, message))
+            stages = properties.get('Stages')
+            if not isinstance(stages, list):
+                self.logger.debug('Stages not list. Should have been caught by generic linting.')
+                return matches
 
-            matches.extend(
-                self.check_first_stage(stages, path + ['Stages'])
-            )
-            matches.extend(
-                self.check_source_actions(stages, path + ['Stages'])
-            )
-            matches.extend(
-                self.check_names_unique(stages, path + ['Stages'])
-            )
+            try:
+                matches.extend(
+                    self.check_stage_count(stages, path + ['Stages'])
+                )
+                matches.extend(
+                    self.check_stage_keys(stages, path + ['Stages'])
+                )
+                matches.extend(
+                    self.check_first_stage(stages, path + ['Stages'])
+                )
+                matches.extend(
+                    self.check_source_actions(stages, path + ['Stages'])
+                )
+                matches.extend(
+                    self.check_names_unique(stages, path + ['Stages'])
+                )
+            except AttributeError as err:
+                self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
+                                  'Ignoring the error here: %s', str(err))
+
 
         return matches

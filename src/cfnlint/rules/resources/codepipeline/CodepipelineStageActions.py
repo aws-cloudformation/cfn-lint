@@ -105,18 +105,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that artifact counts are within valid ranges."""
         matches = []
 
-        action_type_id = action.get('ActionTypeId', {})
+        action_type_id = action.get('ActionTypeId')
         owner = action_type_id.get('Owner')
-        if owner not in self.CONSTRAINTS.keys():
-            return matches
-
         category = action_type_id.get('Category')
-        if not category:
-            return matches
-
         provider = action_type_id.get('Provider')
-        if not provider:
-            return matches
 
         constraints = self.CONSTRAINTS.get(owner, {}).get(category, {}).get(provider, {})
         if not constraints:
@@ -144,8 +136,8 @@ class CodepipelineStageActions(CloudFormationLintRule):
         else:
             if artifact_count != constraints[constraint_key]:
                 message = (
-                    'Action "{action}" declares {number} {artifact_type} which is less than '
-                    'expected [{a}].'
+                    'Action "{action}" declares {number} {artifact_type} which is not the '
+                    'expected number [{a}].'
                 ).format(
                     action=action['Name'],
                     number=artifact_count,
@@ -159,11 +151,30 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
+    def check_action_keys(self, action, path):
+        """Check that action has required keys inside."""
+        matches = []
+
+        if 'Name' not in action:
+            message = 'Expecting Name key in Action.'
+            matches.append(RuleMatch(
+                path,
+                message
+            ))
+        if 'ActionTypeId' not in action:
+            message = 'Expecting ActionTypeId key in Action.'
+            matches.append(RuleMatch(
+                path,
+                message
+            ))
+
+        return matches
+
     def check_owner(self, action, path):
         """Check that action type owner is valid."""
         matches = []
 
-        owner = action.get('ActionTypeId', {}).get('Owner')
+        owner = action.get('ActionTypeId').get('Owner')
         if owner not in self.VALID_OWNER_STRINGS:
             message = (
                 'For all currently supported action types, the only valid owner '
@@ -182,7 +193,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action type version is valid."""
         matches = []
 
-        if action.get('ActionTypeId', {}).get('Version') != 1:
+        if action.get('ActionTypeId').get('Version') != 1:
             message = 'For all currently supported action types, the only valid version is 1.'
             matches.append(RuleMatch(
                 path + ['ActionTypeId', 'Version'],
@@ -213,16 +224,31 @@ class CodepipelineStageActions(CloudFormationLintRule):
             path = resource['Path']
             properties = resource['Value']
 
-            for sidx, stage in enumerate(properties['Stages']):
+            stages = properties.get('Stages')
+            if not isinstance(stages, list):
+                self.logger.debug('Stages not list. Should have been caught by generic linting.')
+                return matches
+
+            for sidx, stage in enumerate(stages):
                 stage_path = path + ['Stages', sidx]
                 action_names = set()
-                for aidx, action in enumerate(stage['Actions']):
+                actions = stage.get('Actions')
+                if not isinstance(actions, list):
+                    self.logger.debug('Actions not list. Should have been caught by generic linting.')
+                    return matches
+
+                for aidx, action in enumerate(actions):
                     action_path = stage_path + ['Actions', aidx]
 
-                    matches.extend(self.check_names_unique(action, action_path, action_names))
-                    matches.extend(self.check_version(action, action_path))
-                    matches.extend(self.check_owner(action, action_path))
-                    matches.extend(self.check_artifact_counts(action, 'InputArtifacts', action_path))
-                    matches.extend(self.check_artifact_counts(action, 'OutputArtifacts', action_path))
+                    try:
+                        matches.extend(self.check_action_keys(action, action_path))
+                        matches.extend(self.check_names_unique(action, action_path, action_names))
+                        matches.extend(self.check_version(action, action_path))
+                        matches.extend(self.check_owner(action, action_path))
+                        matches.extend(self.check_artifact_counts(action, 'InputArtifacts', action_path))
+                        matches.extend(self.check_artifact_counts(action, 'OutputArtifacts', action_path))
+                    except AttributeError as err:
+                        self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
+                                          'Ignoring the error here: %s', str(err))
 
         return matches
