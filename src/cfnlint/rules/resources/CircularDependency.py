@@ -128,6 +128,8 @@ class CircularDependency(CloudFormationLintRule):
                 sub_parameters = self.searchstring(value[0])
             elif isinstance(value, (six.text_type, six.string_types)):
                 sub_parameters = self.searchstring(value)
+            else:
+                sub_parameters = list()
 
             if res_type == 'Resources':
                 for sub_parameter in sub_parameters:
