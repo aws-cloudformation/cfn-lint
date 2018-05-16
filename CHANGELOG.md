@@ -9,9 +9,24 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
-### 0.0.11
+### 0.1.0
 ###### Features
 - Update CloudFormation specs to include recent releases
+- Add checks for duplicate resource names
+- Add checks for null values in templates
+- Add support in Circular Dependency checks to go multiple levels deep
+- Add check for unused mappings
+- Add check for unused and not found conditions
+- Convert Errors to Warnings that don't cause a failure when implementing a template
+###### Fixes
+- Fix check for cfn-lint configurations in templates
+- Fix Sub Functions checks failing on sub stacks or custom resources
+- Fix Serverless Transforms not failing when trying to create multiple RestApiIds
+- Fix TOX encoding issues with certain JSON files
+- Update Lambda Memory size to 3008
+- Fix FindInMap failing when the first parameter is also FindInMap
+- Fix key search function to appropriately respond to nested finds (FindInMap inside a FindInMap)
+
 
 ### 0.0.10
 ###### Features
