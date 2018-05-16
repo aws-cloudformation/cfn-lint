@@ -29,7 +29,7 @@ class IfExist(CloudFormationLintRule):
         """Check CloudFormation Conditions"""
 
         matches = list()
-        if_conditions = list()
+        if_conditions = {}
 
         # Build the list of functions
         iftrees = cfn.search_deep_keys('Fn::If')
@@ -40,18 +40,21 @@ class IfExist(CloudFormationLintRule):
                 if_condition = iftree[-1][0]
             else:
                 if_condition = iftree[-1]
-            # Condations can be referenced multiple times, check them once
-            if not if_condition in if_conditions:
-                if_conditions.append(if_condition)
+            # Conditions can be referenced multiple times, check them once
+            if if_condition not in if_conditions:
+                if_conditions[if_condition] = list()
+
+            if_conditions[if_condition].append(iftree)
 
         conditions = cfn.template.get('Conditions', {})
 
-        for if_condition in if_conditions:
+        for if_condition, trees in if_conditions.items():
             if if_condition not in conditions:
-                message = 'Referenced condition {0} not specified'
-                matches.append(RuleMatch(
-                    ['Conditions', if_condition],
-                    message.format(if_condition)
-                ))
+                for tree in trees:
+                    message = 'Referenced condition {0} not specified.'
+                    matches.append(RuleMatch(
+                        tree[:-1] + [0],
+                        message.format(if_condition)
+                    ))
 
         return matches
