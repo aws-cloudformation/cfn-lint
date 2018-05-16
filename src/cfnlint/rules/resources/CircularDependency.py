@@ -116,10 +116,12 @@ class CircularDependency(CloudFormationLintRule):
                     resources[res_name].append(ref_name)
 
         sub_objs = cfn.search_deep_keys('Fn::Sub')
-        sub_parameter_values = {}
         for sub_obj in sub_objs:
+            sub_parameters = list()
+            sub_parameter_values = {}
             value = sub_obj[-1]
             res_type, res_name = sub_obj[:2]
+
             if isinstance(value, list):
                 if not value:
                     continue
@@ -128,8 +130,6 @@ class CircularDependency(CloudFormationLintRule):
                 sub_parameters = self.searchstring(value[0])
             elif isinstance(value, (six.text_type, six.string_types)):
                 sub_parameters = self.searchstring(value)
-            else:
-                sub_parameters = list()
 
             if res_type == 'Resources':
                 for sub_parameter in sub_parameters:
