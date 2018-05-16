@@ -74,7 +74,7 @@ def main():
             loader = cfnlint.parser.MarkedLoader(fp.read())
             loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
             template = loader.get_single_data()
-            if template is dict:
+            if isinstance(template, dict):
                 defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
         except IOError as e:
             if e.errno == 2:
