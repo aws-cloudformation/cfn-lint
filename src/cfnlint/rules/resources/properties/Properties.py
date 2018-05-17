@@ -121,7 +121,7 @@ class Properties(CloudFormationLintRule):
                     for cond_value in cond_values:
                         matches.extend(self.propertycheck(
                             cond_value['Value'], proptype, parenttype, resourcename,
-                            proppath + cond_value['Path'], False))
+                            proppath + cond_value['Path'], root))
                 elif prop != 'Metadata':
                     message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))

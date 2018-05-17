@@ -31,7 +31,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/properties_required.yaml', 3)
+        self.helper_file_negative('templates/bad/properties_required.yaml', 10)
 
     def test_file_negative_generic(self):
         """Generic Test failure"""

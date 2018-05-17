@@ -27,6 +27,8 @@ class Required(CloudFormationLintRule):
                   'that are required exist'
     tags = ['base', 'resources']
 
+    cfn = {}
+
     def __init__(self):
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
         self.resourcetypes = resourcespecs['ResourceTypes']
@@ -57,65 +59,70 @@ class Required(CloudFormationLintRule):
             return matches
 
         # Check if all required properties are specified
-        for prop in resourcespec:
-            if resourcespec[prop]['Required']:
-                if prop not in text:
-                    proptree = tree[:]
-                    proptree.pop()
+        resource_objects = list()
+        base_object_properties = {}
+        for key, value in text.items():
+            if key not in cfnlint.helpers.CONDITION_FUNCTIONS:
+                base_object_properties[key] = value
+        condition_found = False
+        for key, value in text.items():
+            if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                condition_found = True
+                cond_values = self.cfn.get_condition_values(value)
+                for cond_value in cond_values:
+                    if isinstance(cond_value['Value'], dict):
+                        append_object = {}
+                        append_object['Path'] = tree[:] + [key] + cond_value['Path']
+                        for sub_key, sub_value in cond_value['Value'].items():
+                            append_object[sub_key] = sub_value
 
-                    # The property is not found if it's a confitional,
-                    skip_conditional = False
-                    for key in text:
-                        arrproptree = tree[:]
-                        arrproptree.append(key)
+                        append_object['Value'] = append_object
+                        append_object['Value'].update(base_object_properties)
+                        resource_objects.append(append_object)
 
-                        # If the property is a conditional, check the positive
-                        # and negative individually
-                        if key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                            skip_conditional = True
-                            if text[key][1].get('Ref') != 'AWS::NoValue':
-                                matches.extend(self.propertycheck(
-                                    text[key][1], proptype,
-                                    parenttype, resourcename, arrproptree, False))
-                            if text[key][2].get('Ref') != 'AWS::NoValue':
-                                matches.extend(self.propertycheck(
-                                    text[key][2], proptype,
-                                    parenttype, resourcename, arrproptree, False))
+        if not condition_found:
+            resource_objects.append({
+                'Path': tree[:],
+                'Value': base_object_properties
+            })
 
-                    # If it wasn't a conditional, it was just missing
-                    if not skip_conditional:
+        for resource_object in resource_objects:
+            path = resource_object.get('Path')
+            value = resource_object.get('Value')
+            for prop in resourcespec:
+                if resourcespec[prop]['Required']:
+                    if prop not in value:
                         message = 'Property {0} missing from resource {1}'
-                        matches.append(RuleMatch(proptree, message.format(prop, resourcename)))
-                    else:
-                        # Break the loop, the conditional has handled this
-                        break
+                        matches.append(RuleMatch(path, message.format(prop, resourcename)))
 
-        # For all specified properties, check all nested properties
-        for prop in text:
-            proptree = tree[:]
-            proptree.append(prop)
-            if prop in resourcespec:
-                if 'Type' in resourcespec[prop]:
-                    if resourcespec[prop]['Type'] == 'List':
-                        if 'PrimitiveItemType' not in resourcespec[prop]:
-                            if isinstance(text[prop], list):
-                                for index, item in enumerate(text[prop]):
-                                    arrproptree = proptree[:]
-                                    arrproptree.append(index)
-                                    matches.extend(self.propertycheck(
-                                        item, resourcespec[prop]['ItemType'],
-                                        parenttype, resourcename, arrproptree, False))
-                    else:
-                        if resourcespec[prop]['Type'] not in ['Map']:
-                            matches.extend(self.propertycheck(
-                                text[prop], resourcespec[prop]['Type'],
-                                parenttype, resourcename, proptree, False))
+            # For all specified properties, check all nested properties
+            for prop in value:
+                proptree = path[:]
+                proptree.append(prop)
+                if prop in resourcespec:
+                    if 'Type' in resourcespec[prop]:
+                        if resourcespec[prop]['Type'] == 'List':
+                            if 'PrimitiveItemType' not in resourcespec[prop]:
+                                if isinstance(value[prop], list):
+                                    for index, item in enumerate(value[prop]):
+                                        arrproptree = proptree[:]
+                                        arrproptree.append(index)
+                                        matches.extend(self.propertycheck(
+                                            item, resourcespec[prop]['ItemType'],
+                                            parenttype, resourcename, arrproptree, False))
+                        else:
+                            if resourcespec[prop]['Type'] not in ['Map']:
+                                matches.extend(self.propertycheck(
+                                    value[prop], resourcespec[prop]['Type'],
+                                    parenttype, resourcename, proptree, False))
 
         return matches
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = list()
+
+        self.cfn = cfn
 
         for resourcename, resourcevalue in cfn.get_resources().items():
             if 'Properties' in resourcevalue and 'Type' in resourcevalue:
