@@ -14,33 +14,37 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection
-from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
+import logging
+import cfnlint.__main__  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
-import cfnlint.helpers
-import json
 
-class TestInclude(BaseTestCase):
-    """Used for Testing Rules"""
+LOGGER = logging.getLogger('cfnlint')
 
-    def setUp(self):
-        """Setup"""
-        self.collection = RulesCollection()
-        self.collection.register(Configuration())
 
+class TestDefaultArguments(BaseTestCase):
+    """Test Logging Arguments """
     def tearDown(self):
-        """Tear Down"""
-        # Reset the Spec override to prevent other tests to fail
-        cfnlint.helpers.initialize_specs()
+        """Setup"""
+        for handler in LOGGER.handlers:
+            LOGGER.removeHandler(handler)
 
-    def test_fail_run(self):
-        """Failure test required"""
-        filename = 'templates/bad/override/include.yaml'
-        template = self.load_template(filename)
+    def test_logging_info(self):
+        """Test success run"""
 
-        custom_spec = json.load(open('templates/override_spec/include.json'))
-        cfnlint.helpers.set_specs(custom_spec)
+        cfnlint.__main__.configure_logging('info')
+        self.assertEqual(logging.INFO, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
 
-        bad_runner = Runner(self.collection, [], filename, template, [], ['us-east-1'], [])
-        errs = bad_runner.run()
-        self.assertEqual(2, len(errs))
+    def test_logging_debug(self):
+        """Test debug level"""
+
+        cfnlint.__main__.configure_logging('debug')
+        self.assertEqual(logging.DEBUG, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
+
+    def test_logging_error(self):
+        """Test debug level"""
+
+        cfnlint.__main__.configure_logging(None)
+        self.assertEqual(logging.ERROR, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
