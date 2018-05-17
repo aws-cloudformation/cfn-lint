@@ -19,7 +19,7 @@ import argparse
 import logging
 import json
 from yaml.parser import ParserError, ScannerError
-from cfnlint.parser import DuplicateError, NullError
+from cfnlint.parser import CfnParseError
 import cfnlint.helpers
 from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
@@ -36,6 +36,23 @@ class ArgumentParser(argparse.ArgumentParser):
         self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
 
+def print_matches(frmt, matches, formatter):
+    """Output the values"""
+    exit_code = 0
+    for match in matches:
+        if match.rule.id[0] == 'W':
+            exit_code = exit_code | 4
+        elif match.rule.id[0] == 'E':
+            exit_code = exit_code | 2
+    if frmt == 'json':
+        print(json.dumps(matches, indent=4, cls=CustomEncoder))
+    else:
+        for match in matches:
+            print(formatter.format(match))
+
+    return exit_code
+
+
 def main():
     """Main Function"""
     parser = ArgumentParser(description='CloudFormation Linter')
@@ -47,6 +64,10 @@ def main():
     )
     parser.add_argument(
         '--log-level', help='Log Level', choices=['info', 'debug']
+    )
+
+    parser.add_argument(
+        '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
     )
 
     defaults = {}
@@ -65,6 +86,17 @@ def main():
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
     LOGGER.addHandler(ch)
+
+    if vars(args[0])['format']:
+        if vars(args[0])['format'] == 'quiet':
+            formatter = formatters.QuietFormatter()
+        elif vars(args[0])['format'] == 'parseable':
+            # pylint: disable=bad-option-value
+            formatter = formatters.ParseableFormatter()
+        else:
+            formatter = {}
+    else:
+        formatter = formatters.Formatter()
 
     # Read template to get configuration items
     if vars(args[0])['template']:
@@ -86,23 +118,16 @@ def main():
             elif e.errno == 13:
                 LOGGER.error('Permission denied when accessing template file: %s', filename)
                 sys.exit(1)
-        except DuplicateError as err:
-            LOGGER.error('Template %s contains duplicates: %s', filename, err)
-            sys.exit(1)
-        except NullError as err:
-            LOGGER.error('Template %s contains nulls: %s', filename, err)
-            sys.exit(1)
+        except CfnParseError as err:
+            LOGGER.info('Template %s contains an error: %s', filename, err.message)
+            exit_code = print_matches(vars(args[0])['format'], [err.match], formatter)
+            sys.exit(exit_code)
         except (ParserError, ScannerError) as err:
             try:
                 template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
             except cfnlint.cfn_json.JSONDecodeError as json_err:
-                if vars(args[0])['ignore_bad_template']:
-                    LOGGER.info('Template %s is malformed: %s', filename, err.problem)
-                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                else:
-                    LOGGER.error('Template %s is malformed: %s', filename, err.problem)
-                    LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                sys.exit(1)
+                exit_code = print_matches(vars(args[0])['format'], [json_err.match], formatter)
+                sys.exit(exit_code)
             except Exception as json_err:  # pylint: disable=W0703
                 if vars(args[0])['ignore_bad_template']:
                     LOGGER.info('Template %s is malformed: %s', filename, err.problem)
@@ -112,9 +137,6 @@ def main():
                     LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                     sys.exit(1)
 
-    parser.add_argument(
-        '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
-    )
     parser.add_argument(
         '--list-rules', dest='listrules', default=False,
         action='store_true', help='list all the rules'
@@ -149,15 +171,6 @@ def main():
 
     parser.set_defaults(**defaults)
     args = parser.parse_args()
-
-    if vars(args)['format']:
-        if vars(args)['format'] == 'quiet':
-            formatter = formatters.QuietFormatter()
-        elif vars(args)['format'] == 'parseable':
-            # pylint: disable=bad-option-value
-            formatter = formatters.ParseableFormatter()
-    else:
-        formatter = formatters.Formatter()
 
     if vars(args)['override_spec']:
         try:

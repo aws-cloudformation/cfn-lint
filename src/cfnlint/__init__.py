@@ -18,9 +18,7 @@ import logging
 import sys
 import os
 from datetime import datetime
-from yaml.parser import ParserError
 import cfnlint.helpers
-import cfnlint.parser
 import cfnlint.transforms
 
 
