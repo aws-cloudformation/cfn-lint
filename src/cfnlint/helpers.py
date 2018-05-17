@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-
+import sys
 import fnmatch
 import json
 import os
@@ -23,6 +23,7 @@ import logging
 import re
 import requests
 import pkg_resources
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -85,7 +86,7 @@ def merge_spec(source, destination):
     return destination
 
 
-def override_specs(override_spec_data):
+def set_specs(override_spec_data):
     """ Override Resource Specs """
 
     excludes = []
@@ -129,8 +130,9 @@ def override_specs(override_spec_data):
 
         # Remove unsupported resources
         for resource in all_resources:
-            if not resource in resources:
+            if resource not in resources:
                 del RESOURCE_SPECS[region]['ResourceTypes'][resource]
+
 
 def initialize_specs():
     """ Reload Resource Specs """
@@ -189,3 +191,25 @@ def load_plugins(directory):
                 if fh:
                     fh.close()
     return result
+
+
+def override_specs(override_spec_file):
+    """Override specs file"""
+    try:
+        filename = override_spec_file
+        custom_spec_data = json.load(open(filename))
+
+        set_specs(custom_spec_data)
+    except IOError as e:
+        if e.errno == 2:
+            LOGGER.error('Override spec file not found: %s', filename)
+            sys.exit(1)
+        elif e.errno == 21:
+            LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+            sys.exit(1)
+        elif e.errno == 13:
+            LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+            sys.exit(1)
+    except (ValueError) as err:
+        LOGGER.error('Override spec file %s is malformed: %s', filename, err)
+        sys.exit(1)

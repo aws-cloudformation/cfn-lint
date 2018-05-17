@@ -18,17 +18,9 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-from cfnlint import Match, CloudFormationLintRule
+import cfnlint.match
 
 LOGGER = logging.getLogger(__name__)
-
-
-class ParseError(CloudFormationLintRule):
-    """Parse Lint Rule"""
-    id = 'E0000'
-    shortdesc = 'Parsing error found when parsing the template'
-    description = 'Checks for Null values and Duplicat values in resources'
-    tags = ['base']
 
 
 class DuplicateError(Exception):
@@ -82,13 +74,13 @@ class JSONDecodeError(ValueError):
         self.lineno = lineno
         self.colno = colno
         if key:
-            self.match = Match(
+            self.match = cfnlint.match.Match(
                 lineno, colno + 1, lineno,
-                colno + 1 + len(key), '', ParseError(), message=msg)
+                colno + 1 + len(key), '', cfnlint.ParseError(), message=msg)
         else:
-            self.match = Match(
+            self.match = cfnlint.match.Match(
                 lineno, colno + 1, lineno,
-                colno + 2, '', ParseError(), message=msg)
+                colno + 2, '', cfnlint.ParseError(), message=msg)
 
     def __reduce__(self):
         return self.__class__, (self.msg, self.doc, self.pos)

@@ -26,20 +26,12 @@ from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
-from cfnlint import Match, CloudFormationLintRule
+import cfnlint.match
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
 
 LOGGER = logging.getLogger(__name__)
-
-
-class ParseError(CloudFormationLintRule):
-    """Parse Lint Rule"""
-    id = 'E0000'
-    shortdesc = 'Parsing error found when parsing the template'
-    description = 'Checks for Null values and Duplicat values in resources'
-    tags = ['base']
 
 
 class CfnParseError(ConstructorError):
@@ -56,13 +48,13 @@ class CfnParseError(ConstructorError):
         self.column_number = column_number
         self.message = message
         if key:
-            self.match = Match(
+            self.match = cfnlint.match.Match(
                 line_number + 1, column_number + 1, line_number + 1,
-                column_number + 1 + len(key), '', ParseError(), message=message)
+                column_number + 1 + len(key), '', cfnlint.ParseError(), message=message)
         else:
-            self.match = Match(
+            self.match = cfnlint.match.Match(
                 line_number + 1, column_number + 1, line_number + 1,
-                column_number + 2, '', ParseError(), message=message)
+                column_number + 2, '', cfnlint.ParseError(), message=message)
 
 
 def create_node_class(cls):

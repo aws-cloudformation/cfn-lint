@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from cfnlint import RulesCollection, Template, DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.parser  # pylint: disable=E0401
+import cfnlint  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -40,8 +40,8 @@ class TestTemplate(BaseTestCase):
         """ Test Run Logic"""
         filename = 'templates/good/generic.yaml'
         fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.cfn_yaml.multi_constructor)
         template = loader.get_single_data()
         cfn = Template(template, ['us-east-1'])
 
@@ -53,8 +53,8 @@ class TestTemplate(BaseTestCase):
         """Test failure run"""
         filename = 'templates/bad/generic.yaml'
         fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.cfn_yaml.multi_constructor)
         template = loader.get_single_data()
         cfn = Template(template, ['us-east-1'])
 
@@ -66,8 +66,8 @@ class TestTemplate(BaseTestCase):
         """Test failure run"""
         filename = 'templates/bad/properties_onlyone.yaml'
         fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
+        loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+        loader.add_multi_constructor("!", cfnlint.cfn_yaml.multi_constructor)
         template = loader.get_single_data()
         cfn = Template(template, ['us-east-1'])
 

@@ -14,21 +14,3 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from unittest import TestCase
-from cfnlint.cfn_yaml import MarkedLoader, multi_constructor
-
-
-class BaseTestCase(TestCase):
-    """
-    All test cases should inherit from this class as any common
-    functionality that is added here will then be available to all
-    subclasses. This facilitates the ability to update in one spot
-    and allow all tests to get the update for easy maintenance.
-    """
-
-    def load_template(self, filename):
-        """Return teplate"""
-        fp = open(filename)
-        loader = MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", multi_constructor)
-        return loader.get_single_data()
