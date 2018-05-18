@@ -61,6 +61,31 @@ AVAILABILITY_ZONES = [
     'cn-north-1a', 'cn-north-1b',
 ]
 
+LIMITS = {
+    'mappings': {
+        'number': 100,
+        'attributes': 64,
+        'name': 255  # in characters
+    },
+    'outputs': {
+        'number': 60,
+        'name': 255  # in characters
+    },
+    'parameters': {
+        'number': 60,
+        'name': 255,  # in characters
+        'value': 4096  # in bytes
+    },
+    'resources': {
+        'number': 200,
+        'name': 255  # in characters
+    },
+    'template': {
+        'body': 460800,  # in bytes
+        'description': 1024  # in bytes
+    }
+}
+
 
 def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
     """Load resources"""
