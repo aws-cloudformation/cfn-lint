@@ -35,7 +35,7 @@ class Name(CloudFormationLintRule):
         outputs = cfn.template.get('Outputs', {})
         for output_name, _ in outputs.items():
             if not re.match(REGEX_ALPHANUMERIC, output_name):
-                message = 'Mapping {0} has invalid name.  Name has to be alphanumeric.'
+                message = 'Output {0} has invalid name.  Name has to be alphanumeric.'
                 matches.append(RuleMatch(
                     ['Outputs', output_name],
                     message.format(output_name)

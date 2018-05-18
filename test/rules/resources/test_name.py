@@ -14,31 +14,25 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import re
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
-from cfnlint.helpers import REGEX_ALPHANUMERIC
+from cfnlint.rules.resources.Name import Name  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class Name(CloudFormationLintRule):
-    """Check if Resources are named correctly"""
-    id = 'E3006'
-    shortdesc = 'Resources have appropriate names'
-    description = 'Check if Resources are properly named (A-Za-z0-9)'
-    tags = ['base', 'resources']
+class TestName(BaseRuleTestCase):
+    """Test template resources Names"""
+    def setUp(self):
+        """Setup"""
+        super(TestName, self).setUp()
+        self.collection.register(Name())
 
-    def match(self, cfn):
-        """Check CloudFormation Mapping"""
+    def test_file_positive(self):
+        """Test Positive"""
+        self.helper_file_positive()
 
-        matches = list()
+    def test_file_success(self):
+        """Test success"""
+        self.helper_file_positive_template('templates/good/resources/name.yaml')
 
-        resources = cfn.template.get('Resources', {})
-        for resource_name, _ in resources.items():
-            if not re.match(REGEX_ALPHANUMERIC, resource_name):
-                message = 'Resources {0} has invalid name.  Name has to be alphanumeric.'
-                matches.append(RuleMatch(
-                    ['Resources', resource_name],
-                    message.format(resource_name)
-                ))
-
-        return matches
+    def test_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources/name.yaml', 1)
