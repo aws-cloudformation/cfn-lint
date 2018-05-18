@@ -14,15 +14,15 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.mappings.LimitNumber import LimitNumber  # pylint: disable=E0401
+from cfnlint.rules.parameters.LimitNumber import LimitNumber  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestMappingLimitNumber(BaseRuleTestCase):
-    """Test mappings limit number"""
+class TestParameterLimitNumber(BaseRuleTestCase):
+    """Test parameters limit number"""
     def setUp(self):
         """Setup"""
-        super(TestMappingLimitNumber, self).setUp()
+        super(TestParameterLimitNumber, self).setUp()
         self.collection.register(LimitNumber())
 
     def test_file_positive(self):
