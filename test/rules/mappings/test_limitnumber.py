@@ -14,12 +14,12 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.DependsOn import DependsOn  # pylint: disable=E0401
+from cfnlint.rules.mappings.LimitNumber import LimitNumber  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
 class TestMappingLimitNumber(BaseRuleTestCase):
-    """Test base template"""
+    """Test mappings limit number"""
     def setUp(self):
         """Setup"""
         super(TestMappingLimitNumber, self).setUp()

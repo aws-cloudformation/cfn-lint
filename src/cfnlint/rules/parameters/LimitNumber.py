@@ -21,7 +21,7 @@ from cfnlint.helpers import LIMITS
 
 class LimitNumber(CloudFormationLintRule):
     """Check if maximum Parameter limit is exceeded"""
-    id = 'E6010'
+    id = 'E2010'
     shortdesc = 'Parameter limit not exceeded'
     description = 'Check the number of Parameters in the template is less' \
                   'than the upper limit'
