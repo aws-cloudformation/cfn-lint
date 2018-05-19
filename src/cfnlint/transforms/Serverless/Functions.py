@@ -28,24 +28,25 @@ class Functions(CloudFormationTransform):
         """
         for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::Function').items():
             resource_properties = resource_values.get('Properties', {})
-            transforms.add_resource(
-                cfn, '%sRole' % resource_name,
-                {
-                    'Type': 'AWS::IAM::Role',
-                    'Properties': {
-                        'AssumeRolePolicyDocument': {
-                            'Version': '2012-10-17',
-                            'Statement': [{
-                                'Effect': 'Allow',
-                                'Principal': {
-                                    'Service': ['lambda.amazonaws.com']
-                                },
-                                'Action': ['sts:AssumeRole']
-                            }]
+            if not resource_properties.get('Role'):
+                transforms.add_resource(
+                    cfn, '%sRole' % resource_name,
+                    {
+                        'Type': 'AWS::IAM::Role',
+                        'Properties': {
+                            'AssumeRolePolicyDocument': {
+                                'Version': '2012-10-17',
+                                'Statement': [{
+                                    'Effect': 'Allow',
+                                    'Principal': {
+                                        'Service': ['lambda.amazonaws.com']
+                                    },
+                                    'Action': ['sts:AssumeRole']
+                                }]
+                            }
                         }
                     }
-                }
-            )
+                )
             if resource_properties:
                 key_value = resource_properties.get('AutoPublishAlias')
                 if key_value:
