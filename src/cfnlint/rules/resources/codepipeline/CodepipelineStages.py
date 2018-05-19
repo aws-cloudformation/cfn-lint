@@ -35,26 +35,6 @@ class CodepipelineStages(CloudFormationLintRule):
 
         return matches
 
-    def check_stage_keys(self, stages, path):
-        """Check that stage has required keys inside."""
-        matches = []
-
-        for idx, stage in enumerate(stages):
-            if 'Actions' not in stage:
-                message = 'Expecting Actions key in Stage.'
-                matches.append(RuleMatch(
-                    path + [idx],
-                    message
-                ))
-            if 'Name' not in stage:
-                message = 'Expecting Name key in Stage.'
-                matches.append(RuleMatch(
-                    path + [idx],
-                    message
-                ))
-
-        return matches
-
     def check_first_stage(self, stages, path):
         """Validate the first stage of a pipeline has source actions."""
         matches = []
@@ -64,7 +44,7 @@ class CodepipelineStages(CloudFormationLintRule):
             return matches
 
         first_stage = set([a.get('ActionTypeId').get('Category') for a in stages[0]['Actions']])
-        if 'Source' not in first_stage:
+        if first_stage and 'Source' not in first_stage:
             message = 'The first stage of a pipeline must contain at least one source action.'
             matches.append(RuleMatch(path + [0], message))
 
@@ -129,9 +109,6 @@ class CodepipelineStages(CloudFormationLintRule):
             try:
                 matches.extend(
                     self.check_stage_count(stages, path + ['Stages'])
-                )
-                matches.extend(
-                    self.check_stage_keys(stages, path + ['Stages'])
                 )
                 matches.extend(
                     self.check_first_stage(stages, path + ['Stages'])

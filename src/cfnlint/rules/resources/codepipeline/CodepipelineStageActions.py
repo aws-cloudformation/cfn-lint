@@ -151,31 +151,12 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
-    def check_action_keys(self, action, path):
-        """Check that action has required keys inside."""
-        matches = []
-
-        if 'Name' not in action:
-            message = 'Expecting Name key in Action.'
-            matches.append(RuleMatch(
-                path,
-                message
-            ))
-        if 'ActionTypeId' not in action:
-            message = 'Expecting ActionTypeId key in Action.'
-            matches.append(RuleMatch(
-                path,
-                message
-            ))
-
-        return matches
-
     def check_owner(self, action, path):
         """Check that action type owner is valid."""
         matches = []
 
         owner = action.get('ActionTypeId').get('Owner')
-        if owner not in self.VALID_OWNER_STRINGS:
+        if owner not in self.VALID_OWNER_STRINGS and owner is not None:
             message = (
                 'For all currently supported action types, the only valid owner '
                 'strings are {owners}'
@@ -241,7 +222,6 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     action_path = stage_path + ['Actions', aidx]
 
                     try:
-                        matches.extend(self.check_action_keys(action, action_path))
                         matches.extend(self.check_names_unique(action, action_path, action_names))
                         matches.extend(self.check_version(action, action_path))
                         matches.extend(self.check_owner(action, action_path))
