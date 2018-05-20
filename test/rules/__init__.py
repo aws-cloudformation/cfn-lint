@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection, TransformsCollection, DEFAULT_TRANSFORMSDIR
+from cfnlint import Runner, RulesCollection, TransformsCollection
+from cfnlint.core import DEFAULT_TRANSFORMSDIR
 from testlib.testcase import BaseTestCase
 
 

@@ -18,7 +18,7 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-from cfnlint.parser import DuplicateError, NullError
+from cfnlint.cfn_yaml import DuplicateError, NullError
 
 
 LOGGER = logging.getLogger(__name__)

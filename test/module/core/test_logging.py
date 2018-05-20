@@ -14,27 +14,37 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, TransformsCollection
-from cfnlint.core import DEFAULT_TRANSFORMSDIR
+import logging
+import cfnlint.core  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
+LOGGER = logging.getLogger('cfnlint')
 
-class BaseTransformTestCase(BaseTestCase):
-    """Used for Testing Transforms"""
-    def setUp(self):
+
+class TestLogging(BaseTestCase):
+    """Test Logging Arguments """
+    def tearDown(self):
         """Setup"""
-        self.transforms = TransformsCollection()
-        self.transforms.extend(
-            TransformsCollection.create_from_directory(DEFAULT_TRANSFORMSDIR))
+        for handler in LOGGER.handlers:
+            LOGGER.removeHandler(handler)
 
-    def helper_transform_template(self, template, test_function):
-        """Success test with template parameter"""
-        good_runner = Runner([], self.transforms, 'test', template, [], ['us-east-1'], [])
-        good_runner.transform()
-        self.assertTrue(test_function(good_runner.cfn.template))
+    def test_logging_info(self):
+        """Test success run"""
 
-    def helper_transform_cfn(self, template, test_function):
-        """Test the bigger CFN template"""
-        good_runner = Runner([], self.transforms, 'test', template, [], ['us-east-1'], [])
-        good_runner.transform()
-        self.assertTrue(test_function(good_runner.cfn))
+        cfnlint.core.configure_logging('info')
+        self.assertEqual(logging.INFO, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
+
+    def test_logging_debug(self):
+        """Test debug level"""
+
+        cfnlint.core.configure_logging('debug')
+        self.assertEqual(logging.DEBUG, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
+
+    def test_logging_error(self):
+        """Test debug level"""
+
+        cfnlint.core.configure_logging(None)
+        self.assertEqual(logging.ERROR, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
