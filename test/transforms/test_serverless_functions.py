@@ -62,6 +62,34 @@ class TestServerlessFunction(BaseTransformTestCase):
 
         self.helper_transform_template(self.template, test_success)
 
+    def test_function_role_exists_positive(self):
+        """Test converstion of serverless function to not include Role if there's existing role"""
+
+        def test_success(template):
+            """Test success"""
+            resource = template.get('Resources', {}).get('myFunctionRole')
+            if resource:
+                return False
+            return True
+
+        self.helper_transform_template({
+            "AWSTemplateFormatVersion": "2010-09-09",
+            "Transform": "AWS::Serverless-2016-10-31",
+            "Resources": {
+                "myFunction": {
+                    "Type": "AWS::Serverless::Function",
+                    "Properties": {
+                        "Handler": "index.handler",
+                        "Runtime": "nodejs4.3",
+                        "CodeUri": "s3://testBucket/mySourceCode.zip",
+                        "Role": {
+                            "Ref": "myFunctionRole",
+                        },
+                    }
+                }
+            }
+        }, test_success)
+
     def test_function_event_api_positive(self):
         """Test converstion of serverless function to API Event"""
 
