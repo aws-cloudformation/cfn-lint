@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import cfnlint.helpers  # pylint: disable=E0401
+import cfnlint  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -27,7 +27,7 @@ class TestDefaultArguments(BaseTestCase):
         filename = 'templates/good/helpers/config_cfn_lint.yaml'
         ignore_bad_template = True
 
-        (defaults, _) = cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+        (defaults, _) = cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         assert(defaults == {'regions': ['us-east-1', 'us-east-2'], 'ignore_checks': ['E2530']})
 
@@ -37,7 +37,7 @@ class TestDefaultArguments(BaseTestCase):
         ignore_bad_template = True
 
         with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+            cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         self.assertEqual(exit_code.exception.code, 1)
 
@@ -47,7 +47,7 @@ class TestDefaultArguments(BaseTestCase):
         ignore_bad_template = False
 
         with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+            cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         self.assertEqual(exit_code.exception.code, 1)
 
@@ -57,7 +57,7 @@ class TestDefaultArguments(BaseTestCase):
         ignore_bad_template = False
 
         with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+            cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         self.assertEqual(exit_code.exception.code, 1)
 
@@ -66,7 +66,7 @@ class TestDefaultArguments(BaseTestCase):
         filename = 'templates/bad/helpers/config_invalid_yaml.yaml'
         ignore_bad_template = True
 
-        (defaults, _) = cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+        (defaults, _) = cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         self.assertEqual(defaults, {})
 
@@ -75,6 +75,6 @@ class TestDefaultArguments(BaseTestCase):
         filename = 'templates/bad/helpers/config_invalid_json.json'
         ignore_bad_template = True
 
-        (defaults, _) = cfnlint.helpers.get_template_default_args(filename, ignore_bad_template)
+        (defaults, _) = cfnlint.get_template_default_args(filename, ignore_bad_template, 'json', {})
 
         self.assertEqual(defaults, {})

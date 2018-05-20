@@ -17,11 +17,9 @@
 import sys
 import argparse
 import logging
-import json
 import cfnlint.helpers
-from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
-import cfnlint.cfn_json
+import cfnlint
 from cfnlint.version import __version__
 
 LOGGER = logging.getLogger('cfnlint')
@@ -71,10 +69,22 @@ def main():
 
     configure_logging(vars(args[0])['log_level'])
 
+    if vars(args[0])['format']:
+        if vars(args[0])['format'] == 'quiet':
+            formatter = formatters.QuietFormatter()
+        elif vars(args[0])['format'] == 'parseable':
+            # pylint: disable=bad-option-value
+            formatter = formatters.ParseableFormatter()
+        else:
+            formatter = {}
+    else:
+        formatter = formatters.Formatter()
+
     if vars(args[0])['template']:
-        (defaults, template) = cfnlint.helpers.get_template_default_args(
+        (defaults, template) = cfnlint.get_template_default_args(
             vars(args[0])['template'],
-            vars(args[0])['ignore_bad_template'])
+            vars(args[0])['ignore_bad_template'],
+            vars(args[0])['format'], formatter)
 
     parser.add_argument(
         '--list-rules', dest='listrules', default=False,
@@ -111,15 +121,6 @@ def main():
     parser.set_defaults(**defaults)
     args = parser.parse_args()
 
-    if vars(args)['format']:
-        if vars(args)['format'] == 'quiet':
-            formatter = formatters.QuietFormatter()
-        elif vars(args)['format'] == 'parseable':
-            # pylint: disable=bad-option-value
-            formatter = formatters.ParseableFormatter()
-    else:
-        formatter = formatters.Formatter()
-
     if vars(args)['override_spec']:
         cfnlint.helpers.override_specs(vars(args)['override_spec'])
 
@@ -127,76 +128,33 @@ def main():
         cfnlint.helpers.update_resource_specs()
         exit(0)
 
-    rules = RulesCollection()
+    rules = cfnlint.RulesCollection()
     rulesdirs = [cfnlint.DEFAULT_RULESDIR] + vars(args)['rulesdir']
     for rulesdir in rulesdirs:
         rules.extend(
-            RulesCollection.create_from_directory(rulesdir))
+            cfnlint.RulesCollection.create_from_directory(rulesdir))
 
     if vars(args)['listrules']:
         print(rules)
         return 0
 
-    transforms = TransformsCollection()
+    transforms = cfnlint.TransformsCollection()
     transformdirs = [cfnlint.DEFAULT_TRANSFORMSDIR]
     for transformdir in transformdirs:
         transforms.extend(
-            TransformsCollection.create_from_directory(transformdir))
+            cfnlint.TransformsCollection.create_from_directory(transformdir))
 
     if not vars(args)['template']:
         parser.print_help()
         exit(1)
 
-    matches = cfnlint.helpers.run_checks(
+    matches = cfnlint.run_checks(
         vars(args)['template'], template, rules, transforms, vars(args)['ignore_checks'],
         vars(args)['regions'])
 
-    exit_code = 0
-    for match in matches:
-        if match.rule.id[0] == 'W':
-            exit_code = exit_code | 4
-        elif match.rule.id[0] == 'E':
-            exit_code = exit_code | 2
-    if vars(args)['format'] == 'json':
-        print(json.dumps(matches, indent=4, cls=CustomEncoder))
-    else:
-        for match in matches:
-            print(formatter.format(match))
+    exit_code = cfnlint.match.print_matches(vars(args)['format'], matches, formatter)
 
     return exit_code
-
-
-class CustomEncoder(json.JSONEncoder):
-    """Custom Encoding for the Match Object"""
-    # pylint: disable=E0202
-    def default(self, o):
-        if isinstance(o, Match):
-            if o.rule.id[0] == 'W':
-                level = 'Warning'
-            else:
-                level = 'Error'
-
-            return {
-                'Rule': {
-                    'Id': o.rule.id,
-                    'Description': o.rule.description,
-                    'ShortDescription': o.rule.shortdesc,
-                },
-                'Location': {
-                    'Start': {
-                        'ColumnNumber': o.columnnumber,
-                        'LineNumber': o.linenumber,
-                    },
-                    'End': {
-                        'ColumnNumber': o.columnnumberend,
-                        'LineNumber': o.linenumberend,
-                    }
-                },
-                'Level': level,
-                'Message': o.message,
-                'Filename': o.filename,
-            }
-        return {'__{}__'.format(o.__class__.__name__): o.__dict__}
 
 
 if __name__ == '__main__':

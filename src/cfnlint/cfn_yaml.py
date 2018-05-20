@@ -26,6 +26,7 @@ from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
+import cfnlint.match
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
@@ -33,18 +34,27 @@ FN_PREFIX = 'Fn::'
 LOGGER = logging.getLogger(__name__)
 
 
-class DuplicateError(ConstructorError):
+class CfnParseError(ConstructorError):
     """
-    Error thrown when the template contains duplicates
+    Error thrown when the template contains Cfn Error
     """
-    pass
+    def __init__(self, message, line_number, column_number, key=None):
 
+        # Call the base class constructor with the parameters it needs
+        super(CfnParseError, self).__init__(message)
 
-class NullError(ConstructorError):
-    """
-    Error thrown when the template contains Nulls
-    """
-    pass
+        # Now for your custom code...
+        self.line_number = line_number
+        self.column_number = column_number
+        self.message = message
+        if key:
+            self.match = cfnlint.match.Match(
+                line_number + 1, column_number + 1, line_number + 1,
+                column_number + 1 + len(key), '', cfnlint.ParseError(), message=message)
+        else:
+            self.match = cfnlint.match.Match(
+                line_number + 1, column_number + 1, line_number + 1,
+                column_number + 2, '', cfnlint.ParseError(), message=message)
 
 
 def create_node_class(cls):
@@ -93,7 +103,9 @@ class NodeConstructor(SafeConstructor):
             value = self.construct_object(value_node, False)
 
             if key in mapping:
-                raise DuplicateError('"{}" (line {})'.format(key, key_node.start_mark.line + 1))
+                raise CfnParseError(
+                    'Duplicate resource found "{}" (line {})'.format(key, key_node.start_mark.line + 1),
+                    key_node.start_mark.line, key_node.start_mark.column, key)
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
@@ -110,7 +122,9 @@ class NodeConstructor(SafeConstructor):
 
     def construct_yaml_null_error(self, node):
         """Throw a null error"""
-        raise NullError('Null value at line {0} column {1}'.format(node.start_mark.line, node.start_mark.column))
+        raise CfnParseError(
+            'Null value at line {0} column {1}'.format(node.start_mark.line, node.start_mark.column),
+            node.start_mark.line, node.start_mark.column, ' ')
 
 
 NodeConstructor.add_constructor(

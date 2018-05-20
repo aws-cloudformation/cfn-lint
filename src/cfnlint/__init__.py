@@ -17,11 +17,14 @@
 import logging
 import sys
 import os
+import json
 from datetime import datetime
-from yaml.parser import ParserError
+from yaml.parser import ParserError, ScannerError
 import cfnlint.helpers
-import cfnlint.parser
 import cfnlint.transforms
+import cfnlint.cfn_yaml
+import cfnlint.cfn_json
+import cfnlint.match
 
 
 LOGGER = logging.getLogger(__name__)
@@ -72,12 +75,12 @@ class CloudFormationLintRule(object):
                 for result in results:
                     linenumbers = cfn.get_location_yaml(cfn.template, result.path)
                     if linenumbers:
-                        matches.append(Match(
+                        matches.append(cfnlint.match.Match(
                             linenumbers[0] + 1, linenumbers[1] + 1,
                             linenumbers[2] + 1, linenumbers[3] + 1,
                             filename, self, result.message))
                     else:
-                        matches.append(Match(
+                        matches.append(cfnlint.match.Match(
                             1, 1,
                             1, 1,
                             filename, self, result.message))
@@ -117,6 +120,14 @@ class CloudFormationLintRule(object):
             return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
         return []
+
+
+class ParseError(cfnlint.CloudFormationLintRule):
+    """Parse Lint Rule"""
+    id = 'E0000'
+    shortdesc = 'Parsing error found when parsing the template'
+    description = 'Checks for Null values and Duplicat values in resources'
+    tags = ['base']
 
 
 class CloudFormationTransform(object):
@@ -165,7 +176,7 @@ class TransformsCollection(object):
                     rule.id = 'E0001'
                     rule.shortdesc = 'Transform Error'
                     rule.description = 'Transform failed to complete'
-                    matches.append(Match(
+                    matches.append(cfnlint.match.Match(
                         err.location[0] + 1, err.location[1] + 1,
                         err.location[2] + 1, err.location[3] + 1,
                         filename, rule, 'While Performing a Transform got error: %s' % err.value))
@@ -330,38 +341,6 @@ class RuleMatch(object):
     def __hash__(self):
         """Hash for comparisons"""
         return hash((self.path, self.message))
-
-
-class Match(object):
-    """Match Classes"""
-
-    def __init__(
-            self, linenumber, columnnumber, linenumberend,
-            columnnumberend, filename, rule, message=None):
-        """Init"""
-        self.linenumber = linenumber
-        self.columnnumber = columnnumber
-        self.linenumberend = linenumberend
-        self.columnnumberend = columnnumberend
-        self.filename = filename
-        self.rule = rule
-        self.message = message  # or rule.shortdesc
-
-    def __repr__(self):
-        """Represent"""
-        formatstr = u'[{0}] ({1}) matched {2}:{3}'
-        return formatstr.format(self.rule, self.message,
-                                self.filename, self.linenumber)
-
-    def __eq__(self, item):
-        """Override equal to compare matches"""
-        return (
-            (
-                self.linenumber, self.columnnumber, self.rule.id, self.message
-            ) ==
-            (
-                item.linenumber, item.columnnumber, item.rule.id, item.message
-            ))
 
 
 class Template(object):
@@ -837,3 +816,90 @@ class Runner(object):
             if not any(match == u for u in return_matches):
                 return_matches.append(match)
         return return_matches
+
+
+def run_checks(filename, template, rules, transforms, ignore_checks, regions):
+    """Run Checks against the template"""
+    if regions:
+        supported_regions = [
+            'ap-south-1',
+            'sa-east-1',
+            'ap-northeast-1',
+            'ap-northeast-2',
+            'ap-southeast-1',
+            'ap-southeast-2',
+            'ca-central-1',
+            'eu-central-1',
+            'eu-west-1',
+            'eu-west-2',
+            'us-west-2',
+            'us-east-1',
+            'us-east-2',
+            'us-west-1'
+        ]
+        for region in regions:
+            if region not in supported_regions:
+                LOGGER.error('Supported regions are %s', supported_regions)
+                exit(32)
+
+    matches = list()
+
+    runner = cfnlint.Runner(
+        rules, transforms, filename, template,
+        ignore_checks, regions)
+    matches.extend(runner.transform())
+    # Only do rule analysis if Transform was successful
+    if not matches:
+        try:
+            matches.extend(runner.run())
+        except Exception as err:  # pylint: disable=W0703
+            LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+            exit(1)
+    matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
+
+    return(matches)
+
+
+def get_template_default_args(filename, ignore_bad_template, fmt, formatter):
+    """ Get Template Configuration items and set them as default vales"""
+    defaults = {}
+    template = {}
+    try:
+        fp = open(filename)
+        loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+        loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
+        template = loader.get_single_data()
+        if isinstance(template, dict):
+            defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+    except IOError as e:
+        if e.errno == 2:
+            LOGGER.error('Template file not found: %s', filename)
+            sys.exit(1)
+        elif e.errno == 21:
+            LOGGER.error('Template references a directory, not a file: %s', filename)
+            sys.exit(1)
+        elif e.errno == 13:
+            LOGGER.error('Permission denied when accessing template file: %s', filename)
+            sys.exit(1)
+    except cfnlint.cfn_yaml.CfnParseError as err:
+        LOGGER.info('Template %s contains an error: %s', filename, err.message)
+        err.match.filename = filename
+        exit_code = cfnlint.match.print_matches(fmt, [err.match], formatter)
+        sys.exit(exit_code)
+    except (ParserError, ScannerError) as err:
+        try:
+            template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+        except cfnlint.cfn_json.JSONDecodeError as json_err:
+            json_err.match.filename = filename
+            exit_code = cfnlint.match.print_matches(fmt, [json_err.match], formatter)
+            sys.exit(exit_code)
+        except Exception as json_err:  # pylint: disable=W0703
+            if ignore_bad_template:
+                LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+            else:
+                LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                sys.exit(1)
+
+    return(defaults, template)

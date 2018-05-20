@@ -15,8 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.parser  # pylint: disable=E0401
+from cfnlint import RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
+import cfnlint  # pylint: disable=E0401
 import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -38,10 +38,10 @@ class TestDuplicate(BaseTestCase):
 
         try:
             fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
+            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.parser.DuplicateError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -70,10 +70,10 @@ class TestDuplicate(BaseTestCase):
 
         try:
             fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
+            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.parser.DuplicateError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return
 

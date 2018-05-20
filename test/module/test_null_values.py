@@ -15,8 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.parser  # pylint: disable=E0401
+import cfnlint
 import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -25,11 +24,11 @@ class TestNulls(BaseTestCase):
     """Test Null Value Parsing """
     def setUp(self):
         """ SetUp template object"""
-        self.rules = RulesCollection()
-        rulesdirs = [DEFAULT_RULESDIR]
+        self.rules = cfnlint.RulesCollection()
+        rulesdirs = [cfnlint.DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+                cfnlint.RulesCollection.create_from_directory(rulesdir))
 
     def test_success_run(self):
         """Test success run"""
@@ -38,10 +37,10 @@ class TestNulls(BaseTestCase):
 
         try:
             fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
+            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.parser.NullError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -58,7 +57,7 @@ class TestNulls(BaseTestCase):
         try:
             json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
         except cfnlint.cfn_json.JSONDecodeError as err:
-            self.assertIn("Null Error \"EbsOptimized\"", err.msg)
+            self.assertIn("Null value found \"EbsOptimized\"", err.msg)
             return
 
         assert(False)
@@ -70,10 +69,10 @@ class TestNulls(BaseTestCase):
 
         try:
             fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
+            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
+            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.parser.NullError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return
 

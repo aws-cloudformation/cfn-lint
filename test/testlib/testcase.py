@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from unittest import TestCase
-from cfnlint.parser import MarkedLoader, multi_constructor
+from cfnlint.cfn_yaml import MarkedLoader, multi_constructor
 
 
 class BaseTestCase(TestCase):

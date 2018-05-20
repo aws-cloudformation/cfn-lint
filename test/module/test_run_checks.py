@@ -14,8 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection, DEFAULT_RULESDIR
-import cfnlint.helpers  # pylint: disable=E0401
+import cfnlint
 from testlib.testcase import BaseTestCase
 
 
@@ -23,19 +22,19 @@ class TestDefaultArguments(BaseTestCase):
     """Test Run Checks """
     def setUp(self):
         """Setup"""
-        self.rules = RulesCollection()
-        rulesdirs = [DEFAULT_RULESDIR]
+        self.rules = cfnlint.RulesCollection()
+        rulesdirs = [cfnlint.DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+                cfnlint.RulesCollection.create_from_directory(rulesdir))
 
     def test_good_template(self):
         """Test success run"""
 
         filename = 'templates/good/generic.yaml'
-        (_, template) = cfnlint.helpers.get_template_default_args(filename, True)
+        (_, template) = cfnlint.get_template_default_args(filename, True, 'json', {})
 
-        results = cfnlint.helpers.run_checks(
+        results = cfnlint.run_checks(
             filename, template, self.rules, {}, {}, ['us-east-1'])
 
         assert(results == [])
@@ -44,9 +43,9 @@ class TestDefaultArguments(BaseTestCase):
         """Test bad template"""
 
         filename = 'templates/quickstart/nat-instance.json'
-        (_, template) = cfnlint.helpers.get_template_default_args(filename, True)
+        (_, template) = cfnlint.get_template_default_args(filename, True, 'json', {})
 
-        results = cfnlint.helpers.run_checks(
+        results = cfnlint.run_checks(
             filename, template, self.rules, {}, {}, ['us-east-1'])
 
         assert(results[0].rule.id == 'W2506')
