@@ -86,6 +86,10 @@ def configure_logging(log_level):
         LOGGER.setLevel(logging.ERROR)
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
+
+    # make sure all other log handlers are removed before adding it back
+    for handler in LOGGER.handlers:
+        LOGGER.removeHandler(handler)
     LOGGER.addHandler(ch)
 
 
