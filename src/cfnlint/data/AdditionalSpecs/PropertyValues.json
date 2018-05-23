@@ -1,0 +1,386 @@
+{
+  "PropertyTypes": {
+    "AWS::EC2::Instance.SsmAssociation": {
+      "Properties": {
+        "DocumentName": {
+          "Value": {
+            "ValueType": "SsmDocumentName"
+          }
+        }
+      }
+    }
+  },
+  "ResourceTypes": {
+    "AWS::AutoScaling::AutoScalingGroup": {
+      "Properties": {
+        "AvailabilityZones": {
+          "Value": {
+            "ValueType": "AvailabilityZone"
+          }
+        },
+        "LaunchConfigurationName": {
+          "Value": {
+            "ValueType": "LaunchConfigurationName"
+          }
+        },
+        "LoadBalancerNames": {
+          "Value": {
+            "ValueType": "LoadBalancerName"
+          }
+        },
+        "TargetGroupARNs": {
+          "Value": {
+            "ValueType": "TargetGroupArn"
+          }
+        },
+        "VPCZoneIdentifier": {
+          "Value": {
+            "ValueType": "SubnetId"
+          }
+        }
+      }
+    },
+    "AWS::AutoScaling::LaunchConfiguration": {
+      "Properties": {
+        "IamInstanceProfile": {
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
+        },
+        "ImageId": {
+          "Value": {
+            "ValueType": "ImageId"
+          }
+        },
+        "KeyName": {
+          "Value": {
+            "ValueType": "KeyPair"
+          }
+        },
+        "SecurityGroups": {
+          "Value": {
+            "ValueType": "SecurityGroup"
+          }
+        }
+      }
+    },
+    "AWS::EC2::EIPAssociation": {
+      "Properties": {
+        "AllocationId": {
+          "Value": {
+            "ValueType": "AllocationId"
+          }
+        }
+      }
+    },
+    "AWS::EC2::Host": {
+      "Properties": {
+        "AvailabilityZone": {
+          "Value": {
+            "ValueType": "AvailabilityZone"
+          }
+        }
+      }
+    },
+    "AWS::EC2::Instance": {
+      "Properties": {
+        "IamInstanceProfile": {
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
+        },
+        "ImageId": {
+          "Value": {
+            "ValueType": "ImageId"
+          }
+        },
+        "KeyName": {
+          "Value": {
+            "ValueType": "KeyPair"
+          }
+        },
+        "PlacementGroupName": {
+          "Value": {
+            "ValueType": "PlacementGroup"
+          }
+        },
+        "PrivateIpAddress": {
+          "Value": {
+            "ValueType": "PrivateIpAddress"
+          }
+        },
+        "SecurityGroupIds": {
+          "Value": {
+            "ValueType": "SecurityGroupId"
+          }
+        },
+        "SecurityGroups": {
+          "Value": {
+            "ValueType": "SecurityGroup"
+          }
+        },
+        "SubnetId": {
+          "Value": {
+            "ValueType": "SubnetId"
+          }
+        }
+      }
+    },
+    "AWS::EC2::NetworkAcl": {
+      "Properties": {
+        "VpcId": {
+          "Value": {
+            "ValueType": "VpcId"
+          }
+        }
+      }
+    },
+    "AWS::EC2::RouteTable": {
+      "Properties": {
+        "VpcId": {
+          "Value": {
+            "ValueType": "VpcId"
+          }
+        }
+      }
+    },
+    "AWS::EC2::Subnet": {
+      "Properties": {
+        "VpcId": {
+          "Value": {
+            "ValueType": "VpcId"
+          }
+        }
+      }
+    },
+    "AWS::EC2::SubnetCidrBlock": {
+      "Properties": {
+        "SubnetId": {
+          "Value": {
+            "ValueType": "SubnetId"
+          }
+        }
+      }
+    },
+    "AWS::ElasticLoadBalancing::LoadBalancer": {
+      "Properties": {
+        "AvailabilityZones": {
+          "Value": {
+            "ValueType": "AvailabilityZone"
+          }
+        },
+        "SecurityGroups": {
+          "Value": {
+            "ValueType": "SecurityGroup"
+          }
+        },
+        "Subnets": {
+          "Value": {
+            "ValueType": "SubnetId"
+          }
+        }
+      }
+    },
+    "AWS::ElasticLoadBalancingV2::Listener": {
+      "Properties": {
+        "LoadBalancerArn": {
+          "Value": {
+            "ValueType": "LoadBalancerV2Arn"
+          }
+        },
+        "TargetGroupArn": {
+          "ValueType": "TargetGroupArn"
+        }
+      }
+    },
+    "AWS::ElasticLoadBalancingV2::TargetGroup": {
+      "Properties": {
+        "VpcId": {
+          "Value": {
+            "ValueType": "VpcId"
+          }
+        }
+      }
+    }
+  },
+  "ValueTypes": {
+    "AllocationId": {
+      "GetAtt": {
+        "AWS::EC2::EIP": "AllocationId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AvailabilityZone": {
+      "GetAtt": {
+        "AWS::EC2::Instance": "AvailabilityZone",
+        "AWS::EC2::Subnet": "AvailabilityZone",
+        "AWS::OpsWorks::Instance": "AvailabilityZone"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::AvailabilityZone::Name"
+        ]
+      }
+    },
+    "IamInstanceProfile": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "ImageId": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::Image::Id"
+        ]
+      }
+    },
+    "KeyPair": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::KeyPair::KeyName"
+        ]
+      }
+    },
+    "LaunchConfigurationName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::AutoScaling::LaunchConfiguration"
+        ]
+      }
+    },
+    "LoadBalancerName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancing::LoadBalancer"
+        ]
+      }
+    },
+    "LoadBalancerV2Arn": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancingV2::LoadBalancer"
+        ]
+      }
+    },
+    "PlacementGroup": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::EC2::PlacementGroup"
+        ]
+      }
+    },
+    "PrivateIpAddress": {
+      "GetAtt": {
+        "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "SecurityGroup": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::SecurityGroup::Id"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SecurityGroupId": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::SecurityGroup::Id"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SsmDocumentName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::SSM::Document"
+        ]
+      }
+    },
+    "String": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "SubnetId": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::Subnet::Id"
+        ],
+        "Resources": [
+          "AWS::EC2::Subnet"
+        ]
+      }
+    },
+    "TargetGroupArn": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancingV2::TargetGroup"
+        ]
+      }
+    },
+    "VpcId": {
+      "GetAtt": {
+        "AWS::EC2::NetworkAcl": "VpcId",
+        "AWS::EC2::SecurityGroup": "VpcId",
+        "AWS::EC2::Subnet": "VpcId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AWS::EC2::VPC::Id"
+        ],
+        "Resources": [
+          "AWS::EC2::VPC"
+        ]
+      }
+    }
+  }
+}

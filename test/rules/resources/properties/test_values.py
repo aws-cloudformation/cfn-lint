@@ -14,19 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.iam.InstanceProfile import InstanceProfile  # pylint: disable=E0401
+from cfnlint.rules.resources.properties.Value import Value  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestPropertyVpcId(BaseRuleTestCase):
+class TestValues(BaseRuleTestCase):
     """Test Password Property Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestPropertyVpcId, self).setUp()
-        self.collection.register(InstanceProfile())
-        self.success_templates = [
-            'fixtures/templates/good/resources/iam/instance_profile.yaml'
-        ]
+        super(TestValues, self).setUp()
+        self.collection.register(Value())
 
     def test_file_positive(self):
         """Test Positive"""
