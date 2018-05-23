@@ -26,7 +26,7 @@ import cfnlint.formatters as formatters
 import cfnlint.cfn_yaml
 import cfnlint.cfn_json
 from cfnlint.version import __version__
-
+from cfnlint.helpers import REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -293,25 +293,10 @@ def get_default_args(template):
 def run_checks(filename, template, rules, transforms, ignore_checks, regions):
     """Run Checks against the template"""
     if regions:
-        supported_regions = [
-            'ap-south-1',
-            'sa-east-1',
-            'ap-northeast-1',
-            'ap-northeast-2',
-            'ap-southeast-1',
-            'ap-southeast-2',
-            'ca-central-1',
-            'eu-central-1',
-            'eu-west-1',
-            'eu-west-2',
-            'us-west-2',
-            'us-east-1',
-            'us-east-2',
-            'us-west-1'
-        ]
+
         for region in regions:
-            if region not in supported_regions:
-                LOGGER.error('Supported regions are %s', supported_regions)
+            if region not in REGIONS:
+                LOGGER.error('Supported regions are %s', REGIONS)
                 exit(32)
 
     matches = list()
