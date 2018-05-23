@@ -60,7 +60,7 @@ class TestTemplate(BaseTestCase):
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn, []))
-        assert(len(matches) == 25)
+        assert len(matches) == 27, 'Expected {} failures, got {}'.format(27, len(matches))
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""
@@ -73,4 +73,4 @@ class TestTemplate(BaseTestCase):
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn, []))
-        assert(len(matches) == 2)
+        assert len(matches) == 3, 'Expected {} failures, got {}'.format(2, len(matches))

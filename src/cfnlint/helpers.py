@@ -61,6 +61,11 @@ AVAILABILITY_ZONES = [
     'cn-north-1a', 'cn-north-1b',
 ]
 
+FUNCTIONS = [
+    'Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
+    'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
+    'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
+
 LIMITS = {
     'mappings': {
         'number': 100,
