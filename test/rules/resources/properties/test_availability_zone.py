@@ -31,4 +31,4 @@ class TestPropertyAvailabilityZone(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Failure test"""
-        self.helper_file_negative('templates/bad/properties_ec2_network.yaml', 1)
+        self.helper_file_negative('templates/bad/properties_az.yaml', 3)

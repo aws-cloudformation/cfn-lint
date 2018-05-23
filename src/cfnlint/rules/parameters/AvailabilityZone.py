@@ -21,7 +21,7 @@ from cfnlint import RuleMatch
 class AvailabilityZone(CloudFormationLintRule):
     """Check Availibility Zone parameter checks """
     id = 'W2508'
-    shortdesc = 'Availability Zone Parameters are of correct type AWS::EC2::SecurityGroup::Id'
+    shortdesc = 'Availability Zone Parameters are of correct type AWS::EC2::AvailabilityZone::Name'
     description = 'Check if a parameter is being used in a resource for Security ' \
                   'Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name'
     tags = ['base', 'parameters', 'availabilityzone']
@@ -61,7 +61,7 @@ class AvailabilityZone(CloudFormationLintRule):
             self.resource_sub_property_types.append(property_type_spec)
 
     # pylint: disable=W0613
-    def check_sgid_ref(self, value, path, parameters, resources):
+    def check_az_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = list()
         if 'AvailabilityZone' in path:
@@ -102,14 +102,14 @@ class AvailabilityZone(CloudFormationLintRule):
         matches.extend(
             cfn.check_value(
                 properties, 'AvailabilityZone', path,
-                check_value=None, check_ref=self.check_sgid_ref,
+                check_value=None, check_ref=self.check_az_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'AvailabilityZones', path,
-                check_value=None, check_ref=self.check_sgid_ref,
+                check_value=None, check_ref=self.check_az_ref,
                 check_mapping=None, check_split=None, check_join=None
             )
         )

@@ -1,24 +1,38 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  AWS EC2 Good Template
 Parameters:
-  myAvailabilityZone:
+  myEnvironment:
     Type: String
-  myAvailabilityZone2:
-    Type: String
-  myAvailabilityZoneList:
-    Type: AWS::EC2::AvailabilityZone::Name
+    AllowedValues:
+      - prod
+      - dev
+Conditions:
+  isProd:
+    "Fn::Equals":
+    - !Ref myEnvironment
+    - "prod"
 Resources:
-  myInstance:
-    Type: AWS::EC2::Instance
+  MyLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AvailabilityZone: !Ref myAvailabilityZone
-      ImageId: ami-123456
+      ImageId: "ami-2f726546"
+      InstanceType: t2.micro
   myLoadBalancer:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
       AvailabilityZones:
-      - !Ref myAvailabilityZone2
-  myLoadBalancer2:
-    Type: AWS::ElasticLoadBalancing::LoadBalancer
+        # Hardcoded AZ's
+        - !If [isProd, "eu-west-1a", !Ref "AWS::NoValue"]
+        - "eu-west-1b"
+      MaxSize: 3
+      MinSize: 1
+      LaunchConfigurationName: !Ref MyLaunchConfig
+  mySubnet2-2:
+    Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZones: !Ref myAvailabilityZoneList
+      # Hardcoded AZ
+      AvailabilityZone: us-east-1a
+      CidrBlock: "172.31.0.0/16"
+      VpcId: vpc-1234567

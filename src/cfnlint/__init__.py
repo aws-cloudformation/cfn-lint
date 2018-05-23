@@ -482,10 +482,15 @@ class Template(object):
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         resources = self.template.get('Resources', {})
+
+        astrik_types = (
+            'Custom::', 'AWS::CloudFormation::Stack',
+            'AWS::Serverless::', 'AWS::CloudFormation::CustomResource'
+        )
         for name, value in resources.items():
             if 'Type' in value:
                 valtype = value['Type']
-                if valtype.startswith(('Custom::', 'AWS::CloudFormation::Stack', 'AWS::Serverless::')):
+                if valtype.startswith(astrik_types):
                     LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
                     results[name] = {'*': {'PrimitiveItemType': 'String'}}
                 else:
@@ -786,11 +791,10 @@ class Template(object):
                         check_split(
                             value=value, path=new_path[:] + child_path, **kwargs))
             elif isinstance(child_path[-1], int):
-                if child_path[-2] == 'Fn::If':
-                    if check_value:
-                        matches.extend(
-                            check_value(
-                                value=value, path=new_path[:] + child_path, **kwargs))
+                if check_value:
+                    matches.extend(
+                        check_value(
+                            value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
 

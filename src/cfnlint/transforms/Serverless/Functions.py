@@ -28,24 +28,25 @@ class Functions(CloudFormationTransform):
         """
         for resource_name, resource_values in cfn.get_resources(resource_type='AWS::Serverless::Function').items():
             resource_properties = resource_values.get('Properties', {})
-            transforms.add_resource(
-                cfn, '%sRole' % resource_name,
-                {
-                    'Type': 'AWS::IAM::Role',
-                    'Properties': {
-                        'AssumeRolePolicyDocument': {
-                            'Version': '2012-10-17',
-                            'Statement': [{
-                                'Effect': 'Allow',
-                                'Principal': {
-                                    'Service': ['lambda.amazonaws.com']
-                                },
-                                'Action': ['sts:AssumeRole']
-                            }]
+            if not resource_properties.get('Role'):
+                transforms.add_resource(
+                    cfn, '%sRole' % resource_name,
+                    {
+                        'Type': 'AWS::IAM::Role',
+                        'Properties': {
+                            'AssumeRolePolicyDocument': {
+                                'Version': '2012-10-17',
+                                'Statement': [{
+                                    'Effect': 'Allow',
+                                    'Principal': {
+                                        'Service': ['lambda.amazonaws.com']
+                                    },
+                                    'Action': ['sts:AssumeRole']
+                                }]
+                            }
                         }
                     }
-                }
-            )
+                )
             if resource_properties:
                 key_value = resource_properties.get('AutoPublishAlias')
                 if key_value:
@@ -114,11 +115,12 @@ class Functions(CloudFormationTransform):
                     )
 
                 events = resource_properties.get('Events', {})
+                generated_api = False
                 for event_name, event_value in events.items():
                     event_type = event_value.get('Type', None)
                     if event_type == 'Api':
-                        rest_api_id = event_value.get('Properties', {}).get('RestApidId')
-                        if not rest_api_id:
+                        rest_api_id = event_value.get('Properties', {}).get('RestApiId')
+                        if (not generated_api) and (not rest_api_id):
                             transforms.add_resource(
                                 cfn, 'ServerlessRestApi',
                                 {
@@ -148,6 +150,12 @@ class Functions(CloudFormationTransform):
                                     }
                                 }
                             )
+                            # Generate only 1 RestApi resource:
+                            # If not defined, a default AWS::Serverless::Api resource is
+                            # created using a generated Swagger document contains a union of
+                            # all paths and methods defined by Api events defined in this template
+                            # that do not specify a RestApiId.
+                            generated_api = True
 
                         transforms.add_resource(
                             cfn, '%s%sPermission%s' % (resource_name, event_name, 'Prod'),

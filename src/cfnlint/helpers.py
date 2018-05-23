@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-
+import sys
 import fnmatch
 import json
 import os
@@ -22,7 +22,11 @@ import imp
 import logging
 import re
 import requests
+from yaml.parser import ParserError, ScannerError
 import pkg_resources
+from cfnlint.parser import DuplicateError, NullError
+import cfnlint.parser
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +38,8 @@ REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
            'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
            'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
            'sa-east-1']
+
+REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9_]*$')
 
 AVAILABILITY_ZONES = [
     'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
@@ -54,6 +60,31 @@ AVAILABILITY_ZONES = [
     'ap-south-1a', 'ap-south-1b',
     'cn-north-1a', 'cn-north-1b',
 ]
+
+LIMITS = {
+    'mappings': {
+        'number': 100,
+        'attributes': 64,
+        'name': 255  # in characters
+    },
+    'outputs': {
+        'number': 60,
+        'name': 255  # in characters
+    },
+    'parameters': {
+        'number': 60,
+        'name': 255,  # in characters
+        'value': 4096  # in bytes
+    },
+    'resources': {
+        'number': 200,
+        'name': 255  # in characters
+    },
+    'template': {
+        'body': 460800,  # in bytes
+        'description': 1024  # in bytes
+    }
+}
 
 
 def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
@@ -85,7 +116,7 @@ def merge_spec(source, destination):
     return destination
 
 
-def override_specs(override_spec_data):
+def set_specs(override_spec_data):
     """ Override Resource Specs """
 
     excludes = []
@@ -129,8 +160,9 @@ def override_specs(override_spec_data):
 
         # Remove unsupported resources
         for resource in all_resources:
-            if not resource in resources:
+            if resource not in resources:
                 del RESOURCE_SPECS[region]['ResourceTypes'][resource]
+
 
 def initialize_specs():
     """ Reload Resource Specs """
@@ -189,3 +221,117 @@ def load_plugins(directory):
                 if fh:
                     fh.close()
     return result
+
+
+def override_specs(override_spec_file):
+    """Override specs file"""
+    try:
+        filename = override_spec_file
+        custom_spec_data = json.load(open(filename))
+
+        set_specs(custom_spec_data)
+    except IOError as e:
+        if e.errno == 2:
+            LOGGER.error('Override spec file not found: %s', filename)
+            sys.exit(1)
+        elif e.errno == 21:
+            LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+            sys.exit(1)
+        elif e.errno == 13:
+            LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+            sys.exit(1)
+    except (ValueError) as err:
+        LOGGER.error('Override spec file %s is malformed: %s', filename, err)
+        sys.exit(1)
+
+
+def get_template_default_args(filename, ignore_bad_template):
+    """ Get Template Configuration items and set them as default vales"""
+    defaults = {}
+    template = {}
+    try:
+        fp = open(filename)
+        loader = cfnlint.parser.MarkedLoader(fp.read())
+        loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
+        template = loader.get_single_data()
+        if isinstance(template, dict):
+            defaults = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+    except IOError as e:
+        if e.errno == 2:
+            LOGGER.error('Template file not found: %s', filename)
+            sys.exit(1)
+        elif e.errno == 21:
+            LOGGER.error('Template references a directory, not a file: %s', filename)
+            sys.exit(1)
+        elif e.errno == 13:
+            LOGGER.error('Permission denied when accessing template file: %s', filename)
+            sys.exit(1)
+    except DuplicateError as err:
+        LOGGER.error('Template %s contains duplicates: %s', filename, err)
+        sys.exit(1)
+    except NullError as err:
+        LOGGER.error('Template %s contains nulls: %s', filename, err)
+        sys.exit(1)
+    except (ParserError, ScannerError) as err:
+        try:
+            template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+        except cfnlint.cfn_json.JSONDecodeError as json_err:
+            if ignore_bad_template:
+                LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+            else:
+                LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+            sys.exit(1)
+        except Exception as json_err:  # pylint: disable=W0703
+            if ignore_bad_template:
+                LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+            else:
+                LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                sys.exit(1)
+
+    return(defaults, template)
+
+
+def run_checks(filename, template, rules, transforms, ignore_checks, regions):
+    """Run Checks against the template"""
+    if regions:
+        supported_regions = [
+            'ap-south-1',
+            'sa-east-1',
+            'ap-northeast-1',
+            'ap-northeast-2',
+            'ap-southeast-1',
+            'ap-southeast-2',
+            'ca-central-1',
+            'eu-central-1',
+            'eu-west-1',
+            'eu-west-2',
+            'us-west-2',
+            'us-east-1',
+            'us-east-2',
+            'us-west-1'
+        ]
+        for region in regions:
+            if region not in supported_regions:
+                LOGGER.error('Supported regions are %s', supported_regions)
+                exit(32)
+
+    matches = list()
+
+    runner = cfnlint.Runner(
+        rules, transforms, filename, template,
+        ignore_checks, regions)
+    matches.extend(runner.transform())
+    # Only do rule analysis if Transform was successful
+    if not matches:
+        try:
+            matches.extend(runner.run())
+        except Exception as err:  # pylint: disable=W0703
+            LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
+            exit(1)
+    matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
+
+    return(matches)

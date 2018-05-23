@@ -5,6 +5,18 @@ Description: >
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            /etc/aws-signing-proxy.yml:
+              content: !Sub |
+                listen-address: 127.0.0.1
+                port: 9200
+                target: https://${mySubStack.Outputs.DomainEndpoint}
+                region: ${AWS::Region}
+                loadbalancer: ${myInstance3.PublicDnsName1}
+                badresource: ${myInstance5.PublicDnsName}
     Properties:
       ImageId: ami-asdfef
       UserData:

@@ -2,6 +2,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
+  myApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
   myFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -12,11 +16,28 @@ Resources:
       DeploymentPreference:
         Type: Linear10PercentEvery10Minutes
       Events:
+        OriginalApi:
+          Type: Api
+          Properties:
+            Path: /original
+            Method: GET
+        DoubleApi:
+          Type: Api
+          Properties:
+            Path: /double
+            Method: GET
         ThumbnailApi:
           Type: Api
           Properties:
             Path: /thumbnail
             Method: GET
+            RestApiId: !Ref myApi
+        WatermarkApi:
+          Type: Api
+          Properties:
+            Path: /watermark
+            Method: GET
+            RestApiId: !Ref myApi
         S3Trigger:
           Type: S3
           Properties:

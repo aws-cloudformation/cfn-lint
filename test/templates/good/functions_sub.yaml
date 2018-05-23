@@ -11,9 +11,22 @@ Parameters:
     Type: String
     Default: java
     Description: App Package
+  mySubnets:
+    Type: List<AWS::EC2::Subnet::Id>
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
+    Metadata:
+      AWS::CloudFormation::Init:
+        config:
+          files:
+            /etc/aws-signing-proxy.yml:
+              content: !Sub |
+                listen-address: 127.0.0.1
+                port: 9200
+                target: https://${mySubStack.Outputs.DomainEndpoint}
+                region: ${AWS::Region}
+                loadbalancer: ${myAlb.DNSName}
     Properties:
       ImageId: String
       UserData:
@@ -21,4 +34,19 @@ Resources:
           Fn::Sub:
           - yum install ${myPackage}
             yum install ${package}
+            yum install ${myCustomResource.Package}
           - package: !Ref myAppPackage
+  mySubStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: String
+  myCustomResource:
+    Type: Custom::Test
+    Properties:
+      ServiceToken: Arn
+
+  myAlb:
+    Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
+    Properties:
+      Name: !Sub ${AWS::StackName}-lb
+      Subnets: !Ref mySubnets
