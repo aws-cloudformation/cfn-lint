@@ -31,6 +31,7 @@ class Value(CloudFormationLintRule):
         valuespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/PropertyValues.json')
         self.resource_value_specs = valuespec.get('ResourceTypes', {})
         self.property_value_specs = valuespec.get('PropertyTypes', {})
+        self.parameter_type_specs = valuespec.get('ParameterTypes', {})
         self.value_type_specs = valuespec.get('ValueTypes', {})
         for resource_type_spec in self.resource_value_specs:
             self.resource_property_types.append(resource_type_spec)
@@ -41,8 +42,15 @@ class Value(CloudFormationLintRule):
         """Check Ref"""
         matches = list()
         cfn = kwargs.get('cfn')
-        specs = kwargs.get('value_specs', {}).get('Ref')
+        value_specs = kwargs.get('value_specs', {}).get('Ref')
+        list_value_specs = kwargs.get('list_value_specs', {}).get('Ref')
         property_type = kwargs.get('property_type')
+        property_name = kwargs.get('property_name')
+
+        if path[-1] == 'Ref' and property_type == 'List' and path[-2] == property_name:
+            specs = list_value_specs
+        else:
+            specs = value_specs
 
         if not specs:
             message = 'Property {0} has no valid Refs at {1}'
@@ -51,38 +59,23 @@ class Value(CloudFormationLintRule):
         if value in cfn.template.get('Parameters', {}):
             param = cfn.template.get('Parameters').get(value)
             parameter_type = param.get('Type')
+            valid_parameter_types = []
+            for parameter in specs.get('Parameters'):
+                for parameter_type in self.parameter_type_specs.get(parameter):
+                    valid_parameter_types.append(parameter_type)
 
             if not specs.get('Parameters'):
                 message = 'Property {0} has no valid Refs to Parameters at {1}'
                 matches.append(RuleMatch(path, message.format(path[-2], '/'.join(map(str, path)))))
-            elif parameter_type not in specs.get('Parameters'):
-                valid_param_types = list()
-                valid_list_param_types = list()
-                for parameter in specs.get('Parameters'):
-                    valid_param_types.append(parameter)
-                    valid_param_types.append('AWS::SSM::Parameter::Value<%s>' % parameter)
-                    valid_list_param_types.append('List<%s>' % parameter)
-                    valid_list_param_types.append('AWS::SSM::Parameter::Value<List<%s>>' % parameter)
-                if (not isinstance(path[-1], int)) and property_type == 'List':
-                    # its a list for a list
-                    if parameter_type not in valid_list_param_types:
-                        message = 'Property {0} can Ref to parameter of types [{1}] at {2}'
-                        matches.append(
-                            RuleMatch(
-                                path,
-                                message.format(
-                                    path[-2],
-                                    ', '.join(map(str, valid_list_param_types)),
-                                    '/'.join(map(str, path)))))
-                else:
-                    message = 'Property {0} can Ref to parameter of types [{1}] at {2}'
-                    matches.append(
-                        RuleMatch(
-                            path,
-                            message.format(
-                                path[-2],
-                                ', '.join(map(str, valid_param_types)),
-                                '/'.join(map(str, path)))))
+            elif parameter_type not in valid_parameter_types:
+                message = 'Property {0} can Ref to parameter of types [{1}] at {2}'
+                matches.append(
+                    RuleMatch(
+                        path,
+                        message.format(
+                            path[-2],
+                            ', '.join(map(str, valid_parameter_types)),
+                            '/'.join(map(str, path)))))
         elif value in cfn.template.get('Resources', {}):
             resource = cfn.template.get('Resources').get(value)
             resource_type = resource.get('Type')
@@ -132,21 +125,23 @@ class Value(CloudFormationLintRule):
 
         return matches
 
-    def check(self, cfn, properties, spec_properties, resource_spec, path):
+    def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
         matches = list()
 
         for prop in properties:
-            if prop in spec_properties:
-                value_type = spec_properties.get(prop).get('Value', {}).get('ValueType')
-                property_type = resource_spec.get('Properties').get(prop).get('Type')
+            if prop in value_specs:
+                value_type = value_specs.get(prop).get('Value', {}).get('ValueType', '')
+                list_value_type = value_specs.get(prop).get('Value', {}).get('ListValueType', '')
+                property_type = property_specs.get('Properties').get(prop).get('Type')
                 matches.extend(
                     cfn.check_value(
                         properties, prop, path,
                         check_ref=self.check_value_ref,
                         check_getatt=self.check_value_getatt,
-                        value_specs=self.value_type_specs.get(value_type),
-                        cfn=cfn, property_type=property_type
+                        value_specs=self.value_type_specs.get(value_type, {}),
+                        list_value_specs=self.value_type_specs.get(list_value_type, {}),
+                        cfn=cfn, property_type=property_type, property_name=prop
                     )
                 )
 

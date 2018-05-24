@@ -15,7 +15,8 @@
       "Properties": {
         "AvailabilityZones": {
           "Value": {
-            "ValueType": "AvailabilityZone"
+            "ValueType": "AvailabilityZone",
+            "ListValueType": "AvailabilityZones"
           }
         },
         "LaunchConfigurationName": {
@@ -25,12 +26,14 @@
         },
         "LoadBalancerNames": {
           "Value": {
-            "ValueType": "LoadBalancerName"
+            "ValueType": "LoadBalancerName",
+            "ListValueType": "LoadBalancerNames"
           }
         },
         "TargetGroupARNs": {
           "Value": {
-            "ValueType": "TargetGroupArn"
+            "ValueType": "TargetGroupArn",
+            "ListValueType": "TargetGroupArns"
           }
         },
         "VPCZoneIdentifier": {
@@ -59,7 +62,8 @@
         },
         "SecurityGroups": {
           "Value": {
-            "ValueType": "SecurityGroup"
+            "ValueType": "SecurityGroup",
+            "ListValueType": "SecurityGroups"
           }
         }
       }
@@ -111,12 +115,14 @@
         },
         "SecurityGroupIds": {
           "Value": {
-            "ValueType": "SecurityGroupId"
+            "ValueType": "SecurityGroupId",
+            "ListValueType": "SecurityGroupIds"
           }
         },
         "SecurityGroups": {
           "Value": {
-            "ValueType": "SecurityGroup"
+            "ValueType": "SecurityGroup",
+            "ValueType": "SecurityGroups"
           }
         },
         "SubnetId": {
@@ -166,17 +172,20 @@
       "Properties": {
         "AvailabilityZones": {
           "Value": {
-            "ValueType": "AvailabilityZone"
+            "ValueType": "AvailabilityZone",
+            "ListValueType": "AvailabilityZones"
           }
         },
         "SecurityGroups": {
           "Value": {
-            "ValueType": "SecurityGroup"
+            "ValueType": "SecurityGroup",
+            "ListValueType": "SecurityGroups"
           }
         },
         "Subnets": {
           "Value": {
-            "ValueType": "SubnetId"
+            "ValueType": "SubnetId",
+            "ListValueType": "SubnetIds"
           }
         }
       }
@@ -223,7 +232,15 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::AvailabilityZone::Name"
+          "AvailabilityZone"
+        ]
+      }
+    },
+    "AvailabilityZones": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "AvailabilityZones"
         ]
       }
     },
@@ -241,7 +258,7 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::Image::Id"
+          "ImageId"
         ]
       }
     },
@@ -249,7 +266,7 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::KeyPair::KeyName"
+          "KeyPair"
         ]
       }
     },
@@ -270,6 +287,13 @@
         ],
         "Resources": [
           "AWS::ElasticLoadBalancing::LoadBalancer"
+        ]
+      }
+    },
+    "LoadBalancerNames": {
+      "Ref": {
+        "Parameters": [
+          "Strings"
         ]
       }
     },
@@ -307,10 +331,18 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::SecurityGroup::Id"
+          "SecurityGroupId"
         ],
         "Resources": [
           "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SecurityGroups": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
         ]
       }
     },
@@ -321,10 +353,18 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::SecurityGroup::Id"
+          "SecurityGroupId"
         ],
         "Resources": [
           "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SecurityGroupIds": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
         ]
       }
     },
@@ -349,10 +389,18 @@
       "Ref": {
         "Parameters": [
           "String",
-          "AWS::EC2::Subnet::Id"
+          "SubnetId"
         ],
         "Resources": [
           "AWS::EC2::Subnet"
+        ]
+      }
+    },
+    "SubnetIds": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SubnetIds"
         ]
       }
     },
@@ -366,6 +414,13 @@
         ]
       }
     },
+    "TargetGroupArns": {
+      "Ref": {
+        "Parameters": [
+          "Strings"
+        ]
+      }
+    },
     "VpcId": {
       "GetAtt": {
         "AWS::EC2::NetworkAcl": "VpcId",
@@ -374,13 +429,52 @@
       },
       "Ref": {
         "Parameters": [
-          "String",
-          "AWS::EC2::VPC::Id"
+          "String"
         ],
         "Resources": [
           "AWS::EC2::VPC"
         ]
       }
     }
+  },
+  "ParameterTypes": {
+    "String": [
+      "String",
+      "AWS::SSM::Parameter::Value<String>"
+    ],
+    "Strings": [
+      "CommaDelimitedList",
+      "AWS::SSM::Parameter::Value<List<String>>",
+      "AWS::SSM::Parameter::Value<CommaDelimitedList>"
+    ],
+    "SubnetId": [
+      "AWS::EC2::Subnet::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>"
+    ],
+    "SubnetIds": [
+      "List<AWS::EC2::Subnet::Id<",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>"
+    ],
+    "SecurityGroup": [
+      "AWS::EC2::SecurityGroup::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>"
+    ],
+    "SecurityGroupIds": [
+      "List<AWS::EC2::SecurityGroup::Id>",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>"
+    ],
+    "ImageId": [
+      "AWS::EC2::Image::Id"
+    ],
+    "KeyPair": [
+      "AWS::EC2::KeyPair::KeyName"
+    ],
+    "AvailabilityZone": [
+      "AWS::EC2::AvailabilityZone::Name"
+    ],
+    "AvailabilityZones": [
+      "List<AWS::EC2::AvailabilityZone::Name>",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>"
+    ]
   }
 }
