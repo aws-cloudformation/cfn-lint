@@ -16,6 +16,17 @@ Parameters:
   pIops:
     Type: Number
     Default: 60
+  pEnvironment:
+    Type: String
+    Default: Prod
+  pProdVolumeSize:
+    Type: Number
+    Default: 50
+  pDevVolumeSize:
+    Type: Number
+    Default: 25
+Conditions:
+  ProdVolumeSize: !Equals [!Ref pEnvironment, 'Prod']
 Resources:
   RootRole:
     Type: "AWS::IAM::Role"
@@ -96,7 +107,7 @@ Resources:
             VolumeType: io1
             Iops: !Ref pIops
             DeleteOnTermination: false
-            VolumeSize: 20
+            VolumeSize: !If [ ProdVolumeSize, !Ref pProdVolumeSize, !Ref pDevVolumeSize ]
       NetworkInterfaces:
       -
         DeviceIndex: "1"
