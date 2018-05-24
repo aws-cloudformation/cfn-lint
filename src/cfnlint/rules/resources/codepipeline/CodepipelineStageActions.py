@@ -175,7 +175,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         matches = []
 
         if action.get('ActionTypeId').get('Version') != '1':
-            message = 'For all currently supported action types, the only valid version is "1".'
+            message = 'For all currently supported action types, the only valid version string is "1".'
             matches.append(RuleMatch(
                 path + ['ActionTypeId', 'Version'],
                 message
