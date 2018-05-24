@@ -42,10 +42,14 @@ class Properties(CloudFormationLintRule):
             if len(value) == 1:
                 for sub_key, sub_value in value.items():
                     if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                        matches.extend(self.primitivetypecheck(
-                            sub_value[1], primtype, proppath + ['Fn::If', 1]))
-                        matches.extend(self.primitivetypecheck(
-                            sub_value[2], primtype, proppath + ['Fn::If', 2]))
+                        # not erroring on bad Ifs but not need to account for it
+                        # so the rule doesn't error out
+                        if isinstance(sub_value, list):
+                            if len(sub_value) == 3:
+                                matches.extend(self.primitivetypecheck(
+                                    sub_value[1], primtype, proppath + ['Fn::If', 1]))
+                                matches.extend(self.primitivetypecheck(
+                                    sub_value[2], primtype, proppath + ['Fn::If', 2]))
                     elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
                                          'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
                                          'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']:
