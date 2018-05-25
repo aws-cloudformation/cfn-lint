@@ -63,7 +63,7 @@ class TestCli(BaseTestCase):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_yaml.yaml'
 
-        (args, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {
@@ -81,7 +81,7 @@ class TestCli(BaseTestCase):
     def test_template_invalid_json_ignore(self):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_json.json'
-        (args, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {
@@ -99,7 +99,7 @@ class TestCli(BaseTestCase):
     def test_template_config(self):
         """Test template config"""
         filename = 'templates/good/core/config_parameters.yaml'
-        (args, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {
@@ -117,7 +117,7 @@ class TestCli(BaseTestCase):
     def test_override_parameters(self):
         """Test overriding parameters"""
         filename = 'templates/good/core/config_parameters.yaml'
-        (args, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template',
             '--ignore-checks', 'E0000'])
 
@@ -137,7 +137,7 @@ class TestCli(BaseTestCase):
         """ Test bad formatting in config"""
 
         filename = 'templates/bad/core/config_parameters.yaml'
-        (args, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {

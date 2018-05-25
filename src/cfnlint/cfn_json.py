@@ -18,10 +18,24 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-from cfnlint.cfn_yaml import DuplicateError, NullError
+import cfnlint
 
 
 LOGGER = logging.getLogger(__name__)
+
+
+class DuplicateError(Exception):
+    """
+    Error thrown when the template contains duplicates
+    """
+    pass
+
+
+class NullError(Exception):
+    """
+    Error thrown when the template contains Nulls
+    """
+    pass
 
 
 def check_duplicates(ordered_pairs):
@@ -50,7 +64,7 @@ class JSONDecodeError(ValueError):
     colno: The column corresponding to pos
     """
     # Note that this exception is used from _json
-    def __init__(self, msg, doc, pos):
+    def __init__(self, msg, doc, pos, key=' '):
         lineno = doc.count('\n', 0, pos) + 1
         colno = pos - doc.rfind('\n', 0, pos)
         errmsg = '%s: line %d column %d (char %d)' % (msg, lineno, colno, pos)
@@ -60,6 +74,9 @@ class JSONDecodeError(ValueError):
         self.pos = pos
         self.lineno = lineno
         self.colno = colno
+        self.match = cfnlint.Match(
+            lineno, colno + 1, lineno,
+            colno + 1 + len(key), '', cfnlint.ParseError(), message=msg)
 
     def __reduce__(self):
         return self.__class__, (self.msg, self.doc, self.pos)
@@ -262,9 +279,9 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         try:
             result = object_pairs_hook(pairs)
         except DuplicateError as err:
-            raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+            raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
         except NullError as err:
-            raise JSONDecodeError('Null Error {}'.format(err), s, end)
+            raise JSONDecodeError('Null Error {}'.format(err), s, begin, key)
         return result, end
     pairs = dict(pairs)
     if object_hook is not None:

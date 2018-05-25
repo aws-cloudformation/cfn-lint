@@ -833,3 +833,11 @@ class Runner(object):
             if not any(match == u for u in return_matches):
                 return_matches.append(match)
         return return_matches
+
+
+class ParseError(cfnlint.CloudFormationLintRule):
+    """Parse Lint Rule"""
+    id = 'E0000'
+    shortdesc = 'Parsing error found when parsing the template'
+    description = 'Checks for Null values and Duplicat values in resources'
+    tags = ['base']

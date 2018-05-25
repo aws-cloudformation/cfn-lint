@@ -42,7 +42,7 @@ class TestNulls(BaseTestCase):
             loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
             loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.cfn_yaml.NullError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -74,7 +74,7 @@ class TestNulls(BaseTestCase):
             loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
             loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             loader.get_single_data()
-        except cfnlint.cfn_yaml.NullError:
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return
 
