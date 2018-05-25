@@ -18,6 +18,10 @@ import logging
 import sys
 import os
 import json
+try:
+    from json.decoder import JSONDecodeError
+except ImportError:
+    JSONDecodeError = ValueError
 import argparse
 import six
 from yaml.parser import ParserError, ScannerError
@@ -27,11 +31,6 @@ import cfnlint.cfn_yaml
 import cfnlint.cfn_json
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
-
-try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -56,11 +55,7 @@ def run_cli(filename, template, rules, fmt, ignore_checks, regions, override_spe
         filename, template, rules, transforms, ignore_checks,
         regions)
 
-    if fmt == 'json':
-        print(json.dumps(matches, indent=4, cls=CustomEncoder))
-    else:
-        for match in matches:
-            print(formatter.format(match))
+    print_matches(matches, fmt, formatter)
 
     return get_exit_code(matches)
 
