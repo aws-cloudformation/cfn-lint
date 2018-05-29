@@ -216,12 +216,12 @@ def get_template_args_rules(cli_args):
                 LOGGER.error('Permission denied when accessing template file: %s', filename)
                 sys.exit(1)
         except cfnlint.cfn_yaml.CfnParseError as err:
-            err.match.filename = filename
+            err.match.Filename = filename
             matches = [err.match]
             print_matches(matches, fmt, formatter)
             sys.exit(get_exit_code(matches))
         except ParserError as err:
-            matches = [create_match_yaml_parser_error(err)]
+            matches = [create_match_yaml_parser_error(err, filename)]
             print_matches(matches, fmt, formatter)
             sys.exit(get_exit_code(matches))
         except ScannerError as err:
@@ -234,7 +234,7 @@ def get_template_args_rules(cli_args):
                     print_matches(matches, fmt, formatter)
                     sys.exit(get_exit_code(matches))
                 except JSONDecodeError as json_err:
-                    matches = [create_match_json_parser_error(json_err)]
+                    matches = [create_match_json_parser_error(json_err, filename)]
                     print_matches(matches, fmt, formatter)
                     sys.exit(get_exit_code(matches))
                 except Exception as json_err:  # pylint: disable=W0703
@@ -246,7 +246,7 @@ def get_template_args_rules(cli_args):
                         LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
                         sys.exit(1)
             else:
-                matches = [create_match_yaml_parser_error(err)]
+                matches = [create_match_yaml_parser_error(err, filename)]
                 print_matches(matches, fmt, formatter)
                 sys.exit(get_exit_code(matches))
 
@@ -336,16 +336,17 @@ def print_matches(matches, fmt, formatter):
             print(formatter.format(match))
 
 
-def create_match_yaml_parser_error(parser_error):
+def create_match_yaml_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
     lineno = parser_error.problem_mark.line + 1
     colno = parser_error.problem_mark.column + 1
     msg = parser_error.problem
     return cfnlint.Match(
-        lineno, colno, lineno, colno + 1, '', cfnlint.ParseError(), message=msg)
+        lineno, colno, lineno, colno + 1, filename,
+        cfnlint.ParseError(), message=msg)
 
 
-def create_match_json_parser_error(parser_error):
+def create_match_json_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
     if sys.version_info[0] == 3:
         lineno = parser_error.lineno
@@ -356,7 +357,7 @@ def create_match_json_parser_error(parser_error):
         colno = 1
         msg = parser_error.message
     return cfnlint.Match(
-        lineno, colno, lineno, colno + 1, '', cfnlint.ParseError(), message=msg)
+        lineno, colno, lineno, colno + 1, filename, cfnlint.ParseError(), message=msg)
 
 
 class CustomEncoder(json.JSONEncoder):

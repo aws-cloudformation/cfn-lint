@@ -839,5 +839,5 @@ class ParseError(cfnlint.CloudFormationLintRule):
     """Parse Lint Rule"""
     id = 'E0000'
     shortdesc = 'Parsing error found when parsing the template'
-    description = 'Checks for Null values and Duplicat values in resources'
+    description = 'Checks for Null values and Duplicate values in resources'
     tags = ['base']
