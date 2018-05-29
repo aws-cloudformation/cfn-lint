@@ -20,14 +20,10 @@ import os
 from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
-import cfnlint.parser
 import cfnlint.transforms
 
 
 LOGGER = logging.getLogger(__name__)
-
-DEFAULT_RULESDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'rules')
-DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'transforms')
 
 
 class CloudFormationLintRule(object):

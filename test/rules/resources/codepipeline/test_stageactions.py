@@ -14,25 +14,33 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.properties.Required import Required  # pylint: disable=E0401
+from cfnlint.rules.resources.codepipeline.CodepipelineStageActions import CodepipelineStageActions  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestResourceConfiguration(BaseRuleTestCase):
-    """Test Resource Properties"""
+class TestCodePipelineStageActions(BaseRuleTestCase):
+    """Test CodePipeline Stage Actions Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestResourceConfiguration, self).setUp()
-        self.collection.register(Required())
+        super(TestCodePipelineStageActions, self).setUp()
+        self.collection.register(CodepipelineStageActions())
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative(self):
+    def test_file_artifact_counts(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/properties_required.yaml', 10)
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_artifact_counts.yaml', 1)
 
-    def test_file_negative_generic(self):
-        """Generic Test failure"""
-        self.helper_file_negative('templates/bad/generic.yaml', 7)
+    def test_file_invalid_owner(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_invalid_owner.yaml', 1)
+
+    def test_file_invalid_version(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_invalid_version.yaml', 1)
+
+    def test_file_non_unique(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_non_unique.yaml', 1)

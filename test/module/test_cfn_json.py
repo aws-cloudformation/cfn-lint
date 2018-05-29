@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint import Template, RulesCollection  # pylint: disable=E0401
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 

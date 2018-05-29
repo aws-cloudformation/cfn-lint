@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection, TransformsCollection, DEFAULT_TRANSFORMSDIR
+from cfnlint import Runner, RulesCollection, TransformsCollection
+from cfnlint.core import DEFAULT_TRANSFORMSDIR
 from testlib.testcase import BaseTestCase
 
 
@@ -41,6 +42,7 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/functions_cidr.yaml',
         'templates/good/functions_findinmap.yaml',
         'templates/good/resources_lambda.yaml',
+        'templates/good/resources_codepipeline.yaml',
         'templates/good/transform_serverless_api.yaml',
         'templates/good/transform_serverless_function.yaml',
         'templates/good/transform_serverless_globals.yaml',

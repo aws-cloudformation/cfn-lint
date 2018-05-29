@@ -15,36 +15,43 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
-import cfnlint.__main__  # pylint: disable=E0401
+import cfnlint.core  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 LOGGER = logging.getLogger('cfnlint')
 
 
-class TestDefaultArguments(BaseTestCase):
-    """Test Logging Arguments """
+class TestArgsParser(BaseTestCase):
+    """Test Parser Arguments """
     def tearDown(self):
         """Setup"""
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
 
-    def test_logging_info(self):
+    def test_create_parser(self):
         """Test success run"""
 
-        cfnlint.__main__.configure_logging('info')
-        self.assertEqual(logging.INFO, LOGGER.level)
-        self.assertEqual(len(LOGGER.handlers), 1)
+        parser = cfnlint.core.create_parser()
+        args = parser.parse_args([
+            '--template', 'test.yaml', '--ignore-bad-template',
+            '--format', 'quiet', '--log-level', 'debug'])
+        self.assertEqual(vars(args)['template'], 'test.yaml')
+        self.assertEqual(vars(args)['ignore_bad_template'], True)
+        self.assertEqual(vars(args)['format'], 'quiet')
+        self.assertEqual(vars(args)['log_level'], 'debug')
 
-    def test_logging_debug(self):
-        """Test debug level"""
+    def test_override_template_defaults(self):
+        """Test second parser"""
+        parser = cfnlint.core.create_parser()
+        defaults = {
+            'ignore_checks': ['E0110']
+        }
 
-        cfnlint.__main__.configure_logging('debug')
-        self.assertEqual(logging.DEBUG, LOGGER.level)
-        self.assertEqual(len(LOGGER.handlers), 1)
+        # just write the defaults
 
-    def test_logging_error(self):
-        """Test debug level"""
+        cfnlint.core.append_parser(parser, defaults)
+        args = parser.parse_args([
+            '--ignore-checks', 'E0101'
+        ])
 
-        cfnlint.__main__.configure_logging(None)
-        self.assertEqual(logging.ERROR, LOGGER.level)
-        self.assertEqual(len(LOGGER.handlers), 1)
+        self.assertEqual(vars(args)['ignore_checks'], ['E0101'])
