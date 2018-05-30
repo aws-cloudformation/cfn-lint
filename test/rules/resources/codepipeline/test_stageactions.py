@@ -14,33 +14,33 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.properties.Properties import Properties  # pylint: disable=E0401
+from cfnlint.rules.resources.codepipeline.CodepipelineStageActions import CodepipelineStageActions  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestResourceProperties(BaseRuleTestCase):
-    """Test Resource Properties"""
+class TestCodePipelineStageActions(BaseRuleTestCase):
+    """Test CodePipeline Stage Actions Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestResourceProperties, self).setUp()
-        self.collection.register(Properties())
+        super(TestCodePipelineStageActions, self).setUp()
+        self.collection.register(CodepipelineStageActions())
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_positive_template(self):
-        """Test Positive"""
-        self.helper_file_positive_template('templates/good/resource_properties.yaml')
-
-    def test_file_negative(self):
+    def test_file_artifact_counts(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/generic.yaml', 6)
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_artifact_counts.yaml', 1)
 
-    def test_file_negative_2(self):
-        """Failure test"""
-        self.helper_file_negative('templates/bad/object_should_be_list.yaml', 2)
+    def test_file_invalid_owner(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_invalid_owner.yaml', 1)
 
-    def test_file_negative_3(self):
-        """Failure test"""
-        self.helper_file_negative('templates/bad/resource_properties.yaml', 4)
+    def test_file_invalid_version(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_invalid_version.yaml', 1)
+
+    def test_file_non_unique(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/resources_codepipeline_action_non_unique.yaml', 1)

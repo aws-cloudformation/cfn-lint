@@ -34,7 +34,16 @@ class Properties(CloudFormationLintRule):
         self.parameternames = {}
 
     def primitivetypecheck(self, value, primtype, proppath):
-        """Check primitive types"""
+        """
+            Check primitive types.
+            Only check that a primitive type is actual a primitive type:
+            - If its JSON let it go
+            - If its Conditions check each sub path of the condition
+            - If its a object make sure its a valid function and function
+            - If its a list raise an error
+
+        """
+
         matches = list()
         if isinstance(value, dict) and primtype == 'Json':
             return matches
@@ -42,42 +51,21 @@ class Properties(CloudFormationLintRule):
             if len(value) == 1:
                 for sub_key, sub_value in value.items():
                     if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                        cond_values = self.cfn.get_condition_values(sub_value)
-                        for cond_value in cond_values:
-                            matches.extend(self.primitivetypecheck(
-                                cond_value['Value'], primtype, proppath + cond_value['Path']))
+                        # not erroring on bad Ifs but not need to account for it
+                        # so the rule doesn't error out
+                        if isinstance(sub_value, list):
+                            if len(sub_value) == 3:
+                                matches.extend(self.primitivetypecheck(
+                                    sub_value[1], primtype, proppath + ['Fn::If', 1]))
+                                matches.extend(self.primitivetypecheck(
+                                    sub_value[2], primtype, proppath + ['Fn::If', 2]))
                     elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
                                          'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
                                          'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']:
                         message = 'Property %s has an illegal function %s' % ('/'.join(map(str, proppath)), sub_key)
                         matches.append(RuleMatch(proppath, message))
-        elif isinstance(value, str):
-            if primtype in ['Integer', 'Double', 'Long']:
-                try:
-                    int(value)
-                except ValueError:
-                    # LOGGER.error('Tried to convert %s to int. %s',
-                    #             text[prop], Exception)
-                    message = 'Property %s should be of type Int/Boolean' % ('/'.join(map(str, proppath)))
-                    matches.append(RuleMatch(proppath, message))
-            elif primtype == 'Boolean':
-                if value not in ['true', 'false', 'True', 'False']:
-                    message = 'Property %s should be of type Boolean' % ('/'.join(map(str, proppath)))
-                    matches.append(RuleMatch(proppath, message))
-            elif primtype != 'String':
-                message = 'Property %s should be of type String' % ('/'.join(map(str, proppath)))
-                matches.append(RuleMatch(proppath, message))
-        elif isinstance(value, bool):
-            if primtype != 'Boolean' and primtype != 'String':
-                message = 'Property %s should be of type %s' % ('/'.join(map(str, proppath)), primtype)
-                matches.append(RuleMatch(proppath, message))
-        elif isinstance(value, int):
-            if primtype in ['String', 'Double', 'Long']:
-                pass
-                # LOGGER.info('%s is an int but should be %s for resource %s',
-                #            text[prop], primtype, resourcename)
-            elif primtype not in ['Integer', 'Long']:
-                message = 'Property %s should be of type Integer' % ('/'.join(map(str, proppath)))
+            else:
+                message = 'Property is an object instead of %s at %s' % (primtype, '/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
         elif isinstance(value, list):
             message = 'Property should be of type %s not List at %s' % (primtype, '/'.join(map(str, proppath)))

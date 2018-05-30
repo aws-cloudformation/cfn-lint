@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >
+  Bad CodePipeline Template
+Resources:
+  TestPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      Name: Test-pipeline
+      ArtifactStore:
+        Location: 'pipeline-bucket'
+        Type: S3
+      RoleArn: arn:aws:iam:::role/AWSCodePipelineRole
+      Stages:
+        - Name: Build
+          Actions:
+            - Name: CodeBuild
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+              - Name: MyApp
+        - Name: Build2
+          Actions:
+            - Name: CodeBuild
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+              - Name: MyApp
