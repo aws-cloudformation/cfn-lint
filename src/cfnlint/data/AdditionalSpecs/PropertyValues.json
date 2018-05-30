@@ -8,6 +8,30 @@
           }
         }
       }
+    },
+    "AWS::EC2::SpotFleet.IamInstanceProfileSpecification": {
+      "Properties": {
+        "Arn": {
+          "Value": {
+            "ValueType": "IamInstanceProfile.Arn"
+          }
+        }
+      }
+    },
+    "AWS::EC2::LaunchTemplate.IamInstanceProfile": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-launchtemplatedata-iaminstanceprofile.html",
+      "Properties": {
+        "Arn": {
+          "Value": {
+            "ValueType": "IamInstanceProfile.Arn"
+          }
+        },
+        "Name": {
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
+        }
+      }
     }
   },
   "ResourceTypes": {
@@ -252,6 +276,16 @@
         "Resources": [
           "AWS::IAM::InstanceProfile"
         ]
+      }
+    },
+    "IamInstanceProfile.Arn": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      },
+      "GetAtt": {
+        "AWS::IAM::InstanceProfile": "Arn"
       }
     },
     "ImageId": {
