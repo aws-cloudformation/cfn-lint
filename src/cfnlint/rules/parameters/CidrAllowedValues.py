@@ -14,17 +14,18 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class Cidr(CloudFormationLintRule):
+class CidrAllowedValues(CloudFormationLintRule):
     """Check Availability Zone parameter checks """
-    id = 'W2509'
-    shortdesc = 'CIDR Parameters have allowed values'
+    id = 'E2004'
+    shortdesc = 'CIDR Allowed Values should be a Cidr Range'
     description = 'Check if a parameter is being used as a CIDR. ' \
-                  'If it is make sure it has allowed values regex comparisons'
-    tags = ['base', 'parameters', 'availabilityzone']
+                  'If it is make sure allowed values are proper CIDRs'
+    tags = ['base', 'parameters', 'cidr']
 
     # pylint: disable=C0301
     cidr_regex = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
@@ -61,12 +62,14 @@ class Cidr(CloudFormationLintRule):
 
         if value in parameters:
             parameter = parameters.get(value, {})
-            allowed_pattern = parameter.get('AllowedPattern', None)
             allowed_values = parameter.get('AllowedValues', None)
-            if not allowed_pattern and not allowed_values:
-                param_path = ['Parameters', value]
-                message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. Example for AllowedPattern "{0}"'
-                matches.append(RuleMatch(param_path, message.format(self.cidr_regex, ('/'.join(param_path)))))
+            if allowed_values:
+                for cidr in allowed_values:
+                    pattern = re.compile(self.cidr_regex)
+                    if not pattern.match(cidr):
+                        cidr_path = ['Parameters', value]
+                        message = 'Cidr should be a Cidr Range based string for {0}'
+                        matches.append(RuleMatch(cidr_path, message.format(cidr)))
 
         return matches
 
