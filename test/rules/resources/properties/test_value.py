@@ -18,12 +18,15 @@ from cfnlint.rules.resources.properties.Value import Value  # pylint: disable=E0
 from ... import BaseRuleTestCase
 
 
-class TestValues(BaseRuleTestCase):
+class TestValue(BaseRuleTestCase):
     """Test Password Property Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestValues, self).setUp()
+        super(TestValue, self).setUp()
         self.collection.register(Value())
+        self.success_templates = [
+            'fixtures/templates/good/resources/properties/value.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -32,3 +35,7 @@ class TestValues(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('fixtures/templates/bad/generic.yaml', 2)
+
+    def test_file_negative_value(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/resources/properties/value.yaml', 4)

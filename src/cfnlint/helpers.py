@@ -98,6 +98,11 @@ LIMITS = {
 }
 
 
+def is_custom_resource(resource_type):
+    """ Return True if resource_type is a custom resource """
+    return resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')
+
+
 def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
     """Load resources"""
 
