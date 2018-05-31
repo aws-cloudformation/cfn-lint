@@ -29,7 +29,7 @@ class Used(CloudFormationLintRule):
         """Check CloudFormation Mappings"""
 
         matches = list()
-        ref_mappings = list()
+        fininmap_mappings = list()
 
         mappings = cfn.template.get('Mappings', {})
 
@@ -37,17 +37,24 @@ class Used(CloudFormationLintRule):
 
             # Get all "FindInMaps" that reference a Mapping
             maptrees = cfn.search_deep_keys('Fn::FindInMap')
-
             for maptree in maptrees:
 
                 if isinstance(maptree[-1], list):
-                    ref_mappings.append(maptree[-1][0])
+                    map_name = maptree[-1][0]
+                    if isinstance(map_name, dict):
+                        self.logger.debug(
+                            'Mapping Name has a function can have too many variations. '
+                            'Disabling check %s', self.id
+                        )
+                        return matches
+                    else:
+                        fininmap_mappings.append(maptree[-1][0])
                 else:
-                    ref_mappings.append(maptree[-1])
+                    fininmap_mappings.append(maptree[-1])
 
             # Check if the mappings are used
             for mapname, _ in mappings.items():
-                if mapname not in ref_mappings:
+                if mapname not in fininmap_mappings:
                     message = 'Mapping {0} not used'
                     matches.append(RuleMatch(
                         ['Mappings', mapname],
