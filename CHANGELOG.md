@@ -11,10 +11,11 @@
 
 ### 0.2.0
 ###### Features
-- Broke out main inside "__main__" to be more testable and supportable
+- Standard cfn-lint Errors (E0000) for null, duplicate, and parse errors
 - Add a new check for CloudFormation limits
 - Add a new check for Parameter, Resource, Output, and Mapping names
 - Update specs to those released on May 25th, 2018
+- Strong type checking for property values result in Errors (E3012)
 ###### Fixes
 - Transform logic updated to not add a Role if one is specified for a serverless function
 - Fixed logic around Fn::If when the result is an object
