@@ -5,6 +5,12 @@ Description: >
 Parameters:
   cidrBlock:
     Type: Number
+  cidrBlockAllowedValues:
+    Type: String
+    AllowedValues:
+      - '127.0.0.1'
+      - '8.8.8.8'
+      - 'notacidr'
   vpcTenancy:
     Type: String
     AllowedValues:
@@ -23,6 +29,11 @@ Resources:
     Properties:
       InstanceTenancy: !Ref vpcTenancy
       CidrBlock: 10.0.0.3
+  myVpc3:
+    Type: AWS::EC2::VPC
+    Properties:
+      InstanceTenancy: !Ref vpcTenancy
+      CidrBlock: !Ref cidrBlockAllowedValues
   mySubnet2-1:
     Type: AWS::EC2::Subnet
     Properties:
