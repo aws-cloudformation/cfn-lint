@@ -31,7 +31,7 @@ class Sub(CloudFormationLintRule):
         """Test if a string has appropriate parameters"""
 
         matches = list()
-        regex = re.compile(r'\${[^!][a-zA-Z0-9.:]+}')
+        regex = re.compile(r'\${[^!].*?}')
         string_params = regex.findall(sub_string)
         get_atts = cfn.get_valid_getatts()
 
