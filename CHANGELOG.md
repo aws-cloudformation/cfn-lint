@@ -9,6 +9,18 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.2.0
+###### Features
+- Standard cfn-lint Errors (E0000) for null, duplicate, and parse errors
+- Add a new check for CloudFormation limits
+- Add a new check for Parameter, Resource, Output, and Mapping names
+- Update specs to those released on May 25th, 2018
+- Strong type checking for property values result in Errors (E3012)
+###### Fixes
+- Transform logic updated to not add a Role if one is specified for a serverless function
+- Fixed logic around Fn::If when the result is an object
+- Fix conditions when checking property value structure
+
 ### 0.1.0
 ###### Features
 - Update CloudFormation specs to include recent releases
