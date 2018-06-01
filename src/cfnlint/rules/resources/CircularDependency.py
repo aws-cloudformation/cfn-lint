@@ -93,12 +93,13 @@ class CircularDependency(CloudFormationLintRule):
         resources = {}
         for ref_obj in ref_objs:
             value = ref_obj[-1]
-            ref_type, ref_name = ref_obj[:2]
-            if ref_type == 'Resources':
-                if cfn.template.get('Resources', {}).get(value, {}):
-                    if not resources.get(ref_name):
-                        resources[ref_name] = []
-                    resources[ref_name].append(value)
+            if isinstance(value, (six.text_type, six.string_types, int)):
+                ref_type, ref_name = ref_obj[:2]
+                if ref_type == 'Resources':
+                    if cfn.template.get('Resources', {}).get(value, {}):
+                        if not resources.get(ref_name):
+                            resources[ref_name] = []
+                        resources[ref_name].append(value)
 
         getatt_objs = cfn.search_deep_keys('Fn::GetAtt')
         for getatt_obj in getatt_objs:

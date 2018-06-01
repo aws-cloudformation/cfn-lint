@@ -14,29 +14,21 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import six
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules.functions.Ref import Ref  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class Ref(CloudFormationLintRule):
-    """Check if Ref value is a string"""
-    id = 'E1020'
-    shortdesc = 'Ref validation of value'
-    description = 'Making the Ref has a value of String (no other functions are supported)'
-    tags = ['base', 'functions', 'ref']
+class TestRulesRef(BaseRuleTestCase):
+    """Test Rules Ref exists """
+    def setUp(self):
+        """Setup"""
+        super(TestRulesRef, self).setUp()
+        self.collection.register(Ref())
 
-    def match(self, cfn):
-        """Check CloudFormation Ref"""
+    def test_file_positive(self):
+        """Test Positive"""
+        self.helper_file_positive()
 
-        matches = list()
-
-        ref_objs = cfn.search_deep_keys('Ref')
-
-        for ref_obj in ref_objs:
-            value = ref_obj[-1]
-            if not isinstance(value, (six.string_types, six.text_type, int)):
-                message = 'Ref can only be a string for {0}'
-                matches.append(RuleMatch(ref_obj[:-1], message.format('/'.join(map(str, ref_obj[:-1])))))
-
-        return matches
+    def test_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative('templates/bad/functions/ref.yaml', 1)

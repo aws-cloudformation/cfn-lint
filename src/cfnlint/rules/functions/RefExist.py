@@ -65,11 +65,12 @@ class RefExist(CloudFormationLintRule):
         # start with the basic ref calls
         for reftree in reftrees:
             ref = reftree[-1]
-            if ref not in valid_refs:
-                message = 'Ref {0} not found as a resource or parameter'
-                matches.append(RuleMatch(
-                    reftree[:-2], message.format(ref)
-                ))
+            if isinstance(ref, (six.string_types, six.text_type, int)):
+                if ref not in valid_refs:
+                    message = 'Ref {0} not found as a resource or parameter'
+                    matches.append(RuleMatch(
+                        reftree[:-2], message.format(ref)
+                    ))
         for subtree in subtrees:
             sub = subtree[-1]
             parammatches = []

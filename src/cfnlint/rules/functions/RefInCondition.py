@@ -19,11 +19,11 @@ from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
 
-class Ref(CloudFormationLintRule):
+class RefInCondition(CloudFormationLintRule):
     """Check if Ref value is a string"""
-    id = 'E1020'
-    shortdesc = 'Ref validation of value'
-    description = 'Making the Ref has a value of String (no other functions are supported)'
+    id = 'E1026'
+    shortdesc = 'Cannot reference resources in the Conditions block of the template'
+    description = 'Check that any Refs in the Conditions block uses no resources'
     tags = ['base', 'functions', 'ref']
 
     def match(self, cfn):
@@ -32,11 +32,14 @@ class Ref(CloudFormationLintRule):
         matches = list()
 
         ref_objs = cfn.search_deep_keys('Ref')
+        resource_names = cfn.get_resource_names()
 
         for ref_obj in ref_objs:
-            value = ref_obj[-1]
-            if not isinstance(value, (six.string_types, six.text_type, int)):
-                message = 'Ref can only be a string for {0}'
-                matches.append(RuleMatch(ref_obj[:-1], message.format('/'.join(map(str, ref_obj[:-1])))))
+            if ref_obj[0] == 'Conditions':
+                value = ref_obj[-1]
+                if isinstance(value, (six.string_types, six.text_type, int)):
+                    if value in resource_names:
+                        message = 'Cannot reference resource {0} in the Conditions block of the template at {1}'
+                        matches.append(RuleMatch(ref_obj[:-1], message.format(value, '/'.join(map(str, ref_obj[:-1])))))
 
         return matches
