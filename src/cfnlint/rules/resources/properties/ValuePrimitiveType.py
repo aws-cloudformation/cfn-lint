@@ -43,7 +43,8 @@ class ValuePrimitiveType(CloudFormationLintRule):
         """Check Value"""
         matches = list()
         primitive_type = kwargs.get('primitive_type', {})
-        if isinstance(value, dict) and primitive_type == 'Json':
+
+        if isinstance(value, dict):
             return matches
         if primitive_type in ['String']:
             if not isinstance(value, (str, six.text_type, six.string_types)):
