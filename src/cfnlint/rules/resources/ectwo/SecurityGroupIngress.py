@@ -103,7 +103,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
                     obj=properties, key='SourceSecurityGroupId',
                     path=path[:],
                     check_value=self.check_sgid_value, check_ref=self.check_sgid_ref,
-                    check_mapping=None, check_split=self.check_sgid_fail,
+                    check_find_in_map=None, check_split=self.check_sgid_fail,
                     check_join=self.check_sgid_fail
                 )
             )
