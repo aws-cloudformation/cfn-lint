@@ -62,6 +62,10 @@ class TestUsedMappings(BaseRuleTestCase):
         """Test failure: openshift.yaml"""
         self.helper_file_negative('templates/quickstart/openshift.yaml', 1)
 
+    def helper_file_positive_exception_template(self):
+        """Test success file complex situation"""
+        self.helper_file_positive_template('templates/good/mappings/used.yaml')
+
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/mappings.yaml', 3)
+        self.helper_file_negative('templates/bad/mappings/used.yaml', 1)
