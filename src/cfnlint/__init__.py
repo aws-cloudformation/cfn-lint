@@ -658,6 +658,7 @@ class Template(object):
                 is_condition = False
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                        is_condition = True
                         results = self.get_condition_values(obj_value, path[:] + [obj_key])
                         if isinstance(results, list):
                             matches.extend(results)
@@ -773,7 +774,10 @@ class Template(object):
             else:
                 if len(value) == 1:
                     for dict_name, _ in value.items():
+                        # If this is a function we shouldn't fall back to a check_value check
                         if dict_name in cfnlint.helpers.FUNCTIONS:
+                            # convert the function name from camel case to underscore
+                            # Example: Fn::FindInMap becomes check_find_in_map
                             function_name = 'check_%s' % camel_to_snake(dict_name.replace('Fn::', ''))
                             if function_name == 'check_ref':
                                 if check_ref:
