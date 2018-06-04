@@ -204,6 +204,9 @@ def get_template_args_rules(cli_args):
             loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
             loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
             template = loader.get_single_data()
+            # Convert an empty file to an empty dict
+            if template is None:
+                template = {}
             defaults = get_default_args(template)
         except IOError as e:
             if e.errno == 2:
