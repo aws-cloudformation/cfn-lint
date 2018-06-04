@@ -68,7 +68,7 @@ class LambdaRuntime(CloudFormationLintRule):
             cfn.check_value(
                 properties, 'Runtime', path,
                 check_value=None, check_ref=self.check_lambda_memory_size_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
 

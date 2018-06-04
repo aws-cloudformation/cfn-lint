@@ -126,5 +126,5 @@ class TestTemplate(BaseTestCase):
 
         results = self.template.get_condition_values(template, [])
         self.assertEqual(results, [
-            {'Path': [1, 'Ref'], 'Value': 'Sample'}, {'Path': [2], 'Value': 'String'}
+            {'Path': [1], 'Value': {'Ref': 'Sample'}}, {'Path': [2], 'Value': 'String'}
         ])

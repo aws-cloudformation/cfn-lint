@@ -78,28 +78,28 @@ class Cidr(CloudFormationLintRule):
             cfn.check_value(
                 properties, 'CIDRIP', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'Cidr', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'CidrBlock', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'CidrIp', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
 
