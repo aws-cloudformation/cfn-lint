@@ -38,10 +38,7 @@ class TestNulls(BaseTestCase):
         filename = 'templates/good/generic.yaml'
 
         try:
-            fp = open(filename)
-            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
-            loader.get_single_data()
+            cfnlint.cfn_yaml.load(filename)
         except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
@@ -70,10 +67,7 @@ class TestNulls(BaseTestCase):
         filename = 'templates/bad/null_values.yaml'
 
         try:
-            fp = open(filename)
-            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
-            loader.get_single_data()
+            cfnlint.cfn_yaml.load(filename)
         except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return

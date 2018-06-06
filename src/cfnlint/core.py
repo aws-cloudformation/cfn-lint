@@ -200,14 +200,7 @@ def get_template_args_rules(cli_args):
         filename = vars(args[0])['template']
         ignore_bad_template = vars(args[0])['ignore_bad_template']
         try:
-            fp = open(filename)
-            loader = cfnlint.cfn_yaml.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.cfn_yaml.multi_constructor)
-            template = loader.get_single_data()
-            # Convert an empty file to an empty dict
-            if template is None:
-                template = {}
-            defaults = get_default_args(template)
+            template = cfnlint.cfn_yaml.load(filename)
         except IOError as e:
             if e.errno == 2:
                 LOGGER.error('Template file not found: %s', filename)
@@ -252,6 +245,8 @@ def get_template_args_rules(cli_args):
                 matches = [create_match_yaml_parser_error(err, filename)]
                 print_matches(matches, fmt, formatter)
                 sys.exit(get_exit_code(matches))
+
+    defaults = get_default_args(template)
 
     append_parser(parser, defaults)
     args = parser.parse_args(cli_args)
