@@ -61,7 +61,8 @@ class BaseRuleTestCase(BaseTestCase):
             template = self.load_template(filename)
             good_runner = Runner(self.collection, self.transforms, filename, template, [], ['us-east-1'], [])
             good_runner.transform()
-            self.assertEqual([], good_runner.run())
+            failures = good_runner.run()
+            assert [] == failures, 'Got failures {} on {}'.format(failures, filename)
 
     def helper_file_positive_template(self, filename):
         """Success test with template parameter"""
