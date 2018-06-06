@@ -1,0 +1,20 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Mappings:
+  Environment:
+    acceptance:
+      Subnets: "AcceptanceSubnets"
+    testing:
+      Subnets: "TestingSubnets"
+    production:
+      Subnets: "ProductionSubnets"
+  AcceptanceSubnets:
+    eu-west-1a:
+      Management: "XXX.XXX.XXX.XXX/XX"
+Resources:
+  mySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: vpc-123456
+      # nested and standard checks
+      CidrBlock: !FindInMap [ AcceptanceSubnets, "eu-west-1a", "Management"]
