@@ -668,6 +668,11 @@ class Template(object):
                     result['Path'] = path[:]
                     result['Value'] = value
                     matches.append(result)
+            else:
+                result = {}
+                result['Path'] = path[:]
+                result['Value'] = value
+                matches.append(result)
         elif isinstance(value, (list)):
             for list_index, list_value in enumerate(value):
                 if isinstance(list_value, dict):
@@ -684,6 +689,11 @@ class Template(object):
                             result['Path'] = path[:] + [list_index]
                             result['Value'] = list_value
                             matches.append(result)
+                    else:
+                        result = {}
+                        result['Path'] = path[:] + [list_index]
+                        result['Value'] = list_value
+                        matches.append(result)
                 else:
                     result = {}
                     result['Path'] = path[:] + [list_index]

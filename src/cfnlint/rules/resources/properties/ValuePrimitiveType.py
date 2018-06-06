@@ -39,29 +39,29 @@ class ValuePrimitiveType(CloudFormationLintRule):
         for property_spec in self.property_specs:
             self.resource_sub_property_types.append(property_spec)
 
-    def check_value(self, value, path, **kwargs):
-        """Check Value"""
+    def check_primitive_type(self, value, item_type, path):
+        """Chec item type"""
         matches = list()
-        primitive_type = kwargs.get('primitive_type', {})
-        if isinstance(value, dict) and primitive_type == 'Json':
+
+        if isinstance(value, dict) and item_type == 'Json':
             return matches
-        if primitive_type in ['String']:
+        elif item_type in ['String']:
             if not isinstance(value, (str, six.text_type, six.string_types)):
                 message = 'Property %s should be of type String' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
-        elif primitive_type in ['Boolean']:
+        elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
                 message = 'Property %s should be of type Boolean' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
-        elif primitive_type in ['Double']:
+        elif item_type in ['Double']:
             if not isinstance(value, (float, int)):
                 message = 'Property %s should be of type Double' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
-        elif primitive_type in ['Integer']:
+        elif item_type in ['Integer']:
             if not isinstance(value, (int)):
                 message = 'Property %s should be of type Integer' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
-        elif primitive_type in ['Long']:
+        elif item_type in ['Long']:
             if sys.version_info < (3,):
                 integer_types = (int, long,)  # pylint: disable=undefined-variable
             else:
@@ -70,8 +70,23 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 message = 'Property %s should be of type Long' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
         elif isinstance(value, list):
-            message = 'Property should be of type %s at %s' % (primitive_type, '/'.join(map(str, path)))
+            message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
             matches.append(RuleMatch(path, message))
+
+        return matches
+
+    def check_value(self, value, path, **kwargs):
+        """Check Value"""
+        matches = list()
+        primitive_type = kwargs.get('primitive_type', {})
+        item_type = kwargs.get('item_type', {})
+        if item_type in ['Map']:
+            if isinstance(value, dict):
+                for map_key, map_value in value.items():
+                    if not isinstance(map_value, dict):
+                        matches.extend(self.check_primitive_type(map_value, primitive_type, path + [map_key]))
+        else:
+            matches.extend(self.check_primitive_type(value, primitive_type, path))
 
         return matches
 
@@ -84,13 +99,17 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 primitive_type = specs.get(prop).get('PrimitiveType')
                 if not primitive_type:
                     primitive_type = specs.get(prop).get('PrimitiveItemType')
-
+                if specs.get(prop).get('Type') in ['List', 'Map']:
+                    item_type = specs.get(prop).get('Type')
+                else:
+                    item_type = None
                 if primitive_type:
                     matches.extend(
                         cfn.check_value(
                             properties, prop, path,
                             check_value=self.check_value,
-                            primitive_type=primitive_type
+                            primitive_type=primitive_type,
+                            item_type=item_type
                         )
                     )
 
