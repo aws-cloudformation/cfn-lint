@@ -188,3 +188,17 @@ def construct_getatt(node):
         return [s.value for s in node.value]
     else:
         raise ValueError('Unexpected node type: {}'.format(type(node.value)))
+
+def load(filename):
+    """
+    Load the give YAML file
+    """
+    fp = open(filename)
+    loader = MarkedLoader(fp.read())
+    loader.add_multi_constructor('!', multi_constructor)
+    template = loader.get_single_data()
+    # Convert an empty file to an empty dict
+    if template is None:
+        template = {}
+
+    return template

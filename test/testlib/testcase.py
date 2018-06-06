@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from unittest import TestCase
-from cfnlint.cfn_yaml import MarkedLoader, multi_constructor
+import cfnlint.cfn_yaml
 
 
 class BaseTestCase(TestCase):
@@ -28,7 +28,4 @@ class BaseTestCase(TestCase):
 
     def load_template(self, filename):
         """Return teplate"""
-        fp = open(filename)
-        loader = MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", multi_constructor)
-        return loader.get_single_data()
+        return cfnlint.cfn_yaml.load(filename)
