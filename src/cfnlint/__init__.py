@@ -651,7 +651,7 @@ class Template(object):
         LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = list()
         value = obj.get(key)
-        if not value:
+        if value is None:
             return None
         if isinstance(value, (dict)):
             if len(value) == 1:
