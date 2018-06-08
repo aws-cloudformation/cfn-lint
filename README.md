@@ -23,6 +23,12 @@ From a command prompt run `python setup.py clean --all` then `python setup.py in
 If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
 may need to manually remove the cfn-lint binary.
 
+### Editor Plugins
+There are IDE plugins available to get direct linter feedback from you favorite editor:
+
+* [Atom](https://atom.io/packages/atom-cfn-lint)
+* [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
+
 ## Configuration
 ### Parameters
 
