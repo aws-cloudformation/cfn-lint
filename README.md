@@ -99,6 +99,21 @@ This collection of rules can be extended with custom rules using the `--append-r
 
 More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md)
 
+### Rule Processing Phases
+
+#### Pre Processing
+The pre processing phase happens before the template is modified and multiplied by the processing phase.  Rules in this category get the original template with no modifications.  Errors here will stop further processing as errors here could result in processing failures.
+
+#### Processing
+No rules are run during this phase.  Templates are modified and multiplied to handle currently supported processors.
+- *Conditions* and *Fn::If* are used to create multiple templates for each type of possible scenario of the condition being True or False.
+  - Remove resources that have conditions that are evaluated to *False*
+  - Remove outputs that have conditions that are evaluated to *False*
+- Remove resource properties that are using `Ref: "AWS::NoValue"`
+
+#### Post Processing
+The post processing phase happens after the template is multiplied and modified as part of the processing phase.  Rules here can be called multiple times depending on how the processing phase has changed the template and the number of scenarios to be run.
+Rules benefit for running in this phase as a lot of the CloudFormation complexity may be removed.  This allows rule writers to focus on writing good rules and not have to handle complex situations that can be created from things like *Conditions* and *Fn::If*
 
 ## Customize specifications
 The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).

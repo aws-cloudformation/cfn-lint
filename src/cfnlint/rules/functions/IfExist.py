@@ -26,7 +26,7 @@ class IfExist(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if'
     tags = ['functions', 'if']
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Conditions"""
 
         matches = list()

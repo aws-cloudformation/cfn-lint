@@ -28,7 +28,7 @@ class LimitNumber(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['resources', 'limits']
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Resources"""
 
         matches = list()

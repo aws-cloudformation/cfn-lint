@@ -33,7 +33,7 @@ class TestRunChecks(BaseTestCase):
         results = cfnlint.core.run_checks(
             filename, template, rules, ['us-east-1'])
 
-        assert(results == [])
+        assert results == [], 'Expected 0 failures, got {} on {}'.format(len(results), filename)
 
     def test_bad_template(self):
         """Test bad template"""

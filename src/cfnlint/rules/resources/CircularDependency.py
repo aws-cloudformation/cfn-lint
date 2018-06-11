@@ -85,7 +85,7 @@ class CircularDependency(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Resources"""
 
         matches = list()

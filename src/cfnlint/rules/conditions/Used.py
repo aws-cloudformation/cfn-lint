@@ -27,7 +27,7 @@ class Used(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['conditions']
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Conditions"""
 
         matches = list()

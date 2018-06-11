@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection  # pylint: disable=E0401
+from cfnlint import Template, RulesCollection, Runner  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -31,6 +31,8 @@ class TestCfnJson(BaseTestCase):
             self.rules.extend(
                 RulesCollection.create_from_directory(rulesdir))
 
+        # vpc.json has a lot of errors as they are repeated by the condition
+        # scenarios and this template has a lot of condition scenarios
         self.filenames = {
             "config_rule": {
                 "filename": 'fixtures/templates/quickstart/config-rules.json',
@@ -64,10 +66,10 @@ class TestCfnJson(BaseTestCase):
             filename = values.get('filename')
             failures = values.get('failures')
             template = json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
-            cfn = Template(filename, template, ['us-east-1'])
+            runner = Runner(self.rules, filename, template, ['us-east-1'])
 
             matches = list()
-            matches.extend(self.rules.run(filename, cfn))
+            matches.extend(runner.run())
             assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
 
     def test_fail_run(self):

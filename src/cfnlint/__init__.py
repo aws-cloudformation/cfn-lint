@@ -23,7 +23,9 @@ from datetime import datetime
 import six
 from yaml.parser import ParserError
 import cfnlint.helpers
+import cfnlint.processors
 from cfnlint.transform import Transform
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -51,6 +53,7 @@ class CloudFormationLintRule(object):
     match = None
     match_resource_properties = None
     match_resource_sub_properties = None
+    match_pre_processing = None
 
     # pylint: disable=E0213
     def matching(match_function):
@@ -94,6 +97,15 @@ class CloudFormationLintRule(object):
             return []
 
         return self.match(cfn)  # pylint: disable=E1102
+
+    @matching
+    # pylint: disable=W0613
+    def matchall_pre_processing(self, filename, cfn):
+        """Match the entire file"""
+        if not self.match_pre_processing:
+            return []
+
+        return self.match_pre_processing(cfn)  # pylint: disable=E1102
 
     @matching
     # pylint: disable=W0613
@@ -213,7 +225,7 @@ class RulesCollection(object):
         matches = list()
         for rule in self.rules:
             try:
-                matches.extend(rule.matchall(filename, cfn))
+                matches.extend(rule.matchall_pre_processing(filename, cfn))
             except Exception as err:  # pylint: disable=W0703
                 if self.is_rule_enabled('E0002'):
                     message = 'Unknown exception while processing rule {}: {}'
@@ -222,17 +234,14 @@ class RulesCollection(object):
                         1, 1,
                         filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
 
-        # Go after resource specs for the region in question
+        processors = cfnlint.processors.ProcessorsCollection()
+        processed_templates = processors.run(cfn)
+
         resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
-        for resource_name, resource_attributes in cfn.get_resources().items():
-            resource_type = resource_attributes.get('Type')
-            resource_properties = resource_attributes.get('Properties', {})
-            path = ['Resources', resource_name, 'Properties']
+        for p_cfn in processed_templates:
             for rule in self.rules:
                 try:
-                    matches.extend(
-                        rule.matchall_resource_properties(
-                            filename, cfn, resource_properties, resource_type, path))
+                    matches.extend(rule.matchall(filename, p_cfn))
                 except Exception as err:  # pylint: disable=W0703
                     if self.is_rule_enabled('E0002'):
                         message = 'Unknown exception while processing rule {}: {}'
@@ -240,30 +249,48 @@ class RulesCollection(object):
                             1, 1,
                             1, 1,
                             filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
-            if resource_properties and resource_type in resource_spec:
-                resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
-                for resource_property, resource_property_value in resource_properties.items():
-                    resource_spec_property = resource_spec_properties.get(resource_property, {})
-                    if resource_property not in resource_spec_properties:
-                        continue
-                    if (resource_spec_property.get('Type') == 'List' and
-                            not resource_spec_properties.get('PrimitiveItemType')):
-                        if isinstance(resource_property_value, (list)):
-                            for index, value in enumerate(resource_property_value):
-                                matches.extend(self.resource_property(
-                                    filename, cfn,
-                                    ['Resources', resource_name, 'Properties', resource_property, index],
-                                    value, resource_type, resource_spec_property.get('ItemType')
-                                ))
-                    elif resource_spec_property.get('Type'):
-                        if isinstance(resource_property_value, (dict)):
-                            matches.extend(
-                                self.resource_property(
-                                    filename, cfn,
-                                    ['Resources', resource_name, 'Properties', resource_property],
-                                    resource_property_value,
-                                    resource_type, resource_spec_property.get('Type')
-                                ))
+
+            for resource_name, resource_attributes in p_cfn.get_resources().items():
+                resource_type = resource_attributes.get('Type')
+                resource_properties = resource_attributes.get('Properties', {})
+                path = ['Resources', resource_name, 'Properties']
+                # send all processed templates into the standard match
+                for rule in self.rules:
+                    try:
+                        matches.extend(
+                            rule.matchall_resource_properties(
+                                filename, p_cfn, resource_properties, resource_type, path))
+                    except Exception as err:  # pylint: disable=W0703
+                        if self.is_rule_enabled('E0002'):
+                            message = 'Unknown exception while processing rule {}: {}'
+                            matches.append(cfnlint.Match(
+                                1, 1,
+                                1, 1,
+                                filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
+                if resource_properties and resource_type in resource_spec:
+                    resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
+                    for resource_property, resource_property_value in resource_properties.items():
+                        resource_spec_property = resource_spec_properties.get(resource_property, {})
+                        if resource_property not in resource_spec_properties:
+                            continue
+                        if (resource_spec_property.get('Type') == 'List' and
+                                not resource_spec_properties.get('PrimitiveItemType')):
+                            if isinstance(resource_property_value, (list)):
+                                for index, value in enumerate(resource_property_value):
+                                    matches.extend(self.resource_property(
+                                        filename, p_cfn,
+                                        ['Resources', resource_name, 'Properties', resource_property, index],
+                                        value, resource_type, resource_spec_property.get('ItemType')
+                                    ))
+                        elif resource_spec_property.get('Type'):
+                            if isinstance(resource_property_value, (dict)):
+                                matches.extend(
+                                    self.resource_property(
+                                        filename, p_cfn,
+                                        ['Resources', resource_name, 'Properties', resource_property],
+                                        resource_property_value,
+                                        resource_type, resource_spec_property.get('Type')
+                                    ))
 
         return matches
 
@@ -717,7 +744,8 @@ class Template(object):
         if len(path) > 1:
             try:
                 result = self.get_location_yaml(text[path[0]], path[1:])
-            except KeyError as err:
+            except KeyError:
+                # catches bad paths and just raises the error to a higher level
                 pass
             if not result:
                 try:
@@ -881,6 +909,7 @@ class ParseError(cfnlint.CloudFormationLintRule):
     description = 'Checks for Null values and Duplicate values in resources'
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base']
+
 
 class TransformError(cfnlint.CloudFormationLintRule):
     """Transform Lint Rule"""

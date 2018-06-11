@@ -44,7 +44,7 @@ class RefExist(CloudFormationLintRule):
         regex = re.compile(r'\${([a-zA-Z0-9]*)}')
         return regex.findall(string)
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Parameters"""
 
         matches = list()

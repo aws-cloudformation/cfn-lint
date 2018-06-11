@@ -43,7 +43,7 @@ class Used(CloudFormationLintRule):
 
         return False
 
-    def match(self, cfn):
+    def match_pre_processing(self, cfn):
         """Check CloudFormation Parameters"""
 
         matches = list()

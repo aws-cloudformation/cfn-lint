@@ -93,9 +93,14 @@ class Required(CloudFormationLintRule):
             for prop in resourcespec:
                 if resourcespec[prop]['Required']:
                     if prop not in value:
-                        message = 'Property {0} missing at {1}'
-                        matches.append(RuleMatch(path, message.format(prop, '/'.join(map(str, path)))))
-
+                        message = 'Property {0} for type {1} at {2}'
+                        matches.append(
+                            RuleMatch(
+                                path,
+                                message.format(
+                                    prop,
+                                    resourcetype,
+                                    '/'.join(map(str, path)))))
             # For all specified properties, check all nested properties
             for prop in value:
                 proptree = path[:]

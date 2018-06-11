@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
+import copy
 import six
 from yaml.composer import Composer
 from yaml.reader import Reader
