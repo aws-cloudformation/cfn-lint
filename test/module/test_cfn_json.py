@@ -63,7 +63,7 @@ class TestCfnJson(BaseTestCase):
             cfn = Template(template, ['us-east-1'])
 
             matches = list()
-            matches.extend(self.rules.run(filename, cfn, []))
+            matches.extend(self.rules.run(filename, cfn))
             assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
 
     def test_fail_run(self):

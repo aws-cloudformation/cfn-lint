@@ -182,12 +182,19 @@ class TransformsCollection(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self):
+    def __init__(self, ignore_rules=None):
         self.rules = []
+
+        # Make Ignore Rules not required
+        if ignore_rules:
+            self.ignore_rules = ignore_rules
+        else:
+            self.ignore_rules = []
 
     def register(self, obj):
         """Register rules"""
-        self.rules.append(obj)
+        if self.is_rule_enabled(obj):
+            self.rules.append(obj)
 
     def __iter__(self):
         return iter(self.rules)
@@ -197,30 +204,33 @@ class RulesCollection(object):
 
     def extend(self, more):
         """Extend rules"""
-        self.rules.extend(more)
+        for rule in more:
+            if self.is_rule_enabled(rule):
+                self.rules.append(rule)
 
     def __repr__(self):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
-    def resource_property(self, filename, cfn, ignore_checks, path, properties, resource_type, property_type):
+    def is_rule_enabled(self, rule):
+        """ Cheks if an individual rule is valid """
+        # Allowing ignoring of rules based on prefix to ignore checks
+        for ignore_rule in self.ignore_rules:
+            if rule.id.startswith(ignore_rule) and ignore_rule:
+                return False
+
+        return True
+
+    def resource_property(self, filename, cfn, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
         matches = list()
         property_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
         property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                ignore = False
-                # Allowing ignoring of rules based on prefix to ignore checks
-                for ignore_check in ignore_checks:
-                    if rule.id.startswith(ignore_check) and ignore_check:
-                        ignore = True
-                if rule.id not in ignore_checks and not ignore:
-                    rule_definition = set(rule.tags)
-                    rule_definition.add(rule.id)
-                    matches.extend(
-                        rule.matchall_resource_sub_properties(
-                            filename, cfn, properties, property_spec_name, path))
+                matches.extend(
+                    rule.matchall_resource_sub_properties(
+                        filename, cfn, properties, property_spec_name, path))
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
             for resource_property, resource_property_value in properties.items():
@@ -233,14 +243,14 @@ class RulesCollection(object):
                     if isinstance(resource_property_value, (list)):
                         for index, value in enumerate(resource_property_value):
                             matches.extend(self.resource_property(
-                                filename, cfn, ignore_checks,
+                                filename, cfn,
                                 property_path[:] + [index],
                                 value, resource_type, resource_spec_property.get('ItemType')
                             ))
                 elif resource_spec_property.get('Type'):
                     if isinstance(resource_property_value, (dict)):
                         matches.extend(self.resource_property(
-                            filename, cfn, ignore_checks,
+                            filename, cfn,
                             property_path,
                             resource_property_value,
                             resource_type, resource_spec_property.get('Type')
@@ -248,20 +258,11 @@ class RulesCollection(object):
 
         return matches
 
-    def run(self, filename, cfn, ignore_checks):
+    def run(self, filename, cfn):
         """Run rules"""
         matches = list()
-
         for rule in self.rules:
-            ignore = False
-            # Allowing ignoring of rules based on prefix to ignore checks
-            for ignore_check in ignore_checks:
-                if rule.id.startswith(ignore_check) and ignore_check:
-                    ignore = True
-            if rule.id not in ignore_checks and not ignore:
-                rule_definition = set(rule.tags)
-                rule_definition.add(rule.id)
-                matches.extend(rule.matchall(filename, cfn))
+            matches.extend(rule.matchall(filename, cfn))
 
         # Go after resource specs for the region in question
         resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
@@ -270,12 +271,9 @@ class RulesCollection(object):
             resource_properties = resource_attributes.get('Properties', {})
             path = ['Resources', resource_name, 'Properties']
             for rule in self.rules:
-                if rule.id not in ignore_checks:
-                    rule_definition = set(rule.tags)
-                    rule_definition.add(rule.id)
-                    matches.extend(
-                        rule.matchall_resource_properties(
-                            filename, cfn, resource_properties, resource_type, path))
+                matches.extend(
+                    rule.matchall_resource_properties(
+                        filename, cfn, resource_properties, resource_type, path))
             if resource_properties and resource_type in resource_spec:
                 resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
                 for resource_property, resource_property_value in resource_properties.items():
@@ -287,7 +285,7 @@ class RulesCollection(object):
                         if isinstance(resource_property_value, (list)):
                             for index, value in enumerate(resource_property_value):
                                 matches.extend(self.resource_property(
-                                    filename, cfn, ignore_checks,
+                                    filename, cfn,
                                     ['Resources', resource_name, 'Properties', resource_property, index],
                                     value, resource_type, resource_spec_property.get('ItemType')
                                 ))
@@ -295,7 +293,7 @@ class RulesCollection(object):
                         if isinstance(resource_property_value, (dict)):
                             matches.extend(
                                 self.resource_property(
-                                    filename, cfn, ignore_checks,
+                                    filename, cfn,
                                     ['Resources', resource_name, 'Properties', resource_property],
                                     resource_property_value,
                                     resource_type, resource_spec_property.get('Type')
@@ -306,9 +304,10 @@ class RulesCollection(object):
     @classmethod
     def create_from_directory(cls, rulesdir):
         """Create rules from directory"""
-        result = cls()
+        result = cls([])
         if rulesdir != '':
             result.rules = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
+
         return result
 
 
@@ -823,11 +822,10 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, transforms, filename, template, ignore_checks, regions, verbosity=0):
+            self, rules, transforms, filename, template, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
-        self.ignore_checks = ignore_checks
         self.verbosity = verbosity
         self.transforms = transforms
         self.cfn = Template(template, regions)
@@ -849,7 +847,7 @@ class Runner(object):
         if self.cfn.template is not None:
             matches.extend(
                 self.rules.run(
-                    self.filename, self.cfn, self.ignore_checks))
+                    self.filename, self.cfn))
 
         # uniq the list of incidents
         return_matches = list()

@@ -44,7 +44,7 @@ class ArgumentParser(argparse.ArgumentParser):
         self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
 
-def run_cli(filename, template, rules, fmt, ignore_checks, regions, override_spec, formatter):
+def run_cli(filename, template, rules, fmt, regions, override_spec, formatter):
     """Process args and run"""
 
     if override_spec:
@@ -52,8 +52,7 @@ def run_cli(filename, template, rules, fmt, ignore_checks, regions, override_spe
 
     transforms = get_transforms()
     matches = run_checks(
-        filename, template, rules, transforms, ignore_checks,
-        regions)
+        filename, template, rules, transforms, regions)
 
     print_matches(matches, fmt, formatter)
 
@@ -125,9 +124,9 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir):
+def get_rules(rulesdir, ignore_rules):
     """Get rules"""
-    rules = RulesCollection()
+    rules = RulesCollection(ignore_rules)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
     for rules_dir in rules_dirs:
         rules.extend(
@@ -255,7 +254,7 @@ def get_template_args_rules(cli_args):
         cfnlint.helpers.update_resource_specs()
         exit(0)
 
-    rules = cfnlint.core.get_rules(vars(args)['append_rules'])
+    rules = cfnlint.core.get_rules(vars(args)['append_rules'], vars(args)['ignore_checks'])
 
     if vars(args)['listrules']:
         print(rules)
@@ -298,7 +297,7 @@ def get_default_args(template):
     return defaults
 
 
-def run_checks(filename, template, rules, transforms, ignore_checks, regions):
+def run_checks(filename, template, rules, transforms, regions):
     """Run Checks against the template"""
     if regions:
 
@@ -310,8 +309,7 @@ def run_checks(filename, template, rules, transforms, ignore_checks, regions):
     matches = list()
 
     runner = cfnlint.Runner(
-        rules, transforms, filename, template,
-        ignore_checks, regions)
+        rules, transforms, filename, template, regions)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:

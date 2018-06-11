@@ -29,7 +29,7 @@ def main():
     return(
         cfnlint.core.run_cli(
             vars(args)['template'], template, rules, fmt,
-            vars(args)['ignore_checks'], vars(args)['regions'],
+            vars(args)['regions'],
             vars(args)['override_spec'], formatter))
 
 
