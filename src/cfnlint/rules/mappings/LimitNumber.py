@@ -35,7 +35,7 @@ class LimitNumber(CloudFormationLintRule):
         # Check number of mappings against the defined limit
         mappings = cfn.template.get('Mappings', {})
         if len(mappings) > LIMITS['mappings']['number']:
-            message = 'Maximum number of mappings ({0}) exceeded'
-            matches.append(RuleMatch(['Mappings'], message.format(LIMITS['mappings']['number'])))
+            message = 'The number of mappings ({0}) exceeds the limit ({1})'
+            matches.append(RuleMatch(['Mappings'], message.format(len(mappings), LIMITS['mappings']['number'])))
 
         return matches
