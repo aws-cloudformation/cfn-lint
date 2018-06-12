@@ -76,6 +76,13 @@ def create_node_class(cls):
                 return cls.__new__(self, x.encode('ascii', 'ignore'))
 
             return cls.__new__(self, x)
+
+        def __deepcopy__(self, memo):
+            return self
+
+        def __copy__(self):
+            return self
+
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
 

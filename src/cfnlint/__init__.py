@@ -21,8 +21,7 @@ import re
 from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
-import cfnlint.transforms
-
+from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)
 
@@ -114,69 +113,6 @@ class CloudFormationLintRule(object):
             return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
         return []
-
-
-class CloudFormationTransform(object):
-    """CloudFormation Transform Support"""
-    type = ''
-
-    resource_transform = None
-
-    def resource_transform_all(self, template):
-        """Generic transform"""
-        if not self.resource_transform:
-            return []
-
-        return self.resource_transform(template)  # pylint: disable=E1102
-
-
-class TransformsCollection(object):
-    """Collection of transforms"""
-
-    def __init__(self):
-        self.transforms = []
-
-    def register(self, obj):
-        """Register transforms"""
-        self.transforms.append(obj)
-
-    def __iter__(self):
-        return iter(self.transforms)
-
-    def __len__(self):
-        return len(self.transforms)
-
-    def extend(self, more):
-        """Extend rules"""
-        self.transforms.extend(more)
-
-    def run(self, filename, cfn, transform_type):
-        """Run the transforms"""
-        matches = list()
-        for transform in self.transforms:
-            if transform_type == transform.type:
-                try:
-                    transform.resource_transform_all(cfn)
-                except cfnlint.transforms.TransformError as err:
-                    rule = CloudFormationLintRule()
-                    rule.id = 'E0001'
-                    rule.shortdesc = 'Transform Error'
-                    rule.description = 'Transform failed to complete'
-                    matches.append(Match(
-                        err.location[0] + 1, err.location[1] + 1,
-                        err.location[2] + 1, err.location[3] + 1,
-                        filename, rule, 'While Performing a Transform got error: %s' % err.value))
-
-        return matches
-
-    @classmethod
-    def create_from_directory(cls, transformdir):
-        """Create transforms from directory"""
-        result = cls()
-        if transformdir != '':
-            result.transforms = cfnlint.helpers.load_plugins(os.path.expanduser(transformdir))
-
-        return result
 
 
 class RulesCollection(object):
@@ -822,21 +758,25 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, transforms, filename, template, regions, verbosity=0):
+            self, rules, filename, template, regions, verbosity=0):
 
         self.rules = rules
         self.filename = filename
         self.verbosity = verbosity
-        self.transforms = transforms
         self.cfn = Template(template, regions)
 
     def transform(self):
         """Transform logic"""
-        LOGGER.debug('Transform templates if needed')
+        LOGGER.debug('Transform templates if needed using SAM')
+
+        matches = []
         transform_type = self.cfn.template.get('Transform')
-        matches = list()
-        if transform_type:
-            matches = self.transforms.run(self.filename, self.cfn, transform_type)
+
+        # Don't call transformation if Transform is not specified to prevent
+        # useless execution of the transformation
+        if transform_type == 'AWS::Serverless-2016-10-31':
+            transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
+            matches = transform.transform_template()
 
         return matches
 
@@ -873,4 +813,11 @@ class ParseError(cfnlint.CloudFormationLintRule):
     id = 'E0000'
     shortdesc = 'Parsing error found when parsing the template'
     description = 'Checks for Null values and Duplicate values in resources'
+    tags = ['base']
+
+class TransformError(cfnlint.CloudFormationLintRule):
+    """Transform Lint Rule"""
+    id = 'E0001'
+    shortdesc = 'Error found when transforming the template'
+    description = 'Errors found when transforming the template using the Serverless Application Model'
     tags = ['base']

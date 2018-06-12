@@ -31,7 +31,7 @@ class TestRunChecks(BaseTestCase):
             '--template', filename])
 
         results = cfnlint.core.run_checks(
-            vars(args)['template'], template, rules, {}, ['us-east-1'])
+            vars(args)['template'], template, rules, ['us-east-1'])
 
         assert(results == [])
 
@@ -43,7 +43,7 @@ class TestRunChecks(BaseTestCase):
             '--template', filename])
 
         results = cfnlint.core.run_checks(
-            vars(args)['template'], template, rules, {}, ['us-east-1'])
+            vars(args)['template'], template, rules, ['us-east-1'])
 
         assert(results[0].rule.id == 'W2506')
         assert(results[1].rule.id == 'W2001')

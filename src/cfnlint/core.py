@@ -25,7 +25,7 @@ except ImportError:
 import argparse
 import six
 from yaml.parser import ParserError, ScannerError
-from cfnlint import RulesCollection, TransformsCollection, Match
+from cfnlint import RulesCollection, Match
 import cfnlint.formatters as formatters
 import cfnlint.cfn_yaml
 import cfnlint.cfn_json
@@ -34,7 +34,6 @@ from cfnlint.helpers import REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
-DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(__file__), 'transforms')
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -50,9 +49,7 @@ def run_cli(filename, template, rules, fmt, regions, override_spec, formatter):
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
-    transforms = get_transforms()
-    matches = run_checks(
-        filename, template, rules, transforms, regions)
+    matches = run_checks(filename, template, rules, regions)
 
     print_matches(matches, fmt, formatter)
 
@@ -73,13 +70,21 @@ def get_exit_code(matches):
 
 def configure_logging(log_level):
     """Setup Logging"""
+
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
+
+    # Update our application logger as well as the root logger to prevent
+    # 3rd party Python code to ignore "our" logging configuration:
+    # https://github.com/awslabs/serverless-application-model/pull/466
     if log_level == 'info':
+        logging.getLogger().setLevel(logging.INFO)
         LOGGER.setLevel(logging.INFO)
     elif log_level == 'debug':
+        logging.getLogger().setLevel(logging.DEBUG)
         LOGGER.setLevel(logging.DEBUG)
     else:
+        logging.getLogger().setLevel(logging.ERROR)
         LOGGER.setLevel(logging.ERROR)
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
@@ -133,17 +138,6 @@ def get_rules(rulesdir, ignore_rules):
             RulesCollection.create_from_directory(rules_dir))
 
     return rules
-
-
-def get_transforms():
-    """Get Transforms"""
-    transforms = TransformsCollection()
-    transformdirs = [DEFAULT_TRANSFORMSDIR]
-    for transformdir in transformdirs:
-        transforms.extend(
-            TransformsCollection.create_from_directory(transformdir))
-
-    return transforms
 
 
 def append_parser(parser, defaults):
@@ -297,7 +291,7 @@ def get_default_args(template):
     return defaults
 
 
-def run_checks(filename, template, rules, transforms, regions):
+def run_checks(filename, template, rules, regions):
     """Run Checks against the template"""
     if regions:
 
@@ -308,8 +302,7 @@ def run_checks(filename, template, rules, transforms, regions):
 
     matches = list()
 
-    runner = cfnlint.Runner(
-        rules, transforms, filename, template, regions)
+    runner = cfnlint.Runner(rules, filename, template, regions)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:

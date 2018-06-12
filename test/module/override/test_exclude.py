@@ -41,7 +41,7 @@ class TestExclude(BaseTestCase):
 
         cfnlint.helpers.set_specs(custom_spec)
 
-        good_runner = Runner(self.collection, [], filename, template, ['us-east-1'], [])
+        good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         self.assertEqual([], good_runner.run())
 
     def test_fail_run(self):
@@ -52,6 +52,6 @@ class TestExclude(BaseTestCase):
         custom_spec = json.load(open('templates/override_spec/exclude.json'))
         cfnlint.helpers.set_specs(custom_spec)
 
-        bad_runner = Runner(self.collection, [], filename, template, ['us-east-1'], [])
+        bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         errs = bad_runner.run()
         self.assertEqual(2, len(errs))

@@ -12,6 +12,12 @@ conditions, and nesting those functions inside each other) so its a best effort 
 validate those values but the promise is to not fail if we can't understand or translate
 all the things that could be going on.
 
+#### Serverless Application Model
+The Serverless Application Model (SAM) is supported by the linter. The template is
+transformed using AWS SAM (https://github.com/awslabs/serverless-application-model)
+before the linter processes the template.
+
+
 ## Install
 ### Command line
 From a command prompt run `python setup.py clean --all` then `python setup.py install`
