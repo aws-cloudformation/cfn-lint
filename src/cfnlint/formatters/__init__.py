@@ -46,7 +46,7 @@ class ParseableFormatter(object):
     """Parseable Formmatter"""
     def format(self, match):
         """Format output"""
-        formatstr = u'{0}:{1}:{2}:{3}:{4}: [{5}] {6}'
+        formatstr = u'{0}:{1}:{2}:{3}:{4}:{5}:{6}'
         return formatstr.format(
             match.filename,
             match.linenumber,
