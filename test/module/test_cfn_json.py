@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint import Template, RulesCollection  # pylint: disable=E0401
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -33,7 +34,7 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": 'templates/quickstart/config-rules.json',
-                "failures": 0
+                "failures": 2
             },
             "iam": {
                 "filename": 'templates/quickstart/iam.json',
@@ -45,11 +46,11 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc_management": {
                 "filename": 'templates/quickstart/vpc-management.json',
-                "failures": 16
+                "failures": 32
             },
             "vpc": {
                 "filename": 'templates/quickstart/vpc.json',
-                "failures": 1
+                "failures": 41
             }
         }
 
@@ -63,7 +64,7 @@ class TestCfnJson(BaseTestCase):
 
             matches = list()
             matches.extend(self.rules.run(filename, cfn, []))
-            assert len(matches) == failures, 'Expected {} failures, got {}'.format(failures, len(matches))
+            assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
 
     def test_fail_run(self):
         """Test failure run"""

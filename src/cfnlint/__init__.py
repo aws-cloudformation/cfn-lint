@@ -17,17 +17,14 @@
 import logging
 import sys
 import os
+import re
 from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
-import cfnlint.parser
 import cfnlint.transforms
 
 
 LOGGER = logging.getLogger(__name__)
-
-DEFAULT_RULESDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'rules')
-DEFAULT_TRANSFORMSDIR = os.path.join(os.path.dirname(cfnlint.helpers.__file__), 'transforms')
 
 
 class CloudFormationLintRule(object):
@@ -625,8 +622,7 @@ class Template(object):
                                 matches.extend(results)
                         elif sub_key == 'Ref':
                             if sub_value != 'AWS::NoValue':
-                                result['Value'] = sub_value
-                                result['Path'] += ['Ref']
+                                result['Value'] = item
                                 matches.append(result)
                         else:
                             # Return entire Item
@@ -655,33 +651,49 @@ class Template(object):
         LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = list()
         value = obj.get(key)
-        if not value:
+        if value is None:
             return None
         if isinstance(value, (dict)):
             if len(value) == 1:
+                is_condition = False
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                        is_condition = True
                         results = self.get_condition_values(obj_value, path[:] + [obj_key])
                         if isinstance(results, list):
                             matches.extend(results)
-                    else:
-                        result = {}
-                        result['Path'] = path[:] + [obj_key]
-                        result['Value'] = obj_value
-                        matches.append(result)
+
+                if not is_condition:
+                    result = {}
+                    result['Path'] = path[:]
+                    result['Value'] = value
+                    matches.append(result)
+            else:
+                result = {}
+                result['Path'] = path[:]
+                result['Value'] = value
+                matches.append(result)
         elif isinstance(value, (list)):
             for list_index, list_value in enumerate(value):
                 if isinstance(list_value, dict):
-                    for obj_key, obj_value in list_value.items():
-                        if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
-                            results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
-                            if isinstance(results, list):
-                                matches.extend(results)
-                        else:
+                    if len(list_value) == 1:
+                        is_condition = False
+                        for obj_key, obj_value in list_value.items():
+                            if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                                is_condition = True
+                                results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
+                                if isinstance(results, list):
+                                    matches.extend(results)
+                        if not is_condition:
                             result = {}
-                            result['Path'] = path[:] + [list_index, obj_key]
-                            result['Value'] = obj_value
+                            result['Path'] = path[:] + [list_index]
+                            result['Value'] = list_value
                             matches.append(result)
+                    else:
+                        result = {}
+                        result['Path'] = path[:] + [list_index]
+                        result['Value'] = list_value
+                        matches.append(result)
                 else:
                     result = {}
                     result['Path'] = path[:] + [list_index]
@@ -726,7 +738,7 @@ class Template(object):
 
     def check_resource_property(self, resource_type, resource_property,
                                 check_value=None, check_ref=None,
-                                check_mapping=None, check_split=None,
+                                check_find_in_map=None, check_split=None,
                                 check_join=None, **kwargs):
         """ Check Resource Properties """
         LOGGER.debug('Check property %s for %s', resource_property, resource_type)
@@ -740,15 +752,17 @@ class Template(object):
                         obj=properties, key=resource_property,
                         path=['Resources', resource_name, 'Properties'],
                         check_value=check_value, check_ref=check_ref,
-                        check_mapping=check_mapping, check_split=check_split,
+                        check_find_in_map=check_find_in_map, check_split=check_split,
                         check_join=check_join, **kwargs
                     )
                 )
         return matches
 
+    # pylint: disable=W0613
     def check_value(self, obj, key, path,
                     check_value=None, check_ref=None,
-                    check_mapping=None, check_split=None, check_join=None,
+                    check_find_in_map=None, check_split=None, check_join=None,
+                    check_import_value=None,
                     **kwargs):
         """
             Check the value
@@ -762,39 +776,45 @@ class Template(object):
         for value_obj in values_obj:
             value = value_obj['Value']
             child_path = value_obj['Path']
-            if not child_path:
+            if not isinstance(value, dict):
                 if check_value:
                     matches.extend(
                         check_value(
                             value=value, path=new_path[:] + child_path, **kwargs))
-            elif child_path[-1] == 'Ref':
-                if check_ref:
-                    matches.extend(
-                        check_ref(
-                            value=value, path=new_path[:] + child_path,
-                            parameters=self.get_parameters(),
-                            resources=self.get_resources(),
-                            **kwargs))
-            elif child_path[-1] == 'Fn::FindInMap':
-                if check_mapping:
-                    matches.extend(
-                        check_mapping(
-                            value=value, path=new_path[:] + child_path, **kwargs))
-            elif child_path[-1] == 'Fn::Join':
-                if check_join:
-                    matches.extend(
-                        check_join(
-                            value=value, path=new_path[:] + child_path, **kwargs))
-            elif child_path[-1] == 'Fn::Split':
-                if check_split:
-                    matches.extend(
-                        check_split(
-                            value=value, path=new_path[:] + child_path, **kwargs))
-            elif isinstance(child_path[-1], int):
-                if check_value:
-                    matches.extend(
-                        check_value(
-                            value=value, path=new_path[:] + child_path, **kwargs))
+            else:
+                if len(value) == 1:
+                    for dict_name, _ in value.items():
+                        # If this is a function we shouldn't fall back to a check_value check
+                        if dict_name in cfnlint.helpers.FUNCTIONS:
+                            # convert the function name from camel case to underscore
+                            # Example: Fn::FindInMap becomes check_find_in_map
+                            function_name = 'check_%s' % camel_to_snake(dict_name.replace('Fn::', ''))
+                            if function_name == 'check_ref':
+                                if check_ref:
+                                    matches.extend(
+                                        check_ref(
+                                            value=value.get('Ref'), path=new_path[:] + child_path + ['Ref'],
+                                            parameters=self.get_parameters(),
+                                            resources=self.get_resources(),
+                                            **kwargs))
+                            else:
+                                if locals().get(function_name):
+                                    matches.extend(
+                                        locals()[function_name](
+                                            value=value.get(dict_name),
+                                            path=new_path[:] + child_path + [dict_name],
+                                            **kwargs)
+                                    )
+                        else:
+                            if check_value:
+                                matches.extend(
+                                    check_value(
+                                        value=value, path=new_path[:] + child_path, **kwargs))
+                else:
+                    if check_value:
+                        matches.extend(
+                            check_value(
+                                value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
 
@@ -837,3 +857,22 @@ class Runner(object):
             if not any(match == u for u in return_matches):
                 return_matches.append(match)
         return return_matches
+
+
+def camel_to_snake(s):
+    """
+    Is it ironic that this function is written in camel case, yet it
+    converts to snake case? hmm..
+    """
+    _underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
+    _underscorer2 = re.compile('([a-z0-9])([A-Z])')
+    subbed = _underscorer1.sub(r'\1_\2', s)
+    return _underscorer2.sub(r'\1_\2', subbed).lower()
+
+
+class ParseError(cfnlint.CloudFormationLintRule):
+    """Parse Lint Rule"""
+    id = 'E0000'
+    shortdesc = 'Parsing error found when parsing the template'
+    description = 'Checks for Null values and Duplicate values in resources'
+    tags = ['base']

@@ -15,8 +15,9 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection, DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.parser  # pylint: disable=E0401
+from cfnlint import Template, RulesCollection
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+import cfnlint.cfn_yaml  # pylint: disable=E0401
 import cfnlint.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -37,11 +38,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'templates/good/generic.yaml'
 
         try:
-            fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
-            loader.get_single_data()
-        except cfnlint.parser.DuplicateError:
+            cfnlint.cfn_yaml.load(filename)
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -69,11 +67,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'templates/bad/duplicate.yaml'
 
         try:
-            fp = open(filename)
-            loader = cfnlint.parser.MarkedLoader(fp.read())
-            loader.add_multi_constructor('!', cfnlint.parser.multi_constructor)
-            loader.get_single_data()
-        except cfnlint.parser.DuplicateError:
+            cfnlint.cfn_yaml.load(filename)
+        except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return
 

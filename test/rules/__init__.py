@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection, TransformsCollection, DEFAULT_TRANSFORMSDIR
+from cfnlint import Runner, RulesCollection, TransformsCollection
+from cfnlint.core import DEFAULT_TRANSFORMSDIR
 from testlib.testcase import BaseTestCase
 
 
@@ -41,6 +42,7 @@ class BaseRuleTestCase(BaseTestCase):
         'templates/good/functions_cidr.yaml',
         'templates/good/functions_findinmap.yaml',
         'templates/good/resources_lambda.yaml',
+        'templates/good/resources_codepipeline.yaml',
         'templates/good/transform_serverless_api.yaml',
         'templates/good/transform_serverless_function.yaml',
         'templates/good/transform_serverless_globals.yaml',
@@ -59,7 +61,8 @@ class BaseRuleTestCase(BaseTestCase):
             template = self.load_template(filename)
             good_runner = Runner(self.collection, self.transforms, filename, template, [], ['us-east-1'], [])
             good_runner.transform()
-            self.assertEqual([], good_runner.run())
+            failures = good_runner.run()
+            assert [] == failures, 'Got failures {} on {}'.format(failures, filename)
 
     def helper_file_positive_template(self, filename):
         """Success test with template parameter"""

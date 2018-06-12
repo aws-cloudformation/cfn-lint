@@ -1,0 +1,161 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: MyApp RDS instances
+
+Parameters:
+    pApplicationName:
+        Type: String
+        Description: Application name (typically MyApp).
+        Default: MyApp
+    pMultiAZ:
+        Type: String
+        Description: Set to true to create instances in both AZs, false for one.
+        AllowedValues:
+            - true
+            - false
+    pEnhancedMonitoring:
+        Type: String
+        Description: Set to true to enable RDS enhanced monitoring, false to disable.
+        AllowedValues:
+            - true
+            - false
+    pDBAllocatedStorage:
+        Type: String
+        Description: The amount of disk storage allocated to the database server.
+    pDBParameterGroupFamily:
+        Type: String
+        Description: The RDS parameter group family.
+    pDBInstanceClass:
+        Type: String
+        Description: The RDS instance class.
+    pDBEngine:
+        Type: String
+        Description: The RDS Engine.
+    pDBEngineVersion:
+        Type: String
+        Description: The RDS Engine version.
+    pDBMasterUsername:
+        Type: String
+        Description: The DB Master Username.
+    pDBServerPort:
+        Type: Number
+        Description: The DB engine port. Valid values are 1150-65535 except for 1434, 3389, 47001, 49152, and 49152 through 49156.
+        Default: 1433
+    pProdMonitoringInterval:
+        Type: Number
+        Description: The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance when running in the Prod stage.
+        Default: 60
+    pDevMonitoringInterval:
+        Type: Number
+        Description: The interval, in seconds, between points when Enhanced Monitoring metrics are collected for the DB instance when running in the Dev stage.
+        Default: 0
+
+Resources:
+
+    rParameterGroup:
+        Type: AWS::RDS::DBParameterGroup
+        Properties:
+            Description: !Join [' ', [!Ref pApplicationName, 'RDS Parameter Group.']]
+            Family: !Ref pDBParameterGroupFamily
+            Tags:
+                - Key: app
+                  Value: !Ref pApplicationName
+                - Key: env
+                  Value:
+                      Fn::ImportValue: !Sub "${pApplicationName}:config:env"
+
+    rDBSubnetGroup:
+        Type: AWS::RDS::DBSubnetGroup
+        Properties:
+            DBSubnetGroupDescription: !Join [' ', [!Ref pApplicationName, 'RDS Subnet Group.']]
+            SubnetIds:
+                - Fn::ImportValue: !Sub "${pApplicationName}:subnet:data:1"
+                - Fn::ImportValue: !Sub "${pApplicationName}:subnet:data:2"
+            Tags:
+                - Key: app
+                  Value: !Ref pApplicationName
+                - Key: env
+                  Value:
+                      Fn::ImportValue: !Sub "${pApplicationName}:config:env"
+
+    rDBPassword:
+        Type: Custom::Secret
+        Properties:
+            Name: !Sub "/passwords/rds/${AWS::StackName}"
+            KeyAlias: alias/aws/ssm
+            Alphabet: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+            Length: 30
+            ReturnSecret: true
+            ServiceToken:
+                Fn::Join: [ ":", [ "arn:aws:lambda", !Ref "AWS::Region", ! "Ref": "AWS::AccountId", "function:binxio-cfn-secret-provider" ] ]
+
+    rDBMonitoringRole:
+        Type: AWS::IAM::Role
+        Condition: EnhancedMonitoring
+        Properties:
+            AssumeRolePolicyDocument:
+                Statement:
+                    - Effect: Allow
+                      Principal:
+                          Service: monitoring.rds.amazonaws.com
+                      Action: sts:AssumeRole
+            Policies:
+                - PolicyName: "MyAppRDSEnhancedMonitoring"
+                  PolicyDocument:
+                    Version: '2012-10-17'
+                    Statement:
+                        - Effect: Allow
+                          Action:
+                              - logs:CreateLogGroup
+                              - logs:PutRetentionPolicy
+                          Resource:
+                              - arn:aws:logs:*:*:log-group:RDS*
+                        - Effect: Allow
+                          Action:
+                              - logs:CreateLogStream
+                              - logs:PutLogEvents
+                              - logs:DescribeLogStreams
+                              - logs:GetLogEvents
+                          Resource:
+                              - arn:aws:logs:*:*:log-group:RDS*:log-stream:*
+
+    rDBServerInstance:
+        Type: AWS::RDS::DBInstance
+        Properties:
+            AllocatedStorage: !Ref pDBAllocatedStorage
+            AllowMajorVersionUpgrade: False
+            AutoMinorVersionUpgrade: True
+            BackupRetentionPeriod: 35
+            CopyTagsToSnapshot: True
+            DBInstanceClass: !Ref pDBInstanceClass
+            DBParameterGroupName: !Ref rParameterGroup
+            DBSubnetGroupName: !Ref rDBSubnetGroup
+            Engine: !Ref pDBEngine
+            EngineVersion: !Ref pDBEngineVersion
+            LicenseModel: license-included
+            MasterUserPassword: !GetAtt [ rDBPassword, "Secret" ]
+            MasterUsername: !Ref pDBMasterUsername
+            # MonitoringInterval: !If [ EnhancedMonitoring, !Ref pProdMonitoringInterval, !Ref pDevMonitoringInterval ]
+            MonitoringRoleArn:
+              Fn::If:
+              - EnhancedMonitoring
+              - !GetAtt [ rDBMonitoringRole, Arn ]
+              - !Ref AWS::NoValue
+            MultiAZ: !If [ MultiAZ, true, false ]
+            Port: !Ref pDBServerPort
+            PubliclyAccessible: False
+            StorageEncrypted: True
+            StorageType: gp2
+            Tags:
+                - Key: app
+                  Value: !Ref pApplicationName
+                - Key: env
+                  Value:
+                      Fn::ImportValue: !Sub "${pApplicationName}:config:env"
+            VPCSecurityGroups:
+                - Fn::ImportValue: !Sub "${pApplicationName}:sg:data"
+
+Conditions:
+    MultiAZ: !Equals [ !Ref pMultiAZ, true ]
+    EnhancedMonitoring: !Equals [ !Ref pEnhancedMonitoring, true ]

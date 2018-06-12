@@ -14,8 +14,9 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import RulesCollection, Template, DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.parser  # pylint: disable=E0401
+from cfnlint import RulesCollection, Template
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+import cfnlint.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -39,10 +40,7 @@ class TestTemplate(BaseTestCase):
     def test_success_run(self):
         """ Test Run Logic"""
         filename = 'templates/good/generic.yaml'
-        fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
-        template = loader.get_single_data()
+        template = cfnlint.cfn_yaml.load(filename)
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
@@ -52,25 +50,19 @@ class TestTemplate(BaseTestCase):
     def test_fail_run(self):
         """Test failure run"""
         filename = 'templates/bad/generic.yaml'
-        fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
-        template = loader.get_single_data()
+        template = cfnlint.cfn_yaml.load(filename)
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn, []))
-        assert(len(matches) == 25)
+        assert len(matches) == 27, 'Expected {} failures, got {}'.format(27, len(matches))
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""
         filename = 'templates/bad/properties_onlyone.yaml'
-        fp = open(filename)
-        loader = cfnlint.parser.MarkedLoader(fp.read())
-        loader.add_multi_constructor("!", cfnlint.parser.multi_constructor)
-        template = loader.get_single_data()
+        template = cfnlint.cfn_yaml.load(filename)
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn, []))
-        assert(len(matches) == 2)
+        assert len(matches) == 3, 'Expected {} failures, got {}'.format(2, len(matches))

@@ -96,21 +96,21 @@ class SecurityGroup(CloudFormationLintRule):
             cfn.check_value(
                 properties, 'SecurityGroupIds', path,
                 check_value=None, check_ref=self.check_sgid_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'SecurityGroups', path,
                 check_value=None, check_ref=self.check_sgid_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'SourceSecurityGroupId', path,
                 check_value=None, check_ref=self.check_sgid_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
 

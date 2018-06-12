@@ -9,6 +9,33 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.2.1
+###### Features
+- Added AllowedValues for Cidr parameter checking Rule W2509
+- Add Rule E2004 to check Allowed values for Cidr parameters are a valid Cidr range
+- Disable mapping Name checks W7001 if dynamic mapping names are used (Ref, FindInMap)
+- New Rule E1026 to make sure Ref's in 'Conditions' are to parameters and not resources
+- Updated CloudFormation specs to June 5th, 2018
+###### Fixes
+- Fixed an issue with Rule E1019 not giving errors when there was a bad pseudo parameter
+- Fixed an issue where conditions with Refs were validated as strings instead of Refs
+- Fix crash errors when an empty yaml file is provided
+- Updated condition functions to return the full object (Ref isn't translated while looking for AWS::NoValue)
+- Support Map Type properties when doing PrimitiveType check E3012
+- Fix an issue when boolean values not being checked when using check_value
+
+### 0.2.0
+###### Features
+- Standard cfn-lint Errors (E0000) for null, duplicate, and parse errors
+- Add a new check for CloudFormation limits
+- Add a new check for Parameter, Resource, Output, and Mapping names
+- Update specs to those released on May 25th, 2018
+- Strong type checking for property values result in Errors (E3012)
+###### Fixes
+- Transform logic updated to not add a Role if one is specified for a serverless function
+- Fixed logic around Fn::If when the result is an object
+- Fix conditions when checking property value structure
+
 ### 0.1.0
 ###### Features
 - Update CloudFormation specs to include recent releases

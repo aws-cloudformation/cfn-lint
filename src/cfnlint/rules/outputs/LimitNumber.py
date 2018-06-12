@@ -35,7 +35,7 @@ class LimitNumber(CloudFormationLintRule):
         # Check number of outputs against the defined limit
         outputs = cfn.template.get('Outputs', {})
         if len(outputs) > LIMITS['outputs']['number']:
-            message = 'Maximum number of outputs ({0}) exceeded'
-            matches.append(RuleMatch(['Outputs'], message.format(LIMITS['outputs']['number'])))
+            message = 'The number of outputs ({0}) exceeds the limit ({1})'
+            matches.append(RuleMatch(['Outputs'], message.format(len(outputs), LIMITS['outputs']['number'])))
 
         return matches

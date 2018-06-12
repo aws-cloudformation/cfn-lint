@@ -103,14 +103,14 @@ class AvailabilityZone(CloudFormationLintRule):
             cfn.check_value(
                 properties, 'AvailabilityZone', path,
                 check_value=None, check_ref=self.check_az_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
             cfn.check_value(
                 properties, 'AvailabilityZones', path,
                 check_value=None, check_ref=self.check_az_ref,
-                check_mapping=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None
             )
         )
 

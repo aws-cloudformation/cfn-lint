@@ -23,6 +23,12 @@ From a command prompt run `python setup.py clean --all` then `python setup.py in
 If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
 may need to manually remove the cfn-lint binary.
 
+### Editor Plugins
+There are IDE plugins available to get direct linter feedback from you favorite editor:
+
+* [Atom](https://atom.io/packages/atom-cfn-lint)
+* [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
+
 ## Configuration
 ### Parameters
 
@@ -35,7 +41,7 @@ may need to manually remove the cfn-lint binary.
 | --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
 | --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
 | --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
-| --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose id do not match these values |
+| --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | --log-level | log_level | {info, debug} | Log Level |
 | --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
@@ -78,6 +84,7 @@ Errors will start with the letter E.  Errors should result in a hard failure of 
 ### Warnings
 Warnings start with the letter W.  Warnings alert you when the template doesn't follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
 
+### Categories
 
 | Rule Numbers    | Category |
 | --------------- | ------------- |
@@ -90,6 +97,9 @@ Warnings start with the letter W.  Warnings alert you when the template doesn't 
 | (E&#124;W)7xxx  | Mappings |
 | (E&#124;W)8xxx  | Conditions |
 | (E&#124;W)9xxx  | Reserved for users rules |
+
+*Warning* <br />
+Rule `E3012` is used to check the types for value of a resource property.  A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error.  cfn-lint didn't build an exception process so all instances of this issue is considered an error.  
 
 ## Customise specifications
 The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).

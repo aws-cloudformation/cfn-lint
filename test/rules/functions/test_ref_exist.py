@@ -31,4 +31,4 @@ class TestRulesRefExist(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/functions_ref.yaml', 5)
+        self.helper_file_negative('templates/bad/functions/ref.yaml', 5)

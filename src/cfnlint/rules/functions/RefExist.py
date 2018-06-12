@@ -18,7 +18,6 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.parser import list_node
 
 
 class RefExist(CloudFormationLintRule):
@@ -66,18 +65,19 @@ class RefExist(CloudFormationLintRule):
         # start with the basic ref calls
         for reftree in reftrees:
             ref = reftree[-1]
-            if ref not in valid_refs:
-                message = 'Ref {0} not found as a resource or parameter'
-                matches.append(RuleMatch(
-                    reftree[:-2], message.format(ref)
-                ))
+            if isinstance(ref, (six.string_types, six.text_type, int)):
+                if ref not in valid_refs:
+                    message = 'Ref {0} not found as a resource or parameter'
+                    matches.append(RuleMatch(
+                        reftree[:-2], message.format(ref)
+                    ))
         for subtree in subtrees:
             sub = subtree[-1]
             parammatches = []
             subparams = []
             if isinstance(sub, (six.text_type, six.string_types)):
                 parammatches = self.searchstring(sub)
-            elif isinstance(subtree[-1], (list, list_node)):
+            elif isinstance(subtree[-1], (list)):
                 if len(sub) == 2:
                     parammatches = self.searchstring(sub[0])
                     for subparam in sub[1]:

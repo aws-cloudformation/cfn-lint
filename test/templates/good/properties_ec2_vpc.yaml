@@ -3,9 +3,20 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   AWS EC2 Good Template
 Parameters:
-  cidrBlock:
+  cidrBlockAllowedPattern:
     Type: String
     AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
+  cidrBlockAllowedValues:
+    Type: String
+    AllowedValues:
+      - '127.0.0.1/32'
+      - '8.8.8.8/32'
+  cidrBlockAllowedPatternValues:
+    Type: String
+    AllowedPattern: '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
+    AllowedValues:
+      - '127.0.0.1/32'
+      - '8.8.8.8/32'
   vpcTenancy:
     Type: String
     AllowedValues:
@@ -15,23 +26,33 @@ Resources:
   myVpc1:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !Ref cidrBlock
+      CidrBlock: !Ref cidrBlockAllowedPattern
       InstanceTenancy: default
   myVpc2:
     Type: AWS::EC2::VPC
     Properties:
       InstanceTenancy: !Ref vpcTenancy
-      CidrBlock: !Ref cidrBlock
+      CidrBlock: !Ref cidrBlockAllowedPattern
+  myVpc3:
+    Type: AWS::EC2::VPC
+    Properties:
+      InstanceTenancy: !Ref vpcTenancy
+      CidrBlock: !Ref cidrBlockAllowedValues
+  myVpc4:
+    Type: AWS::EC2::VPC
+    Properties:
+      InstanceTenancy: !Ref vpcTenancy
+      CidrBlock: !Ref cidrBlockAllowedPatternValues
   mySubnet21:
     Type: AWS::EC2::Subnet
     Properties:
       CidrBlock:
         Fn::Select:
         - 0
-        - !Cidr [!Ref cidrBlock, 3, 16]
+        - !Cidr [!Ref cidrBlockAllowedPattern, 3, 16]
       VpcId: vpc-1234567
   mySubnet22:
     Type: AWS::EC2::Subnet
     Properties:
-      CidrBlock: !Ref cidrBlock
+      CidrBlock: !Ref cidrBlockAllowedPattern
       VpcId: vpc-1234567

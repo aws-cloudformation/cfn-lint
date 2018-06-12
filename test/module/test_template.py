@@ -55,7 +55,7 @@ class TestTemplate(BaseTestCase):
     def test_get_parameters(self):
         """ Test Get Parameters"""
         parameters = self.template.get_parameters()
-        assert len(parameters) == 4
+        assert len(parameters) == 7
 
     def test_get_parameter_names(self):
         """Test Get Parameter Names"""
@@ -65,7 +65,7 @@ class TestTemplate(BaseTestCase):
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
         refs = self.template.get_valid_refs()
-        assert len(refs) == 21
+        assert len(refs) == 24
 
     def test_conditions_return_object_success(self):
         """Test condition object response and nested IFs"""
@@ -126,5 +126,5 @@ class TestTemplate(BaseTestCase):
 
         results = self.template.get_condition_values(template, [])
         self.assertEqual(results, [
-            {'Path': [1, 'Ref'], 'Value': 'Sample'}, {'Path': [2], 'Value': 'String'}
+            {'Path': [1], 'Value': {'Ref': 'Sample'}}, {'Path': [2], 'Value': 'String'}
         ])

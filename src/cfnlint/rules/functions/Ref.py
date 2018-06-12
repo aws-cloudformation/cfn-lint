@@ -31,11 +31,11 @@ class Ref(CloudFormationLintRule):
 
         matches = list()
 
-        ref_objs = cfn.search_deep_keys('Fn::Ref')
+        ref_objs = cfn.search_deep_keys('Ref')
 
         for ref_obj in ref_objs:
             value = ref_obj[-1]
-            if not isinstance(value, six.string_types):
+            if not isinstance(value, (six.string_types, six.text_type)):
                 message = 'Ref can only be a string for {0}'
                 matches.append(RuleMatch(ref_obj[:-1], message.format('/'.join(map(str, ref_obj[:-1])))))
 
