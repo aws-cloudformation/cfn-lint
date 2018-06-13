@@ -60,7 +60,7 @@ class TestCfnJson(BaseTestCase):
             filename = values.get('filename')
             failures = values.get('failures')
             template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-            cfn = Template(template, ['us-east-1'])
+            cfn = Template(filename, template, ['us-east-1'])
 
             matches = list()
             matches.extend(self.rules.run(filename, cfn, []))
