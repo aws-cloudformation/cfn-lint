@@ -40,7 +40,16 @@ class Configuration(CloudFormationLintRule):
             'UpdatePolicy',
             'Properties',
             'Type',
+            'Condition'
+        ]
+
+        valid_custom_attributes = [
+            'Version',
+            'Properties',
+            'DependsOn',
+            'Metadata',
             'Condition',
+            'Type',
         ]
 
         for resource_name, resource_values in cfn.get_resources().items():
@@ -52,13 +61,19 @@ class Configuration(CloudFormationLintRule):
                     message.format(resource_name)
                 ))
                 continue
+            resource_type = resource_values.get('Type')
+            check_attributes = []
+            if resource_type.startswith('Custom::') or resource_type == 'AWS::CloudFormation::CustomResource':
+                check_attributes = valid_custom_attributes
+            else:
+                check_attributes = valid_attributes
+
             for property_key, _ in resource_values.items():
-                if property_key not in valid_attributes:
+                if property_key not in check_attributes:
                     message = 'Invalid resource attribute {0} for resource {1}'
                     matches.append(RuleMatch(
                         ['Resources', resource_name, property_key],
-                        message.format(property_key, resource_name)
-                    ))
+                        message.format(property_key, resource_name)))
 
             resource_type = resource_values.get('Type')
             if not resource_type:

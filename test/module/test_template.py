@@ -44,8 +44,9 @@ class TestTemplate(BaseTestCase):
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
+        valid_resource_count = 10
         resources = self.template.get_resources()
-        assert len(resources) == 9
+        assert len(resources) == valid_resource_count, 'Expected {} resuources, got {}'.format(valid_resource_count, len(resources))
 
     def test_get_resource_names(self):
         """ Test Resource Names"""
@@ -54,8 +55,9 @@ class TestTemplate(BaseTestCase):
 
     def test_get_parameters(self):
         """ Test Get Parameters"""
+        valid_parameter_count = 7
         parameters = self.template.get_parameters()
-        assert len(parameters) == 7
+        assert len(parameters) == valid_parameter_count, 'Expected {} parameters, got {}'.format(valid_parameter_count, len(parameters))
 
     def test_get_parameter_names(self):
         """Test Get Parameter Names"""
@@ -64,8 +66,9 @@ class TestTemplate(BaseTestCase):
 
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
+        valid_ref_count = 25
         refs = self.template.get_valid_refs()
-        assert len(refs) == 24
+        assert len(refs) == valid_ref_count, 'Expected {} refs, got {}'.format(valid_ref_count, len(refs))
 
     def test_conditions_return_object_success(self):
         """Test condition object response and nested IFs"""
