@@ -14,15 +14,14 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
 from cfnlint import Template, RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.cfn_json  # pylint: disable=E0401
+import cfnlint.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
-class TestCfnJson(BaseTestCase):
-    """Test JSON Parsing """
+class TestYamlParse(BaseTestCase):
+    """Test YAML Parsing """
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection()
@@ -33,24 +32,8 @@ class TestCfnJson(BaseTestCase):
 
         self.filenames = {
             "config_rule": {
-                "filename": 'templates/quickstart/config-rules.json',
-                "failures": 2
-            },
-            "iam": {
-                "filename": 'templates/quickstart/iam.json',
+                "filename": 'templates/public/lambda-poller.yaml',
                 "failures": 0
-            },
-            "nat_instance": {
-                "filename": 'templates/quickstart/nat-instance.json',
-                "failures": 2
-            },
-            "vpc_management": {
-                "filename": 'templates/quickstart/vpc-management.json',
-                "failures": 32
-            },
-            "vpc": {
-                "filename": 'templates/quickstart/vpc.json',
-                "failures": 41
             }
         }
 
@@ -59,22 +42,9 @@ class TestCfnJson(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get('filename')
             failures = values.get('failures')
-            template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+            template = cfnlint.cfn_yaml.load(filename)
             cfn = Template(template, ['us-east-1'])
 
             matches = list()
             matches.extend(self.rules.run(filename, cfn))
             assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
-
-    def test_fail_run(self):
-        """Test failure run"""
-
-        filename = 'templates/bad/json_parse.json'
-
-        try:
-            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-        except cfnlint.cfn_json.JSONDecodeError:
-            assert(True)
-            return
-
-        assert(False)

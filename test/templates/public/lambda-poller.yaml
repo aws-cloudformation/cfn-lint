@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Creates a Lambda function that polls the Workable API and finds new
+  applicants, which get sent to Slack
+Parameters:
+  WorkableAccessToken:
+    Type: String
+  SlackMessageRelayTopicArn:
+    Type: String
+  PollingPeriod:
+    Type: Number
+    Default: 5
+    Description: In minutes
+Resources:
+  PollerFunctionIamRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: SnsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "sns:Publish"
+                Resource:
+                  - !Ref SlackMessageRelayTopicArn
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  PollerFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+        ZipFile: |
+          const url = require('url');
+          const https = require('https');
+          const AWS = require('aws-sdk');
+
+          const sns = new AWS.SNS({ apiVersion: '2010-03-31' });
+
+          const API_URL_BASE = 'https://www.workable.com/spi/v3/accounts/prx';
+
+          const SLACK_CHANNEL = '#applicants';
+          const SLACK_ICON = ':workable:';
+          const SLACK_USERNAME = 'Workable';
+
+          const PERIOD = (60 * process.env.POLLING_PERIOD);
+
+          function workableApiData(apiUrl) {
+              return new Promise((resolve, reject) => {
+                  const options = url.parse(apiUrl);
+                  options.headers = {
+                      'Authorization': `Bearer ${process.env.WORKABLE_ACCESS_TOKEN}`,
+                  };
+
+                  https.get(options, (res) => {
+                      let body = '';
+
+                      res.setEncoding('utf8');
+                      res.on('error', e => { reject(e) });
+                      res.on('data', chunk => body += chunk);
+
+                      res.on('end', () => {
+                          try {
+                              const data = JSON.parse(body);
+                              resolve(data);
+                          } catch (e) {
+                              reject(e);
+                          }
+                      });
+                  }).on('error', e => { reject(e) });
+              });
+          }
+
+          async function publishedJobs() {
+              const apiUrl = `${API_URL_BASE}/jobs?state=published`;
+
+              const payload = await workableApiData(apiUrl);
+              return payload.jobs;
+          }
+
+          async function candidatesForJob(job) {
+              const after = Math.round((+ new Date()) / 1000) - PERIOD;
+              const apiUrl = `${API_URL_BASE}/jobs/${job.shortcode}/candidates?created_after=${after}`;
+
+              const payload = await workableApiData(apiUrl);
+              return payload.candidates;
+          }
+
+          function messageForCandidates(candidates) {
+              return {
+                  channel: SLACK_CHANNEL,
+                  username: SLACK_USERNAME,
+                  icon_emoji: SLACK_ICON,
+                  attachments: candidates.map(c => {
+                      return {
+                          title: `${c.job.title} – ${c.firstname} ${c.lastname}`,
+                          title_link: c.profile_url
+                      };
+                  }),
+              };
+          }
+
+          function publishMessage(message) {
+              return new Promise((resolve, reject) => {
+                  const json = JSON.stringify(message);
+
+                  sns.publish({
+                      TopicArn: process.env.SLACK_MESSAGE_RELAY_TOPIC_ARN,
+                      Message: json,
+                  }, (err) => {
+                      console.log(1);
+                      if (err) {
+                          reject(err);
+                      } else {
+                          resolve();
+                      }
+                  });
+              });
+          }
+
+          exports.handler = async (event) => {
+              const jobs = await publishedJobs();
+
+              const candidatesByJob = await Promise.all(jobs.map(j => candidatesForJob(j)));
+              const candidates = [].concat(...candidatesByJob);
+
+              await publishMessage(messageForCandidates(candidates));
+          };
+      Description: >
+        Gets recent job applicants from Workable and sends them to Slack via the
+        Slack relay
+      Environment:
+        Variables:
+          WORKABLE_ACCESS_TOKEN: !Ref WorkableAccessToken
+          SLACK_MESSAGE_RELAY_TOPIC_ARN: !Ref SlackMessageRelayTopicArn
+          POLLING_PERIOD: !Ref PollingPeriod
+      Handler: index.handler
+      MemorySize: 128
+      Role: !GetAtt PollerFunctionIamRole.Arn
+      Runtime: nodejs6.10
+      Tags:
+        - Key: Project
+          Value: Misc
+        - Key: "prx:cloudformation:stack-name"
+          Value: !Ref AWS::StackName
+        - Key: "prx:cloudformation:stack-id"
+          Value: !Ref AWS::StackId
+      Timeout: 10
+  PollerEventRuleIamRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "events.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: LambdaPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource:
+                  - !GetAtt PollerFunction.Arn
+  PollerEventRule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Description: >
+        Invokes the Workable poller function
+      RoleArn: !GetAtt PollerEventRuleIamRole.Arn
+      ScheduleExpression: !Sub "rate(${PollingPeriod} minutes)"
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt PollerFunction.Arn
+          Id: !Sub "${AWS::StackName}.PollerFunction"
+  PollerFunctionEventInvokePermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref PollerFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt PollerEventRule.Arn
