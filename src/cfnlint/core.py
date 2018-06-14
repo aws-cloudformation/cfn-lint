@@ -134,7 +134,10 @@ def create_parser():
         '-u', '--update-specs', help='Update the CloudFormation Specs',
         action='store_true'
     )
-
+    parser.add_argument(
+        '--update-documentation', help=argparse.SUPPRESS,
+        action='store_true'
+    )
     return parser
 
 
