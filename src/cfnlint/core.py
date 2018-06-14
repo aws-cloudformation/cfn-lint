@@ -69,16 +69,15 @@ def get_exit_code(matches):
     return exit_code
 
 
-def configure_logging(log_level):
+def configure_logging(debug_logging):
     """Setup Logging"""
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
-    if log_level == 'info':
-        LOGGER.setLevel(logging.INFO)
-    elif log_level == 'debug':
+
+    if debug_logging:
         LOGGER.setLevel(logging.DEBUG)
     else:
-        LOGGER.setLevel(logging.ERROR)
+        LOGGER.setLevel(logging.INFO)
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
 
@@ -98,7 +97,7 @@ def create_parser():
         action='store_true'
     )
     parser.add_argument(
-        '-d', '--log-level', help='Log Level', choices=['info', 'debug']
+        '-d', '--debug', help='Enable debug logging', action='store_true'
     )
     parser.add_argument(
         '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
@@ -172,7 +171,8 @@ def get_template_args_rules(cli_args):
     parser = create_parser()
 
     args = parser.parse_known_args(cli_args)
-    configure_logging(vars(args[0])['log_level'])
+
+    configure_logging(vars(args[0])['debug'])
 
     fmt = vars(args[0])['format']
     formatter = get_formatter(fmt)
@@ -277,9 +277,6 @@ def get_default_args(template):
             if config_name == 'ignore_bad_template':
                 if isinstance(config_value, bool):
                     defaults['ignore_bad_template'] = config_value
-            if config_name == 'log_level':
-                if isinstance(config_value, (six.string_types, six.text_type)):
-                    defaults['log_level'] = config_value
 
     return defaults
 

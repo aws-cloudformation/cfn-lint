@@ -34,11 +34,11 @@ class TestArgsParser(BaseTestCase):
         parser = cfnlint.core.create_parser()
         args = parser.parse_args([
             '--template', 'test.yaml', '--ignore-bad-template',
-            '--format', 'quiet', '--log-level', 'debug'])
+            '--format', 'quiet', '--debug'])
         self.assertEqual(vars(args)['template'], 'test.yaml')
         self.assertEqual(vars(args)['ignore_bad_template'], True)
         self.assertEqual(vars(args)['format'], 'quiet')
-        self.assertEqual(vars(args)['log_level'], 'debug')
+        self.assertEqual(vars(args)['debug'], True)
 
     def test_override_template_defaults(self):
         """Test second parser"""
