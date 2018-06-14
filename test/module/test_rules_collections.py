@@ -41,7 +41,7 @@ class TestTemplate(BaseTestCase):
         """ Test Run Logic"""
         filename = 'templates/good/generic.yaml'
         template = cfnlint.cfn_yaml.load(filename)
-        cfn = Template(template, ['us-east-1'])
+        cfn = Template(filename, template, ['us-east-1'])
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn))
@@ -51,7 +51,7 @@ class TestTemplate(BaseTestCase):
         """Test failure run"""
         filename = 'templates/bad/generic.yaml'
         template = cfnlint.cfn_yaml.load(filename)
-        cfn = Template(template, ['us-east-1'])
+        cfn = Template(filename, template, ['us-east-1'])
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn))
@@ -61,7 +61,7 @@ class TestTemplate(BaseTestCase):
         """Test failure run"""
         filename = 'templates/bad/properties_onlyone.yaml'
         template = cfnlint.cfn_yaml.load(filename)
-        cfn = Template(template, ['us-east-1'])
+        cfn = Template(filename, template, ['us-east-1'])
 
         matches = list()
         matches.extend(self.rules.run(filename, cfn))

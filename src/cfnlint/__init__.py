@@ -364,7 +364,8 @@ class Template(object):
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
-    def __init__(self, template, regions=['us-east-1']):
+    def __init__(self, filename, template, regions=['us-east-1']):
+        self.filename = filename
         self.template = template
         self.regions = regions
         self.sections = [
@@ -828,7 +829,7 @@ class Runner(object):
         self.filename = filename
         self.verbosity = verbosity
         self.transforms = transforms
-        self.cfn = Template(template, regions)
+        self.cfn = Template(filename, template, regions)
 
     def transform(self):
         """Transform logic"""
