@@ -44,7 +44,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 | --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | --log-level | log_level | {info, debug} | Log Level |
 | --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
-| --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
+| --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. |
 | --version | | | Version of cfn-lint |
 
 ### Command Line
@@ -76,80 +76,20 @@ cfn-lint applies the configuration from the CloudFormation Metadata first and th
 > E3001 Invalid Type AWS::Batch::ComputeEnvironment for resource testBatch in ap-south-1
 
 
-## Rule IDs
+## Rules
+This linter checks the CloudFormation by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
 
-### Errors
-Errors will start with the letter E.  Errors should result in a hard failure of the template being run.
+This collection of rules can be extended with custom rules using the `--apopend-rules` argument.
 
-### Warnings
-Warnings start with the letter W.  Warnings alert you when the template doesn't follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
+More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md)
 
-### Categories
 
-| Rule Numbers    | Category |
-| --------------- | ------------- |
-| (E&#124;W)0XXX  | Basic Template Errors. Examples: Not parseable, main sections (Outputs, Resources, etc.)  |
-| (E&#124;W)1XXX  | Functions (Ref, GetAtt, etc.)  |
-| (E&#124;W)2XXX  | Parameters |
-| (E&#124;W)3XXX  | Resources |
-| (E&#124;W)4XXX  | Metadata |
-| (E&#124;W)6xxx  | Outputs |
-| (E&#124;W)7xxx  | Mappings |
-| (E&#124;W)8xxx  | Conditions |
-| (E&#124;W)9xxx  | Reserved for users rules |
-
-*Warning* <br />
-Rule `E3012` is used to check the types for value of a resource property.  A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error.  cfn-lint didn't build an exception process so all instances of this issue is considered an error.  
-
-## Customise specifications
+## Customize specifications
 The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
 
-The linter provides the possibility to implement these customised specifications using the `--override-spec` parameter. This parameter should pass a (JSON) file in the same format as the [Specification](/src/cfnlint/data) files, this file is then merged into the Regional specification files that are used to process all the linting rules.
+The linter provides the possibility to implement these customzsed specifications using the `--override-spec` argument.
 
-This makes it easy to apply your our rules on top of the CloudFormation rules without having to write your own checks in Python and use the power of the linter itself with a single file!
-
-### Features
-The `--override-spec` functionality currently supports the following features:
-
-#### Whitelist/Blacklist resources
-If you want to block the use of specific resources, you can easily disable them by using the Whitelist/Blacklist features. This can be done by specifying a list of `IncludedResourceTypes` and/or `ExcludedResourceTypes`.
-
-* `IncludedResourceTypes`: List of resources that are supported. If specified, all resources that are not in this list are not allowed.
-* `ExcludedResourceTypes`: List of resources that are not supported. Resources in this list are not allowed.
-
-Wildcards (`*`) are supported in these lists, so `AWS::EC2::*` allows ALL EC2 ResourceTypes. Both lists can work in conjunction with each other.
-
-The following example only allows the usage of all `EC2` resources, except for `AWS::EC2::SpotFleet`:
-```
-{
-  "IncludeResourceTypes": [
-    "AWS::EC2::*"
-  ],
-  "ExcludeResourceTypes": [
-    "AWS::EC2::SpotFleet"
-  ]
-}
-```
-
-#### Alter Resource/Parameter specifications
-The spec file overwrites values from the Regional spec files which give you the possible to alter the specifications for your own needs. A good example is making optional Parameters Required.
-
-For example, to enforce tagging on an S3 bucket, the override file looks like this:
-```
-{
-  "ResourceTypes": {
-    "AWS::S3::Bucket": {
-      "Properties": {
-        "Tags": {
-          "Required": true
-        }
-      }
-    }
-  }
-}
-```
-**WARNING**
-The file is checked for valid JSON syntax, but does not check the contents of the file before merging it into the Specifications. Be careful with your changes because it can possibly corrupt the Specifications and break the linting process.
+More information about how this feature works is documented [here](docs/customize_specifications.md)
 
 ## Credit
 Will Thames and ansible-lint at https://github.com/willthames/ansible-lint
