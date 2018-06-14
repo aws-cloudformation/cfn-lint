@@ -92,16 +92,16 @@ def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
     parser.add_argument(
-        '--template', help='CloudFormation Template')
+        '-t', '--template', help='CloudFormation Template')
     parser.add_argument(
-        '--ignore-bad-template', help='Ignore failures with Bad template',
+        '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
         action='store_true'
     )
     parser.add_argument(
-        '--log-level', help='Log Level', choices=['info', 'debug']
+        '-d', '--log-level', help='Log Level', choices=['info', 'debug']
     )
     parser.add_argument(
-        '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
+        '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
     )
 
     return parser
@@ -136,34 +136,34 @@ def get_rules(rulesdir, ignore_rules):
 def append_parser(parser, defaults):
     """Append arguments to parser"""
     parser.add_argument(
-        '--list-rules', dest='listrules', default=False,
+        '-l', '--list-rules', dest='listrules', default=False,
         action='store_true', help='list all the rules'
     )
     parser.add_argument(
-        '--regions', dest='regions', default=['us-east-1'], nargs='*',
+        '-r', '--regions', dest='regions', default=['us-east-1'], nargs='*',
         help='list the regions to validate against.'
     )
     parser.add_argument(
-        '--append-rules', dest='append_rules', default=[], nargs='*',
+        '-a', '--append-rules', dest='append_rules', default=[], nargs='*',
         help='specify one or more rules directories using '
              'one or more --append-rules arguments. '
     )
     parser.add_argument(
-        '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
+        '-i', '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
         help='only check rules whose id do not match these values'
     )
 
     parser.add_argument(
-        '--override-spec', dest='override_spec',
+        '-o', '--override-spec', dest='override_spec',
         help='A CloudFormation Spec override file that allows customization'
     )
 
     parser.add_argument(
-        '--version', help='Version of cfn-lint', action='version',
+        '-v', '--version', help='Version of cfn-lint', action='version',
         version='%(prog)s {version}'.format(version=__version__)
     )
     parser.add_argument(
-        '--update-specs', help='Update the CloudFormation Specs',
+        '-u', '--update-specs', help='Update the CloudFormation Specs',
         action='store_true'
     )
     parser.add_argument(
