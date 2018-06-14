@@ -41,6 +41,6 @@ class TestInclude(BaseTestCase):
         custom_spec = json.load(open('templates/override_spec/include.json'))
         cfnlint.helpers.set_specs(custom_spec)
 
-        bad_runner = Runner(self.collection, [], filename, template, [], ['us-east-1'], [])
+        bad_runner = Runner(self.collection, [], filename, template, ['us-east-1'], [])
         errs = bad_runner.run()
         self.assertEqual(2, len(errs))

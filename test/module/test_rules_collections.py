@@ -44,7 +44,7 @@ class TestTemplate(BaseTestCase):
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
-        matches.extend(self.rules.run(filename, cfn, []))
+        matches.extend(self.rules.run(filename, cfn))
         assert(matches == [])
 
     def test_fail_run(self):
@@ -54,7 +54,7 @@ class TestTemplate(BaseTestCase):
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
-        matches.extend(self.rules.run(filename, cfn, []))
+        matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == 27, 'Expected {} failures, got {}'.format(27, len(matches))
 
     def test_fail_sub_properties_run(self):
@@ -64,5 +64,5 @@ class TestTemplate(BaseTestCase):
         cfn = Template(template, ['us-east-1'])
 
         matches = list()
-        matches.extend(self.rules.run(filename, cfn, []))
+        matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == 3, 'Expected {} failures, got {}'.format(2, len(matches))

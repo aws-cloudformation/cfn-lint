@@ -14,27 +14,3 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import sys
-import logging
-import cfnlint.core
-
-
-LOGGER = logging.getLogger('cfnlint')
-
-
-def main():
-    """Main function"""
-    (args, template, rules, fmt, formatter) = cfnlint.core.get_template_args_rules(sys.argv[1:])
-
-    return(
-        cfnlint.core.run_cli(
-            vars(args)['template'], template, rules, fmt,
-            vars(args)['regions'],
-            vars(args)['override_spec'], formatter))
-
-
-if __name__ == '__main__':
-    try:
-        sys.exit(main())
-    except (ValueError, TypeError):
-        LOGGER.error(ValueError)

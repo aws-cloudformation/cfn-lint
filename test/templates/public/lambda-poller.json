@@ -1,0 +1,206 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Creates a Lambda function that polls the Workable API and finds new applicants, which get sent to Slack\n",
+	"Parameters": {
+	    "WorkableAccessToken": {
+	        "Type": "String"
+        },
+        "SlackMessageRelayTopicArn": {
+            "Type": "String"
+        },
+        "PollingPeriod": {
+            "Type": "Number",
+            "Default": 5,
+            "Description": "In minutes"
+        }
+    },
+    "Resources": {
+        "PollerFunctionIamRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "lambda.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "SnsPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "sns:Publish"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Ref": "SlackMessageRelayTopicArn"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                ]
+            }
+        },
+        "PollerFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+                "Code": {
+                    "ZipFile": "const url = require('url');\nconst https = require('https');\nconst AWS = require('aws-sdk');\n\nconst sns = new AWS.SNS({ apiVersion: '2010-03-31' });\n\nconst API_URL_BASE = 'https://www.workable.com/spi/v3/accounts/prx';\n\nconst SLACK_CHANNEL = '#applicants';\nconst SLACK_ICON = ':workable:';\nconst SLACK_USERNAME = 'Workable';\n\nconst PERIOD = (60 * process.env.POLLING_PERIOD);\n\nfunction workableApiData(apiUrl) {\n    return new Promise((resolve, reject) => {\n        const options = url.parse(apiUrl);\n        options.headers = {\n            'Authorization': `Bearer ${process.env.WORKABLE_ACCESS_TOKEN}`,\n        };\n\n        https.get(options, (res) => {\n            let body = '';\n\n            res.setEncoding('utf8');\n            res.on('error', e => { reject(e) });\n            res.on('data', chunk => body += chunk);\n\n            res.on('end', () => {\n                try {\n                    const data = JSON.parse(body);\n                    resolve(data);\n                } catch (e) {\n                    reject(e);\n                }\n            });\n        }).on('error', e => { reject(e) });\n    });\n}\n\nasync function publishedJobs() {\n    const apiUrl = `${API_URL_BASE}/jobs?state=published`;\n\n    const payload = await workableApiData(apiUrl);\n    return payload.jobs;\n}\n\nasync function candidatesForJob(job) {\n    const after = Math.round((+ new Date()) / 1000) - PERIOD;\n    const apiUrl = `${API_URL_BASE}/jobs/${job.shortcode}/candidates?created_after=${after}`;\n\n    const payload = await workableApiData(apiUrl);\n    return payload.candidates;\n}\n\nfunction messageForCandidates(candidates) {\n    return {\n        channel: SLACK_CHANNEL,\n        username: SLACK_USERNAME,\n        icon_emoji: SLACK_ICON,\n        attachments: candidates.map(c => {\n            return {\n                title: `${c.job.title} \u2013 ${c.firstname} ${c.lastname}`,\n                title_link: c.profile_url\n            };\n        }),\n    };\n}\n\nfunction publishMessage(message) {\n    return new Promise((resolve, reject) => {\n        const json = JSON.stringify(message);\n\n        sns.publish({\n            TopicArn: process.env.SLACK_MESSAGE_RELAY_TOPIC_ARN,\n            Message: json,\n        }, (err) => {\n            console.log(1);\n            if (err) {\n                reject(err);\n            } else {\n                resolve();\n            }\n        });\n    });\n}\n\nexports.handler = async (event) => {\n    const jobs = await publishedJobs();\n\n    const candidatesByJob = await Promise.all(jobs.map(j => candidatesForJob(j)));\n    const candidates = [].concat(...candidatesByJob);\n\n    await publishMessage(messageForCandidates(candidates));\n};\n"
+                },
+                "Description": "Gets recent job applicants from Workable and sends them to Slack via the Slack relay\n",
+                "Environment": {
+                    "Variables": {
+                        "WORKABLE_ACCESS_TOKEN": {
+                            "Ref": "WorkableAccessToken"
+                        },
+                        "SLACK_MESSAGE_RELAY_TOPIC_ARN": {
+                            "Ref": "SlackMessageRelayTopicArn"
+                        },
+                        "POLLING_PERIOD": {
+                            "Ref": "PollingPeriod"
+                        }
+                    }
+                },
+                "Handler": "index.handler",
+                "MemorySize": 128,
+                "Role": {
+                    "Fn::GetAtt": [
+                        "PollerFunctionIamRole",
+                        "Arn"
+                    ]
+                },
+                "Runtime": "nodejs6.10",
+                "Tags": [
+                    {
+                        "Key": "Project",
+                        "Value": "Misc"
+                    },
+                    {
+                        "Key": "prx:cloudformation:stack-name",
+                        "Value": {
+                            "Ref": "AWS::StackName"
+                        }
+                    },
+                    {
+                        "Key": "prx:cloudformation:stack-id",
+                        "Value": {
+                            "Ref": "AWS::StackId"
+                        }
+                    }
+                ],
+                "Timeout": 10
+            }
+        },
+        "PollerEventRuleIamRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "events.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "Path": "/",
+                "Policies": [
+                    {
+                        "PolicyName": "LambdaPolicy",
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Effect": "Allow",
+                                    "Action": [
+                                        "lambda:InvokeFunction"
+                                    ],
+                                    "Resource": [
+                                        {
+                                            "Fn::GetAtt": [
+                                                "PollerFunction",
+                                                "Arn"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "PollerEventRule": {
+            "Type": "AWS::Events::Rule",
+            "Properties": {
+                "Description": "Invokes the Workable poller function\n",
+                "RoleArn": {
+                    "Fn::GetAtt": [
+                        "PollerEventRuleIamRole",
+                        "Arn"
+                    ]
+                },
+                "ScheduleExpression": {
+                    "Fn::Sub": "rate(${PollingPeriod} minutes)"
+                },
+                "State": "ENABLED",
+                "Targets": [
+                    {
+                        "Arn": {
+                            "Fn::GetAtt": [
+                                "PollerFunction",
+                                "Arn"
+                            ]
+                        },
+                        "Id": {
+                            "Fn::Sub": "${AWS::StackName}.PollerFunction"
+                        }
+                    }
+                ]
+            }
+        },
+        "PollerFunctionEventInvokePermission": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+                "Action": "lambda:InvokeFunction",
+                "FunctionName": {
+                    "Ref": "PollerFunction"
+                },
+                "Principal": "events.amazonaws.com",
+                "SourceArn": {
+                    "Fn::GetAtt": [
+                        "PollerEventRule",
+                        "Arn"
+                    ]
+                }
+            }
+        }
+    }
+}
