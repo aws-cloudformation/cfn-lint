@@ -17,7 +17,7 @@
 import os
 import six
 
-from samtranslator.parser.parser import Parser
+from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 
@@ -39,7 +39,7 @@ class Transform(object):
         self._region = region
 
         self._managed_policy_map = self.load_managed_policies()
-        self._sam_parser = Parser()
+        self._sam_parser = parser.Parser()
 
 
     def load_managed_policies(self):
@@ -89,7 +89,29 @@ class Transform(object):
                                         sam_parser=self._sam_parser)
 
             self._replace_local_codeuri()
-            sam_translator.translate(sam_template=self._template, parameter_values={})
+
+            # In the Paser class, within the SAM Translator, they log a warning for when the template
+            # does not match the schema. The logger they use is the root logger instead of one scoped to
+            # their module. Currently this does not cause templates to fail, so we will suppress this
+            # by patching the logging.warning method that is used in that class.
+            class WarningSuppressLogger(object):
+                """ Patch the Logger in SAM """
+
+                def __init__(self, obj_to_patch):
+                    self.obj_to_patch = obj_to_patch
+
+                def __enter__(self):
+                    self.obj_to_patch.warning = self.warning
+
+                def __exit__(self, exc_type, exc_val, exc_tb):
+                    self.obj_to_patch.warning = self.obj_to_patch.warning
+
+                def warning(self, message):
+                    """ Ignore warnings from SAM """
+                    pass
+
+            with WarningSuppressLogger(parser.logging):
+                sam_translator.translate(sam_template=self._template, parameter_values={})
         except InvalidDocumentException as e:
             for cause in e.causes:
                 matches.append(cfnlint.Match(

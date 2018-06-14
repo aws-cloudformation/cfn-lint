@@ -70,21 +70,13 @@ def get_exit_code(matches):
 
 def configure_logging(log_level):
     """Setup Logging"""
-
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
-
-    # Update our application logger as well as the root logger to prevent
-    # 3rd party Python code to ignore "our" logging configuration:
-    # https://github.com/awslabs/serverless-application-model/pull/466
     if log_level == 'info':
-        logging.getLogger().setLevel(logging.INFO)
         LOGGER.setLevel(logging.INFO)
     elif log_level == 'debug':
-        logging.getLogger().setLevel(logging.DEBUG)
         LOGGER.setLevel(logging.DEBUG)
     else:
-        logging.getLogger().setLevel(logging.ERROR)
         LOGGER.setLevel(logging.ERROR)
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)

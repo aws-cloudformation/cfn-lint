@@ -767,13 +767,14 @@ class Runner(object):
 
     def transform(self):
         """Transform logic"""
-        LOGGER.debug('Transform templates if needed using SAM')
+        LOGGER.debug('Transform templates if needed')
 
         matches = []
         transform_type = self.cfn.template.get('Transform')
 
         # Don't call transformation if Transform is not specified to prevent
-        # useless execution of the transformation
+        # useless execution of the transformation.
+        # Currently locked in to SAM specific
         if transform_type == 'AWS::Serverless-2016-10-31':
             transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
             matches = transform.transform_template()
@@ -819,5 +820,5 @@ class TransformError(cfnlint.CloudFormationLintRule):
     """Transform Lint Rule"""
     id = 'E0001'
     shortdesc = 'Error found when transforming the template'
-    description = 'Errors found when transforming the template using the Serverless Application Model'
-    tags = ['base']
+    description = 'Errors found when performing transformation on the template'
+    tags = ['base', 'transform']
