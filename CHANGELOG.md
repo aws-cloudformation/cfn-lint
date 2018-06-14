@@ -9,6 +9,14 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.2.2
+###### Fixes
+- Fixed issues with Yaml and Json parsing for complex strings in Python 2.7
+- Added eu-central-1 Availability Zones to acceptable AZ list
+- Added nodejs8.10 to supported Lambda
+- Added Version as an attribute for a Custom Resource
+- Parseable output is now colon(:) delimited
+
 ### 0.2.1
 ###### Features
 - Added AllowedValues for Cidr parameter checking Rule W2509
