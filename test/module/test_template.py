@@ -24,7 +24,7 @@ class TestTemplate(BaseTestCase):
         """ SetUp template object"""
         filename = 'templates/good/generic.yaml'
         template = self.load_template(filename)
-        self.template = Template(template)
+        self.template = Template(filename, template)
         self.resource_names = [
             'IamPipeline',
             'RootInstanceProfile',
