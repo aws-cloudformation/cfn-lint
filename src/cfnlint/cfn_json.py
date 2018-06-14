@@ -14,10 +14,12 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import sys
 import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
+import six
 import cfnlint
 
 
@@ -108,7 +110,14 @@ def create_node_class(cls):
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
+            if sys.version_info >= (3, 0):
+                return cls.__new__(self, x)
+
+            if isinstance(x, six.string_types):
+                return cls.__new__(self, x.encode('ascii', 'ignore'))
+
             return cls.__new__(self, x)
+
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
 
@@ -170,7 +179,11 @@ def py_scanstring(s, end, strict=True,
                 if 0xdc00 <= uni2 <= 0xdfff:
                     uni = 0x10000 + (((uni - 0xd800) << 10) | (uni2 - 0xdc00))
                     end += 6
-            char = chr(uni)
+            # pylint: disable=undefined-variable
+            if sys.version_info >= (3, 0):
+                char = chr(uni)
+            else:
+                char = unichr(uni)
         _append(char)
     return ''.join(chunks), end
 

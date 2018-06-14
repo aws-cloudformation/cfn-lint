@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import sys
 import logging
 import six
 from yaml.composer import Composer
@@ -68,6 +69,12 @@ def create_node_class(cls):
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
+            if sys.version_info >= (3, 0):
+                return cls.__new__(self, x)
+
+            if isinstance(x, six.string_types):
+                return cls.__new__(self, x.encode('ascii', 'ignore'))
+
             return cls.__new__(self, x)
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
@@ -112,7 +119,7 @@ class NodeConstructor(SafeConstructor):
 
     def construct_yaml_str(self, node):
         obj = SafeConstructor.construct_yaml_str(self, node)
-        assert isinstance(obj, str)
+        assert isinstance(obj, (six.string_types))
         return str_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_null_error(self, node):
