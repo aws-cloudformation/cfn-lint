@@ -46,7 +46,7 @@ class TestTemplate(BaseTestCase):
         """Test Success on Get Resources"""
         valid_resource_count = 10
         resources = self.template.get_resources()
-        assert len(resources) == valid_resource_count, 'Expected {} resuources, got {}'.format(valid_resource_count, len(resources))
+        assert len(resources) == valid_resource_count, 'Expected {} resources, got {}'.format(valid_resource_count, len(resources))
 
     def test_get_resource_names(self):
         """ Test Resource Names"""
