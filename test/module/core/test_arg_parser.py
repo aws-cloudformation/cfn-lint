@@ -49,7 +49,7 @@ class TestArgsParser(BaseTestCase):
 
         # just write the defaults
 
-        cfnlint.core.append_parser(parser, defaults)
+        parser.set_defaults(**defaults)
         args = parser.parse_args([
             '--ignore-checks', 'E0101'
         ])

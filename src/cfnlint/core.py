@@ -104,37 +104,6 @@ def create_parser():
         '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
     )
 
-    return parser
-
-
-def get_formatter(fmt):
-    """ Get Formatter"""
-    formatter = {}
-    if fmt:
-        if fmt == 'quiet':
-            formatter = formatters.QuietFormatter()
-        elif fmt == 'parseable':
-            # pylint: disable=bad-option-value
-            formatter = formatters.ParseableFormatter()
-    else:
-        formatter = formatters.Formatter()
-
-    return formatter
-
-
-def get_rules(rulesdir, ignore_rules):
-    """Get rules"""
-    rules = RulesCollection(ignore_rules)
-    rules_dirs = [DEFAULT_RULESDIR] + rulesdir
-    for rules_dir in rules_dirs:
-        rules.extend(
-            RulesCollection.create_from_directory(rules_dir))
-
-    return rules
-
-
-def append_parser(parser, defaults):
-    """Append arguments to parser"""
     parser.add_argument(
         '-l', '--list-rules', dest='listrules', default=False,
         action='store_true', help='list all the rules'
@@ -166,12 +135,34 @@ def append_parser(parser, defaults):
         '-u', '--update-specs', help='Update the CloudFormation Specs',
         action='store_true'
     )
-    parser.add_argument(
-        '--update-documentation', help=argparse.SUPPRESS,
-        action='store_true'
-    )
 
-    parser.set_defaults(**defaults)
+    return parser
+
+
+def get_formatter(fmt):
+    """ Get Formatter"""
+    formatter = {}
+    if fmt:
+        if fmt == 'quiet':
+            formatter = formatters.QuietFormatter()
+        elif fmt == 'parseable':
+            # pylint: disable=bad-option-value
+            formatter = formatters.ParseableFormatter()
+    else:
+        formatter = formatters.Formatter()
+
+    return formatter
+
+
+def get_rules(rulesdir, ignore_rules):
+    """Get rules"""
+    rules = RulesCollection(ignore_rules)
+    rules_dirs = [DEFAULT_RULESDIR] + rulesdir
+    for rules_dir in rules_dirs:
+        rules.extend(
+            RulesCollection.create_from_directory(rules_dir))
+
+    return rules
 
 
 def get_template_args_rules(cli_args):
@@ -237,8 +228,8 @@ def get_template_args_rules(cli_args):
                 sys.exit(get_exit_code(matches))
 
     defaults = get_default_args(template)
+    parser.set_defaults(**defaults)
 
-    append_parser(parser, defaults)
     args = parser.parse_args(cli_args)
 
 
