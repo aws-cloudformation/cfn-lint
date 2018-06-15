@@ -14,7 +14,6 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import os
 import six
 
 from samtranslator.parser import parser
@@ -77,13 +76,6 @@ class Transform(object):
         """
         matches = []
 
-        # Boto's mechanism is used to fetch the region. Since we know which we use
-        # to lint, make sure Boto loads that one.
-        # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py#L39
-        # https://github.com/awslabs/serverless-application-model/blob/master/tests/translator/test_translator.py#L120
-        old_region = os.environ.get('AWS_DEFAULT_REGION', '')
-        os.environ['AWS_DEFAULT_REGION'] = self._region
-
         try:
             sam_translator = Translator(managed_policy_map=self._managed_policy_map,
                                         sam_parser=self._sam_parser)
@@ -118,8 +110,6 @@ class Transform(object):
                     1, 1,
                     1, 1,
                     self._filename, cfnlint.TransformError(), cause.message))
-        finally:
-            os.environ['AWS_DEFAULT_REGION'] = old_region
 
         return matches
 
