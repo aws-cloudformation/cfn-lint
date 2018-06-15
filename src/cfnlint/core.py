@@ -29,6 +29,7 @@ from cfnlint import RulesCollection, TransformsCollection, Match
 import cfnlint.formatters as formatters
 import cfnlint.cfn_yaml
 import cfnlint.cfn_json
+import cfnlint.maintenance
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
 
@@ -179,6 +180,10 @@ def append_parser(parser, defaults):
         '--update-specs', help='Update the CloudFormation Specs',
         action='store_true'
     )
+    parser.add_argument(
+        '--update-documentation', help=argparse.SUPPRESS,
+        action='store_true'
+    )
 
     parser.set_defaults(**defaults)
 
@@ -250,11 +255,16 @@ def get_template_args_rules(cli_args):
     append_parser(parser, defaults)
     args = parser.parse_args(cli_args)
 
+
     if vars(args)['update_specs']:
-        cfnlint.helpers.update_resource_specs()
+        cfnlint.maintenance.update_resource_specs()
         exit(0)
 
     rules = cfnlint.core.get_rules(vars(args)['append_rules'], vars(args)['ignore_checks'])
+
+    if vars(args)['update_documentation']:
+        cfnlint.maintenance.update_documentation(rules)
+        exit(0)
 
     if vars(args)['listrules']:
         print(rules)

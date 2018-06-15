@@ -95,6 +95,7 @@ class TestCli(BaseTestCase):
             'override_spec': None,
             'regions': ['us-east-1'],
             'template': 'templates/good/core/config_parameters.yaml',
+            'update_documentation': False,
             'update_specs': False})
 
     def test_override_parameters(self):
@@ -114,6 +115,7 @@ class TestCli(BaseTestCase):
             'override_spec': None,
             'regions': ['us-east-1'],
             'template': 'templates/good/core/config_parameters.yaml',
+            'update_documentation': False,
             'update_specs': False})
 
     def test_bad_config(self):
@@ -133,4 +135,5 @@ class TestCli(BaseTestCase):
             'override_spec': None,
             'regions': ['us-east-1'],
             'template': filename,
+            'update_documentation': False,
             'update_specs': False})
