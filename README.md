@@ -43,9 +43,8 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 | --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
 | --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | --log-level | log_level | {info, debug} | Log Level |
-| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. |
-| --version | | | Version of cfn-lint |
+| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command || --version | | | Version of cfn-lint |
 
 ### Command Line
 From a command prompt run `cfn-lint --template <path to yaml template>`

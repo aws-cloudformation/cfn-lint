@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-THe following **67** rules are applied by this linter:
+The following **67** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Tags |
 | -------- | ----- | ----------- |----- |
