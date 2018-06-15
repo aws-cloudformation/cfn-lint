@@ -1,7 +1,7 @@
 # Rules
 
 ### Errors
-Errors will start with the letter `E`. Errors should result in a hard failure of the template being run.
+Errors will start with the letter `E`. Errors will result in a hard failure for the template being validated.
 
 ### Warnings
 Warnings start with the letter `W`. Warnings alert you when the template doesnt follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
@@ -23,8 +23,7 @@ Warnings start with the letter `W`. Warnings alert you when the template doesnt 
 
 
 *Warning*
-Rule `E3012` is used to check the types for value of a resource property.  A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error.  cfn-lint didnt build an exception process so all instances of this issue is considered an error.
-
+Rule `E3012` is used to check the types for value of a resource property.  A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error.  cfn-lint doesn't have an exception process so all instances of this issue are considered errors. You can disable this rule using `--ignore-checks` if it is not required for your internal best practices.
 
 
 ## Rules

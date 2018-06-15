@@ -1,7 +1,7 @@
 ## Customize specifications
 The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
 
-The linter provides the possibility to implement these customzsed specifications using the `--override-spec` argument. This argument should pass a (JSON) file in the same format as the [Specification](/src/cfnlint/data) files, this file is then merged into the Regional specification files that are used to process all the linting rules.
+The linter provides the possibility to implement these customized specifications using the `--override-spec` argument. This argument should pass a (JSON) file in the same format as the [Specification](/src/cfnlint/data) files, this file is then merged into the Regional specification files that are used to process all the linting rules.
 
 This makes it easy to apply your our rules on top of the CloudFormation rules without having to write your own checks in Python and use the power of the linter itself with a single file!
 
@@ -29,7 +29,7 @@ The following example only allows the usage of all `EC2` resources, except for `
 ```
 
 #### Alter Resource/Parameter specifications
-The spec file overwrites values from the Regional spec files which give you the possible to alter the specifications for your own needs. A good example is making optional Parameters Required.
+The spec file overwrites values from the Regional spec files which give you the possible to alter the specifications for your own needs. A good example is making optional Parameters required.
 
 For example, to enforce tagging on an S3 bucket, the override file looks like this:
 ```

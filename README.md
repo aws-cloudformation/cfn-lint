@@ -79,7 +79,7 @@ cfn-lint applies the configuration from the CloudFormation Metadata first and th
 ## Rules
 This linter checks the CloudFormation by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
 
-This collection of rules can be extended with custom rules using the `--apopend-rules` argument.
+This collection of rules can be extended with custom rules using the `--append-rules` argument.
 
 More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md)
 
@@ -87,7 +87,7 @@ More information describing how rules are set up and an overview of all the Rule
 ## Customize specifications
 The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
 
-The linter provides the possibility to implement these customzsed specifications using the `--override-spec` argument.
+The linter provides the possibility to implement these customized specifications using the `--override-spec` argument.
 
 More information about how this feature works is documented [here](docs/customize_specifications.md)
 
