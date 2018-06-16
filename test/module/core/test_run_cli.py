@@ -94,6 +94,28 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
+            'template_alt': 'templates/good/core/config_parameters.yaml',
+            'template': None,
+            'update_documentation': False,
+            'update_specs': False})
+
+    def test_positional_template_parameters(self):
+        """Test overriding parameters"""
+        filename = 'templates/good/core/config_parameters.yaml'
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
+            filename, '--ignore-bad-template',
+            '--ignore-checks', 'E0000'])
+
+        self.assertEqual(vars(args), {
+            'append_rules': [],
+            'format': None,
+            'ignore_bad_template': True,
+            'ignore_checks': ['E0000'],
+            'listrules': False,
+            'debug': False,
+            'override_spec': None,
+            'regions': ['us-east-1'],
+            'template_alt': None,
             'template': 'templates/good/core/config_parameters.yaml',
             'update_documentation': False,
             'update_specs': False})
@@ -114,7 +136,8 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template': 'templates/good/core/config_parameters.yaml',
+            'template_alt': 'templates/good/core/config_parameters.yaml',
+            'template': None,
             'update_documentation': False,
             'update_specs': False})
 
@@ -134,6 +157,7 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template': filename,
+            'template_alt': filename,
+            'template': None,
             'update_documentation': False,
             'update_specs': False})

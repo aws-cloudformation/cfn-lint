@@ -35,7 +35,8 @@ class TestArgsParser(BaseTestCase):
         args = parser.parse_args([
             '--template', 'test.yaml', '--ignore-bad-template',
             '--format', 'quiet', '--debug'])
-        self.assertEqual(vars(args)['template'], 'test.yaml')
+        self.assertEqual(vars(args)['template'], None)
+        self.assertEqual(vars(args)['template_alt'], 'test.yaml')
         self.assertEqual(vars(args)['ignore_bad_template'], True)
         self.assertEqual(vars(args)['format'], 'quiet')
         self.assertEqual(vars(args)['debug'], True)

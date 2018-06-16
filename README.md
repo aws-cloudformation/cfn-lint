@@ -36,12 +36,18 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 
 ## Configuration
+
+### Command Line
+From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template
+
 ### Parameters
+
+Optional parameters:
 
 | Command Line  | Metadata | Options | Description |
 | ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
-| -t, --template  |   | filename | Template file path to the file that needs to be tested by cfn-lint |
+| -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
 | -f, --format    | format | quiet, parseable, json | Output format |
 | -l, --list-rules | | | List all the rules |
 | -r, --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
@@ -52,9 +58,6 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
 | -v, --version | | | Version of cfn-lint |
-
-### Command Line
-From a command prompt run `cfn-lint --template <path to yaml template>`
 
 ### Metadata
 Inside the root level Metadata key you can configure cfn-lint using the supported parameters.
