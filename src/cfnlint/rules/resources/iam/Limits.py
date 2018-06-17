@@ -23,7 +23,7 @@ from cfnlint import RuleMatch
 
 class Limits(CloudFormationLintRule):
     """Check if IAM limits are not breached"""
-    id = '2508'
+    id = 'E2508'
     shortdesc = 'Check IAM resource limits'
     description = 'See if IAM resources do not breach limits'
     tags = ['base', 'resources', 'iam']
