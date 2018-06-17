@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -32,24 +33,37 @@ class Used(CloudFormationLintRule):
         ref_conditions = list()
 
         conditions = cfn.template.get('Conditions', {})
-
         if conditions:
-
             # Get all "If's" that reference a Condition
             iftrees = cfn.search_deep_keys('Fn::If')
 
             for iftree in iftrees:
-
                 if isinstance(iftree[-1], list):
                     ref_conditions.append(iftree[-1][0])
                 else:
                     ref_conditions.append(iftree[-1])
+            # Get resource's Conditions
+            for _, resource_values in cfn.get_resources().items():
+                if 'Condition' in resource_values:
+                    ref_conditions.append(resource_values['Condition'])
+
+            # Get conditions used by another condition
+            condtrees = cfn.search_deep_keys('Condition')
+
+            for condtree in condtrees:
+                if condtree[0] == 'Conditions':
+                    if isinstance(condtree[-1], (str, six.text_type, six.string_types)):
+                        ref_conditions.append(condtree[-1])
 
             # Get resource's Conditions
             for _, resource_values in cfn.get_resources().items():
-
                 if 'Condition' in resource_values:
                     ref_conditions.append(resource_values['Condition'])
+
+            # Get Output Conditions
+            for _, output_values in cfn.template.get('Outputs', {}).items():
+                if 'Condition' in output_values:
+                    ref_conditions.append(output_values['Condition'])
 
             # Check if the confitions are used
             for condname, _ in conditions.items():
