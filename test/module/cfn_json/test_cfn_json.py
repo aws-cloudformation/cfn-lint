@@ -50,7 +50,7 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc": {
                 "filename": 'templates/quickstart/vpc.json',
-                "failures": 41
+                "failures": 40
             },
             "poller": {
                 "filename": 'templates/public/lambda-poller.json',
