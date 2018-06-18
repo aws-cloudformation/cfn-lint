@@ -33,6 +33,7 @@ may need to manually remove the cfn-lint binary.
 There are IDE plugins available to get direct linter feedback from you favorite editor:
 
 * [Atom](https://atom.io/packages/atom-cfn-lint)
+* [Sublime](https://packagecontrol.io/packages/SublimeLinter-contrib-cloudformation)
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 
 ## Configuration
