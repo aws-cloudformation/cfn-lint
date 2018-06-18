@@ -27,11 +27,11 @@ class TestRunChecks(BaseTestCase):
         """Test success run"""
 
         filename = 'templates/good/generic.yaml'
-        (args, template, rules, _, _) = cfnlint.core.get_template_args_rules([
+        (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename])
 
         results = cfnlint.core.run_checks(
-            vars(args)['template'], template, rules, ['us-east-1'])
+            filename, template, rules, ['us-east-1'])
 
         assert(results == [])
 
@@ -39,11 +39,11 @@ class TestRunChecks(BaseTestCase):
         """Test bad template"""
 
         filename = 'templates/quickstart/nat-instance.json'
-        (args, template, rules, _, _) = cfnlint.core.get_template_args_rules([
+        (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename])
 
         results = cfnlint.core.run_checks(
-            vars(args)['template'], template, rules, ['us-east-1'])
+            filename, template, rules, ['us-east-1'])
 
         assert(results[0].rule.id == 'W2506')
         assert(results[1].rule.id == 'W2001')
