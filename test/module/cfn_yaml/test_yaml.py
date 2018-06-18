@@ -43,7 +43,7 @@ class TestYamlParse(BaseTestCase):
             filename = values.get('filename')
             failures = values.get('failures')
             template = cfnlint.cfn_yaml.load(filename)
-            cfn = Template(template, ['us-east-1'])
+            cfn = Template(filename, template, ['us-east-1'])
 
             matches = list()
             matches.extend(self.rules.run(filename, cfn))
