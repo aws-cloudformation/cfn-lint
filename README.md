@@ -36,24 +36,28 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 
 ## Configuration
+
+### Command Line
+From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template
+
 ### Parameters
+
+Optional parameters:
 
 | Command Line  | Metadata | Options | Description |
 | ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
-| --template  |   | filename | Template file path to the file that needs to be tested by cfn-lint |
-| --format    | format | quiet, parseable, json | Output format |
-| --list-rules | | | List all the rules |
-| --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
-| --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
-| --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
-| --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
-| --log-level | log_level | {info, debug} | Log Level |
-| --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. |
-| --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command || --version | | | Version of cfn-lint |
-
-### Command Line
-From a command prompt run `cfn-lint --template <path to yaml template>`
+| -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
+| -f, --format    | format | quiet, parseable, json | Output format |
+| -l, --list-rules | | | List all the rules |
+| -r, --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
+| -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
+| -a, --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
+| -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
+| -d, --debug |  |  | Specify to enable debug logging |
+| -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
+| -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
+| -v, --version | | | Version of cfn-lint |
 
 ### Metadata
 Inside the root level Metadata key you can configure cfn-lint using the supported parameters.

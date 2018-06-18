@@ -661,14 +661,14 @@ class Template(object):
                         if key == path[0]:
                             result = self._loc(key)
                 except AttributeError as err:
-                    LOGGER.info(err)
+                    LOGGER.debug(err)
         else:
             try:
                 for key in text:
                     if key == path[0]:
                         result = self._loc(key)
             except AttributeError as err:
-                LOGGER.info(err)
+                LOGGER.debug(err)
         return result
 
     def check_resource_property(self, resource_type, resource_property,
