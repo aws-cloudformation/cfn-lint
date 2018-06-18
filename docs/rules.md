@@ -27,11 +27,12 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **67** rules are applied by this linter:
+The following **69** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Tags |
 | -------- | ----- | ----------- |----- |
 | E1001 | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template componets are propery configured | `base` |
+| E1002 | Template size limit | Check the size of the template is less than the upper limit | `base`,`limits` |
 | E1010 | GetAtt validation of parameters | Making sure the function GetAtt is of list | `base`,`functions`,`getatt` |
 | E1011 | FindInMap validation of configuration | Making sure the function is a list of appropriate config | `base`,`functions`,`getatt` |
 | E1012 | Check if Refs exist | Making sure the refs exist | `base`,`functions`,`ref` |
@@ -58,6 +59,7 @@ The following **67** rules are applied by this linter:
 | E2505 | Resource EC2 VPC Properties | See if EC2 VPC Properties are set correctly | `base`,`properties`,`vpc` |
 | E2506 | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | `base`,`resources`,`securitygroup` |
 | E2507 | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | `base`,`properties`,`iam` |
+| E2508 | Check IAM resource limits | See if IAM resources do not breach limits | `base`,`resources`,`iam` |
 | E2510 | Resource EC2 PropertiesEc2Subnet Properties | See if EC2 Subnet Properties are set correctly | `base`,`properties`,`subnet` |
 | E2520 | Check Properties that are mutually exclusive | Making sure CloudFormation properties that are exclusive are not defined | `base`,`resources` |
 | E2521 | Check Properties that are required together | Make sure CloudFormation resource properties are included together when required | `base`,`resources` |
