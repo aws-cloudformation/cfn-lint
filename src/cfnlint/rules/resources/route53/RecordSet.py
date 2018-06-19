@@ -49,10 +49,14 @@ class RecordSet(CloudFormationLintRule):
 
         for index, record in enumerate(resource_records):
             tree = path[:] + ['ResourceRecords', index]
+            full_path = ('/'.join(str(x) for x in tree))
+
             if not record.startswith('"') or not record.endswith('"'):
                 message = 'TXT record has to be enclosed in double quotation marks (") at {0}'
-                full_path = ('/'.join(str(x) for x in tree))
                 matches.append(RuleMatch(tree, message.format(full_path)))
+            elif len(record) > 255:
+                message = 'The length of the TXT record ({0}) exceeds the limit (255) as {1}'
+                matches.append(RuleMatch(tree, message.format(len(record), full_path)))
 
         return matches
 
@@ -65,7 +69,7 @@ class RecordSet(CloudFormationLintRule):
         if recordset_type not in self.VALID_RECORD_TYPES:
             message = 'Invalid record type "{0}" specified at {1}'
             full_path = ('/'.join(str(x) for x in path))
-            matches.append(RuleMatch(path, message.format(type, full_path)))
+            matches.append(RuleMatch(path, message.format(recordset_type, full_path)))
         elif recordset_type == 'TXT':
             matches.extend(self.check_txt_record(path, recordset))
 
