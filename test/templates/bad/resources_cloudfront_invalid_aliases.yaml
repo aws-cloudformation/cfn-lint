@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - "www.example.com"
+          - "example.com"
+          - "email.exa.ple.com"
+          - "mx1.example.eu"
+          - "e-mail.example.amsterdam"
+          - "xn-caf-dma.com"
+          - "www.example.eu"
+          - "111.example.com"
+          - "email.internal.example.eu"
+          - "e-mail.internal.ex-ample.eu"
+          - "www.example.google"
+          - "1111111111.ex--ample.nl"
+          - "WWW.EXAMPLE.COM" # invalid
+          - "-example.com" # invalid
+          - "example.c" # invalid
+          - "www.example.com " # invalid
+          - "www.-example.com" # invalid
+          - "-www.example.com" # invalid
+          - "www.example.com-" # invalid
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - "GET"
+            - "HEAD"
+          CachedMethods:
+            - "GET"
+            - "HEAD"
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: "s3"
+          ViewerProtocolPolicy: "https-only"
+        Enabled: true
+        Origins:
+          - Id: "s3"
+            DomainName: www.example.com.s3.amazonaws.com"
