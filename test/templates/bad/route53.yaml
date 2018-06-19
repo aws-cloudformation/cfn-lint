@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Route53 resources"
+Parameters:
+  DomainName:
+    Type: String
+    Default: "www.example.com"
+Resources:
+  MyHostedZone:
+    Type: "AWS::Route53::HostedZone"
+    Properties:
+      Name: !Ref "DomainName"
+      VPCs:
+        - VPCId: !ImportValue "infrastructure-vpc"
+          VPCRegion: AWS::Region
+  MyTXTRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Record to point to the on-prem COOL.BLUE domain controller 00"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "x.example.com"
+      Type: "TXT"
+      TTL: "300"
+      ResourceRecords:
+        - "\"google-site-verification=asdfasdfasdfasdfasdfasdfasd123123123786123871623876128376128736123f This is way too longasdfasdfasdfasdfasdfasdfasd123123123786123871623876128376128736123f This is way too longasdfasdfasdfasdfasdfasdfasd123123123786123871623876128376128736123f This is way too long\"" # Too long
+        - "\"MS=ms123123\""
+        - "test2" # No quotation
+  MyARecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Record to point to the on-prem COOL.BLUE domain controller 00"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "X" # Invalid record type
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1"
+  MyRecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      RecordSets:
+        - Name: "y.example.com"
+          Type: "TXT"
+          TTL: "300"
+          ResourceRecords:
+            - "test4" # No quotation
+        - Name: "www.example.com"
+          Type: "A"
+          TTL: "300"
+          ResourceRecords:
+            - "127.0.0.1"
+  MySecondRecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      RecordSets:
+        - Name: "z.example.com"
+          Type: "TXT"
+          TTL: "300"
+          ResourceRecords:
+            - "\"henk\""
