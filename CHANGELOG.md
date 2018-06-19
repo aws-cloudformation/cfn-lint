@@ -9,6 +9,25 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.3.0
+###### Features
+- Serverless Transforms now handled by SAM libraries
+- Add Rule E2508: Add checks for IAM
+  - Managed Policies attached to IAM user, group or role can't be more than 10
+  - An IAM user can be a member of no more than 10 groups
+  - There can only be 1 role in an instance profile
+  - AssumeRolePolicyDocument size is less than <2048 characters
+- Add Rule E1002: Check overall template size to make sure its below
+- Add Rule E3013: CloudFront aliases should contain valid domain names
+- Add Rule E3020: Check if all RecordSets are correctly configured
+  - Strings end and start with double quotes
+  - Size is less than 256 characters
+  - Record Types are within the specification
+- Short hand parameter switches and no longer need --template
+###### Fixes
+- Don't report a Condition not being used if it is used by another Condition
+
+
 ### 0.2.2
 ###### Fixes
 - Fixed issues with Yaml and Json parsing for complex strings in Python 2.7
