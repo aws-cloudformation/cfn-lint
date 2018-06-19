@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **70** rules are applied by this linter:
+The following **71** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Tags |
 | -------- | ----- | ----------- |----- |
@@ -77,6 +77,7 @@ The following **70** rules are applied by this linter:
 | E3006 | Resources have appropriate names | Check if Resources are properly named (A-Za-z0-9) | `base`,`resources` |
 | E3010 | Resource limit not exceeded | Check the number of Resources in the template is lessthan the upper limit | `base`,`resources`,`limits` |
 | E3012 | Check resource properties values | Checks resource property values with Primitive Types for values that match those types. | `base`,`resources` |
+| E3013 | CloudFront Aliases | CloudFront aliases should contain valid domain names | `base`,`properties`,`cloudfront` |
 | E3020 | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | `base`,`resources`,`route53`,`record_set` |
 | E4001 | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | `base`,`metadata` |
 | E6001 | Outputs have appropriate properties | Making sure the outputs are properly configured | `base`,`outputs` |
