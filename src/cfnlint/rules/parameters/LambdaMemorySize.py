@@ -26,9 +26,6 @@ class LambdaMemorySize(CloudFormationLintRule):
                   ' should have a min and max size that matches Lambda constraints'
     tags = ['base', 'parameters', 'lambda']
 
-    min_memory = 128
-    max_memory = 3008
-
     def __init__(self):
         """Init"""
         resource_type_specs = [
@@ -45,19 +42,17 @@ class LambdaMemorySize(CloudFormationLintRule):
 
         if value in parameters:
             parameter = parameters.get(value)
-            min_value = parameter.get('MinValue', 0)
-            max_value = parameter.get('MaxValue', 999999)
-            if min_value < self.min_memory or max_value > self.max_memory:
-                param_path = ['Parameters', value, 'Type']
-                message = 'Type for Parameter should be Integer, MinValue should be ' \
-                          'at least {0}, and MaxValue equal or less than {1} at {0}'
+            min_value = parameter.get('MinValue')
+            max_value = parameter.get('MaxValue')
+            allowed_values = parameter.get('AllowedValues')
+            if (not min_value or not max_value) and (not allowed_values):
+                param_path = ['Parameters', value]
+                message = 'Lambda Memory Size parameters should use MinValue, MaxValue ' \
+                          'or AllowedValues at {0}'
                 matches.append(
                     RuleMatch(
                         param_path,
-                        message.format(
-                            self.min_memory,
-                            self.max_memory,
-                            ('/'.join(param_path)))))
+                        message.format(('/'.join(param_path)))))
 
         return matches
 

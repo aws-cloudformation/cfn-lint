@@ -8,6 +8,23 @@ Parameters:
     Description: Memory Size
     MinValue: 128
     MaxValue: 1024
+  myMemorySize2:
+    Type: Number
+    AllowedValues:
+      - 128
+      - 384
+      - 512
+      - 640
+      - 768
+      - 896
+      - 1024
+      - 1152
+      - 1280
+      - 1408
+      - 1536
+    Default: 128
+    Description: Size of the Lambda function running the scheduler, increase size when
+      processing large numbers of instances
   myParameterRuntime:
     Type: String
     Description: Runtime
@@ -56,3 +73,12 @@ Resources:
         ZipFile: "amilookup.zip"
       Runtime: !Ref myParameterRuntime
       MemorySize: !Ref myParameterMemorySize
+  myLambda3:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt myLambdaExecutionRole.Arn
+      Code:
+        ZipFile: "amilookup.zip"
+      Runtime: !Ref myParameterRuntime
+      MemorySize: !Ref myMemorySize2

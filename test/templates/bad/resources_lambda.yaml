@@ -6,6 +6,27 @@ Parameters:
   myParameterMemorySize:
     Type: Number
     Description: Memory Size
+  myMemorySize2:
+    Type: Number
+    AllowedValues:
+      - 1
+      - 384
+      - 512
+      - 640
+      - 768
+      - 896
+      - 1024
+      - 1152
+      - 1280
+      - 1408
+      - 3009
+    Default: 128
+    Description: Size of the Lambda function running the scheduler, increase size when
+      processing large numbers of instances
+  myMemorySize3:
+    Type: Number
+    Description: Size of the Lambda function running the scheduler, increase size when
+      processing large numbers of instances
   myParameterRuntime:
     Type: String
     Description: Runtime
@@ -42,3 +63,17 @@ Resources:
       Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: !Ref myParameterRuntime
       MemorySize: !Ref myParameterMemorySize
+  myLambda3:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: !Ref myParameterRuntime
+      MemorySize: !Ref myMemorySize2
+  myLambda4:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: !Ref myParameterRuntime
+      MemorySize: !Ref myMemorySize3
