@@ -73,6 +73,55 @@ class Properties(CloudFormationLintRule):
 
         return matches
 
+    def check_list_for_condition(self, text, prop, parenttype, resourcename, propspec, path):
+        """Checks lists that are a dict for conditions"""
+        matches = list()
+        if len(text[prop]) == 1:
+            for sub_key, sub_value in text[prop].items():
+                if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                    if len(sub_value) == 3:
+                        if isinstance(sub_value[1], list):
+                            for index, item in enumerate(sub_value[1]):
+                                arrproppath = path[:]
+
+                                arrproppath.append(index)
+                                matches.extend(self.propertycheck(
+                                    item, propspec['ItemType'],
+                                    parenttype, resourcename, arrproppath, False))
+                        else:
+                            message = 'Property {0} should be of type List for resource {1}'
+                            matches.append(
+                                RuleMatch(
+                                    path,
+                                    message.format(prop, resourcename)))
+
+                        if isinstance(sub_value[2], list):
+                            for index, item in enumerate(sub_value[2]):
+                                arrproppath = path[:]
+
+                                arrproppath.append(index)
+                                matches.extend(self.propertycheck(
+                                    item, propspec['ItemType'],
+                                    parenttype, resourcename, arrproppath, False))
+                        else:
+                            message = 'Property {0} should be of type List for resource {1} at {2}'
+                            matches.append(
+                                RuleMatch(
+                                    path + [2],
+                                    message.format(prop, resourcename, ('/'.join(str(x) for x in path)))))
+
+                    else:
+                        message = 'Invalid !If condition specified at %s' % ('/'.join(map(str, path)))
+                        matches.append(RuleMatch(path, message))
+                else:
+                    message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+                    matches.append(RuleMatch(path, message))
+        else:
+            message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+            matches.append(RuleMatch(path, message))
+
+        return matches
+
     def propertycheck(self, text, proptype, parenttype, resourcename, path, root):
         """Check individual properties"""
 
@@ -124,6 +173,12 @@ class Properties(CloudFormationLintRule):
                                     matches.extend(self.propertycheck(
                                         item, resourcespec[prop]['ItemType'],
                                         parenttype, resourcename, arrproppath, False))
+                            elif (isinstance(text[prop], dict)):
+                                # A list can be be specific as a Conditional
+                                matches.extend(
+                                    self.check_list_for_condition(
+                                        text, prop, parenttype, resourcename, resourcespec[prop], proppath)
+                                )
                             else:
                                 message = 'Property {0} should be of type List for resource {1}'
                                 matches.append(

@@ -651,3 +651,23 @@ Resources:
       Cooldown: '60'
       ScalingAdjustment: '1'
     Type: AWS::AutoScaling::ScalingPolicy
+  Table:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !If [HasTableName, !Ref TableName, !Ref 'AWS::NoValue']
+      AttributeDefinitions: !If
+      - HasSortKey
+      - - AttributeName: !Ref PartitionKeyName
+          AttributeType: !Ref PartitionKeyType
+        - AttributeName: !Ref SortKeyName
+          AttributeType: !Ref SortKeyType
+      - "String"
+      KeySchema: !If
+      - HasSortKey
+      - - AttributeName: !Ref PartitionKeyName
+          KeyType: HASH
+        - AttributeName: !Ref SortKeyName
+          KeyType: RANGE
+      - - AttributeName: !Ref PartitionKeyName
+          KeyType: HASH
+        - "String2"

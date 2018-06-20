@@ -561,3 +561,25 @@ Resources:
       Parameters:
         sql_mode: "NO_AUTO_CREATE_USER"
         another_param: "ANOTHER_PARAMETER"
+  Table:
+    Type: 'AWS::DynamoDB::Table'
+    Properties:
+      TableName: !If [HasTableName, !Ref TableName, !Ref 'AWS::NoValue']
+      AttributeDefinitions: !If
+      - HasSortKey
+      - - AttributeName: !Ref PartitionKeyName
+          AttributeType: !Ref PartitionKeyType
+        - AttributeName: !Ref SortKeyName
+          AttributeType: !Ref SortKeyType
+      - - AttributeName: !Ref PartitionKeyName
+          AttributeType: !Ref PartitionKeyType
+      KeySchema: !If
+      - HasSortKey
+      - - AttributeName: !Ref PartitionKeyName
+          KeyType: HASH
+        - AttributeName: !Ref SortKeyName
+          KeyType: RANGE
+      - - AttributeName: !Ref PartitionKeyName
+          KeyType: HASH
+        - AttributeName: !Ref SortKeyName
+          KeyType: RANGE
