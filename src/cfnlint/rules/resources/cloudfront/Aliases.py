@@ -17,6 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+from cfnlint.helpers import FUNCTIONS
 
 
 class Aliases(CloudFormationLintRule):
@@ -31,14 +32,19 @@ class Aliases(CloudFormationLintRule):
 
         matches = list()
 
-        valid_domain = re.compile(r'^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$')
+        valid_domain = re.compile(r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$')
 
         results = cfn.get_resource_properties(['AWS::CloudFront::Distribution', 'DistributionConfig'])
         for result in results:
             aliases = result['Value'].get('Aliases')
             if aliases:
                 for alias in aliases:
-                    if not isinstance(alias, dict):
+                    if isinstance(alias, str) and alias not in FUNCTIONS:
+                        wildcard = alias.split('.')
+                        if '*' in wildcard[1:]:
+                            message = 'Invalid use of wildcards: {}'.format(alias)
+                            path = result['Path'] + ['Aliases']
+                            matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
                         if not re.match(valid_domain, alias):
                             message = 'Invalid alias found: {}'.format(alias)
                             path = result['Path'] + ['Aliases']
