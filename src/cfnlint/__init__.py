@@ -127,10 +127,10 @@ class RulesCollection(object):
         else:
             self.ignore_rules = []
 
-    def register(self, obj):
+    def register(self, rule):
         """Register rules"""
-        if self.is_rule_enabled(obj):
-            self.rules.append(obj)
+        if self.is_rule_enabled(rule.id):
+            self.rules.append(rule)
 
     def __iter__(self):
         return iter(self.rules)
@@ -141,18 +141,18 @@ class RulesCollection(object):
     def extend(self, more):
         """Extend rules"""
         for rule in more:
-            if self.is_rule_enabled(rule):
+            if self.is_rule_enabled(rule.id):
                 self.rules.append(rule)
 
     def __repr__(self):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
-    def is_rule_enabled(self, rule):
+    def is_rule_enabled(self, rule_id):
         """ Cheks if an individual rule is valid """
         # Allowing ignoring of rules based on prefix to ignore checks
         for ignore_rule in self.ignore_rules:
-            if rule.id.startswith(ignore_rule) and ignore_rule:
+            if rule_id.startswith(ignore_rule) and ignore_rule:
                 return False
 
         return True
@@ -164,9 +164,17 @@ class RulesCollection(object):
         property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                matches.extend(
-                    rule.matchall_resource_sub_properties(
-                        filename, cfn, properties, property_spec_name, path))
+                try:
+                    matches.extend(
+                        rule.matchall_resource_sub_properties(
+                            filename, cfn, properties, property_spec_name, path))
+                except Exception as err:  # pylint: disable=W0703
+                    if self.is_rule_enabled('E0002'):
+                        message = 'Unknown exception while processing rule {}: {}'
+                        matches.append(cfnlint.Match(
+                            1, 1,
+                            1, 1,
+                            filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
             for resource_property, resource_property_value in properties.items():
@@ -198,7 +206,15 @@ class RulesCollection(object):
         """Run rules"""
         matches = list()
         for rule in self.rules:
-            matches.extend(rule.matchall(filename, cfn))
+            try:
+                matches.extend(rule.matchall(filename, cfn))
+            except Exception as err:  # pylint: disable=W0703
+                if self.is_rule_enabled('E0002'):
+                    message = 'Unknown exception while processing rule {}: {}'
+                    matches.append(cfnlint.Match(
+                        1, 1,
+                        1, 1,
+                        filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
 
         # Go after resource specs for the region in question
         resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
@@ -207,9 +223,17 @@ class RulesCollection(object):
             resource_properties = resource_attributes.get('Properties', {})
             path = ['Resources', resource_name, 'Properties']
             for rule in self.rules:
-                matches.extend(
-                    rule.matchall_resource_properties(
-                        filename, cfn, resource_properties, resource_type, path))
+                try:
+                    matches.extend(
+                        rule.matchall_resource_properties(
+                            filename, cfn, resource_properties, resource_type, path))
+                except Exception as err:  # pylint: disable=W0703
+                    if self.is_rule_enabled('E0002'):
+                        message = 'Unknown exception while processing rule {}: {}'
+                        matches.append(cfnlint.Match(
+                            1, 1,
+                            1, 1,
+                            filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
             if resource_properties and resource_type in resource_spec:
                 resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
                 for resource_property, resource_property_value in resource_properties.items():
@@ -823,3 +847,10 @@ class TransformError(cfnlint.CloudFormationLintRule):
     shortdesc = 'Error found when transforming the template'
     description = 'Errors found when performing transformation on the template'
     tags = ['base', 'transform']
+
+class RuleError(cfnlint.CloudFormationLintRule):
+    """Rule processing Error"""
+    id = 'E0002'
+    shortdesc = 'Error processing rule on the template'
+    description = 'Errors found when processing a rule on the template'
+    tags = ['base', 'rule']
