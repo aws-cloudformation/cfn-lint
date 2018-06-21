@@ -44,11 +44,21 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "test4" # No quotation
-        - Name: "www.example.com"
+        - Name: "www1.example.com"
           Type: "A"
           TTL: "300"
           ResourceRecords:
-            - "127.0.0.1"
+            - "a.example.com" # No IPv4 address
+        - Name: "www2.example.com"
+          Type: "A"
+          TTL: "300"
+          ResourceRecords:
+            - "127.0.0.1 " # Spaces
+        - Name: "www3.example.com"
+          Type: "A"
+          TTL: "300"
+          ResourceRecords:
+            - "256.10.1.256" # Invalid values
   MySecondRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:

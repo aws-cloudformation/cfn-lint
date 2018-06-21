@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -39,6 +40,26 @@ class RecordSet(CloudFormationLintRule):
         'SRV',
         'TXT'
     ]
+
+    ipv4_regex = r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$'
+
+    def check_a_record(self, path, recordset):
+        """Check A record Configuration"""
+        matches = list()
+
+        if not recordset.get('AliasTarget'):
+            resource_records = recordset.get('ResourceRecords')
+            for index, record in enumerate(resource_records):
+                tree = path[:] + ['ResourceRecords', index]
+                full_path = ('/'.join(str(x) for x in tree))
+
+                # Check if a valid IPv4 address is specified
+                regex = re.compile(self.ipv4_regex)
+                if not regex.match(record):
+                    message = 'A record is not a valid IPv4 address at {0}'
+                    matches.append(RuleMatch(tree, message.format(full_path)))
+
+        return matches
 
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
@@ -70,6 +91,8 @@ class RecordSet(CloudFormationLintRule):
             message = 'Invalid record type "{0}" specified at {1}'
             full_path = ('/'.join(str(x) for x in path))
             matches.append(RuleMatch(path, message.format(recordset_type, full_path)))
+        elif recordset_type == 'A':
+            matches.extend(self.check_a_record(path, recordset))
         elif recordset_type == 'TXT':
             matches.extend(self.check_txt_record(path, recordset))
 
