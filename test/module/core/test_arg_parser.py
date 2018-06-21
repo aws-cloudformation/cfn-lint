@@ -35,11 +35,11 @@ class TestArgsParser(BaseTestCase):
         args = parser.parse_args([
             '--template', 'test.yaml', '--ignore-bad-template',
             '--format', 'quiet', '--debug'])
-        self.assertEqual(vars(args)['template'], None)
-        self.assertEqual(vars(args)['template_alt'], 'test.yaml')
-        self.assertEqual(vars(args)['ignore_bad_template'], True)
-        self.assertEqual(vars(args)['format'], 'quiet')
-        self.assertEqual(vars(args)['debug'], True)
+        self.assertEqual(args.template, None)
+        self.assertEqual(args.template_alt, 'test.yaml')
+        self.assertEqual(args.ignore_bad_template, True)
+        self.assertEqual(args.format, 'quiet')
+        self.assertEqual(args.debug, True)
 
     def test_override_template_defaults(self):
         """Test second parser"""
@@ -55,4 +55,4 @@ class TestArgsParser(BaseTestCase):
             '--ignore-checks', 'E0101'
         ])
 
-        self.assertEqual(vars(args)['ignore_checks'], ['E0101'])
+        self.assertEqual(args.ignore_checks, ['E0101'])

@@ -91,7 +91,7 @@ def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
 
-    # Alllow the template to be passes ad an optional or a positional argument
+    # Alllow the template to be passes as an optional or a positional argument
     parser.add_argument(
         'template', nargs='?', help='The CloudFormation template to be linted')
     parser.add_argument(
@@ -173,29 +173,29 @@ def get_rules(rulesdir, ignore_rules):
 
 
 def get_template_args_rules(cli_args):
-    """ Get Template Configuration items and set them as default vales"""
+    """ Get Template Configuration items and set them as default values"""
     defaults = {}
     template = {}
     parser = create_parser()
 
-    args = parser.parse_known_args(cli_args)
+    args, _ = parser.parse_known_args(cli_args)
 
-    configure_logging(vars(args[0])['debug'])
+    configure_logging(args.debug)
 
-    fmt = vars(args[0])['format']
+    fmt = args.format
     formatter = get_formatter(fmt)
 
-    # Filename can be speficied as positional or optiona argument. Positional
+    # Filename can be speficied as positional or optional argument. Positional
     # is leading
-    if vars(args[0])['template']:
-        filename = vars(args[0])['template']
-    elif vars(args[0])['template_alt']:
-        filename = vars(args[0])['template_alt']
+    if args.template:
+        filename = args.template
+    elif args.template_alt:
+        filename = args.template_alt
     else:
         filename = None
 
     if filename:
-        ignore_bad_template = vars(args[0])['ignore_bad_template']
+        ignore_bad_template = args.ignore_bad_template
         try:
             template = cfnlint.cfn_yaml.load(filename)
         except IOError as e:
@@ -248,17 +248,17 @@ def get_template_args_rules(cli_args):
 
     args = parser.parse_args(cli_args)
 
-    if vars(args)['update_specs']:
+    if args.update_specs:
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
-    rules = cfnlint.core.get_rules(vars(args)['append_rules'], vars(args)['ignore_checks'])
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
 
-    if vars(args)['update_documentation']:
+    if args.update_documentation:
         cfnlint.maintenance.update_documentation(rules)
         exit(0)
 
-    if vars(args)['listrules']:
+    if args.listrules:
         print(rules)
         exit(0)
 

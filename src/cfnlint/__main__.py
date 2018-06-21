@@ -29,8 +29,8 @@ def main():
     return(
         cfnlint.core.run_cli(
             filename, template, rules, fmt,
-            vars(args)['regions'],
-            vars(args)['override_spec'], formatter))
+            args.regions,
+            args.override_spec, formatter))
 
 
 if __name__ == '__main__':
