@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -56,6 +57,13 @@ class FunctionMemorySize(CloudFormationLintRule):
 
         return matches
 
+    def check_memory_size_value(self, value):
+        """ Check the memory size value"""
+        if value < self.min_memory or value > self.max_memory:
+            return False
+
+        return True
+
     def check_ref(self, value, path, parameters, resources):
         """ Check Memory Size Ref """
 
@@ -70,6 +78,46 @@ class FunctionMemorySize(CloudFormationLintRule):
                 param_path = ['Parameters', value, 'Type']
                 message = 'Type for Parameter should be Number at {0}'
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
+
+            min_value = parameter.get('MinValue')
+            max_value = parameter.get('MaxValue')
+            allowed_values = parameter.get('AllowedValues')
+            if isinstance(allowed_values, list):
+                for allowed_value in allowed_values:
+                    if isinstance(allowed_value, six.integer_types):
+                        if not self.check_memory_size_value(allowed_value):
+                            param_path = ['Parameters', value, 'AllowedValues']
+                            message = 'AllowedValues should be between {0} and {1} at {2}'
+                            matches.append(
+                                RuleMatch(
+                                    param_path,
+                                    message.format(
+                                        self.min_memory,
+                                        self.max_memory,
+                                        ('/'.join(param_path)))))
+            else:
+                if min_value:
+                    if not self.check_memory_size_value(min_value):
+                        param_path = ['Parameters', value, 'MinValue']
+                        message = 'MinValue should be greater than {0} and equal or less than {1} at {2}'
+                        matches.append(
+                            RuleMatch(
+                                param_path,
+                                message.format(
+                                    self.min_memory,
+                                    self.max_memory,
+                                    ('/'.join(param_path)))))
+                if max_value:
+                    if not self.check_memory_size_value(max_value):
+                        param_path = ['Parameters', value, 'MaxValue']
+                        message = 'MaxValue should be greater than {0} and equal or less than {1} at {2}'
+                        matches.append(
+                            RuleMatch(
+                                param_path,
+                                message.format(
+                                    self.min_memory,
+                                    self.max_memory,
+                                    ('/'.join(param_path)))))
 
         return matches
 
