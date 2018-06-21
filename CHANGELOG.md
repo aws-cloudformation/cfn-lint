@@ -9,6 +9,17 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.3.1
+###### Features
+- Update rule E3020 to validate A recordsets
+###### Fixes
+- Require "aws-sam-translator" dependency be at least 1.6.0
+- Add support for wildcards in rule E3013
+- Support conditions in Lists for rule E3002
+- Include filename when we run into Null and Duplicate values when parsing yaml
+- Rule W2510 now allows for AllowedValues instead of just Min/MaxValue for compliance of Lambda MemorySize
+- Rule E2530 updated to checked AllowedValues for compliance of Lambda MemorySize
+
 ### 0.3.0
 ###### Features
 - Serverless Transforms now handled by SAM libraries
