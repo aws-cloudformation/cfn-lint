@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import re
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -50,14 +51,16 @@ class RecordSet(CloudFormationLintRule):
         if not recordset.get('AliasTarget'):
             resource_records = recordset.get('ResourceRecords')
             for index, record in enumerate(resource_records):
-                tree = path[:] + ['ResourceRecords', index]
-                full_path = ('/'.join(str(x) for x in tree))
 
-                # Check if a valid IPv4 address is specified
-                regex = re.compile(self.ipv4_regex)
-                if not regex.match(record):
-                    message = 'A record is not a valid IPv4 address at {0}'
-                    matches.append(RuleMatch(tree, message.format(full_path)))
+                if isinstance(record, six.string_types):
+                    tree = path[:] + ['ResourceRecords', index]
+                    full_path = ('/'.join(str(x) for x in tree))
+
+                    # Check if a valid IPv4 address is specified
+                    regex = re.compile(self.ipv4_regex)
+                    if not regex.match(record):
+                        message = 'A record is not a valid IPv4 address at {0}'
+                        matches.append(RuleMatch(tree, message.format(full_path)))
 
         return matches
 
