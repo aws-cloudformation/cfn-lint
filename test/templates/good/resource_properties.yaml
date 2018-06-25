@@ -297,6 +297,8 @@ Parameters:
     Type: String
   ParamInstanceSecurityGroup:
     Type: List<AWS::EC2::SecurityGroup::Id>
+Conditions:
+  HasSingleClusterInstance: !Equals [!Ref 'AWS::Region', 'us-east-1']
 Resources:
   CPUAlarmHigh:
     Properties:
@@ -561,6 +563,11 @@ Resources:
       Parameters:
         sql_mode: "NO_AUTO_CREATE_USER"
         another_param: "ANOTHER_PARAMETER"
+  ElasticsearchDomain:
+    Type: 'AWS::Elasticsearch::Domain'
+    Properties:
+      VPCOptions:
+        SubnetIds: !If [HasSingleClusterInstance, ['SubnetAPrivate'], ['SubnetAPrivate', 'SubnetBPrivate']]
   Table:
     Type: 'AWS::DynamoDB::Table'
     Properties:
