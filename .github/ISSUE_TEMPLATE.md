@@ -1,4 +1,4 @@
-*cfn-lint version: (`cfn-lint -version`)*
+*cfn-lint version: (`cfn-lint --version`)*
 
 *Description of issue.*
 
