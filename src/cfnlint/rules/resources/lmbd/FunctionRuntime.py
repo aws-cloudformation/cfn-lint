@@ -34,7 +34,7 @@ class FunctionRuntime(CloudFormationLintRule):
         """ Check runtime value """
         matches = list()
 
-        message = 'You must specify a valid value for runtime at {0}'
+        message = 'You must specify a valid value for runtime ({0}) at {1}'
 
         if value not in self.runtimes:
             matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
