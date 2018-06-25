@@ -35,7 +35,7 @@ REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
            'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
            'sa-east-1']
 
-REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9_]*$')
+REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 
 AVAILABILITY_ZONES = [
     'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
