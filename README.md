@@ -86,6 +86,10 @@ cfn-lint applies the configuration from the CloudFormation Metadata first and th
 
 > E3001 Invalid Type AWS::Batch::ComputeEnvironment for resource testBatch in ap-south-1
 
+### Integrate Linter (API)
+Apart from CLI usage, cfn-lint can also be integrated in existing code.
+See the [integration](docs/integration.md) documentation on how to integrate cfn-lint in your own code.
+
 
 ## Rules
 This linter checks the CloudFormation by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
