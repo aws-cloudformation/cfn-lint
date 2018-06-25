@@ -621,8 +621,10 @@ class Template(object):
                         is_condition = True
                         results = self.get_condition_values(obj_value, path[:] + [obj_key])
                         if isinstance(results, list):
-                            matches.extend(results)
-
+                            for result in results:
+                                check_obj = obj.copy()
+                                check_obj[key] = result['Value']
+                                matches.extend(self.get_values(check_obj, key, path[:] + result['Path']))
                 if not is_condition:
                     result = {}
                     result['Path'] = path[:]
