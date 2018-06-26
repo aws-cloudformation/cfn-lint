@@ -28,7 +28,7 @@ def main():
 
     for filename, template in files.items():
         exit_code |= cfnlint.core.lint_file(filename, template, rules, fmt,
-        args.regions, args.override_spec, formatter)
+                                            args.regions, args.override_spec, formatter)
 
     sys.exit(exit_code)
 
