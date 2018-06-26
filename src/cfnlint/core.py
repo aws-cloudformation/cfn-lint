@@ -193,11 +193,14 @@ def get_template_args_rules(cli_args):
     fmt = args.format
     formatter = get_formatter(fmt)
 
-    filenames = args.templates
+    if not args.templates:
+        # No templates specified, print the help
+        parser.print_help()
+        exit(1)
 
     exit_code = 0
     files = {}
-    for filename in filenames:
+    for filename in args.templates:
         if filename:
             ignore_bad_template = args.ignore_bad_template
             try:
@@ -265,11 +268,6 @@ def get_template_args_rules(cli_args):
     if args.listrules:
         print(rules)
         exit(0)
-
-    if not filename:
-        # Not specified, print the help
-        parser.print_help()
-        exit(1)
 
     return (
         args, # ArgumentParser.parse_args() returned object
