@@ -95,6 +95,11 @@ def create_parser():
     parser.add_argument(
         'templates', nargs='*', default=[],
         help='The CloudFormation templates to be linted')
+
+    # --template is for backwards compat -- can be dropped with next major version bump
+    parser.add_argument(
+        '--template', dest='templates', action='append', help=argparse.SUPPRESS
+    )
     parser.add_argument(
         '-t', '--templates', dest='templates', action='append',
         help='The CloudFormation templates to be linted'
