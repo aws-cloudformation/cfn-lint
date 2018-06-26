@@ -31,6 +31,9 @@ The following **71** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Tags |
 | -------- | ----- | ----------- |----- |
+| E0000 | Parsing error found when parsing the template | Checks for Null values and Duplicate values in resources | `base` |
+| E0001 | Error found when transforming the template | Errors found when performing transformation on the template | `base`,`transform` |
+| E0002 | Error processing rule on the template | Errors found when processing a rule on the template | `base`,`rule` |
 | E1001 | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template componets are propery configured | `base` |
 | E1002 | Template size limit | Check the size of the template is less than the upper limit | `base`,`limits` |
 | E1010 | GetAtt validation of parameters | Making sure the function GetAtt is of list | `base`,`functions`,`getatt` |

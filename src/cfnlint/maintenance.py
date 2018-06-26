@@ -18,6 +18,8 @@ import logging
 import pkg_resources
 import requests
 
+import cfnlint
+
 LOGGER = logging.getLogger('cfnlint')
 
 
@@ -89,6 +91,23 @@ def update_documentation(rules):
         new_file.write('| -------- | ----- | ----------- |----- |\n')
 
         rule_output = '| {0} | {1} | {2} | {3} |\n'
+
+        # Add system Errors (hardcoded)
+        parseerror = cfnlint.ParseError()
+        tags = ','.join('`{0}`'.format(tag) for tag in parseerror.tags)
+        new_file.write(rule_output.format(
+            parseerror.id, parseerror.shortdesc, parseerror.description, tags))
+
+        transformerror = cfnlint.TransformError()
+        tags = ','.join('`{0}`'.format(tag) for tag in transformerror.tags)
+        new_file.write(rule_output.format(
+            transformerror.id, transformerror.shortdesc, transformerror.description, tags))
+
+        ruleerror = cfnlint.RuleError()
+        tags = ','.join('`{0}`'.format(tag) for tag in ruleerror.tags)
+        new_file.write(
+            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, tags))
+
         for rule in sorted_rules:
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, tags))
