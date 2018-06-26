@@ -24,13 +24,13 @@ LOGGER = logging.getLogger('cfnlint')
 
 def main():
     """Main function"""
-    (args, filename, template, rules, fmt, formatter) = cfnlint.core.get_template_args_rules(sys.argv[1:])
+    (args, files, rules, fmt, formatter, exit_code) = cfnlint.core.get_template_args_rules(sys.argv[1:])
 
-    return(
-        cfnlint.core.run_cli(
-            filename, template, rules, fmt,
-            args.regions,
-            args.override_spec, formatter))
+    for filename, template in files.items():
+        exit_code |= cfnlint.core.lint_file(filename, template, rules, fmt,
+        args.regions, args.override_spec, formatter)
+
+    sys.exit(exit_code)
 
 
 if __name__ == '__main__':

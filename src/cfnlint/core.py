@@ -44,8 +44,8 @@ class ArgumentParser(argparse.ArgumentParser):
         self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
 
-def run_cli(filename, template, rules, fmt, regions, override_spec, formatter):
-    """Process args and run"""
+def lint_file(filename, template, rules, fmt, regions, override_spec, formatter):
+    """Process args and run."""
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -93,9 +93,12 @@ def create_parser():
 
     # Alllow the template to be passes as an optional or a positional argument
     parser.add_argument(
-        'template', nargs='?', help='The CloudFormation template to be linted')
+        'templates', nargs='*', default=[],
+        help='The CloudFormation templates to be linted')
     parser.add_argument(
-        '-t', '--template', dest='template_alt', help='The CloudFormation template to be linted')
+        '-t', '--templates', dest='templates', action='append',
+        help='The CloudFormation templates to be linted'
+    )
 
     parser.add_argument(
         '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
@@ -173,7 +176,7 @@ def get_rules(rulesdir, ignore_rules):
 
 
 def get_template_args_rules(cli_args):
-    """ Get Template Configuration items and set them as default values"""
+    """Get Template Configuration items and set them as default values."""
     defaults = {}
     template = {}
     parser = create_parser()
@@ -185,63 +188,59 @@ def get_template_args_rules(cli_args):
     fmt = args.format
     formatter = get_formatter(fmt)
 
-    # Filename can be speficied as positional or optional argument. Positional
-    # is leading
-    if args.template:
-        filename = args.template
-    elif args.template_alt:
-        filename = args.template_alt
-    else:
-        filename = None
+    filenames = args.templates
 
-    if filename:
-        ignore_bad_template = args.ignore_bad_template
-        try:
-            template = cfnlint.cfn_yaml.load(filename)
-        except IOError as e:
-            if e.errno == 2:
-                LOGGER.error('Template file not found: %s', filename)
-                sys.exit(1)
-            elif e.errno == 21:
-                LOGGER.error('Template references a directory, not a file: %s', filename)
-                sys.exit(1)
-            elif e.errno == 13:
-                LOGGER.error('Permission denied when accessing template file: %s', filename)
-                sys.exit(1)
-        except cfnlint.cfn_yaml.CfnParseError as err:
-            err.match.Filename = filename
-            matches = [err.match]
-            print_matches(matches, fmt, formatter)
-            sys.exit(get_exit_code(matches))
-        except ParserError as err:
-            matches = [create_match_yaml_parser_error(err, filename)]
-            print_matches(matches, fmt, formatter)
-            sys.exit(get_exit_code(matches))
-        except ScannerError as err:
-            if err.problem == 'found character \'\\t\' that cannot start any token':
-                try:
-                    template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-                except cfnlint.cfn_json.JSONDecodeError as json_err:
-                    json_err.match.filename = filename
-                    matches = [json_err.match]
-                    print_matches(matches, fmt, formatter)
-                    sys.exit(get_exit_code(matches))
-                except JSONDecodeError as json_err:
-                    matches = [create_match_json_parser_error(json_err, filename)]
-                    print_matches(matches, fmt, formatter)
-                    sys.exit(get_exit_code(matches))
-                except Exception as json_err:  # pylint: disable=W0703
-                    if ignore_bad_template:
-                        LOGGER.info('Template %s is malformed: %s', filename, err.problem)
-                        LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                    else:
-                        LOGGER.error('Template %s is malformed: %s', filename, err.problem)
-                        LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                        sys.exit(1)
-            else:
+    exit_code = 0
+    files = {}
+    for filename in filenames:
+        if filename:
+            ignore_bad_template = args.ignore_bad_template
+            try:
+                files[filename] = cfnlint.cfn_yaml.load(filename)
+            except IOError as e:
+                if e.errno == 2:
+                    LOGGER.error('Template file not found: %s', filename)
+                    exit_code |= 1
+                elif e.errno == 21:
+                    LOGGER.error('Template references a directory, not a file: %s', filename)
+                    exit_code |= 1
+                elif e.errno == 13:
+                    LOGGER.error('Permission denied when accessing template file: %s', filename)
+                    exit_code |= 1
+            except cfnlint.cfn_yaml.CfnParseError as err:
+                err.match.Filename = filename
+                matches = [err.match]
+                print_matches(matches, fmt, formatter)
+                exit_code |= get_exit_code(matches)
+            except ParserError as err:
                 matches = [create_match_yaml_parser_error(err, filename)]
                 print_matches(matches, fmt, formatter)
-                sys.exit(get_exit_code(matches))
+                exit_code |= get_exit_code(matches)
+            except ScannerError as err:
+                if err.problem == 'found character \'\\t\' that cannot start any token':
+                    try:
+                        files[filename] = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+                    except cfnlint.cfn_json.JSONDecodeError as json_err:
+                        json_err.match.filename = filename
+                        matches = [json_err.match]
+                        print_matches(matches, fmt, formatter)
+                        exit_code |= get_exit_code(matches)
+                    except JSONDecodeError as json_err:
+                        matches = [create_match_json_parser_error(json_err, filename)]
+                        print_matches(matches, fmt, formatter)
+                        exit_code |= get_exit_code(matches)
+                    except Exception as json_err:  # pylint: disable=W0703
+                        if ignore_bad_template:
+                            LOGGER.info('Template %s is malformed: %s', filename, err.problem)
+                            LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                        else:
+                            LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                            LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
+                            exit_code |= 1
+                else:
+                    matches = [create_match_yaml_parser_error(err, filename)]
+                    print_matches(matches, fmt, formatter)
+                    exit_code |= get_exit_code(matches)
 
     defaults = get_default_args(template)
     parser.set_defaults(**defaults)
@@ -267,7 +266,14 @@ def get_template_args_rules(cli_args):
         parser.print_help()
         exit(1)
 
-    return(args, filename, template, rules, fmt, formatter)
+    return (
+        args, # ArgumentParser.parse_args() returned object
+        files, # Dictionary of file(str):template(dict) that were parsed successfully
+        rules,
+        fmt, # output format
+        formatter, # formatter for output format
+        exit_code, # minimum exit code (might be non-zero due to parsing errors)
+    )
 
 
 def get_default_args(template):
