@@ -29,10 +29,10 @@ from yaml.constructor import ConstructorError
 import cfnlint
 
 try:
-    from yaml.cyaml import CParser as Parser
+    from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
     cyaml = True
 except ImportError:
-    from yaml.parser import Parser
+    from yaml.parser import Parser  # pylint: disable=ungrouped-imports
     cyaml = False
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
