@@ -21,13 +21,19 @@ from yaml.composer import Composer
 from yaml.reader import Reader
 from yaml.scanner import Scanner
 from yaml.resolver import Resolver
-from yaml.parser import Parser
 from yaml import ScalarNode
 from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
 import cfnlint
+
+try:
+    from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
+    cyaml = True
+except ImportError:
+    from yaml.parser import Parser  # pylint: disable=ungrouped-imports
+    cyaml = False
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
@@ -171,7 +177,10 @@ class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver)
     def __init__(self, stream, filename):
         Reader.__init__(self, stream)
         Scanner.__init__(self)
-        Parser.__init__(self)
+        if cyaml:
+            Parser.__init__(self, stream)
+        else:
+            Parser.__init__(self)
         Composer.__init__(self)
         SafeConstructor.__init__(self)
         Resolver.__init__(self)
