@@ -249,6 +249,8 @@ def get_template_args_rules(cli_args):
                 matches = [create_match_yaml_parser_error(err, filename)]
                 print_matches(matches, fmt, formatter)
                 exit_code |= get_exit_code(matches)
+        finally:
+            f.close()
 
     if args.templates and not files:
         # Templates were specified but none were valid
