@@ -9,6 +9,14 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.3.2
+###### Features
+- Try/Catch added to rule processing so code failures in rules won't crash cfn-lint
+- Parse YAML files using C parser when available.  Greatly speeds up YAML parsing.
+###### Fixes
+- Template class updated to handle conditions where lists are in the true/false values
+- Fix regex for checking Resource, Output, etc. names to not include underscore
+
 ### 0.3.1
 ###### Features
 - Update rule E3020 to validate A recordsets
