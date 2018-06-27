@@ -87,6 +87,15 @@ def configure_logging(debug_logging):
     LOGGER.addHandler(ch)
 
 
+def rule(string):
+    if not string or string[0] not in ('E', 'W'):
+        message = '"%s" is not a valid rule.' % string
+        if os.path.isfile(string):
+            message += ' (Hint: specify "--" between the rules and template files.)'
+        raise argparse.ArgumentTypeError(message)
+    return string
+
+
 def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
@@ -123,16 +132,19 @@ def create_parser():
         action='store_true', help='list all the rules'
     )
     parser.add_argument(
-        '-r', '--regions', dest='regions', default=['us-east-1'], nargs='*',
+        '-r', '--regions', dest='regions', default=['us-east-1'], nargs='+',
+        metavar='REGION',
         help='list the regions to validate against.'
     )
     parser.add_argument(
-        '-a', '--append-rules', dest='append_rules', default=[], nargs='*',
+        '-a', '--append-rules', dest='append_rules', default=[], nargs='+', type=rule,
+        metavar='RULE',
         help='specify one or more rules directories using '
              'one or more --append-rules arguments. '
     )
     parser.add_argument(
-        '-i', '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
+        '-i', '--ignore-checks', dest='ignore_checks', default=[], nargs='+', type=rule,
+        metavar='RULE',
         help='only check rules whose id do not match these values'
     )
 
