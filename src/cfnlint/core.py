@@ -193,11 +193,6 @@ def get_template_args_rules(cli_args):
     fmt = args.format
     formatter = get_formatter(fmt)
 
-    if not args.templates:
-        # No templates specified, print the help
-        parser.print_help()
-        exit(1)
-
     exit_code = 0
     files = {}
     for filename in args.templates:
@@ -250,6 +245,11 @@ def get_template_args_rules(cli_args):
                     print_matches(matches, fmt, formatter)
                     exit_code |= get_exit_code(matches)
 
+    if args.templates and not files:
+        # Templates were specified but none were valid
+        LOGGER.error('No valid templates specified')
+        exit(1)
+
     defaults = get_default_args(template)
     parser.set_defaults(**defaults)
 
@@ -268,6 +268,10 @@ def get_template_args_rules(cli_args):
     if args.listrules:
         print(rules)
         exit(0)
+
+    if not args.templates:
+        LOGGER.error('No templates specified')
+        exit(1)
 
     return (
         args, # ArgumentParser.parse_args() returned object

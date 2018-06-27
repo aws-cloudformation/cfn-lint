@@ -28,7 +28,7 @@ class TestRunChecks(BaseTestCase):
 
         filename = 'templates/good/generic.yaml'
         (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
-            '--template', filename])
+            filename])
 
         results = cfnlint.core.run_checks(
             filename, template, rules, ['us-east-1'])
@@ -40,7 +40,7 @@ class TestRunChecks(BaseTestCase):
 
         filename = 'templates/quickstart/nat-instance.json'
         (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
-            '--template', filename])
+            filename])
 
         results = cfnlint.core.run_checks(
             filename, template, rules, ['us-east-1'])
