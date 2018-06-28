@@ -15,7 +15,6 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import re
-import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -28,6 +27,25 @@ class SecurityGroupDescription(CloudFormationLintRule):
 
     description_regex = r'^([a-z,A-Z,0-9,. _\-:/()#,@[\]+=&;\{\}!$*])*$'
 
+    def check_value(self, value, path):
+        """Check SecurityGroup descriptions"""
+        matches = list()
+        full_path = ('/'.join(str(x) for x in path))
+
+        # Check max length
+        if len(value) > 255:
+            message = 'GroupDescription length ({0}) exceeds the limit (255) at {1}'
+            matches.append(RuleMatch(path, message.format(len(value), full_path)))
+        else:
+            # Check valid characters
+            regex = re.compile(self.description_regex)
+            if not regex.match(value):
+                message = 'GroupDescription contains invalid characters (valid characters are: '\
+                          '"a-zA-Z0-9. _-:/()#,@[]+=&;\\{{}}!$*"") at {0}'
+                matches.append(RuleMatch(path, message.format(full_path)))
+
+        return matches
+
     def match(self, cfn):
         """Check SecurityGroup descriptions"""
 
@@ -38,25 +56,14 @@ class SecurityGroupDescription(CloudFormationLintRule):
         for resource_name, resource in resources.items():
             path = ['Resources', resource_name, 'Properties']
 
-            props = resource.get('Properties')
-            if props:
-                description = props.get('GroupDescription')
-
-                if description:
-                    path = ['Resources', resource_name, 'Properties', 'GroupDescription']
-                    full_path = ('/'.join(str(x) for x in path))
-
-                    if isinstance(description, six.string_types):
-                        # Check max length
-                        if len(description) > 255:
-                            message = 'GroupDescription length of {0} ({1}) exceeds the limit (255) at {2}'
-                            matches.append(RuleMatch(path, message.format(resource_name, len(description), full_path)))
-                        else:
-                            # Check valid characters
-                            regex = re.compile(self.description_regex)
-                            if not regex.match(description):
-                                message = 'GroupDescription contains invalid characters (valid characters are: '\
-                                          '"a-zA-Z0-9. _-:/()#,@[]+=&;\\{{}}!$*"") at {0}'
-                                matches.append(RuleMatch(path, message.format(full_path)))
+            properties = resource.get('Properties')
+            if properties:
+                matches.extend(
+                    cfn.check_value(
+                        properties, 'GroupDescription', path,
+                        check_value=self.check_value, check_ref=None,
+                        check_find_in_map=None, check_split=None, check_join=None
+                    )
+                )
 
         return matches

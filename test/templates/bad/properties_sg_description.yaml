@@ -1,5 +1,9 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  AppGroup:
+    Type: "String"
+    Default: "myAppgroup"
 Resources:
   mySecurityGroupLongDescription:
     Type: AWS::EC2::SecurityGroup
@@ -13,3 +17,11 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: 'This one should be perfect! some characters like {} and [] are supported'
+  mySecurityGroupValidRef:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Ref "AppGroup"
+  mySecurityGroupValidSub:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub "Securitygroup of ${AppGroup}"
