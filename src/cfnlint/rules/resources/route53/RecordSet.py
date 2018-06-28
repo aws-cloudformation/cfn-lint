@@ -19,6 +19,8 @@ import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
+from cfnlint.helpers import REGEX_IPV4
+
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
     id = 'E3020'
@@ -42,8 +44,6 @@ class RecordSet(CloudFormationLintRule):
         'TXT'
     ]
 
-    ipv4_regex = r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$'
-
     def check_a_record(self, path, recordset):
         """Check A record Configuration"""
         matches = list()
@@ -57,8 +57,7 @@ class RecordSet(CloudFormationLintRule):
                     full_path = ('/'.join(str(x) for x in tree))
 
                     # Check if a valid IPv4 address is specified
-                    regex = re.compile(self.ipv4_regex)
-                    if not regex.match(record):
+                    if not re.match(REGEX_IPV4, record):
                         message = 'A record is not a valid IPv4 address at {0}'
                         matches.append(RuleMatch(tree, message.format(full_path)))
 

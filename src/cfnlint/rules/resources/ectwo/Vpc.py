@@ -18,6 +18,8 @@ import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
+from cfnlint.helpers import REGEX_CIDR
+
 
 class Vpc(CloudFormationLintRule):
     """Check if EC2 VPC Resource Properties"""
@@ -25,9 +27,6 @@ class Vpc(CloudFormationLintRule):
     shortdesc = 'Resource EC2 VPC Properties'
     description = 'See if EC2 VPC Properties are set correctly'
     tags = ['base', 'properties', 'vpc']
-
-    # pylint: disable=C0301
-    cidr_regex = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
 
     def check_vpc_value(self, value, path):
         """Check VPC Values"""
@@ -65,8 +64,7 @@ class Vpc(CloudFormationLintRule):
         """Check CIDR Strings"""
         matches = list()
 
-        regex = re.compile(self.cidr_regex)
-        if not regex.match(value):
+        if not re.match(REGEX_CIDR, value):
             message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         return matches
