@@ -27,6 +27,13 @@ class SecurityGroupDescription(CloudFormationLintRule):
 
     description_regex = r'^([a-z,A-Z,0-9,. _\-:/()#,@[\]+=&;\{\}!$*])*$'
 
+    # pylint: disable=W0613
+    def check_sub(self, value, path, **kwargs):
+        """Check SecurityGroup descriptions in Subs"""
+        # Just check the raw sub string itself, without the replacements
+        # for special characters
+        return self.check_value(value, path)
+
     def check_value(self, value, path):
         """Check SecurityGroup descriptions"""
         matches = list()
@@ -61,8 +68,7 @@ class SecurityGroupDescription(CloudFormationLintRule):
                 matches.extend(
                     cfn.check_value(
                         properties, 'GroupDescription', path,
-                        check_value=self.check_value, check_ref=None,
-                        check_find_in_map=None, check_split=None, check_join=None
+                        check_value=self.check_value, check_sub=self.check_sub
                     )
                 )
 
