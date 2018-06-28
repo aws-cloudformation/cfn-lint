@@ -17,6 +17,8 @@
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
+from cfnlint.helpers import REGEX_CIDR
+
 
 class Cidr(CloudFormationLintRule):
     """Check Availability Zone parameter checks """
@@ -25,9 +27,6 @@ class Cidr(CloudFormationLintRule):
     description = 'Check if a parameter is being used as a CIDR. ' \
                   'If it is make sure it has allowed values regex comparisons'
     tags = ['base', 'parameters', 'availabilityzone']
-
-    # pylint: disable=C0301
-    cidr_regex = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
 
     def __init__(self):
         """Init"""
@@ -65,8 +64,10 @@ class Cidr(CloudFormationLintRule):
             allowed_values = parameter.get('AllowedValues', None)
             if not allowed_pattern and not allowed_values:
                 param_path = ['Parameters', value]
-                message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. Example for AllowedPattern "{0}"'
-                matches.append(RuleMatch(param_path, message.format(self.cidr_regex, ('/'.join(param_path)))))
+                full_param_path = '/'.join(param_path)
+                message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. ' \
+                          'Example for AllowedPattern: "{0}"'
+                matches.append(RuleMatch(param_path, message.format(REGEX_CIDR.pattern, full_param_path)))
 
         return matches
 

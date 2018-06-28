@@ -19,6 +19,7 @@ import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
+from cfnlint.helpers import REGEX_CIDR
 
 class Cidr(CloudFormationLintRule):
     """Check if Cidr values are correct"""
@@ -114,10 +115,7 @@ class Cidr(CloudFormationLintRule):
                                     matches.append(RuleMatch(
                                         tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
                     elif isinstance(ip_block_obj, (six.text_type, six.string_types)):
-                        # pylint: disable=C0301
-                        pattern = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
-                        pattern = re.compile(pattern)
-                        if not pattern.match(ip_block_obj):
+                        if not re.match(REGEX_CIDR, ip_block_obj):
                             message = 'Cidr ipBlock should be a Cidr Range based string for {0}'
                             matches.append(RuleMatch(
                                 tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))

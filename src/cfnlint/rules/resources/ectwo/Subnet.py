@@ -17,7 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import AVAILABILITY_ZONES
+from cfnlint.helpers import AVAILABILITY_ZONES, REGEX_CIDR
 
 
 class Subnet(CloudFormationLintRule):
@@ -26,9 +26,6 @@ class Subnet(CloudFormationLintRule):
     shortdesc = 'Resource EC2 PropertiesEc2Subnet Properties'
     description = 'See if EC2 Subnet Properties are set correctly'
     tags = ['base', 'properties', 'subnet']
-
-    # pylint: disable=C0301
-    cidr_regex = r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
 
     def check_az_value(self, value, path):
         """Check AZ Values"""
@@ -67,8 +64,7 @@ class Subnet(CloudFormationLintRule):
         """Check CIDR Strings"""
         matches = list()
 
-        regex = re.compile(self.cidr_regex)
-        if not regex.match(value):
+        if not re.match(REGEX_CIDR, value):
             message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
         return matches
