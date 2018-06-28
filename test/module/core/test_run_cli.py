@@ -33,57 +33,49 @@ class TestCli(BaseTestCase):
 
         filename = 'templates/good/core/not_found.yaml'
 
-        with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.core.get_template_args_rules([
-                '--template', filename, '--ignore_bad_template'])
+        (_, _, _, _, _, exit_code) = cfnlint.core.get_template_args_rules(
+            ['--ignore-bad-template', filename])
 
-        self.assertEqual(exit_code.exception.code, 1)
+        self.assertEqual(exit_code, 1)
 
     def test_template_invalid_yaml(self):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_yaml.yaml'
 
-        with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.core.get_template_args_rules([
-                '--template', filename])
+        (_, _, _, _, _, exit_code) = cfnlint.core.get_template_args_rules([filename])
 
-        self.assertEqual(exit_code.exception.code, 2)
+        self.assertEqual(exit_code, 2)
 
     def test_template_invalid_json(self):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_json.json'
 
-        with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.core.get_template_args_rules([
-                '--template', filename])
+        (_, _, _, _, _, exit_code) = cfnlint.core.get_template_args_rules([filename])
 
-        self.assertEqual(exit_code.exception.code, 2)
+        self.assertEqual(exit_code, 2)
 
     def test_template_invalid_yaml_ignore(self):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_yaml.yaml'
 
-        with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.core.get_template_args_rules([
-                '--template', filename, '--ignore-bad-template'])
+        (_, _, _, _, _, exit_code) = cfnlint.core.get_template_args_rules(
+            ['--ignore-bad-template', filename])
 
-        self.assertEqual(exit_code.exception.code, 2)
+        self.assertEqual(exit_code, 2)
 
     def test_template_invalid_json_ignore(self):
         """Test template not found"""
         filename = 'templates/bad/core/config_invalid_json.json'
 
-        with self.assertRaises(SystemExit) as exit_code:
-            cfnlint.core.get_template_args_rules([
-                '--template', filename, '--ignore-bad-template'])
+        (_, _, _, _, _, exit_code) = cfnlint.core.get_template_args_rules(
+            ['--ignore-bad-template', filename])
 
-        self.assertEqual(exit_code.exception.code, 2)
+        self.assertEqual(exit_code, 2)
 
     def test_template_config(self):
         """Test template config"""
         filename = 'templates/good/core/config_parameters.yaml'
-        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
-            '--template', filename, '--ignore-bad-template'])
+        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules(['--ignore-bad-template', filename])
 
         self.assertEqual(vars(args), {
             'append_rules': [],
@@ -94,8 +86,7 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template_alt': 'templates/good/core/config_parameters.yaml',
-            'template': None,
+            'templates': ['templates/good/core/config_parameters.yaml'],
             'update_documentation': False,
             'update_specs': False})
 
@@ -103,8 +94,7 @@ class TestCli(BaseTestCase):
         """Test overriding parameters"""
         filename = 'templates/good/core/config_parameters.yaml'
         (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
-            filename, '--ignore-bad-template',
-            '--ignore-checks', 'E0000'])
+            '--ignore-bad-template', '--ignore-checks', 'E0000', filename])
 
         self.assertEqual(vars(args), {
             'append_rules': [],
@@ -115,8 +105,7 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template_alt': None,
-            'template': 'templates/good/core/config_parameters.yaml',
+            'templates': ['templates/good/core/config_parameters.yaml'],
             'update_documentation': False,
             'update_specs': False})
 
@@ -124,8 +113,7 @@ class TestCli(BaseTestCase):
         """Test overriding parameters"""
         filename = 'templates/good/core/config_parameters.yaml'
         (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
-            '--template', filename, '--ignore-bad-template',
-            '--ignore-checks', 'E0000'])
+            '--ignore-bad-template', '--ignore-checks', 'E0000', filename])
 
         self.assertEqual(vars(args), {
             'append_rules': [],
@@ -136,8 +124,7 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template_alt': 'templates/good/core/config_parameters.yaml',
-            'template': None,
+            'templates': ['templates/good/core/config_parameters.yaml'],
             'update_documentation': False,
             'update_specs': False})
 
@@ -146,7 +133,7 @@ class TestCli(BaseTestCase):
 
         filename = 'templates/bad/core/config_parameters.yaml'
         (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
-            '--template', filename, '--ignore-bad-template'])
+            '--ignore-bad-template', filename])
 
         self.assertEqual(vars(args), {
             'append_rules': [],
@@ -157,7 +144,6 @@ class TestCli(BaseTestCase):
             'debug': False,
             'override_spec': None,
             'regions': ['us-east-1'],
-            'template_alt': filename,
-            'template': None,
+            'templates': ['templates/bad/core/config_parameters.yaml'],
             'update_documentation': False,
             'update_specs': False})

@@ -38,7 +38,7 @@ class TestDuplicate(BaseTestCase):
         filename = 'templates/good/generic.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
+            cfnlint.cfn_yaml.load(open(filename))
         except cfnlint.cfn_yaml.CfnParseError:
             assert(False)
             return
@@ -67,7 +67,7 @@ class TestDuplicate(BaseTestCase):
         filename = 'templates/bad/duplicate.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
+            cfnlint.cfn_yaml.load(open(filename))
         except cfnlint.cfn_yaml.CfnParseError:
             assert(True)
             return

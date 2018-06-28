@@ -223,12 +223,11 @@ def construct_getatt(node):
     else:
         raise ValueError('Unexpected node type: {}'.format(type(node.value)))
 
-def load(filename):
+def load(fp):
     """
     Load the give YAML file
     """
-    fp = open(filename)
-    loader = MarkedLoader(fp.read(), filename)
+    loader = MarkedLoader(fp.read(), fp.name)
     loader.add_multi_constructor('!', multi_constructor)
     template = loader.get_single_data()
     # Convert an empty file to an empty dict
