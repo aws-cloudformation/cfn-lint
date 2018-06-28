@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -50,7 +51,9 @@ class Configuration(CloudFormationLintRule):
                             ))
                         else:
                             for secondkey in firstkeyobj:
-                                if isinstance(firstkeyobj[secondkey], (dict, list)):
+                                if not isinstance(
+                                        firstkeyobj[secondkey],
+                                        (six.string_types, list, six.integer_types)):
                                     message = 'Mapping {0} has invalid property at {1}'
                                     matches.append(RuleMatch(
                                         ['Mappings', mapname, firstkey, secondkey],
