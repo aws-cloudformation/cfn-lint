@@ -34,11 +34,11 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": 'templates/quickstart/config-rules.json',
-                "failures": 2
+                "failures": 4
             },
             "iam": {
                 "filename": 'templates/quickstart/iam.json',
-                "failures": 0
+                "failures": 4
             },
             "nat_instance": {
                 "filename": 'templates/quickstart/nat-instance.json',
@@ -46,7 +46,7 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc_management": {
                 "filename": 'templates/quickstart/vpc-management.json',
-                "failures": 32
+                "failures": 35
             },
             "vpc": {
                 "filename": 'templates/quickstart/vpc.json',
