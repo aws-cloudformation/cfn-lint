@@ -701,7 +701,7 @@ class Template(object):
     def check_resource_property(self, resource_type, resource_property,
                                 check_value=None, check_ref=None,
                                 check_find_in_map=None, check_split=None,
-                                check_join=None, **kwargs):
+                                check_join=None, check_sub=None, **kwargs):
         """ Check Resource Properties """
         LOGGER.debug('Check property %s for %s', resource_property, resource_type)
         matches = list()
@@ -715,7 +715,7 @@ class Template(object):
                         path=['Resources', resource_name, 'Properties'],
                         check_value=check_value, check_ref=check_ref,
                         check_find_in_map=check_find_in_map, check_split=check_split,
-                        check_join=check_join, **kwargs
+                        check_join=check_join, check_sub=check_sub, **kwargs
                     )
                 )
         return matches
@@ -724,7 +724,7 @@ class Template(object):
     def check_value(self, obj, key, path,
                     check_value=None, check_ref=None,
                     check_find_in_map=None, check_split=None, check_join=None,
-                    check_import_value=None,
+                    check_import_value=None, check_sub=None,
                     **kwargs):
         """
             Check the value

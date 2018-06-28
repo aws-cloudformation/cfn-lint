@@ -63,6 +63,7 @@ The following **72** rules are applied by this linter:
 | E2506 | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | `base`,`resources`,`securitygroup` |
 | E2507 | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | `base`,`properties`,`iam` |
 | E2508 | Check IAM resource limits | See if IAM resources do not breach limits | `base`,`resources`,`iam` |
+| E2509 | Validate SecurityGroup description | Check if SecurityGroup descriptions are correctly configured | `base`,`resources`,`securitygroup` |
 | E2510 | Resource EC2 PropertiesEc2Subnet Properties | See if EC2 Subnet Properties are set correctly | `base`,`properties`,`subnet` |
 | E2520 | Check Properties that are mutually exclusive | Making sure CloudFormation properties that are exclusive are not defined | `base`,`resources` |
 | E2521 | Check Properties that are required together | Make sure CloudFormation resource properties are included together when required | `base`,`resources` |
