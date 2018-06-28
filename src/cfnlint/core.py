@@ -98,7 +98,7 @@ def create_parser():
     standard.add_argument(
         'template', nargs='?', help='The CloudFormation template to be linted')
     standard.add_argument(
-        '-t', '--template', dest='template_alt', help='The CloudFormation template to be linted')
+        '-t', '--template', metavar='TEMPLATE', dest='template_alt', help='The CloudFormation template to be linted')
 
     standard.add_argument(
         '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
