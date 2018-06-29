@@ -25,6 +25,7 @@ class Inclusive(CloudFormationLintRule):
     shortdesc = 'Check Properties that are required together'
     description = 'Make sure CloudFormation resource properties ' + \
                   'are included together when required'
+    source = ['Resource Specification']
     tags = ['base', 'resources']
 
     def __init__(self):

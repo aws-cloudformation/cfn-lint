@@ -23,7 +23,8 @@ class IfExist(CloudFormationLintRule):
     id = 'E1025'
     shortdesc = 'Check if Conditions exist'
     description = 'Making sure the Conditions used in Fn:If functions exist'
-    tags = ['base', 'functions', 'if']
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if']
+    tags = ['functions', 'if']
 
     def match(self, cfn):
         """Check CloudFormation Conditions"""

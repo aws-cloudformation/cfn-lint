@@ -32,6 +32,9 @@ class CloudFormationLintRule(object):
     id = ''
     shortdesc = ''
     description = ''
+    source = []
+    tags = []
+
     logger = logging.getLogger(__name__)
     resource_property_types = []
     resource_sub_property_types = []

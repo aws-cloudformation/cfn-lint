@@ -24,6 +24,7 @@ class Split(CloudFormationLintRule):
     id = 'E1018'
     shortdesc = 'Split validation of parameters'
     description = 'Making sure the split function is properly configured'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-split.html']
     tags = ['base', 'functions', 'split']
 
     def match(self, cfn):

@@ -25,6 +25,7 @@ class LimitNumber(CloudFormationLintRule):
     shortdesc = 'Parameter limit not exceeded'
     description = 'Check the number of Parameters in the template is less' \
                   'than the upper limit'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
     tags = ['base', 'parameters', 'limits']
 
     def match(self, cfn):

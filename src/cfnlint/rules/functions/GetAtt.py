@@ -24,7 +24,8 @@ class GetAtt(CloudFormationLintRule):
     id = 'E1010'
     shortdesc = 'GetAtt validation of parameters'
     description = 'Making sure the function GetAtt is of list'
-    tags = ['base', 'functions', 'getatt']
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html']
+    tags = ['functions', 'getatt']
 
     def __init__(self):
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS['us-east-1']

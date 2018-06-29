@@ -25,6 +25,7 @@ class LimitNumber(CloudFormationLintRule):
     shortdesc = 'Mapping limit not exceeded'
     description = 'Check the number of Mappings in the template is less' \
                   'than the upper limit'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
     tags = ['base', 'mappings', 'limits']
 
     def match(self, cfn):

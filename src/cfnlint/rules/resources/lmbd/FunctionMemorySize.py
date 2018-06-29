@@ -24,7 +24,9 @@ class FunctionMemorySize(CloudFormationLintRule):
     id = 'E2530'
     shortdesc = 'Check Lambda Memory Size Properties'
     description = 'See if Lambda Memory Size is valid'
+    source = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize']
     tags = ['base', 'resources', 'lambda']
+
     min_memory = 128
     max_memory = 3008
 

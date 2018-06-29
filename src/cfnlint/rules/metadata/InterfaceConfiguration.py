@@ -23,6 +23,7 @@ class InterfaceConfiguration(CloudFormationLintRule):
     id = 'E4001'
     shortdesc = 'Metadata Interface have appropriate properties'
     description = 'Metadata Interface properties are properly configured'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html']
     tags = ['base', 'metadata']
 
     valid_keys = [

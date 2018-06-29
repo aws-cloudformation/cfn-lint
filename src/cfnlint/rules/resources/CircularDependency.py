@@ -26,6 +26,7 @@ class CircularDependency(CloudFormationLintRule):
     shortdesc = 'Resource dependencies are not circular'
     description = 'Check that Resources are not circularly dependent ' \
                   'by Ref, Sub, or GetAtt'
+    source = ['Resource Specification']
     tags = ['base', 'resources', 'circularly']
 
     def searchstring(self, string):

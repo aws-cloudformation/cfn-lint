@@ -26,6 +26,7 @@ class OnlyOne(CloudFormationLintRule):
     description = 'Making sure CloudFormation properties ' + \
                   'that require only one property from a list. ' + \
                   'One has to be specified.'
+    source = ['Resource Specification']
     tags = ['base', 'resources']
 
     def __init__(self):

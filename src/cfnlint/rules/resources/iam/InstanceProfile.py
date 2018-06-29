@@ -24,6 +24,7 @@ class InstanceProfile(CloudFormationLintRule):
     shortdesc = 'Check if IamInstanceProfile are using the name and not ARN'
     description = 'See if there are any properties IamInstanceProfile' + \
                   'are using name and not ARN'
+    source = ['Unknown']
     tags = ['base', 'properties']
 
     def match(self, cfn):

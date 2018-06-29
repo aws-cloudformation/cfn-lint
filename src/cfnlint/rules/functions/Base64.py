@@ -24,6 +24,7 @@ class Base64(CloudFormationLintRule):
     id = 'E1021'
     shortdesc = 'Base64 validation of parameters'
     description = 'Making sure the function not is of list'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html']
     tags = ['base', 'functions', 'base64']
 
     def match(self, cfn):

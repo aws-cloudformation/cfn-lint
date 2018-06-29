@@ -24,6 +24,7 @@ class Base(CloudFormationLintRule):
     shortdesc = 'Basic CloudFormation Template Configuration'
     description = 'Making sure the basic CloudFormation template componets ' + \
                   'are propery configured'
+    source = ['Basic Template validation']
     tags = ['base']
 
     required_keys = [

@@ -25,6 +25,7 @@ class Required(CloudFormationLintRule):
     shortdesc = 'Required Resource Parameters are missing'
     description = 'Making sure that Resources properties ' + \
                   'that are required exist'
+    source = ['Resource Specification']
     tags = ['base', 'resources']
 
     cfn = {}

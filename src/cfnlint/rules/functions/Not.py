@@ -23,6 +23,7 @@ class Not(CloudFormationLintRule):
     id = 'E1023'
     shortdesc = 'Validation NOT function configuration'
     description = 'Making sure that NOT functions are list'
+    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-not']
     tags = ['base', 'functions', 'not']
 
     def match(self, cfn):

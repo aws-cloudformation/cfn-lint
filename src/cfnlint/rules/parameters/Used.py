@@ -26,6 +26,7 @@ class Used(CloudFormationLintRule):
     id = 'W2001'
     shortdesc = 'Check if Parameters are Used'
     description = 'Making sure the parameters defined are used'
+    source = ['Best Practice']
     tags = ['base', 'parameters']
 
     def searchstring(self, string, parameter):
