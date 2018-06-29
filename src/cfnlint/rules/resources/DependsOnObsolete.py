@@ -25,7 +25,7 @@ class DependsOnObsolete(CloudFormationLintRule):
     description = 'Check if DependsOn is specified if not needed. ' \
                   'A Ref or a Fn::GetAtt already is an implicit dependency.'
     source = ['https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/']
-    tags = ['base', 'resources', 'dependson']
+    tags = ['resources', 'dependson']
 
     def get_resource_references(self, cfn, ref_function, resource):
         """Get tree of all resource references of a resource"""

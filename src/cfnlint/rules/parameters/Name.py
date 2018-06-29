@@ -26,7 +26,7 @@ class Name(CloudFormationLintRule):
     shortdesc = 'Parameters have appropriate names'
     description = 'Check if Parameters are properly named (A-Za-z0-9)'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-requirements']
-    tags = ['base', 'parameters']
+    tags = ['parameters']
 
     def match(self, cfn):
         """Check CloudFormation Mapping"""

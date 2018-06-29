@@ -26,7 +26,7 @@ class LimitNumber(CloudFormationLintRule):
     description = 'Check the number of Outputs in the template is less' \
                   'than the upper limit'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
-    tags = ['base', 'outputs', 'limits']
+    tags = ['outputs', 'limits']
 
     def match(self, cfn):
         """Check CloudFormation Outputs"""

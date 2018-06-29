@@ -26,7 +26,7 @@ class Configuration(CloudFormationLintRule):
     description = 'Making sure the basic CloudFormation resources ' + \
                   'are propery configured'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def match(self, cfn):
         """Check CloudFormation Resources"""

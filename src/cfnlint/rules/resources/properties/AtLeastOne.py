@@ -27,7 +27,7 @@ class AtLeastOne(CloudFormationLintRule):
                   'that require at least one property from a list. ' + \
                   'More than one can be included.'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

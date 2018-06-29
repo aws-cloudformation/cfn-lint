@@ -25,7 +25,7 @@ class LambdaRuntime(CloudFormationLintRule):
     description = 'Check if a parameter that is used for Lambda runtime ' \
                   ' has allowed values constraint defined'
     source = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime']
-    tags = ['base', 'parameters', 'lambda']
+    tags = ['parameters', 'lambda']
 
     def __init__(self):
         """Init"""

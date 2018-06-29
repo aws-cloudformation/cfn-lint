@@ -26,7 +26,7 @@ class Required(CloudFormationLintRule):
     description = 'Making sure that Resources properties ' + \
                   'that are required exist'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     cfn = {}
 

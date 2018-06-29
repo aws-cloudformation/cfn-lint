@@ -25,7 +25,7 @@ class GetAz(CloudFormationLintRule):
     shortdesc = 'GetAz validation of parameters'
     description = 'Making sure the function not is of list'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getavailabilityzones.html']
-    tags = ['base', 'functions', 'getaz']
+    tags = ['functions', 'getaz']
 
     def match(self, cfn):
         """Check CloudFormation GetAz"""

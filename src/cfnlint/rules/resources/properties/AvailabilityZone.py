@@ -24,7 +24,7 @@ class AvailabilityZone(CloudFormationLintRule):
     shortdesc = 'Availability Zone Parameters should not be hardcoded'
     description = 'Check if an Availability Zone property is hardcoded.'
     source = ['Unknown']
-    tags = ['base', 'parameters', 'availabilityzone']
+    tags = ['parameters', 'availabilityzone']
 
     def __init__(self):
         """Init"""

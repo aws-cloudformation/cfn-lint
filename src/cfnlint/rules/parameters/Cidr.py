@@ -27,7 +27,7 @@ class Cidr(CloudFormationLintRule):
     description = 'Check if a parameter is being used as a CIDR. ' \
                   'If it is make sure it has allowed values regex comparisons'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html']
-    tags = ['base', 'parameters', 'availabilityzone']
+    tags = ['parameters', 'availabilityzone']
 
     def __init__(self):
         """Init"""

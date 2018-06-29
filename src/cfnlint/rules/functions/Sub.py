@@ -26,7 +26,7 @@ class Sub(CloudFormationLintRule):
     shortdesc = 'Sub validation of parameters'
     description = 'Making sure the split function is properly configured'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html']
-    tags = ['base', 'functions', 'sub']
+    tags = ['functions', 'sub']
 
     def _test_string(self, cfn, sub_string, parameters, tree):
         """Test if a string has appropriate parameters"""

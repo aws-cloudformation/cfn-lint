@@ -24,7 +24,7 @@ class Configuration(CloudFormationLintRule):
     shortdesc = 'Conditions have appropriate properties'
     description = 'Check if Conditions are properly configured'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html']
-    tags = ['base', 'conditions']
+    tags = ['conditions']
 
     condition_keys = [
         'Fn::And',

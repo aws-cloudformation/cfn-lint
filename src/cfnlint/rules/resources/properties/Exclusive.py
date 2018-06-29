@@ -26,7 +26,7 @@ class Exclusive(CloudFormationLintRule):
     description = 'Making sure CloudFormation properties ' + \
                   'that are exclusive are not defined'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

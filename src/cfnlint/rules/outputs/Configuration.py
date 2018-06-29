@@ -24,7 +24,7 @@ class Configuration(CloudFormationLintRule):
     shortdesc = 'Outputs have appropriate properties'
     description = 'Making sure the outputs are properly configured'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
-    tags = ['base', 'outputs']
+    tags = ['outputs']
 
     valid_keys = [
         'Value',

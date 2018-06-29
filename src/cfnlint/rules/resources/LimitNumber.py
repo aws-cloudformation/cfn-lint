@@ -26,7 +26,7 @@ class LimitNumber(CloudFormationLintRule):
     description = 'Check the number of Resources in the template is less' \
                   'than the upper limit'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
-    tags = ['base', 'resources', 'limits']
+    tags = ['resources', 'limits']
 
     def match(self, cfn):
         """Check CloudFormation Resources"""

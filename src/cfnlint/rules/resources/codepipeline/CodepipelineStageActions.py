@@ -24,7 +24,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
     shortdesc = 'CodePipeline Stage Actions'
     description = 'See if CodePipeline stage actions are set correctly'
     source = ['Unknown']
-    tags = ['base', 'resources', 'codepipeline']
+    tags = ['resources', 'codepipeline']
 
     VALID_OWNER_STRINGS = {'AWS', 'ThirdParty', 'Custom'}
 

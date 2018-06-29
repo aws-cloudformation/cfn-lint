@@ -24,7 +24,7 @@ class CodepipelineStages(CloudFormationLintRule):
     shortdesc = 'CodePipeline Stages'
     description = 'See if CodePipeline stages are set correctly'
     source = ['Unknown']
-    tags = ['base', 'properties', 'codepipeline']
+    tags = ['properties', 'codepipeline']
 
     def check_stage_count(self, stages, path):
         """Check that there is minimum 2 stages."""

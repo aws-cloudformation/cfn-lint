@@ -27,7 +27,7 @@ class CircularDependency(CloudFormationLintRule):
     description = 'Check that Resources are not circularly dependent ' \
                   'by Ref, Sub, or GetAtt'
     source = ['Resource Specification']
-    tags = ['base', 'resources', 'circularly']
+    tags = ['resources', 'circularly']
 
     def searchstring(self, string):
         """Search string for tokenized fields"""

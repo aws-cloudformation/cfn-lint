@@ -25,7 +25,7 @@ class FindInMap(CloudFormationLintRule):
     shortdesc = 'FindInMap validation of configuration'
     description = 'Making sure the function is a list of appropriate config'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html']
-    tags = ['base', 'functions', 'getatt']
+    tags = ['functions', 'getatt']
 
     supported_functions = [
         'Fn::FindInMap',

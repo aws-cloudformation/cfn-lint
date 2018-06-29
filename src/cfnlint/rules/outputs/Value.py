@@ -26,7 +26,7 @@ class Value(CloudFormationLintRule):
     shortdesc = 'Outputs have values of strings'
     description = 'Making sure the outputs have strings as values'
     source = ['Resource Specification']
-    tags = ['base', 'outputs']
+    tags = ['outputs']
 
     def __init__(self):
         resourcespecs = RESOURCE_SPECS['us-east-1']

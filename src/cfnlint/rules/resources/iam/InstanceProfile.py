@@ -25,7 +25,7 @@ class InstanceProfile(CloudFormationLintRule):
     description = 'See if there are any properties IamInstanceProfile' + \
                   'are using name and not ARN'
     source = ['Unknown']
-    tags = ['base', 'properties']
+    tags = ['properties']
 
     def match(self, cfn):
         """Check CloudFormation IamInstanceProfile Parameters"""

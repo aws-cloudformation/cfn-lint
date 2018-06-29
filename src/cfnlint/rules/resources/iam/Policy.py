@@ -25,7 +25,7 @@ class Policy(CloudFormationLintRule):
     description = 'See if there elements inside an IAM policy ' + \
                   'are correct'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html']
-    tags = ['base', 'properties', 'iam']
+    tags = ['properties', 'iam']
 
     def _check_policy_document(self, branch, policy):
         """Check policy document"""

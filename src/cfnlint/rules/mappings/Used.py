@@ -24,7 +24,7 @@ class Used(CloudFormationLintRule):
     shortdesc = 'Check if Mappings are Used'
     description = 'Making sure the mappings defined are used'
     source = ['Best Practice']
-    tags = ['base', 'conditions']
+    tags = ['conditions']
 
     def match(self, cfn):
         """Check CloudFormation Mappings"""

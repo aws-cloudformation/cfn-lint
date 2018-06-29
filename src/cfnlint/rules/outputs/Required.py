@@ -24,7 +24,7 @@ class Required(CloudFormationLintRule):
     shortdesc = 'Outputs have required properties'
     description = 'Making sure the outputs have required properties'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
-    tags = ['base', 'outputs']
+    tags = ['outputs']
 
     def match(self, cfn):
         """Check CloudFormation Outputs"""

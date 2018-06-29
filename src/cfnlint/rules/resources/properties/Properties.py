@@ -26,7 +26,7 @@ class Properties(CloudFormationLintRule):
     description = 'Making sure that resources properties ' + \
                   'are propery configured'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def __init__(self):
         self.cfn = {}

@@ -26,7 +26,7 @@ class Name(CloudFormationLintRule):
     shortdesc = 'Outputs have appropriate names'
     description = 'Check if Outputs are properly named (A-Za-z0-9)'
     source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
-    tags = ['base', 'outputs']
+    tags = ['outputs']
 
     def match(self, cfn):
         """Check CloudFormation Mapping"""

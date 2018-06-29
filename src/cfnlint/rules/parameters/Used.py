@@ -27,7 +27,7 @@ class Used(CloudFormationLintRule):
     shortdesc = 'Check if Parameters are Used'
     description = 'Making sure the parameters defined are used'
     source = ['Best Practice']
-    tags = ['base', 'parameters']
+    tags = ['parameters']
 
     def searchstring(self, string, parameter):
         """Search string for tokenized fields"""

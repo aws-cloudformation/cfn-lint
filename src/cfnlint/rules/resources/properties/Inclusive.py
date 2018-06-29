@@ -26,7 +26,7 @@ class Inclusive(CloudFormationLintRule):
     description = 'Make sure CloudFormation resource properties ' + \
                   'are included together when required'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

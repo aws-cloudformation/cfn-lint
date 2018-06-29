@@ -28,7 +28,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
     description = 'Checks resource property values with Primitive Types for ' \
                   'values that match those types.'
     source = ['Resource Specification']
-    tags = ['base', 'resources']
+    tags = ['resources']
 
     def __init__(self, ):
         """Init """
