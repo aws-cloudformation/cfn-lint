@@ -90,7 +90,7 @@ def update_documentation(rules):
         new_file.write('| Rule ID  | Title | Description | Tags |\n')
         new_file.write('| -------- | ----- | ----------- |----- |\n')
 
-        rule_output = '| {0} | {1} | {2} | {3} |\n'
+        rule_output = '| {0} <a name="{0}"></a> | {1} | {2} | {3} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
