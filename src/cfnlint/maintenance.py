@@ -26,7 +26,6 @@ LOGGER = logging.getLogger('cfnlint')
 def update_resource_specs():
     """ Update Resource Specs """
 
-    # pylint: disable=C0301
     regions = {
         'ap-south-1': 'https://d2senuesg1djtx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
