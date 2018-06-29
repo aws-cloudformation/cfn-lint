@@ -23,7 +23,7 @@ class Configuration(CloudFormationLintRule):
     id = 'E8001'
     shortdesc = 'Conditions have appropriate properties'
     description = 'Check if Conditions are properly configured'
-    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html']
+    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html']
     tags = ['conditions']
 
     condition_keys = [

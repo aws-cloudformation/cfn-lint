@@ -23,7 +23,7 @@ class SecurityGroupDescription(CloudFormationLintRule):
     id = 'E2509'
     shortdesc = 'Validate SecurityGroup description'
     description = 'Check if SecurityGroup descriptions are correctly configured'
-    source = ['https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateSecurityGroup.html']
+    sources = ['https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateSecurityGroup.html']
     tags = ['resources', 'securitygroup']
 
     description_regex = r'^([a-z,A-Z,0-9,. _\-:/()#,@[\]+=&;\{\}!$*])*$'

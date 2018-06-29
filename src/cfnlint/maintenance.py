@@ -110,7 +110,7 @@ def update_documentation(rules):
         for rule in sorted_rules:
             # Minor Readability magic
             sources_markdown = []
-            for source in rule.source:
+            for source in rule.sources:
                 if source.startswith('http'):
                     sources_markdown.append('[source]({})'.format(source))
                 else:

@@ -23,7 +23,7 @@ class CodepipelineStages(CloudFormationLintRule):
     id = 'E2540'
     shortdesc = 'CodePipeline Stages'
     description = 'See if CodePipeline stages are set correctly'
-    source = ['Unknown']
+    sources = []
     tags = ['properties', 'codepipeline']
 
     def check_stage_count(self, stages, path):

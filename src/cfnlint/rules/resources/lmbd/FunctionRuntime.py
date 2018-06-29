@@ -23,7 +23,7 @@ class FunctionRuntime(CloudFormationLintRule):
     id = 'E2531'
     shortdesc = 'Check Lambda Runtime Properties'
     description = 'See if Lambda Runtime is in valid'
-    source = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime']
+    sources = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime']
     tags = ['resources', 'lambda']
 
     runtimes = [

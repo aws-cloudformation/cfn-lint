@@ -25,7 +25,7 @@ class Properties(CloudFormationLintRule):
     shortdesc = 'Resource properties are valid'
     description = 'Making sure that resources properties ' + \
                   'are propery configured'
-    source = ['Resource Specification']
+    sources = ['Resource Specification']
     tags = ['resources']
 
     def __init__(self):

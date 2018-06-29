@@ -25,7 +25,7 @@ class Exclusive(CloudFormationLintRule):
     shortdesc = 'Check Properties that are mutually exclusive'
     description = 'Making sure CloudFormation properties ' + \
                   'that are exclusive are not defined'
-    source = ['Resource Specification']
+    sources = ['Resource Specification']
     tags = ['resources']
 
     def __init__(self):

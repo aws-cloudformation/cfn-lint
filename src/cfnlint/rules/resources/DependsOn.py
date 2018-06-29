@@ -24,7 +24,7 @@ class DependsOn(CloudFormationLintRule):
     id = 'E3005'
     shortdesc = 'Check DependsOn values for Resources'
     description = 'Check that the DependsOn values are valid'
-    source = ['Resource Specification']
+    sources = ['Resource Specification']
     tags = ['resources', 'dependson']
 
     def check_value(self, key, path, resources):

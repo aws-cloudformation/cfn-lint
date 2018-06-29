@@ -23,7 +23,7 @@ class Configuration(CloudFormationLintRule):
     id = 'E6001'
     shortdesc = 'Outputs have appropriate properties'
     description = 'Making sure the outputs are properly configured'
-    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
+    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
     tags = ['outputs']
 
     valid_keys = [

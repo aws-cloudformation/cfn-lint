@@ -24,7 +24,7 @@ class LambdaMemorySize(CloudFormationLintRule):
     shortdesc = 'Parameter Memory Size attributes should have max and min'
     description = 'Check if a parameter that is used for Lambda memory size ' \
                   ' should have a min and max size that matches Lambda constraints'
-    source = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize']
+    sources = ['https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize']
     tags = ['parameters', 'lambda']
 
     def __init__(self):

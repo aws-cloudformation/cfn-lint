@@ -26,7 +26,7 @@ class RecordSet(CloudFormationLintRule):
     id = 'E3020'
     shortdesc = 'Validate Route53 RecordSets'
     description = 'Check if all RecordSets are correctly configured'
-    source = ['https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html']
+    sources = ['https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html']
     tags = ['resources', 'route53', 'record_set']
 
     # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html

@@ -23,7 +23,7 @@ class Used(CloudFormationLintRule):
     id = 'W7001'
     shortdesc = 'Check if Mappings are Used'
     description = 'Making sure the mappings defined are used'
-    source = ['Best Practice']
+    sources = ['Best Practice']
     tags = ['conditions']
 
     def match(self, cfn):

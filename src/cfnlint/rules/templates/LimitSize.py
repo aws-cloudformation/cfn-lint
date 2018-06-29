@@ -25,7 +25,7 @@ class LimitSize(CloudFormationLintRule):
     id = 'E1002'
     shortdesc = 'Template size limit'
     description = 'Check the size of the template is less than the upper limit'
-    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
+    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
     tags = ['limits']
 
     def match(self, cfn):

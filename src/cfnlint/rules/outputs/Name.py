@@ -25,7 +25,7 @@ class Name(CloudFormationLintRule):
     id = 'E6004'
     shortdesc = 'Outputs have appropriate names'
     description = 'Check if Outputs are properly named (A-Za-z0-9)'
-    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
+    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html']
     tags = ['outputs']
 
     def match(self, cfn):

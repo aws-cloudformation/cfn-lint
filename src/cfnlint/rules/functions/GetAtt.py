@@ -24,7 +24,7 @@ class GetAtt(CloudFormationLintRule):
     id = 'E1010'
     shortdesc = 'GetAtt validation of parameters'
     description = 'Making sure the function GetAtt is of list'
-    source = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html']
+    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html']
     tags = ['functions', 'getatt']
 
     def __init__(self):

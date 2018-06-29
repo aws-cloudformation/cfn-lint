@@ -25,7 +25,7 @@ class Configuration(CloudFormationLintRule):
     shortdesc = 'Basic CloudFormation Resource Check'
     description = 'Making sure the basic CloudFormation resources ' + \
                   'are propery configured'
-    source = ['Resource Specification']
+    sources = ['Resource Specification']
     tags = ['resources']
 
     def match(self, cfn):
