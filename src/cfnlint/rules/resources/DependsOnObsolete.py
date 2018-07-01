@@ -23,7 +23,7 @@ class DependsOnObsolete(CloudFormationLintRule):
     id = 'W3005'
     shortdesc = 'Check obsolete DependsOn configuration for Resources'
     description = 'Check if DependsOn is specified if not needed. ' \
-                  'A Ref and GetAtt implicitly results in DependsOn behaviour.'
+                  'A Ref or a Fn::GetAtt already is an implicit dependency.'
     tags = ['base', 'resources', 'dependson']
 
     def get_resource_references(self, cfn, ref_function, resource):
@@ -50,7 +50,7 @@ class DependsOnObsolete(CloudFormationLintRule):
 
         for tree in trees:
             if tree[-1] == key:
-                message = 'Obsolete DependsOn on resource ({0}), dependency already enfoced by "!Ref" at {1}'
+                message = 'Obsolete DependsOn on resource ({0}), dependency already enfoced by a "Ref" at {1}'
                 matches.append(RuleMatch(path, message.format(key, '/'.join(map(str, tree)))))
 
         # Get the GetAtt
@@ -59,7 +59,7 @@ class DependsOnObsolete(CloudFormationLintRule):
         for tree in trees:
             # GettAtt formation is "resource : Attribute", just check the resource
             if tree[-1][0] == key:
-                message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by "!Fn:GetAtt" at {1}'
+                message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Fn:GetAtt" at {1}'
                 matches.append(RuleMatch(path, message.format(key, '/'.join(map(str, tree)))))
 
         return matches
