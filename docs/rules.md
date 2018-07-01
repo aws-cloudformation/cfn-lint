@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **72** rules are applied by this linter:
+The following **73** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Tags |
 | -------- | ----- | ----------- |----- |
@@ -102,7 +102,7 @@ The following **72** rules are applied by this linter:
 | W2509 | CIDR Parameters have allowed values | Check if a parameter is being used as a CIDR. If it is make sure it has allowed values regex comparisons | `base`,`parameters`,`availabilityzone` |
 | W2510 | Parameter Memory Size attributes should have max and min | Check if a parameter that is used for Lambda memory size  should have a min and max size that matches Lambda constraints | `base`,`parameters`,`lambda` |
 | W2512 | Parameter Lambda Runtime has allowed values set | Check if a parameter that is used for Lambda runtime  has allowed values constraint defined | `base`,`parameters`,`lambda` |
-| W3005 | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref and GetAtt implicitly results in DependsOn behaviour. | `base`,`resources`,`dependson` |
+| W3005 | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. | `base`,`resources`,`dependson` |
 | W3010 | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. | `base`,`parameters`,`availabilityzone` |
 | W4001 | Metadata Interface parameters exist | Metadata Interface parameters actually exist | `base`,`metadata` |
 | W7001 | Check if Mappings are Used | Making sure the mappings defined are used | `base`,`conditions` |
