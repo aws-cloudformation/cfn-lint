@@ -26,7 +26,6 @@ import cfnlint.helpers
 import cfnlint.processors
 from cfnlint.transform import Transform
 
-
 LOGGER = logging.getLogger(__name__)
 
 
@@ -53,7 +52,7 @@ class CloudFormationLintRule(object):
     match = None
     match_resource_properties = None
     match_resource_sub_properties = None
-    match_pre_processing = None
+    match_post_processing = None
 
     # pylint: disable=E0213
     def matching(match_function):
@@ -100,12 +99,12 @@ class CloudFormationLintRule(object):
 
     @matching
     # pylint: disable=W0613
-    def matchall_pre_processing(self, filename, cfn):
+    def matchall_post_processing(self, filename, cfn):
         """Match the entire file"""
-        if not self.match_pre_processing:
+        if not self.match_post_processing:
             return []
 
-        return self.match_pre_processing(cfn)  # pylint: disable=E1102
+        return self.match_post_processing(cfn)  # pylint: disable=E1102
 
     @matching
     # pylint: disable=W0613
@@ -225,7 +224,7 @@ class RulesCollection(object):
         matches = list()
         for rule in self.rules:
             try:
-                matches.extend(rule.matchall_pre_processing(filename, cfn))
+                matches.extend(rule.matchall(filename, cfn))
             except Exception as err:  # pylint: disable=W0703
                 if self.is_rule_enabled('E0002'):
                     message = 'Unknown exception while processing rule {}: {}'
@@ -241,7 +240,7 @@ class RulesCollection(object):
         for p_cfn in processed_templates:
             for rule in self.rules:
                 try:
-                    matches.extend(rule.matchall(filename, p_cfn))
+                    matches.extend(rule.matchall_post_processing(filename, p_cfn))
                 except Exception as err:  # pylint: disable=W0703
                     if self.is_rule_enabled('E0002'):
                         message = 'Unknown exception while processing rule {}: {}'
@@ -744,8 +743,7 @@ class Template(object):
         if len(path) > 1:
             try:
                 result = self.get_location_yaml(text[path[0]], path[1:])
-            except KeyError:
-                # catches bad paths and just raises the error to a higher level
+            except KeyError as err:
                 pass
             if not result:
                 try:
@@ -909,7 +907,6 @@ class ParseError(cfnlint.CloudFormationLintRule):
     description = 'Checks for Null values and Duplicate values in resources'
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base']
-
 
 class TransformError(cfnlint.CloudFormationLintRule):
     """Transform Lint Rule"""

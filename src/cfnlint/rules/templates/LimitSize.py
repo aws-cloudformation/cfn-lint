@@ -28,7 +28,7 @@ class LimitSize(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['limits']
 
-    def match_pre_processing(self, cfn):
+    def match(self, cfn):
         """Basic Matching"""
         matches = list()
 

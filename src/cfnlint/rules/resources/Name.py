@@ -28,7 +28,7 @@ class Name(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid'
     tags = ['resources']
 
-    def match_pre_processing(self, cfn):
+    def match(self, cfn):
         """Check CloudFormation Mapping"""
 
         matches = list()

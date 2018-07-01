@@ -38,7 +38,8 @@ class ProcessorsCollection(object):
     """Collection of processors"""
 
     def __init__(self):
-        self.processors = cfnlint.helpers.load_plugins(os.path.expanduser(DEFAULT_PROCESSORSDIR))
+        self.processors = cfnlint.helpers.load_plugins(
+            os.path.expanduser(DEFAULT_PROCESSORSDIR), 'cfnlint.processors', 'CloudFormationProcessor')
 
     def __iter__(self):
         return iter(self.processors)

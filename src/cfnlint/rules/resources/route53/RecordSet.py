@@ -183,7 +183,6 @@ class RecordSet(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check RecordSets and RecordSetGroups Properties"""
-
         matches = list()
 
         recordsets = cfn.get_resources(['AWS::Route53::RecordSet'])

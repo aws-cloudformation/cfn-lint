@@ -28,7 +28,7 @@ class VpcId(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'vpcid']
 
-    def match_pre_processing(self, cfn):
+    def match(self, cfn):
         """Check CloudFormation VpcId Parameters"""
 
         matches = list()

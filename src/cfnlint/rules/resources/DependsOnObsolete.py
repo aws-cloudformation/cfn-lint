@@ -65,7 +65,7 @@ class DependsOnObsolete(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match_post_processing(self, cfn):
         """Check CloudFormation Resources"""
 
         matches = list()

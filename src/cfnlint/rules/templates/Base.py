@@ -30,13 +30,9 @@ class Base(CloudFormationLintRule):
         'Resources'
     ]
 
-    def match_pre_processing(self, cfn):
+    def match(self, cfn):
         """Basic Matching"""
         matches = list()
-
-        transform = cfn.template.get('Transform')
-        if transform == 'AWS::Serverless-2016-10-31':
-            cfn.sections.append('Globals')
 
         top_level = []
         for x in cfn.template:

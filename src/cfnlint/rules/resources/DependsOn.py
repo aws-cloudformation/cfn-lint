@@ -41,7 +41,7 @@ class DependsOn(CloudFormationLintRule):
 
         return matches
 
-    def match_pre_processing(self, cfn):
+    def match(self, cfn):
         """Check CloudFormation Resources"""
 
         matches = list()

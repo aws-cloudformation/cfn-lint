@@ -179,7 +179,7 @@ def initialize_specs():
 initialize_specs()
 
 
-def load_plugins(directory):
+def load_plugins(directory, module='cfnlint', class_name='CloudFormationLintRule'):
     """Load plugins"""
     result = []
     fh = None
@@ -192,7 +192,7 @@ def load_plugins(directory):
                 mod = imp.load_module(pluginname, fh, filename, desc)
                 for _, clazz in inspect.getmembers(mod, inspect.isclass):
                     method_resolution = inspect.getmro(clazz)
-                    if [clz for clz in method_resolution[1:] if clz.__module__ == 'cfnlint' and clz.__name__ == 'CloudFormationLintRule']:
+                    if [clz for clz in method_resolution[1:] if clz.__module__ == module and clz.__name__ == class_name]:
                         # create and instance of subclasses of CloudFormationLintRule
                         obj = clazz()
                         result.append(obj)

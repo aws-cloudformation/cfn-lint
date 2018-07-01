@@ -32,7 +32,7 @@ class GetAtt(CloudFormationLintRule):
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
 
-    def match(self, cfn):
+    def match_post_processing(self, cfn):
         """Check CloudFormation GetAtt"""
 
         matches = list()
