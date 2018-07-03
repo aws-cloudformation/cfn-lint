@@ -24,6 +24,9 @@ class TestRulesCidr(BaseRuleTestCase):
         """Setup"""
         super(TestRulesCidr, self).setUp()
         self.collection.register(Cidr())
+        self.success_templates = [
+            'fixtures/templates/good/functions_cidr.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +34,4 @@ class TestRulesCidr(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/functions_cidr.yaml', 10)
+        self.helper_file_negative('fixtures/templates/bad/functions_cidr.yaml', 10)

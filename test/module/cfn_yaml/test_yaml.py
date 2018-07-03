@@ -32,7 +32,7 @@ class TestYamlParse(BaseTestCase):
 
         self.filenames = {
             "config_rule": {
-                "filename": 'templates/public/lambda-poller.yaml',
+                "filename": 'fixtures/templates/public/lambda-poller.yaml',
                 "failures": 0
             }
         }

@@ -33,27 +33,27 @@ class TestCfnJson(BaseTestCase):
 
         self.filenames = {
             "config_rule": {
-                "filename": 'templates/quickstart/config-rules.json',
+                "filename": 'fixtures/templates/quickstart/config-rules.json',
                 "failures": 4
             },
             "iam": {
-                "filename": 'templates/quickstart/iam.json',
+                "filename": 'fixtures/templates/quickstart/iam.json',
                 "failures": 4
             },
             "nat_instance": {
-                "filename": 'templates/quickstart/nat-instance.json',
+                "filename": 'fixtures/templates/quickstart/nat-instance.json',
                 "failures": 2
             },
             "vpc_management": {
-                "filename": 'templates/quickstart/vpc-management.json',
+                "filename": 'fixtures/templates/quickstart/vpc-management.json',
                 "failures": 35
             },
             "vpc": {
-                "filename": 'templates/quickstart/vpc.json',
+                "filename": 'fixtures/templates/quickstart/vpc.json',
                 "failures": 40
             },
             "poller": {
-                "filename": 'templates/public/lambda-poller.json',
+                "filename": 'fixtures/templates/public/lambda-poller.json',
                 "failures": 0
             }
         }
@@ -73,7 +73,7 @@ class TestCfnJson(BaseTestCase):
     def test_fail_run(self):
         """Test failure run"""
 
-        filename = 'templates/bad/json_parse.json'
+        filename = 'fixtures/templates/bad/json_parse.json'
 
         try:
             json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)

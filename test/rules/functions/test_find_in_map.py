@@ -24,6 +24,9 @@ class TestRulesFindInMap(BaseRuleTestCase):
         """Setup"""
         super(TestRulesFindInMap, self).setUp()
         self.collection.register(FindInMap())
+        self.success_templates = [
+            'fixtures/templates/good/functions_findinmap.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +34,4 @@ class TestRulesFindInMap(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/functions_findinmap.yaml', 5)
+        self.helper_file_negative('fixtures/templates/bad/functions_findinmap.yaml', 5)
