@@ -24,7 +24,8 @@ class Select(CloudFormationLintRule):
     id = 'E1017'
     shortdesc = 'Select validation of parameters'
     description = 'Making sure the function not is of list'
-    tags = ['base', 'functions', 'select']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html'
+    tags = ['functions', 'select']
 
     def match(self, cfn):
         """Check CloudFormation Select"""

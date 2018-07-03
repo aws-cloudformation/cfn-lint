@@ -24,6 +24,7 @@ class Base(CloudFormationLintRule):
     shortdesc = 'Basic CloudFormation Template Configuration'
     description = 'Making sure the basic CloudFormation template componets ' + \
                   'are propery configured'
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base']
 
     required_keys = [

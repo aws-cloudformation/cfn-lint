@@ -26,7 +26,8 @@ class Used(CloudFormationLintRule):
     id = 'W2001'
     shortdesc = 'Check if Parameters are Used'
     description = 'Making sure the parameters defined are used'
-    tags = ['base', 'parameters']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['parameters']
 
     def searchstring(self, string, parameter):
         """Search string for tokenized fields"""

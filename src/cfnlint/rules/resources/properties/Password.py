@@ -24,7 +24,8 @@ class Password(CloudFormationLintRule):
     id = 'W2501'
     shortdesc = 'Check if Password Properties are correctly configured'
     description = 'Password properties should be strings and if parameter using NoEcho'
-    tags = ['base', 'parameters', 'passwords']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds'
+    tags = ['parameters', 'passwords']
 
     def match(self, cfn):
         """Check CloudFormation Password Parameters"""

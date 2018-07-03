@@ -23,7 +23,8 @@ class AvailabilityZone(CloudFormationLintRule):
     id = 'W3010'
     shortdesc = 'Availability Zone Parameters should not be hardcoded'
     description = 'Check if an Availability Zone property is hardcoded.'
-    tags = ['base', 'parameters', 'availabilityzone']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['parameters', 'availabilityzone']
 
     def __init__(self):
         """Init"""

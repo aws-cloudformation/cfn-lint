@@ -29,81 +29,81 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 ## Rules
 The following **73** rules are applied by this linter:
 
-| Rule ID  | Title | Description | Tags |
-| -------- | ----- | ----------- |----- |
-| E0000 | Parsing error found when parsing the template | Checks for Null values and Duplicate values in resources | `base` |
-| E0001 | Error found when transforming the template | Errors found when performing transformation on the template | `base`,`transform` |
-| E0002 | Error processing rule on the template | Errors found when processing a rule on the template | `base`,`rule` |
-| E1001 | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template componets are propery configured | `base` |
-| E1002 | Template size limit | Check the size of the template is less than the upper limit | `base`,`limits` |
-| E1010 | GetAtt validation of parameters | Making sure the function GetAtt is of list | `base`,`functions`,`getatt` |
-| E1011 | FindInMap validation of configuration | Making sure the function is a list of appropriate config | `base`,`functions`,`getatt` |
-| E1012 | Check if Refs exist | Making sure the refs exist | `base`,`functions`,`ref` |
-| E1015 | GetAz validation of parameters | Making sure the function not is of list | `base`,`functions`,`getaz` |
-| E1016 | ImportValue validation of parameters | Making sure the function not is of list | `base`,`functions`,`importvalue` |
-| E1017 | Select validation of parameters | Making sure the function not is of list | `base`,`functions`,`select` |
-| E1018 | Split validation of parameters | Making sure the split function is properly configured | `base`,`functions`,`split` |
-| E1019 | Sub validation of parameters | Making sure the split function is properly configured | `base`,`functions`,`sub` |
-| E1020 | Ref validation of value | Making the Ref has a value of String (no other functions are supported) | `base`,`functions`,`ref` |
-| E1021 | Base64 validation of parameters | Making sure the function not is of list | `base`,`functions`,`base64` |
-| E1022 | Join validation of parameters | Making sure the join function is properly configured | `base`,`functions`,`join` |
-| E1023 | Validation NOT function configuration | Making sure that NOT functions are list | `base`,`functions`,`not` |
-| E1024 | Cidr validation of parameters | Making sure the function CIDR is a list with valid values | `base`,`functions`,`cidr` |
-| E1025 | Check if Conditions exist | Making sure the Conditions used in Fn:If functions exist | `base`,`functions`,`if` |
-| E1026 | Cannot reference resources in the Conditions block of the template | Check that any Refs in the Conditions block uses no resources | `base`,`functions`,`ref` |
-| E2001 | Parameters have appropriate properties | Making sure the parameters are properly configured | `base`,`parameters` |
-| E2002 | Parameters have appropriate type | Making sure the parameters have a correct type | `base`,`parameters` |
-| E2003 | Parameters have appropriate names | Check if Parameters are properly named (A-Za-z0-9) | `base`,`parameters` |
-| E2004 | CIDR Allowed Values should be a Cidr Range | Check if a parameter is being used as a CIDR. If it is make sure allowed values are proper CIDRs | `base`,`parameters`,`cidr` |
-| E2010 | Parameter limit not exceeded | Check the number of Parameters in the template is lessthan the upper limit | `base`,`parameters`,`limits` |
-| E2502 | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | `base`,`properties` |
-| E2503 | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | `base`,`properties`,`elb` |
-| E2504 | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | `base`,`properties`,`ec2`,`ebs` |
-| E2505 | Resource EC2 VPC Properties | See if EC2 VPC Properties are set correctly | `base`,`properties`,`vpc` |
-| E2506 | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | `base`,`resources`,`securitygroup` |
-| E2507 | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | `base`,`properties`,`iam` |
-| E2508 | Check IAM resource limits | See if IAM resources do not breach limits | `base`,`resources`,`iam` |
-| E2509 | Validate SecurityGroup description | Check if SecurityGroup descriptions are correctly configured | `base`,`resources`,`securitygroup` |
-| E2510 | Resource EC2 PropertiesEc2Subnet Properties | See if EC2 Subnet Properties are set correctly | `base`,`properties`,`subnet` |
-| E2520 | Check Properties that are mutually exclusive | Making sure CloudFormation properties that are exclusive are not defined | `base`,`resources` |
-| E2521 | Check Properties that are required together | Make sure CloudFormation resource properties are included together when required | `base`,`resources` |
-| E2522 | Check Properties that need at least one of a list of properties | Making sure CloudFormation properties that require at least one property from a list. More than one can be included. | `base`,`resources` |
-| E2523 | Check Properties that need only one of a list of properties | Making sure CloudFormation properties that require only one property from a list. One has to be specified. | `base`,`resources` |
-| E2530 | Check Lambda Memory Size Properties | See if Lambda Memory Size is valid | `base`,`resources`,`lambda` |
-| E2531 | Check Lambda Runtime Properties | See if Lambda Runtime is in valid | `base`,`resources`,`lambda` |
-| E2540 | CodePipeline Stages | See if CodePipeline stages are set correctly | `base`,`properties`,`codepipeline` |
-| E2541 | CodePipeline Stage Actions | See if CodePipeline stage actions are set correctly | `base`,`resources`,`codepipeline` |
-| E3001 | Basic CloudFormation Resource Check | Making sure the basic CloudFormation resources are propery configured | `base`,`resources` |
-| E3002 | Resource properties are valid | Making sure that resources properties are propery configured | `base`,`resources` |
-| E3003 | Required Resource Parameters are missing | Making sure that Resources properties that are required exist | `base`,`resources` |
-| E3004 | Resource dependencies are not circular | Check that Resources are not circularly dependent by Ref, Sub, or GetAtt | `base`,`resources`,`circularly` |
-| E3005 | Check DependsOn values for Resources | Check that the DependsOn values are valid | `base`,`resources`,`dependson` |
-| E3006 | Resources have appropriate names | Check if Resources are properly named (A-Za-z0-9) | `base`,`resources` |
-| E3010 | Resource limit not exceeded | Check the number of Resources in the template is lessthan the upper limit | `base`,`resources`,`limits` |
-| E3012 | Check resource properties values | Checks resource property values with Primitive Types for values that match those types. | `base`,`resources` |
-| E3013 | CloudFront Aliases | CloudFront aliases should contain valid domain names | `base`,`properties`,`cloudfront` |
-| E3020 | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | `base`,`resources`,`route53`,`record_set` |
-| E4001 | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | `base`,`metadata` |
-| E6001 | Outputs have appropriate properties | Making sure the outputs are properly configured | `base`,`outputs` |
-| E6002 | Outputs have required properties | Making sure the outputs have required properties | `base`,`outputs` |
-| E6003 | Outputs have values of strings | Making sure the outputs have strings as values | `base`,`outputs` |
-| E6004 | Outputs have appropriate names | Check if Outputs are properly named (A-Za-z0-9) | `base`,`outputs` |
-| E6010 | Output limit not exceeded | Check the number of Outputs in the template is lessthan the upper limit | `base`,`outputs`,`limits` |
-| E7001 | Mappings are appropriately configured | Check if Mappings are properly configured | `base`,`mappings` |
-| E7002 | Mappings have appropriate names | Check if Mappings are properly named (A-Za-z0-9) | `base`,`mapping` |
-| E7010 | Mapping limit not exceeded | Check the number of Mappings in the template is lessthan the upper limit | `base`,`mappings`,`limits` |
-| E8001 | Conditions have appropriate properties | Check if Conditions are properly configured | `base`,`conditions` |
-| W2001 | Check if Parameters are Used | Making sure the parameters defined are used | `base`,`parameters` |
-| W2501 | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | `base`,`parameters`,`passwords` |
-| W2505 | Check if VpcID Parameters have the correct type | See if there are any refs for VpcId to a parameter of innapropriate type.  Appropriate Types are [AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>] | `base`,`parameters`,`vpcid` |
-| W2506 | Check if ImageId Parameters have the correct type | See if there are any refs for ImageId to a parameter of innapropriate type. Appropriate Types are [AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>] | `base`,`parameters`,`imageid` |
-| W2507 | Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id | `base`,`parameters`,`securitygroup` |
-| W2508 | Availability Zone Parameters are of correct type AWS::EC2::AvailabilityZone::Name | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name | `base`,`parameters`,`availabilityzone` |
-| W2509 | CIDR Parameters have allowed values | Check if a parameter is being used as a CIDR. If it is make sure it has allowed values regex comparisons | `base`,`parameters`,`availabilityzone` |
-| W2510 | Parameter Memory Size attributes should have max and min | Check if a parameter that is used for Lambda memory size  should have a min and max size that matches Lambda constraints | `base`,`parameters`,`lambda` |
-| W2512 | Parameter Lambda Runtime has allowed values set | Check if a parameter that is used for Lambda runtime  has allowed values constraint defined | `base`,`parameters`,`lambda` |
-| W3005 | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. | `base`,`resources`,`dependson` |
-| W3010 | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. | `base`,`parameters`,`availabilityzone` |
-| W4001 | Metadata Interface parameters exist | Metadata Interface parameters actually exist | `base`,`metadata` |
-| W7001 | Check if Mappings are Used | Making sure the mappings defined are used | `base`,`conditions` |
-| W8001 | Check if Conditions are Used | Making sure the conditions defined are used | `base`,`conditions` |
+| Rule ID  | Title | Description | Source | Tags |
+| -------- | ----- | ----------- | ------ | ---- |
+| E0000 <a name="E0000"></a> | Parsing error found when parsing the template | Checks for Null values and Duplicate values in resources | [Source]() | `base` |
+| E0001 <a name="E0001"></a> | Error found when transforming the template | Errors found when performing transformation on the template | [Source]() | `base`,`transform` |
+| E0002 <a name="E0002"></a> | Error processing rule on the template | Errors found when processing a rule on the template | [Source]() | `base`,`rule` |
+| E1001 <a name="E1001"></a> | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template componets are propery configured | [Source](https://github.com/awslabs/cfn-python-lint) | `base` |
+| E1002 <a name="E1002"></a> | Template size limit | Check the size of the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `limits` |
+| E1010 <a name="E1010"></a> | GetAtt validation of parameters | Making sure the function GetAtt is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html) | `functions`,`getatt` |
+| E1011 <a name="E1011"></a> | FindInMap validation of configuration | Making sure the function is a list of appropriate config | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) | `functions`,`getatt` |
+| E1012 <a name="E1012"></a> | Check if Refs exist | Making sure the refs exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `functions`,`ref` |
+| E1015 <a name="E1015"></a> | GetAz validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getavailabilityzones.html) | `functions`,`getaz` |
+| E1016 <a name="E1016"></a> | ImportValue validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html) | `functions`,`importvalue` |
+| E1017 <a name="E1017"></a> | Select validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html) | `functions`,`select` |
+| E1018 <a name="E1018"></a> | Split validation of parameters | Making sure the split function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-split.html) | `functions`,`split` |
+| E1019 <a name="E1019"></a> | Sub validation of parameters | Making sure the split function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
+| E1020 <a name="E1020"></a> | Ref validation of value | Making the Ref has a value of String (no other functions are supported) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `functions`,`ref` |
+| E1021 <a name="E1021"></a> | Base64 validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html) | `functions`,`base64` |
+| E1022 <a name="E1022"></a> | Join validation of parameters | Making sure the join function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html) | `functions`,`join` |
+| E1023 <a name="E1023"></a> | Validation NOT function configuration | Making sure that NOT functions are list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-not) | `functions`,`not` |
+| E1024 <a name="E1024"></a> | Cidr validation of parameters | Making sure the function CIDR is a list with valid values | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html) | `functions`,`cidr` |
+| E1025 <a name="E1025"></a> | Check if Conditions exist | Making sure the Conditions used in Fn:If functions exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) | `functions`,`if` |
+| E1026 <a name="E1026"></a> | Cannot reference resources in the Conditions block of the template | Check that any Refs in the Conditions block uses no resources | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#w2ab2c21c28c21c45) | `functions`,`ref` |
+| E2001 <a name="E2001"></a> | Parameters have appropriate properties | Making sure the parameters are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters` |
+| E2002 <a name="E2002"></a> | Parameters have appropriate type | Making sure the parameters have a correct type | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters` |
+| E2003 <a name="E2003"></a> | Parameters have appropriate names | Check if Parameters are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-requirements) | `parameters` |
+| E2004 <a name="E2004"></a> | CIDR Allowed Values should be a Cidr Range | Check if a parameter is being used as a CIDR. If it is make sure allowed values are proper CIDRs | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`cidr` |
+| E2010 <a name="E2010"></a> | Parameter limit not exceeded | Check the number of Parameters in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
+| E2502 <a name="E2502"></a> | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | [Source](https://github.com/awslabs/cfn-python-lint) | `properties` |
+| E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
+| E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
+| E2505 <a name="E2505"></a> | Resource EC2 VPC Properties | See if EC2 VPC Properties are set correctly | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
+| E2506 <a name="E2506"></a> | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html) | `resources`,`securitygroup` |
+| E2507 <a name="E2507"></a> | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html) | `properties`,`iam` |
+| E2508 <a name="E2508"></a> | Check IAM resource limits | See if IAM resources do not breach limits | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`iam` |
+| E2509 <a name="E2509"></a> | Validate SecurityGroup description | Check if SecurityGroup descriptions are correctly configured | [Source](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateSecurityGroup.html) | `resources`,`securitygroup` |
+| E2510 <a name="E2510"></a> | Resource EC2 PropertiesEc2Subnet Properties | See if EC2 Subnet Properties are set correctly | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html) | `properties`,`subnet` |
+| E2520 <a name="E2520"></a> | Check Properties that are mutually exclusive | Making sure CloudFormation properties that are exclusive are not defined | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E2521 <a name="E2521"></a> | Check Properties that are required together | Make sure CloudFormation resource properties are included together when required | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E2522 <a name="E2522"></a> | Check Properties that need at least one of a list of properties | Making sure CloudFormation properties that require at least one property from a list. More than one can be included. | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E2523 <a name="E2523"></a> | Check Properties that need only one of a list of properties | Making sure CloudFormation properties that require only one property from a list. One has to be specified. | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E2530 <a name="E2530"></a> | Check Lambda Memory Size Properties | See if Lambda Memory Size is valid | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize) | `resources`,`lambda` |
+| E2531 <a name="E2531"></a> | Check Lambda Runtime Properties | See if Lambda Runtime is in valid | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime) | `resources`,`lambda` |
+| E2540 <a name="E2540"></a> | CodePipeline Stages | See if CodePipeline stages are set correctly | [Source](https://github.com/awslabs/cfn-python-lint) | `properties`,`codepipeline` |
+| E2541 <a name="E2541"></a> | CodePipeline Stage Actions | See if CodePipeline stage actions are set correctly | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`codepipeline` |
+| E3001 <a name="E3001"></a> | Basic CloudFormation Resource Check | Making sure the basic CloudFormation resources are propery configured | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E3002 <a name="E3002"></a> | Resource properties are valid | Making sure that resources properties are propery configured | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E3003 <a name="E3003"></a> | Required Resource Parameters are missing | Making sure that Resources properties that are required exist | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E3004 <a name="E3004"></a> | Resource dependencies are not circular | Check that Resources are not circularly dependent by Ref, Sub, or GetAtt | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`circularly` |
+| E3005 <a name="E3005"></a> | Check DependsOn values for Resources | Check that the DependsOn values are valid | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`dependson` |
+| E3006 <a name="E3006"></a> | Resources have appropriate names | Check if Resources are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid) | `resources` |
+| E3010 <a name="E3010"></a> | Resource limit not exceeded | Check the number of Resources in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`limits` |
+| E3012 <a name="E3012"></a> | Check resource properties values | Checks resource property values with Primitive Types for values that match those types. | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
+| E3013 <a name="E3013"></a> | CloudFront Aliases | CloudFront aliases should contain valid domain names | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases) | `properties`,`cloudfront` |
+| E3020 <a name="E3020"></a> | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | [Source](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html) | `resources`,`route53`,`record_set` |
+| E4001 <a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
+| E6001 <a name="E6001"></a> | Outputs have appropriate properties | Making sure the outputs are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
+| E6002 <a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
+| E6003 <a name="E6003"></a> | Outputs have values of strings | Making sure the outputs have strings as values | [Source](https://github.com/awslabs/cfn-python-lint) | `outputs` |
+| E6004 <a name="E6004"></a> | Outputs have appropriate names | Check if Outputs are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
+| E6010 <a name="E6010"></a> | Output limit not exceeded | Check the number of Outputs in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `outputs`,`limits` |
+| E7001 <a name="E7001"></a> | Mappings are appropriately configured | Check if Mappings are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mappings` |
+| E7002 <a name="E7002"></a> | Mappings have appropriate names | Check if Mappings are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mapping` |
+| E7010 <a name="E7010"></a> | Mapping limit not exceeded | Check the number of Mappings in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
+| E8001 <a name="E8001"></a> | Conditions have appropriate properties | Check if Conditions are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
+| W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
+| W2501 <a name="W2501"></a> | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds) | `parameters`,`passwords` |
+| W2505 <a name="W2505"></a> | Check if VpcID Parameters have the correct type | See if there are any refs for VpcId to a parameter of innapropriate type.  Appropriate Types are [AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>] | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`vpcid` |
+| W2506 <a name="W2506"></a> | Check if ImageId Parameters have the correct type | See if there are any refs for ImageId to a parameter of innapropriate type. Appropriate Types are [AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>] | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`imageid` |
+| W2507 <a name="W2507"></a> | Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`securitygroup` |
+| W2508 <a name="W2508"></a> | Availability Zone Parameters are of correct type AWS::EC2::AvailabilityZone::Name | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`availabilityzone` |
+| W2509 <a name="W2509"></a> | CIDR Parameters have allowed values | Check if a parameter is being used as a CIDR. If it is make sure it has allowed values regex comparisons | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`availabilityzone` |
+| W2510 <a name="W2510"></a> | Parameter Memory Size attributes should have max and min | Check if a parameter that is used for Lambda memory size  should have a min and max size that matches Lambda constraints | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize) | `parameters`,`lambda` |
+| W2512 <a name="W2512"></a> | Parameter Lambda Runtime has allowed values set | Check if a parameter that is used for Lambda runtime  has allowed values constraint defined | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime) | `parameters`,`lambda` |
+| W3005 <a name="W3005"></a> | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. | [Source](https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/) | `resources`,`dependson` |
+| W3010 <a name="W3010"></a> | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters`,`availabilityzone` |
+| W4001 <a name="W4001"></a> | Metadata Interface parameters exist | Metadata Interface parameters actually exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
+| W7001 <a name="W7001"></a> | Check if Mappings are Used | Making sure the mappings defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `conditions` |
+| W8001 <a name="W8001"></a> | Check if Conditions are Used | Making sure the conditions defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `conditions` |

@@ -23,7 +23,7 @@ class PropertiesTagsRequired(CloudFormationLintRule):
     id = 'E9000'
     shortdesc = 'Tags have correct key values'
     description = 'Check Tags for resources'
-    tags = ['base', 'resources', 'tags']
+    tags = ['resources', 'tags']
 
     def match(self, cfn):
         """Check Tags for required keys"""

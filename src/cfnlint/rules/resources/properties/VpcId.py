@@ -25,7 +25,8 @@ class VpcId(CloudFormationLintRule):
     description = 'See if there are any refs for VpcId to a parameter ' + \
                   'of innapropriate type.  Appropriate Types are ' + \
                   '[AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>]'
-    tags = ['base', 'parameters', 'vpcid']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
+    tags = ['parameters', 'vpcid']
 
     def match(self, cfn):
         """Check CloudFormation VpcId Parameters"""

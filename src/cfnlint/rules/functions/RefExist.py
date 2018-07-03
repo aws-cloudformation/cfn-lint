@@ -25,7 +25,8 @@ class RefExist(CloudFormationLintRule):
     id = 'E1012'
     shortdesc = 'Check if Refs exist'
     description = 'Making sure the refs exist'
-    tags = ['base', 'functions', 'ref']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'
+    tags = ['functions', 'ref']
 
     pseudoparams = [
         'AWS::AccountId',

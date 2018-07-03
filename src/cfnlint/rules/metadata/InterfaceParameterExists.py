@@ -23,7 +23,8 @@ class InterfaceParameterExists(CloudFormationLintRule):
     id = 'W4001'
     shortdesc = 'Metadata Interface parameters exist'
     description = 'Metadata Interface parameters actually exist'
-    tags = ['base', 'metadata']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html'
+    tags = ['metadata']
 
     valid_keys = [
         'ParameterGroups',

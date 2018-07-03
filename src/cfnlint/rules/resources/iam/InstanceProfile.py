@@ -24,7 +24,8 @@ class InstanceProfile(CloudFormationLintRule):
     shortdesc = 'Check if IamInstanceProfile are using the name and not ARN'
     description = 'See if there are any properties IamInstanceProfile' + \
                   'are using name and not ARN'
-    tags = ['base', 'properties']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['properties']
 
     def match(self, cfn):
         """Check CloudFormation IamInstanceProfile Parameters"""

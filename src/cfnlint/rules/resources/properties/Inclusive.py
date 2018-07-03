@@ -25,7 +25,8 @@ class Inclusive(CloudFormationLintRule):
     shortdesc = 'Check Properties that are required together'
     description = 'Make sure CloudFormation resource properties ' + \
                   'are included together when required'
-    tags = ['base', 'resources']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

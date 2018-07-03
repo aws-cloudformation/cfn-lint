@@ -24,7 +24,7 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
     id = 'E9001'
     shortdesc = 'Tags are included on resources that support it'
     description = 'Check Tags for resources'
-    tags = ['base', 'resources', 'tags']
+    tags = ['resources', 'tags']
 
     def get_resources_with_tags(self, region):
         """Get resource types that support tags"""

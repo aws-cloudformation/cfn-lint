@@ -24,7 +24,8 @@ class Join(CloudFormationLintRule):
     id = 'E1022'
     shortdesc = 'Join validation of parameters'
     description = 'Making sure the join function is properly configured'
-    tags = ['base', 'functions', 'join']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html'
+    tags = ['functions', 'join']
 
     def match(self, cfn):
         """Check CloudFormation Join"""

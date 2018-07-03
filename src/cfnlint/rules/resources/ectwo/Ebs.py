@@ -25,7 +25,8 @@ class Ebs(CloudFormationLintRule):
     id = 'E2504'
     shortdesc = 'Check Ec2 Ebs Properties'
     description = 'See if Ec2 Eb2 Properties are valid'
-    tags = ['base', 'properties', 'ec2', 'ebs']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html'
+    tags = ['properties', 'ec2', 'ebs']
 
     def _checkEbs(self, cfn, ebs, path):
         matches = list()

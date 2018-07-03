@@ -26,7 +26,8 @@ class AtLeastOne(CloudFormationLintRule):
     description = 'Making sure CloudFormation properties ' + \
                   'that require at least one property from a list. ' + \
                   'More than one can be included.'
-    tags = ['base', 'resources']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

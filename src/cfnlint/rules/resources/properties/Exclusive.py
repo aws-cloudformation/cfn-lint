@@ -25,7 +25,8 @@ class Exclusive(CloudFormationLintRule):
     shortdesc = 'Check Properties that are mutually exclusive'
     description = 'Making sure CloudFormation properties ' + \
                   'that are exclusive are not defined'
-    tags = ['base', 'resources']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['resources']
 
     def __init__(self):
         """Init"""

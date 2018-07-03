@@ -26,7 +26,6 @@ LOGGER = logging.getLogger('cfnlint')
 def update_resource_specs():
     """ Update Resource Specs """
 
-    # pylint: disable=C0301
     regions = {
         'ap-south-1': 'https://d2senuesg1djtx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -87,27 +86,27 @@ def update_documentation(rules):
 
         # Add the rules
         new_file.write('The following **{}** rules are applied by this linter:\n\n'.format(len(sorted_rules)))
-        new_file.write('| Rule ID  | Title | Description | Tags |\n')
-        new_file.write('| -------- | ----- | ----------- |----- |\n')
+        new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
+        new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
 
-        rule_output = '| {0} | {1} | {2} | {3} |\n'
+        rule_output = '| {0} <a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
         tags = ','.join('`{0}`'.format(tag) for tag in parseerror.tags)
         new_file.write(rule_output.format(
-            parseerror.id, parseerror.shortdesc, parseerror.description, tags))
+            parseerror.id, parseerror.shortdesc, parseerror.description, '', tags))
 
         transformerror = cfnlint.TransformError()
         tags = ','.join('`{0}`'.format(tag) for tag in transformerror.tags)
         new_file.write(rule_output.format(
-            transformerror.id, transformerror.shortdesc, transformerror.description, tags))
+            transformerror.id, transformerror.shortdesc, transformerror.description, '', tags))
 
         ruleerror = cfnlint.RuleError()
         tags = ','.join('`{0}`'.format(tag) for tag in ruleerror.tags)
         new_file.write(
-            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, tags))
+            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', tags))
 
         for rule in sorted_rules:
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, tags))
+            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))

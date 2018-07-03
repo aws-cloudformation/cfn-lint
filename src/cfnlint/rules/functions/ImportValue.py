@@ -24,7 +24,8 @@ class ImportValue(CloudFormationLintRule):
     id = 'E1016'
     shortdesc = 'ImportValue validation of parameters'
     description = 'Making sure the function not is of list'
-    tags = ['base', 'functions', 'importvalue']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html'
+    tags = ['functions', 'importvalue']
 
     def match(self, cfn):
         """Check CloudFormation ImportValue"""

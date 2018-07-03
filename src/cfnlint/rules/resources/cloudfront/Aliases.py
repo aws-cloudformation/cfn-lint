@@ -25,7 +25,8 @@ class Aliases(CloudFormationLintRule):
     id = 'E3013'
     shortdesc = 'CloudFront Aliases'
     description = 'CloudFront aliases should contain valid domain names'
-    tags = ['base', 'properties', 'cloudfront']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases'
+    tags = ['properties', 'cloudfront']
 
     def match(self, cfn):
         """Check cloudfront Resource Parameters"""

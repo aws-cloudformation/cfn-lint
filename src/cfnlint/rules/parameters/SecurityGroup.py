@@ -19,12 +19,14 @@ from cfnlint import RuleMatch
 
 
 class SecurityGroup(CloudFormationLintRule):
+
     """Check if EC2 Security Group Ingress Properties"""
     id = 'W2507'
     shortdesc = 'Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id'
     description = 'Check if a parameter is being used in a resource for Security ' \
                   'Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id'
-    tags = ['base', 'parameters', 'securitygroup']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
+    tags = ['parameters', 'securitygroup']
 
     def __init__(self):
         """Init"""

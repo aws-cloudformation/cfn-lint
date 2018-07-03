@@ -373,6 +373,7 @@ class CustomEncoder(json.JSONEncoder):
                     'Id': o.rule.id,
                     'Description': o.rule.description,
                     'ShortDescription': o.rule.shortdesc,
+                    'Source': o.rule.source_url
                 },
                 'Location': {
                     'Start': {

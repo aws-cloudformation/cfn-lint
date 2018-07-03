@@ -32,6 +32,9 @@ class CloudFormationLintRule(object):
     id = ''
     shortdesc = ''
     description = ''
+    source_url = ''
+    tags = []
+
     logger = logging.getLogger(__name__)
     resource_property_types = []
     resource_sub_property_types = []
@@ -841,6 +844,7 @@ class ParseError(cfnlint.CloudFormationLintRule):
     id = 'E0000'
     shortdesc = 'Parsing error found when parsing the template'
     description = 'Checks for Null values and Duplicate values in resources'
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base']
 
 class TransformError(cfnlint.CloudFormationLintRule):
@@ -848,6 +852,7 @@ class TransformError(cfnlint.CloudFormationLintRule):
     id = 'E0001'
     shortdesc = 'Error found when transforming the template'
     description = 'Errors found when performing transformation on the template'
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base', 'transform']
 
 class RuleError(cfnlint.CloudFormationLintRule):
@@ -855,4 +860,5 @@ class RuleError(cfnlint.CloudFormationLintRule):
     id = 'E0002'
     shortdesc = 'Error processing rule on the template'
     description = 'Errors found when processing a rule on the template'
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base', 'rule']

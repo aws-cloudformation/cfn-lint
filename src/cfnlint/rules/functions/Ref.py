@@ -24,7 +24,8 @@ class Ref(CloudFormationLintRule):
     id = 'E1020'
     shortdesc = 'Ref validation of value'
     description = 'Making the Ref has a value of String (no other functions are supported)'
-    tags = ['base', 'functions', 'ref']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'
+    tags = ['functions', 'ref']
 
     def match(self, cfn):
         """Check CloudFormation Ref"""

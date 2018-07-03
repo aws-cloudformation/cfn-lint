@@ -24,7 +24,8 @@ class DependsOn(CloudFormationLintRule):
     id = 'E3005'
     shortdesc = 'Check DependsOn values for Resources'
     description = 'Check that the DependsOn values are valid'
-    tags = ['base', 'resources', 'dependson']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    tags = ['resources', 'dependson']
 
     def check_value(self, key, path, resources):
         """Check resource names for DependsOn"""
