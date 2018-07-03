@@ -24,7 +24,7 @@ class Policy(CloudFormationLintRule):
     shortdesc = 'Check if IAM Policies are properly configured'
     description = 'See if there elements inside an IAM policy ' + \
                   'are correct'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html'
     tags = ['properties', 'iam']
 
     def _check_policy_document(self, branch, policy):

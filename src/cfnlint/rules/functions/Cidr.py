@@ -26,7 +26,7 @@ class Cidr(CloudFormationLintRule):
     id = 'E1024'
     shortdesc = 'Cidr validation of parameters'
     description = 'Making sure the function CIDR is a list with valid values'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html'
     tags = ['functions', 'cidr']
 
     def check_parameter_count(self, cfn, parameter_name):

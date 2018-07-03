@@ -26,7 +26,7 @@ class Limits(CloudFormationLintRule):
     id = 'E2508'
     shortdesc = 'Check IAM resource limits'
     description = 'See if IAM resources do not breach limits'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['resources', 'iam']
 
     def _serialize_date(self, obj):

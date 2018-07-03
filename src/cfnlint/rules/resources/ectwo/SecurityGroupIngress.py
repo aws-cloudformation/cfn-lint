@@ -25,7 +25,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
     description = 'See if EC2 Security Group Ingress Properties are set correctly. ' \
                   'Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are ' \
                   ' are exclusive and using the type of Ref or GetAtt '
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html'
     tags = ['resources', 'securitygroup']
 
     def check_sgid_value(self, value, path):

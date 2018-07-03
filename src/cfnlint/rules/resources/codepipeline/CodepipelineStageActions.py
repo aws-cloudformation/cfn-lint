@@ -23,7 +23,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
     id = 'E2541'
     shortdesc = 'CodePipeline Stage Actions'
     description = 'See if CodePipeline stage actions are set correctly'
-    sources = []
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources', 'codepipeline']
 
     VALID_OWNER_STRINGS = {'AWS', 'ThirdParty', 'Custom'}

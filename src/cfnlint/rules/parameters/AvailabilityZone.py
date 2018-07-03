@@ -24,7 +24,7 @@ class AvailabilityZone(CloudFormationLintRule):
     shortdesc = 'Availability Zone Parameters are of correct type AWS::EC2::AvailabilityZone::Name'
     description = 'Check if a parameter is being used in a resource for Security ' \
                   'Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters', 'availabilityzone']
 
     def __init__(self):

@@ -25,7 +25,7 @@ class Aliases(CloudFormationLintRule):
     id = 'E3013'
     shortdesc = 'CloudFront Aliases'
     description = 'CloudFront aliases should contain valid domain names'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases'
     tags = ['properties', 'cloudfront']
 
     def match(self, cfn):

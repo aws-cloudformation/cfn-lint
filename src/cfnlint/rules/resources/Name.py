@@ -25,7 +25,7 @@ class Name(CloudFormationLintRule):
     id = 'E3006'
     shortdesc = 'Resources have appropriate names'
     description = 'Check if Resources are properly named (A-Za-z0-9)'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid'
     tags = ['resources']
 
     def match(self, cfn):

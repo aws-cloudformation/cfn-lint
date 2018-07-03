@@ -26,7 +26,7 @@ class CircularDependency(CloudFormationLintRule):
     shortdesc = 'Resource dependencies are not circular'
     description = 'Check that Resources are not circularly dependent ' \
                   'by Ref, Sub, or GetAtt'
-    sources = ['Resource Specification']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources', 'circularly']
 
     def searchstring(self, string):

@@ -23,10 +23,7 @@ class Types(CloudFormationLintRule):
     id = 'E2002'
     shortdesc = 'Parameters have appropriate type'
     description = 'Making sure the parameters have a correct type'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes',
-               'https://aws.amazon.com/blogs/devops/using-the-new-cloudformation-parameter-types/',
-               'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-specific-parameter-types'
-              ]
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters']
 
     valid_types = [

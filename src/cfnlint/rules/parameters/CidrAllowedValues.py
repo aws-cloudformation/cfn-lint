@@ -27,7 +27,7 @@ class CidrAllowedValues(CloudFormationLintRule):
     shortdesc = 'CIDR Allowed Values should be a Cidr Range'
     description = 'Check if a parameter is being used as a CIDR. ' \
                   'If it is make sure allowed values are proper CIDRs'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters', 'cidr']
 
     def __init__(self):

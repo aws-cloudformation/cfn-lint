@@ -25,7 +25,7 @@ class Required(CloudFormationLintRule):
     shortdesc = 'Required Resource Parameters are missing'
     description = 'Making sure that Resources properties ' + \
                   'that are required exist'
-    sources = ['Resource Specification']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
     cfn = {}

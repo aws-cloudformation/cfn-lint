@@ -25,7 +25,7 @@ class Name(CloudFormationLintRule):
     id = 'E7002'
     shortdesc = 'Mappings have appropriate names'
     description = 'Check if Mappings are properly named (A-Za-z0-9)'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'
     tags = ['mapping']
 
     def match(self, cfn):

@@ -23,7 +23,7 @@ class CodepipelineStages(CloudFormationLintRule):
     id = 'E2540'
     shortdesc = 'CodePipeline Stages'
     description = 'See if CodePipeline stages are set correctly'
-    sources = []
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['properties', 'codepipeline']
 
     def check_stage_count(self, stages, path):

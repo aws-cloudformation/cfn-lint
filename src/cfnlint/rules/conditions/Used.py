@@ -24,7 +24,7 @@ class Used(CloudFormationLintRule):
     id = 'W8001'
     shortdesc = 'Check if Conditions are Used'
     description = 'Making sure the conditions defined are used'
-    sources = ['Best Practice']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['conditions']
 
     def match(self, cfn):

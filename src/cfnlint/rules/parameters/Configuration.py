@@ -23,7 +23,7 @@ class Configuration(CloudFormationLintRule):
     id = 'E2001'
     shortdesc = 'Parameters have appropriate properties'
     description = 'Making sure the parameters are properly configured'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters']
 
     valid_keys = [

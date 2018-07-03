@@ -24,8 +24,7 @@ class Elb(CloudFormationLintRule):
     shortdesc = 'Resource ELB Properties'
     description = 'See if Elb Resource Properties are set correctly \
 HTTPS has certificate HTTP has no certificate'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html',
-               'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html'
     tags = ['properties', 'elb']
 
     def match(self, cfn):

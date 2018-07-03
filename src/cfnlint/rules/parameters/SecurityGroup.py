@@ -25,10 +25,7 @@ class SecurityGroup(CloudFormationLintRule):
     shortdesc = 'Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id'
     description = 'Check if a parameter is being used in a resource for Security ' \
                   'Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes',
-               'https://aws.amazon.com/blogs/devops/using-the-new-cloudformation-parameter-types/',
-               'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#aws-specific-parameter-types'
-              ]
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'securitygroup']
 
     def __init__(self):

@@ -26,7 +26,7 @@ class Used(CloudFormationLintRule):
     id = 'W2001'
     shortdesc = 'Check if Parameters are Used'
     description = 'Making sure the parameters defined are used'
-    sources = ['Best Practice']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['parameters']
 
     def searchstring(self, string, parameter):

@@ -27,7 +27,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
     shortdesc = 'Check resource properties values'
     description = 'Checks resource property values with Primitive Types for ' \
                   'values that match those types.'
-    sources = ['Resource Specification']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
     def __init__(self, ):

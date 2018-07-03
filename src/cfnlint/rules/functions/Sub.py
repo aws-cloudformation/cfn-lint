@@ -25,7 +25,7 @@ class Sub(CloudFormationLintRule):
     id = 'E1019'
     shortdesc = 'Sub validation of parameters'
     description = 'Making sure the split function is properly configured'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
     tags = ['functions', 'sub']
 
     def _test_string(self, cfn, sub_string, parameters, tree):

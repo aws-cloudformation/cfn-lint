@@ -89,7 +89,7 @@ def update_documentation(rules):
         new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
 
-        rule_output = '| {0} <a name="{0}"></a> | {1} | {2} | {3} | {4} |\n'
+        rule_output = '| {0} <a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
@@ -108,15 +108,5 @@ def update_documentation(rules):
             rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', tags))
 
         for rule in sorted_rules:
-            # Minor Readability magic
-            sources_markdown = []
-            for source in rule.sources:
-                if source.startswith('http'):
-                    sources_markdown.append('[source]({})'.format(source))
-                else:
-                    sources_markdown.append(source)
-
-            sources = ', '.join(sources_markdown)
-
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, sources, tags))
+            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))

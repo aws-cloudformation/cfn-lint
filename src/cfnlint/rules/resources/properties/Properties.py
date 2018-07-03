@@ -25,7 +25,7 @@ class Properties(CloudFormationLintRule):
     shortdesc = 'Resource properties are valid'
     description = 'Making sure that resources properties ' + \
                   'are propery configured'
-    sources = ['Resource Specification']
+    source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
     def __init__(self):

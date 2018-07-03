@@ -26,7 +26,7 @@ class Vpc(CloudFormationLintRule):
     id = 'E2505'
     shortdesc = 'Resource EC2 VPC Properties'
     description = 'See if EC2 VPC Properties are set correctly'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
     tags = ['properties', 'vpc']
 
     def check_vpc_value(self, value, path):

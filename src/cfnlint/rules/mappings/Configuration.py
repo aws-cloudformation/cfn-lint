@@ -24,7 +24,7 @@ class Configuration(CloudFormationLintRule):
     id = 'E7001'
     shortdesc = 'Mappings are appropriately configured'
     description = 'Check if Mappings are properly configured'
-    sources = ['https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html']
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'
     tags = ['mappings']
 
     def match(self, cfn):
