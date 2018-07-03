@@ -368,11 +368,19 @@ class CustomEncoder(json.JSONEncoder):
             else:
                 level = 'Error'
 
+            # Output the first URL in the list
+            source_url = ''
+            for source in o.rule.sources:
+                if source.startswith('http'):
+                    source_url = source
+                    break
+
             return {
                 'Rule': {
                     'Id': o.rule.id,
                     'Description': o.rule.description,
                     'ShortDescription': o.rule.shortdesc,
+                    'Source': source_url
                 },
                 'Location': {
                     'Start': {
