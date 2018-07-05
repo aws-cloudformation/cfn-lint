@@ -9,6 +9,17 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.3.3
+###### Features
+- Support for Yaml C Parser when available.
+- Catch rule processing errors and raise a lint error in their place.
+- Add Rule W3005 to warn for when DependsOn is specified but not needed
+- Add Rule E2509 to check if Security Group Descriptions are properly configured
+- Add `source_url` to rules so rule reference documentation can be provided
+###### Fixes
+- Fixed issues when Conditions had lists for values
+- Fixed issue where underscore was allowed for AlphaNumeric names
+
 ### 0.3.2
 ###### Features
 - Try/Catch added to rule processing so code failures in rules won't crash cfn-lint
