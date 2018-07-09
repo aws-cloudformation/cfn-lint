@@ -1,4 +1,4 @@
-# Getting Started: Rules
+# Creating Rules
 This getting started guide describes how create a new rule to be used by `cfn-lint`.
 
 ## Introduction to rules
