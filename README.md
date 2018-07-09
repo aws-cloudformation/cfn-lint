@@ -1,6 +1,6 @@
 # CloudFormation Linter
 
-[![Build Status](https://codebuild.us-east-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibm1lNzczajZWcGw3UE5JRkhhcTBVZzBWTVRMYUtBU2lNcjdPNDVMK2JFM1RERGNDRjJlY2FQMVIrdFFpamx3M3ZaSDF5UCtrRGxkV1BrYU96YTdGNUE4PSIsIml2UGFyYW1ldGVyU3BlYyI6Im1DZklveUk5dXY0dTBucEsiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://github.com/awslabs/cfn-python-lint)
+[![Build Status](https://travis-ci.com/awslabs/cfn-python-lint.svg?branch=master)](https://travis-ci.com/awslabs/cfn-python-lint)
 
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
 checks.  Includes checking valid values for resource properties and best practices.
