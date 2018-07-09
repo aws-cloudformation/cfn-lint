@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **73** rules are applied by this linter:
+The following **77** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -56,6 +56,7 @@ The following **73** rules are applied by this linter:
 | E2003 <a name="E2003"></a> | Parameters have appropriate names | Check if Parameters are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-requirements) | `parameters` |
 | E2004 <a name="E2004"></a> | CIDR Allowed Values should be a Cidr Range | Check if a parameter is being used as a CIDR. If it is make sure allowed values are proper CIDRs | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`cidr` |
 | E2010 <a name="E2010"></a> | Parameter limit not exceeded | Check the number of Parameters in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
+| E2011 <a name="E2011"></a> | Parameter name limit not exceeded | Check the size of Parameter names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
 | E2502 <a name="E2502"></a> | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | [Source](https://github.com/awslabs/cfn-python-lint) | `properties` |
 | E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
 | E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
@@ -80,6 +81,7 @@ The following **73** rules are applied by this linter:
 | E3005 <a name="E3005"></a> | Check DependsOn values for Resources | Check that the DependsOn values are valid | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`dependson` |
 | E3006 <a name="E3006"></a> | Resources have appropriate names | Check if Resources are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html#resources-section-structure-logicalid) | `resources` |
 | E3010 <a name="E3010"></a> | Resource limit not exceeded | Check the number of Resources in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`limits` |
+| E3011 <a name="E3011"></a> | Resource name limit not exceeded | Check the size of Resource names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`limits` |
 | E3012 <a name="E3012"></a> | Check resource properties values | Checks resource property values with Primitive Types for values that match those types. | [Source](https://github.com/awslabs/cfn-python-lint) | `resources` |
 | E3013 <a name="E3013"></a> | CloudFront Aliases | CloudFront aliases should contain valid domain names | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases) | `properties`,`cloudfront` |
 | E3020 <a name="E3020"></a> | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | [Source](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html) | `resources`,`route53`,`record_set` |
@@ -89,9 +91,11 @@ The following **73** rules are applied by this linter:
 | E6003 <a name="E6003"></a> | Outputs have values of strings | Making sure the outputs have strings as values | [Source](https://github.com/awslabs/cfn-python-lint) | `outputs` |
 | E6004 <a name="E6004"></a> | Outputs have appropriate names | Check if Outputs are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6010 <a name="E6010"></a> | Output limit not exceeded | Check the number of Outputs in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `outputs`,`limits` |
+| E6011 <a name="E6011"></a> | Output name limit not exceeded | Check the size of Output names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `outputs`,`limits` |
 | E7001 <a name="E7001"></a> | Mappings are appropriately configured | Check if Mappings are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mappings` |
 | E7002 <a name="E7002"></a> | Mappings have appropriate names | Check if Mappings are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mapping` |
 | E7010 <a name="E7010"></a> | Mapping limit not exceeded | Check the number of Mappings in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
+| E7011 <a name="E7011"></a> | Mapping name limit not exceeded | Check the size of Mapping names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E8001 <a name="E8001"></a> | Conditions have appropriate properties | Check if Conditions are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
 | W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
 | W2501 <a name="W2501"></a> | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds) | `parameters`,`passwords` |
