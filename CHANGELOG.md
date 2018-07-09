@@ -13,6 +13,7 @@
 ###### Features
 - Support for Yaml C Parser when available.
 - Catch rule processing errors and raise a lint error in their place.
+- Add rules for the limit on Parameter, Mapping, Resource and Output names
 - Add Rule W3005 to warn for when DependsOn is specified but not needed
 - Add Rule E2509 to check if Security Group Descriptions are properly configured
 - Add `source_url` to rules so rule reference documentation can be provided
