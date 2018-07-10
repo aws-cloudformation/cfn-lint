@@ -684,7 +684,10 @@ class Template(object):
         LOGGER.debug('Get location of path %s', path)
         result = None
         if len(path) > 1:
-            result = self.get_location_yaml(text[path[0]], path[1:])
+            try:
+                result = self.get_location_yaml(text[path[0]], path[1:])
+            except KeyError as err:
+                pass
             if not result:
                 try:
                     for key in text:

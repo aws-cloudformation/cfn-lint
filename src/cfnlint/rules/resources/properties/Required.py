@@ -74,10 +74,10 @@ class Required(CloudFormationLintRule):
                     if isinstance(cond_value['Value'], dict):
                         append_object = {}
                         append_object['Path'] = tree[:] + [key] + cond_value['Path']
+                        append_object['Value'] = {}
                         for sub_key, sub_value in cond_value['Value'].items():
-                            append_object[sub_key] = sub_value
+                            append_object['Value'][sub_key] = sub_value
 
-                        append_object['Value'] = append_object
                         append_object['Value'].update(base_object_properties)
                         resource_objects.append(append_object)
 
