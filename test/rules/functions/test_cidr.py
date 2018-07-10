@@ -32,6 +32,10 @@ class TestRulesCidr(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
+    def test_file_positive_extra(self):
+        """Test failure"""
+        self.helper_file_positive_template('fixtures/templates/good/functions/cidr.yaml')
+
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('fixtures/templates/bad/functions_cidr.yaml', 10)

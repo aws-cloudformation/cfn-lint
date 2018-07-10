@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  SubnetIndex:
+    Description: 'Index of the subnet'
+    Type: Number
+    MinValue: 0
+    MaxValue: 5
+  SubnetCount:
+    Description: 'To slice the IP address ranges you need to specify how many subnets you want to create in the VPC'
+    Type: Number
+    MinValue: 1
+    MaxValue: 6
+Resources:
+  Subnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      CidrBlock: !Select [!Ref SubnetIndex, !Cidr [{'Fn::ImportValue': 'vpc-CidrBlock'}, !Ref SubnetCount, 12]]
+      VpcId: 'vpc-123456'
