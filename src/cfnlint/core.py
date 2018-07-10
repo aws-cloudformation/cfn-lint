@@ -88,6 +88,7 @@ def configure_logging(debug_logging):
 
 
 def comma_separated_arg(string):
+    """ Split a comma separated string """
     return string.split(',')
 
 
@@ -194,7 +195,6 @@ def get_rules(rulesdir, ignore_rules):
 
 def get_template_args_rules(cli_args):
     """ Get Template Configuration items and set them as default values"""
-    defaults = {}
     template = {}
     parser = create_parser()
 
@@ -263,21 +263,15 @@ def get_template_args_rules(cli_args):
                 print_matches(matches, fmt, formatter)
                 sys.exit(get_exit_code(matches))
 
-    defaults = get_default_args(template)
-    parser.set_defaults(**defaults)
-
-    args = parser.parse_args(cli_args)
-
     # If the template has cfn-lint Metadata but the same options are set on the command-
-    # line, ignore the template's configuration.
+    # line, ignore the template's configuration. This works because these are all appends
+    # that have default values of empty arrays or none.  The only one that really doesn't
+    # work is ignore_bad_template but you can't override that back to false at this point.
     for section, values in get_default_args(template).items():
-        if hasattr(args, section):
-            for value in values:
-                v = getattr(args, section)
-                del(v[0])
-                setattr(args, section, v)
+        if not getattr(args, section):
+            setattr(args, section, values)
 
-    # Set default regions if none are specified
+    # Set default regions if none are specified.
     if not args.regions:
         setattr(args, 'regions', ['us-east-1'])
 

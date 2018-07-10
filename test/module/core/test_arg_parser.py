@@ -40,19 +40,3 @@ class TestArgsParser(BaseTestCase):
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.format, 'quiet')
         self.assertEqual(args.debug, True)
-
-    def test_override_template_defaults(self):
-        """Test second parser"""
-        parser = cfnlint.core.create_parser()
-        defaults = {
-            'ignore_checks': ['E0110']
-        }
-
-        # just write the defaults
-
-        parser.set_defaults(**defaults)
-        args = parser.parse_args([
-            '--ignore-checks', 'E0101'
-        ])
-
-        self.assertEqual(args.ignore_checks, ['E0101'])
