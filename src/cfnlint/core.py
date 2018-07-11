@@ -87,9 +87,23 @@ def configure_logging(debug_logging):
     LOGGER.addHandler(ch)
 
 
+def comma_separated_arg(string):
+    return string.split(',')
+
+
+class ExtendAction(argparse.Action):
+    """Support argument types that are lists and can be specified multiple times."""
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = getattr(namespace, self.dest, [])
+        for value in values:
+            items.extend(value)
+        setattr(namespace, self.dest, items)
+
+
 def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
+    parser.register('action', 'extend', ExtendAction)
 
     standard = parser.add_argument_group('Standard')
     advanced = parser.add_argument_group('Advanced / Debugging')
@@ -116,16 +130,19 @@ def create_parser():
         action='store_true', help='list all the rules'
     )
     standard.add_argument(
-        '-r', '--regions', dest='regions', default=['us-east-1'], nargs='*',
+        '-r', '--regions', dest='regions', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='list the regions to validate against.'
     )
     advanced.add_argument(
-        '-a', '--append-rules', dest='append_rules', default=[], nargs='*',
+        '-a', '--append-rules', dest='append_rules', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='specify one or more rules directories using '
              'one or more --append-rules arguments. '
     )
     standard.add_argument(
-        '-i', '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
+        '-i', '--ignore-checks', dest='ignore_checks', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='only check rules whose id do not match these values'
     )
 
@@ -250,6 +267,19 @@ def get_template_args_rules(cli_args):
     parser.set_defaults(**defaults)
 
     args = parser.parse_args(cli_args)
+
+    # If the template has cfn-lint Metadata but the same options are set on the command-
+    # line, ignore the template's configuration.
+    for section, values in get_default_args(template).items():
+        if hasattr(args, section):
+            for value in values:
+                v = getattr(args, section)
+                del(v[0])
+                setattr(args, section, v)
+
+    # Set default regions if none are specified
+    if not args.regions:
+        setattr(args, 'regions', ['us-east-1'])
 
     if args.update_specs:
         cfnlint.maintenance.update_resource_specs()
