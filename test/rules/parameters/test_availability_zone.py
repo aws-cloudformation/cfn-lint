@@ -26,37 +26,13 @@ class TestParameterAvailabilityZone(BaseRuleTestCase):
         self.collection.register(AvailabilityZone())
 
     success_templates = [
-        'templates/good/generic.yaml',
-        'templates/quickstart/nist_high_master.yaml',
-        'templates/quickstart/nist_application.yaml',
-        'templates/quickstart/nist_config_rules.yaml',
-        'templates/quickstart/nist_iam.yaml',
-        'templates/quickstart/nist_logging.yaml',
-        'templates/quickstart/nist_vpc_production.yaml',
-        'templates/quickstart/openshift_master.yaml',
-        'templates/quickstart/openshift.yaml',
-        'templates/quickstart/cis_benchmark.yaml',
-        'templates/good/properties_ec2_vpc.yaml',
-        'templates/good/minimal.yaml',
-        'templates/good/transform.yaml',
-        'templates/good/conditions.yaml',
-        'templates/good/properties_elb.yaml',
-        'templates/good/functions_sub.yaml',
-        'templates/good/functions_cidr.yaml',
-        'templates/good/resources_lambda.yaml',
-        'templates/good/transform_serverless_api.yaml',
-        'templates/good/transform_serverless_function.yaml',
-        'templates/good/transform_serverless_globals.yaml',
+        'fixtures/templates/good/properties_ec2_vpc.yaml',
     ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative_nist_mgmt(self):
-        """Failure test"""
-        self.helper_file_negative('templates/quickstart/nist_vpc_management.yaml', 2)
-
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/parameters_az.yaml', 3)
+        self.helper_file_negative('fixtures/templates/bad/parameters_az.yaml', 3)

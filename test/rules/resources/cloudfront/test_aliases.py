@@ -31,4 +31,4 @@ class TestCloudFrontAliases(BaseRuleTestCase):
 
     def test_file_negative_alias(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/resources_cloudfront_invalid_aliases.yaml', 8)
+        self.helper_file_negative('fixtures/templates/bad/resources_cloudfront_invalid_aliases.yaml', 8)

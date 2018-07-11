@@ -24,15 +24,14 @@ class TestMappingConfiguration(BaseRuleTestCase):
         """Setup"""
         super(TestMappingConfiguration, self).setUp()
         self.collection.register(Configuration())
+        self.success_templates = [
+            'fixtures/templates/good/mappings/configuration.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_positive_configuration(self):
-        """Test Positive"""
-        self.helper_file_positive_template('templates/good/mappings/configuration.yaml')
-
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/mappings/configuration.yaml', 3)
+        self.helper_file_negative('fixtures/templates/bad/mappings/configuration.yaml', 3)

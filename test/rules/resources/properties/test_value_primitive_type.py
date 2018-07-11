@@ -26,22 +26,8 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
         self.collection.register(ValuePrimitiveType())
 
     success_templates = [
-        'templates/good/generic.yaml',
-        'templates/quickstart/nist_iam.yaml',
-        'templates/quickstart/openshift_master.yaml',
-        'templates/good/properties_ec2_vpc.yaml',
-        'templates/good/minimal.yaml',
-        'templates/good/transform.yaml',
-        'templates/good/conditions.yaml',
-        'templates/good/properties_elb.yaml',
-        'templates/good/functions_sub.yaml',
-        'templates/good/functions_cidr.yaml',
-        'templates/good/functions_findinmap.yaml',
-        'templates/good/resources_lambda.yaml',
-        'templates/good/resources_codepipeline.yaml',
-        'templates/good/transform_serverless_api.yaml',
-        'templates/good/transform_serverless_function.yaml',
-        'templates/good/transform_serverless_globals.yaml',
+        'fixtures/templates/good/generic.yaml',
+        'fixtures/templates/good/resource_properties.yaml'
     ]
 
     def test_file_positive(self):
@@ -50,20 +36,16 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
 
     def test_file_negative_nist_high_master(self):
         """Generic Test failure"""
-        self.helper_file_negative('templates/quickstart/nist_high_master.yaml', 6)
+        self.helper_file_negative('fixtures/templates/quickstart/nist_high_master.yaml', 6)
 
     def test_file_negative_nist_high_app(self):
         """Generic Test failure"""
-        self.helper_file_negative('templates/quickstart/nist_application.yaml', 53)
+        self.helper_file_negative('fixtures/templates/quickstart/nist_application.yaml', 53)
 
     def test_file_negative_nist_config_rules(self):
         """Generic Test failure"""
-        self.helper_file_negative('templates/quickstart/nist_config_rules.yaml', 2)
+        self.helper_file_negative('fixtures/templates/quickstart/nist_config_rules.yaml', 2)
 
     def test_file_negative_generic(self):
         """Generic Test failure"""
-        self.helper_file_negative('templates/bad/generic.yaml', 3)
-
-    def test_file_positive_resource_properties(self):
-        """Good template"""
-        self.helper_file_positive_template('templates/good/resource_properties.yaml')
+        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 3)

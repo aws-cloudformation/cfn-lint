@@ -31,4 +31,4 @@ class TestBaseTemplate(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('templates/bad/generic.yaml', 1)
+        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 1)
