@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **77** rules are applied by this linter:
+The following **81** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -36,6 +36,7 @@ The following **77** rules are applied by this linter:
 | E0002 <a name="E0002"></a> | Error processing rule on the template | Errors found when processing a rule on the template | [Source]() | `base`,`rule` |
 | E1001 <a name="E1001"></a> | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template componets are propery configured | [Source](https://github.com/awslabs/cfn-python-lint) | `base` |
 | E1002 <a name="E1002"></a> | Template size limit | Check the size of the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `limits` |
+| E1003 <a name="E1003"></a> | Template description limit | Check if the size of the template description is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `limits` |
 | E1010 <a name="E1010"></a> | GetAtt validation of parameters | Making sure the function GetAtt is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html) | `functions`,`getatt` |
 | E1011 <a name="E1011"></a> | FindInMap validation of configuration | Making sure the function is a list of appropriate config | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) | `functions`,`getatt` |
 | E1012 <a name="E1012"></a> | Check if Refs exist | Making sure the refs exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `functions`,`ref` |
@@ -57,6 +58,8 @@ The following **77** rules are applied by this linter:
 | E2004 <a name="E2004"></a> | CIDR Allowed Values should be a Cidr Range | Check if a parameter is being used as a CIDR. If it is make sure allowed values are proper CIDRs | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`cidr` |
 | E2010 <a name="E2010"></a> | Parameter limit not exceeded | Check the number of Parameters in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
 | E2011 <a name="E2011"></a> | Parameter name limit not exceeded | Check the size of Parameter names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
+| E2012 <a name="E2012"></a> | Parameter value limit not exceeded | Check uf the size of Parameter values in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
+| E2015 <a name="E2015"></a> | Default value is within parameter constraints | Making sure the parameters have a default value inside AllowedValues, MinValue, MaxValue, AllowedPattern | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters` |
 | E2502 <a name="E2502"></a> | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | [Source](https://github.com/awslabs/cfn-python-lint) | `properties` |
 | E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
 | E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
@@ -96,6 +99,7 @@ The following **77** rules are applied by this linter:
 | E7002 <a name="E7002"></a> | Mappings have appropriate names | Check if Mappings are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mapping` |
 | E7010 <a name="E7010"></a> | Mapping limit not exceeded | Check the number of Mappings in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E7011 <a name="E7011"></a> | Mapping name limit not exceeded | Check the size of Mapping names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
+| E7012 <a name="E7012"></a> | Mapping attribute limit not exceeded | Check if the amount of Mapping attributes in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E8001 <a name="E8001"></a> | Conditions have appropriate properties | Check if Conditions are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
 | W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
 | W2501 <a name="W2501"></a> | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds) | `parameters`,`passwords` |
