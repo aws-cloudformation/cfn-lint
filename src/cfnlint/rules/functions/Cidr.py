@@ -90,7 +90,8 @@ class Cidr(CloudFormationLintRule):
 
         supported_functions = [
             'Fn::Select',
-            'Ref'
+            'Ref',
+            'Fn::ImportValue'
         ]
 
         count_parameters = []
@@ -148,7 +149,7 @@ class Cidr(CloudFormationLintRule):
                                         tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2])))))
                                 if index_key == 'Ref':
                                     size_mask_parameters.append(index_value)
-                    elif not isinstance(count_obj, six.integer_types):
+                    elif not isinstance(size_mask_obj, six.integer_types):
                         message = 'Cidr sizeMask should be a int for {0}'
                         matches.append(RuleMatch(
                             tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2])))))
