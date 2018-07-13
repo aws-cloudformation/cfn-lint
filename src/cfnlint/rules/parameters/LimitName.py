@@ -38,7 +38,7 @@ class LimitName(CloudFormationLintRule):
         for parameter_name in parameters:
             path = ['Parameters', parameter_name]
             if len(parameter_name) > LIMITS['parameters']['name']:
-                message = 'The lenght of parameter name ({0}) exceeds the limit ({1})'
+                message = 'The length of parameter name ({0}) exceeds the limit ({1})'
                 matches.append(RuleMatch(path, message.format(len(parameter_name), LIMITS['parameters']['name'])))
 
         return matches

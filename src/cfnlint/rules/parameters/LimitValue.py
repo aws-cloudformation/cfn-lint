@@ -45,7 +45,7 @@ class LimitValue(CloudFormationLintRule):
             if isinstance(default_value, (six.text_type, six.string_types)):
                 if len(default_value) > value_limit:
                     path = ['Parameters', paramname, 'Default']
-                    message = 'The lenght of parameter default value ({0}) exceeds the limit ({1})'
+                    message = 'The length of parameter default value ({0}) exceeds the limit ({1})'
                     matches.append(RuleMatch(path, message.format(len(default_value), value_limit)))
 
             # CHeck MaxLength parameters
@@ -71,7 +71,7 @@ class LimitValue(CloudFormationLintRule):
                 if isinstance(allowed_value, (six.text_type, six.string_types)):
                     if len(allowed_value) > value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
-                        message = 'The lenght of parameter allowed value ({0}) exceeds the limit ({1})'
+                        message = 'The length of parameter allowed value ({0}) exceeds the limit ({1})'
                         matches.append(RuleMatch(path, message.format(len(allowed_value), value_limit)))
 
         return matches
