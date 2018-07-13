@@ -87,9 +87,24 @@ def configure_logging(debug_logging):
     LOGGER.addHandler(ch)
 
 
+def comma_separated_arg(string):
+    """ Split a comma separated string """
+    return string.split(',')
+
+
+class ExtendAction(argparse.Action):
+    """Support argument types that are lists and can be specified multiple times."""
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = getattr(namespace, self.dest, [])
+        for value in values:
+            items.extend(value)
+        setattr(namespace, self.dest, items)
+
+
 def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
+    parser.register('action', 'extend', ExtendAction)
 
     standard = parser.add_argument_group('Standard')
     advanced = parser.add_argument_group('Advanced / Debugging')
@@ -116,16 +131,19 @@ def create_parser():
         action='store_true', help='list all the rules'
     )
     standard.add_argument(
-        '-r', '--regions', dest='regions', default=['us-east-1'], nargs='*',
+        '-r', '--regions', dest='regions', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='list the regions to validate against.'
     )
     advanced.add_argument(
-        '-a', '--append-rules', dest='append_rules', default=[], nargs='*',
+        '-a', '--append-rules', dest='append_rules', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='specify one or more rules directories using '
              'one or more --append-rules arguments. '
     )
     standard.add_argument(
-        '-i', '--ignore-checks', dest='ignore_checks', default=[], nargs='*',
+        '-i', '--ignore-checks', dest='ignore_checks', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
         help='only check rules whose id do not match these values'
     )
 
@@ -177,7 +195,6 @@ def get_rules(rulesdir, ignore_rules):
 
 def get_template_args_rules(cli_args):
     """ Get Template Configuration items and set them as default values"""
-    defaults = {}
     template = {}
     parser = create_parser()
 
@@ -246,10 +263,17 @@ def get_template_args_rules(cli_args):
                 print_matches(matches, fmt, formatter)
                 sys.exit(get_exit_code(matches))
 
-    defaults = get_default_args(template)
-    parser.set_defaults(**defaults)
+    # If the template has cfn-lint Metadata but the same options are set on the command-
+    # line, ignore the template's configuration. This works because these are all appends
+    # that have default values of empty arrays or none.  The only one that really doesn't
+    # work is ignore_bad_template but you can't override that back to false at this point.
+    for section, values in get_default_args(template).items():
+        if not getattr(args, section):
+            setattr(args, section, values)
 
-    args = parser.parse_args(cli_args)
+    # Set default regions if none are specified.
+    if not args.regions:
+        setattr(args, 'regions', ['us-east-1'])
 
     if args.update_specs:
         cfnlint.maintenance.update_resource_specs()
