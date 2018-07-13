@@ -119,7 +119,10 @@ def create_node_class(cls):
             return cls.__new__(self, x)
 
         def __deepcopy__(self, memo):
-            return self
+            result = str_node(self, self.start_mark, self.end_mark)
+            memo[id(self)] = result
+
+            return result
 
         def __copy__(self):
             return self

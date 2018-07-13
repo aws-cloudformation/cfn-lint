@@ -84,7 +84,9 @@ def create_node_class(cls):
             return cls.__new__(self, x)
 
         def __deepcopy__(self, memo):
-            return self
+            result = str_node(self, self.start_mark, self.end_mark)
+            memo[id(self)] = result
+            return result
 
         def __copy__(self):
             return self
@@ -93,8 +95,6 @@ def create_node_class(cls):
     return node_class
 
 
-dict_node = create_node_class(dict)
-list_node = create_node_class(list)
 str_node = create_node_class(str)
 
 
@@ -108,7 +108,6 @@ class NodeConstructor(SafeConstructor):
         super(NodeConstructor, self).__init__()
 
         self.filename = filename
-
 
     # To support lazy loading, the original constructors first yield
     # an empty object, then fill them in when iterated. Due to
@@ -133,11 +132,7 @@ class NodeConstructor(SafeConstructor):
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
-        return dict_node(obj, node.start_mark, node.end_mark)
-
-    def construct_yaml_seq(self, node):
-        obj, = SafeConstructor.construct_yaml_seq(self, node)
-        return list_node(obj, node.start_mark, node.end_mark)
+        return obj
 
     def construct_yaml_str(self, node):
         obj = SafeConstructor.construct_yaml_str(self, node)
@@ -155,10 +150,6 @@ class NodeConstructor(SafeConstructor):
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:map',
     NodeConstructor.construct_yaml_map)
-
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:seq',
-    NodeConstructor.construct_yaml_seq)
 
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:str',
