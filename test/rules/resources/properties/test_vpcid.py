@@ -24,6 +24,9 @@ class TestPropertyVpcId(BaseRuleTestCase):
         """Setup"""
         super(TestPropertyVpcId, self).setUp()
         self.collection.register(VpcId())
+        self.success_templates = [
+            'fixtures/templates/good/properties_ec2_vpc.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

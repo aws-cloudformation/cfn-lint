@@ -61,9 +61,8 @@ class AvailabilityZone(CloudFormationLintRule):
         matches = list()
 
         if path[-1] != 'Fn::GetAZs':
-            message = 'Don\'t hardcode {0} for AvailabilityZones at {1}'
-            full_path = ('/'.join(str(x) for x in path))
-            matches.append(RuleMatch(path, message.format(value, full_path)))
+            message = 'Don\'t hardcode {0} for AvailabilityZones'
+            matches.append(RuleMatch(path, message.format(value)))
 
         return matches
 
