@@ -40,6 +40,9 @@ class Transform(object):
         self._managed_policy_map = self.load_managed_policies()
         self._sam_parser = parser.Parser()
 
+    def template(self):
+        """Get the template"""
+        return self._template
 
     def load_managed_policies(self):
         """
@@ -103,7 +106,7 @@ class Transform(object):
                     pass
 
             with WarningSuppressLogger(parser.logging):
-                sam_translator.translate(sam_template=self._template, parameter_values={})
+                self._template = sam_translator.translate(sam_template=self._template, parameter_values={})
         except InvalidDocumentException as e:
             for cause in e.causes:
                 matches.append(cfnlint.Match(

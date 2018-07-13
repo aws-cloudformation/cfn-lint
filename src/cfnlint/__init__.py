@@ -18,6 +18,7 @@ import logging
 import sys
 import os
 import re
+from copy import deepcopy
 from datetime import datetime
 from yaml.parser import ParserError
 import cfnlint.helpers
@@ -343,6 +344,14 @@ class Template(object):
             'Outputs',
             'Rules'
         ]
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        for k, v in self.__dict__.items():
+            setattr(result, k, deepcopy(v, memo))
+        return result
 
     def get_resources(self, resource_type=[]):
         """
@@ -811,6 +820,7 @@ class Runner(object):
         if transform_type == 'AWS::Serverless-2016-10-31':
             transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
             matches = transform.transform_template()
+            self.cfn.template = transform.template()
 
         return matches
 
