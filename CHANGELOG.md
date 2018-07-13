@@ -9,6 +9,19 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.3.5
+###### Features
+- Update CloudFormation Specs to July 12th, 2018
+- Rule E7012 added to check the limits of attributes in a Mapping
+- Rule E2012 added to check maximum size of a parameter value
+- Rule E1003 added to check the maximum length of the template Description
+- Guide created to help new users write new rules
+###### Fixes
+- Catch KeyError when trying to discover the line and column number of an error
+- Update Lambda rules to support dotnet core
+- Fix rule E1017 so we unpack first element of select as a dict
+- Fix rule E1024 to support ImportValue and appropriately checking number for the last element
+
 ### 0.3.3
 ###### Features
 - Support for Yaml C Parser when available.
