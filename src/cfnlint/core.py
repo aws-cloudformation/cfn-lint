@@ -18,17 +18,11 @@ import logging
 import sys
 import os
 import json
-try:
-    from json.decoder import JSONDecodeError
-except ImportError:
-    JSONDecodeError = ValueError
 import argparse
 import six
-from yaml.parser import ParserError, ScannerError
 from cfnlint import RulesCollection, Match
 import cfnlint.formatters as formatters
-import cfnlint.cfn_yaml
-import cfnlint.cfn_json
+import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
@@ -215,53 +209,11 @@ def get_template_args_rules(cli_args):
         filename = None
 
     if filename:
-        ignore_bad_template = args.ignore_bad_template
-        try:
-            template = cfnlint.cfn_yaml.load(filename)
-        except IOError as e:
-            if e.errno == 2:
-                LOGGER.error('Template file not found: %s', filename)
-                sys.exit(1)
-            elif e.errno == 21:
-                LOGGER.error('Template references a directory, not a file: %s', filename)
-                sys.exit(1)
-            elif e.errno == 13:
-                LOGGER.error('Permission denied when accessing template file: %s', filename)
-                sys.exit(1)
-        except cfnlint.cfn_yaml.CfnParseError as err:
-            err.match.Filename = filename
-            matches = [err.match]
+        (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
+
+        if matches:
             print_matches(matches, fmt, formatter)
             sys.exit(get_exit_code(matches))
-        except ParserError as err:
-            matches = [create_match_yaml_parser_error(err, filename)]
-            print_matches(matches, fmt, formatter)
-            sys.exit(get_exit_code(matches))
-        except ScannerError as err:
-            if err.problem == 'found character \'\\t\' that cannot start any token':
-                try:
-                    template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-                except cfnlint.cfn_json.JSONDecodeError as json_err:
-                    json_err.match.filename = filename
-                    matches = [json_err.match]
-                    print_matches(matches, fmt, formatter)
-                    sys.exit(get_exit_code(matches))
-                except JSONDecodeError as json_err:
-                    matches = [create_match_json_parser_error(json_err, filename)]
-                    print_matches(matches, fmt, formatter)
-                    sys.exit(get_exit_code(matches))
-                except Exception as json_err:  # pylint: disable=W0703
-                    if ignore_bad_template:
-                        LOGGER.info('Template %s is malformed: %s', filename, err.problem)
-                        LOGGER.info('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                    else:
-                        LOGGER.error('Template %s is malformed: %s', filename, err.problem)
-                        LOGGER.error('Tried to parse %s as JSON but got error: %s', filename, str(json_err))
-                        sys.exit(1)
-            else:
-                matches = [create_match_yaml_parser_error(err, filename)]
-                print_matches(matches, fmt, formatter)
-                sys.exit(get_exit_code(matches))
 
     # If the template has cfn-lint Metadata but the same options are set on the command-
     # line, ignore the template's configuration. This works because these are all appends
@@ -356,30 +308,6 @@ def print_matches(matches, fmt, formatter):
     else:
         for match in matches:
             print(formatter.format(match))
-
-
-def create_match_yaml_parser_error(parser_error, filename):
-    """Create a Match for a parser error"""
-    lineno = parser_error.problem_mark.line + 1
-    colno = parser_error.problem_mark.column + 1
-    msg = parser_error.problem
-    return cfnlint.Match(
-        lineno, colno, lineno, colno + 1, filename,
-        cfnlint.ParseError(), message=msg)
-
-
-def create_match_json_parser_error(parser_error, filename):
-    """Create a Match for a parser error"""
-    if sys.version_info[0] == 3:
-        lineno = parser_error.lineno
-        colno = parser_error.colno
-        msg = parser_error.msg
-    elif sys.version_info[0] == 2:
-        lineno = 1
-        colno = 1
-        msg = parser_error.message
-    return cfnlint.Match(
-        lineno, colno, lineno, colno + 1, filename, cfnlint.ParseError(), message=msg)
 
 
 class CustomEncoder(json.JSONEncoder):

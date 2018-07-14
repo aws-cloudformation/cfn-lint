@@ -17,8 +17,8 @@
 import json
 from cfnlint import RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR
-import cfnlint.cfn_yaml  # pylint: disable=E0401
-import cfnlint.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+import cfnlint.decode.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -38,8 +38,8 @@ class TestNulls(BaseTestCase):
         filename = 'fixtures/templates/good/generic.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
-        except cfnlint.cfn_yaml.CfnParseError:
+            cfnlint.decode.cfn_yaml.load(filename)
+        except cfnlint.decode.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -54,8 +54,8 @@ class TestNulls(BaseTestCase):
         filename = 'fixtures/templates/bad/null_values.json'
 
         try:
-            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-        except cfnlint.cfn_json.JSONDecodeError as err:
+            json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+        except cfnlint.decode.cfn_json.JSONDecodeError as err:
             self.assertIn("Null Error \"EbsOptimized\"", err.msg)
             return
 
@@ -67,8 +67,8 @@ class TestNulls(BaseTestCase):
         filename = 'fixtures/templates/bad/null_values.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
-        except cfnlint.cfn_yaml.CfnParseError:
+            cfnlint.decode.cfn_yaml.load(filename)
+        except cfnlint.decode.cfn_yaml.CfnParseError:
             assert(True)
             return
 
