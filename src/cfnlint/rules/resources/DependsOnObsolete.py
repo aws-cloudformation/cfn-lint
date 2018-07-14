@@ -51,7 +51,7 @@ class DependsOnObsolete(CloudFormationLintRule):
 
         for tree in trees:
             if tree[-1] == key:
-                message = 'Obsolete DependsOn on resource ({0}), dependency already enfoced by a "Ref" at {1}'
+                message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Ref" at {1}'
                 matches.append(RuleMatch(path, message.format(key, '/'.join(map(str, tree)))))
 
         # Get the GetAtt
