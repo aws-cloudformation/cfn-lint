@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from unittest import TestCase
-import cfnlint.cfn_yaml
+import cfnlint.decode.cfn_yaml
 
 
 class BaseTestCase(TestCase):
@@ -28,4 +28,4 @@ class BaseTestCase(TestCase):
 
     def load_template(self, filename):
         """Return teplate"""
-        return cfnlint.cfn_yaml.load(filename)
+        return cfnlint.decode.cfn_yaml.load(filename)

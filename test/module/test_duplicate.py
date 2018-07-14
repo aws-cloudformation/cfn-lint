@@ -17,8 +17,8 @@
 import json
 from cfnlint import Template, RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.cfn_yaml  # pylint: disable=E0401
-import cfnlint.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+import cfnlint.decode.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -38,8 +38,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'fixtures/templates/good/generic.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
-        except cfnlint.cfn_yaml.CfnParseError:
+            cfnlint.decode.cfn_yaml.load(filename)
+        except cfnlint.decode.cfn_yaml.CfnParseError:
             assert(False)
             return
 
@@ -54,8 +54,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'fixtures/templates/bad/duplicate.json'
 
         try:
-            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-        except cfnlint.cfn_json.JSONDecodeError:
+            json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+        except cfnlint.decode.cfn_json.JSONDecodeError:
             assert(True)
             return
 
@@ -67,8 +67,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'fixtures/templates/bad/duplicate.yaml'
 
         try:
-            cfnlint.cfn_yaml.load(filename)
-        except cfnlint.cfn_yaml.CfnParseError:
+            cfnlint.decode.cfn_yaml.load(filename)
+        except cfnlint.decode.cfn_yaml.CfnParseError:
             assert(True)
             return
 

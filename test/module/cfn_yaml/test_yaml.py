@@ -16,7 +16,7 @@
 """
 from cfnlint import Template, RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.cfn_yaml  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -42,7 +42,7 @@ class TestYamlParse(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get('filename')
             failures = values.get('failures')
-            template = cfnlint.cfn_yaml.load(filename)
+            template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
 
             matches = list()

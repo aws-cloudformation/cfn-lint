@@ -14,7 +14,6 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import sys
 import logging
 import six
 from yaml.composer import Composer
@@ -27,6 +26,7 @@ from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
 import cfnlint
+from cfnlint.decode.str_node import str_node
 
 try:
     from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
@@ -58,44 +58,6 @@ class CfnParseError(ConstructorError):
         self.match = cfnlint.Match(
             line_number + 1, column_number + 1, line_number + 1,
             column_number + 1 + len(key), filename, cfnlint.ParseError(), message=message)
-
-def create_node_class(cls):
-    """
-    Create dynamic node class
-    """
-    class node_class(cls):
-        """Node class created based on the input class"""
-        def __init__(self, x, start_mark, end_mark):
-            try:
-                cls.__init__(self, x)
-            except TypeError:
-                cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
-
-        # pylint: disable=bad-classmethod-argument, unused-argument
-        def __new__(self, x, start_mark, end_mark):
-            if sys.version_info >= (3, 0):
-                return cls.__new__(self, x)
-
-            if isinstance(x, six.string_types):
-                return cls.__new__(self, x.encode('ascii', 'ignore'))
-
-            return cls.__new__(self, x)
-
-        def __deepcopy__(self, memo):
-            result = str_node(self, self.start_mark, self.end_mark)
-            memo[id(self)] = result
-            return result
-
-        def __copy__(self):
-            return self
-
-    node_class.__name__ = '%s_node' % cls.__name__
-    return node_class
-
-
-str_node = create_node_class(str)
 
 
 class NodeConstructor(SafeConstructor):
@@ -213,6 +175,7 @@ def construct_getatt(node):
         return [s.value for s in node.value]
 
     raise ValueError('Unexpected node type: {}'.format(type(node.value)))
+
 
 def load(filename):
     """

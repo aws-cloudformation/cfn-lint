@@ -19,8 +19,8 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-import six
 import cfnlint
+from cfnlint.decode.str_node import str_node
 
 
 LOGGER = logging.getLogger(__name__)
@@ -92,46 +92,6 @@ class Mark(object):
     def __init__(self, line, column):
         self.line = line
         self.column = column
-
-
-def create_node_class(cls):
-    """
-    Create dynamic node class
-    """
-    class node_class(cls):
-        """Node class created based on the input class"""
-        def __init__(self, x, start_mark, end_mark):
-            try:
-                cls.__init__(self, x)
-            except TypeError:
-                cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
-
-        # pylint: disable=bad-classmethod-argument, unused-argument
-        def __new__(self, x, start_mark, end_mark):
-            if sys.version_info >= (3, 0):
-                return cls.__new__(self, x)
-
-            if isinstance(x, six.string_types):
-                return cls.__new__(self, x.encode('ascii', 'ignore'))
-
-            return cls.__new__(self, x)
-
-        def __deepcopy__(self, memo):
-            result = str_node(self, self.start_mark, self.end_mark)
-            memo[id(self)] = result
-
-            return result
-
-        def __copy__(self):
-            return self
-
-    node_class.__name__ = '%s_node' % cls.__name__
-    return node_class
-
-
-str_node = create_node_class(str)
 
 
 # pylint: disable=W0102
