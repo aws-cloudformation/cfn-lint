@@ -218,10 +218,10 @@ def construct_getatt(node):
 
     if isinstance(node.value, (six.text_type, six.string_types)):
         return node.value.split('.')
-    elif isinstance(node.value, list):
+    if isinstance(node.value, list):
         return [s.value for s in node.value]
-    else:
-        raise ValueError('Unexpected node type: {}'.format(type(node.value)))
+
+    raise ValueError('Unexpected node type: {}'.format(type(node.value)))
 
 def load(filename):
     """

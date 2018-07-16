@@ -40,10 +40,11 @@ class CodepipelineStages(CloudFormationLintRule):
         """Validate the first stage of a pipeline has source actions."""
         matches = []
 
-        if len(stages) < 1:
+        if len(stages) < 1:  # pylint: disable=C1801
             self.logger.debug('Stages was empty. Should have been caught by generic linting.')
             return matches
 
+        # pylint: disable=R1718
         first_stage = set([a.get('ActionTypeId').get('Category') for a in stages[0]['Actions']])
         if first_stage and 'Source' not in first_stage:
             message = 'The first stage of a pipeline must contain at least one source action.'
@@ -60,7 +61,7 @@ class CodepipelineStages(CloudFormationLintRule):
         matches = []
         categories = set()
 
-        if len(stages) < 1:
+        if len(stages) < 1:  # pylint: disable=C1801
             self.logger.debug('Stages was empty. Should have been caught by generic linting.')
             return matches
 

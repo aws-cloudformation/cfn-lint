@@ -48,8 +48,8 @@ class Used(CloudFormationLintRule):
                             'Disabling check %s', self.id
                         )
                         return matches
-                    else:
-                        findinmap_mappings.append(maptree[-1][0])
+
+                    findinmap_mappings.append(maptree[-1][0])
                 else:
                     findinmap_mappings.append(maptree[-1])
 
