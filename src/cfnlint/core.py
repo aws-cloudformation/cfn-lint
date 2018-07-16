@@ -21,7 +21,7 @@ import json
 import argparse
 import six
 from cfnlint import RulesCollection, Match
-import cfnlint.formatters as formatters
+import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.version import __version__
@@ -166,12 +166,12 @@ def get_formatter(fmt):
     formatter = {}
     if fmt:
         if fmt == 'quiet':
-            formatter = formatters.QuietFormatter()
+            formatter = cfnlint.formatters.QuietFormatter()
         elif fmt == 'parseable':
             # pylint: disable=bad-option-value
-            formatter = formatters.ParseableFormatter()
+            formatter = cfnlint.formatters.ParseableFormatter()
     else:
-        formatter = formatters.Formatter()
+        formatter = cfnlint.formatters.Formatter()
 
     return formatter
 

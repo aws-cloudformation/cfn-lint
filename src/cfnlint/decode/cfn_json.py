@@ -200,7 +200,8 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
             if object_hook is not None:
                 pairs = object_hook(pairs, s)
             return pairs, end + 1
-        elif nextchar != '"':
+
+        if nextchar != '"':
             raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
     end += 1
     while True:
@@ -299,17 +300,19 @@ def py_make_scanner(context):
 
         if nextchar == '"':
             return parse_string(string, idx + 1, strict)
-        elif nextchar == '{':
+
+        if nextchar == '{':
             return parse_object(
                 (string, idx + 1), strict,
                 scan_once, object_hook, object_pairs_hook, memo)
-        elif nextchar == '[':
+
+        if nextchar == '[':
             return parse_array((string, idx + 1), _scan_once)
-        elif nextchar == 'n' and string[idx:idx + 4] == 'null':
+        if nextchar == 'n' and string[idx:idx + 4] == 'null':
             return None, idx + 4
-        elif nextchar == 't' and string[idx:idx + 4] == 'true':
+        if nextchar == 't' and string[idx:idx + 4] == 'true':
             return True, idx + 4
-        elif nextchar == 'f' and string[idx:idx + 5] == 'false':
+        if nextchar == 'f' and string[idx:idx + 5] == 'false':
             return False, idx + 5
 
         m = match_number(string, idx)
@@ -320,14 +323,17 @@ def py_make_scanner(context):
             else:
                 res = parse_int(integer)
             return res, m.end()
-        elif nextchar == 'N' and string[idx:idx + 3] == 'NaN':
+
+        if nextchar == 'N' and string[idx:idx + 3] == 'NaN':
             return parse_constant('NaN'), idx + 3
-        elif nextchar == 'I' and string[idx:idx + 8] == 'Infinity':
+
+        if nextchar == 'I' and string[idx:idx + 8] == 'Infinity':
             return parse_constant('Infinity'), idx + 8
-        elif nextchar == '-' and string[idx:idx + 9] == '-Infinity':
+
+        if nextchar == '-' and string[idx:idx + 9] == '-Infinity':
             return parse_constant('-Infinity'), idx + 9
-        else:
-            raise StopIteration(idx)
+
+        raise StopIteration(idx)
 
     def scan_once(string, idx):
         """ Scan Once"""

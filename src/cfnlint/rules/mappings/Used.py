@@ -28,7 +28,6 @@ class Used(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Mappings"""
-
         matches = list()
         findinmap_mappings = list()
 
@@ -48,8 +47,8 @@ class Used(CloudFormationLintRule):
                             'Disabling check %s', self.id
                         )
                         return matches
-                    else:
-                        findinmap_mappings.append(maptree[-1][0])
+
+                    findinmap_mappings.append(maptree[-1][0])
                 else:
                     findinmap_mappings.append(maptree[-1])
 

@@ -48,7 +48,8 @@ class Properties(CloudFormationLintRule):
         matches = list()
         if isinstance(value, dict) and primtype == 'Json':
             return matches
-        elif isinstance(value, dict):
+
+        if isinstance(value, dict):
             if len(value) == 1:
                 for sub_key, sub_value in value.items():
                     if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
