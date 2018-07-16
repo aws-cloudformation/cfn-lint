@@ -57,7 +57,7 @@ class Password(CloudFormationLintRule):
                                     else:
                                         fix_params.add(value)
                     else:
-                        message = 'Innappropriate map found for password on %s' % (
+                        message = 'Inappropriate map found for password on %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
 

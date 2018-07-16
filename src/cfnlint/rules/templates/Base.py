@@ -22,8 +22,7 @@ class Base(CloudFormationLintRule):
     """Check Base Template Settings"""
     id = 'E1001'
     shortdesc = 'Basic CloudFormation Template Configuration'
-    description = 'Making sure the basic CloudFormation template componets ' + \
-                  'are propery configured'
+    description = 'Making sure the basic CloudFormation template components are properly configured'
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['base']
 

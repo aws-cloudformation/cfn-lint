@@ -35,7 +35,7 @@ class Used(CloudFormationLintRule):
         return regex.findall(string)
 
     def isparaminref(self, subs, parameter):
-        """Search sub strings for paramters"""
+        """Search sub strings for parameters"""
         for sub in subs:
             if isinstance(sub, (six.text_type, six.string_types)):
                 if self.searchstring(sub, parameter):

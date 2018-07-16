@@ -23,7 +23,7 @@ class ImageId(CloudFormationLintRule):
     id = 'W2506'
     shortdesc = 'Check if ImageId Parameters have the correct type'
     description = 'See if there are any refs for ImageId to a parameter ' + \
-                  'of innapropriate type. Appropriate Types are ' + \
+                  'of inappropriate type. Appropriate Types are ' + \
                   '[AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>]'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'imageid']
@@ -55,7 +55,7 @@ class ImageId(CloudFormationLintRule):
                                     tree = ['Parameters', paramname]
                                     matches.append(RuleMatch(tree, message))
                 else:
-                    message = 'Innappropriate map found for imageid on %s' % (
+                    message = 'Inappropriate map found for ImageId on %s' % (
                         '/'.join(map(str, imageidtree[:-1])))
                     matches.append(RuleMatch(imageidtree[:-1], message))
 

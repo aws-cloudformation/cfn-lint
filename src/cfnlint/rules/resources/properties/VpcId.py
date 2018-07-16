@@ -23,7 +23,7 @@ class VpcId(CloudFormationLintRule):
     id = 'W2505'
     shortdesc = 'Check if VpcID Parameters have the correct type'
     description = 'See if there are any refs for VpcId to a parameter ' + \
-                  'of innapropriate type.  Appropriate Types are ' + \
+                  'of inappropriate type. Appropriate Types are ' + \
                   '[AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>]'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'vpcid']
