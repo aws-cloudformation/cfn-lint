@@ -17,7 +17,7 @@
 import json
 from cfnlint import Template, RulesCollection, Runner  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.cfn_yaml  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -84,7 +84,7 @@ class TestQuickStartTemplates(BaseTestCase):
             filename = values.get('filename')
             failures = values.get('failures')
             results_filename = values.get('results_filename')
-            template = cfnlint.cfn_yaml.load(filename)
+            template = cfnlint.decode.cfn_yaml.load(filename)
 
             runner = Runner(self.rules, filename, template, ['us-east-1'])
             matches = list()

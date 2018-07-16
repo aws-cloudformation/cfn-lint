@@ -19,8 +19,8 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-import six
 import cfnlint
+from cfnlint.decode.str_node import str_node
 
 
 LOGGER = logging.getLogger(__name__)
@@ -92,43 +92,6 @@ class Mark(object):
     def __init__(self, line, column):
         self.line = line
         self.column = column
-
-
-def create_node_class(cls):
-    """
-    Create dynamic node class
-    """
-    class node_class(cls):
-        """Node class created based on the input class"""
-        def __init__(self, x, start_mark, end_mark):
-            try:
-                cls.__init__(self, x)
-            except TypeError:
-                cls.__init__(self)
-            self.start_mark = start_mark
-            self.end_mark = end_mark
-
-        # pylint: disable=bad-classmethod-argument, unused-argument
-        def __new__(self, x, start_mark, end_mark):
-            if sys.version_info >= (3, 0):
-                return cls.__new__(self, x)
-
-            if isinstance(x, six.string_types):
-                return cls.__new__(self, x.encode('ascii', 'ignore'))
-
-            return cls.__new__(self, x)
-
-        def __deepcopy__(self, memo):
-            return self
-
-        def __copy__(self):
-            return self
-
-    node_class.__name__ = '%s_node' % cls.__name__
-    return node_class
-
-
-str_node = create_node_class(str)
 
 
 # pylint: disable=W0102
@@ -237,7 +200,8 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
             if object_hook is not None:
                 pairs = object_hook(pairs, s)
             return pairs, end + 1
-        elif nextchar != '"':
+
+        if nextchar != '"':
             raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
     end += 1
     while True:
@@ -336,17 +300,19 @@ def py_make_scanner(context):
 
         if nextchar == '"':
             return parse_string(string, idx + 1, strict)
-        elif nextchar == '{':
+
+        if nextchar == '{':
             return parse_object(
                 (string, idx + 1), strict,
                 scan_once, object_hook, object_pairs_hook, memo)
-        elif nextchar == '[':
+
+        if nextchar == '[':
             return parse_array((string, idx + 1), _scan_once)
-        elif nextchar == 'n' and string[idx:idx + 4] == 'null':
+        if nextchar == 'n' and string[idx:idx + 4] == 'null':
             return None, idx + 4
-        elif nextchar == 't' and string[idx:idx + 4] == 'true':
+        if nextchar == 't' and string[idx:idx + 4] == 'true':
             return True, idx + 4
-        elif nextchar == 'f' and string[idx:idx + 5] == 'false':
+        if nextchar == 'f' and string[idx:idx + 5] == 'false':
             return False, idx + 5
 
         m = match_number(string, idx)
@@ -357,14 +323,17 @@ def py_make_scanner(context):
             else:
                 res = parse_int(integer)
             return res, m.end()
-        elif nextchar == 'N' and string[idx:idx + 3] == 'NaN':
+
+        if nextchar == 'N' and string[idx:idx + 3] == 'NaN':
             return parse_constant('NaN'), idx + 3
-        elif nextchar == 'I' and string[idx:idx + 8] == 'Infinity':
+
+        if nextchar == 'I' and string[idx:idx + 8] == 'Infinity':
             return parse_constant('Infinity'), idx + 8
-        elif nextchar == '-' and string[idx:idx + 9] == '-Infinity':
+
+        if nextchar == '-' and string[idx:idx + 9] == '-Infinity':
             return parse_constant('-Infinity'), idx + 9
-        else:
-            raise StopIteration(idx)
+
+        raise StopIteration(idx)
 
     def scan_once(string, idx):
         """ Scan Once"""
