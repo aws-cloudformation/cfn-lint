@@ -46,7 +46,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         if isinstance(value, dict) and item_type == 'Json':
             return matches
-        elif item_type in ['String']:
+        if item_type in ['String']:
             if not isinstance(value, (str, six.text_type, six.string_types)):
                 message = 'Property %s should be of type String' % ('/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
