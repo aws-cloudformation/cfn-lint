@@ -86,7 +86,7 @@ class AvailabilityZone(CloudFormationLintRule):
             parameter_type = parameter_properties.get('Type')
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = 'Availbility Zone Parameter should be of type [{0}] for {1}'
+                message = 'Availability Zone Parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         path_error,

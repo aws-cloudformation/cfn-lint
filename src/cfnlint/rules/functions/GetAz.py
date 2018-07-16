@@ -20,7 +20,7 @@ from cfnlint import RuleMatch
 
 
 class GetAz(CloudFormationLintRule):
-    """Check if GetAtt values are correct"""
+    """Check if GetAz values are correct"""
     id = 'E1015'
     shortdesc = 'GetAz validation of parameters'
     description = 'Making sure the function not is of list'
