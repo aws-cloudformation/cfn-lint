@@ -17,7 +17,7 @@
 import json
 from cfnlint import Template, RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_json  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -63,7 +63,7 @@ class TestCfnJson(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get('filename')
             failures = values.get('failures')
-            template = json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
+            template = json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
             cfn = Template(filename, template, ['us-east-1'])
 
             matches = list()
@@ -76,8 +76,8 @@ class TestCfnJson(BaseTestCase):
         filename = 'fixtures/templates/bad/json_parse.json'
 
         try:
-            json.load(open(filename), cls=cfnlint.cfn_json.CfnJSONDecoder)
-        except cfnlint.cfn_json.JSONDecodeError:
+            json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+        except cfnlint.decode.cfn_json.JSONDecodeError:
             assert(True)
             return
 
