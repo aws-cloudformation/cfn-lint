@@ -297,6 +297,9 @@ Parameters:
     Type: String
   ParamInstanceSecurityGroup:
     Type: List<AWS::EC2::SecurityGroup::Id>
+  Aliases:
+    Type: "CommaDelimitedList"
+    Default: "foo.com, bar.com"
 Conditions:
   HasSingleClusterInstance: !Equals [!Ref 'AWS::Region', 'us-east-1']
 Resources:
@@ -590,3 +593,9 @@ Resources:
           KeyType: HASH
         - AttributeName: !Ref SortKeyName
           KeyType: RANGE
+  Distribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        Aliases: !Ref Aliases
+        Enabled: True
