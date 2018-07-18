@@ -197,8 +197,9 @@ class Properties(CloudFormationLintRule):
                                 if 'Ref' in text[prop]:
                                     ref = text[prop]['Ref']
                                     if ref in parameternames:
-                                        if 'Type' in self.cfn.template['Parameters'][ref]:
-                                            if not self.cfn.template['Parameters'][ref]['Type'].startswith('List<'):
+                                        param_type = self.cfn.template['Parameters'][ref]['Type']
+                                        if param_type:
+                                            if not param_type.startswith('List<') and not param_type == 'CommaDelimitedList':
                                                 message = 'Property {0} should be of type List or Parameter should ' \
                                                           'be a list for resource {1}'
                                                 matches.append(
