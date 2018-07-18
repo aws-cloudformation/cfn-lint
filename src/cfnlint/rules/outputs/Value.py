@@ -25,7 +25,7 @@ class Value(CloudFormationLintRule):
     id = 'E6003'
     shortdesc = 'Outputs have values of strings'
     description = 'Making sure the outputs have strings as values'
-    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'
     tags = ['outputs']
 
     def __init__(self):
