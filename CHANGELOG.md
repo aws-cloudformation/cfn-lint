@@ -16,6 +16,8 @@
 ###### Fixes
 - Fix a bunch of typos across many different rules
 - Support DeepCopy with Template and custom String classes used for marking up templates
+- Fix Rule E3002 to support CommaDelimitedList when looking for List Parameters
+- Fix core engine to check that something is a Dict instead of assuming it is
 
 ### 0.3.5
 ###### Features
