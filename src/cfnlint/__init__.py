@@ -181,28 +181,29 @@ class RulesCollection(object):
                             filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
-            for resource_property, resource_property_value in properties.items():
-                property_path = path[:] + [resource_property]
-                resource_spec_property = resource_spec_properties.get(resource_property, {})
-                if resource_property not in resource_spec_properties:
-                    continue
-                if (resource_spec_property.get('Type') == 'List' and
-                        not resource_spec_properties.get('PrimitiveItemType')):
-                    if isinstance(resource_property_value, (list)):
-                        for index, value in enumerate(resource_property_value):
+            if isinstance(properties, dict):
+                for resource_property, resource_property_value in properties.items():
+                    property_path = path[:] + [resource_property]
+                    resource_spec_property = resource_spec_properties.get(resource_property, {})
+                    if resource_property not in resource_spec_properties:
+                        continue
+                    if (resource_spec_property.get('Type') == 'List' and
+                            not resource_spec_properties.get('PrimitiveItemType')):
+                        if isinstance(resource_property_value, (list)):
+                            for index, value in enumerate(resource_property_value):
+                                matches.extend(self.resource_property(
+                                    filename, cfn,
+                                    property_path[:] + [index],
+                                    value, resource_type, resource_spec_property.get('ItemType')
+                                ))
+                    elif resource_spec_property.get('Type'):
+                        if isinstance(resource_property_value, (dict)):
                             matches.extend(self.resource_property(
                                 filename, cfn,
-                                property_path[:] + [index],
-                                value, resource_type, resource_spec_property.get('ItemType')
+                                property_path,
+                                resource_property_value,
+                                resource_type, resource_spec_property.get('Type')
                             ))
-                elif resource_spec_property.get('Type'):
-                    if isinstance(resource_property_value, (dict)):
-                        matches.extend(self.resource_property(
-                            filename, cfn,
-                            property_path,
-                            resource_property_value,
-                            resource_type, resource_spec_property.get('Type')
-                        ))
 
         return matches
 
@@ -622,6 +623,9 @@ class Template(object):
         """
         LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = list()
+
+        if not isinstance(obj, dict):
+            return None
         value = obj.get(key)
         if value is None:
             return None
