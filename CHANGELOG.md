@@ -13,6 +13,7 @@
 ###### Features
 - Update CloudFormation specs to July 16th, 2018
 - Support comma lists for regions, append rules, and ignore check parameters
+- Added documentation explaining Resource Specification based rules
 ###### Fixes
 - Fix a bunch of typos across many different rules
 - Support DeepCopy with Template and custom String classes used for marking up templates
