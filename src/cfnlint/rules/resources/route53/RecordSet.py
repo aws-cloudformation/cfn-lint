@@ -91,9 +91,8 @@ class RecordSet(CloudFormationLintRule):
         recordset_type = recordset.get('Type')
 
         if recordset_type not in self.VALID_RECORD_TYPES:
-            message = 'Invalid record type "{0}" specified at {1}'
-            full_path = ('/'.join(str(x) for x in path))
-            matches.append(RuleMatch(path, message.format(recordset_type, full_path)))
+            message = 'Invalid record type "{0}" specified'
+            matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
         elif recordset_type == 'A':
             matches.extend(self.check_a_record(path, recordset))
         elif recordset_type == 'TXT':
