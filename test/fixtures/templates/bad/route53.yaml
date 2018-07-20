@@ -34,6 +34,20 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - "127.0.0.1"
+  MyAAAARecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Invalid AAAA Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "AAAA"
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1" # IPv4 address
+        - "XXXX:XXXX:XXXX:XXXX:XXXX:XXXX:1.2.3.4" # Invalid data
+        - "2001:0db8: 85a3:0:0:8a2e:0370:7334" # Spaces
+        - "1111:2222:3333:4444:5555:6666:7777" # Missing components
+        - "1111:2222:3333:4444:5555:6666:7777:8888::" # Too much components
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -49,6 +63,16 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "a.example.com" # No IPv4 address
+        - Name: "www1.example.com"
+          Type: "AAAA"
+          TTL: "300"
+          ResourceRecords:
+            - "1111:2222:3333:4444:55556666:7777:8888" # Mssing :
+            - "1111:2222:3333:4444:5555:6666:7777:8888:" # Missing : intended for ::
+            - "1111:2222:3333:::5555:6666:7777:8888" # :::
+            - "1111::3333:4444:5555::7777:8888" # Double ::
+            - "::1.2.3." # Missing parts
+            - ":1111:2222:3333:4444:5555::7777:8888" # Extra : in front
         - Name: "www2.example.com"
           Type: "A"
           TTL: "300"

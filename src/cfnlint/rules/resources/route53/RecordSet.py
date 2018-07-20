@@ -19,7 +19,7 @@ import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
-from cfnlint.helpers import REGEX_IPV4
+from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6
 
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
@@ -64,6 +64,25 @@ class RecordSet(CloudFormationLintRule):
 
         return matches
 
+    def check_aaaa_record(self, path, recordset):
+        """Check AAAA record Configuration"""
+        matches = list()
+
+        if not recordset.get('AliasTarget'):
+            resource_records = recordset.get('ResourceRecords')
+            for index, record in enumerate(resource_records):
+
+                if isinstance(record, six.string_types):
+                    tree = path[:] + ['ResourceRecords', index]
+                    full_path = ('/'.join(str(x) for x in tree))
+                    print(record)
+
+                    # Check if a valid IPv4 address is specified
+                    if not re.match(REGEX_IPV6, record):
+                        message = 'AAAA record is not a valid IPv6 address at {0}'
+                        matches.append(RuleMatch(tree, message.format(full_path)))
+
+        return matches
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
         matches = list()
@@ -95,6 +114,8 @@ class RecordSet(CloudFormationLintRule):
             matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
         elif recordset_type == 'A':
             matches.extend(self.check_a_record(path, recordset))
+        elif recordset_type == 'AAAA':
+            matches.extend(self.check_aaaa_record(path, recordset))
         elif recordset_type == 'TXT':
             matches.extend(self.check_txt_record(path, recordset))
 

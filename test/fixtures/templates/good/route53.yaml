@@ -32,6 +32,18 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - "127.0.0.1"
+  MyAAAARecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "A valid A Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "AAAA"
+      TTL: "300"
+      ResourceRecords:
+        - "2001:0db8:85a3:0:0:8a2e:0370:7334"
+        - "2001:0db8:3c4d:0015:0000:0000:1a2f:1a2b"
+        - "0:0:0:0:0:0:A00:1"
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -42,6 +54,16 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "255.255.255.255"
+        - Name: "www.example.com"
+          Type: "AAAA"
+          TTL: "300"
+          ResourceRecords:
+            - "2001:db8:3c4d:15::1a2f:1a2b"
+            - "2001:0db8:3c4d:0015:0000:d234:3eee:0000"
+            - "2001:db8:3c4d:15:0:d234:3eee::"
+            - "::1"
+            - "1111:2222:3333:4444:5555:6666:123.123.123.123"
+            - "1111::3333:4444:5555:6666:123.123.123.123"
         - Name: "txt.example.com"
           Type: "TXT"
           TTL: "300"
