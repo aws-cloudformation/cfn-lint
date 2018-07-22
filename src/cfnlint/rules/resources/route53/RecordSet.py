@@ -75,7 +75,6 @@ class RecordSet(CloudFormationLintRule):
                 if isinstance(record, six.string_types):
                     tree = path[:] + ['ResourceRecords', index]
                     full_path = ('/'.join(str(x) for x in tree))
-                    print(record)
 
                     # Check if a valid IPv4 address is specified
                     if not re.match(REGEX_IPV6, record):
@@ -83,6 +82,7 @@ class RecordSet(CloudFormationLintRule):
                         matches.append(RuleMatch(tree, message.format(full_path)))
 
         return matches
+
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
         matches = list()
@@ -120,7 +120,6 @@ class RecordSet(CloudFormationLintRule):
             matches.extend(self.check_txt_record(path, recordset))
 
         return matches
-
 
     def match(self, cfn):
         """Check RecordSets and RecordSetGroups Properties"""
