@@ -14,7 +14,6 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
@@ -32,8 +31,7 @@ class Sub(CloudFormationLintRule):
         """Test if a string has appropriate parameters"""
 
         matches = list()
-        regex = re.compile(r'\${[^!].*?}')
-        string_params = regex.findall(sub_string)
+        string_params = cfn.get_sub_parameters(sub_string)
         get_atts = cfn.get_valid_getatts()
 
         valid_pseudo_params = [
@@ -54,7 +52,6 @@ class Sub(CloudFormationLintRule):
             valid_params.append(key)
 
         for string_param in string_params:
-            string_param = string_param[2:-1]
             if isinstance(string_param, (six.string_types, six.text_type)):
                 if string_param not in valid_params:
                     found = False
@@ -66,7 +63,7 @@ class Sub(CloudFormationLintRule):
                                   attribute_name == '.'.join(string_param.split('.')[1:])):
                                 found = True
                     if not found:
-                        message = 'String parameter {0} not found in string for {1}'
+                        message = 'Parameter {0} for Fn::Sub not found at {1}'
                         matches.append(RuleMatch(
                             tree, message.format(string_param, '/'.join(map(str, tree)))))
 

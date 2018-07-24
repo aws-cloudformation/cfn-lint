@@ -56,12 +56,13 @@ class Used(CloudFormationLintRule):
         subs = list()
         for subtree in subtrees:
             if isinstance(subtree[-1], list):
-                subs.append(subtree[-1][0])
+                subs.extend(cfn.get_sub_parameters(subtree[-1][0]))
             else:
-                subs.append(subtree[-1])
+                subs.extend(cfn.get_sub_parameters(subtree[-1]))
+
         for paramname, _ in cfn.get_parameters().items():
             if paramname not in refs:
-                if not self.isparaminref(subs, paramname):
+                if paramname not in subs:
                     message = 'Parameter {0} not used.'
                     matches.append(RuleMatch(
                         ['Parameters', paramname],

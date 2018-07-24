@@ -690,6 +690,17 @@ class Template(object):
         LOGGER.debug('Get location of object...')
         return (obj.start_mark.line, obj.start_mark.column, obj.end_mark.line, obj.end_mark.column)
 
+    def get_sub_parameters(self, sub_string):
+        """ Gets the parameters out of a Sub String"""
+        regex = re.compile(r'\${[^!].*?}')
+        string_params = regex.findall(sub_string)
+
+        results = []
+        for string_param in string_params:
+            results.append(string_param[2:-1].strip())
+
+        return results
+
     def get_location_yaml(self, text, path):
         """
         Get the location information

@@ -91,7 +91,7 @@ Resources:
       NetworkInterfaces:
         - DeviceIndex: "1"
       UserData: !Sub |
-        yum install ${Package}
+        yum install ${ Package}
   mySnsTopic:
     Type: AWS::SNS::Topic
   MyEC2Instance1:
@@ -151,7 +151,7 @@ Resources:
   IamPipeline:
     Type: "AWS::CloudFormation::Stack"
     Properties:
-      TemplateURL: !Sub 'https://s3.${AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml'
+      TemplateURL: !Sub 'https://s3.${ AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml'
       Parameters:
         DeploymentName: iam-pipeline
         Deploy: 'auto'
