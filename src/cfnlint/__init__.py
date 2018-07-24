@@ -20,6 +20,7 @@ import os
 import re
 from copy import deepcopy
 from datetime import datetime
+import six
 from yaml.parser import ParserError
 import cfnlint.helpers
 from cfnlint.transform import Transform
@@ -361,12 +362,18 @@ class Template(object):
         """
         LOGGER.debug('Get resources from template...')
         resources = self.template.get('Resources', {})
-        if isinstance(resource_type, list):
-            return {k: v for (k, v) in resources.items()
-                    if v.get('Type', None) in resource_type or not resource_type}
+        if not isinstance(resources, dict):
+            return {}
+        if isinstance(resource_type, six.string_types):
+            resource_type = [resource_type]
 
-        return {k: v for (k, v) in resources.items()
-                if v.get('Type', None) == resource_type or len(resource_type) == 0}
+        results = {}
+        for k, v in resources.items():
+            if isinstance(v, dict):
+                if (v.get('Type', None) in resource_type) or (not resource_type and v.get('Type') is not None):
+                    results[k] = v
+
+        return results
 
     def get_parameters(self):
         """Get Resources"""

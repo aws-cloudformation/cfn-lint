@@ -53,63 +53,68 @@ class Configuration(CloudFormationLintRule):
             'Type',
         ]
 
-        for resource_name, resource_values in cfn.get_resources().items():
-            self.logger.debug('Validating resource %s base configuration', resource_name)
-            if not isinstance(resource_values, dict):
-                message = 'Resource not properly configured at {0}'
-                matches.append(RuleMatch(
-                    ['Resources', resource_name],
-                    message.format(resource_name)
-                ))
-                continue
-            resource_type = resource_values.get('Type')
-            check_attributes = []
-            if resource_type.startswith('Custom::') or resource_type == 'AWS::CloudFormation::CustomResource':
-                check_attributes = valid_custom_attributes
-            else:
-                check_attributes = valid_attributes
-
-            for property_key, _ in resource_values.items():
-                if property_key not in check_attributes:
-                    message = 'Invalid resource attribute {0} for resource {1}'
+        resources = cfn.template.get('Resources', {})
+        if not isinstance(resources, dict):
+            message = 'Resource not properly configured'
+            matches.append(RuleMatch(['Resources'], message))
+        else:
+            for resource_name, resource_values in cfn.template.get('Resources', {}).items():
+                self.logger.debug('Validating resource %s base configuration', resource_name)
+                if not isinstance(resource_values, dict):
+                    message = 'Resource not properly configured at {0}'
                     matches.append(RuleMatch(
-                        ['Resources', resource_name, property_key],
-                        message.format(property_key, resource_name)))
+                        ['Resources', resource_name],
+                        message.format(resource_name)
+                    ))
+                    continue
+                resource_type = resource_values.get('Type', '')
+                check_attributes = []
+                if resource_type.startswith('Custom::') or resource_type == 'AWS::CloudFormation::CustomResource':
+                    check_attributes = valid_custom_attributes
+                else:
+                    check_attributes = valid_attributes
 
-            resource_type = resource_values.get('Type')
-            if not resource_type:
-                message = 'Type not defined for resource {0}'
-                matches.append(RuleMatch(
-                    ['Resources', resource_name],
-                    message.format(resource_name)
-                ))
-            else:
-                self.logger.debug('Check resource types by region...')
-                for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
-                    if region in cfn.regions:
-                        if resource_type not in specs['ResourceTypes']:
-                            if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
-                                message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
+                for property_key, _ in resource_values.items():
+                    if property_key not in check_attributes:
+                        message = 'Invalid resource attribute {0} for resource {1}'
+                        matches.append(RuleMatch(
+                            ['Resources', resource_name, property_key],
+                            message.format(property_key, resource_name)))
+
+                resource_type = resource_values.get('Type', '')
+                if not resource_type:
+                    message = 'Type not defined for resource {0}'
+                    matches.append(RuleMatch(
+                        ['Resources', resource_name],
+                        message.format(resource_name)
+                    ))
+                else:
+                    self.logger.debug('Check resource types by region...')
+                    for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
+                        if region in cfn.regions:
+                            if resource_type not in specs['ResourceTypes']:
+                                if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
+                                    message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
+                                    matches.append(RuleMatch(
+                                        ['Resources', resource_name, 'Type'],
+                                        message.format(resource_type, resource_name, region)
+                                    ))
+
+                if 'Properties' not in resource_values:
+                    resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
+                    if resource_type in resource_spec['ResourceTypes']:
+                        properties_spec = resource_spec['ResourceTypes'][resource_type]['Properties']
+                        # pylint: disable=len-as-condition
+                        if len(properties_spec) > 0:
+                            required = 0
+                            for _, property_spec in properties_spec.items():
+                                if property_spec.get('Required', False):
+                                    required += 1
+                            if required > 0:
+                                message = 'Properties not defined for resource {0}'
                                 matches.append(RuleMatch(
-                                    ['Resources', resource_name, 'Type'],
-                                    message.format(resource_type, resource_name, region)
+                                    ['Resources', resource_name],
+                                    message.format(resource_name)
                                 ))
-
-            if 'Properties' not in resource_values:
-                resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
-                if resource_type in resource_spec['ResourceTypes']:
-                    properties_spec = resource_spec['ResourceTypes'][resource_type]['Properties']
-                    # pylint: disable=len-as-condition
-                    if len(properties_spec) > 0:
-                        required = 0
-                        for _, property_spec in properties_spec.items():
-                            if property_spec.get('Required', False):
-                                required += 1
-                        if required > 0:
-                            message = 'Properties not defined for resource {0}'
-                            matches.append(RuleMatch(
-                                ['Resources', resource_name],
-                                message.format(resource_name)
-                            ))
 
         return matches
