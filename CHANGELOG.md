@@ -9,6 +9,13 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.4.2
+###### Features
+- Update rule E3020 to support AAAA record checks
+###### Fixes
+- Fix many rules that would fail if a sub parameter had a space at the beginning or end
+- Fix crashing issues when trying to get resources that aren't properly configured
+
 ### 0.4.1
 ###### Features
 - Update CloudFormation Specs to July 20th, 2018
