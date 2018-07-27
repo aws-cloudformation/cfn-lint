@@ -27,5 +27,5 @@ class BaseTestCase(TestCase):
     """
 
     def load_template(self, filename):
-        """Return teplate"""
+        """Return template"""
         return cfnlint.decode.cfn_yaml.load(filename)
