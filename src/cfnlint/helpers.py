@@ -22,6 +22,7 @@ import imp
 import logging
 import re
 import pkg_resources
+import inspect
 
 
 LOGGER = logging.getLogger(__name__)
@@ -182,6 +183,7 @@ def load_plugins(directory):
     """Load plugins"""
     result = []
     fh = None
+    from cfnlint import CloudFormationLintRule
 
     for root, _, filenames in os.walk(directory):
         for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
@@ -189,8 +191,12 @@ def load_plugins(directory):
             try:
                 fh, filename, desc = imp.find_module(pluginname, [root])
                 mod = imp.load_module(pluginname, fh, filename, desc)
-                obj = getattr(mod, pluginname)()
-                result.append(obj)
+                for name, clazz in inspect.getmembers(mod, inspect.isclass):
+                    method_resolution = inspect.getmro(clazz)
+                    if len([clz for clz in method_resolution[1:] if clz == CloudFormationLintRule]) > 0:
+                        # create and instance of subclasses of CloudFormationLintRule
+                        obj = clazz()
+                        result.append(obj)
             finally:
                 if fh:
                     fh.close()
