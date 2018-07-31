@@ -38,6 +38,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
   * [Syntastic](https://github.com/speshak/vim-cfn)
 * [Sublime](https://packagecontrol.io/packages/SublimeLinter-contrib-cloudformation)
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
+* [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint/update/48247)
 
 ## Configuration
 
