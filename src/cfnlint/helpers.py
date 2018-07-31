@@ -21,6 +21,7 @@ import os
 import imp
 import logging
 import re
+import inspect
 import pkg_resources
 
 
@@ -189,8 +190,12 @@ def load_plugins(directory):
             try:
                 fh, filename, desc = imp.find_module(pluginname, [root])
                 mod = imp.load_module(pluginname, fh, filename, desc)
-                obj = getattr(mod, pluginname)()
-                result.append(obj)
+                for _, clazz in inspect.getmembers(mod, inspect.isclass):
+                    method_resolution = inspect.getmro(clazz)
+                    if [clz for clz in method_resolution[1:] if clz.__module__ == 'cfnlint' and clz.__name__ == 'CloudFormationLintRule']:
+                        # create and instance of subclasses of CloudFormationLintRule
+                        obj = clazz()
+                        result.append(obj)
             finally:
                 if fh:
                     fh.close()
