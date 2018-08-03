@@ -43,6 +43,7 @@ class Split(CloudFormationLintRule):
             'Fn::If',
             'Fn::Join',
             'Fn::Select',
+            'Fn::Sub',
             'Ref'
         ]
 
@@ -61,9 +62,9 @@ class Split(CloudFormationLintRule):
                         if len(split_string) == 1:
                             for key, _ in split_string.items():
                                 if key not in supported_functions:
-                                    message = 'Split unsupported function for {0}'
+                                    message = 'Fn::Split doesn\'t support the function {0} at {1}'
                                     matches.append(RuleMatch(
-                                        tree + [key], message.format('/'.join(map(str, tree)))))
+                                        tree + [key], message.format(key, '/'.join(map(str, tree)))))
                         else:
                             message = 'Split list of singular function or string for {0}'
                             matches.append(RuleMatch(
