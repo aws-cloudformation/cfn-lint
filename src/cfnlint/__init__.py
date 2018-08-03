@@ -647,7 +647,7 @@ class Template(object):
                             for result in results:
                                 check_obj = obj.copy()
                                 check_obj[key] = result['Value']
-                                matches.extend(self.get_values(check_obj, key, path[:] + result['Path']))
+                                matches.extend(self.get_values(check_obj, key, result['Path']))
                 if not is_condition:
                     result = {}
                     result['Path'] = path[:]
