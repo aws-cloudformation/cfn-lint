@@ -24,6 +24,9 @@ class TestPropertyIamPolicies(BaseRuleTestCase):
         """Setup"""
         super(TestPropertyIamPolicies, self).setUp()
         self.collection.register(Policy())
+        self.success_templates = [
+            'fixtures/templates/good/resources/iam/policy.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

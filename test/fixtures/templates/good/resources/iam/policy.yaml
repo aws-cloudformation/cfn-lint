@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  SomeOptionalParameter:
+    Type: String
+    Description: Name of some optional bucket
+    Default: ""
+Conditions:
+  SomeCondition: !Not [!Equals [!Ref SomeOptionalParameter, ""]]
+Resources:
+  SomeManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      Description: "Example Managed Policy"
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "s3:ListBucket"
+              - "s3:GetObject"
+            Resource: '*'
+          - Fn::If:
+            - SomeCondition
+            - Effect: "Allow"
+              Action:
+                - "s3:PutObject"
+              Resource:
+                - SomeOptionalParameter
+            - Ref: AWS::NoValue
