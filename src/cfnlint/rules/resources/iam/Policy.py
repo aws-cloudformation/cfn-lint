@@ -27,7 +27,7 @@ class Policy(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html'
     tags = ['properties', 'iam']
 
-    def _check_policy_document(self, branch, policy):
+    def _check_policy_document(self, cfn, branch, policy):
         """Check policy document"""
         matches = list()
 
@@ -50,11 +50,11 @@ class Policy(CloudFormationLintRule):
                     RuleMatch(branch[:] + [parent_key], message))
             if parent_key == 'Statement':
                 if isinstance(parent_value, (list)):
-                    for index, statement in enumerate(parent_value):
+                    values = cfn.get_values(policy, 'Statement', branch[:])
+                    for value in values:
                         matches.extend(
                             self._check_policy_statement(
-                                branch[:] + [parent_key, index],
-                                statement
+                                value['Path'], value['Value']
                             )
                         )
                 else:
@@ -112,13 +112,13 @@ class Policy(CloudFormationLintRule):
 
         return(matches)
 
-    def _check_policy(self, branch, policy):
+    def _check_policy(self, cfn, branch, policy):
         """Checks a policy"""
         matches = list()
         policy_document = policy.get('PolicyDocument', {})
         matches.extend(
             self._check_policy_document(
-                branch + ['PolicyDocument'], policy_document))
+                cfn, branch + ['PolicyDocument'], policy_document))
 
         return matches
 
@@ -140,16 +140,17 @@ class Policy(CloudFormationLintRule):
             tree = ['Resources', resource_name, 'Properties']
             properties = resource_values.get('Properties', {})
             if properties:
-                policy_document = properties.get('PolicyDocument', None)
-                if policy_document:
-                    matches.extend(
-                        self._check_policy_document(
-                            tree[:] + ['PolicyDocument'], policy_document))
-                policy_documents = properties.get('Policies', [])
-                for index, policy_document in enumerate(policy_documents):
-                    matches.extend(
-                        self._check_policy(
-                            tree[:] + ['Policies', index],
-                            policy_document))
+                if properties.get('PolicyDocument'):
+                    values = cfn.get_values(properties, 'PolicyDocument', tree)
+                    for value in values:
+                        matches.extend(
+                            self._check_policy_document(
+                                cfn, value['Path'], value['Value']))
+                if properties.get('Policies'):
+                    values = cfn.get_values(properties, 'Policies', tree)
+                    for value in values:
+                        matches.extend(
+                            self._check_policy(
+                                cfn, value['Path'], value['Value']))
 
         return matches
