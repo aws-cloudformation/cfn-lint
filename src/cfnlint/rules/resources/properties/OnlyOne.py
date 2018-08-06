@@ -39,38 +39,40 @@ class OnlyOne(CloudFormationLintRule):
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, onlyoneprops, path):
+    def check(self, properties, onlyoneprops, path, cfn):
         """Check itself"""
         matches = list()
-        for onlyoneprop in onlyoneprops:
-            count = 0
-            for prop in onlyoneprop:
-                if prop in properties:
-                    count += 1
+        property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
+        for property_set in property_sets:
+            for onlyoneprop in onlyoneprops:
+                count = 0
+                for prop in onlyoneprop:
+                    if prop in property_set['Value']:
+                        count += 1
 
-            if count != 1:
-                message = 'Only one of [{0}] should be specified for {1}'
-                matches.append(RuleMatch(
-                    path,
-                    message.format(', '.join(map(str, onlyoneprop)), '/'.join(map(str, path)))
-                ))
+                if count != 1:
+                    message = 'Only one of [{0}] should be specified for {1}'
+                    matches.append(RuleMatch(
+                        property_set['Path'],
+                        message.format(', '.join(map(str, onlyoneprop)), '/'.join(map(str, property_set['Path'])))
+                    ))
 
         return matches
 
-    def match_resource_sub_properties(self, properties, property_type, path, _):
+    def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
         matches = list()
 
         onlyoneprops = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, onlyoneprops, path))
+        matches.extend(self.check(properties, onlyoneprops, path, cfn))
 
         return matches
 
-    def match_resource_properties(self, properties, resource_type, path, _):
+    def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = list()
 
         onlyoneprops = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, onlyoneprops, path))
+        matches.extend(self.check(properties, onlyoneprops, path, cfn))
 
         return matches

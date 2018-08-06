@@ -38,35 +38,37 @@ class Inclusive(CloudFormationLintRule):
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, inclusions, path):
+    def check(self, properties, inclusions, path, cfn):
         """Check itself"""
         matches = list()
-        for prop in properties:
-            if prop in inclusions:
-                for incl_property in inclusions[prop]:
-                    if incl_property not in properties:
-                        message = 'Parameter {0} should exist with {1} for {2}'
-                        matches.append(RuleMatch(
-                            path + [prop],
-                            message.format(incl_property, prop, '/'.join(map(str, path)))
-                        ))
+        property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
+        for property_set in property_sets:
+            for prop in property_set['Value']:
+                if prop in inclusions:
+                    for incl_property in inclusions[prop]:
+                        if incl_property not in property_set['Value']:
+                            message = 'Parameter {0} should exist with {1} for {2}'
+                            matches.append(RuleMatch(
+                                path + [prop],
+                                message.format(incl_property, prop, '/'.join(map(str, property_set['Path'])))
+                            ))
 
         return matches
 
-    def match_resource_sub_properties(self, properties, property_type, path, _):
+    def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
         matches = list()
 
         inclusions = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, inclusions, path))
+        matches.extend(self.check(properties, inclusions, path, cfn))
 
         return matches
 
-    def match_resource_properties(self, properties, resource_type, path, _):
+    def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = list()
 
         inclusions = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, inclusions, path))
+        matches.extend(self.check(properties, inclusions, path, cfn))
 
         return matches
