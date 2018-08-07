@@ -197,4 +197,3 @@ def load(filename):
     """
     fp = open(filename)
     return loads(fp.read(), filename)
-
