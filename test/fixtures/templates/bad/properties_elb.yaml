@@ -17,6 +17,11 @@ Parameters:
     AllowedValues:
       - internal
       - internet-facing
+  TestParam:
+    Type: String
+    Default: TCP
+Conditions:
+  TestCond: !Equals ['a', 'a']
 Resources:
   LoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
@@ -108,6 +113,22 @@ Resources:
       AvailabilityZones:
         Fn::GetAZs: ''
       Listeners:
+      - InstancePort: '4'
+        InstanceProtocol: !If [TestCond, TCP, SSL]
+        LoadBalancerPort: '4'
+        Protocol: [test]
+      - InstancePort: '5'
+        InstanceProtocol: !If [TestCond, TCP, SSL]
+        LoadBalancerPort: '5'
+        Protocol: ererere
+      - InstancePort: '4'
+        InstanceProtocol: !If [TestCond, TCP, SSL]
+        LoadBalancerPort: '4'
+        Protocol: {"arbKey": ""}
+      - InstancePort: '4'
+        InstanceProtocol: !If [TestCond, TCP, SSL]
+        LoadBalancerPort: '4'
+        Protocol: {"arbKey": "", "moreArb": ""}
       - LoadBalancerPort: '80'
         InstancePort: '80'
         Protocol: TCP
