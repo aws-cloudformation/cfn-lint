@@ -11,7 +11,7 @@ import cfnlint.core
 filename = 'test.yaml'
 
 # Load the YAML file
-template = cfnlint.cfn_yaml.load(filename)
+template = cfnlint.decode.cfn_yaml.load(filename)
 
 # Initialize the ruleset to be applied (no overrules, no excludes)
 rules = cfnlint.core.get_rules([], [])
