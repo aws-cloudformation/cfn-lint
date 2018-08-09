@@ -160,6 +160,12 @@ Resources:
       Version: "1.0"
       Properties:
         ServiceToken: anArn
+  WaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+        Count: 1
 Outputs:
   ElasticIP:
     Value: !Sub "${ElasticIP}/32"
