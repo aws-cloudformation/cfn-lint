@@ -48,10 +48,16 @@ class InstanceProfile(CloudFormationLintRule):
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
                     else:
-                        if obj[1] == 'Arn':
-                            message = 'Property IamInstanceProfile shouldn\'t be an ARN for %s' % (
-                                '/'.join(map(str, tree[:-1])))
-                            matches.append(RuleMatch(tree[:-1], message))
+                        if cfn.template.get('Resources', {}).get(tree[1], {}).get('Type') in ['AWS::EC2::SpotFleet']:
+                            if obj[1] != 'Arn':
+                                message = 'Property IamInstanceProfile should be an ARN for %s' % (
+                                    '/'.join(map(str, tree[:-1])))
+                                matches.append(RuleMatch(tree[:-1], message))
+                        else:
+                            if obj[1] == 'Arn':
+                                message = 'Property IamInstanceProfile shouldn\'t be an ARN for %s' % (
+                                    '/'.join(map(str, tree[:-1])))
+                                matches.append(RuleMatch(tree[:-1], message))
 
         # Search Refs
         trees = cfn.search_deep_keys('Ref')
