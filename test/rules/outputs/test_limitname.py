@@ -18,11 +18,11 @@ from cfnlint.rules.outputs.LimitName import LimitName  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestParameterLimitNumber(BaseRuleTestCase):
-    """Test parameters limit number"""
+class TestOutputLimitName(BaseRuleTestCase):
+    """Test output limit name"""
     def setUp(self):
         """Setup"""
-        super(TestParameterLimitNumber, self).setUp()
+        super(TestOutputLimitName, self).setUp()
         self.collection.register(LimitName())
 
     def test_file_positive(self):
