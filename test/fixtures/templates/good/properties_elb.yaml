@@ -21,6 +21,11 @@ Parameters:
     Type: List<AWS::EC2::SecurityGroup::Id>
   CertARN:
     Type: String
+  TestParam:
+    Type: String
+    Default: TCP
+Conditions:
+  TestCond: !Equals ['a', 'a']
 Resources:
   LoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
@@ -114,6 +119,14 @@ Resources:
       AvailabilityZones:
         Fn::GetAZs: ''
       Listeners:
+      - InstancePort: '1'
+        InstanceProtocol: !Ref TestParam
+        LoadBalancerPort: '1'
+        Protocol: !Ref TestParam
+      - InstancePort: '2'
+        InstanceProtocol: !If [TestCond, TCP, SSL]
+        LoadBalancerPort: '2'
+        Protocol: !If [TestCond, TCP, SSL]
       - LoadBalancerPort: '80'
         InstancePort: '80'
         Protocol: TCP

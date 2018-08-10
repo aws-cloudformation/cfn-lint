@@ -30,13 +30,21 @@ HTTPS has certificate HTTP has no certificate'
     def match(self, cfn):
         """Check ELB Resource Parameters"""
 
+        def is_intrinsic(input_obj):
+            """Checks if a given input looks like an intrinsic function"""
+
+            if isinstance(input_obj, dict) and len(input_obj) == 1:
+                if list(input_obj.keys())[0] == 'Ref' or list(input_obj.keys())[0].startswith('Fn::'):
+                    return True
+            return False
+
         matches = list()
 
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::Listener'])
         for result in results:
             protocol = result['Value'].get('Protocol')
             if protocol:
-                if protocol not in ['HTTP', 'HTTPS', 'TCP']:
+                if protocol not in ['HTTP', 'HTTPS', 'TCP'] and not is_intrinsic(protocol):
                     message = 'Protocol is invalid for {0}'
                     path = result['Path'] + ['Protocol']
                     matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
@@ -53,7 +61,7 @@ HTTPS has certificate HTTP has no certificate'
                 for index, listener in enumerate(result['Value']):
                     protocol = listener.get('Protocol')
                     if protocol:
-                        if protocol not in ['HTTP', 'HTTPS', 'TCP', 'SSL']:
+                        if protocol not in ['HTTP', 'HTTPS', 'TCP', 'SSL'] and not is_intrinsic(protocol):
                             message = 'Protocol is invalid for {0}'
                             path = result['Path'] + [index, 'Protocol']
                             matches.append(RuleMatch(path, message.format(('/'.join(result['Path'])))))
