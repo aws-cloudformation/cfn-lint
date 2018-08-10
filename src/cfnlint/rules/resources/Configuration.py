@@ -111,10 +111,13 @@ class Configuration(CloudFormationLintRule):
                                 if property_spec.get('Required', False):
                                     required += 1
                             if required > 0:
-                                message = 'Properties not defined for resource {0}'
-                                matches.append(RuleMatch(
-                                    ['Resources', resource_name],
-                                    message.format(resource_name)
-                                ))
+                                if resource_type == 'AWS::CloudFormation::WaitCondition' and 'CreationPolicy' in resource_values.keys():
+                                    self.logger.debug('Exception to required properties section as CreationPolicy is defined.')
+                                else:
+                                    message = 'Properties not defined for resource {0}'
+                                    matches.append(RuleMatch(
+                                        ['Resources', resource_name],
+                                        message.format(resource_name)
+                                    ))
 
         return matches
