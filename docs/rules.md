@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **81** rules are applied by this linter:
+The following **82** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -113,5 +113,6 @@ The following **81** rules are applied by this linter:
 | W3005 <a name="W3005"></a> | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. | [Source](https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/) | `resources`,`dependson` |
 | W3010 <a name="W3010"></a> | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters`,`availabilityzone` |
 | W4001 <a name="W4001"></a> | Metadata Interface parameters exist | Metadata Interface parameters actually exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
+| W6001 <a name="W6001"></a> | Output using ImportValue | Check if the Output value is set using ImportValue, so creating an Output of an Output | [Source](https://github.com/awslabs/cfn-python-lint) | `outputs`,`importvalue` |
 | W7001 <a name="W7001"></a> | Check if Mappings are Used | Making sure the mappings defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `conditions` |
 | W8001 <a name="W8001"></a> | Check if Conditions are Used | Making sure the conditions defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `conditions` |

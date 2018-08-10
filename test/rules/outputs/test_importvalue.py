@@ -14,16 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.outputs.LimitName import LimitName  # pylint: disable=E0401
+from cfnlint.rules.outputs.ImportValue import ImportValue  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestOutputLimitName(BaseRuleTestCase):
-    """Test output limit name"""
+class TestOutputImportValue(BaseRuleTestCase):
+    """Test Output ImportValue"""
     def setUp(self):
         """Setup"""
-        super(TestOutputLimitName, self).setUp()
-        self.collection.register(LimitName())
+        super(TestOutputImportValue, self).setUp()
+        self.collection.register(ImportValue())
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +31,4 @@ class TestOutputLimitName(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/limit_name.yaml', 1)
+        self.helper_file_negative('fixtures/templates/bad/outputs.yaml', 1)
