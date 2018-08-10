@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import os
 import six
 
 from samtranslator.parser import parser
@@ -84,6 +85,10 @@ class Transform(object):
                                         sam_parser=self._sam_parser)
 
             self._replace_local_codeuri()
+
+            # Tell SAM to use the region we're linting in, this has to be controlled using the default AWS mechanisms, see also:
+            # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
+            os.environ['AWS_DEFAULT_REGION'] = self._region
 
             # In the Paser class, within the SAM Translator, they log a warning for when the template
             # does not match the schema. The logger they use is the root logger instead of one scoped to
