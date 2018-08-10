@@ -44,7 +44,7 @@ class TestTemplate(BaseTestCase):
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
-        valid_resource_count = 10
+        valid_resource_count = 11
         resources = self.template.get_resources()
         assert len(resources) == valid_resource_count, 'Expected {} resources, got {}'.format(valid_resource_count, len(resources))
 
@@ -80,7 +80,7 @@ class TestTemplate(BaseTestCase):
 
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
-        valid_ref_count = 25
+        valid_ref_count = 26
         refs = self.template.get_valid_refs()
         assert len(refs) == valid_ref_count, 'Expected {} refs, got {}'.format(valid_ref_count, len(refs))
 
