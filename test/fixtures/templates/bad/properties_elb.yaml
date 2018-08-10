@@ -92,6 +92,16 @@ Resources:
       LoadBalancerArn: !Ref LoadBalancer
       Port: 443
       Protocol: HTTPS
+  Listener1:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+      -
+        TargetGroupArn: !Ref HttpTargetGroup
+        Type: forward
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 443
+      Protocol: BadProtocol
   HttpTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
