@@ -32,6 +32,18 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - "127.0.0.1"
+  MyCAARecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Valid A Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "CAA"
+      TTL: "300"
+      ResourceRecords:
+        - "0 issue \"amazontrust.com;\""
+        - "0 issue \"awstrust.com;\""
+        - "0 issue \"amazonaws.com;\""
   MyAAAARecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
@@ -64,6 +76,14 @@ Resources:
             - "::1"
             - "1111:2222:3333:4444:5555:6666:123.123.123.123"
             - "1111::3333:4444:5555:6666:123.123.123.123"
+        - Name: "example.com"
+          Type: "CAA"
+          TTL: "300"
+          ResourceRecords:
+            - "0 issue \"ca.example.net; account=123456\""
+            - "0 issuewild \"ca.example.net\""
+            - "128 exampletexttag \"1-555-555-1212\""
+            - "0 iodef \"mailto:admin@example.com\""
         - Name: "txt.example.com"
           Type: "TXT"
           TTL: "300"

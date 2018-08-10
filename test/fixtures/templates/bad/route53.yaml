@@ -48,6 +48,17 @@ Resources:
         - "2001:0db8: 85a3:0:0:8a2e:0370:7334" # Spaces
         - "1111:2222:3333:4444:5555:6666:7777" # Missing components
         - "1111:2222:3333:4444:5555:6666:7777:8888::" # Too much components
+  MyCAARecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Invalid CAA Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "CAA"
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1" # No 3 items
+        - "0 issue amazon.com; henk" # Missing quotes around the value
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -83,6 +94,12 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "256.10.1.256" # Invalid values
+        - Name: "www.example.com"
+          Type: "CAA"
+          TTL: "300"
+          ResourceRecords:
+            - "1 issue \"amazon.com; example.com\"" # Invalid flag
+            - "0 special-value \"amazon.com\"" # Invalid tag (not numeric)
   MySecondRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
