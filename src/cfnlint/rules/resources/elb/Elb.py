@@ -34,10 +34,10 @@ HTTPS has certificate HTTP has no certificate'
         """
         matches = list()
         if isinstance(value, six.string_types):
-            if value not in kwargs['accepted_protocols']:
+            if value.upper() not in kwargs['accepted_protocols']:
                 message = 'Protocol must be {0} is invalid at {1}'
                 matches.append(RuleMatch(path, message.format((', '.join(kwargs['accepted_protocols'])), ('/'.join(map(str, path))))))
-            elif value in kwargs['certificate_protocols']:
+            elif value.upper() in kwargs['certificate_protocols']:
                 if not kwargs['certificates']:
                     message = 'Certificates should be specified when using HTTPS for {0}'
                     matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
