@@ -9,9 +9,24 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.5.0
+###### Features
+- Load all instances of CloudFormationLintRule in a file. Class doesn't need to match the filename anymore
+- Allow load yaml to accept a string allowing people to use cfn-lint as a module
+- Add rule W6001 to test outputs that are just using an import value
+- Update specs to ones released on August 10, 2018
+###### Fixes
+- Update [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to support conditions and using get_values to test all condition paths
+- Update E2521, [E2523](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2523) to support conditions and using get_values to test all condition paths
+- Rewrite [E2503](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2503) to support intrinsic functions and conditions and lower case protocols
+- Fix [E1018](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1018) to support Sub inside a Split function
+- Fix [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003) description messages to be more informative
+- Fix [E3001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3001) to not require parameters when CreationPolicy is used
+- Fix SAM region when no region is available from a local AWS profile or environment variable.
+
 ### 0.4.2
 ###### Features
-- Update rule E3020 to support AAAA record checks
+- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to support AAAA record checks
 ###### Fixes
 - Fix many rules that would fail if a sub parameter had a space at the beginning or end
 - Fix crashing issues when trying to get resources that aren't properly configured
@@ -30,21 +45,21 @@
 ###### Fixes
 - Fix a bunch of typos across many different rules
 - Support DeepCopy with Template and custom String classes used for marking up templates
-- Fix Rule E3002 to support CommaDelimitedList when looking for List Parameters
+- Fix Rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to support CommaDelimitedList when looking for List Parameters
 - Fix core engine to check that something is a Dict instead of assuming it is
 
 ### 0.3.5
 ###### Features
 - Update CloudFormation Specs to July 12th, 2018
-- Rule E7012 added to check the limits of attributes in a Mapping
-- Rule E2012 added to check maximum size of a parameter value
-- Rule E1003 added to check the maximum length of the template Description
+- Rule [E7012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E7012) added to check the limits of attributes in a Mapping
+- Rule [E2012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2012) added to check maximum size of a parameter value
+- Rule [E1003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1003) added to check the maximum length of the template Description
 - Guide created to help new users write new rules
 ###### Fixes
 - Catch KeyError when trying to discover the line and column number of an error
 - Update Lambda rules to support dotnet core
-- Fix rule E1017 so we unpack first element of select as a dict
-- Fix rule E1024 to support ImportValue and appropriately checking number for the last element
+- Fix rule [E1017](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1017) so we unpack first element of select as a dict
+- Fix rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to support ImportValue and appropriately checking number for the last element
 
 ### 0.3.3
 ###### Features
@@ -52,7 +67,7 @@
 - Catch rule processing errors and raise a lint error in their place.
 - Add rules for the limit on Parameter, Mapping, Resource and Output names
 - Add Rule W3005 to warn for when DependsOn is specified but not needed
-- Add Rule E2509 to check if Security Group Descriptions are properly configured
+- Add Rule [E2509](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2509) to check if Security Group Descriptions are properly configured
 - Add `source_url` to rules so rule reference documentation can be provided
 ###### Fixes
 - Fixed issues when Conditions had lists for values
@@ -68,14 +83,12 @@
 
 ### 0.3.1
 ###### Features
-- Update rule E3020 to validate A recordsets
+- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to validate A recordsets
 ###### Fixes
 - Require "aws-sam-translator" dependency be at least 1.6.0
-- Add support for wildcards in rule E3013
-- Support conditions in Lists for rule E3002
-- Include filename when we run into Null and Duplicate values when parsing yaml
+- Add support for wildcards in rule [E3013](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3013) - Support conditions in Lists for rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) - Include filename when we run into Null and Duplicate values when parsing yaml
 - Rule W2510 now allows for AllowedValues instead of just Min/MaxValue for compliance of Lambda MemorySize
-- Rule E2530 updated to checked AllowedValues for compliance of Lambda MemorySize
+- Rule [E2530](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2530) updated to checked AllowedValues for compliance of Lambda MemorySize
 
 ### 0.3.0
 ###### Features
@@ -95,7 +108,6 @@
 ###### Fixes
 - Don't report a Condition not being used if it is used by another Condition
 
-
 ### 0.2.2
 ###### Fixes
 - Fixed issues with Yaml and Json parsing for complex strings in Python 2.7
@@ -107,17 +119,16 @@
 ### 0.2.1
 ###### Features
 - Added AllowedValues for Cidr parameter checking Rule W2509
-- Add Rule E2004 to check Allowed values for Cidr parameters are a valid Cidr range
+- Add Rule [E2004](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2004) to check Allowed values for Cidr parameters are a valid Cidr range
 - Disable mapping Name checks W7001 if dynamic mapping names are used (Ref, FindInMap)
-- New Rule E1026 to make sure Ref's in 'Conditions' are to parameters and not resources
+- New Rule [E1026](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1026) to make sure Ref's in 'Conditions' are to parameters and not resources
 - Updated CloudFormation specs to June 5th, 2018
 ###### Fixes
-- Fixed an issue with Rule E1019 not giving errors when there was a bad pseudo parameter
+- Fixed an issue with Rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019) not giving errors when there was a bad pseudo parameter
 - Fixed an issue where conditions with Refs were validated as strings instead of Refs
 - Fix crash errors when an empty yaml file is provided
 - Updated condition functions to return the full object (Ref isn't translated while looking for AWS::NoValue)
-- Support Map Type properties when doing PrimitiveType check E3012
-- Fix an issue when boolean values not being checked when using check_value
+- Support Map Type properties when doing PrimitiveType check [E3012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3012) - Fix an issue when boolean values not being checked when using check_value
 
 ### 0.2.0
 ###### Features
@@ -148,7 +159,6 @@
 - Update Lambda Memory size to 3008
 - Fix FindInMap failing when the first parameter is also FindInMap
 - Fix key search function to appropriately respond to nested finds (FindInMap inside a FindInMap)
-
 
 ### 0.0.10
 ###### Features
