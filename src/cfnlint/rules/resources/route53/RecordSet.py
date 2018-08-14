@@ -19,7 +19,7 @@ import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
-from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6
+from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
 
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
@@ -83,6 +83,44 @@ class RecordSet(CloudFormationLintRule):
 
         return matches
 
+    def check_caa_record(self, path, recordset):
+        """Check CAA record Configuration"""
+        matches = list()
+
+        resource_records = recordset.get('ResourceRecords')
+
+        for index, record in enumerate(resource_records):
+            tree = path[:] + ['ResourceRecords', index]
+
+            # Split the record up to the mandatory settings (flags tag "value")
+            items = record.split(' ', 2)
+
+            # Check if the 3 settings are given.
+            if len(items) != 3:
+                message = 'CAA record must contain 3 settings (flags tag "value"), record contains {} settings.'
+                matches.append(RuleMatch(tree, message.format(len(items))))
+            else:
+                # Check the flag value
+                if not items[0].isdigit():
+                    message = 'CAA record flag setting ({}) should be of type Integer.'
+                    matches.append(RuleMatch(tree, message.format(items[0])))
+                else:
+                    if int(items[0]) not in [0, 128]:
+                        message = 'Invalid CAA record flag setting ({}) given, must be 0 or 128.'
+                        matches.append(RuleMatch(tree, message.format(items[0])))
+
+                # Check the tag value
+                if not re.match(REGEX_ALPHANUMERIC, items[1]):
+                    message = 'Invalid CAA record tag setting {}. Value has to be alphanumeric.'
+                    matches.append(RuleMatch(tree, message.format(items[0])))
+
+                # Check the value
+                if not items[2].startswith('"') or not items[2].endswith('"'):
+                    message = 'CAA record value setting has to be enclosed in double quotation marks (").'
+                    matches.append(RuleMatch(tree, message))
+
+        return matches
+
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
         matches = list()
@@ -116,6 +154,8 @@ class RecordSet(CloudFormationLintRule):
             matches.extend(self.check_a_record(path, recordset))
         elif recordset_type == 'AAAA':
             matches.extend(self.check_aaaa_record(path, recordset))
+        elif recordset_type == 'CAA':
+            matches.extend(self.check_caa_record(path, recordset))
         elif recordset_type == 'TXT':
             matches.extend(self.check_txt_record(path, recordset))
 
