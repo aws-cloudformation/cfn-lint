@@ -13,11 +13,11 @@
 ###### Features
 - Load all instances of CloudFormationLintRule in a file. Class doesn't need to match the filename anymore
 - Allow load yaml to accept a string allowing people to use cfn-lint as a module
-- Add rule W6001 to test outputs that are just using an import value
+- Add rule [W6001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W6001) to test outputs that are just using an import value
 - Update specs to ones released on August 10, 2018
 ###### Fixes
 - Update [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to support conditions and using get_values to test all condition paths
-- Update E2521, [E2523](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2523) to support conditions and using get_values to test all condition paths
+- Update [E2521](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2521), [E2523](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2523) to support conditions and using get_values to test all condition paths
 - Rewrite [E2503](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2503) to support intrinsic functions and conditions and lower case protocols
 - Fix [E1018](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1018) to support Sub inside a Split function
 - Fix [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003) description messages to be more informative
@@ -66,7 +66,7 @@
 - Support for Yaml C Parser when available.
 - Catch rule processing errors and raise a lint error in their place.
 - Add rules for the limit on Parameter, Mapping, Resource and Output names
-- Add Rule W3005 to warn for when DependsOn is specified but not needed
+- Add Rule [W3005](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3005) to warn for when DependsOn is specified but not needed
 - Add Rule [E2509](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2509) to check if Security Group Descriptions are properly configured
 - Add `source_url` to rules so rule reference documentation can be provided
 ###### Fixes
@@ -93,14 +93,14 @@
 ### 0.3.0
 ###### Features
 - Serverless Transforms now handled by SAM libraries
-- Add Rule E2508: Add checks for IAM
+- Add Rule [E2508](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2508): Add checks for IAM
   - Managed Policies attached to IAM user, group or role can't be more than 10
   - An IAM user can be a member of no more than 10 groups
   - There can only be 1 role in an instance profile
   - AssumeRolePolicyDocument size is less than <2048 characters
-- Add Rule E1002: Check overall template size to make sure its below
-- Add Rule E3013: CloudFront aliases should contain valid domain names
-- Add Rule E3020: Check if all RecordSets are correctly configured
+- Add Rule [E1002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1002): Check overall template size to make sure its below
+- Add Rule [E3013](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3013): CloudFront aliases should contain valid domain names
+- Add Rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020): Check if all RecordSets are correctly configured
   - Strings end and start with double quotes
   - Size is less than 256 characters
   - Record Types are within the specification
@@ -120,7 +120,7 @@
 ###### Features
 - Added AllowedValues for Cidr parameter checking Rule W2509
 - Add Rule [E2004](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2004) to check Allowed values for Cidr parameters are a valid Cidr range
-- Disable mapping Name checks W7001 if dynamic mapping names are used (Ref, FindInMap)
+- Disable mapping Name checks [W7001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W7001) if dynamic mapping names are used (Ref, FindInMap)
 - New Rule [E1026](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1026) to make sure Ref's in 'Conditions' are to parameters and not resources
 - Updated CloudFormation specs to June 5th, 2018
 ###### Fixes
@@ -132,11 +132,11 @@
 
 ### 0.2.0
 ###### Features
-- Standard cfn-lint Errors (E0000) for null, duplicate, and parse errors
+- Standard cfn-lint Errors ([E0000](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E0000)) for null, duplicate, and parse errors
 - Add a new check for CloudFormation limits
 - Add a new check for Parameter, Resource, Output, and Mapping names
 - Update specs to those released on May 25th, 2018
-- Strong type checking for property values result in Errors (E3012)
+- Strong type checking for property values result in Errors ([E3012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3012))
 ###### Fixes
 - Transform logic updated to not add a Role if one is specified for a serverless function
 - Fixed logic around Fn::If when the result is an object
