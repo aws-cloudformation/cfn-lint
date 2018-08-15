@@ -15,7 +15,6 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import re
-import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -45,22 +44,22 @@ class RecordSet(CloudFormationLintRule):
         'TXT'
     ]
 
+    REGEX_CNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
+
     def check_a_record(self, path, recordset):
         """Check A record Configuration"""
         matches = list()
 
-        if not recordset.get('AliasTarget'):
-            resource_records = recordset.get('ResourceRecords')
-            for index, record in enumerate(resource_records):
+        resource_records = recordset.get('ResourceRecords')
+        for index, record in enumerate(resource_records):
 
-                if isinstance(record, six.string_types):
-                    tree = path[:] + ['ResourceRecords', index]
-                    full_path = ('/'.join(str(x) for x in tree))
+            if not isinstance(record, dict):
+                tree = path[:] + ['ResourceRecords', index]
 
-                    # Check if a valid IPv4 address is specified
-                    if not re.match(REGEX_IPV4, record):
-                        message = 'A record is not a valid IPv4 address at {0}'
-                        matches.append(RuleMatch(tree, message.format(full_path)))
+                # Check if a valid IPv4 address is specified
+                if not re.match(REGEX_IPV4, record):
+                    message = 'A record ({}) is not a valid IPv4 address'
+                    matches.append(RuleMatch(tree, message.format(record)))
 
         return matches
 
@@ -68,18 +67,16 @@ class RecordSet(CloudFormationLintRule):
         """Check AAAA record Configuration"""
         matches = list()
 
-        if not recordset.get('AliasTarget'):
-            resource_records = recordset.get('ResourceRecords')
-            for index, record in enumerate(resource_records):
+        resource_records = recordset.get('ResourceRecords')
+        for index, record in enumerate(resource_records):
 
-                if isinstance(record, six.string_types):
-                    tree = path[:] + ['ResourceRecords', index]
-                    full_path = ('/'.join(str(x) for x in tree))
+            if not isinstance(record, dict):
+                tree = path[:] + ['ResourceRecords', index]
 
-                    # Check if a valid IPv4 address is specified
-                    if not re.match(REGEX_IPV6, record):
-                        message = 'AAAA record is not a valid IPv6 address at {0}'
-                        matches.append(RuleMatch(tree, message.format(full_path)))
+                # Check if a valid IPv4 address is specified
+                if not re.match(REGEX_IPV6, record):
+                    message = 'AAAA record ({}) is not a valid IPv6 address'
+                    matches.append(RuleMatch(tree, message.format(record)))
 
         return matches
 
@@ -92,32 +89,51 @@ class RecordSet(CloudFormationLintRule):
         for index, record in enumerate(resource_records):
             tree = path[:] + ['ResourceRecords', index]
 
-            # Split the record up to the mandatory settings (flags tag "value")
-            items = record.split(' ', 2)
+            if not isinstance(record, dict):
+                # Split the record up to the mandatory settings (flags tag "value")
+                items = record.split(' ', 2)
 
-            # Check if the 3 settings are given.
-            if len(items) != 3:
-                message = 'CAA record must contain 3 settings (flags tag "value"), record contains {} settings.'
-                matches.append(RuleMatch(tree, message.format(len(items))))
-            else:
-                # Check the flag value
-                if not items[0].isdigit():
-                    message = 'CAA record flag setting ({}) should be of type Integer.'
-                    matches.append(RuleMatch(tree, message.format(items[0])))
+                # Check if the 3 settings are given.
+                if len(items) != 3:
+                    message = 'CAA record must contain 3 settings (flags tag "value"), record contains {} settings.'
+                    matches.append(RuleMatch(tree, message.format(len(items))))
                 else:
-                    if int(items[0]) not in [0, 128]:
-                        message = 'Invalid CAA record flag setting ({}) given, must be 0 or 128.'
+                    # Check the flag value
+                    if not items[0].isdigit():
+                        message = 'CAA record flag setting ({}) should be of type Integer.'
+                        matches.append(RuleMatch(tree, message.format(items[0])))
+                    else:
+                        if int(items[0]) not in [0, 128]:
+                            message = 'Invalid CAA record flag setting ({}) given, must be 0 or 128.'
+                            matches.append(RuleMatch(tree, message.format(items[0])))
+
+                    # Check the tag value
+                    if not re.match(REGEX_ALPHANUMERIC, items[1]):
+                        message = 'Invalid CAA record tag setting {}. Value has to be alphanumeric.'
                         matches.append(RuleMatch(tree, message.format(items[0])))
 
-                # Check the tag value
-                if not re.match(REGEX_ALPHANUMERIC, items[1]):
-                    message = 'Invalid CAA record tag setting {}. Value has to be alphanumeric.'
-                    matches.append(RuleMatch(tree, message.format(items[0])))
+                    # Check the value
+                    if not items[2].startswith('"') or not items[2].endswith('"'):
+                        message = 'CAA record value setting has to be enclosed in double quotation marks (").'
+                        matches.append(RuleMatch(tree, message))
 
-                # Check the value
-                if not items[2].startswith('"') or not items[2].endswith('"'):
-                    message = 'CAA record value setting has to be enclosed in double quotation marks (").'
-                    matches.append(RuleMatch(tree, message))
+        return matches
+
+    def check_cname_record(self, path, recordset):
+        """Check CNAME record Configuration"""
+        matches = list()
+
+        resource_records = recordset.get('ResourceRecords')
+        if len(resource_records) > 1:
+            message = 'A CNAME recordset can only contain 1 value'
+            matches.append(RuleMatch(path + ['ResourceRecords'], message))
+        else:
+            for index, record in enumerate(resource_records):
+                if not isinstance(record, dict):
+                    tree = path[:] + ['ResourceRecords', index]
+                    if not re.match(self.REGEX_CNAME, record):
+                        message = 'CNAME record ({}) does not contain a valid domain name'
+                        matches.append(RuleMatch(tree, message.format(record)))
 
         return matches
 
@@ -130,14 +146,14 @@ class RecordSet(CloudFormationLintRule):
 
         for index, record in enumerate(resource_records):
             tree = path[:] + ['ResourceRecords', index]
-            full_path = ('/'.join(str(x) for x in tree))
 
-            if not record.startswith('"') or not record.endswith('"'):
-                message = 'TXT record has to be enclosed in double quotation marks (") at {0}'
-                matches.append(RuleMatch(tree, message.format(full_path)))
-            elif len(record) > 255:
-                message = 'The length of the TXT record ({0}) exceeds the limit (255) as {1}'
-                matches.append(RuleMatch(tree, message.format(len(record), full_path)))
+            if not isinstance(record, dict):
+                if not record.startswith('"') or not record.endswith('"'):
+                    message = 'TXT record ({}) has to be enclosed in double quotation marks (")'
+                    matches.append(RuleMatch(tree, message.format(record)))
+                elif len(record) > 255:
+                    message = 'The length of the TXT record ({}) exceeds the limit (255)'
+                    matches.append(RuleMatch(tree, message.format(len(record))))
 
         return matches
 
@@ -150,14 +166,18 @@ class RecordSet(CloudFormationLintRule):
         if recordset_type not in self.VALID_RECORD_TYPES:
             message = 'Invalid record type "{0}" specified'
             matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
-        elif recordset_type == 'A':
-            matches.extend(self.check_a_record(path, recordset))
-        elif recordset_type == 'AAAA':
-            matches.extend(self.check_aaaa_record(path, recordset))
-        elif recordset_type == 'CAA':
-            matches.extend(self.check_caa_record(path, recordset))
-        elif recordset_type == 'TXT':
-            matches.extend(self.check_txt_record(path, recordset))
+        elif not recordset.get('AliasTarget'):
+            # Record type specific checks
+            if recordset_type == 'A':
+                matches.extend(self.check_a_record(path, recordset))
+            elif recordset_type == 'AAAA':
+                matches.extend(self.check_aaaa_record(path, recordset))
+            elif recordset_type == 'CAA':
+                matches.extend(self.check_caa_record(path, recordset))
+            elif recordset_type == 'CNAME':
+                matches.extend(self.check_cname_record(path, recordset))
+            elif recordset_type == 'TXT':
+                matches.extend(self.check_txt_record(path, recordset))
 
         return matches
 
