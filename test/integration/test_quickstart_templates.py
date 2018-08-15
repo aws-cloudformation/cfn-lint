@@ -104,6 +104,6 @@ class TestQuickStartTemplates(BaseTestCase):
                                 c['Location']['Start']['ColumnNumber'] == match.columnnumber and \
                                 c['Rule']['Id'] == match.rule.id:
                             matched = True
-                    assert matched is True, 'Expected error {} at line {}, column {} in matches'.format(c['Rule']['Id'], c['Location']['Start']['LineNumber'], c['Location']['Start']['ColumnNumber'])
+                    assert matched is True, 'Expected error {} at line {}, column {} in matches for {}'.format(c['Rule']['Id'], c['Location']['Start']['LineNumber'], c['Location']['Start']['ColumnNumber'], filename)
             else:
                 assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)

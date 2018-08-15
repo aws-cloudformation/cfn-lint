@@ -48,4 +48,4 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
 
     def test_file_negative_generic(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 3)
+        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 7)

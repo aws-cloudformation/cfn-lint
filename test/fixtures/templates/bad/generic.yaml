@@ -8,6 +8,8 @@ Parameters:
     Type: String
     Default: String
     Description: String
+Conditions:
+  IsProduction: !Equals ["Prod", "Prod"]
 Resources:
   ## Missing Properties
   MyEC2Instance1:
@@ -131,6 +133,50 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       Handler: index.handler
+  conditionLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      Tags:
+      - Fn::If:
+        - IsProduction
+        - Key: Production
+          Value: True
+        - Key: Production
+          Value: False
+      Fn::If:
+      - IsProduction
+      - AvailabilityZones:
+          Fn::GetAZs: ''
+        Listeners:
+        - Fn::If:
+          - IsProduction
+          - LoadBalancerPort: '443'
+            InstancePort: '443'
+            Protocol: HTTP
+          - LoadBalancerPort: '443'
+            InstancePort: '443'
+            Protocol: HTTP
+        HealthCheck:
+          Target: HTTP:80/
+          HealthyThreshold: '3'
+          UnhealthyThreshold: '5'
+          Interval: '30'
+          Timeout: '5'
+        ConnectionDrainingPolicy:
+          Enabled: 'true'
+          Timeout: '60'
+      - AvailabilityZones:
+          Fn::GetAZs: ''
+        Listeners:
+        - LoadBalancerPort: '80'
+          InstancePort: '80'
+          Protocol: HTTP
+        HealthCheck:
+          Target: HTTP:80/
+          HealthyThreshold: '3'
+          UnhealthyThreshold: '5'
+          Interval: '30'
+          Timeout: '5'
 Outputs:
   myOutput:
     Value: !GetAtt ElasticLoadBalancer.CanonicalHostedZoneName
