@@ -14,9 +14,11 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF_SSM_SECURE
 
 
 class Password(CloudFormationLintRule):
@@ -41,10 +43,16 @@ class Password(CloudFormationLintRule):
             trees = [x for x in trees if x[0] == 'Resources']
             for tree in trees:
                 obj = tree[-1]
-                if isinstance(obj, (six.text_type, six.string_types)):
-                    message = 'Password shouldn\'t be hardcoded for %s' % (
-                        '/'.join(map(str, tree[:-1])))
-                    matches.append(RuleMatch(tree[:-1], message))
+                if isinstance(obj, (six.string_types)):
+                    if not re.match(REGEX_DYN_REF_SSM_SECURE, obj):
+                        if re.match(REGEX_DYN_REF_SSM, obj):
+                            message = 'Password should use a secure dynamic reference for %s' % (
+                                '/'.join(map(str, tree[:-1])))
+                            matches.append(RuleMatch(tree[:-1], message))
+                        else:
+                            message = 'Password shouldn\'t be hardcoded for %s' % (
+                                '/'.join(map(str, tree[:-1])))
+                            matches.append(RuleMatch(tree[:-1], message))
                 elif isinstance(obj, dict):
                     if len(obj) == 1:
                         for key, value in obj.items():
