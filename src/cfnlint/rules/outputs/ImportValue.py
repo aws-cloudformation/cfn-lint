@@ -39,8 +39,11 @@ class ImportValue(CloudFormationLintRule):
 
         # Check if the importvalue is set on the Value
         for importvalue_tree in importvalue_trees:
-            if importvalue_tree[2] == 'Value':
+            # Skip invalid configuration, let other rules handle that
+            if len(importvalue_tree) < 4:
+                continue
 
+            if importvalue_tree[2] == 'Value':
                 # ImportValue can be used within other intrinic function, exclude those
                 if importvalue_tree[3] == 'Fn::ImportValue':
                     message = 'The value of output ({0}) is imported from another output ({1})'
