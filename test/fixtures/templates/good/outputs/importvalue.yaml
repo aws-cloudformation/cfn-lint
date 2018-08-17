@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+Outputs:
+  GitlabDomain:
+    Description: The domain name of the Gitlab server
+    Value: !Sub
+    - 'gitlab.${zone}'
+    - zone: !ImportValue infra-ZonePublic-Name

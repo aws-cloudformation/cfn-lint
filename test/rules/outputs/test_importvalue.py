@@ -24,6 +24,9 @@ class TestOutputImportValue(BaseRuleTestCase):
         """Setup"""
         super(TestOutputImportValue, self).setUp()
         self.collection.register(ImportValue())
+        self.success_templates = [
+            'fixtures/templates/good/outputs/importvalue.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
