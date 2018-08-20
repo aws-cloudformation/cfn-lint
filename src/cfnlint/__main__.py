@@ -24,11 +24,11 @@ LOGGER = logging.getLogger('cfnlint')
 
 def main():
     """Main function"""
-    (args, filename, template, rules, fmt, formatter) = cfnlint.core.get_template_args_rules(sys.argv[1:])
+    (args, filename, template, rules, formatter) = cfnlint.core.get_template_args_rules(sys.argv[1:])
 
     return(
         cfnlint.core.run_cli(
-            filename, template, rules, fmt,
+            filename, template, rules,
             args.regions,
             args.override_spec, formatter))
 

@@ -82,7 +82,7 @@ class TestCli(BaseTestCase):
     def test_template_config(self):
         """Test template config"""
         filename = 'fixtures/templates/good/core/config_parameters.yaml'
-        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {
@@ -102,7 +102,7 @@ class TestCli(BaseTestCase):
     def test_positional_template_parameters(self):
         """Test overriding parameters"""
         filename = 'fixtures/templates/good/core/config_parameters.yaml'
-        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             filename, '--ignore-bad-template',
             '--ignore-checks', 'E0000'])
 
@@ -123,7 +123,7 @@ class TestCli(BaseTestCase):
     def test_override_parameters(self):
         """Test overriding parameters"""
         filename = 'fixtures/templates/good/core/config_parameters.yaml'
-        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template',
             '--ignore-checks', 'E0000'])
 
@@ -145,7 +145,7 @@ class TestCli(BaseTestCase):
         """ Test bad formatting in config"""
 
         filename = 'fixtures/templates/bad/core/config_parameters.yaml'
-        (args, _, _, _, _, _) = cfnlint.core.get_template_args_rules([
+        (args, _, _, _, _) = cfnlint.core.get_template_args_rules([
             '--template', filename, '--ignore-bad-template'])
 
         self.assertEqual(vars(args), {

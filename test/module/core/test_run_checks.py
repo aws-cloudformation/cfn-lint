@@ -27,7 +27,7 @@ class TestRunChecks(BaseTestCase):
         """Test success run"""
 
         filename = 'fixtures/templates/good/generic.yaml'
-        (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
+        (args, filename, template, rules, _) = cfnlint.core.get_template_args_rules([
             '--template', filename])
 
         results = cfnlint.core.run_checks(
@@ -39,7 +39,7 @@ class TestRunChecks(BaseTestCase):
         """Test bad template"""
 
         filename = 'fixtures/templates/quickstart/nat-instance.json'
-        (args, filename, template, rules, _, _) = cfnlint.core.get_template_args_rules([
+        (args, filename, template, rules, _) = cfnlint.core.get_template_args_rules([
             '--template', filename])
 
         results = cfnlint.core.run_checks(
