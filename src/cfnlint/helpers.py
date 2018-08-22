@@ -78,7 +78,8 @@ LIMITS = {
     },
     'outputs': {
         'number': 60,
-        'name': 255  # in characters
+        'name': 255,  # in characters
+        'description': 1024  # in bytes
     },
     'parameters': {
         'number': 60,
