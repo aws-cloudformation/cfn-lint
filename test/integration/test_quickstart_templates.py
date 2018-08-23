@@ -36,6 +36,10 @@ class TestQuickStartTemplates(BaseTestCase):
                 "filename": 'fixtures/templates/public/lambda-poller.yaml',
                 "failures": 0
             },
+            'watchmaker': {
+                "filename": 'fixtures/templates/public/watchmaker.json',
+                "failures": 0
+            },
             'nist_high_master': {
                 'filename': 'fixtures/templates/quickstart/nist_high_master.yaml',
                 'results_filename': 'fixtures/results/quickstart/nist_high_master.json'
