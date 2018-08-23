@@ -666,6 +666,7 @@ class Template(object):
         if isinstance(value, (dict)):
             if len(value) == 1:
                 is_condition = False
+                is_no_value = False
                 for obj_key, obj_value in value.items():
                     if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                         is_condition = True
@@ -675,7 +676,9 @@ class Template(object):
                                 check_obj = obj.copy()
                                 check_obj[key] = result['Value']
                                 matches.extend(self.get_values(check_obj, key, result['Path']))
-                if not is_condition:
+                    elif obj_key == 'Ref' and obj_value == 'AWS::NoValue':
+                        is_no_value = True
+                if not is_condition and not is_no_value:
                     result = {}
                     result['Path'] = path[:]
                     result['Value'] = value
@@ -690,13 +693,16 @@ class Template(object):
                 if isinstance(list_value, dict):
                     if len(list_value) == 1:
                         is_condition = False
+                        is_no_value = False
                         for obj_key, obj_value in list_value.items():
                             if obj_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                                 is_condition = True
                                 results = self.get_condition_values(obj_value, path[:] + [list_index, obj_key])
                                 if isinstance(results, list):
                                     matches.extend(results)
-                        if not is_condition:
+                            elif obj_key == 'Ref' and obj_value == 'AWS::NoValue':
+                                is_no_value = True
+                        if not is_condition and not is_no_value:
                             result = {}
                             result['Path'] = path[:] + [list_index]
                             result['Value'] = list_value
