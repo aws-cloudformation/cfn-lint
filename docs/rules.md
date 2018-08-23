@@ -27,7 +27,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **82** rules are applied by this linter:
+The following **87** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -37,6 +37,7 @@ The following **82** rules are applied by this linter:
 | E1001 <a name="E1001"></a> | Basic CloudFormation Template Configuration | Making sure the basic CloudFormation template components are properly configured | [Source](https://github.com/awslabs/cfn-python-lint) | `base` |
 | E1002 <a name="E1002"></a> | Template size limit | Check the size of the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `limits` |
 | E1003 <a name="E1003"></a> | Template description limit | Check if the size of the template description is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `limits` |
+| E1004 <a name="E1004"></a> | Template description can only be a string | Template description can only be a string | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html) | `description` |
 | E1010 <a name="E1010"></a> | GetAtt validation of parameters | Validates that GetAtt parameters are to valid resources and properties of those resources | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html) | `functions`,`getatt` |
 | E1011 <a name="E1011"></a> | FindInMap validation of configuration | Making sure the function is a list of appropriate config | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) | `functions`,`findinmap` |
 | E1012 <a name="E1012"></a> | Check if Refs exist | Making sure the refs exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `functions`,`ref` |
@@ -52,6 +53,7 @@ The following **82** rules are applied by this linter:
 | E1024 <a name="E1024"></a> | Cidr validation of parameters | Making sure the function CIDR is a list with valid values | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html) | `functions`,`cidr` |
 | E1025 <a name="E1025"></a> | Check if Conditions exist | Making sure the Conditions used in Fn:If functions exist | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) | `functions`,`if` |
 | E1026 <a name="E1026"></a> | Cannot reference resources in the Conditions block of the template | Check that any Refs in the Conditions block uses no resources | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#w2ab2c21c28c21c45) | `functions`,`ref` |
+| E1027 <a name="E1027"></a> | Check dynamic references secure strings are in supported locations | Dynamic References Secure Strings are only supported for a small set of resource properties.  Validate that they are being used in the correct location when checking values and Fn::Sub in resource properties. Currently doesn't check outputs, maps, conditions, parameters, and descriptions. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html) | `functions`,`dynamic reference` |
 | E2001 <a name="E2001"></a> | Parameters have appropriate properties | Making sure the parameters are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters` |
 | E2002 <a name="E2002"></a> | Parameters have appropriate type | Making sure the parameters have a correct type | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters` |
 | E2003 <a name="E2003"></a> | Parameters have appropriate names | Check if Parameters are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-requirements) | `parameters` |
@@ -93,10 +95,13 @@ The following **82** rules are applied by this linter:
 | E6002 <a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6003 <a name="E6003"></a> | Outputs have values of strings | Making sure the outputs have strings as values | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6004 <a name="E6004"></a> | Outputs have appropriate names | Check if Outputs are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
+| E6005 <a name="E6005"></a> | Outputs descriptions can only be strings | Outputs descriptions can only be strings | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6010 <a name="E6010"></a> | Output limit not exceeded | Check the number of Outputs in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `outputs`,`limits` |
 | E6011 <a name="E6011"></a> | Output name limit not exceeded | Check the size of Output names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `outputs`,`limits` |
+| E6012 <a name="E6012"></a> | Output description limit not exceeded | Check the size of Output description in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs`,`limits` |
 | E7001 <a name="E7001"></a> | Mappings are appropriately configured | Check if Mappings are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mappings` |
 | E7002 <a name="E7002"></a> | Mappings have appropriate names | Check if Mappings are properly named (A-Za-z0-9) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mapping` |
+| E7003 <a name="E7003"></a> | Mapping keys are strings and alphanumeric | Check if Mappings keys are properly typed as strings and alphanumeric | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html) | `mapping` |
 | E7010 <a name="E7010"></a> | Mapping limit not exceeded | Check the number of Mappings in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E7011 <a name="E7011"></a> | Mapping name limit not exceeded | Check the size of Mapping names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E7012 <a name="E7012"></a> | Mapping attribute limit not exceeded | Check if the amount of Mapping attributes in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |

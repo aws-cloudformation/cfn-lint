@@ -9,6 +9,19 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.6.0
+###### Features
+- Update formatters to be similar from JSON and text outputs and modularize for easier growth later
+- Don't raise an error with [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) when doing ACM DNS validation registration
+- Add rule [E7003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E7003) to validate that mapping keys are strings.  
+- Add rule [E1027](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1027) to validate that dynamic reference secure strings are to supported properties
+- Add rule [E1004](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1004) to validate that the Template Description is only a string
+- Add rule [E6005](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is only a string
+- Add rule [E6012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is less than the maximum length
+###### Fixes
+- Fix core libraries to handle conditions around resource properties so that the resource and property checks still run
+- Fix core libraries to handle the special property type `Tag` so that its checked when a rule is doing a Property Check
+
 ### 0.5.2
 ###### Fixes
 - Support additional attributes in spec file for [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003)
