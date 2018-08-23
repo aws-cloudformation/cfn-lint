@@ -9,6 +9,10 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.6.1
+###### Fixes
+- Fixes an issue where Template.get_values would return `Ref: AWS::NoValue`. This will no longer be returned as it is considered to be a Null value.
+
 ### 0.6.0
 ###### Features
 - Update formatters to be similar from JSON and text outputs and modularize for easier growth later
