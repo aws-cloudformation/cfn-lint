@@ -14,24 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.route53.RecordSet import RecordSet  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.mappings.KeyName import KeyName  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestRoute53RecordSets(BaseRuleTestCase):
-    """Test CloudFront Aliases Configuration"""
+class TestKeyName(BaseRuleTestCase):
+    """Test template Condition Names"""
     def setUp(self):
         """Setup"""
-        super(TestRoute53RecordSets, self).setUp()
-        self.collection.register(RecordSet())
+        super(TestKeyName, self).setUp()
+        self.collection.register(KeyName())
         self.success_templates = [
-            'fixtures/templates/good/route53.yaml'
+            'fixtures/templates/good/mappings/key_name.yaml'
         ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative_alias(self):
+    def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 24)
+        self.helper_file_negative('fixtures/templates/bad/mappings/key_name.yaml', 3)

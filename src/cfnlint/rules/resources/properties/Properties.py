@@ -144,12 +144,15 @@ class Properties(CloudFormationLintRule):
                 resourcetype = str.format('{0}.{1}', parenttype, proptype)
 
         resourcespec = specs[resourcetype].get('Properties', {})
+        supports_additional_properties = specs[resourcetype].get('AdditionalProperties', False)
+
         if text == 'AWS::NoValue':
             return matches
         if not isinstance(text, dict):
             message = 'Expecting an object at %s' % ('/'.join(map(str, path)))
             matches.append(RuleMatch(path, message))
             return matches
+
         for prop in text:
             proppath = path[:]
             proppath.append(prop)
@@ -160,7 +163,7 @@ class Properties(CloudFormationLintRule):
                         matches.extend(self.propertycheck(
                             cond_value['Value'], proptype, parenttype, resourcename,
                             proppath + cond_value['Path'], root))
-                elif prop != 'Metadata':
+                elif prop != 'Metadata' and not supports_additional_properties:
                     message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))
             else:
@@ -241,6 +244,8 @@ class Properties(CloudFormationLintRule):
         for resourcename, resourcevalue in cfn.get_resources().items():
             if 'Properties' in resourcevalue and 'Type' in resourcevalue:
                 resourcetype = resourcevalue.get('Type', None)
+                if resourcetype.startswith('Custom::'):
+                    resourcetype = 'AWS::CloudFormation::CustomResource'
                 if resourcetype in self.resourcetypes:
                     path = ['Resources', resourcename, 'Properties']
                     matches.extend(self.propertycheck(

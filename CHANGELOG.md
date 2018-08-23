@@ -9,6 +9,18 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.5.2
+###### Fixes
+- Support additional attributes in spec file for [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003)
+- Check custom resources as if they are 'AWS::CloudFormation::CustomResource' in rule [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003)
+- Fix [W6001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W6001) when an ImportValue is used to another function
+- Fix [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to support the new dynamic reference feature
+
+### 0.5.1
+###### Features
+- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to support CAA and CNAME record checks
+- Update specs to ones released on August 16, 2018
+
 ### 0.5.0
 ###### Features
 - Load all instances of CloudFormationLintRule in a file. Class doesn't need to match the filename anymore

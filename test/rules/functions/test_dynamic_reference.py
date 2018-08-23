@@ -14,24 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.route53.RecordSet import RecordSet  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.functions.DynamicReferenceSecureString import DynamicReferenceSecureString  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestRoute53RecordSets(BaseRuleTestCase):
-    """Test CloudFront Aliases Configuration"""
+class TestDynamicReferenceSecureString(BaseRuleTestCase):
+    """Test Rules Dynamic References exists """
     def setUp(self):
         """Setup"""
-        super(TestRoute53RecordSets, self).setUp()
-        self.collection.register(RecordSet())
+        super(TestDynamicReferenceSecureString, self).setUp()
+        self.collection.register(DynamicReferenceSecureString())
         self.success_templates = [
-            'fixtures/templates/good/route53.yaml'
+            'fixtures/templates/good/functions/dynamic_reference.yaml'
         ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative_alias(self):
+    def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 24)
+        self.helper_file_negative('fixtures/templates/bad/functions/dynamic_reference.yaml', 2)

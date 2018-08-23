@@ -14,24 +14,27 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.route53.RecordSet import RecordSet  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+import six
+from cfnlint import CloudFormationLintRule
+from cfnlint import RuleMatch
 
 
-class TestRoute53RecordSets(BaseRuleTestCase):
-    """Test CloudFront Aliases Configuration"""
-    def setUp(self):
-        """Setup"""
-        super(TestRoute53RecordSets, self).setUp()
-        self.collection.register(RecordSet())
-        self.success_templates = [
-            'fixtures/templates/good/route53.yaml'
-        ]
+class Description(CloudFormationLintRule):
+    """Check Template Description is only a String"""
+    id = 'E1004'
+    shortdesc = 'Template description can only be a string'
+    description = 'Template description can only be a string'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html'
+    tags = ['description']
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+    def match(self, cfn):
+        """Basic Matching"""
+        matches = list()
 
-    def test_file_negative_alias(self):
-        """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 24)
+        description = cfn.template.get('Description')
+
+        if description:
+            if not isinstance(description, six.string_types):
+                message = 'Description can only be a string'
+                matches.append(RuleMatch(['Description'], message))
+        return matches
