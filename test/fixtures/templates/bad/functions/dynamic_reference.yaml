@@ -1,0 +1,33 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Bad Template for testing Dynamic References
+Resources:
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+      MasterUsername: MyName
+      MasterUserPassword: '{{resolve:ssm-secure:MySecurePassword:1}}'
+    DeletionPolicy: Snapshot
+  MyIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      # Username field not supported for secure strings
+      UserName: '{{resolve:ssm-secure:MyUsername:1}}'
+      LoginProfile:
+        Password: !Sub 'list-{{resolve:ssm-secure:MySecurePassword:1}}'
+  OpsWorkStack:
+    Type: AWS::OpsWorks::Stack
+    Properties:
+      Name: Test
+      ServiceRoleArn: service:arn
+      DefaultInstanceProfileArn: profile:arn
+      RdsDbInstances:
+      -
+        DbPassword: '{{resolve:ssm-secure:MySecurePassword:1}}'
+        # DB User Not Supported for secure strings
+        DbUser: !Sub '{{resolve:ssm-secure:MyUsername:1}}'
+        RdsDbInstanceArn: String

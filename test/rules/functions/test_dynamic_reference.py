@@ -14,27 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import sys
-import logging
-import cfnlint.core
+from cfnlint.rules.functions.DynamicReferenceSecureString import DynamicReferenceSecureString  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-LOGGER = logging.getLogger('cfnlint')
+class TestDynamicReferenceSecureString(BaseRuleTestCase):
+    """Test Rules Dynamic References exists """
+    def setUp(self):
+        """Setup"""
+        super(TestDynamicReferenceSecureString, self).setUp()
+        self.collection.register(DynamicReferenceSecureString())
+        self.success_templates = [
+            'fixtures/templates/good/functions/dynamic_reference.yaml'
+        ]
 
+    def test_file_positive(self):
+        """Test Positive"""
+        self.helper_file_positive()
 
-def main():
-    """Main function"""
-    (args, filename, template, rules, formatter) = cfnlint.core.get_template_args_rules(sys.argv[1:])
-
-    return(
-        cfnlint.core.run_cli(
-            filename, template, rules,
-            args.regions,
-            args.override_spec, formatter))
-
-
-if __name__ == '__main__':
-    try:
-        sys.exit(main())
-    except (ValueError, TypeError):
-        LOGGER.error(ValueError)
+    def test_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/functions/dynamic_reference.yaml', 2)

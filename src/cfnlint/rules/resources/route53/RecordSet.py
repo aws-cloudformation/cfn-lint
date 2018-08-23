@@ -131,7 +131,10 @@ class RecordSet(CloudFormationLintRule):
             for index, record in enumerate(resource_records):
                 if not isinstance(record, dict):
                     tree = path[:] + ['ResourceRecords', index]
-                    if not re.match(self.REGEX_CNAME, record):
+                    if (not re.match(self.REGEX_CNAME, record)
+                            # ACM Route 53 validation uses invalid CNAMEs starting with `_`,
+                            # special-case them rather than complicate the regex.
+                            and not record.endswith('.acm-validations.aws.')):
                         message = 'CNAME record ({}) does not contain a valid domain name'
                         matches.append(RuleMatch(tree, message.format(record)))
 
