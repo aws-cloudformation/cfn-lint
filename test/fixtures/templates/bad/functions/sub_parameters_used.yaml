@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Mappings:
+  Authorizers:
+    us-east-1:
+      AccountId: "123456789012"
+      Name: "lambda-us-east-1"
+Resources:
+  Properties:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: ['sts:AssumeRole']
+          Effect: Allow
+          Principal:
+            Service: [apigateway.amazonaws.com]
+        Version: '2012-10-17'
+      Policies:
+      - PolicyName: LambdaInvokation
+        PolicyDocument:
+          Statement:
+          - Action: ['lambda:Invoke*']
+            Effect: Allow
+            Resource:
+            - Fn::Sub:
+              - 'arn:aws:lambda:${AWS::Region}:{AccountId}:function:${LambdaName}'
+              - AccountId: !FindInMap [ Authorizers, !Ref "AWS::Region", AccountId ]
+                LambdaName: !FindInMap [ Authorizers, !Ref "AWS::Region", Name ]
+          Version: '2012-10-17'
