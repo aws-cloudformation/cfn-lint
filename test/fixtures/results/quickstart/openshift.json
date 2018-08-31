@@ -3,7 +3,8 @@
         "Rule": {
             "Id": "W7001",
             "Description": "Making sure the mappings defined are used",
-            "ShortDescription": "Check if Mappings are Used"
+            "ShortDescription": "Check if Mappings are Used",
+            "Source": "https://github.com/awslabs/cfn-python-lint"
         },
         "Location": {
             "Start": {
@@ -17,13 +18,14 @@
         },
         "Level": "Warning",
         "Message": "Mapping LinuxAMINameMap not used",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref and GetAtt implicitly results in DependsOn behaviour.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources"
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
         },
         "Location": {
             "Start": {
@@ -36,14 +38,15 @@
             }
         },
         "Level": "Warning",
-        "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by \"!Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/43/Ref/OpenShiftNodeASG",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by a \"Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/43/Ref/OpenShiftNodeASG",
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref and GetAtt implicitly results in DependsOn behaviour.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources"
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
         },
         "Location": {
             "Start": {
@@ -56,14 +59,15 @@
             }
         },
         "Level": "Warning",
-        "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by \"!Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/88/Ref/OpenShiftNodeASG",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by a \"Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/88/Ref/OpenShiftNodeASG",
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -77,13 +81,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/AnsibleConfigServer/Properties/NetworkInterfaces/0/AssociatePublicIpAddress should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -97,13 +102,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/AnsibleConfigServer/Properties/NetworkInterfaces/0/DeleteOnTermination should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref and GetAtt implicitly results in DependsOn behaviour.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources"
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
         },
         "Location": {
             "Start": {
@@ -116,14 +122,36 @@
             }
         },
         "Level": "Warning",
-        "Message": "Obsolete DependsOn on resource (KeyGen), dependency already enforced by \"!Fn:GetAtt\" at Resources/GetRSA/Properties/ServiceToken/Fn::GetAtt/['KeyGen', 'Arn']",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Message": "Obsolete DependsOn on resource (KeyGen), dependency already enforced by a \"Fn:GetAtt\" at Resources/GetRSA/Properties/ServiceToken/Fn::GetAtt/['KeyGen', 'Arn']",
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+    },
+    {
+        "Rule": {
+            "Id": "W1020",
+            "Description": "Checks sub strings to see if a variable is defined.",
+            "ShortDescription": "Sub isn't needed if it doesn't have a variable defined",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        },
+        "Location": {
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 804
+            },
+            "End": {
+                "ColumnNumber": 18,
+                "LineNumber": 804
+            }
+        },
+        "Level": "Warning",
+        "Message": "Fn::Sub isn't needed because there are no variables at Resources/KeyGen/Properties/Code/S3Key/Fn::Sub",
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -137,13 +165,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/KeyGen/Properties/Timeout should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -157,13 +186,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -177,13 +207,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -197,13 +228,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -217,13 +249,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref and GetAtt implicitly results in DependsOn behaviour.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources"
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
         },
         "Location": {
             "Start": {
@@ -236,14 +269,15 @@
             }
         },
         "Level": "Warning",
-        "Message": "Obsolete DependsOn on resource (GetRSA), dependency already enforced by \"!Fn:GetAtt\" at Resources/OpenShiftMasterASLaunchConfig/Metadata/AWS::CloudFormation::Init/GetPublicKey/files//root/.ssh/public.key/content/Fn::Join/1/1/Fn::GetAtt/['GetRSA', 'PUB']",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Message": "Obsolete DependsOn on resource (GetRSA), dependency already enforced by a \"Fn:GetAtt\" at Resources/OpenShiftMasterASLaunchConfig/Metadata/AWS::CloudFormation::Init/GetPublicKey/files//root/.ssh/public.key/content/Fn::Join/1/1/Fn::GetAtt/['GetRSA', 'PUB']",
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -257,13 +291,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -277,13 +312,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -297,13 +333,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -317,13 +354,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/1/FromPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -337,13 +375,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -357,13 +396,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -377,13 +417,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/2/ToPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -397,13 +438,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -417,13 +459,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/BlockDeviceMappings/1/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -437,13 +480,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -457,13 +501,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/1/FromPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -477,13 +522,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -497,13 +543,14 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     },
     {
         "Rule": {
             "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values"
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
         },
         "Location": {
             "Start": {
@@ -517,6 +564,6 @@
         },
         "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/2/ToPort should be of type Integer",
-        "Filename": "test/templates/quickstart/openshift.yaml"
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
     }
 ]
