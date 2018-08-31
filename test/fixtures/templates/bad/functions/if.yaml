@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myEnvironment:
+    Type: String
+    Default: dev
+  myCondition:
+    Type: String
+    Default: isDevelopment
+Conditions:
+  isProduction: !Equals [!Ref myEnvironment, 'prd']
+  isDevelopment: !Equals [!Ref myEnvironment, 'dev']
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !If [!Ref myCondition, 'ami-123456', 'ami-abcdef']
