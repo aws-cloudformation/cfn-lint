@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
@@ -123,6 +124,24 @@ class Properties(CloudFormationLintRule):
 
         return matches
 
+    def check_exceptions(self, parenttype, proptype, text):
+        """
+            Checks for exceptions to the spec
+            - Start with handling exceptions for templated code.
+        """
+        templated_exceptions = {
+            'AWS::ApiGateway::RestApi': ['BodyS3Location'],
+            'AWS::Lambda::Function': ['Code'],
+            'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
+        }
+
+        exceptions = templated_exceptions.get(parenttype, [])
+        if proptype in exceptions:
+            if isinstance(text, six.string_types):
+                return True
+
+        return False
+
     def propertycheck(self, text, proptype, parenttype, resourcename, path, root):
         """Check individual properties"""
 
@@ -149,8 +168,9 @@ class Properties(CloudFormationLintRule):
         if text == 'AWS::NoValue':
             return matches
         if not isinstance(text, dict):
-            message = 'Expecting an object at %s' % ('/'.join(map(str, path)))
-            matches.append(RuleMatch(path, message))
+            if not self.check_exceptions(parenttype, proptype, text):
+                message = 'Expecting an object at %s' % ('/'.join(map(str, path)))
+                matches.append(RuleMatch(path, message))
             return matches
 
         for prop in text:

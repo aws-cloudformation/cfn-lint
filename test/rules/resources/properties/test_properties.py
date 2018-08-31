@@ -25,7 +25,8 @@ class TestResourceProperties(BaseRuleTestCase):
         super(TestResourceProperties, self).setUp()
         self.collection.register(Properties())
         self.success_templates = [
-            'fixtures/templates/good/resource_properties.yaml'
+            'fixtures/templates/good/resource_properties.yaml',
+            'fixtures/templates/good/resources/properties/templated_code.yaml',
         ]
 
     def test_file_positive(self):
@@ -43,3 +44,7 @@ class TestResourceProperties(BaseRuleTestCase):
     def test_file_negative_3(self):
         """Failure test"""
         self.helper_file_negative('fixtures/templates/bad/resource_properties.yaml', 4)
+
+    def test_file_negative_4(self):
+        """Failure test"""
+        self.helper_file_negative('fixtures/templates/bad/resources/properties/templated_code.yaml', 1)
