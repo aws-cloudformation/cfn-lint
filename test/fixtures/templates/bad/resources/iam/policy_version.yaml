@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test bad Policy Version
+Resources:
+  rIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      Policies:
+      - PolicyName: String
+        PolicyDocument:
+          Version: "2008-10-17"
+          Statement:
+            - Effect: "Allow"
+              Action:
+                - "s3:ListBucket"
+                - "s3:GetObject"
+              Resource: '*'

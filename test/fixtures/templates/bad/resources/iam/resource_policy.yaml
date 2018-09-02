@@ -1,0 +1,34 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  SampleBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: "myExampleBucket"
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:GetObject"
+            Effect: "Allow"
+            Resource: arn:aws:s3:::myExampleBucket/*
+            Condition:
+              StringLike:
+                aws:Referer:
+                  - "http://www.example.com/*"
+                  - "http://example.com/*"
+  mysnspolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Id: MyTopicPolicy
+        Version: '2012-10-17'
+        Statement:
+        - Sid: My-statement-id
+          Effect: NotAllow
+          Principal: arn:aws:iam::account-id:user/user-name
+          Action: sns:Publish
+          Resource: "*"
+          BadProperty: test
+      Topics:
+      - mytopic
