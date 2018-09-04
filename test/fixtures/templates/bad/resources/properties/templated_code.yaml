@@ -1,0 +1,13 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  SampleLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: role:arn
+      Runtime: python2.7
+      Handler: lambda_sample.handler
+      Code: ./sample.zip
+      Timeout: 300
+      # Still finds errors when objects aren't templatable
+      DeadLetterConfig: ./test.zip
