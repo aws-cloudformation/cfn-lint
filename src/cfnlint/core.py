@@ -256,23 +256,23 @@ def get_default_args(template):
     if isinstance(template, dict):
         configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
 
-    if isinstance(configs, dict):
-        for config_name, config_value in configs.items():
-            if config_name == 'ignore_checks':
-                if isinstance(config_value, list):
-                    defaults['ignore_checks'] = config_value
-            if config_name == 'regions':
-                if isinstance(config_value, list):
-                    defaults['regions'] = config_value
-            if config_name == 'append_rules':
-                if isinstance(config_value, list):
-                    defaults['override_spec'] = config_value
-            if config_name == 'override_spec':
-                if isinstance(config_value, (six.string_types, six.text_type)):
-                    defaults['override_spec'] = config_value
-            if config_name == 'ignore_bad_template':
-                if isinstance(config_value, bool):
-                    defaults['ignore_bad_template'] = config_value
+        if isinstance(configs, dict):
+            for config_name, config_value in configs.items():
+                if config_name == 'ignore_checks':
+                    if isinstance(config_value, list):
+                        defaults['ignore_checks'] = config_value
+                if config_name == 'regions':
+                    if isinstance(config_value, list):
+                        defaults['regions'] = config_value
+                if config_name == 'append_rules':
+                    if isinstance(config_value, list):
+                        defaults['override_spec'] = config_value
+                if config_name == 'override_spec':
+                    if isinstance(config_value, (six.string_types, six.text_type)):
+                        defaults['override_spec'] = config_value
+                if config_name == 'ignore_bad_template':
+                    if isinstance(config_value, bool):
+                        defaults['ignore_bad_template'] = config_value
 
     return defaults
 
