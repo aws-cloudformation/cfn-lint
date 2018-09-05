@@ -14,19 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.iam.Policy import Policy  # pylint: disable=E0401
+from cfnlint.rules.resources.iam.PolicyVersion import PolicyVersion  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestPropertyIamPolicies(BaseRuleTestCase):
-    """Test IAM Policies"""
+class TestPolicyVersion(BaseRuleTestCase):
+    """Test IAM Resource Policies"""
     def setUp(self):
         """Setup"""
-        super(TestPropertyIamPolicies, self).setUp()
-        self.collection.register(Policy())
+        super(TestPolicyVersion, self).setUp()
+        self.collection.register(PolicyVersion())
         self.success_templates = [
-            'fixtures/templates/good/resources/iam/policy.yaml',
             'fixtures/templates/good/resources/iam/resource_policy.yaml',
+            'fixtures/templates/good/resources/iam/policy.yaml',
         ]
 
     def test_file_positive(self):
@@ -35,8 +35,4 @@ class TestPropertyIamPolicies(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_iam_policy.yaml', 8)
-
-    def test_file_resource_negative(self):
-        """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources/iam/resource_policy.yaml', 3)
+        self.helper_file_negative('fixtures/templates/bad/resources/iam/policy_version.yaml', 1)

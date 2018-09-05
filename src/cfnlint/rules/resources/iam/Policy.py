@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from datetime import date
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -27,7 +28,29 @@ class Policy(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html'
     tags = ['properties', 'iam']
 
-    def _check_policy_document(self, cfn, branch, policy):
+    def __init__(self):
+        """Init"""
+        self.resources_and_keys = {
+            'AWS::SNS::TopicPolicy': 'PolicyDocument',
+            'AWS::S3::BucketPolicy': 'PolicyDocument',
+            'AWS::KMS::Key': 'KeyPolicy',
+            'AWS::SQS::QueuePolicy': 'PolicyDocument',
+            'AWS::ECR::Repository': 'RepositoryPolicyText',
+            'AWS::Elasticsearch::Domain': 'AccessPolicies',
+        }
+        self.idp_and_keys = {
+            'AWS::IAM::Group': 'Policies',
+            'AWS::IAM::ManagedPolicy': 'PolicyDocument',
+            'AWS::IAM::Policy': 'PolicyDocument',
+            'AWS::IAM::Role': 'Policies',
+            'AWS::IAM::User': 'Policies',
+        }
+        for resource_type in self.resources_and_keys:
+            self.resource_property_types.append(resource_type)
+        for resource_type in self.idp_and_keys:
+            self.resource_property_types.append(resource_type)
+
+    def check_policy_document(self, value, path, cfn, is_identity_policy):
         """Check policy document"""
         matches = list()
 
@@ -36,34 +59,41 @@ class Policy(CloudFormationLintRule):
             'Id',
             'Statement',
         ]
+        valid_versions = ['2012-10-17', '2008-10-17', date(2012, 10, 17), date(2008, 10, 17)]
 
-        if not isinstance(policy, dict):
+        if not isinstance(value, dict):
             message = 'IAM Policy Documents needs to be JSON'
             matches.append(
-                RuleMatch(branch[:], message))
+                RuleMatch(path[:], message))
             return matches
 
-        for parent_key, parent_value in policy.items():
+        for parent_key, parent_value in value.items():
             if parent_key not in valid_keys:
                 message = 'IAM Policy key %s doesn\'t exist.' % (parent_key)
                 matches.append(
-                    RuleMatch(branch[:] + [parent_key], message))
+                    RuleMatch(path[:] + [parent_key], message))
+            if parent_key == 'Version':
+                if parent_value not in valid_versions:
+                    message = 'IAM Policy Version needs to be one of (%s).' % (
+                        ', '.join(map(str, ['2012-10-17', '2008-10-17'])))
+                    matches.append(
+                        RuleMatch(path[:] + [parent_key], message))
             if parent_key == 'Statement':
                 if isinstance(parent_value, (list)):
-                    values = cfn.get_values(policy, 'Statement', branch[:])
-                    for value in values:
+                    statements = cfn.get_values(value, 'Statement', path[:])
+                    for statement in statements:
                         matches.extend(
                             self._check_policy_statement(
-                                value['Path'], value['Value']
+                                statement['Path'], statement['Value'], is_identity_policy
                             )
                         )
                 else:
                     message = 'IAM Policy statement should be of list.'
                     matches.append(
-                        RuleMatch(branch[:] + [parent_key], message))
+                        RuleMatch(path[:] + [parent_key], message))
         return matches
 
-    def _check_policy_statement(self, branch, statement):
+    def _check_policy_statement(self, branch, statement, is_identity_policy):
         """Check statements"""
         matches = list()
         statement_valid_keys = [
@@ -97,14 +127,16 @@ class Policy(CloudFormationLintRule):
             message = 'IAM Policy statement missing Action or NotAction'
             matches.append(
                 RuleMatch(branch[:], message))
-        if 'Principal' in statement:
-            message = 'IAM Policy statement shouldn\'t have Principal'
-            matches.append(
-                RuleMatch(branch[:] + ['Principal'], message))
-        if 'NotPrincipal' in statement:
-            message = 'IAM Policy statement shouldn\'t have NotPrincipal'
-            matches.append(
-                RuleMatch(branch[:] + ['NotPrincipal'], message))
+        if is_identity_policy:
+            if 'Principal' in statement or 'NotPrincipal' in statement:
+                message = 'IAM Resource Policy statement shouldn\'t have Principal or NotPrincipal'
+                matches.append(
+                    RuleMatch(branch[:], message))
+        else:
+            if 'Principal' not in statement and 'NotPrincipal' not in statement:
+                message = 'IAM Resource Policy statement should have Principal or NotPrincipal'
+                matches.append(
+                    RuleMatch(branch[:] + ['Principal'], message))
         if 'Resource' not in statement and 'NotResource' not in statement:
             message = 'IAM Policy statement missing Resource or NotResource'
             matches.append(
@@ -112,45 +144,42 @@ class Policy(CloudFormationLintRule):
 
         return(matches)
 
-    def _check_policy(self, cfn, branch, policy):
-        """Checks a policy"""
-        matches = list()
-        policy_document = policy.get('PolicyDocument', {})
-        matches.extend(
-            self._check_policy_document(
-                cfn, branch + ['PolicyDocument'], policy_document))
-
-        return matches
-
-    def match(self, cfn):
-        """Check IAM Policies Properties"""
-
+    def match_resource_properties(self, properties, resourcetype, path, cfn):
+        """Check CloudFormation Properties"""
         matches = list()
 
-        iam_types = [
-            'AWS::IAM::Group',
-            'AWS::IAM::ManagedPolicy',
-            'AWS::IAM::Policy',
-            'AWS::IAM::Role',
-            'AWS::IAM::User',
-        ]
+        is_identity_policy = True
+        if resourcetype in self.resources_and_keys:
+            is_identity_policy = False
 
-        resources = cfn.get_resources(iam_types)
-        for resource_name, resource_values in resources.items():
-            tree = ['Resources', resource_name, 'Properties']
-            properties = resource_values.get('Properties', {})
-            if properties:
-                if properties.get('PolicyDocument'):
-                    values = cfn.get_values(properties, 'PolicyDocument', tree)
-                    for value in values:
-                        matches.extend(
-                            self._check_policy_document(
-                                cfn, value['Path'], value['Value']))
-                if properties.get('Policies'):
-                    values = cfn.get_values(properties, 'Policies', tree)
-                    for value in values:
-                        matches.extend(
-                            self._check_policy(
-                                cfn, value['Path'], value['Value']))
+        key = None
+        if resourcetype in self.resources_and_keys:
+            key = self.resources_and_keys.get(resourcetype)
+        else:
+            key = self.idp_and_keys.get(resourcetype)
+
+        if not key:
+            # Key isn't defined return nothing
+            return matches
+
+        if key == 'Policies':
+            for index, policy in enumerate(properties.get(key, [])):
+                matches.extend(
+                    cfn.check_value(
+                        obj=policy, key='PolicyDocument',
+                        path=path[:] + ['Policies', index],
+                        check_value=self.check_policy_document,
+                        cfn=cfn,
+                        is_identity_policy=is_identity_policy
+                    ))
+        else:
+            matches.extend(
+                cfn.check_value(
+                    obj=properties, key=key,
+                    path=path[:],
+                    check_value=self.check_policy_document,
+                    cfn=cfn,
+                    is_identity_policy=is_identity_policy
+                ))
 
         return matches
