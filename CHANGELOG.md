@@ -9,6 +9,20 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.7.0
+###### Features
+- New Rule [W1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1019) to make sure any Sub variables are used in the string
+- New Rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to start basic validation of state machine syntax
+- New Rule [W1020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1020) to see if Sub is needed and variables are being used
+- New Rule [E1028](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1028) validate that first element in a Fn::If array is a string
+- New Rule [W3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3002) to warn when templated templates are used
+- Update Rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to check resource base policies
+- Add Rule [W2511](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2511) to warn when using an older version of IAM Policy Version
+###### Fixes
+- Update Rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow for templated code
+- Update Rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to allow Cidr function to use GetAtt
+- Fix core functionality to not error if the template is an array or string instead of an object
+
 ### 0.6.1
 ###### Fixes
 - Fixes an issue where Template.get_values would return `Ref: AWS::NoValue`. This will no longer be returned as it is considered to be a Null value.
