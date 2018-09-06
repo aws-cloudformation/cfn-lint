@@ -74,7 +74,7 @@ def decode(filename, ignore_bad_template):
         else:
             matches = [create_match_yaml_parser_error(err, filename)]
 
-    if not isinstance(template, dict):
+    if not isinstance(template, dict) and not matches:
         # Template isn't a dict which means nearly nothing will work
         matches = [cfnlint.Match(1, 1, 1, 1, filename, cfnlint.ParseError(), message='Template needs to be an object.')]
     return (template, matches)
