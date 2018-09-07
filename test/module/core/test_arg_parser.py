@@ -33,10 +33,28 @@ class TestArgsParser(BaseTestCase):
 
         parser = cfnlint.core.create_parser()
         args = parser.parse_args([
-            '--template', 'test.yaml', '--ignore-bad-template',
+            '-t', 'test.yaml', '--ignore-bad-template',
             '--format', 'quiet', '--debug'])
-        self.assertEqual(args.template, None)
-        self.assertEqual(args.template_alt, 'test.yaml')
+        self.assertEqual(args.templates, [])
+        self.assertEqual(args.template_alt, ['test.yaml'])
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.format, 'quiet')
         self.assertEqual(args.debug, True)
+
+    def test_create_parser_default_param(self):
+        """Test success run"""
+
+        parser = cfnlint.core.create_parser()
+        args = parser.parse_args([
+            '--regions', 'us-east-1', 'us-west-2', '--', 'template1.yaml', 'template2.yaml'])
+        self.assertEqual(args.templates, ['template1.yaml', 'template2.yaml'])
+        self.assertEqual(args.template_alt, [])
+        self.assertEqual(args.regions, ['us-east-1', 'us-west-2'])
+
+    def test_create_parser_exend(self):
+        """Test success run"""
+
+        parser = cfnlint.core.create_parser()
+        args = parser.parse_args(['-t', 'template1.yaml', '-t', 'template2.yaml'])
+        self.assertEqual(args.templates, [])
+        self.assertEqual(args.template_alt, ['template1.yaml', 'template2.yaml'])
