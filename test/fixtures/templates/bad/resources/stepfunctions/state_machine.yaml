@@ -25,13 +25,18 @@ Resources:
       # Missing StartsAt
       # ByeWorld is missing Resource
       # HelloWorld is missing Type
+      # Type doesn't exist
       DefinitionString:
         Fn::Sub: |-
           {
             "States": {
               "HelloWorld": {
                 "Resource": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:HelloFunction",
-                "End": true
+                "Next": "GoodDay"
+              },
+              "GoodDay": {
+                "Type": "DNE",
+                "Next": "ByeWorld"
               },
               "ByeWorld": {
                 "Type": "Task",
