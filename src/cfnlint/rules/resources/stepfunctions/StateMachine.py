@@ -51,7 +51,7 @@ class StateMachine(CloudFormationLintRule):
         state_key_types = {
             'Pass': ['Result', 'ResultPath'],
             'Task': ['Resource', 'ResultPath', 'Retry', 'Catch', 'TimeoutSeconds', 'HeartbeatSeconds'],
-            'Choices': ['Choices', 'Default'],
+            'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],
             'Fail': ['Cause', 'Error'],
@@ -60,7 +60,7 @@ class StateMachine(CloudFormationLintRule):
         state_required_types = {
             'Pass': [],
             'Task': ['Resource'],
-            'Choices': ['Choices'],
+            'Choice': ['Choices'],
             'Wait': [],
             'Succeed': [],
             'Fail': [],
@@ -75,15 +75,19 @@ class StateMachine(CloudFormationLintRule):
 
         state_type = def_json.get('Type')
 
-        for state_key, _ in def_json.items():
-            if state_key not in common_state_keys + state_key_types.get(state_type):
-                message = 'State Machine Definition key (%s) for State (%s) of Type (%s) is not valid' % (state_key, state_name, state_type)
-                matches.append(RuleMatch(path, message))
-        for req_key in common_state_required_keys + state_required_types.get(state_type):
-            if req_key not in def_json:
-                message = 'State Machine Definition required key (%s) for State (%s) of Type (%s) is missing' % (req_key, state_name, state_type)
-                matches.append(RuleMatch(path, message))
-                return matches
+        if state_type in state_key_types:
+            for state_key, _ in def_json.items():
+                if state_key not in common_state_keys + state_key_types.get(state_type, []):
+                    message = 'State Machine Definition key (%s) for State (%s) of Type (%s) is not valid' % (state_key, state_name, state_type)
+                    matches.append(RuleMatch(path, message))
+            for req_key in common_state_required_keys + state_required_types.get(state_type, []):
+                if req_key not in def_json:
+                    message = 'State Machine Definition required key (%s) for State (%s) of Type (%s) is missing' % (req_key, state_name, state_type)
+                    matches.append(RuleMatch(path, message))
+                    return matches
+        else:
+            message = 'State Machine Definition Type (%s) is not valid' % (state_type)
+            matches.append(RuleMatch(path, message))
 
         return matches
 
