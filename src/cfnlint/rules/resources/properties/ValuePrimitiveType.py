@@ -42,7 +42,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def check_primitive_type(self, value, item_type, path):
         """Chec item type"""
-        matches = list()
+        matches = []
 
         if isinstance(value, dict) and item_type == 'Json':
             return matches
@@ -78,7 +78,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def check_value(self, value, path, **kwargs):
         """Check Value"""
-        matches = list()
+        matches = []
         primitive_type = kwargs.get('primitive_type', {})
         item_type = kwargs.get('item_type', {})
         if item_type in ['Map']:
@@ -93,7 +93,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def check(self, cfn, properties, specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
 
         for prop in properties:
             if prop in specs:
@@ -118,7 +118,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, property_specs, path))
@@ -127,7 +127,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
         resource_specs = self.resource_specs.get(resource_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, resource_specs, path))
 

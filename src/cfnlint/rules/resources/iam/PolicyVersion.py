@@ -52,7 +52,7 @@ class PolicyVersion(CloudFormationLintRule):
 
     def check_policy_document(self, value, path):
         """Check policy document"""
-        matches = list()
+        matches = []
 
         if not isinstance(value, dict):
             return matches
@@ -67,7 +67,7 @@ class PolicyVersion(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         key = None
         if resourcetype in self.resources_and_keys:

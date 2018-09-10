@@ -32,7 +32,7 @@ class Base(CloudFormationLintRule):
 
     def match(self, cfn):
         """Basic Matching"""
-        matches = list()
+        matches = []
 
         top_level = []
         for x in cfn.template:

@@ -45,6 +45,6 @@ class TestYamlParse(BaseTestCase):
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
 
-            matches = list()
+            matches = []
             matches.extend(self.rules.run(filename, cfn))
             assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)

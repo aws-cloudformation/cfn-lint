@@ -46,7 +46,7 @@ class Properties(CloudFormationLintRule):
 
         """
 
-        matches = list()
+        matches = []
         if isinstance(value, dict) and primtype == 'Json':
             return matches
         if isinstance(value, dict):
@@ -77,7 +77,7 @@ class Properties(CloudFormationLintRule):
 
     def check_list_for_condition(self, text, prop, parenttype, resourcename, propspec, path):
         """Checks lists that are a dict for conditions"""
-        matches = list()
+        matches = []
         if len(text[prop]) == 1:
             for sub_key, sub_value in text[prop].items():
                 if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
@@ -146,7 +146,7 @@ class Properties(CloudFormationLintRule):
         """Check individual properties"""
 
         parameternames = self.parameternames
-        matches = list()
+        matches = []
         if root:
             specs = self.resourcetypes
             resourcetype = parenttype
@@ -254,7 +254,7 @@ class Properties(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
         self.cfn = cfn
 
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]

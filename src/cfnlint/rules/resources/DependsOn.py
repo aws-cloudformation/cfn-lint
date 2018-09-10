@@ -29,7 +29,7 @@ class DependsOn(CloudFormationLintRule):
 
     def check_value(self, key, path, resources):
         """Check resource names for DependsOn"""
-        matches = list()
+        matches = []
 
         if not isinstance(key, (six.text_type, six.string_types)):
             message = 'DependsOn values should be of string at {0}'
@@ -44,7 +44,7 @@ class DependsOn(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         resources = cfn.get_resources()
 

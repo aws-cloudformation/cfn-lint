@@ -31,7 +31,7 @@ class VpcId(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation VpcId Parameters"""
 
-        matches = list()
+        matches = []
 
         # Build the list of refs
         trees = cfn.search_deep_keys('VpcId')

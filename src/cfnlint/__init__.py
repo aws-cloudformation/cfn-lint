@@ -164,7 +164,7 @@ class RulesCollection(object):
 
     def resource_property(self, filename, cfn, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
-        matches = list()
+        matches = []
         property_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
         if property_type == 'Tag':
             property_spec_name = 'Tag'
@@ -221,7 +221,7 @@ class RulesCollection(object):
 
     def run_resource(self, filename, cfn, resource_type, resource_properties, path):
         """Run loops in resource checks for embedded properties"""
-        matches = list()
+        matches = []
         resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         if resource_properties and resource_type in resource_spec:
             resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
@@ -259,7 +259,7 @@ class RulesCollection(object):
 
     def run(self, filename, cfn):
         """Run rules"""
-        matches = list()
+        matches = []
         for rule in self.rules:
             try:
                 matches.extend(rule.matchall(filename, cfn))
@@ -423,7 +423,7 @@ class Template(object):
     def get_resource_names(self):
         """Get all the Resource Names"""
         LOGGER.debug('Get the names of all resources from template...')
-        results = list()
+        results = []
         resources = self.template.get('Resources', {})
         if isinstance(resources, dict):
             for resourcename, _ in resources.items():
@@ -434,7 +434,7 @@ class Template(object):
     def get_parameter_names(self):
         """Get all Parameter Names"""
         LOGGER.debug('Get names of all parameters from template...')
-        results = list()
+        results = []
         parameters = self.template.get('Parameters', {})
         if isinstance(parameters, dict):
             for parametername, _ in parameters.items():
@@ -524,7 +524,7 @@ class Template(object):
                     if results:
                         return results
         elif isinstance(properties, list):
-            matches = list()
+            matches = []
             for index, item in enumerate(properties):
                 results = None
                 if isinstance(item, dict):
@@ -532,7 +532,7 @@ class Template(object):
                         for sub_key, sub_value in item.items():
                             if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                                 cond_values = self.get_condition_values(sub_value)
-                                results = list()
+                                results = []
                                 for cond_value in cond_values:
                                     result_path = path[:] + [index, sub_key] + cond_value['Path']
                                     results.extend(
@@ -551,12 +551,12 @@ class Template(object):
                     matches.extend(results)
             return matches
 
-        return list()
+        return []
 
     def get_resource_properties(self, keys):
         """Filter keys of template"""
         LOGGER.debug('Get Properties from a resource: %s', keys)
-        matches = list()
+        matches = []
         resourcetype = keys.pop(0)
         for resource_name, resource_value in self.get_resources(resourcetype).items():
             path = ['Resources', resource_name, 'Properties']
@@ -570,7 +570,7 @@ class Template(object):
     # pylint: disable=dangerous-default-value
     def _search_deep_keys(self, searchText, cfndict, path):
         """Search deep for keys and get their values"""
-        keys = list()
+        keys = []
         if isinstance(cfndict, dict):
             for key in cfndict:
                 pathprop = path[:]
@@ -606,7 +606,7 @@ class Template(object):
     def get_condition_values(self, template, path=[]):
         """Evaluates conditions and brings back the values"""
         LOGGER.debug('Get condition values...')
-        matches = list()
+        matches = []
         if not isinstance(template, list):
             return matches
         if not len(template) == 3:
@@ -656,7 +656,7 @@ class Template(object):
 
         """
         LOGGER.debug('Get the value for key %s in %s', key, obj)
-        matches = list()
+        matches = []
 
         if not isinstance(obj, dict):
             return None
@@ -774,7 +774,7 @@ class Template(object):
                                 check_join=None, check_sub=None, **kwargs):
         """ Check Resource Properties """
         LOGGER.debug('Check property %s for %s', resource_property, resource_type)
-        matches = list()
+        matches = []
         resources = self.get_resources(resource_type=resource_type)
         for resource_name, resource_object in resources.items():
             properties = resource_object.get('Properties', {})
@@ -800,7 +800,7 @@ class Template(object):
             Check the value
         """
         LOGGER.debug('Check value %s for %s', key, obj)
-        matches = list()
+        matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
         if not values_obj:
@@ -882,14 +882,14 @@ class Runner(object):
     def run(self):
         """Run rules"""
         LOGGER.debug('Run scan of template...')
-        matches = list()
+        matches = []
         if self.cfn.template is not None:
             matches.extend(
                 self.rules.run(
                     self.filename, self.cfn))
 
         # uniq the list of incidents
-        return_matches = list()
+        return_matches = []
         for _, match in enumerate(matches):
             if not any(match == u for u in return_matches):
                 return_matches.append(match)

@@ -35,7 +35,7 @@ class Value(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Outputs"""
 
-        matches = list()
+        matches = []
 
         template = cfn.template
 

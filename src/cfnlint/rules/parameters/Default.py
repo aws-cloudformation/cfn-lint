@@ -101,7 +101,7 @@ class Default(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         for paramname, paramvalue in cfn.get_parameters().items():
             default_value = paramvalue.get('Default')

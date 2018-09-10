@@ -31,7 +31,7 @@ class LimitValue(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         value_limit = LIMITS['parameters']['value']
 

@@ -29,8 +29,8 @@ class Used(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Mappings"""
 
-        matches = list()
-        findinmap_mappings = list()
+        matches = []
+        findinmap_mappings = []
 
         mappings = cfn.template.get('Mappings', {})
 

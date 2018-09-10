@@ -30,7 +30,7 @@ class InstanceProfile(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation IamInstanceProfile Parameters"""
 
-        matches = list()
+        matches = []
 
         # Build the list of keys
         trees = cfn.search_deep_keys('Fn::GetAtt')

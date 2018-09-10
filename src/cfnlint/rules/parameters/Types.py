@@ -56,7 +56,7 @@ class Types(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         for paramname, paramvalue in cfn.get_parameters().items():
             # If the type isn't found we create a valid one

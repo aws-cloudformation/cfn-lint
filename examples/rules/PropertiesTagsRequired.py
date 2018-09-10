@@ -28,7 +28,7 @@ class PropertiesTagsRequired(CloudFormationLintRule):
     def match(self, cfn):
         """Check Tags for required keys"""
 
-        matches = list()
+        matches = []
 
         required_tags = ['CostCenter', 'ApplicationName']
 

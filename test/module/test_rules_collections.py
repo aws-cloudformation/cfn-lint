@@ -43,7 +43,7 @@ class TestTemplate(BaseTestCase):
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 
-        matches = list()
+        matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert(matches == [])
 
@@ -53,7 +53,7 @@ class TestTemplate(BaseTestCase):
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 
-        matches = list()
+        matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == 31, 'Expected {} failures, got {}'.format(31, len(matches))
 
@@ -63,6 +63,6 @@ class TestTemplate(BaseTestCase):
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 
-        matches = list()
+        matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == 3, 'Expected {} failures, got {}'.format(2, len(matches))

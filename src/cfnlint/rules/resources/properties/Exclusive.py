@@ -40,7 +40,7 @@ class Exclusive(CloudFormationLintRule):
 
     def check(self, properties, exclusions, path):
         """Check itself"""
-        matches = list()
+        matches = []
 
         for prop in properties:
             if prop in exclusions:
@@ -56,7 +56,7 @@ class Exclusive(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, _):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         exclusions = self.property_types_specs.get(property_type, {})
         matches.extend(self.check(properties, exclusions, path))
@@ -65,7 +65,7 @@ class Exclusive(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, _):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         exclusions = self.resource_types_specs.get(resource_type, {})
         matches.extend(self.check(properties, exclusions, path))

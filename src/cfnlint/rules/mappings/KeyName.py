@@ -31,7 +31,7 @@ class KeyName(CloudFormationLintRule):
 
     def check_key(self, key, path, check_alphanumeric=True):
         """ Check the key name for string and alphanumeric"""
-        matches = list()
+        matches = []
         if not isinstance(key, six.string_types):
             message = 'Mapping key ({0}) has to be a string.'
             matches.append(RuleMatch(path[:], message.format(key)))
@@ -44,7 +44,7 @@ class KeyName(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Mapping"""
 
-        matches = list()
+        matches = []
 
         mappings = cfn.template.get('Mappings', {})
         for mapping_name, mapping_value in mappings.items():
