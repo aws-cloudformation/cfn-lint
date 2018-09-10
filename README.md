@@ -19,15 +19,13 @@ before the linter processes the template.
 
 
 ## Install
-### Command line
-From a command prompt run `python setup.py clean --all` then `python setup.py install`
+
+Python 2.7+ and 3.4+ are supported.
 
 ### Pip Install
-`pip install cfn-lint`.  You may need to use sudo.
 
-## Uninstall
-If you have pip installed you can uninstall using `pip uninstall cfn-lint`.  You
-may need to manually remove the cfn-lint binary.
+`pip install cfn-lint`. If pip is not available, run
+`python setup.py clean --all` then `python setup.py install`.
 
 ### Editor Plugins
 There are IDE plugins available to get direct linter feedback from you favorite editor:
