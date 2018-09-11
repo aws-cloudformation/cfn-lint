@@ -106,9 +106,8 @@ def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
         filename
     )
 
-    data = json.load(open(filename))
-
-    return data
+    with open(filename) as fp:
+        return json.load(fp)
 
 
 RESOURCE_SPECS = {}
@@ -211,7 +210,8 @@ def override_specs(override_spec_file):
     """Override specs file"""
     try:
         filename = override_spec_file
-        custom_spec_data = json.load(open(filename))
+        with open(filename) as fp:
+            custom_spec_data = json.load(fp)
 
         set_specs(custom_spec_data)
     except IOError as e:
