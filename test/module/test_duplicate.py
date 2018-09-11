@@ -54,7 +54,8 @@ class TestDuplicate(BaseTestCase):
         filename = 'fixtures/templates/bad/duplicate.json'
 
         try:
-            json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+            with open(filename) as fp:
+                json.load(fp, cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
         except cfnlint.decode.cfn_json.JSONDecodeError:
             assert(True)
             return
