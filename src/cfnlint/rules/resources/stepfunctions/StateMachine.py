@@ -35,7 +35,7 @@ class StateMachine(CloudFormationLintRule):
 
     def _check_state_json(self, def_json, state_name, path):
         """Check State JSON Definition"""
-        matches = list()
+        matches = []
 
         common_state_keys = [
             'Next',
@@ -93,7 +93,7 @@ class StateMachine(CloudFormationLintRule):
 
     def _check_definition_json(self, def_json, path):
         """Check JSON Definition"""
-        matches = list()
+        matches = []
 
         top_level_keys = [
             'Comment',
@@ -122,7 +122,7 @@ class StateMachine(CloudFormationLintRule):
 
     def check_value(self, value, path):
         """Check Definition Value"""
-        matches = list()
+        matches = []
         try:
             def_json = json.loads(value)
         # pylint: disable=W0703
@@ -136,7 +136,7 @@ class StateMachine(CloudFormationLintRule):
 
     def check_sub(self, value, path):
         """Check Sub Object"""
-        matches = list()
+        matches = []
         if isinstance(value, list):
             matches.extend(self.check_value(value[0], path))
         elif isinstance(value, six.string_types):
@@ -146,7 +146,7 @@ class StateMachine(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         matches.extend(
             cfn.check_value(

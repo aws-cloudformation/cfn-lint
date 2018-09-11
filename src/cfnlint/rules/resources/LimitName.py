@@ -30,7 +30,7 @@ class LimitName(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         resources = cfn.template.get('Resources', {})
 

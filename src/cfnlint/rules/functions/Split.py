@@ -30,7 +30,7 @@ class Split(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Join"""
 
-        matches = list()
+        matches = []
 
         split_objs = cfn.search_deep_keys('Fn::Split')
 

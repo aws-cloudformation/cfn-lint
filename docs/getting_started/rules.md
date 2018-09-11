@@ -71,7 +71,7 @@ class MyNewRule(CloudFormationLintRule):
     def match(self, cfn):
         """Basic Rule Matching"""
 
-        matches = list()
+        matches = []
 
         # Your Rule code goes here
 
@@ -208,7 +208,7 @@ The following snippet is a simple example on checking specific property values:
 ```python
 def check_value(self, value, path):
     """Check SecurityGroup descriptions"""
-    matches = list()
+    matches = []
     full_path = ('/'.join(str(x) for x in path))
 
     # Check max length
@@ -219,7 +219,7 @@ def check_value(self, value, path):
 def match(self, cfn):
     """Check SecurityGroup descriptions"""
 
-    matches = list()
+    matches = []
 
     resources = cfn.get_resources(['AWS::EC2::SecurityGroup'])
 

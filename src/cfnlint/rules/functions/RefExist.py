@@ -47,17 +47,17 @@ class RefExist(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         # Build the list of refs
         reftrees = cfn.search_deep_keys('Ref')
-        refs = list()
+        refs = []
         for reftree in reftrees:
             refs.append(reftree[-1])
 
         # build the sub lists
         subtrees = cfn.search_deep_keys('Fn::Sub')
-        subs = list()
+        subs = []
         for subtree in subtrees:
             subs.append(subtree[-1])
 

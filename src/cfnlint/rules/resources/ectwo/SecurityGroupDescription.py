@@ -37,7 +37,7 @@ class SecurityGroupDescription(CloudFormationLintRule):
 
     def check_value(self, value, path):
         """Check SecurityGroup descriptions"""
-        matches = list()
+        matches = []
         full_path = ('/'.join(str(x) for x in path))
 
         # Check max length
@@ -57,7 +57,7 @@ class SecurityGroupDescription(CloudFormationLintRule):
     def match(self, cfn):
         """Check SecurityGroup descriptions"""
 
-        matches = list()
+        matches = []
 
         resources = cfn.get_resources(['AWS::EC2::SecurityGroup'])
 

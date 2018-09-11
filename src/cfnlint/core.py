@@ -286,7 +286,7 @@ def run_checks(filename, template, rules, regions):
                 LOGGER.error('Supported regions are %s', REGIONS)
                 exit(32)
 
-    matches = list()
+    matches = []
 
     runner = cfnlint.Runner(rules, filename, template, regions)
     matches.extend(runner.transform())

@@ -31,7 +31,7 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[region]
         resourcetypes = resourcespecs['ResourceTypes']
 
-        matches = list()
+        matches = []
         for resourcetype, resourceobj in resourcetypes.items():
             propertiesobj = resourceobj.get('Properties')
             if propertiesobj:
@@ -43,7 +43,7 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
     def match(self, cfn):
         """Check Tags for required keys"""
 
-        matches = list()
+        matches = []
 
         all_tags = cfn.search_deep_keys('Tags')
         all_tags = [x for x in all_tags if x[0] == 'Resources']

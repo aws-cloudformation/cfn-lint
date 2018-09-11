@@ -31,7 +31,7 @@ class Name(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Mapping"""
 
-        matches = list()
+        matches = []
 
         mappings = cfn.template.get('Mappings', {})
         for mapping_name, _ in mappings.items():

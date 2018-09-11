@@ -30,7 +30,7 @@ class Select(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Select"""
 
-        matches = list()
+        matches = []
 
         select_objs = cfn.search_deep_keys('Fn::Select')
 

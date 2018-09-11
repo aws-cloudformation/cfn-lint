@@ -44,7 +44,7 @@ class DependsOnObsolete(CloudFormationLintRule):
 
     def check_depends_on(self, cfn, resource, key, path):
         """Check if the DependsOn is already specified"""
-        matches = list()
+        matches = []
 
         # Get references
         trees = self.get_resource_references(cfn, 'Ref', resource)
@@ -68,7 +68,7 @@ class DependsOnObsolete(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         resources = cfn.get_resources()
 

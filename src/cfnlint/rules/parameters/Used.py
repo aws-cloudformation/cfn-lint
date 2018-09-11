@@ -46,14 +46,14 @@ class Used(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         reftrees = cfn.search_deep_keys('Ref')
-        refs = list()
+        refs = []
         for reftree in reftrees:
             refs.append(reftree[-1])
         subtrees = cfn.search_deep_keys('Fn::Sub')
-        subs = list()
+        subs = []
         for subtree in subtrees:
             if isinstance(subtree[-1], list):
                 subs.extend(cfn.get_sub_parameters(subtree[-1][0]))

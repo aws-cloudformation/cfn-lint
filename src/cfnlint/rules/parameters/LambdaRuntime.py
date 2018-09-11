@@ -39,7 +39,7 @@ class LambdaRuntime(CloudFormationLintRule):
     # pylint: disable=W0613
     def check_lambda_memory_size_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
-        matches = list()
+        matches = []
         runtimes = [
             'nodejs', 'nodejs4.3', 'nodejs6.10', 'nodejs8.10', 'java8', 'python2.7',
             'python3.6', 'dotnetcore1.0', 'dotnetcore2.0', 'dotnetcore2.1',
@@ -64,7 +64,7 @@ class LambdaRuntime(CloudFormationLintRule):
 
     def check(self, properties, resource_type, path, cfn):
         """Check itself"""
-        matches = list()
+        matches = []
 
         matches.extend(
             cfn.check_value(
@@ -78,7 +78,7 @@ class LambdaRuntime(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         matches.extend(self.check(properties, resource_type, path, cfn))
 

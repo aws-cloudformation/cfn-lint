@@ -32,7 +32,7 @@ class Password(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Password Parameters"""
 
-        matches = list()
+        matches = []
         password_properties = ['Password', 'DbPassword', 'MasterUserPassword']
 
         parameters = cfn.get_parameter_names()

@@ -59,9 +59,9 @@ class CircularDependency(CloudFormationLintRule):
 
     def check_circular_dependencies(self, resources):
         """Check circular dependencies one item at a time"""
-        matches = list()
+        matches = []
         for resource_name, associations in resources.items():
-            resource_results = list()
+            resource_results = []
             for association in associations:
                 results = set(
                     self._check_circular_dependency(
@@ -88,7 +88,7 @@ class CircularDependency(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         ref_objs = cfn.search_deep_keys('Ref')
         resources = {}
@@ -119,7 +119,7 @@ class CircularDependency(CloudFormationLintRule):
 
         sub_objs = cfn.search_deep_keys('Fn::Sub')
         for sub_obj in sub_objs:
-            sub_parameters = list()
+            sub_parameters = []
             sub_parameter_values = {}
             value = sub_obj[-1]
             res_type, res_name = sub_obj[:2]
