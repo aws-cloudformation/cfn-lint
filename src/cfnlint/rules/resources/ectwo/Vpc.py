@@ -31,7 +31,7 @@ class Vpc(CloudFormationLintRule):
 
     def check_vpc_value(self, value, path):
         """Check VPC Values"""
-        matches = list()
+        matches = []
 
         if value not in ('default', 'dedicated'):
             message = 'DefaultTenancy needs to be default or dedicated for {0}'
@@ -40,7 +40,7 @@ class Vpc(CloudFormationLintRule):
 
     def check_vpc_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
-        matches = list()
+        matches = []
         allowed_types = [
             'String'
         ]
@@ -63,7 +63,7 @@ class Vpc(CloudFormationLintRule):
 
     def check_cidr_value(self, value, path):
         """Check CIDR Strings"""
-        matches = list()
+        matches = []
 
         if not re.match(REGEX_CIDR, value):
             message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
@@ -72,7 +72,7 @@ class Vpc(CloudFormationLintRule):
 
     def check_cidr_ref(self, value, path, parameters, resources):
         """Check CidrBlock for VPC"""
-        matches = list()
+        matches = []
 
         allowed_types = [
             'String'
@@ -101,7 +101,7 @@ class Vpc(CloudFormationLintRule):
     def match(self, cfn):
         """Check EC2 VPC Resource Parameters"""
 
-        matches = list()
+        matches = []
         matches.extend(
             cfn.check_resource_property(
                 'AWS::EC2::VPC', 'InstanceTenancy',

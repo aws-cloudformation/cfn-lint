@@ -30,7 +30,7 @@ class SubUnneeded(CloudFormationLintRule):
     def _test_string(self, cfn, sub_string, tree):
         """Test if a string has appropriate parameters"""
 
-        matches = list()
+        matches = []
         string_params = cfn.get_sub_parameters(sub_string)
 
         if not string_params:
@@ -43,7 +43,7 @@ class SubUnneeded(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Join"""
 
-        matches = list()
+        matches = []
 
         sub_objs = cfn.search_deep_keys('Fn::Sub')
 

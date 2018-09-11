@@ -39,7 +39,7 @@ class LambdaMemorySize(CloudFormationLintRule):
     # pylint: disable=W0613
     def check_lambda_memory_size_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
-        matches = list()
+        matches = []
 
         if value in parameters:
             parameter = parameters.get(value)
@@ -59,7 +59,7 @@ class LambdaMemorySize(CloudFormationLintRule):
 
     def check(self, properties, resource_type, path, cfn):
         """Check itself"""
-        matches = list()
+        matches = []
 
         matches.extend(
             cfn.check_value(
@@ -73,7 +73,7 @@ class LambdaMemorySize(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         matches.extend(self.check(properties, resource_type, path, cfn))
 

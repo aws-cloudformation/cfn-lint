@@ -35,7 +35,7 @@ class GetAtt(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation GetAtt"""
 
-        matches = list()
+        matches = []
 
         getatts = cfn.search_deep_keys('Fn::GetAtt')
         valid_getatts = cfn.get_valid_getatts()

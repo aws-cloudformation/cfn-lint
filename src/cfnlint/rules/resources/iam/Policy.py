@@ -52,7 +52,7 @@ class Policy(CloudFormationLintRule):
 
     def check_policy_document(self, value, path, cfn, is_identity_policy):
         """Check policy document"""
-        matches = list()
+        matches = []
 
         valid_keys = [
             'Version',
@@ -95,7 +95,7 @@ class Policy(CloudFormationLintRule):
 
     def _check_policy_statement(self, branch, statement, is_identity_policy):
         """Check statements"""
-        matches = list()
+        matches = []
         statement_valid_keys = [
             'Effect',
             'Principal',
@@ -146,7 +146,7 @@ class Policy(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         is_identity_policy = True
         if resourcetype in self.resources_and_keys:

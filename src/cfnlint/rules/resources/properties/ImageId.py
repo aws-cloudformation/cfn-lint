@@ -31,7 +31,7 @@ class ImageId(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation ImageId Parameters"""
 
-        matches = list()
+        matches = []
 
         # Build the list of refs
         imageidtrees = cfn.search_deep_keys('ImageId')

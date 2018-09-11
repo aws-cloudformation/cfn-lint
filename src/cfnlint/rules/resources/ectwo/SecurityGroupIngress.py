@@ -30,7 +30,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
 
     def check_sgid_value(self, value, path):
         """Check VPC Values"""
-        matches = list()
+        matches = []
         if not value.startswith('sg-'):
             message = 'Security Group Id must have a valid Identifier {0}'
             matches.append(
@@ -39,7 +39,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
 
     def check_sgid_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
-        matches = list()
+        matches = []
 
         allowed_types = [
             'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
@@ -79,7 +79,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
     def check_sgid_fail(self, value, path, **kwargs):
         """Automatic failure for certain functions"""
 
-        matches = list()
+        matches = []
         message = 'Use Ref, FindInMap, or string values for {0}'
         matches.append(
             RuleMatch(path, message.format('/'.join(map(str, path)))))
@@ -88,7 +88,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
     def check_ingress_rule(self, vpc_id, properties, path, cfn):
         """Check ingress rule"""
 
-        matches = list()
+        matches = []
         if vpc_id:
 
             # Check that SourceSecurityGroupName isn't specified
@@ -123,7 +123,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
     def match(self, cfn):
         """Check EC2 Security Group Ingress Resource Parameters"""
 
-        matches = list()
+        matches = []
 
         resources = cfn.get_resources(resource_type='AWS::EC2::SecurityGroup')
         for resource_name, resource_object in resources.items():

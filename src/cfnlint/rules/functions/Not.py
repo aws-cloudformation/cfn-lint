@@ -29,7 +29,7 @@ class Not(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation GetAtt"""
 
-        matches = list()
+        matches = []
 
         fnnots = cfn.search_deep_keys('Fn::Not')
         for fnnot in fnnots:

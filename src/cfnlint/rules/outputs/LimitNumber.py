@@ -31,7 +31,7 @@ class LimitNumber(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Outputs"""
 
-        matches = list()
+        matches = []
 
         # Check number of outputs against the defined limit
         outputs = cfn.template.get('Outputs', {})

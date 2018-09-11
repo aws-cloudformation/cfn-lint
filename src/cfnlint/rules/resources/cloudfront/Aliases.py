@@ -31,7 +31,7 @@ class Aliases(CloudFormationLintRule):
     def match(self, cfn):
         """Check cloudfront Resource Parameters"""
 
-        matches = list()
+        matches = []
 
         valid_domain = re.compile(r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$')
 

@@ -73,7 +73,7 @@ class TestQuickStartTemplates(BaseTestCase):
             template = cfnlint.decode.cfn_yaml.load(filename)
 
             runner = Runner(self.rules, filename, template, ['us-east-1'])
-            matches = list()
+            matches = []
             matches.extend(runner.transform())
             if not matches:
                 matches.extend(runner.run())

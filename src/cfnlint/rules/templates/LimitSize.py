@@ -30,7 +30,7 @@ class LimitSize(CloudFormationLintRule):
 
     def match(self, cfn):
         """Basic Matching"""
-        matches = list()
+        matches = []
 
         # Check number of resources against the defined limit
         filename = cfn.filename

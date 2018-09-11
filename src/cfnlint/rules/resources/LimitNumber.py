@@ -31,7 +31,7 @@ class LimitNumber(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         # Check number of resources against the defined limit
         resources = cfn.get_resources()

@@ -31,7 +31,7 @@ class Configuration(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
 
-        matches = list()
+        matches = []
 
         valid_attributes = [
             'CreationPolicy',
