@@ -34,7 +34,7 @@ class InterfaceParameterExists(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Metadata Parameters Exist"""
 
-        matches = list()
+        matches = []
 
         strinterface = 'AWS::CloudFormation::Interface'
         parameters = cfn.get_parameter_names()

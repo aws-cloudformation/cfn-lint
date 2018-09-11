@@ -38,7 +38,7 @@ class Required(CloudFormationLintRule):
     def propertycheck(self, text, proptype, parenttype, resourcename, tree, root):
         """Check individual properties"""
 
-        matches = list()
+        matches = []
         if root:
             specs = self.resourcetypes
             resourcetype = parenttype
@@ -60,7 +60,7 @@ class Required(CloudFormationLintRule):
             return matches
 
         # Check if all required properties are specified
-        resource_objects = list()
+        resource_objects = []
         base_object_properties = {}
         for key, value in text.items():
             if key not in cfnlint.helpers.CONDITION_FUNCTIONS:
@@ -121,7 +121,7 @@ class Required(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         self.cfn = cfn
 

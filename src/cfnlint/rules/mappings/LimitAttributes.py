@@ -30,7 +30,7 @@ class LimitAttributes(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Mappings"""
 
-        matches = list()
+        matches = []
 
         mappings = cfn.template.get('Mappings', {})
 

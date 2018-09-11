@@ -199,7 +199,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check that stage actions are set up properly."""
-        matches = list()
+        matches = []
 
         resources = cfn.get_resource_properties(['AWS::CodePipeline::Pipeline'])
         for resource in resources:

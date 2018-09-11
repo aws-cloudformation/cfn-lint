@@ -30,7 +30,7 @@ class Configuration(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         mappings = cfn.template.get('Mappings', {})
         if mappings:

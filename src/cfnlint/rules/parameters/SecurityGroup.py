@@ -58,7 +58,7 @@ class SecurityGroup(CloudFormationLintRule):
     # pylint: disable=W0613
     def check_sgid_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
-        matches = list()
+        matches = []
         if 'SourceSecurityGroupId' in path:
             allowed_types = [
                 'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
@@ -92,7 +92,7 @@ class SecurityGroup(CloudFormationLintRule):
 
     def check(self, properties, resource_type, path, cfn):
         """Check itself"""
-        matches = list()
+        matches = []
 
         matches.extend(
             cfn.check_value(
@@ -120,7 +120,7 @@ class SecurityGroup(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         matches.extend(self.check(properties, property_type, path, cfn))
 
@@ -128,7 +128,7 @@ class SecurityGroup(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         matches.extend(self.check(properties, resource_type, path, cfn))
 

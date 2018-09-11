@@ -34,7 +34,7 @@ class FunctionRuntime(CloudFormationLintRule):
 
     def check_value(self, value, path):
         """ Check runtime value """
-        matches = list()
+        matches = []
 
         message = 'You must specify a valid value for runtime ({0}) at {1}'
 
@@ -46,7 +46,7 @@ class FunctionRuntime(CloudFormationLintRule):
     def check_ref(self, value, path, parameters, resources):
         """ Check Memory Size Ref """
 
-        matches = list()
+        matches = []
         if value in resources:
             message = 'Runtime can\'t use a Ref to a resource for {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(path)))))
@@ -64,7 +64,7 @@ class FunctionRuntime(CloudFormationLintRule):
     def match(self, cfn):
         """Check Lambda Function Memory Size Resource Parameters"""
 
-        matches = list()
+        matches = []
         matches.extend(
             cfn.check_resource_property(
                 'AWS::Lambda::Function', 'Runtime',

@@ -40,7 +40,7 @@ class Inclusive(CloudFormationLintRule):
 
     def check(self, properties, inclusions, path, cfn):
         """Check itself"""
-        matches = list()
+        matches = []
         property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
         for property_set in property_sets:
             for prop in property_set['Value']:
@@ -57,7 +57,7 @@ class Inclusive(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         inclusions = self.property_types_specs.get(property_type, {})
         matches.extend(self.check(properties, inclusions, path, cfn))
@@ -66,7 +66,7 @@ class Inclusive(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         inclusions = self.resource_types_specs.get(resource_type, {})
         matches.extend(self.check(properties, inclusions, path, cfn))

@@ -30,7 +30,7 @@ class If(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Conditions"""
 
-        matches = list()
+        matches = []
 
         # Build the list of functions
         iftrees = cfn.search_deep_keys('Fn::If')

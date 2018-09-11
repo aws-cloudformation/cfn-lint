@@ -30,7 +30,7 @@ class ImportValue(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation ImportValue"""
 
-        matches = list()
+        matches = []
 
         iv_objs = cfn.search_deep_keys('Fn::ImportValue')
 

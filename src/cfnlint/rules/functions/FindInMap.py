@@ -37,7 +37,7 @@ class FindInMap(CloudFormationLintRule):
             Check that obj is a dict with Ref as the only key
             Mappings only support Ref inside them
         """
-        matches = list()
+        matches = []
 
         if isinstance(obj, dict):
             if len(obj) == 1:
@@ -62,7 +62,7 @@ class FindInMap(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation GetAtt"""
 
-        matches = list()
+        matches = []
 
         findinmaps = cfn.search_deep_keys('Fn::FindInMap')
         mappings = cfn.get_mappings()
