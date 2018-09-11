@@ -4,6 +4,27 @@ Parameters:
   myExampleBucket:
     Type: String
 Resources:
+  Ecr:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryPolicyText:
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "CodeBuildAccess",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "codebuild.amazonaws.com"
+              },
+              "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability"
+              ]
+            }
+          ]
+        }
   SampleBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:

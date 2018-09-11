@@ -30,6 +30,9 @@ class Policy(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        self.resource_exceptions = {
+            'AWS::ECR::Repository': 'RepositoryPolicyText',
+        }
         self.resources_and_keys = {
             'AWS::SNS::TopicPolicy': 'PolicyDocument',
             'AWS::S3::BucketPolicy': 'PolicyDocument',
@@ -50,7 +53,7 @@ class Policy(CloudFormationLintRule):
         for resource_type in self.idp_and_keys:
             self.resource_property_types.append(resource_type)
 
-    def check_policy_document(self, value, path, cfn, is_identity_policy):
+    def check_policy_document(self, value, path, cfn, is_identity_policy, resource_exceptions):
         """Check policy document"""
         matches = []
 
@@ -84,7 +87,7 @@ class Policy(CloudFormationLintRule):
                     for statement in statements:
                         matches.extend(
                             self._check_policy_statement(
-                                statement['Path'], statement['Value'], is_identity_policy
+                                statement['Path'], statement['Value'], is_identity_policy, resource_exceptions
                             )
                         )
                 else:
@@ -93,7 +96,7 @@ class Policy(CloudFormationLintRule):
                         RuleMatch(path[:] + [parent_key], message))
         return matches
 
-    def _check_policy_statement(self, branch, statement, is_identity_policy):
+    def _check_policy_statement(self, branch, statement, is_identity_policy, resource_exceptions):
         """Check statements"""
         matches = []
         statement_valid_keys = [
@@ -137,10 +140,11 @@ class Policy(CloudFormationLintRule):
                 message = 'IAM Resource Policy statement should have Principal or NotPrincipal'
                 matches.append(
                     RuleMatch(branch[:] + ['Principal'], message))
-        if 'Resource' not in statement and 'NotResource' not in statement:
-            message = 'IAM Policy statement missing Resource or NotResource'
-            matches.append(
-                RuleMatch(branch[:], message))
+        if not resource_exceptions:
+            if 'Resource' not in statement and 'NotResource' not in statement:
+                message = 'IAM Policy statement missing Resource or NotResource'
+                matches.append(
+                    RuleMatch(branch[:], message))
 
         return(matches)
 
@@ -162,6 +166,10 @@ class Policy(CloudFormationLintRule):
             # Key isn't defined return nothing
             return matches
 
+        resource_exceptions = False
+        if key == self.resource_exceptions.get(resourcetype):
+            resource_exceptions = True
+
         if key == 'Policies':
             for index, policy in enumerate(properties.get(key, [])):
                 matches.extend(
@@ -170,7 +178,8 @@ class Policy(CloudFormationLintRule):
                         path=path[:] + ['Policies', index],
                         check_value=self.check_policy_document,
                         cfn=cfn,
-                        is_identity_policy=is_identity_policy
+                        is_identity_policy=is_identity_policy,
+                        resource_exceptions=resource_exceptions,
                     ))
         else:
             matches.extend(
@@ -179,7 +188,8 @@ class Policy(CloudFormationLintRule):
                     path=path[:],
                     check_value=self.check_policy_document,
                     cfn=cfn,
-                    is_identity_policy=is_identity_policy
+                    is_identity_policy=is_identity_policy,
+                    resource_exceptions=resource_exceptions,
                 ))
 
         return matches
