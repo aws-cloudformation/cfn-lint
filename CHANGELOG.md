@@ -13,8 +13,8 @@
 ###### Fixes
 - Fix rule [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to support dashes in KMS Key name
 - Fix rule [E2543](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2543) to not fail when the type of a step isn't known
-- Many cleanup items are initializing lists, how version is loaded, and dropping discover in testing
 - Fix rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to have an exception for ECR Policies.  Resource isn't required.
+- Several Python cleanup items around initializing lists, how version is loaded, and dropping 'discover' in testing
 
 ### 0.7.1
 ###### Fixes
