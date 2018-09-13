@@ -30,7 +30,7 @@ class Ref(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Ref"""
 
-        matches = list()
+        matches = []
 
         ref_objs = cfn.search_deep_keys('Ref')
 

@@ -37,7 +37,8 @@ class TestExclude(BaseTestCase):
         """Success test"""
         filename = 'fixtures/templates/good/generic.yaml'
         template = self.load_template(filename)
-        custom_spec = json.load(open('fixtures/templates/override_spec/exclude.json'))
+        with open('fixtures/templates/override_spec/exclude.json') as fp:
+            custom_spec = json.load(fp)
 
         cfnlint.helpers.set_specs(custom_spec)
 
@@ -49,7 +50,8 @@ class TestExclude(BaseTestCase):
         filename = 'fixtures/templates/bad/override/exclude.yaml'
         template = self.load_template(filename)
 
-        custom_spec = json.load(open('fixtures/templates/override_spec/exclude.json'))
+        with open('fixtures/templates/override_spec/exclude.json') as fp:
+            custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
 
         bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])

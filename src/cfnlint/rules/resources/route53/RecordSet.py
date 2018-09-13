@@ -48,7 +48,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_a_record(self, path, recordset):
         """Check A record Configuration"""
-        matches = list()
+        matches = []
 
         resource_records = recordset.get('ResourceRecords')
         for index, record in enumerate(resource_records):
@@ -65,7 +65,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_aaaa_record(self, path, recordset):
         """Check AAAA record Configuration"""
-        matches = list()
+        matches = []
 
         resource_records = recordset.get('ResourceRecords')
         for index, record in enumerate(resource_records):
@@ -82,7 +82,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_caa_record(self, path, recordset):
         """Check CAA record Configuration"""
-        matches = list()
+        matches = []
 
         resource_records = recordset.get('ResourceRecords')
 
@@ -121,7 +121,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_cname_record(self, path, recordset):
         """Check CNAME record Configuration"""
-        matches = list()
+        matches = []
 
         resource_records = recordset.get('ResourceRecords')
         if len(resource_records) > 1:
@@ -142,7 +142,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
-        matches = list()
+        matches = []
 
         # Check quotation of the records
         resource_records = recordset.get('ResourceRecords')
@@ -163,7 +163,7 @@ class RecordSet(CloudFormationLintRule):
     def check_recordset(self, path, recordset):
         """Check record configuration"""
 
-        matches = list()
+        matches = []
         recordset_type = recordset.get('Type')
 
         if recordset_type not in self.VALID_RECORD_TYPES:
@@ -187,7 +187,7 @@ class RecordSet(CloudFormationLintRule):
     def match(self, cfn):
         """Check RecordSets and RecordSetGroups Properties"""
 
-        matches = list()
+        matches = []
 
         recordsets = cfn.get_resources(['AWS::Route53::RecordSet'])
 

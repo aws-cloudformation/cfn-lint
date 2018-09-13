@@ -29,7 +29,7 @@ class IfExist(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Conditions"""
 
-        matches = list()
+        matches = []
         if_conditions = {}
 
         # Build the list of functions
@@ -43,7 +43,7 @@ class IfExist(CloudFormationLintRule):
                 if_condition = iftree[-1]
             # Conditions can be referenced multiple times, check them once
             if if_condition not in if_conditions:
-                if_conditions[if_condition] = list()
+                if_conditions[if_condition] = []
 
             if_conditions[if_condition].append(iftree)
 

@@ -54,7 +54,8 @@ class TestNulls(BaseTestCase):
         filename = 'fixtures/templates/bad/null_values.json'
 
         try:
-            json.load(open(filename), cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+            with open(filename) as fp:
+                json.load(fp, cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
         except cfnlint.decode.cfn_json.JSONDecodeError as err:
             self.assertIn("Null Error \"EbsOptimized\"", err.msg)
             return

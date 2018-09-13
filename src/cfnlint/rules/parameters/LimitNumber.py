@@ -31,7 +31,7 @@ class LimitNumber(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
-        matches = list()
+        matches = []
 
         # Check number of parameters against the defined limit
         parameters = cfn.template.get('Parameters', {})

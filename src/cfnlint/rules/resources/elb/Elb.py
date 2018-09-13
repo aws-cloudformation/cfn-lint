@@ -32,7 +32,7 @@ HTTPS has certificate HTTP has no certificate'
         """
             Check Protocol Value
         """
-        matches = list()
+        matches = []
         if isinstance(value, six.string_types):
             if value.upper() not in kwargs['accepted_protocols']:
                 message = 'Protocol must be {0} is invalid at {1}'
@@ -47,7 +47,7 @@ HTTPS has certificate HTTP has no certificate'
     def match(self, cfn):
         """Check ELB Resource Parameters"""
 
-        matches = list()
+        matches = []
 
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::Listener'])
         for result in results:

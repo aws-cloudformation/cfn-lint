@@ -30,7 +30,7 @@ class RefInCondition(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Ref"""
 
-        matches = list()
+        matches = []
 
         ref_objs = cfn.search_deep_keys('Ref')
         resource_names = cfn.get_resource_names()

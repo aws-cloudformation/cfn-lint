@@ -36,7 +36,7 @@ class Limits(CloudFormationLintRule):
 
     def check_managed_policy_arns(self, properties, path):
         """Check ManagedPolicyArns is within limits"""
-        matches = list()
+        matches = []
 
         if 'ManagedPolicyArns' not in properties:
             return matches
@@ -53,7 +53,7 @@ class Limits(CloudFormationLintRule):
 
     def check_instance_profile_roles(self, properties, path):
         """Check InstanceProfile.Roles is within limits"""
-        matches = list()
+        matches = []
 
         if 'Roles' not in properties:
             return matches
@@ -70,7 +70,7 @@ class Limits(CloudFormationLintRule):
 
     def check_user_groups(self, properties, path):
         """Check User.Groups is within limits"""
-        matches = list()
+        matches = []
 
         if 'Groups' not in properties:
             return matches
@@ -87,7 +87,7 @@ class Limits(CloudFormationLintRule):
 
     def check_role_assume_role_policy_document(self, properties, path):
         """Check Role.AssumeRolePolicyDocument is within limits"""
-        matches = list()
+        matches = []
 
         if 'AssumeRolePolicyDocument' not in properties:
             return matches
@@ -104,7 +104,7 @@ class Limits(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check that IAM resources are below limits"""
-        matches = list()
+        matches = []
         types = {
             'AWS::IAM::User': [
                 self.check_managed_policy_arns,

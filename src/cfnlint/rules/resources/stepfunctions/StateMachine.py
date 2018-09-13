@@ -35,7 +35,7 @@ class StateMachine(CloudFormationLintRule):
 
     def _check_state_json(self, def_json, state_name, path):
         """Check State JSON Definition"""
-        matches = list()
+        matches = []
 
         common_state_keys = [
             'Next',
@@ -51,7 +51,7 @@ class StateMachine(CloudFormationLintRule):
         state_key_types = {
             'Pass': ['Result', 'ResultPath'],
             'Task': ['Resource', 'ResultPath', 'Retry', 'Catch', 'TimeoutSeconds', 'HeartbeatSeconds'],
-            'Choices': ['Choices', 'Default'],
+            'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],
             'Fail': ['Cause', 'Error'],
@@ -60,7 +60,7 @@ class StateMachine(CloudFormationLintRule):
         state_required_types = {
             'Pass': [],
             'Task': ['Resource'],
-            'Choices': ['Choices'],
+            'Choice': ['Choices'],
             'Wait': [],
             'Succeed': [],
             'Fail': [],
@@ -75,21 +75,25 @@ class StateMachine(CloudFormationLintRule):
 
         state_type = def_json.get('Type')
 
-        for state_key, _ in def_json.items():
-            if state_key not in common_state_keys + state_key_types.get(state_type):
-                message = 'State Machine Definition key (%s) for State (%s) of Type (%s) is not valid' % (state_key, state_name, state_type)
-                matches.append(RuleMatch(path, message))
-        for req_key in common_state_required_keys + state_required_types.get(state_type):
-            if req_key not in def_json:
-                message = 'State Machine Definition required key (%s) for State (%s) of Type (%s) is missing' % (req_key, state_name, state_type)
-                matches.append(RuleMatch(path, message))
-                return matches
+        if state_type in state_key_types:
+            for state_key, _ in def_json.items():
+                if state_key not in common_state_keys + state_key_types.get(state_type, []):
+                    message = 'State Machine Definition key (%s) for State (%s) of Type (%s) is not valid' % (state_key, state_name, state_type)
+                    matches.append(RuleMatch(path, message))
+            for req_key in common_state_required_keys + state_required_types.get(state_type, []):
+                if req_key not in def_json:
+                    message = 'State Machine Definition required key (%s) for State (%s) of Type (%s) is missing' % (req_key, state_name, state_type)
+                    matches.append(RuleMatch(path, message))
+                    return matches
+        else:
+            message = 'State Machine Definition Type (%s) is not valid' % (state_type)
+            matches.append(RuleMatch(path, message))
 
         return matches
 
     def _check_definition_json(self, def_json, path):
         """Check JSON Definition"""
-        matches = list()
+        matches = []
 
         top_level_keys = [
             'Comment',
@@ -118,7 +122,7 @@ class StateMachine(CloudFormationLintRule):
 
     def check_value(self, value, path):
         """Check Definition Value"""
-        matches = list()
+        matches = []
         try:
             def_json = json.loads(value)
         # pylint: disable=W0703
@@ -132,7 +136,7 @@ class StateMachine(CloudFormationLintRule):
 
     def check_sub(self, value, path):
         """Check Sub Object"""
-        matches = list()
+        matches = []
         if isinstance(value, list):
             matches.extend(self.check_value(value[0], path))
         elif isinstance(value, six.string_types):
@@ -142,7 +146,7 @@ class StateMachine(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         matches.extend(
             cfn.check_value(

@@ -34,7 +34,7 @@ class InterfaceConfiguration(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Metadata Interface Configuration"""
 
-        matches = list()
+        matches = []
 
         strinterface = 'AWS::CloudFormation::Interface'
 

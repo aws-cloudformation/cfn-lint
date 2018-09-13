@@ -31,7 +31,7 @@ class Cidr(CloudFormationLintRule):
 
     def check_parameter_count(self, cfn, parameter_name):
         """Check Count Parameter if used"""
-        matches = list()
+        matches = []
         parameter_obj = cfn.get_parameters().get(parameter_name, {})
         if parameter_obj:
             tree = ['Parameters', parameter_name]
@@ -56,7 +56,7 @@ class Cidr(CloudFormationLintRule):
 
     def check_parameter_size_mask(self, cfn, parameter_name):
         """Check SizeMask Parameter if used"""
-        matches = list()
+        matches = []
         parameter_obj = cfn.get_parameters().get(parameter_name, {})
         if parameter_obj:
             tree = ['Parameters', parameter_name]
@@ -84,7 +84,7 @@ class Cidr(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Cidr"""
 
-        matches = list()
+        matches = []
 
         cidr_objs = cfn.search_deep_keys('Fn::Cidr')
 

@@ -30,7 +30,7 @@ class GetAz(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation GetAz"""
 
-        matches = list()
+        matches = []
 
         getaz_objs = cfn.search_deep_keys('Fn::GetAZs')
 

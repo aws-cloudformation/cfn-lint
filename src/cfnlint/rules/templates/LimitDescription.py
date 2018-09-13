@@ -29,7 +29,7 @@ class LimitDescription(CloudFormationLintRule):
 
     def match(self, cfn):
         """Basic Matching"""
-        matches = list()
+        matches = []
 
         description = cfn.template.get('Description', '')
 

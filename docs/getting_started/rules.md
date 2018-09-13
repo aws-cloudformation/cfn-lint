@@ -71,7 +71,7 @@ class MyNewRule(CloudFormationLintRule):
     def match(self, cfn):
         """Basic Rule Matching"""
 
-        matches = list()
+        matches = []
 
         # Your Rule code goes here
 
@@ -166,40 +166,45 @@ This section contains a few simple and straightforward snippets to get you start
 The following snippet is a simple example on how to return a finding for every resource in the template:
 
 ```python
-  # Get all resources
-  resources = cfn.get_resources()
+# Get all resources
+resources = cfn.get_resources()
 
-  # Loop over all the found resources
-  for resource_name, resource in resources.items():
+matches = []
+# Loop over all the found resources
+for resource_name, resource in resources.items():
+    # The path is used to determine the line/column number when returning the Match information.
+    path = ['Resources', resource_name]
+    # The error message with specific error information
+    message = 'An error message about resource {0}'
+    matches.append(RuleMatch(path, message.format(resource_name)))
 
-      # The path is used to determine the line/column number when returning the Match information.
-      path = ['Resources', resource_name]
-      # The error message with specific error information
-      message = 'An error message about resource {0}'
-      matches.append(RuleMatch(path, message.format(resource_name)))
+return matches
 ```
 
 ### Check specific resource types
 The following snippet is a simple example on checking a specific resource type:
 
 ```python
-  # Get all EC2 instances from the template
-  resources = cfn.get_resources(['AWS::EC2::Instance'])
+# Get all EC2 instances from the template
+resources = cfn.get_resources(['AWS::EC2::Instance'])
 
-  # Loop over all the found resources
-  for resource_name, resource in resources.items():
-      # Check the InstanceType setting
-      properties = resource.get('Properties')
+matches = []
+# Loop over all the found resources
+for resource_name, resource in resources.items():
+    # Check the InstanceType setting
+    properties = resource.get('Properties')
 
-      # Only check what we need. Other rules handle misconfigurations
-      if properties:
-          # Check the instance type specified
-          if properties.get('InstanceType') == 't2.small':
+    # Only check what we need. Other rules handle misconfigurations
+    if properties:
+        # Check the instance type specified
+        if properties.get('InstanceType') == 't2.small':
 
-            # The path is used to determine the line/column number when returning the Match information.
-            path = ['Resources', resource_name, 'Properties', 'InstanceType']
-            message = 'Please do not use t2.small'
-            matches.append(RuleMatch(path, message.format(resource_name)))
+          # The path is used to determine the line/column number when returning the Match information.
+          path = ['Resources', resource_name, 'Properties', 'InstanceType']
+          message = 'Please do not use t2.small'
+          matches.append(RuleMatch(path, message.format(resource_name)))
+
+return matches
 ```
 
 ### Check property values
@@ -208,21 +213,21 @@ The following snippet is a simple example on checking specific property values:
 ```python
 def check_value(self, value, path):
     """Check SecurityGroup descriptions"""
-    matches = list()
-    full_path = ('/'.join(str(x) for x in path))
+    matches = []
 
     # Check max length
     if len(value) > 255:
         message = 'GroupDescription length ({0}) exceeds the limit (255) at {1}'
+        full_path = '/'.join(str(x) for x in path)
         matches.append(RuleMatch(path, message.format(len(value), full_path)))
+
+    return matches
 
 def match(self, cfn):
     """Check SecurityGroup descriptions"""
 
-    matches = list()
-
     resources = cfn.get_resources(['AWS::EC2::SecurityGroup'])
-
+    matches = []
     for resource_name, resource in resources.items():
         path = ['Resources', resource_name, 'Properties']
 

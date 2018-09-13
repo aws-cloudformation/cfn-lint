@@ -195,5 +195,5 @@ def load(filename):
     """
     Load the given YAML file
     """
-    fp = open(filename)
-    return loads(fp.read(), filename)
+    with open(filename) as fp:
+        return loads(fp.read(), filename)

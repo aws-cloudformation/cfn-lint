@@ -39,4 +39,4 @@ class TestPropertyIamPolicies(BaseRuleTestCase):
 
     def test_file_resource_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources/iam/resource_policy.yaml', 3)
+        self.helper_file_negative('fixtures/templates/bad/resources/iam/resource_policy.yaml', 4)

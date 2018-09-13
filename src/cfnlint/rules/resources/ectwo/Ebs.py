@@ -29,7 +29,7 @@ class Ebs(CloudFormationLintRule):
     tags = ['properties', 'ec2', 'ebs']
 
     def _checkEbs(self, cfn, ebs, path):
-        matches = list()
+        matches = []
 
         if isinstance(ebs, dict):
             volume_types_obj = cfn.get_values(ebs, 'VolumeType')
@@ -81,7 +81,7 @@ class Ebs(CloudFormationLintRule):
     def match(self, cfn):
         """Check Ec2 Ebs Resource Parameters"""
 
-        matches = list()
+        matches = []
 
         results = cfn.get_resource_properties(['AWS::EC2::Instance', 'BlockDeviceMappings'])
         results.extend(cfn.get_resource_properties(['AWS::AutoScaling::LaunchConfiguration', 'BlockDeviceMappings']))

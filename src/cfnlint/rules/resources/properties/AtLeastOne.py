@@ -41,7 +41,7 @@ class AtLeastOne(CloudFormationLintRule):
 
     def check(self, properties, atleastoneprops, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for atleastoneprop in atleastoneprops:
             count = 0
             for prop in atleastoneprop:
@@ -59,7 +59,7 @@ class AtLeastOne(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, _):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         atleastoneprops = self.property_types_specs.get(property_type, {})
         matches.extend(self.check(properties, atleastoneprops, path))
@@ -68,7 +68,7 @@ class AtLeastOne(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, _):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         atleastoneprops = self.resource_types_specs.get(resource_type, {})
         matches.extend(self.check(properties, atleastoneprops, path))

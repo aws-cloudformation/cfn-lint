@@ -18,7 +18,7 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF_SSM_SECURE
+from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF
 
 
 class Password(CloudFormationLintRule):
@@ -32,7 +32,7 @@ class Password(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Password Parameters"""
 
-        matches = list()
+        matches = []
         password_properties = ['Password', 'DbPassword', 'MasterUserPassword']
 
         parameters = cfn.get_parameter_names()
@@ -44,15 +44,15 @@ class Password(CloudFormationLintRule):
             for tree in trees:
                 obj = tree[-1]
                 if isinstance(obj, (six.string_types)):
-                    if not re.match(REGEX_DYN_REF_SSM_SECURE, obj):
+                    if re.match(REGEX_DYN_REF, obj):
                         if re.match(REGEX_DYN_REF_SSM, obj):
                             message = 'Password should use a secure dynamic reference for %s' % (
                                 '/'.join(map(str, tree[:-1])))
                             matches.append(RuleMatch(tree[:-1], message))
-                        else:
-                            message = 'Password shouldn\'t be hardcoded for %s' % (
-                                '/'.join(map(str, tree[:-1])))
-                            matches.append(RuleMatch(tree[:-1], message))
+                    else:
+                        message = 'Password shouldn\'t be hardcoded for %s' % (
+                            '/'.join(map(str, tree[:-1])))
+                        matches.append(RuleMatch(tree[:-1], message))
                 elif isinstance(obj, dict):
                     if len(obj) == 1:
                         for key, value in obj.items():

@@ -30,7 +30,7 @@ class SubParametersUsed(CloudFormationLintRule):
     def _test_parameters(self, cfn, sub_string, parameters, tree):
         """Test if sub parmaeters are in the string"""
 
-        matches = list()
+        matches = []
         sub_string_parameters = cfn.get_sub_parameters(sub_string)
 
         for parameter_name, _ in parameters.items():
@@ -44,7 +44,7 @@ class SubParametersUsed(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Join"""
 
-        matches = list()
+        matches = []
 
         sub_objs = cfn.search_deep_keys('Fn::Sub')
 
