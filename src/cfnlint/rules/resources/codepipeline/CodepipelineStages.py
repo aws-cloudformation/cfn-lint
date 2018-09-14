@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -83,15 +84,17 @@ class CodepipelineStages(CloudFormationLintRule):
         """Check that stage names are unique."""
         matches = []
         stage_names = set()
-
         for sidx, stage in enumerate(value):
-            if stage.get('Name') in stage_names:
-                message = 'All stage names within a pipeline must be unique. ({name})'.format(
-                    name=stage.get('Name'),
-                )
-                matches.append(RuleMatch(path + [sidx, 'Name'], message))
-            stage_names.add(stage.get('Name'))
-
+            stage_name = stage.get('Name')
+            if isinstance(stage_name, six.string_types):
+                if stage_name in stage_names:
+                    message = 'All stage names within a pipeline must be unique. ({name})'.format(
+                        name=stage_name,
+                    )
+                    matches.append(RuleMatch(path + [sidx, 'Name'], message))
+                stage_names.add(stage_name)
+            else:
+                self.logger.debug('Found non string for stage name: %s', stage_name)
         return matches
 
     def match(self, cfn):
