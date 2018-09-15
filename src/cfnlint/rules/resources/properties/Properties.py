@@ -82,35 +82,37 @@ class Properties(CloudFormationLintRule):
             for sub_key, sub_value in text[prop].items():
                 if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                     if len(sub_value) == 3:
-                        if isinstance(sub_value[1], list):
-                            for index, item in enumerate(sub_value[1]):
-                                arrproppath = path[:]
+                        for if_i, if_v in enumerate(sub_value[1:]):
+                            condition_path = path[:] + [sub_key, if_i + 1]
+                            if isinstance(if_v, list):
+                                for index, item in enumerate(if_v):
+                                    arrproppath = condition_path[:]
 
-                                arrproppath.append(index)
-                                matches.extend(self.propertycheck(
-                                    item, propspec['ItemType'],
-                                    parenttype, resourcename, arrproppath, False))
-                        else:
-                            message = 'Property {0} should be of type List for resource {1}'
-                            matches.append(
-                                RuleMatch(
-                                    path,
-                                    message.format(prop, resourcename)))
-
-                        if isinstance(sub_value[2], list):
-                            for index, item in enumerate(sub_value[2]):
-                                arrproppath = path[:]
-
-                                arrproppath.append(index)
-                                matches.extend(self.propertycheck(
-                                    item, propspec['ItemType'],
-                                    parenttype, resourcename, arrproppath, False))
-                        else:
-                            message = 'Property {0} should be of type List for resource {1} at {2}'
-                            matches.append(
-                                RuleMatch(
-                                    path + [2],
-                                    message.format(prop, resourcename, ('/'.join(str(x) for x in path)))))
+                                    arrproppath.append(index)
+                                    matches.extend(self.propertycheck(
+                                        item, propspec['ItemType'],
+                                        parenttype, resourcename, arrproppath, False))
+                            elif isinstance(if_v, dict):
+                                if len(if_v) == 1:
+                                    for d_k, d_v in if_v.items():
+                                        if d_k != 'Ref' or d_v != 'AWS::NoValue':
+                                            message = 'Property {0} should be of type List for resource {1} at {2}'
+                                            matches.append(
+                                                RuleMatch(
+                                                    condition_path,
+                                                    message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
+                                else:
+                                    message = 'Property {0} should be of type List for resource {1} at {2}'
+                                    matches.append(
+                                        RuleMatch(
+                                            condition_path,
+                                            message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
+                            else:
+                                message = 'Property {0} should be of type List for resource {1} at {2}'
+                                matches.append(
+                                    RuleMatch(
+                                        condition_path,
+                                        message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
 
                     else:
                         message = 'Invalid !If condition specified at %s' % ('/'.join(map(str, path)))
