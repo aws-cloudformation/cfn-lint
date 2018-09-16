@@ -181,9 +181,13 @@ def get_rules(rulesdir, ignore_rules):
     """Get rules"""
     rules = RulesCollection(ignore_rules)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
-    for rules_dir in rules_dirs:
-        rules.extend(
-            RulesCollection.create_from_directory(rules_dir))
+    try:
+        for rules_dir in rules_dirs:
+            rules.extend(
+                RulesCollection.create_from_directory(rules_dir))
+    except OSError as e:
+        LOGGER.error('Tried to append rules but got an error: %s', str(e))
+        exit(1)
 
     return rules
 
