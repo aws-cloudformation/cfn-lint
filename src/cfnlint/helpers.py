@@ -188,7 +188,11 @@ def load_plugins(directory):
     result = []
     fh = None
 
-    for root, _, filenames in os.walk(directory):
+    def onerror(os_error):
+        """Raise an error"""
+        raise os_error
+
+    for root, _, filenames in os.walk(directory, onerror=onerror):
         for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
             pluginname = filename.replace('.py', '')
             try:
@@ -203,6 +207,7 @@ def load_plugins(directory):
             finally:
                 if fh:
                     fh.close()
+
     return result
 
 
