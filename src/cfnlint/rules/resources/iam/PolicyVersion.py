@@ -57,12 +57,14 @@ class PolicyVersion(CloudFormationLintRule):
         if not isinstance(value, dict):
             return matches
 
-        version = value.get('Version')
-        if version:
-            if version in ['2008-10-17', date(2008, 10, 17)]:
-                message = 'IAM Policy Version should be updated to \'2012-10-17\'.'
-                matches.append(
-                    RuleMatch(path[:] + ['Version'], message))
+        for e_v, e_p in value.items_safe(path[:]):
+            for p_vs, p_p in e_v.items_safe(e_p[:]):
+                version = p_vs.get('Version')
+                if version:
+                    if version in ['2008-10-17', date(2008, 10, 17)]:
+                        message = 'IAM Policy Version should be updated to \'2012-10-17\'.'
+                        matches.append(
+                            RuleMatch(p_p + ['Version'], message))
         return matches
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):

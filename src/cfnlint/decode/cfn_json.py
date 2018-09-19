@@ -20,7 +20,7 @@ import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
 import cfnlint
-from cfnlint.decode.str_node import str_node
+from cfnlint.decode.node import str_node, dict_node, list_node
 
 
 LOGGER = logging.getLogger(__name__)
@@ -40,13 +40,13 @@ class NullError(Exception):
     pass
 
 
-def check_duplicates(ordered_pairs):
+def check_duplicates(ordered_pairs, beg_mark, end_mark):
     """
         Check for duplicate keys on the current level, this is not desirable
         because a dict does not support this. It overwrites it with the last
         occurance, which can give unexpected results
     """
-    mapping = {}
+    mapping = dict_node({}, beg_mark, end_mark)
     for key, value in ordered_pairs:
         if value is None:
             raise NullError('"{}"'.format(key))
@@ -172,6 +172,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                   memo=None, _w=WHITESPACE.match, _ws=WHITESPACE_STR):
     """ Custom Cfn JSON Object to store keys with start and end times """
     s, end = s_and_end
+    orginal_end = end
     pairs = []
     pairs_append = pairs.append
     # Backwards compatibility
@@ -190,7 +191,8 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             if object_pairs_hook is not None:
                 try:
-                    result = object_pairs_hook(pairs)
+                    beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1)
+                    result = object_pairs_hook(pairs, beg_mark, end_mark)
                     return result, end + 1
                 except DuplicateError as err:
                     raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
@@ -198,7 +200,8 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                     raise JSONDecodeError('Null Error {}'.format(err), s, end)
             pairs = {}
             if object_hook is not None:
-                pairs = object_hook(pairs, s)
+                beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1)
+                pairs = object_hook(pairs, beg_mark, end_mark)
             return pairs, end + 1
 
         if nextchar != '"':
@@ -226,13 +229,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         except IndexError:
             pass
 
-        beg_lineno = s.count('\n', 0, begin)
-        beg_colno = begin - s.rfind('\n', 0, begin)
-        beg_mark = Mark(beg_lineno, beg_colno)
-        end_key_pos = begin + len(key)
-        end_lineno = s.count('\n', 0, end_key_pos)
-        end_colno = end_key_pos - s.rfind('\n', 0, end_key_pos)
-        end_mark = Mark(end_lineno, end_colno)
+        beg_mark, end_mark = get_beg_end_mark(s, begin, begin + len(key))
         try:
             value, end = scan_once(s, end)
         except StopIteration as err:
@@ -260,15 +257,18 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                 'Expecting property name enclosed in double quotes', s, end - 1)
     if object_pairs_hook is not None:
         try:
-            result = object_pairs_hook(pairs)
+            beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end)
+            result = object_pairs_hook(pairs, beg_mark, end_mark)
         except DuplicateError as err:
             raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
         except NullError as err:
             raise JSONDecodeError('Null Error {}'.format(err), s, begin, key)
         return result, end
+
     pairs = dict(pairs)
     if object_hook is not None:
-        pairs = object_hook(pairs, s, begin)
+        beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end)
+        pairs = object_hook(pairs, beg_mark, end_mark)
     return pairs, end
 
 
@@ -340,6 +340,18 @@ def py_make_scanner(context):
     return _scan_once
 
 
+def get_beg_end_mark(s, start, end):
+    """Get the Start and End Mark """
+    beg_lineno = s.count('\n', 0, start)
+    beg_colno = start - s.rfind('\n', 0, start)
+    beg_mark = Mark(beg_lineno, beg_colno)
+    end_lineno = s.count('\n', 0, end)
+    end_colno = end - s.rfind('\n', 0, end)
+    end_mark = Mark(end_lineno, end_colno)
+
+    return beg_mark, end_mark
+
+
 class CfnJSONDecoder(json.JSONDecoder):
     """
     Converts a json string, where datetime and timedelta objects were converted
@@ -348,7 +360,15 @@ class CfnJSONDecoder(json.JSONDecoder):
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, *args, **kwargs)
         self.parse_object = CfnJSONObject
+        self.parse_array = self.JSONArray
         self.parse_string = py_scanstring
         self.memo = {}
         self.object_pairs_hook = check_duplicates
         self.scan_once = py_make_scanner(self)
+
+    def JSONArray(self, s_and_end, scan_once, **kwargs):
+        """ Convert JSON array to be a list_node object """
+        values, end = json.decoder.JSONArray(s_and_end, scan_once, **kwargs)
+        s, start = s_and_end
+        beg_mark, end_mark = get_beg_end_mark(s, start, end)
+        return list_node(values, beg_mark, end_mark), end

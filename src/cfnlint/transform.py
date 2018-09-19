@@ -22,6 +22,7 @@ from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 
 import cfnlint.helpers
+from cfnlint.decode.node import dict_node, list_node
 
 
 class Transform(object):
@@ -112,6 +113,7 @@ class Transform(object):
 
             with WarningSuppressLogger(parser.logging):
                 self._template = sam_translator.translate(sam_template=self._template, parameter_values={})
+                self._correct_objects()
         except InvalidDocumentException as e:
             for cause in e.causes:
                 matches.append(cfnlint.Match(
@@ -120,6 +122,29 @@ class Transform(object):
                     self._filename, cfnlint.TransformError(), cause.message))
 
         return matches
+
+    def _correct_objects_loop(self, template):
+        """
+            Looping for dynamic depths and types
+        """
+        if isinstance(template, dict):
+            if not isinstance(template, dict_node):
+                template = dict_node(template, (0, 0), (0, 0))
+            for k, v in template.items():
+                template[k] = self._correct_objects_loop(v)
+        elif isinstance(template, list):
+            if not isinstance(template, list_node):
+                template = list_node(template, (0, 0), (0, 0))
+            for i, v in enumerate(template):
+                template[i] = self._correct_objects_loop(v)
+
+        return template
+
+    def _correct_objects(self):
+        """
+            Corrects the template to have the correct types of objects, list, strings
+        """
+        self._template = self._correct_objects_loop(self._template)
 
     @staticmethod
     def is_s3_uri(uri):

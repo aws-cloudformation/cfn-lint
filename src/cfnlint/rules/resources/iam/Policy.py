@@ -53,7 +53,7 @@ class Policy(CloudFormationLintRule):
         for resource_type in self.idp_and_keys:
             self.resource_property_types.append(resource_type)
 
-    def check_policy_document(self, value, path, cfn, is_identity_policy, resource_exceptions):
+    def check_policy_document(self, value, path, is_identity_policy, resource_exceptions):
         """Check policy document"""
         matches = []
 
@@ -70,30 +70,30 @@ class Policy(CloudFormationLintRule):
                 RuleMatch(path[:], message))
             return matches
 
-        for parent_key, parent_value in value.items():
-            if parent_key not in valid_keys:
-                message = 'IAM Policy key %s doesn\'t exist.' % (parent_key)
-                matches.append(
-                    RuleMatch(path[:] + [parent_key], message))
-            if parent_key == 'Version':
-                if parent_value not in valid_versions:
-                    message = 'IAM Policy Version needs to be one of (%s).' % (
-                        ', '.join(map(str, ['2012-10-17', '2008-10-17'])))
+        for p_vs, p_p in value.items_safe(path[:], (dict)):
+            for parent_key, parent_value in p_vs.items():
+                if parent_key not in valid_keys:
+                    message = 'IAM Policy key %s doesn\'t exist.' % (parent_key)
                     matches.append(
-                        RuleMatch(path[:] + [parent_key], message))
-            if parent_key == 'Statement':
-                if isinstance(parent_value, (list)):
-                    statements = cfn.get_values(value, 'Statement', path[:])
-                    for statement in statements:
-                        matches.extend(
-                            self._check_policy_statement(
-                                statement['Path'], statement['Value'], is_identity_policy, resource_exceptions
+                        RuleMatch(path[:] + p_p + [parent_key], message))
+                if parent_key == 'Version':
+                    if parent_value not in valid_versions:
+                        message = 'IAM Policy Version needs to be one of (%s).' % (
+                            ', '.join(map(str, ['2012-10-17', '2008-10-17'])))
+                        matches.append(
+                            RuleMatch(p_p + [parent_key], message))
+                if parent_key == 'Statement':
+                    if isinstance(parent_value, list):
+                        for i_s_v, i_s_p in parent_value.items_safe(p_p + ['Statement'], (dict)):
+                            matches.extend(
+                                self._check_policy_statement(
+                                    i_s_p, i_s_v, is_identity_policy, resource_exceptions
+                                )
                             )
-                        )
-                else:
-                    message = 'IAM Policy statement should be of list.'
-                    matches.append(
-                        RuleMatch(path[:] + [parent_key], message))
+                    else:
+                        message = 'IAM Policy statement should be of list.'
+                        matches.append(
+                            RuleMatch(p_p + [parent_key], message))
         return matches
 
     def _check_policy_statement(self, branch, statement, is_identity_policy, resource_exceptions):
@@ -177,7 +177,6 @@ class Policy(CloudFormationLintRule):
                         obj=policy, key='PolicyDocument',
                         path=path[:] + ['Policies', index],
                         check_value=self.check_policy_document,
-                        cfn=cfn,
                         is_identity_policy=is_identity_policy,
                         resource_exceptions=resource_exceptions,
                     ))
@@ -187,7 +186,6 @@ class Policy(CloudFormationLintRule):
                     obj=properties, key=key,
                     path=path[:],
                     check_value=self.check_policy_document,
-                    cfn=cfn,
                     is_identity_policy=is_identity_policy,
                     resource_exceptions=resource_exceptions,
                 ))
