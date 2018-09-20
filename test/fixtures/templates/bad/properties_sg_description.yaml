@@ -25,3 +25,15 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub 'Securitygroup of ${AppGroup} has invalid characters like  ^ and "'
+  mySecurityGroupValidMapping:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub
+      - '${Var} works fine with the mapping below'
+      - Var: content
+  mySecurityGroupBadMapping:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub
+      - '${Var} works will faill because ^ is an invalid character'
+      - Var: content
