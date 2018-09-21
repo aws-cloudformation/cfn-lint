@@ -9,6 +9,17 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.7.3
+###### Features
+- Update the custom objects for the template to directly allow the calling of getting items and checking items that is condition safe
+- Update CloudFormation Specs to 2018-09-21 released specs
+###### Fixes
+- Fix rule [E2540](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2540) to not fail when the stage names aren't strings
+- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when processing Ref AWS::NoValue
+- Core functionality updated to fail when extending rules directory doesn't exist
+- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) metadata isn't supported as a resource property
+- Fix rule [E2509](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2509) to not error when using a function for description
+
 ### 0.7.2
 ###### Fixes
 - Fix rule [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to support dashes in KMS Key name
