@@ -113,8 +113,8 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
                     item_type = None
                 if primitive_type:
                     matches.extend(
-                        cfn.check_value(
-                            properties, prop, path[:],
+                        properties.check_value(
+                            prop, path[:],
                             check_value=self.check_value,
                             check_sub=self.check_sub,
                             primitive_type=primitive_type,

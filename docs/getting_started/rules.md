@@ -234,8 +234,8 @@ def match(self, cfn):
         properties = resource.get('Properties')
         if properties:
             matches.extend(
-                cfn.check_value(
-                    properties, 'GroupDescription', path,
+                properties.check_value(
+                    'GroupDescription', path,
                     check_value=self.check_value
                 )
             )

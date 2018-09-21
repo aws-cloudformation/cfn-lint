@@ -68,7 +68,7 @@ class PolicyVersion(CloudFormationLintRule):
                             RuleMatch(p_p + ['Version'], message))
         return matches
 
-    def match_resource_properties(self, properties, resourcetype, path, cfn):
+    def match_resource_properties(self, properties, resourcetype, path, _):
         """Check CloudFormation Properties"""
         matches = []
 
@@ -81,15 +81,15 @@ class PolicyVersion(CloudFormationLintRule):
         if key == 'Policies':
             for index, policy in enumerate(properties.get(key, [])):
                 matches.extend(
-                    cfn.check_value(
-                        obj=policy, key='PolicyDocument',
+                    policy.check_value(
+                        key='PolicyDocument',
                         path=path[:] + ['Policies', index],
                         check_value=self.check_policy_document,
                     ))
         else:
             matches.extend(
-                cfn.check_value(
-                    obj=properties, key=key,
+                properties.check_value(
+                    key=key,
                     path=path[:],
                     check_value=self.check_policy_document
                 ))

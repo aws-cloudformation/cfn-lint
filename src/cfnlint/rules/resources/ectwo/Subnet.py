@@ -28,7 +28,8 @@ class Subnet(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html'
     tags = ['properties', 'subnet']
 
-    def check_az_value(self, value, path):
+    # pylint: disable=W0613
+    def check_az_value(self, value, path, **kwargs):
         """Check AZ Values"""
         matches = []
 
@@ -61,7 +62,8 @@ class Subnet(CloudFormationLintRule):
                             '/'.join(map(str, param_path)))))
         return matches
 
-    def check_cidr_value(self, value, path):
+    # pylint: disable=W0613
+    def check_cidr_value(self, value, path, **kwargs):
         """Check CIDR Strings"""
         matches = []
 
@@ -99,7 +101,8 @@ class Subnet(CloudFormationLintRule):
                             '/'.join(map(str, param_path)))))
         return matches
 
-    def check_vpc_value(self, value, path):
+    # pylint: disable=W0613
+    def check_vpc_value(self, value, path, **kwargs):
         """Check VPC Values"""
         matches = []
 
@@ -133,6 +136,8 @@ class Subnet(CloudFormationLintRule):
                 'AWS::EC2::Subnet', 'AvailabilityZone',
                 check_value=self.check_az_value,
                 check_ref=self.check_az_ref,
+                resources=cfn.get_resources(),
+                parameters=cfn.get_parameters(),
             )
         )
         matches.extend(
@@ -140,6 +145,8 @@ class Subnet(CloudFormationLintRule):
                 'AWS::EC2::Subnet', 'CidrBlock',
                 check_value=self.check_cidr_value,
                 check_ref=self.check_cidr_ref,
+                resources=cfn.get_resources(),
+                parameters=cfn.get_parameters(),
             )
         )
 

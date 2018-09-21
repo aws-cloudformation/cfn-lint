@@ -32,7 +32,8 @@ class FunctionRuntime(CloudFormationLintRule):
         'nodejs4.3-edge', 'go1.x'
     ]
 
-    def check_value(self, value, path):
+    # pylint: disable=W0613
+    def check_value(self, value, path, **kwargs):
         """ Check runtime value """
         matches = []
 
@@ -70,6 +71,8 @@ class FunctionRuntime(CloudFormationLintRule):
                 'AWS::Lambda::Function', 'Runtime',
                 check_value=self.check_value,
                 check_ref=self.check_ref,
+                resources=cfn.get_resources(),
+                parameters=cfn.get_parameters(),
             )
         )
 

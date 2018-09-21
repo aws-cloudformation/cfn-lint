@@ -28,7 +28,8 @@ class SecurityGroupIngress(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html'
     tags = ['resources', 'securitygroup']
 
-    def check_sgid_value(self, value, path):
+    # pylint: disable=W0613
+    def check_sgid_value(self, value, path, parameters, resources):
         """Check VPC Values"""
         matches = []
         if not value.startswith('sg-'):
@@ -100,12 +101,14 @@ class SecurityGroupIngress(CloudFormationLintRule):
                     RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
 
             matches.extend(
-                cfn.check_value(
-                    obj=properties, key='SourceSecurityGroupId',
+                properties.check_value(
+                    key='SourceSecurityGroupId',
                     path=path[:],
                     check_value=self.check_sgid_value, check_ref=self.check_sgid_ref,
                     check_find_in_map=None, check_split=self.check_sgid_fail,
-                    check_join=self.check_sgid_fail
+                    check_join=self.check_sgid_fail,
+                    parameters=cfn.get_parameters(),
+                    resources=cfn.get_resources(),
                 )
             )
 

@@ -167,7 +167,7 @@ class Policy(CloudFormationLintRule):
 
         return(matches)
 
-    def match_resource_properties(self, properties, resourcetype, path, cfn):
+    def match_resource_properties(self, properties, resourcetype, path, _):
         """Check CloudFormation Properties"""
         matches = []
 
@@ -201,9 +201,8 @@ class Policy(CloudFormationLintRule):
             if key == 'Policies' and isinstance(value, list):
                 for index, policy in enumerate(properties.get(key, [])):
                     matches.extend(
-                        cfn.check_value(
-                            obj=policy, key='PolicyDocument',
-                            path=path[:] + ['Policies', index],
+                        policy.check_value(
+                            key='PolicyDocument', path=path[:] + ['Policies', index],
                             check_value=self.check_policy_document,
                             is_identity_policy=is_identity_policy,
                             resource_exceptions=resource_exceptions,
@@ -211,9 +210,8 @@ class Policy(CloudFormationLintRule):
                         ))
             elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies']:
                 matches.extend(
-                    cfn.check_value(
-                        obj=properties, key=key,
-                        path=path[:],
+                    value.check_value(
+                        key=key, path=path[:],
                         check_value=self.check_policy_document,
                         is_identity_policy=is_identity_policy,
                         resource_exceptions=resource_exceptions,

@@ -156,7 +156,7 @@ class TestNode(BaseTestCase):
         }, (0, 1), (2, 3))
 
         obj = template.get_safe("Test")
-        self.assertEqual(obj, [('True', ['Fn::If', 1]), ('False', ['Fn::If', 2])])
+        self.assertEqual(obj, [('True', ['Test', 'Fn::If', 1]), ('False', ['Test', 'Fn::If', 2])])
 
     def test_success_fnif_get_nested(self):
         """Test Dict Object"""
@@ -177,9 +177,9 @@ class TestNode(BaseTestCase):
 
         obj = template.get_safe("Test")
         self.assertEqual(obj, [
-            ('True,True', ['Fn::If', 1, 'Fn::If', 1]),
-            ('True,False', ['Fn::If', 1, 'Fn::If', 2]),
-            ('False', ['Fn::If', 2])
+            ('True,True', ['Test', 'Fn::If', 1, 'Fn::If', 1]),
+            ('True,False', ['Test', 'Fn::If', 1, 'Fn::If', 2]),
+            ('False', ['Test', 'Fn::If', 2])
         ])
 
     def test_success_fnif_list_strings(self):
@@ -234,3 +234,45 @@ class TestNode(BaseTestCase):
             results.append((v, p))
 
         self.assertEqual(results, [('1', [0]), ('2', [1]), ('4', [2, 'Fn::If', 1])])
+
+    def test_check_value(self):
+        """Test List Object"""
+        template = cfnlint.decode.node.dict_node({
+            "Fn::If": [
+                "string",
+                cfnlint.decode.node.dict_node({"Test": True}, (0, 1), (2, 3)),
+                cfnlint.decode.node.dict_node({
+                    "Fn::If": [
+                        "nested",
+                        cfnlint.decode.node.dict_node({"Test": False}, (0, 1), (2, 3)),
+                        cfnlint.decode.node.dict_node(
+                            {
+                                "Test": cfnlint.decode.node.dict_node({"Fn::Sub": "TestString"}, (0, 1), (2, 3))
+                            }, (0, 1), (2, 3))
+                    ]
+                }, (0, 1), (2, 3))
+            ]
+        }, (0, 1), (2, 3))
+
+        def check_value(value, path):
+            """ Return the value """
+            if path == ['Fn::If', 1, 'Test'] and value is True:
+                return [True]
+            elif path == ['Fn::If', 2, 'Fn::If', 1, 'Test'] and value is False:
+                return [True]
+
+            return [False]
+
+        def check_sub(value, path):
+            """ Return the value """
+            if path == ['Fn::If', 2, 'Fn::If', 2, 'Test', 'Fn::Sub'] and value == 'TestString':
+                return [True]
+
+            return [False]
+
+        results = []
+        results = template.check_value(key='Test', path=[], check_value=check_value, check_sub=check_sub)
+
+        self.assertEqual(results[0], True)
+        self.assertEqual(results[1], True)
+        self.assertEqual(results[2], True)

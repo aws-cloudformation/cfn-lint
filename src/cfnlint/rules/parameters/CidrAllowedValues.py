@@ -78,31 +78,35 @@ class CidrAllowedValues(CloudFormationLintRule):
         matches = []
 
         matches.extend(
-            cfn.check_value(
-                properties, 'CIDRIP', path,
+            properties.check_value(
+                'CIDRIP', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None,
+                parameters=cfn.get_parameters(), resources=cfn.get_resources(),
             )
         )
         matches.extend(
-            cfn.check_value(
-                properties, 'Cidr', path,
+            properties.check_value(
+                'Cidr', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None,
+                parameters=cfn.get_parameters(), resources=cfn.get_resources(),
             )
         )
         matches.extend(
-            cfn.check_value(
-                properties, 'CidrBlock', path,
+            properties.check_value(
+                'CidrBlock', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None,
+                parameters=cfn.get_parameters(), resources=cfn.get_resources(),
             )
         )
         matches.extend(
-            cfn.check_value(
-                properties, 'CidrIp', path,
+            properties.check_value(
+                'CidrIp', path,
                 check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+                check_find_in_map=None, check_split=None, check_join=None,
+                parameters=cfn.get_parameters(), resources=cfn.get_resources(),
             )
         )
 

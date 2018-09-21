@@ -73,15 +73,15 @@ class AvailabilityZone(CloudFormationLintRule):
         matches = []
 
         matches.extend(
-            cfn.check_value(
-                properties, 'AvailabilityZone', path,
+            properties.check_value(
+                'AvailabilityZone', path,
                 check_value=self.check_az_value, check_ref=None,
                 check_find_in_map=None, check_split=None, check_join=None
             )
         )
         matches.extend(
-            cfn.check_value(
-                properties, 'AvailabilityZones', path,
+            properties.check_value(
+                'AvailabilityZones', path,
                 check_value=self.check_az_value, check_ref=None,
                 check_find_in_map=None, check_split=None, check_join=None
             )

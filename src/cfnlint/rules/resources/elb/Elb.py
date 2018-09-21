@@ -52,8 +52,8 @@ HTTPS has certificate HTTP has no certificate'
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::Listener'])
         for result in results:
             matches.extend(
-                cfn.check_value(
-                    result['Value'], 'Protocol', result['Path'],
+                result['Value'].check_value(
+                    'Protocol', result['Path'],
                     check_value=self.check_protocol_value,
                     accepted_protocols=['HTTP', 'HTTPS', 'TCP'],
                     certificate_protocols=['HTTPS'],
@@ -64,8 +64,8 @@ HTTPS has certificate HTTP has no certificate'
             if isinstance(result['Value'], list):
                 for index, listener in enumerate(result['Value']):
                     matches.extend(
-                        cfn.check_value(
-                            listener, 'Protocol', result['Path'] + [index],
+                        listener.check_value(
+                            'Protocol', result['Path'] + [index],
                             check_value=self.check_protocol_value,
                             accepted_protocols=['HTTP', 'HTTPS', 'TCP', 'SSL'],
                             certificate_protocols=['HTTPS', 'SSL'],

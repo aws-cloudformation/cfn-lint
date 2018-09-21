@@ -92,7 +92,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         return matches
 
-    def check(self, cfn, properties, specs, path):
+    def check(self, _, properties, specs, path):
         """Check itself"""
         matches = []
 
@@ -107,8 +107,8 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     item_type = None
                 if primitive_type:
                     matches.extend(
-                        cfn.check_value(
-                            properties, prop, path,
+                        properties.check_value(
+                            prop, path,
                             check_value=self.check_value,
                             primitive_type=primitive_type,
                             item_type=item_type

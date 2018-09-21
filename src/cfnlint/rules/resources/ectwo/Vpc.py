@@ -29,7 +29,8 @@ class Vpc(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
     tags = ['properties', 'vpc']
 
-    def check_vpc_value(self, value, path):
+    # pylint: disable=W0613
+    def check_vpc_value(self, value, path, **kwargs):
         """Check VPC Values"""
         matches = []
 
@@ -61,7 +62,8 @@ class Vpc(CloudFormationLintRule):
                             '/'.join(map(str, path_error)))))
         return matches
 
-    def check_cidr_value(self, value, path):
+    # pylint: disable=W0613
+    def check_cidr_value(self, value, path, **kwargs):
         """Check CIDR Strings"""
         matches = []
 
@@ -107,6 +109,8 @@ class Vpc(CloudFormationLintRule):
                 'AWS::EC2::VPC', 'InstanceTenancy',
                 check_value=self.check_vpc_value,
                 check_ref=self.check_vpc_ref,
+                resources=cfn.get_resources(),
+                parameters=cfn.get_parameters(),
             )
         )
         matches.extend(
@@ -114,6 +118,8 @@ class Vpc(CloudFormationLintRule):
                 'AWS::EC2::VPC', 'CidrBlock',
                 check_value=self.check_cidr_value,
                 check_ref=self.check_cidr_ref,
+                resources=cfn.get_resources(),
+                parameters=cfn.get_parameters(),
             )
         )
 

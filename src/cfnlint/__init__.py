@@ -794,77 +794,17 @@ class Template(object):
         matches = []
         resources = self.get_resources(resource_type=resource_type)
         for resource_name, resource_object in resources.items():
-            properties = resource_object.get('Properties', {})
+            properties = resource_object.get('Properties')
             if properties:
                 matches.extend(
-                    self.check_value(
-                        obj=properties, key=resource_property,
+                    properties.check_value(
+                        key=resource_property,
                         path=['Resources', resource_name, 'Properties'],
                         check_value=check_value, check_ref=check_ref,
                         check_find_in_map=check_find_in_map, check_split=check_split,
                         check_join=check_join, check_sub=check_sub, **kwargs
                     )
                 )
-        return matches
-
-    # pylint: disable=W0613
-    def check_value(self, obj, key, path,
-                    check_value=None, check_ref=None,
-                    check_find_in_map=None, check_split=None, check_join=None,
-                    check_import_value=None, check_sub=None,
-                    **kwargs):
-        """
-            Check the value
-        """
-        LOGGER.debug('Check value %s for %s', key, obj)
-        matches = []
-        values_obj = self.get_values(obj=obj, key=key)
-        new_path = path[:] + [key]
-        if not values_obj:
-            return matches
-        for value_obj in values_obj:
-            value = value_obj['Value']
-            child_path = value_obj['Path']
-            if not isinstance(value, dict):
-                if check_value:
-                    matches.extend(
-                        check_value(
-                            value=value, path=new_path[:] + child_path, **kwargs))
-            else:
-                if len(value) == 1:
-                    for dict_name, _ in value.items():
-                        # If this is a function we shouldn't fall back to a check_value check
-                        if dict_name in cfnlint.helpers.FUNCTIONS:
-                            # convert the function name from camel case to underscore
-                            # Example: Fn::FindInMap becomes check_find_in_map
-                            function_name = 'check_%s' % camel_to_snake(dict_name.replace('Fn::', ''))
-                            if function_name == 'check_ref':
-                                if check_ref:
-                                    matches.extend(
-                                        check_ref(
-                                            value=value.get('Ref'), path=new_path[:] + child_path + ['Ref'],
-                                            parameters=self.get_parameters(),
-                                            resources=self.get_resources(),
-                                            **kwargs))
-                            else:
-                                if locals().get(function_name):
-                                    matches.extend(
-                                        locals()[function_name](
-                                            value=value.get(dict_name),
-                                            path=new_path[:] + child_path + [dict_name],
-                                            **kwargs)
-                                    )
-                        else:
-                            if check_value:
-                                matches.extend(
-                                    check_value(
-                                        value=value, path=new_path[:] + child_path, **kwargs))
-                else:
-                    if check_value:
-                        matches.extend(
-                            check_value(
-                                value=value, path=new_path[:] + child_path, **kwargs))
-
         return matches
 
 

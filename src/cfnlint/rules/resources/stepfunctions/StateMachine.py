@@ -146,13 +146,15 @@ class StateMachine(CloudFormationLintRule):
 
         return matches
 
+    # pylint: disable=W0613
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
 
+        # properties.check_value('DefinitionString', path)
         matches.extend(
-            cfn.check_value(
-                obj=properties, key='DefinitionString',
+            properties.check_value(
+                key='DefinitionString',
                 path=path[:],
                 check_value=self.check_value,
                 check_sub=self.check_sub

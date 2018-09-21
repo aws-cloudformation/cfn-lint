@@ -45,7 +45,7 @@ class PropertiesTemplated(CloudFormationLintRule):
 
         return matches
 
-    def match_resource_properties(self, properties, resourcetype, path, cfn):
+    def match_resource_properties(self, properties, resourcetype, path, _):
         """Check CloudFormation Properties"""
         matches = []
 
@@ -57,8 +57,8 @@ class PropertiesTemplated(CloudFormationLintRule):
 
         for key in templated_exceptions.get(resourcetype, []):
             matches.extend(
-                cfn.check_value(
-                    obj=properties, key=key,
+                properties.check_value(
+                    key=key,
                     path=path[:],
                     check_value=self.check_value
                 ))
