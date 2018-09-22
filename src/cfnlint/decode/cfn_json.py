@@ -20,7 +20,7 @@ import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
 import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node
+from cfnlint.decode.node import str_node, dict_node, list_node, Mark
 
 
 LOGGER = logging.getLogger(__name__)
@@ -82,16 +82,6 @@ class JSONDecodeError(ValueError):
 
     def __reduce__(self):
         return self.__class__, (self.msg, self.doc, self.pos)
-
-
-class Mark(object):
-    """Mark of line and column"""
-    line = 1
-    column = 1
-
-    def __init__(self, line, column):
-        self.line = line
-        self.column = column
 
 
 # pylint: disable=W0102

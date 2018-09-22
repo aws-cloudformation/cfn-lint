@@ -24,6 +24,16 @@ import cfnlint.helpers
 LOGGER = logging.getLogger(__name__)
 
 
+class Mark(object):
+    """Mark of line and column"""
+    line = 1
+    column = 1
+
+    def __init__(self, line, column):
+        self.line = line
+        self.column = column
+
+
 def create_str_node_class(cls):
     """
     Create string node class
@@ -37,6 +47,10 @@ def create_str_node_class(cls):
                 cls.__init__(self)
             self.start_mark = start_mark
             self.end_mark = end_mark
+
+        def location(self):
+            """Return location of object"""
+            return (self.start_mark.line, self.start_mark.column, self.end_mark.line, self.end_mark.column)
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
@@ -66,8 +80,8 @@ def create_dict_node_class(cls):
     """
     class node_class(cls):
         """Node class created based on the input class"""
-        start_mark = (0, 0)
-        end_mark = (0, 0)
+        start_mark = Mark(0, 0)
+        end_mark = Mark(0, 0)
 
         def __init__(self, x, start_mark, end_mark):
             try:

@@ -742,11 +742,6 @@ class Template(object):
 
         return matches
 
-    def _loc(self, obj):
-        """Return location of object"""
-        LOGGER.debug('Get location of object...')
-        return (obj.start_mark.line, obj.start_mark.column, obj.end_mark.line, obj.end_mark.column)
-
     def get_sub_parameters(self, sub_string):
         """ Gets the parameters out of a Sub String"""
         regex = re.compile(r'\${[^!].*?}')
@@ -773,14 +768,14 @@ class Template(object):
                 try:
                     for key in text:
                         if key == path[0]:
-                            result = self._loc(key)
+                            result = key.location()
                 except AttributeError as err:
                     LOGGER.debug(err)
         else:
             try:
                 for key in text:
                     if key == path[0]:
-                        result = self._loc(key)
+                        result = key.location()
             except AttributeError as err:
                 LOGGER.debug(err)
         return result
