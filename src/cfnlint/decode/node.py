@@ -201,7 +201,9 @@ def create_dict_node_class(cls):
 
         def get_safe(self, key, default=None, path=None, type_t=()):
             """
-                Get values in format
+                Get values for a key in the object
+                Handle conditions by creating an array of values and paths
+                When the value is None don't return anything
             """
             path = path or []
             results = []
@@ -219,7 +221,10 @@ def create_dict_node_class(cls):
             value = self.get(key, default)
             if not isinstance(value, (dict)):
                 if isinstance(value, type_t) or not type_t:
-                    return [(value, (path[:] + [key]))]
+                    if value is not None:
+                        return [(value, (path[:] + [key]))]
+
+                    return results
 
             for sub_v, sub_path in value.items_safe(path[:] + [key]):
                 if isinstance(sub_v, type_t) or not type_t:

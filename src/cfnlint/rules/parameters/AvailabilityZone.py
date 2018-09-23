@@ -101,7 +101,6 @@ class AvailabilityZone(CloudFormationLintRule):
     def check(self, properties, resource_type, path, cfn):
         """Check itself"""
         matches = []
-
         matches.extend(
             properties.check_value(
                 'AvailabilityZone', path,

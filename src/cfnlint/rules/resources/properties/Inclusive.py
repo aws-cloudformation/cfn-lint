@@ -42,7 +42,7 @@ class Inclusive(CloudFormationLintRule):
     def check(self, properties, inclusions, path):
         """Check itself"""
         matches = []
-        # property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
+
         if not properties:
             return matches
 

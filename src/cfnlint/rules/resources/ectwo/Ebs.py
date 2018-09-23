@@ -28,53 +28,46 @@ class Ebs(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html'
     tags = ['properties', 'ec2', 'ebs']
 
-    def _checkEbs(self, cfn, ebs, path):
+    def _checkEbs(self, ebs, path):
         matches = []
 
         if isinstance(ebs, dict):
-            volume_types_obj = cfn.get_values(ebs, 'VolumeType')
-            iops_obj = cfn.get_values(ebs, 'Iops')
+            volume_types_obj = ebs.get_safe('VolumeType', None, path)
+            iops_obj = ebs.get_safe('Iops', None, path)
             if volume_types_obj is not None:
-                for volume_type_obj in volume_types_obj:
-                    volume_type = volume_type_obj.get('Value')
-                    if isinstance(volume_type, six.string_types):
-                        if volume_type not in ['standard', 'io1', 'gp2', 'sc1', 'st1']:
-                            pathmessage = path[:] + ['VolumeType', volume_type['Path']]
+                for vt_value, vt_path in volume_types_obj:
+                    if isinstance(vt_value, six.string_types):
+                        if vt_value not in ['standard', 'io1', 'gp2', 'sc1', 'st1']:
                             message = 'VolumeType should be of standard | io1 | gp2 | sc1 | st1] for {0}'
                             matches.append(
-                                RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                        elif volume_type == 'io1':
+                                RuleMatch(vt_path, message.format('/'.join(map(str, vt_path)))))
+                        elif vt_value == 'io1':
                             if iops_obj is None:
-                                pathmessage = path[:] + ['VolumeType']
                                 message = 'VolumeType io1 requires Iops to be specified for {0}'
                                 matches.append(
-                                    RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
+                                    RuleMatch(vt_path, message.format('/'.join(map(str, vt_path)))))
                             else:
-                                try:
-                                    if len(iops_obj) == 1:
-                                        iops = iops_obj[0]['Value']
-                                        if isinstance(iops, (six.string_types, int)) and not iops_obj[0]['Path']:
-                                            iops_value = int(iops)
+                                for iop_value, iop_path in iops_obj:
+                                    try:
+                                        if isinstance(iop_value, (six.string_types, int)):
+                                            iops_value = int(iop_value)
                                             if iops_value < 100 or iops_value > 2000:
-                                                pathmessage = path[:] + ['Iops']
                                                 message = 'Property Iops should be Int between 100 to 20000 {0}'
                                                 matches.append(
                                                     RuleMatch(
-                                                        pathmessage,
-                                                        message.format('/'.join(map(str, pathmessage)))))
-                                except ValueError:
-                                    pathmessage = path[:] + ['Iops']
-                                    message = 'Property Iops should be Int between 100 to 20000 {0}'
-                                    matches.append(
-                                        RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                        elif volume_type:
-                            if iops_obj is not None:
-                                pathmessage = path[:] + ['Iops']
+                                                        iop_path,
+                                                        message.format('/'.join(map(str, iop_path)))))
+                                    except ValueError:
+                                        message = 'Property Iops should be Int between 100 to 20000 {0}'
+                                        matches.append(
+                                            RuleMatch(iop_path, message.format('/'.join(map(str, iop_path)))))
+                        elif vt_value:
+                            if iops_obj:
                                 message = 'Iops shouldn\'t be defined for type {0} for {1}'
                                 matches.append(
                                     RuleMatch(
-                                        pathmessage,
-                                        message.format(volume_type, '/'.join(map(str, pathmessage)))))
+                                        path[:] + ['Iops'],
+                                        message.format(vt_value, '/'.join(map(str, path[:] + ['Iops'])))))
 
         return matches
 
@@ -98,5 +91,5 @@ class Ebs(CloudFormationLintRule):
                         matches.append(
                             RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                 elif ebs:
-                    matches.extend(self._checkEbs(cfn, ebs, path[:] + [index, 'Ebs']))
+                    matches.extend(self._checkEbs(ebs, path[:] + [index, 'Ebs']))
         return matches
