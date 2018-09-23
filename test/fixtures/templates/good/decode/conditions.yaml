@@ -1,0 +1,71 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myEnvironment:
+    Type: String
+  DBMasterUsername:
+    Type: String
+    NoEcho: true
+    Description: Username of database
+  DBMasterUserPassword:
+    Type: String
+    NoEcho: true
+    Description: Password of database
+  DBSnapshotIdentifier:
+    Type: String
+    Description: Snapshot Identifier
+  DBInstanceClass:
+    Description: 'The instance type of database server.'
+    Type: String
+    Default: 'db.t2.micro'
+Conditions:
+  isProdRegion:
+    Fn::Equals: [!Ref 'AWS::Region', 'us-east-1']
+  isProd:
+    Fn::Equals: [!Ref myEnvironment, 'prod']
+  isDev:
+    Fn::Equals: [!Ref myEnvironment, 'dev']
+  HasDBSnapshotIdentifier: !Not [!Equals [!Ref DBSnapshotIdentifier, '']]
+  HasNoDBSnapshotIdentifier: !Not [!Condition HasDBSnapshotIdentifier]
+Resources:
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      Fn::If:
+      - isProdRegion
+      - BucketName:
+          Fn::If:
+          - isProd
+          - True
+          - Fn::If: [isDev, True, False]
+      - Fn::If:
+        - isDev
+        - BucketName: True
+          MetricsConfigurations: False
+        - !Ref 'AWS::NoValue'
+  DBCluster:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      MasterUsername: !If [HasDBSnapshotIdentifier, !Ref 'AWS::NoValue', !Ref DBMasterUsername]
+      MasterUserPassword: !If [HasDBSnapshotIdentifier, !Ref 'AWS::NoValue', !Ref DBMasterUserPassword]
+      DBSnapshotIdentifier: !If [HasDBSnapshotIdentifier, !Ref DBSnapshotIdentifier, !Ref 'AWS::NoValue']
+      Engine: aurora
+      DBInstanceClass: !Ref DBInstanceClass
+  DBCluster2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      MasterUsername: !If [HasNoDBSnapshotIdentifier, !Ref DBMasterUsername, !Ref 'AWS::NoValue']
+      MasterUserPassword: !If [HasNoDBSnapshotIdentifier, !Ref DBMasterUserPassword, !Ref 'AWS::NoValue' ]
+      DBSnapshotIdentifier: !If [HasDBSnapshotIdentifier, !Ref DBSnapshotIdentifier, !Ref 'AWS::NoValue']
+      Engine: aurora
+      DBInstanceClass: !Ref DBInstanceClass
+  myTaggedBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      # To handle how values are checked when there is a list.
+      # and conditions inside the list
+      Tags:
+      - Key: Environment
+        Value: !Ref myEnvironment
+      - Key: CostCenter
+        Value: '1'

@@ -55,9 +55,8 @@ class RuleTargetsLimit(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
         matches.extend(
-            cfn.check_value(
-                obj=properties, key='Targets',
-                path=path[:],
+            properties.check_value(
+                key='Targets', path=path[:],
                 check_value=self.check_value
             ))
 

@@ -14,7 +14,6 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import six
 import cfnlint.decode.node  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -34,41 +33,101 @@ class TestNode(BaseTestCase):
         self.assertEqual(template.end_mark[0], 2)
         self.assertEqual(template.end_mark[1], 3)
 
-    def test_success_fnif_object(self):
-        """Test Dict Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Fn::If": [
-                "string",
-                cfnlint.decode.node.dict_node({"Test": True}, (0, 1), (2, 3)),
-                cfnlint.decode.node.dict_node({"Test": False}, (0, 1), (2, 3))]
-        }, (0, 1), (2, 3))
+    def test_success_dict_get_safe(self):
+        """Test List Object"""
+        filename = 'fixtures/templates/good/decode/conditions.yaml'
+        template = cfnlint.decode.cfn_yaml.load(filename)
+
+        bucket_properties = template.get('Resources').get('myS3Bucket').get('Properties')
+        results = [
+            (True, ['Fn::If', 1, 'BucketName', 'Fn::If', 1]),
+            (True, ['Fn::If', 1, 'BucketName', 'Fn::If', 2, 'Fn::If', 1]),
+            (False, ['Fn::If', 1, 'BucketName', 'Fn::If', 2, 'Fn::If', 2]),
+            (True, ['Fn::If', 2, 'Fn::If', 1, 'BucketName'])
+        ]
+
+        self.assertEqual(bucket_properties.get_safe('BucketName'), results)
+
+    def test_success_dict_items_safe(self):
+        """Test List Object"""
+        filename = 'fixtures/templates/good/decode/conditions.yaml'
+        template = cfnlint.decode.cfn_yaml.load(filename)
+
+        bucket_properties = template.get('Resources').get('myS3Bucket').get('Properties')
+        correct_results = [
+            ({'BucketName': {'Fn::If': ['isProd', True, {'Fn::If': ['isDev', True, False]}]}}, ['Fn::If', 1]),
+            ({'MetricsConfigurations': False, 'BucketName': True}, ['Fn::If', 2, 'Fn::If', 1])
+        ]
 
         results = []
-        for items, p in template.items_safe():
+        for items, p in bucket_properties.items_safe():
             results.append((items, p))
 
-        self.assertEqual(results, [
-            ({'Test': True}, ['Fn::If', 1]),
-            ({'Test': False}, ['Fn::If', 2])
-        ])
+        self.assertEqual(results, correct_results)
 
-    def test_success_fnif_string(self):
-        """Test Dict Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Fn::If": [
-                "string",
-                "True",
-                "False"]
-        }, (0, 1), (2, 3))
+    def test_success_dict_get_keys_safe(self):
+        """ Test success of Get Keys Safe on Dict """
+        filename = 'fixtures/templates/good/decode/conditions.yaml'
+        template = cfnlint.decode.cfn_yaml.load(filename)
+
+        #
+        # Test singular condition
+        #
+        dbcluster_properties = template.get('Resources').get('DBCluster').get('Properties')
+        correct_results = [
+            ['DBSnapshotIdentifier', 'DBInstanceClass', 'Engine'].sort(),
+            ['DBInstanceClass', 'Engine', 'MasterUserPassword', 'MasterUsername'].sort()]
 
         results = []
-        for items, p in template.items_safe():
-            results.append((items, p))
+        for result in dbcluster_properties.keys_safe():
+            results.append(result.sort())
 
-        self.assertEqual(results, [
-            ('True', ['Fn::If', 1]),
-            ('False', ['Fn::If', 2])
-        ])
+        self.assertEqual(results, correct_results)
+
+    def test_success_dict_get_keys_safe_multiple_conditions(self):
+        """ Test success of Get Keys Safe on Dict """
+        filename = 'fixtures/templates/good/decode/conditions.yaml'
+        template = cfnlint.decode.cfn_yaml.load(filename)
+
+        dbcluster_properties = template.get('Resources').get('DBCluster2').get('Properties')
+        correct_results = [
+            ['MasterUsername', 'MasterUserPassword', 'DBSnapshotIdentifier', 'Engine', 'DBInstanceClass'].sort(),
+            ['MasterUsername', 'MasterUserPassword', 'Engine', 'DBInstanceClass'].sort(),
+            ['DBSnapshotIdentifier', 'Engine', 'DBInstanceClass'].sort(),
+            ['Engine', 'DBInstanceClass'].sort()]
+
+        results = []
+        for result in dbcluster_properties.keys_safe():
+            results.append(result.sort())
+
+        self.assertEqual(results, correct_results)
+
+    def test_success_dict_check_value(self):
+        """Test List Object"""
+        filename = 'fixtures/templates/good/decode/conditions.yaml'
+        template = cfnlint.decode.cfn_yaml.load(filename)
+
+        def check_value(value, path):
+            """ Return the value """
+            if path == ['Fn::If', 1, 'BucketName', 'Fn::If', 1] and value is True:
+                return [1]
+            elif path == ['Fn::If', 1, 'BucketName', 'Fn::If', 2, 'Fn::If', 1] and value is True:
+                return [2]
+            elif path == ['Fn::If', 1, 'BucketName', 'Fn::If', 2, 'Fn::If', 2] and value is False:
+                return [3]
+            elif path == ['Fn::If', 2, 'Fn::If', 1, 'BucketName'] and value is True:
+                return [4]
+
+            return [False]
+
+        results = []
+        bucket_properties = template.get('Resources').get('myS3Bucket').get('Properties')
+        results = bucket_properties.check_value(key='BucketName', path=[], check_value=check_value)
+
+        self.assertEqual(results[0], 1)
+        self.assertEqual(results[1], 2)
+        self.assertEqual(results[2], 3)
+        self.assertEqual(results[3], 4)
 
     def test_success_fnif_list(self):
         """Test List Object"""
@@ -86,100 +145,6 @@ class TestNode(BaseTestCase):
         self.assertEqual(results, [
             (['1', '2', '3'], ['Fn::If', 1]),
             (['a', 'b', 'c'], ['Fn::If', 2])
-        ])
-
-    def test_success_fnif_ref_novalue(self):
-        """Test List Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Fn::If": [
-                "string",
-                True,
-                cfnlint.decode.node.dict_node({
-                    "Ref": "AWS::NoValue"
-                }, (0, 1), (2, 3))
-            ]
-        }, (0, 1), (2, 3))
-
-        results = []
-        for items, p in template.items_safe():
-            results.append((items, p))
-
-        self.assertEqual(results, [(True, ['Fn::If', 1])])
-
-    def test_success_fnif_nested(self):
-        """Test List Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Fn::If": [
-                "string",
-                cfnlint.decode.node.dict_node({"Test": "True"}, (0, 1), (2, 3)),
-                cfnlint.decode.node.dict_node({
-                    "Fn::If": [
-                        "nested",
-                        cfnlint.decode.node.dict_node({"NestedTest": "False,True"}, (0, 1), (2, 3)),
-                        False
-                    ]
-                }, (0, 1), (2, 3))
-            ]
-        }, (0, 1), (2, 3))
-
-        results = []
-        for items, p in template.items_safe(path=['Start']):
-            results.append((items, p))
-
-        # Adding testing of Paths to make sure nested paths are good
-        self.assertEqual(results, [
-            ({'Test': 'True'}, ['Start', 'Fn::If', 1]),
-            ({'NestedTest': 'False,True'}, ['Start', 'Fn::If', 2, 'Fn::If', 1]),
-            (False, ['Start', 'Fn::If', 2, 'Fn::If', 2])
-        ])
-
-        # Testing the filters based on type
-        results = []
-        for items, p in template.items_safe(type_t=(dict)):
-            results.append((items, p))
-
-        self.assertEqual(results, [
-            ({'Test': 'True'}, ['Fn::If', 1]),
-            ({'NestedTest': 'False,True'}, ['Fn::If', 2, 'Fn::If', 1])
-        ])
-
-    def test_success_fnif_get(self):
-        """Test Dict Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Test":
-                cfnlint.decode.node.dict_node({
-                    "Fn::If": [
-                        "string",
-                        "True",
-                        "False"]
-                }, (0, 1), (2, 3))
-        }, (0, 1), (2, 3))
-
-        obj = template.get_safe("Test")
-        self.assertEqual(obj, [('True', ['Test', 'Fn::If', 1]), ('False', ['Test', 'Fn::If', 2])])
-
-    def test_success_fnif_get_nested(self):
-        """Test Dict Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Test":
-                cfnlint.decode.node.dict_node({
-                    "Fn::If": [
-                        "string",
-                        cfnlint.decode.node.dict_node({
-                            "Fn::If": [
-                                "string",
-                                "True,True",
-                                "True,False"]
-                        }, (0, 1), (2, 3)),
-                        "False"]
-                }, (0, 1), (2, 3))
-        }, (0, 1), (2, 3))
-
-        obj = template.get_safe("Test")
-        self.assertEqual(obj, [
-            ('True,True', ['Test', 'Fn::If', 1, 'Fn::If', 1]),
-            ('True,False', ['Test', 'Fn::If', 1, 'Fn::If', 2]),
-            ('False', ['Test', 'Fn::If', 2])
         ])
 
     def test_success_fnif_list_strings(self):
@@ -234,45 +199,3 @@ class TestNode(BaseTestCase):
             results.append((v, p))
 
         self.assertEqual(results, [('1', [0]), ('2', [1]), ('4', [2, 'Fn::If', 1])])
-
-    def test_check_value(self):
-        """Test List Object"""
-        template = cfnlint.decode.node.dict_node({
-            "Fn::If": [
-                "string",
-                cfnlint.decode.node.dict_node({"Test": True}, (0, 1), (2, 3)),
-                cfnlint.decode.node.dict_node({
-                    "Fn::If": [
-                        "nested",
-                        cfnlint.decode.node.dict_node({"Test": False}, (0, 1), (2, 3)),
-                        cfnlint.decode.node.dict_node(
-                            {
-                                "Test": cfnlint.decode.node.dict_node({"Fn::Sub": "TestString"}, (0, 1), (2, 3))
-                            }, (0, 1), (2, 3))
-                    ]
-                }, (0, 1), (2, 3))
-            ]
-        }, (0, 1), (2, 3))
-
-        def check_value(value, path):
-            """ Return the value """
-            if path == ['Fn::If', 1, 'Test'] and value is True:
-                return [True]
-            elif path == ['Fn::If', 2, 'Fn::If', 1, 'Test'] and value is False:
-                return [True]
-
-            return [False]
-
-        def check_sub(value, path):
-            """ Return the value """
-            if path == ['Fn::If', 2, 'Fn::If', 2, 'Test', 'Fn::Sub'] and value == 'TestString':
-                return [True]
-
-            return [False]
-
-        results = []
-        results = template.check_value(key='Test', path=[], check_value=check_value, check_sub=check_sub)
-
-        self.assertEqual(results[0], True)
-        self.assertEqual(results[1], True)
-        self.assertEqual(results[2], True)

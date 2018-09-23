@@ -29,6 +29,11 @@ class Vpc(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
     tags = ['properties', 'vpc']
 
+    def __init__(self):
+        """Init"""
+        super(Vpc, self).__init__()
+        self.resource_property_types = ['AWS::EC2::VPC']
+
     # pylint: disable=W0613
     def check_vpc_value(self, value, path, **kwargs):
         """Check VPC Values"""
@@ -100,27 +105,30 @@ class Vpc(CloudFormationLintRule):
                             '/'.join(map(str, path_error)))))
         return matches
 
-    def match(self, cfn):
-        """Check EC2 VPC Resource Parameters"""
-
+    # pylint: disable=W0613
+    def match_resource_properties(self, properties, _, path, cfn):
+        """Check CloudFormation Properties"""
         matches = []
+
+        # properties.check_value('DefinitionString', path)
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::EC2::VPC', 'InstanceTenancy',
+            properties.check_value(
+                key='InstanceTenancy',
+                path=path[:],
                 check_value=self.check_vpc_value,
                 check_ref=self.check_vpc_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::EC2::VPC', 'CidrBlock',
+            properties.check_value(
+                key='CidrBlock',
+                path=path[:],
                 check_value=self.check_cidr_value,
                 check_ref=self.check_cidr_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
 
         return matches

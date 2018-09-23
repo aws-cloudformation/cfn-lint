@@ -38,6 +38,9 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         specs = cfnlint.helpers.RESOURCE_SPECS.get('us-east-1')
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')
+
+        self.resource_property_types = []
+        self.resource_sub_property_types = []
         for resource_spec in self.resource_specs:
             self.resource_property_types.append(resource_spec)
         for property_spec in self.property_specs:

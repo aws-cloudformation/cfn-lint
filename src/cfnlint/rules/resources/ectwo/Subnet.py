@@ -28,6 +28,11 @@ class Subnet(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html'
     tags = ['properties', 'subnet']
 
+    def __init__(self):
+        """Init"""
+        super(Subnet, self).__init__()
+        self.resource_property_types = ['AWS::EC2::Subnet']
+
     # pylint: disable=W0613
     def check_az_value(self, value, path, **kwargs):
         """Check AZ Values"""
@@ -68,8 +73,8 @@ class Subnet(CloudFormationLintRule):
         matches = []
 
         if not re.match(REGEX_CIDR, value):
-            message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
+            message = 'CidrBlock ({0}) needs to be of x.x.x.x/y at {1}'
+            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
         return matches
 
     def check_cidr_ref(self, value, path, parameters, resources):
@@ -79,20 +84,19 @@ class Subnet(CloudFormationLintRule):
         allowed_types = [
             'String'
         ]
-
         if value in resources:
             resource_obj = resources.get(value, {})
             if resource_obj:
                 resource_type = resource_obj.get('Type', '')
                 if not resource_type.startswith('Custom::'):
-                    message = 'CidrBlock needs to be a valid Cidr Range at {0}'
-                    matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
+                    message = 'CidrBlock needs to be a valid Cidr Range at {1}'
+                    matches.append(RuleMatch(path, message.format(('/'.join(path)))))
         if value in parameters:
             parameter = parameters.get(value, {})
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 param_path = ['Parameters', value]
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
+                message = 'CidrBlock Parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         param_path,
@@ -127,27 +131,30 @@ class Subnet(CloudFormationLintRule):
                 matches.append(RuleMatch(param_path, message.format(('/'.join(param_path)))))
         return matches
 
-    def match(self, cfn):
-        """Check EC2 VPC Resource Parameters"""
-
+    # pylint: disable=W0613
+    def match_resource_properties(self, properties, _, path, cfn):
+        """Check CloudFormation Properties"""
         matches = []
+
+        # properties.check_value('DefinitionString', path)
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::EC2::Subnet', 'AvailabilityZone',
+            properties.check_value(
+                key='AvailabilityZone',
+                path=path[:],
                 check_value=self.check_az_value,
                 check_ref=self.check_az_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::EC2::Subnet', 'CidrBlock',
+            properties.check_value(
+                key='CidrBlock',
+                path=path[:],
                 check_value=self.check_cidr_value,
                 check_ref=self.check_cidr_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
 
         return matches

@@ -32,6 +32,11 @@ class FunctionRuntime(CloudFormationLintRule):
         'nodejs4.3-edge', 'go1.x'
     ]
 
+    def __init__(self):
+        """Init"""
+        super(FunctionRuntime, self).__init__()
+        self.resource_property_types = ['AWS::Lambda::Function']
+
     # pylint: disable=W0613
     def check_value(self, value, path, **kwargs):
         """ Check runtime value """
@@ -62,18 +67,19 @@ class FunctionRuntime(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
-        """Check Lambda Function Memory Size Resource Parameters"""
-
+    # pylint: disable=W0613
+    def match_resource_properties(self, properties, _, path, cfn):
+        """Check CloudFormation Properties"""
         matches = []
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::Lambda::Function', 'Runtime',
+            properties.check_value(
+                key='Runtime',
+                path=path[:],
                 check_value=self.check_value,
                 check_ref=self.check_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
 
         return matches

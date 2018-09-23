@@ -30,6 +30,11 @@ class FunctionMemorySize(CloudFormationLintRule):
     min_memory = 128
     max_memory = 3008
 
+    def __init__(self):
+        """Init"""
+        super(FunctionMemorySize, self).__init__()
+        self.resource_property_types = ['AWS::Lambda::Function']
+
     # pylint: disable=W0613
     def check_value(self, value, path, **kwargs):
         """ Check memory size value """
@@ -125,18 +130,19 @@ class FunctionMemorySize(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
-        """Check Lambda Function Memory Size Resource Parameters"""
-
+    # pylint: disable=W0613
+    def match_resource_properties(self, properties, _, path, cfn):
+        """Check CloudFormation Properties"""
         matches = []
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::Lambda::Function', 'MemorySize',
+            properties.check_value(
+                key='MemorySize',
+                path=path[:],
                 check_value=self.check_value,
                 check_ref=self.check_ref,
                 resources=cfn.get_resources(),
                 parameters=cfn.get_parameters(),
-            )
-        )
+            ))
 
         return matches

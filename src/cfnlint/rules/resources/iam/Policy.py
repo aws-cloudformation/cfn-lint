@@ -210,7 +210,7 @@ class Policy(CloudFormationLintRule):
                         ))
             elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies']:
                 matches.extend(
-                    value.check_value(
+                    properties.check_value(
                         key=key, path=path[:],
                         check_value=self.check_policy_document,
                         is_identity_policy=is_identity_policy,

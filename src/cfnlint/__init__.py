@@ -701,28 +701,6 @@ class Template(object):
                 LOGGER.debug(err)
         return result
 
-    def check_resource_property(self, resource_type, resource_property,
-                                check_value=None, check_ref=None,
-                                check_find_in_map=None, check_split=None,
-                                check_join=None, check_sub=None, **kwargs):
-        """ Check Resource Properties """
-        LOGGER.debug('Check property %s for %s', resource_property, resource_type)
-        matches = []
-        resources = self.get_resources(resource_type=resource_type)
-        for resource_name, resource_object in resources.items():
-            properties = resource_object.get('Properties')
-            if properties:
-                matches.extend(
-                    properties.check_value(
-                        key=resource_property,
-                        path=['Resources', resource_name, 'Properties'],
-                        check_value=check_value, check_ref=check_ref,
-                        check_find_in_map=check_find_in_map, check_split=check_split,
-                        check_join=check_join, check_sub=check_sub, **kwargs
-                    )
-                )
-        return matches
-
 
 class Runner(object):
     """Run all the rules"""

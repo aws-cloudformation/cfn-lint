@@ -19,7 +19,7 @@ import logging
 import re
 from copy import deepcopy
 import six
-import cfnlint.helpers
+import cfnlint.helpers  # pylint: disable=R0401
 
 LOGGER = logging.getLogger(__name__)
 
@@ -232,6 +232,75 @@ def create_dict_node_class(cls):
 
             return results
 
+        def get_attribute_condition_names(self):
+            """Return all the condition names directly affecting the possible values"""
+            results = set()
+            for _, v in self.items():
+                if isinstance(v, dict):
+                    if len(v) == 1:
+                        for d_k, d_v in v.items():
+                            if d_k == 'Fn::If':
+                                if isinstance(d_v, list):
+                                    results.add(d_v[0])
+
+            return list(results)
+
+
+        def _key_safe(self, value, condition_values):
+            # Returns the key and value from a condition
+
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    for sub_k, sub_v in value.items():
+                        if sub_k == 'Fn::If':
+                            if isinstance(sub_v, list):
+                                if len(sub_v) == 3:
+                                    condition_path = 1
+                                    if not condition_values[sub_v[0]]:
+                                        condition_path = 2
+                                    return self._key_safe(sub_v[condition_path], condition_values)
+                        if sub_k == 'Ref' and sub_v == 'AWS::NoValue':
+                            return None
+                else:
+                    return value
+
+            return value
+
+        def _get_condition_scenarios(self, condition_names):
+            """Get condition scenarios"""
+
+            results = [{}]
+            condition_name = condition_names[0]
+            if len(condition_names) > 1:
+                results = self._get_condition_scenarios(condition_names[1:])
+
+            for result in results:
+                result[condition_name] = True
+            for result in deepcopy(results):
+                result[condition_name] = False
+                results.append(result)
+
+            return results
+
+        def keys_safe(self, path=None, condition_scenarios=None):
+            """Get the key names removing conditions"""
+            path = path or []
+            results = []
+            for i, _ in self.items_safe(path):
+                condition_names = i.get_attribute_condition_names()
+                if not condition_scenarios:
+                    condition_scenarios = self._get_condition_scenarios(condition_names)
+
+                for condition_scenario in condition_scenarios:
+                    tempresults = []
+                    for k, v in i.items():
+                        if self._key_safe(v, condition_scenario):
+                            tempresults.append(k)
+
+                    results.append(tempresults)
+
+            return results
+
         def items_safe(self, path=None, type_t=()):
             """Get items while handling IFs"""
             path = path or []
@@ -247,9 +316,6 @@ def create_dict_node_class(cls):
                                         for items, p in if_v.items_safe(path[:] + [k, i + 1]):
                                             if isinstance(items, type_t) or not type_t:
                                                 yield items, p
-                                    elif isinstance(if_v, list):
-                                        if isinstance(if_v, type_t) or not type_t:
-                                            yield if_v, path[:] + [k, i + 1]
                                     else:
                                         if isinstance(if_v, type_t) or not type_t:
                                             yield if_v, path[:] + [k, i + 1]

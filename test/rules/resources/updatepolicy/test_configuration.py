@@ -32,6 +32,6 @@ class TestConfiguration(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative_alias(self):
+    def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('fixtures/templates/bad/resources/updatepolicy/config.yaml', 10)
