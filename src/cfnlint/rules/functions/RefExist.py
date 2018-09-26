@@ -55,12 +55,6 @@ class RefExist(CloudFormationLintRule):
         for reftree in reftrees:
             refs.append(reftree[-1])
 
-        # build the sub lists
-        subtrees = cfn.search_deep_keys('Fn::Sub')
-        subs = []
-        for subtree in subtrees:
-            subs.append(subtree[-1])
-
         valid_refs = cfn.get_valid_refs()
 
         # start with the basic ref calls
@@ -72,23 +66,5 @@ class RefExist(CloudFormationLintRule):
                     matches.append(RuleMatch(
                         reftree[:-2], message.format(ref)
                     ))
-        for subtree in subtrees:
-            sub = subtree[-1]
-            parammatches = []
-            subparams = []
-            if isinstance(sub, (six.text_type, six.string_types)):
-                parammatches = self.searchstring(sub)
-            elif isinstance(subtree[-1], (list)):
-                if len(sub) == 2:
-                    parammatches = self.searchstring(sub[0])
-                    for subparam in sub[1]:
-                        subparams.append(subparam)
-            for parammatch in parammatches:
-                if parammatch not in valid_refs:
-                    if parammatch not in subparams:
-                        message = 'Ref {0} not found as a resource or parameter'
-                        matches.append(RuleMatch(
-                            subtree[:-2], message.format(parammatch)
-                        ))
 
         return matches
