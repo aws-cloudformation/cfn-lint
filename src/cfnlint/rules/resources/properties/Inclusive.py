@@ -46,11 +46,11 @@ class Inclusive(CloudFormationLintRule):
             return matches
 
         for items, p in properties.items_safe(path=path, type_t=(dict)):
-            for k, v in items.items():
+            for k in items.keys():
                 if k in inclusions:
                     for incl_property in inclusions[k]:
-                        if incl_property not in v:
-                            message = 'Parameter {0} should exist with {1} for {2}'
+                        if incl_property not in items.keys():
+                            message = 'Property {0} should exist with {1} for {2}'
                             matches.append(RuleMatch(
                                 p,
                                 message.format(incl_property, k, '/'.join(map(str, p)))

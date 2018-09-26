@@ -46,7 +46,7 @@ class Exclusive(CloudFormationLintRule):
             if prop in exclusions:
                 for excl_property in exclusions[prop]:
                     if excl_property in properties:
-                        message = 'Parameter {0} should NOT exist with {1} for {2}'
+                        message = 'Property {0} should NOT exist with {1} for {2}'
                         matches.append(RuleMatch(
                             path + [prop],
                             message.format(excl_property, prop, '/'.join(map(str, path)))
