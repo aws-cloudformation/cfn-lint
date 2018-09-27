@@ -24,6 +24,9 @@ class TestRulesGetAtt(BaseRuleTestCase):
         """Setup"""
         super(TestRulesGetAtt, self).setUp()
         self.collection.register(GetAtt())
+        self.success_templates = [
+            'fixtures/templates/good/functions/getatt.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -32,3 +35,7 @@ class TestRulesGetAtt(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('fixtures/templates/bad/generic.yaml', 1)
+
+    def test_file_negative_getatt(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/functions/getatt.yaml', 1)
