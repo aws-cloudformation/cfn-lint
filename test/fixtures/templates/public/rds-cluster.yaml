@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: MU database in a specific environment
+Parameters:
+  DatabaseMasterUsername:
+    Type: String
+    NoEcho: true
+    Description: Username of database
+  DatabaseName:
+    Type: String
+    Description: Name of database
+  DatabaseMasterPassword:
+    Type: String
+    NoEcho: true
+    Description: Password of database
+
+Resources:
+  DBCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: !Ref DatabaseMasterUsername
+      MasterUserPassword: !Ref DatabaseMasterPassword
+      DatabaseName: !Ref DatabaseName
+      Engine: aurora
+      EngineMode: serverless
+      Tags:
+      - Key: Name
+        Value: !Ref DatabaseName
