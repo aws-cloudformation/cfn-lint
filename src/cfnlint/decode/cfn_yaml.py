@@ -176,6 +176,7 @@ def construct_getatt(node):
     """
     Reconstruct !GetAtt into a list
     """
+
     if isinstance(node.value, (six.string_types)):
         return list_node(node.value.split('.'), node.start_mark, node.end_mark)
     if isinstance(node.value, list):
