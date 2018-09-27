@@ -37,17 +37,13 @@ class ArgumentParser(argparse.ArgumentParser):
         self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
 
-def run_cli(filename, template, rules, regions, override_spec, formatter):
+def run_cli(filename, template, rules, regions, override_spec):
     """Process args and run"""
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
-    matches = run_checks(filename, template, rules, regions)
-
-    formatter.print_matches(matches)
-
-    return get_exit_code(matches)
+    return run_checks(filename, template, rules, regions)
 
 
 def get_exit_code(matches):
@@ -85,12 +81,21 @@ def comma_separated_arg(string):
     return string.split(',')
 
 
+def space_separated_arg(string):
+    """ Split a comma separated string """
+    return string.split(' ')
+
+
 class ExtendAction(argparse.Action):
     """Support argument types that are lists and can be specified multiple times."""
     def __call__(self, parser, namespace, values, option_string=None):
-        items = getattr(namespace, self.dest, [])
+        items = getattr(namespace, self.dest)
+        items = [] if items is None else items
         for value in values:
-            items.extend(value)
+            if isinstance(value, list):
+                items.extend(value)
+            else:
+                items.append(value)
         setattr(namespace, self.dest, items)
 
 
@@ -104,10 +109,10 @@ def create_parser():
 
     # Alllow the template to be passes as an optional or a positional argument
     standard.add_argument(
-        'template', nargs='?', help='The CloudFormation template to be linted')
+        'templates', metavar='TEMPLATE', nargs='*', help='The CloudFormation template to be linted')
     standard.add_argument(
-        '-t', '--template', metavar='TEMPLATE', dest='template_alt', help='The CloudFormation template to be linted')
-
+        '-t', '--template', metavar='TEMPLATE', dest='template_alt',
+        help='The CloudFormation template to be linted', nargs='+', default=[], action='extend')
     standard.add_argument(
         '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
         action='store_true'
@@ -192,11 +197,9 @@ def get_rules(rulesdir, ignore_rules):
     return rules
 
 
-def get_template_args_rules(cli_args):
+def get_args_filenames(cli_args):
     """ Get Template Configuration items and set them as default values"""
-    template = {}
     parser = create_parser()
-
     args, _ = parser.parse_known_args(cli_args)
 
     configure_logging(args.debug)
@@ -206,27 +209,18 @@ def get_template_args_rules(cli_args):
 
     # Filename can be speficied as positional or optional argument. Positional
     # is leading
-    if args.template:
-        filename = args.template
+    if args.templates:
+        filenames = args.templates
     elif args.template_alt:
-        filename = args.template_alt
+        filenames = args.template_alt
     else:
-        filename = None
+        filenames = None
 
-    if filename:
-        (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
+    # if only one is specified convert it to array
+    if isinstance(filenames, six.string_types):
+        filenames = [filenames]
 
-        if matches:
-            formatter.print_matches(matches)
-            sys.exit(get_exit_code(matches))
-
-    # If the template has cfn-lint Metadata but the same options are set on the command-
-    # line, ignore the template's configuration. This works because these are all appends
-    # that have default values of empty arrays or none.  The only one that really doesn't
-    # work is ignore_bad_template but you can't override that back to false at this point.
-    for section, values in get_default_args(template).items():
-        if not getattr(args, section):
-            setattr(args, section, values)
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
 
     # Set default regions if none are specified.
     if not args.regions:
@@ -236,8 +230,6 @@ def get_template_args_rules(cli_args):
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
-
     if args.update_documentation:
         cfnlint.maintenance.update_documentation(rules)
         exit(0)
@@ -246,12 +238,33 @@ def get_template_args_rules(cli_args):
         print(rules)
         exit(0)
 
-    if not filename:
+    if not filenames:
         # Not specified, print the help
         parser.print_help()
         exit(1)
 
-    return(args, filename, template, rules, formatter)
+    return(args, filenames, formatter)
+
+
+def get_template_rules(filename, args):
+    """ Get Template Configuration items and set them as default values"""
+
+    (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
+
+    if matches:
+        return(template, [], matches)
+
+    # If the template has cfn-lint Metadata but the same options are set on the command-
+    # line, ignore the template's configuration. This works because these are all appends
+    # that have default values of empty arrays or none.  The only one that really doesn't
+    # work is ignore_bad_template but you can't override that back to false at this point.
+    for section, values in get_default_args(template).items():
+        if not getattr(args, section):
+            setattr(args, section, values)
+
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
+
+    return(template, rules, [])
 
 
 def get_default_args(template):
