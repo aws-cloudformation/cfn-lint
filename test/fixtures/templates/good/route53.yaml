@@ -4,6 +4,8 @@ Parameters:
   DomainName:
     Type: String
     Default: "example.com"
+  RecordType:
+    Type: String
 Resources:
   MyHostedZone:
     Type: "AWS::Route53::HostedZone"
@@ -12,6 +14,15 @@ Resources:
       VPCs:
         - VPCId: !ImportValue "infrastructure-vpc"
           VPCRegion: !Ref "AWS::Region"
+  MyRefRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "x.example.com"
+      Type: !Ref "RecordType"
+      TTL: "300"
+      ResourceRecords:
+        - "value"
   MyTXTRecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
