@@ -38,6 +38,19 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 * [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint/update/48247)
 
+## Basic Usage
+- `cfn-lint template.yaml`
+- `cfn-lint -t template.yaml`
+
+##### Lint multiple files
+- `cfn-lint template1.yaml template2.yaml`
+- `cfn-lint -t template1.yaml template2.yaml`
+- `cfn-lint path/*.yaml`
+
+##### Specifying the template with other parameters
+- `cfn-lint -r us-east-1 ap-south-1 -- template.yaml`
+- `cfn-lint -r us-east-1 ap-south-1 -t template.yaml`
+
 ## Configuration
 
 ### Command Line
@@ -77,15 +90,6 @@ Metadata:
 
 ### Precedence
 cfn-lint applies the configuration from the CloudFormation Metadata first and then overrides those values with anything specified in the CLI.
-
-## Examples
-### Basic usage
-`cfn-lint --template template.yaml`
-
-### Test a template based on multiple regions
-`cfn-lint --regions us-east-1 ap-south-1 --template template.yaml`
-
-> E3001 Invalid Type AWS::Batch::ComputeEnvironment for resource testBatch in ap-south-1
 
 ### Getting Started Guides
 There are [getting started guides](/docs/getting_started) available in the documentation section to help with integrating `cfn-lint` or creating rules.
