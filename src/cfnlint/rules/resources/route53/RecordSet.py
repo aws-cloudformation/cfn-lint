@@ -166,21 +166,23 @@ class RecordSet(CloudFormationLintRule):
         matches = []
         recordset_type = recordset.get('Type')
 
-        if recordset_type not in self.VALID_RECORD_TYPES:
-            message = 'Invalid record type "{0}" specified'
-            matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
-        elif not recordset.get('AliasTarget'):
-            # Record type specific checks
-            if recordset_type == 'A':
-                matches.extend(self.check_a_record(path, recordset))
-            elif recordset_type == 'AAAA':
-                matches.extend(self.check_aaaa_record(path, recordset))
-            elif recordset_type == 'CAA':
-                matches.extend(self.check_caa_record(path, recordset))
-            elif recordset_type == 'CNAME':
-                matches.extend(self.check_cname_record(path, recordset))
-            elif recordset_type == 'TXT':
-                matches.extend(self.check_txt_record(path, recordset))
+        # Skip Intrinsic functions
+        if not isinstance(recordset_type, dict):
+            if recordset_type not in self.VALID_RECORD_TYPES:
+                message = 'Invalid record type "{0}" specified'
+                matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
+            elif not recordset.get('AliasTarget'):
+                # Record type specific checks
+                if recordset_type == 'A':
+                    matches.extend(self.check_a_record(path, recordset))
+                elif recordset_type == 'AAAA':
+                    matches.extend(self.check_aaaa_record(path, recordset))
+                elif recordset_type == 'CAA':
+                    matches.extend(self.check_caa_record(path, recordset))
+                elif recordset_type == 'CNAME':
+                    matches.extend(self.check_cname_record(path, recordset))
+                elif recordset_type == 'TXT':
+                    matches.extend(self.check_txt_record(path, recordset))
 
         return matches
 
