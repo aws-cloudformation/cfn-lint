@@ -1,0 +1,30 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  condition: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Resources:
+  MyCronRule:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: cron(0 6 * * ? *)
+      Targets:
+        Fn::If:
+        - condition
+        - - Id: Job1
+            Arn: arn:target
+          - Id: Job2
+            Arn: arn:target
+          - Id: Job3
+            Arn: arn:target
+          - Id: Job4
+            Arn: arn:target
+          - Id: Job5
+            Arn: arn:target
+        - - Id: Job1
+            Arn: arn:target
+          - Id: Job2
+            Arn: arn:target
+          - Id: Job3
+            Arn: arn:target
+          - Id: Job4
+            Arn: arn:target
