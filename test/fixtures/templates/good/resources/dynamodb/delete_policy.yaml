@@ -1,0 +1,17 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  myTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: retain
+    Properties:
+      KeySchema:
+        -
+          AttributeName: "ArtistId"
+          KeyType: "HASH"
+        -
+          AttributeName: "Concert"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
