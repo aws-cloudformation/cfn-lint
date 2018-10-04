@@ -9,6 +9,16 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.7.4
+###### Features
+- Support parsing multiple files from the command line
+- New rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3016) to validate a resources UpdatePolicy configuration
+###### Fixes
+- Removes sub parameter check from rule [E1012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1012). The same check is covered by
+[E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019)
+- Fix rule [E1010](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1010) when using a string not an array with Fn::Sub
+- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) ignore intrinsic functions when checking values
+
 ### 0.7.3
 ###### Features
 - Update the custom objects for the template to directly allow the calling of getting items and checking items that is condition safe
