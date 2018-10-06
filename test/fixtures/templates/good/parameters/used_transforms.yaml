@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  Version:
+    Type: String
+
+Globals:
+  Function:
+    CodeUri:
+      Bucket: "somebucket"
+      Key: !Sub "lambda/code/lambda-${Version}-shaded.jar"
+
+Resources:
+  SomeLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: com.SomeLambda::handleRequest
+      Runtime: java8
+      MemorySize: 256

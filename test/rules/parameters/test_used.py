@@ -24,6 +24,9 @@ class TestParameterUsed(BaseRuleTestCase):
         """Setup"""
         super(TestParameterUsed, self).setUp()
         self.collection.register(Used())
+        self.success_templates = [
+            'fixtures/templates/good/parameters/used_transforms.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

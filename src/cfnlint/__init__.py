@@ -373,6 +373,7 @@ class Template(object):
             'Outputs',
             'Rules'
         ]
+        self.transform_globals = {}
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -601,7 +602,11 @@ class Template(object):
             Search for keys in all parts of the templates
         """
         LOGGER.debug('Search for key %s as far down as the template goes', searchText)
-        return (self._search_deep_keys(searchText, self.template, []))
+        results = []
+        results.extend(self._search_deep_keys(searchText, self.template, []))
+        # Globals are removed during a transform.  They need to be checked manually
+        results.extend(self._search_deep_keys(searchText, self.transform_globals, []))
+        return results
 
     def get_condition_values(self, template, path=[]):
         """Evaluates conditions and brings back the values"""
@@ -873,6 +878,8 @@ class Runner(object):
         # useless execution of the transformation.
         # Currently locked in to SAM specific
         if transform_type == 'AWS::Serverless-2016-10-31':
+            # Save the Globals section so its available for rule processing
+            self.cfn.transform_globals = self.cfn.template.get('Globals', {})
             transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
             matches = transform.transform_template()
             self.cfn.template = transform.template()
