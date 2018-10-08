@@ -109,7 +109,7 @@ The linter provides the possibility to implement these customized specifications
 
 More information about how this feature works is documented [here](docs/customize_specifications.md)
 
-## pre-Commit
+## pre-commit
 If you'd like cfn-lint to be run automatically when making changes to files in your Git repository, you can install [pre-commit](https://pre-commit.com/) and add the following text to your repositories' `.pre-commit-config.yaml`:
 
 ```yaml
