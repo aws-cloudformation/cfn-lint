@@ -109,7 +109,7 @@ The linter provides the possibility to implement these customized specifications
 
 More information about how this feature works is documented [here](docs/customize_specifications.md)
 
-## Pre-Commit
+## pre-Commit
 If you'd like cfn-lint to be run automatically when making changes to files in your Git repository, you can install [pre-commit](https://pre-commit.com/) and add the following text to your repositories' `.pre-commit-config.yaml`:
 
 ```yaml
@@ -118,9 +118,11 @@ repos:
     rev: v0.7.4 # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
+    files: path/to/cfn/dir/.*\.(json|yml|yaml)$
 ```
 
-You can see the available cfn-lint versions on the [releases page](https://github.com/awslabs/cfn-python-lint/releases).
+* If you exclude the `files:` line above, every json/yml/yaml file will be checked.
+* You can see available cfn-lint versions on the [releases page](https://github.com/awslabs/cfn-python-lint/releases).
 
 ## Credit
 Will Thames and ansible-lint at https://github.com/willthames/ansible-lint
