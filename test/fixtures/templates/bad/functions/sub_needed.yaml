@@ -1,0 +1,12 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  AMIId:
+    Type: 'String'
+    Description: 'The AMI ID for the image to use.'
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "${AMIId}" # Sub without a variable
+      AdditionalInfo: !Sub "${AMIId}" # We add a valid sub in to silence W2001
