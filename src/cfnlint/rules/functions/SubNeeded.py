@@ -82,7 +82,7 @@ class SubNeeded(CloudFormationLintRule):
         # Get a list of paths to every leaf node string containing at least one ${parameter}
         parameter_string_paths = self.match_values(parameter_search, cfn)
 
-        # We want to search all of the paths to check if each one contains an 'Fn::Sub' 
+        # We want to search all of the paths to check if each one contains an 'Fn::Sub'
         for parameter_string_path in parameter_string_paths:
             found_sub = False
 
