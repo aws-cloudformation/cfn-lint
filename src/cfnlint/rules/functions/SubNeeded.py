@@ -26,6 +26,9 @@ class SubNeeded(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
     tags = ['functions', 'sub']
 
+    # Free-form text properties to exclude from this rule
+    excludes = ['UserData', 'ZipFile']
+
     def _match_values(self, searchRegex, cfndict, path, cfn):
         """Recursively search for values matching the searchRegex"""
         values = []
@@ -85,7 +88,7 @@ class SubNeeded(CloudFormationLintRule):
 
             # Does the path contain an 'Fn::Sub'?
             for step in parameter_string_path:
-                if step == 'Fn::Sub':
+                if step == 'Fn::Sub' or step in self.excludes:
                     found_sub = True
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
