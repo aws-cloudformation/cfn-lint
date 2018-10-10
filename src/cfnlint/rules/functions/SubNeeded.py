@@ -29,35 +29,23 @@ class SubNeeded(CloudFormationLintRule):
     # Free-form text properties to exclude from this rule
     excludes = ['UserData', 'ZipFile']
 
-    def _match_values(self, searchRegex, cfndict, path, cfn):
+    def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
         values = []
-        if isinstance(cfndict, dict):
-            for key in cfndict:
+        if isinstance(cfnelem, dict):
+            for key in cfnelem:
                 pathprop = path[:]
                 pathprop.append(key)
-                if isinstance(cfndict[key], str) and re.match(searchRegex, cfndict[key]):
-                    pathprop.append(cfndict[key])
-                    values.append(pathprop)
-                    # pop the last element off for nesting of found elements for
-                    # dict and list checks
-                    pathprop = pathprop[:-1]
-                if isinstance(cfndict[key], dict):
-                    values.extend(self._match_values(searchRegex, cfndict[key], pathprop, cfn))
-                elif isinstance(cfndict[key], list):
-                    for index, item in enumerate(cfndict[key]):
-                        pathproparr = pathprop[:]
-                        pathproparr.append(index)
-                        values.extend(self._match_values(searchRegex, item, pathproparr, cfn))
-        elif isinstance(cfndict, list):
-            for index, item in enumerate(cfndict):
+                values.extend(self._match_values(searchRegex, cfnelem[key], pathprop))
+        elif isinstance(cfnelem, list):
+            for index, item in enumerate(cfnelem):
                 pathprop = path[:]
                 pathprop.append(index)
-                values.extend(self._match_values(searchRegex, item, pathprop, cfn))
+                values.extend(self._match_values(searchRegex, item, pathprop))
         else:
             # Leaf node
-            if isinstance(cfndict, str) and re.match(searchRegex, cfndict):
-                values.append(path + [cfndict])
+            if isinstance(cfnelem, str) and re.match(searchRegex, cfnelem):
+                values.append(path + [cfnelem])
 
         return values
 
@@ -66,9 +54,9 @@ class SubNeeded(CloudFormationLintRule):
             Search for values in all parts of the templates that match the searchRegex
         """
         results = []
-        results.extend(self._match_values(searchRegex, cfn.template, [], cfn))
+        results.extend(self._match_values(searchRegex, cfn.template, []))
         # Globals are removed during a transform.  They need to be checked manually
-        results.extend(self._match_values(searchRegex, cfn.template.get('Globals', {}), [], cfn))
+        results.extend(self._match_values(searchRegex, cfn.template.get('Globals', {}), []))
         return results
 
     def match(self, cfn):
