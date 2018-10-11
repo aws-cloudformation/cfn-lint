@@ -50,7 +50,9 @@ def get_exit_code(matches):
     """ Determine exit code """
     exit_code = 0
     for match in matches:
-        if match.rule.id[0] == 'W':
+        if match.rule.id[0] == 'I':
+            exit_code = exit_code | 8
+        elif match.rule.id[0] == 'W':
             exit_code = exit_code | 4
         elif match.rule.id[0] == 'E':
             exit_code = exit_code | 2
