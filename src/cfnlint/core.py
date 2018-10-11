@@ -146,6 +146,11 @@ def create_parser():
         type=comma_separated_arg, action='extend',
         help='only check rules whose id do not match these values'
     )
+    standard.add_argument(
+        '-c', '--include-checks', dest='include_checks', nargs='+', default=[],
+        type=comma_separated_arg, action='extend',
+        help='include rules whose id match these values'
+    )
 
     advanced.add_argument(
         '-o', '--override-spec', dest='override_spec',
@@ -184,9 +189,9 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir, ignore_rules):
+def get_rules(rulesdir, ignore_rules, include_rules):
     """Get rules"""
-    rules = RulesCollection(ignore_rules)
+    rules = RulesCollection(ignore_rules, include_rules)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
     try:
         for rules_dir in rules_dirs:
@@ -222,7 +227,7 @@ def get_args_filenames(cli_args):
     if isinstance(filenames, six.string_types):
         filenames = [filenames]
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
 
     # Set default regions if none are specified.
     if not args.regions:
@@ -264,7 +269,7 @@ def get_template_rules(filename, args):
         if not getattr(args, section):
             setattr(args, section, values)
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks)
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
 
     return(template, rules, [])
 
