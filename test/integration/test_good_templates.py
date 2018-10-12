@@ -24,7 +24,7 @@ class TestQuickStartTemplates(BaseTestCase):
     """Test QuickStart Templates Parsing """
     def setUp(self):
         """ SetUp template object"""
-        self.rules = RulesCollection()
+        self.rules = RulesCollection(include_rules=['I'])
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.extend(
