@@ -52,6 +52,9 @@ def decode(filename, ignore_bad_template):
 
         if matches:
             return(None, matches)
+    except UnicodeDecodeError as err:
+        LOGGER.error('Cannot read file contents: %s', filename)
+        matches.append(create_match_file_error(filename, 'Cannot read file contents: %s' % filename))
     except cfnlint.decode.cfn_yaml.CfnParseError as err:
         err.match.Filename = filename
         matches = [err.match]
