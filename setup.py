@@ -51,7 +51,7 @@ setup(
     ]},
     packages=find_packages('src'),
     zip_safe=False,
-    install_requires=['pyyaml', 'six', 'requests', 'aws-sam-translator>=1.6.0'],
+    install_requires=['pyyaml', 'six', 'requests', 'aws-sam-translator>=1.6.0', 'jsonpatch'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
         'console_scripts': [
