@@ -123,14 +123,15 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None):
+    def __init__(self, ignore_rules=None, include_rules=None):
         self.rules = []
 
         # Make Ignore Rules not required
-        if ignore_rules:
-            self.ignore_rules = ignore_rules
-        else:
-            self.ignore_rules = []
+        self.ignore_rules = ignore_rules or []
+        self.include_rules = include_rules or []
+        # by default include 'W' and 'E'
+        # 'I' has to be included manually for backwards compabitility
+        self.include_rules.extend(['W', 'E'])
 
     def register(self, rule):
         """Register rules"""
@@ -155,6 +156,13 @@ class RulesCollection(object):
 
     def is_rule_enabled(self, rule_id):
         """ Cheks if an individual rule is valid """
+        # Evaluate includes first:
+        include_filter = False
+        for include_rule in self.include_rules:
+            if rule_id.startswith(include_rule):
+                include_filter = True
+        if not include_filter:
+            return False
         # Allowing ignoring of rules based on prefix to ignore checks
         for ignore_rule in self.ignore_rules:
             if rule_id.startswith(ignore_rule) and ignore_rule:
