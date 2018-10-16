@@ -120,6 +120,15 @@ def update_documentation(rules):
 def patch_spec(content, region):
     """Patch the spec file"""
     json_patches = [
+        # CloudFront DistributionConfig Origin and DefaultCacheBehavior
+        {
+            'Name': 'Origin and DefaultCacheBehavior required for AWS::CloudFront::Distribution.DistributionConfig',
+            'Regions': ['All'],
+            'Patch': jsonpatch.JsonPatch([
+                {'op': 'replace', 'path': '/ResourceTypes/AWS::CloudFront::Distribution.DistributionConfig/Properties/DefaultCacheBehavior/Required', 'value': True},
+                {'op': 'replace', 'path': '/ResourceTypes/AWS::CloudFront::Distribution.DistributionConfig/Properties/Origin/Required', 'value': True},
+            ])
+        },
         # VPC Endpoint and DNS Endpoint
         {
             'Name': 'VpcEndpointType in AWS::EC2::VPCEndpoint',
