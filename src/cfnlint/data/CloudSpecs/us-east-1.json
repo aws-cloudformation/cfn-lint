@@ -3605,6 +3605,13 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Type": "List",
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-tagspecifications.html#cfn-ec2-spotfleet-spotfleettagspecification-tags",
+          "ItemType": "Tag",
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -5471,7 +5478,7 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
-        "SecondsBeforeAutoPause": {
+        "SecondsUntilAutoPause": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbcluster-scalingconfiguration.html#cfn-rds-dbcluster-scalingconfiguration-secondsbeforeautopause",
           "PrimitiveType": "Integer",
           "Required": false,
@@ -10780,7 +10787,7 @@
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-smsconfiguration.html",
       "Properties": {
         "ExternalId": {
-          "Required": false,
+          "Required": true,
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-smsconfiguration.html#cfn-cognito-userpool-smsconfiguration-externalid",
           "PrimitiveType": "String",
           "UpdateType": "Mutable"
@@ -15388,6 +15395,24 @@
           "UpdateType": "Mutable"
         }
       }
+    },
+    "AWS::SSM::MaintenanceWindowTarget.Target": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html",
+      "Properties": {
+        "Key": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-key",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "Values": {
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-values",
+          "PrimitiveItemType": "String",
+          "UpdateType": "Mutable",
+          "Type": "List"
+        }
+      }
     }
   },
   "ResourceTypes": {
@@ -17596,7 +17621,7 @@
         "Protocol": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-protocol",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Immutable"
         },
         "RawMessageDelivery": {
@@ -17614,7 +17639,7 @@
         "TopicArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#topicarn",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Immutable"
         }
       }
@@ -22352,13 +22377,13 @@
         "Handle": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-waitcondition.html#cfn-waitcondition-handle",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Timeout": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-waitcondition.html#cfn-waitcondition-timeout",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -26908,16 +26933,16 @@
           "Type": "List",
           "UpdateType": "Mutable"
         },
-        "VPCEndpointType": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
-        },
         "VpcId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcid",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "VpcEndpointType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Immutable"
         }
       }
@@ -28744,6 +28769,90 @@
           "Type": "GrokClassifier",
           "Required": false,
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-classifier.html#cfn-glue-classifier-grokclassifier",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::SSM::MaintenanceWindow": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html",
+      "Properties": {
+        "Description": {
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "AllowUnassociatedTargets": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets",
+          "PrimitiveType": "Boolean",
+          "UpdateType": "Mutable"
+        },
+        "Cutoff": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff",
+          "PrimitiveType": "Integer",
+          "UpdateType": "Mutable"
+        },
+        "Schedule": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "Duration": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration",
+          "PrimitiveType": "Integer",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::SSM::MaintenanceWindowTarget": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html",
+      "Properties": {
+        "OwnerInformation": {
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "Description": {
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "WindowId": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "ResourceType": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "Targets": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets",
+          "PrimitiveType": "String",
+          "Type": "List",
+          "ItemType": "Target",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Required": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name",
+          "PrimitiveType": "String",
           "UpdateType": "Mutable"
         }
       }
