@@ -23,6 +23,7 @@ try:
 except ImportError:
     JSONDecodeError = ValueError
 from yaml.parser import ParserError, ScannerError
+from yaml import YAMLError
 import cfnlint.decode.cfn_yaml
 import cfnlint.decode.cfn_json
 
@@ -51,6 +52,9 @@ def decode(filename, ignore_bad_template):
 
         if matches:
             return(None, matches)
+    except UnicodeDecodeError as err:
+        LOGGER.error('Cannot read file contents: %s', filename)
+        matches.append(create_match_file_error(filename, 'Cannot read file contents: %s' % filename))
     except cfnlint.decode.cfn_yaml.CfnParseError as err:
         err.match.Filename = filename
         matches = [err.match]
@@ -77,6 +81,8 @@ def decode(filename, ignore_bad_template):
                     return(None, [create_match_file_error(filename, 'Tried to parse %s as JSON but got error: %s' % (filename, str(json_err)))])
         else:
             matches = [create_match_yaml_parser_error(err, filename)]
+    except YAMLError as err:
+        matches = [create_match_file_error(filename, err)]
 
     if not isinstance(template, dict) and not matches:
         # Template isn't a dict which means nearly nothing will work
