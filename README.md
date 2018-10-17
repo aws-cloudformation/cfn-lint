@@ -70,10 +70,14 @@ Optional parameters:
 | -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
 | -a, --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
+| -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -d, --debug |  |  | Specify to enable debug logging |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
 | -v, --version | | | Version of cfn-lint |
+
+### Info Rules
+To maintain backwards compatibility `info` rules are not included by default.  To include these rules you will need to include `-c I` or `--include-checks I`
 
 ### Metadata
 Inside the root level Metadata key you can configure cfn-lint using the supported parameters.
