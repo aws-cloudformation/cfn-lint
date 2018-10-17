@@ -9,6 +9,18 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.8.0
+###### Features
+- Created a process to patch the CloudFormation Spec and patched a bunch of issues
+- Support pre-commit hooks for linting templates
+- Add rule [E3021](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3021) to that 5 or less targets are added to a CloudWatch Event
+- Add rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to look for Sub variables that aren't inside a Sub
+- Add rule [I3011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#I3011) to validate that DynamDB Tables have deletion policy specified as the default is to delete the database.
+- Add support for `info` errors
+###### Fixes
+- Update search_deep_keys to look for items in the Global section which is lost in a Transformation
+- Clean up failures when loading files that are not yaml or json
+
 ### 0.7.4
 ###### Features
 - Support parsing multiple files from the command line
