@@ -47,8 +47,6 @@ class TestPatchJson(BaseTestCase):
         self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Timeout']['Required'])
         self.assertIn('SecondsUntilAutoPause', patched['PropertyTypes']['AWS::RDS::DBCluster.ScalingConfiguration']['Properties'])
         self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
-        self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Handle']['Required'])
-        self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Timeout']['Required'])
         self.assertIn('Tags', patched['PropertyTypes']['AWS::EC2::SpotFleet.SpotFleetTagSpecification']['Properties'])
         self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
         self.assertIn('AWS::SSM::MaintenanceWindow', patched['ResourceTypes'])
