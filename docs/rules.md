@@ -4,22 +4,24 @@
 Errors will start with the letter `E`. Errors will result in a hard failure for the template being validated.
 
 ### Warnings
-Warnings start with the letter `W`. Warnings alert you when the template doesnt follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
+Warnings start with the letter `W`. Warnings alert you when the template doesn't follow best practices but should still function.  *Example: If you use a parameter for a RDS master password you should have the parameter property NoEcho set to true.*
 
+### Informational
+Informational results start with the letter `I`. Informational alert you when the template doesn't follow best practices, just like the Warnings, but in a non-blocking way. The Informational level is disabled by default and has to be enabled explicitly using `-c I` or `--include-checks I`.
 
 ## Categories
 
 | Rule Numbers    | Category |
 | --------------- | ------------- |
-| (E&#124;W)0XXX  | Basic Template Errors. Examples: Not parseable, main sections (Outputs, Resources, etc.)  |
-| (E&#124;W)1XXX  | Functions (Ref, GetAtt, etc.)  |
-| (E&#124;W)2XXX  | Parameters |
-| (E&#124;W)3XXX  | Resources |
-| (E&#124;W)4XXX  | Metadata |
-| (E&#124;W)6xxx  | Outputs |
-| (E&#124;W)7xxx  | Mappings |
-| (E&#124;W)8xxx  | Conditions |
-| (E&#124;W)9xxx  | Reserved for users rules |
+| (E&#124;W&#124;I)0XXX  | Basic Template Errors. Examples: Not parseable, main sections (Outputs, Resources, etc.)  |
+| (E&#124;W&#124;I)1XXX  | Functions (Ref, GetAtt, etc.)  |
+| (E&#124;W&#124;I)2XXX  | Parameters |
+| (E&#124;W&#124;I)3XXX  | Resources |
+| (E&#124;W&#124;I)4XXX  | Metadata |
+| (E&#124;W&#124;I)6xxx  | Outputs |
+| (E&#124;W&#124;I)7xxx  | Mappings |
+| (E&#124;W&#124;I)8xxx  | Conditions |
+| (E&#124;W&#124;I)9xxx  | Reserved for users rules |
 
 
 *Warning*
