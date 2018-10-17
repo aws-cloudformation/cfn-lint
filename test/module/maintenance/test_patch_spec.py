@@ -39,10 +39,14 @@ class TestPatchJson(BaseTestCase):
     def test_success_rds_dbcluster(self):
         """Success test"""
         patched = patch_spec(self.spec, 'us-east-1')
-        self.assertIn('SecondsUntilAutoPause', patched['PropertyTypes']['AWS::RDS::DBCluster.ScalingConfiguration']['Properties'])
-        self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
+        self.assertTrue(
+            patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['DefaultCacheBehavior']['Required'])
+        self.assertTrue(
+            patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['Origins']['Required'])
         self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Handle']['Required'])
         self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Timeout']['Required'])
+        self.assertIn('SecondsUntilAutoPause', patched['PropertyTypes']['AWS::RDS::DBCluster.ScalingConfiguration']['Properties'])
+        self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
         self.assertIn('Tags', patched['PropertyTypes']['AWS::EC2::SpotFleet.SpotFleetTagSpecification']['Properties'])
         self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
         self.assertIn('AWS::SSM::MaintenanceWindow', patched['ResourceTypes'])
