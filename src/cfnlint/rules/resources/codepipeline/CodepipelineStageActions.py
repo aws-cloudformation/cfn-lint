@@ -111,6 +111,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
         category = action_type_id.get('Category')
         provider = action_type_id.get('Provider')
 
+        if isinstance(owner, dict) or isinstance(category, dict) or isinstance(provider, dict):
+            self.logger.debug('owner, category, provider need to be strings to validate. Skipping.')
+            return matches
+
         constraints = self.CONSTRAINTS.get(owner, {}).get(category, {}).get(provider, {})
         if not constraints:
             return matches
@@ -175,13 +179,15 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action type version is valid."""
         matches = []
 
-        if action.get('ActionTypeId').get('Version') != '1':
+        version = action.get('ActionTypeId', {}).get('Version')
+        if isinstance(version, dict):
+            self.logger.debug('Unable to validate version when an object is used.  Skipping')
+        elif version != '1':
             message = 'For all currently supported action types, the only valid version string is "1".'
             matches.append(RuleMatch(
                 path + ['ActionTypeId', 'Version'],
                 message
             ))
-
         return matches
 
     def check_names_unique(self, action, path, action_names):
