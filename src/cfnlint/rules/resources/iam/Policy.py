@@ -14,7 +14,10 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import json
 from datetime import date
+import six
+from cfnlint.helpers import convert_dict
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -53,7 +56,7 @@ class Policy(CloudFormationLintRule):
         for resource_type in self.idp_and_keys:
             self.resource_property_types.append(resource_type)
 
-    def check_policy_document(self, value, path, is_identity_policy, resource_exceptions):
+    def check_policy_document(self, value, path, is_identity_policy, resource_exceptions, start_mark, end_mark):
         """Check policy document"""
         matches = []
 
@@ -63,6 +66,14 @@ class Policy(CloudFormationLintRule):
             'Statement',
         ]
         valid_versions = ['2012-10-17', '2008-10-17', date(2012, 10, 17), date(2008, 10, 17)]
+
+        if isinstance(value, six.string_types):
+            try:
+                value = convert_dict(json.loads(value), start_mark, end_mark)
+            except Exception as ex:  # pylint: disable=W0703,W0612
+                message = 'IAM Policy Documents need to be JSON'
+                matches.append(RuleMatch(path[:], message))
+                return matches
 
         if not isinstance(value, dict):
             message = 'IAM Policy Documents needs to be JSON'
@@ -170,24 +181,35 @@ class Policy(CloudFormationLintRule):
         if key == self.resource_exceptions.get(resourcetype):
             resource_exceptions = True
 
-        if key == 'Policies':
-            for index, policy in enumerate(properties.get(key, [])):
+        other_keys = []
+        for key, value in self.resources_and_keys.items():
+            if value != 'Policies':
+                other_keys.append(key)
+        for key, value in self.idp_and_keys.items():
+            if value != 'Policies':
+                other_keys.append(key)
+
+        for key, value in properties.items():
+            if key == 'Policies' and isinstance(value, list):
+                for index, policy in enumerate(properties.get(key, [])):
+                    matches.extend(
+                        cfn.check_value(
+                            obj=policy, key='PolicyDocument',
+                            path=path[:] + ['Policies', index],
+                            check_value=self.check_policy_document,
+                            is_identity_policy=is_identity_policy,
+                            resource_exceptions=resource_exceptions,
+                            start_mark=key.start_mark, end_mark=key.end_mark,
+                        ))
+            elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies']:
                 matches.extend(
                     cfn.check_value(
-                        obj=policy, key='PolicyDocument',
-                        path=path[:] + ['Policies', index],
+                        obj=properties, key=key,
+                        path=path[:],
                         check_value=self.check_policy_document,
                         is_identity_policy=is_identity_policy,
                         resource_exceptions=resource_exceptions,
+                        start_mark=key.start_mark, end_mark=key.end_mark,
                     ))
-        else:
-            matches.extend(
-                cfn.check_value(
-                    obj=properties, key=key,
-                    path=path[:],
-                    check_value=self.check_policy_document,
-                    is_identity_policy=is_identity_policy,
-                    resource_exceptions=resource_exceptions,
-                ))
 
         return matches
