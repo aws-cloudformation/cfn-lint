@@ -1,0 +1,20 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  AMIId:
+    Type: 'String'
+    Description: 'The AMI ID for the image to use.'
+Resources:
+  myPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+      - testRole
+      PolicyName: test
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Action:
+            - "iam:UploadSSHPublicKey"
+          Resource: "arn:aws:iam::*:user/${aws:username}"

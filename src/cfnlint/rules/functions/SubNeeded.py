@@ -27,7 +27,7 @@ class SubNeeded(CloudFormationLintRule):
     tags = ['functions', 'sub']
 
     # Free-form text properties to exclude from this rule
-    excludes = ['UserData', 'ZipFile']
+    excludes = ['UserData', 'ZipFile', 'Resource', 'Condition']
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""

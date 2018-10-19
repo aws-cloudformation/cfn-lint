@@ -26,6 +26,7 @@ class TestSubNeeded(BaseRuleTestCase):
         self.collection.register(SubNeeded())
         self.success_templates = [
             'fixtures/templates/good/functions_sub.yaml',
+            'fixtures/templates/good/functions/sub_needed.yaml',
         ]
 
     def test_file_positive(self):
