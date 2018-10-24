@@ -101,6 +101,13 @@ class Policy(CloudFormationLintRule):
                                     i_s_p, i_s_v, is_identity_policy, resource_exceptions
                                 )
                             )
+                    elif isinstance(parent_value, dict):
+                        for i_s_v, i_s_p in parent_value.items_safe(p_p + ['Statement']):
+                            matches.extend(
+                                self._check_policy_statement(
+                                    i_s_p, i_s_v, is_identity_policy, resource_exceptions
+                                )
+                            )
                     else:
                         message = 'IAM Policy statement should be of list.'
                         matches.append(

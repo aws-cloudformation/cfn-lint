@@ -4,10 +4,21 @@ Parameters:
   myExampleBucket:
     Type: String
 Resources:
+  WebsiteBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: MyBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement: # doesn't fail when the statement isn't a list
+          Effect: Allow
+          Principal: "*"
+          Action: s3:GetObject
+          Resource: "arn:aws:s3:::MyBucket"
   Ecr:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryPolicyText: | 
+      RepositoryPolicyText: |
         {
           "Version": "2012-10-17",
           "Statement": [
