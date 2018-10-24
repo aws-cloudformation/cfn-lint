@@ -1,0 +1,75 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Bad SubnetRouteTableAssociation'
+
+Parameters:
+  PublicRouteTable:
+    Type: String
+  PrivateRouteTable:
+    Type: String
+  PublicSubnet01:
+    Type: String
+  PrivateSubnet01:
+    Type: String
+  AppType:
+    Type: String
+    AllowedValues: ['Public', 'Public']
+
+Conditions:
+  isPublic: !Equals [ !Ref AppType, 'Public' ]
+
+Resources:
+  PublicSubnetRouteTableAssociation1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId:
+          Ref: PublicRouteTable
+        SubnetId:
+          Ref: PublicSubnet01
+
+  PrivateSubnetRouteTableAssociation1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId:
+          Ref: PrivateRouteTable
+        SubnetId:
+          Ref: PublicSubnet01
+
+  AuxiliaryPublicSubnetRouteTableAssociation1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Condition: CreateAuxiliaryNetworks
+      Properties:
+        RouteTableId:
+          Ref: PublicRouteTable
+        SubnetId:
+          Ref: PublicSubnet01
+
+  ProxySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId:
+          Ref: PublicRouteTable
+        SubnetId:
+          Fn::If: [ isPublic, Ref: PublicSubnet01 , Ref: PrivateSubnet01 ]
+
+  CustomResource:
+      Type: AWS::CloudFormation::CustomResource
+      Properties:
+        ServiceToken: arn:aws:sns:region:account-id:topicname
+
+  CustomSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          !GetAtt CustomResource.PublicSubnet
+
+  AuxilliaryCustomSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Condition: CreateAuxiliaryNetworks
+      Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          !GetAtt CustomResource.PublicSubnet
