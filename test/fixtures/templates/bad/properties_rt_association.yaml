@@ -5,24 +5,49 @@ Description: 'Bad SubnetRouteTableAssociation'
 Parameters:
   PublicRouteTable:
     Type: String
-
+  PrivateRouteTable:
+    Type: String
   PublicSubnet01:
     Type: String
+  PrivateSubnet01:
+    Type: String
+  AppType:
+    Type: String
+    AllowedValues: ['Public', 'Public']
+
+Conditions:
+  isPublic: !Equals [ !Ref AppType, 'Public' ]
 
 Resources:
   PublicSubnetRouteTableAssociation1:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
+          Ref: PublicSubnet01
+
+  PrivateSubnetRouteTableAssociation1:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId:
+          Ref: PrivateRouteTable
+        SubnetId:
           Ref: PublicSubnet01
 
   AuxiliaryPublicSubnetRouteTableAssociation1:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Condition: CreateAuxiliaryNetworks
       Properties:
-        RouteTableId: 
+        RouteTableId:
           Ref: PublicRouteTable
-        SubnetId: 
+        SubnetId:
           Ref: PublicSubnet01
+
+  ProxySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId:
+          Ref: PublicRouteTable
+        SubnetId:
+          Fn::If: [ isPublic, Ref: PublicSubnet01 , Ref: PrivateSubnet01 ]
