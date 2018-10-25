@@ -9,6 +9,15 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.8.2
+###### Fixes
+- Update rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502) to allow GetAtt against a nested stack or custom resource
+- Update rules [E2541](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2541) and [E2540](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2540) to support conditions inside the CodePipeline
+- Fix types in rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to now include InputPath and OutputPath
+- Update rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to skip missing sub when looking at parameters in IAM policies
+- Update rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow for strings in the IAM policy
+- Update rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow the policy statement to be an object along with a list
+
 ### 0.8.1
 ###### Features
 - Update Specs to the versions released October 19th, 2018
