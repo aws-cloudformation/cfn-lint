@@ -1,4 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
+Conditions:
+  myCondition: !Equals [!Ref "AWS::Region", 'us-east-1']
 Resources:
   TestPipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -39,6 +41,8 @@ Resources:
               - Name: MyApp
         - Name: !ImportValue TestImport
           Actions:
+          - Fn::If:
+            - myCondition
             - Name: CodeBuild
               ActionTypeId:
                 Category: Build
@@ -49,3 +53,4 @@ Resources:
                 ProjectName: cfn-python-lint
               InputArtifacts:
               - Name: MyApp
+            - !Ref AWS::NoValue

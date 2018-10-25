@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  IAMInstanceProfile:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3-us-west-2.amazonaws.com/example-bucket/example-instance-profile.yml
+  Instance:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        IamInstanceProfile: !GetAtt IAMInstanceProfile.Outputs.InstanceProfileArn
+      TemplateURL: https://s3-us-west-2.amazonaws.com/example-bucket/example-instance.yml

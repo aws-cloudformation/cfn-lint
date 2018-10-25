@@ -34,7 +34,7 @@ class InstanceProfile(CloudFormationLintRule):
 
         # Build the list of keys
         trees = cfn.search_deep_keys('Fn::GetAtt')
-        # Filter only resoureces
+        # Filter only resources
         # Disable pylint for Pylint 2
         # pylint: disable=W0110
         trees = filter(lambda x: x[0] == 'Resources', trees)
@@ -43,12 +43,17 @@ class InstanceProfile(CloudFormationLintRule):
                 obj = tree[-1]
                 objtype = cfn.template.get('Resources', {}).get(obj[0], {}).get('Type')
                 if objtype:
-                    if objtype != 'AWS::IAM::InstanceProfile':
+                    if objtype not in ['AWS::IAM::InstanceProfile', 'AWS::CloudFormation::Stack', 'AWS::CloudFormation::CustomResource']:
                         message = 'Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
                     else:
-                        if cfn.template.get('Resources', {}).get(tree[1], {}).get('Type') in ['AWS::EC2::SpotFleet']:
+                        if objtype in ['AWS::CloudFormation::Stack']:
+                            if obj[1] != 'Outputs':
+                                message = 'Property IamInstanceProfile should relate to AWS::IAM::InstanceProfile for %s' % (
+                                    '/'.join(map(str, tree[:-1])))
+                                matches.append(RuleMatch(tree[:-1], message))
+                        elif cfn.template.get('Resources', {}).get(tree[1], {}).get('Type') in ['AWS::EC2::SpotFleet']:
                             if obj[1] != 'Arn':
                                 message = 'Property IamInstanceProfile should be an ARN for %s' % (
                                     '/'.join(map(str, tree[:-1])))
