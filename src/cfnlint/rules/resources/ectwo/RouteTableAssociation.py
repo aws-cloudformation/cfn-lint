@@ -16,6 +16,7 @@
 """
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+import cfnlint.helpers
 
 
 class RouteTableAssociation(CloudFormationLintRule):
@@ -26,32 +27,60 @@ class RouteTableAssociation(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'
     tags = ['resources', 'subnet', 'route table']
 
+    subnets = set()
+
+    def check_value(self, subnetid, condition, resource_name):
+        """Check subnet is not associated with other Route Tables"""
+        matches = []
+        values = self.get_values(subnetid, condition)
+        for value in values:
+            if '::' in value:
+                (condition, bare_value) = value.split('::')
+            else:
+                bare_value = value
+            if value in self.subnets or bare_value in self.subnets:
+                path = ['Resources', resource_name, 'Properties', 'SubnetId']
+                message = 'SubnetId is associated with another route table for {0}'
+                matches.append(
+                    RuleMatch(path, message.format(resource_name)))
+            self.subnets.add(value)
+
+        return matches
+
+    def get_values(self, subnetid, condition):
+        """Get string literal(s) from value of SubnetId"""
+        values = []
+        if isinstance(subnetid, dict):
+            if len(subnetid) == 1:
+                for key, value in subnetid.items():
+                    if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                        if isinstance(value, list):
+                            if len(value) == 3:
+                                condition = value[0]
+                                values.extend(self.get_values(value[1], condition))
+                                values.extend(self.get_values(value[2], condition))
+                    if key in ('Ref', 'GetAtt'):
+                        values.extend(self.get_values(value, condition))
+        else:
+            if condition:
+                values.append(condition + '::' + subnetid)
+            else:
+                values.append(subnetid)
+        return values
+
     def match(self, cfn):
         """Check SubnetRouteTableAssociation Resource Properties"""
         matches = []
-        subnets = set()
 
         # Get all SubnetRouteTableAssociation resources from template
         resources = cfn.get_resources(['AWS::EC2::SubnetRouteTableAssociation'])
         for resource_name, resource in resources.items():
             properties = resource.get('Properties')
-            print("Found rtAssociation: %s" % resource_name)
+            condition = resource.get('Condition')
             if properties:
                 subnetid = properties.get('SubnetId')
-                if isinstance(subnetid, dict):
-                    print("it's a dict!")
-                    if len(subnetid) == 1:
-                        for key, value in subnetid.items():
-                            if key == 'Ref':
-                                print("Found ref to: %s" % value)
-                                subnetid = value
-                print("SubnetId: %s" % subnetid)
-                if subnetid in subnets:
-                    path = ['Resources', resource_name, 'Properties', 'SubnetId']
-                    message = 'Only one route table association is allowed per Subnet for {0}'
-                    matches.append(
-                        RuleMatch(path, message.format(resource_name)))
-                else:
-                    subnets.add(subnetid)
+                matches.extend(
+                    self.check_value(subnetid, condition, resource_name)
+                )
 
         return matches
