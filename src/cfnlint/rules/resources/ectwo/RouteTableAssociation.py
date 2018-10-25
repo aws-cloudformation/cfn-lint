@@ -28,7 +28,7 @@ class RouteTableAssociation(CloudFormationLintRule):
     tags = ['resources', 'subnet', 'route table']
 
     # Namespace for unique associated subnets in the form condition::value
-    associated_subnets = set()
+    associated = set()
 
     def get_values(self, subnetid, condition):
         """Get string literal(s) from value of SubnetId"""
@@ -60,12 +60,12 @@ class RouteTableAssociation(CloudFormationLintRule):
                 (condition, bare_value) = value.split('::')
             else:
                 bare_value = value
-            if value in self.associated_subnets or bare_value in self.associated_subnets:
+            if value in self.associated or bare_value in self.associated:
                 path = ['Resources', resource_name, 'Properties', 'SubnetId']
                 message = 'SubnetId is associated with another route table for {0}'
                 matches.append(
                     RuleMatch(path, message.format(resource_name)))
-            self.associated_subnets.add(value)
+            self.associated.add(value)
 
         return matches
 
