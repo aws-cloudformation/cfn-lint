@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
@@ -30,7 +31,7 @@ class RouteTableAssociation(CloudFormationLintRule):
     # Namespace for unique associated subnets in the form condition::value
     associated = set()
 
-    def get_values(self, subnetid, condition):
+    def get_values(self, subnetid, resource_condition, property_condition):
         """Get string literal(s) from value of SubnetId"""
         values = []
         if isinstance(subnetid, dict):
@@ -39,33 +40,34 @@ class RouteTableAssociation(CloudFormationLintRule):
                     if key in cfnlint.helpers.CONDITION_FUNCTIONS:
                         if isinstance(value, list):
                             if len(value) == 3:
-                                condition = value[0]
-                                values.extend(self.get_values(value[1], condition))
-                                values.extend(self.get_values(value[2], condition))
-                    if key in ('Ref', 'GetAtt'):
-                        values.extend(self.get_values(value, condition))
+                                property_condition = value[0]
+                                values.extend(self.get_values(value[1], resource_condition, property_condition))
+                                values.extend(self.get_values(value[2], resource_condition, property_condition))
+                    if key == 'Ref':
+                        values.extend(self.get_values(value, resource_condition, property_condition))
+                    if key == 'Fn::GetAtt':
+                        if isinstance(value[1], (six.string_types)):
+                            sub_value = '.'.join(value)
+                            values.append((resource_condition, property_condition, sub_value))
         else:
-            if condition:
-                values.append(condition + '::' + subnetid)
-            else:
-                values.append(subnetid)
+            values.append((resource_condition, property_condition, subnetid))
         return values
 
-    def check_values(self, subnetid, condition, resource_name):
+    def check_values(self, subnetid, resource_condition, resource_name):
         """Check subnet value is not associated with other route tables"""
         matches = []
-        values = self.get_values(subnetid, condition)
+        property_condition = None
+        values = self.get_values(subnetid, resource_condition, property_condition)
         for value in values:
-            if '::' in value:
-                (condition, bare_value) = value.split('::')
-            else:
-                bare_value = value
+            print("%s : %s : %s" % (resource_name, value, self.associated))
+            bare_value = (None, None, value[2])
             if value in self.associated or bare_value in self.associated:
                 path = ['Resources', resource_name, 'Properties', 'SubnetId']
                 message = 'SubnetId is associated with another route table for {0}'
                 matches.append(
                     RuleMatch(path, message.format(resource_name)))
             self.associated.add(value)
+            self.associated.add((None, None, value[2]))
 
         return matches
 
@@ -77,10 +79,10 @@ class RouteTableAssociation(CloudFormationLintRule):
         for resource_name, resource in resources.items():
             properties = resource.get('Properties')
             if properties:
-                condition = resource.get('Condition')
+                resource_condition = resource.get('Condition')
                 subnetid = properties.get('SubnetId')
                 matches.extend(
-                    self.check_values(subnetid, condition, resource_name)
+                    self.check_values(subnetid, resource_condition, resource_name)
                 )
 
         return matches

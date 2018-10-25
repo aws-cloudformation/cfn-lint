@@ -50,10 +50,23 @@ Resources:
         SubnetId: 
           Fn::If: [ isPublic, Ref: PublicProxySubnet , Ref: PrivateProxySubnet ]
   
-  PublicSubnetRouteTableAssociation1:
+  PublicSubnetRouteTableAssociation:
       Type: AWS::EC2::SubnetRouteTableAssociation
       Properties:
         RouteTableId: 
           Ref: PublicRouteTable
         SubnetId: 
           Ref: PublicSubnet01
+
+  CustomResource:
+      Type: AWS::CloudFormation::CustomResource
+      Properties:
+        ServiceToken: arn:aws:sns:region:account-id:topicname
+
+  CustomSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          !GetAtt CustomResource.PublicSubnet
