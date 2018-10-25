@@ -37,13 +37,14 @@ class StateMachine(CloudFormationLintRule):
         """Check State JSON Definition"""
         matches = []
 
+        # https://docs.aws.amazon.com/step-functions/latest/dg/amazon-states-language-common-fields.html
         common_state_keys = [
             'Next',
             'End',
             'Type',
             'Comment',
-            'Input',
-            'Ouptut',
+            'InputPath',
+            'OutputPath',
         ]
         common_state_required_keys = [
             'Type',
