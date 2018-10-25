@@ -106,27 +106,27 @@ class CodepipelineStages(CloudFormationLintRule):
             path = resource['Path']
             properties = resource['Value']
 
-            stages = properties.get('Stages')
-            if not isinstance(stages, list):
-                self.logger.debug('Stages not list. Should have been caught by generic linting.')
-                return matches
+            s_stages = properties.get_safe('Stages', path)
+            for s_stage_v, s_stage_p in s_stages:
+                if not isinstance(s_stage_v, list):
+                    self.logger.debug('Stages not list. Should have been caught by generic linting.')
+                    return matches
 
-            try:
-                matches.extend(
-                    self.check_stage_count(stages, path + ['Stages'])
-                )
-                matches.extend(
-                    self.check_first_stage(stages, path + ['Stages'])
-                )
-                matches.extend(
-                    self.check_source_actions(stages, path + ['Stages'])
-                )
-                matches.extend(
-                    self.check_names_unique(stages, path + ['Stages'])
-                )
-            except AttributeError as err:
-                self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
-                                  'Ignoring the error here: %s', str(err))
-
+                try:
+                    matches.extend(
+                        self.check_stage_count(s_stage_v, s_stage_p)
+                    )
+                    matches.extend(
+                        self.check_first_stage(s_stage_v, s_stage_p)
+                    )
+                    matches.extend(
+                        self.check_source_actions(s_stage_v, s_stage_p)
+                    )
+                    matches.extend(
+                        self.check_names_unique(s_stage_v, s_stage_p)
+                    )
+                except AttributeError as err:
+                    self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
+                                      'Ignoring the error here: %s', str(err))
 
         return matches
