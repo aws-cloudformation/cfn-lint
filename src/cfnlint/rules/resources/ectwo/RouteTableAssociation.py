@@ -14,8 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import six
 from collections import defaultdict
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
@@ -73,7 +73,7 @@ class RouteTableAssociation(CloudFormationLintRule):
                 resource_condition = resource.get('Condition')
                 subnetid = properties.get('SubnetId')
                 self.check_values(subnetid, resource_condition, resource_name)
-        for resource_name in self.resource_values.keys():
+        for resource_name in self.resource_values:
             for value in self.resource_values[resource_name]:
                 bare_value = (None, None, value[2])
                 other_resources = []
@@ -83,13 +83,13 @@ class RouteTableAssociation(CloudFormationLintRule):
                         if resource == resource_name:
                             other_resources.append(resource)
 
-                if value != bare_value and len(self.associated_resources[bare_value]) > 0:
+                if value != bare_value and self.associated_resources[bare_value]:
                     other_resources.extend(self.associated_resources[bare_value])
 
                 if other_resources:
                     path = ['Resources', resource_name, 'Properties', 'SubnetId']
                     message = 'SubnetId in {0} is also associated with {1}'
                     matches.append(
-                        RuleMatch(path, message.format(resource_name, ", ".join(other_resources))))
+                        RuleMatch(path, message.format(resource_name, ', '.join(other_resources))))
 
         return matches
