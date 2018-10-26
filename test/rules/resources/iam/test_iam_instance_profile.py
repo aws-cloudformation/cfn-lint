@@ -24,6 +24,9 @@ class TestPropertyVpcId(BaseRuleTestCase):
         """Setup"""
         super(TestPropertyVpcId, self).setUp()
         self.collection.register(InstanceProfile())
+        self.success_templates = [
+            'fixtures/templates/good/resources/iam/instance_profile.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

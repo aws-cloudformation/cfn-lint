@@ -23,7 +23,7 @@ import logging
 import re
 import inspect
 import pkg_resources
-
+from cfnlint.decode.node import dict_node, list_node
 
 LOGGER = logging.getLogger(__name__)
 
@@ -209,6 +209,22 @@ def load_plugins(directory):
                     fh.close()
 
     return result
+
+
+def convert_dict(template, start_mark=(0, 0), end_mark=(0, 0)):
+    """Convert dict to template"""
+    if isinstance(template, dict):
+        if not isinstance(template, dict_node):
+            template = dict_node(template, start_mark, end_mark)
+        for k, v in template.items():
+            template[k] = convert_dict(v)
+    elif isinstance(template, list):
+        if not isinstance(template, list_node):
+            template = list_node(template, start_mark, end_mark)
+        for i, v in enumerate(template):
+            template[i] = convert_dict(v)
+
+    return template
 
 
 def override_specs(override_spec_file):
