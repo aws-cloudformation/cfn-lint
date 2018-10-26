@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import six
+from collections import defaultdict
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
@@ -29,7 +30,8 @@ class RouteTableAssociation(CloudFormationLintRule):
     tags = ['resources', 'subnet', 'route table']
 
     # Namespace for unique associated subnets in the form condition::value
-    associated = set()
+    resource_values = {}
+    associated_resources = defaultdict(list)
 
     def get_values(self, subnetid, resource_condition, property_condition):
         """Get string literal(s) from value of SubnetId"""
@@ -55,34 +57,39 @@ class RouteTableAssociation(CloudFormationLintRule):
 
     def check_values(self, subnetid, resource_condition, resource_name):
         """Check subnet value is not associated with other route tables"""
-        matches = []
         property_condition = None
         values = self.get_values(subnetid, resource_condition, property_condition)
+        self.resource_values[resource_name] = values
         for value in values:
-            print("%s : %s : %s" % (resource_name, value, self.associated))
-            bare_value = (None, None, value[2])
-            if value in self.associated or bare_value in self.associated:
-                path = ['Resources', resource_name, 'Properties', 'SubnetId']
-                message = 'SubnetId is associated with another route table for {0}'
-                matches.append(
-                    RuleMatch(path, message.format(resource_name)))
-            self.associated.add(value)
-            self.associated.add((None, None, value[2]))
-
-        return matches
+            self.associated_resources[value].append(resource_name)
 
     def match(self, cfn):
         """Check SubnetRouteTableAssociation Resource Properties"""
         matches = []
-
         resources = cfn.get_resources(['AWS::EC2::SubnetRouteTableAssociation'])
         for resource_name, resource in resources.items():
             properties = resource.get('Properties')
             if properties:
                 resource_condition = resource.get('Condition')
                 subnetid = properties.get('SubnetId')
-                matches.extend(
-                    self.check_values(subnetid, resource_condition, resource_name)
-                )
+                self.check_values(subnetid, resource_condition, resource_name)
+        for resource_name in self.resource_values.keys():
+            for value in self.resource_values[resource_name]:
+                bare_value = (None, None, value[2])
+                other_resources = []
+
+                if len(self.associated_resources[value]) > 1:
+                    for resource in self.associated_resources[value]:
+                        if resource == resource_name:
+                            other_resources.append(resource)
+
+                if value != bare_value and len(self.associated_resources[bare_value]) > 0:
+                    other_resources.extend(self.associated_resources[bare_value])
+
+                if other_resources:
+                    path = ['Resources', resource_name, 'Properties', 'SubnetId']
+                    message = 'SubnetId in {0} is also associated with {1}'
+                    matches.append(
+                        RuleMatch(path, message.format(resource_name, ", ".join(other_resources))))
 
         return matches
