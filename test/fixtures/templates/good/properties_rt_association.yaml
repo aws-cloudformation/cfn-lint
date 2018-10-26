@@ -1,0 +1,72 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Good SubnetRouteTableAssociation'
+
+Parameters:
+  PublicRouteTable:
+    Type: String
+  PrivateRouteTable:
+    Type: String
+  AppSubnet01:
+    Type: String
+  PublicSubnet01:
+    Type: String
+  PublicProxySubnet:
+    Type: String
+  PrivateProxySubnet:
+    Type: String
+  AppType:
+    Type: String
+    AllowedValues: ['Public', 'Public']
+
+Conditions:
+  isPublic: !Equals [ !Ref AppType, 'Public' ]
+  isPrivate: !Equals [ !Ref AppType, 'Private' ]
+
+Resources:
+  AppSubnetPublicRouteTableAssociation:
+    Condition: isPublic
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          Ref: AppSubnet01
+
+  AppSubnetPrivateRouteTableAssociation:
+    Condition: isPrivate
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId: 
+          Ref: PrivateRouteTable
+        SubnetId: 
+          Ref: AppSubnet01
+
+  ProxySubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          Fn::If: [ isPublic, Ref: PublicProxySubnet , Ref: PrivateProxySubnet ]
+  
+  PublicSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          Ref: PublicSubnet01
+
+  CustomResource:
+      Type: AWS::CloudFormation::CustomResource
+      Properties:
+        ServiceToken: arn:aws:sns:region:account-id:topicname
+
+  CustomSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId: 
+          Ref: PublicRouteTable
+        SubnetId: 
+          !GetAtt CustomResource.PublicSubnet
