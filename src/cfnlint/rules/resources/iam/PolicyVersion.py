@@ -30,6 +30,7 @@ class PolicyVersion(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(PolicyVersion, self).__init__()
         self.resources_and_keys = {
             'AWS::SNS::TopicPolicy': 'PolicyDocument',
             'AWS::S3::BucketPolicy': 'PolicyDocument',

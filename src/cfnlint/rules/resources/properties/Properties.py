@@ -30,6 +30,7 @@ class Properties(CloudFormationLintRule):
     tags = ['resources']
 
     def __init__(self):
+        super(Properties, self).__init__()
         self.cfn = {}
         self.resourcetypes = {}
         self.propertytypes = {}

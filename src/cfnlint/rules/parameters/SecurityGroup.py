@@ -30,6 +30,7 @@ class SecurityGroup(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(SecurityGroup, self).__init__()
         resource_type_specs = [
             'AWS::ElasticLoadBalancingV2::LoadBalancer',
             'AWS::AutoScaling::LaunchConfiguration',

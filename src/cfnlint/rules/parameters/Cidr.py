@@ -31,9 +31,10 @@ class Cidr(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(Cidr, self).__init__()
         resource_type_specs = [
             'AWS::EC2::Subnet',
-            'AWS::EC2::Vpc',
+            'AWS::EC2::VPC',
             'AWS::RDS::DBSecurityGroupIngress',
             'AWS::EC2::NetworkAclEntry',
             'AWS::EC2::SecurityGroupIngress',
