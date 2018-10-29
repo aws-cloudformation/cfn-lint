@@ -18,6 +18,8 @@ import logging
 import sys
 import os
 import argparse
+import glob
+from six.moves import configparser
 import six
 from cfnlint import RulesCollection
 import cfnlint.formatters
@@ -25,6 +27,10 @@ import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
+if six.PY2:
+    ConfigParser = configparser.SafeConfigParser
+else:
+    ConfigParser = configparser.ConfigParser
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -101,6 +107,21 @@ class ExtendAction(argparse.Action):
         setattr(namespace, self.dest, items)
 
 
+def get_config_file_defaults():
+    """ Get defaults from the config file """
+    defaults = {}
+    config = ConfigParser()
+    config.read(['~/.cfnlint', '.cfnlint'])
+    if 'Defaults' in config.sections():
+        defaults = dict(config.items('Defaults'))
+        # fix lists
+        for list_type in ['append_rules', 'include_checks', 'ignore_checks', 'override_spec']:
+            if defaults.get(list_type):
+                defaults[list_type] = [x.strip() for x in defaults.get(list_type).split(',')]
+
+    return defaults
+
+
 def create_parser():
     """Do first round of parsing parameters to set options"""
     parser = ArgumentParser(description='CloudFormation Linter')
@@ -169,6 +190,9 @@ def create_parser():
         '--update-documentation', help=argparse.SUPPRESS,
         action='store_true'
     )
+
+    defaults = get_config_file_defaults()
+    parser.set_defaults(**defaults)
     return parser
 
 
@@ -227,6 +251,8 @@ def get_args_filenames(cli_args):
     if isinstance(filenames, six.string_types):
         filenames = [filenames]
 
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
+
     # Set default regions if none are specified.
     if not args.regions:
         setattr(args, 'regions', ['us-east-1'])
@@ -245,12 +271,12 @@ def get_args_filenames(cli_args):
         print(cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks))
         exit(0)
 
-    if not filenames:
+    if not all_filenames:
         # Not specified, print the help
         parser.print_help()
         exit(1)
 
-    return(args, filenames, formatter)
+    return(args, all_filenames, formatter)
 
 
 def get_template_rules(filename, args):
