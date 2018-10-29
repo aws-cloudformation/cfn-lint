@@ -210,6 +210,6 @@ class Configuration(CloudFormationLintRule):
             else:
                 message = 'UpdatePolicy should be an object'
                 matches.append(
-                    RuleMatch(['Resources', r_name, 'UpdatePolicy'], message.format(path[-1])))
+                    RuleMatch(['Resources', r_name, 'UpdatePolicy'], message.format()))
 
         return matches
