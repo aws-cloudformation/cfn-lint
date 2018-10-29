@@ -58,6 +58,11 @@ class InstanceProfile(CloudFormationLintRule):
                                 message = 'Property IamInstanceProfile should be an ARN for %s' % (
                                     '/'.join(map(str, tree[:-1])))
                                 matches.append(RuleMatch(tree[:-1], message))
+                        elif cfn.template.get('Resources', {}).get(tree[1], {}).get('Type') in ['AWS::EC2::LaunchTemplate']:
+                            if not obj[1] in ['Arn', 'Name']:
+                                message = 'Property IamInstanceProfile should be an ARN or Name for %s' % (
+                                    '/'.join(map(str, tree[:-1])))
+                                matches.append(RuleMatch(tree[:-1], message))
                         else:
                             if obj[1] == 'Arn':
                                 message = 'Property IamInstanceProfile shouldn\'t be an ARN for %s' % (
