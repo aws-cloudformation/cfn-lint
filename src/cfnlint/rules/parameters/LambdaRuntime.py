@@ -29,6 +29,7 @@ class LambdaRuntime(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(LambdaRuntime, self).__init__()
         resource_type_specs = [
             'AWS::Lambda::Function',
         ]

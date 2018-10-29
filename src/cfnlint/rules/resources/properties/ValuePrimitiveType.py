@@ -32,6 +32,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def __init__(self, ):
         """Init """
+        super(ValuePrimitiveType, self).__init__()
         specs = cfnlint.helpers.RESOURCE_SPECS.get('us-east-1')
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')

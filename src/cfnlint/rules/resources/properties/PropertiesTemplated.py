@@ -29,6 +29,7 @@ class PropertiesTemplated(CloudFormationLintRule):
     tags = ['resources']
 
     def __init__(self):
+        super(PropertiesTemplated, self).__init__()
         self.resource_property_types.extend([
             'AWS::ApiGateway::RestApi',
             'AWS::Lambda::Function',

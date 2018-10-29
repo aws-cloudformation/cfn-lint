@@ -29,16 +29,19 @@ class RuleTargetsLimit(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        self.resource_property_types.append('AWS::Events::Rule')
+        super(RuleTargetsLimit, self).__init__()
+        self.resource_property_types = ['AWS::Events::Rule']
         self.limits = {}
 
     # pylint: disable=W0613
     def check_value(self, value, path):
         """Count them up """
-        if path[4] == 'Fn::If':
-            resource_name = '%s.%s' % (path[1], path[5])
-        else:
-            resource_name = path[1]
+
+        resource_name = path[1]
+        if len(path) > 4:
+            if path[4] == 'Fn::If':
+                resource_name = '%s.%s' % (path[1], path[5])
+
         if resource_name not in self.limits:
             self.limits[resource_name] = {
                 'count': 0,
@@ -51,7 +54,6 @@ class RuleTargetsLimit(CloudFormationLintRule):
     def match_resource_properties(self, properties, _, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
-
         matches.extend(
             cfn.check_value(
                 obj=properties, key='Targets',

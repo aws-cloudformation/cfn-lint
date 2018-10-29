@@ -28,6 +28,7 @@ class AvailabilityZone(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(AvailabilityZone, self).__init__()
         resource_type_specs = [
             'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',
@@ -36,6 +37,7 @@ class AvailabilityZone(CloudFormationLintRule):
             'AWS::OpsWorks::Instance',
             'AWS::RDS::DBInstance',
             'AWS::EC2::Host',
+            'AWS::EC2::Subnet',
             'AWS::DMS::ReplicationInstance',
             'AWS::EC2::Instance'
         ]

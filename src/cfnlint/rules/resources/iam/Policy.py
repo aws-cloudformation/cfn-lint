@@ -33,6 +33,7 @@ class Policy(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
+        super(Policy, self).__init__()
         self.resource_exceptions = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
         }

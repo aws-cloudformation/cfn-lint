@@ -31,6 +31,7 @@ class Required(CloudFormationLintRule):
     cfn = {}
 
     def __init__(self):
+        super(Required, self).__init__()
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
