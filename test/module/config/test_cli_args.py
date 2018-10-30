@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
-import cfnlint.core  # pylint: disable=E0401
+from mock import patch, mock_open
+import cfnlint.config  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 LOGGER = logging.getLogger('cfnlint')
@@ -31,30 +32,39 @@ class TestArgsParser(BaseTestCase):
     def test_create_parser(self):
         """Test success run"""
 
-        parser = cfnlint.core.create_parser()
-        args = parser.parse_args([
+        config = cfnlint.config.CliArgs([
             '-t', 'test.yaml', '--ignore-bad-template',
             '--format', 'quiet', '--debug'])
-        self.assertEqual(args.templates, [])
-        self.assertEqual(args.template_alt, ['test.yaml'])
-        self.assertEqual(args.ignore_bad_template, True)
-        self.assertEqual(args.format, 'quiet')
-        self.assertEqual(args.debug, True)
+        self.assertEqual(config.cli_args.templates, [])
+        self.assertEqual(config.cli_args.template_alt, ['test.yaml'])
+        self.assertEqual(config.cli_args.ignore_bad_template, True)
+        self.assertEqual(config.cli_args.format, 'quiet')
+        self.assertEqual(config.cli_args.debug, True)
 
     def test_create_parser_default_param(self):
         """Test success run"""
 
-        parser = cfnlint.core.create_parser()
-        args = parser.parse_args([
+        config = cfnlint.config.CliArgs([
             '--regions', 'us-east-1', 'us-west-2', '--', 'template1.yaml', 'template2.yaml'])
-        self.assertEqual(args.templates, ['template1.yaml', 'template2.yaml'])
-        self.assertEqual(args.template_alt, [])
-        self.assertEqual(args.regions, ['us-east-1', 'us-west-2'])
+        self.assertEqual(config.cli_args.templates, ['template1.yaml', 'template2.yaml'])
+        self.assertEqual(config.cli_args.template_alt, [])
+        self.assertEqual(config.cli_args.regions, ['us-east-1', 'us-west-2'])
 
     def test_create_parser_exend(self):
         """Test success run"""
 
-        parser = cfnlint.core.create_parser()
-        args = parser.parse_args(['-t', 'template1.yaml', '-t', 'template2.yaml'])
-        self.assertEqual(args.templates, [])
-        self.assertEqual(args.template_alt, ['template1.yaml', 'template2.yaml'])
+        config = cfnlint.config.CliArgs(['-t', 'template1.yaml', '-t', 'template2.yaml'])
+        self.assertEqual(config.cli_args.templates, [])
+        self.assertEqual(config.cli_args.template_alt, ['template1.yaml', 'template2.yaml'])
+
+    @patch('cfnlint.config.ConfigParser.sections')
+    @patch('cfnlint.config.ConfigParser.items')
+    def test_create_parser_config_file(self, mock_items, mock_sections):
+        """Test success run"""
+        mock_sections.return_value = {'Defaults'}
+        mock_items.return_value = {'include_checks': 'I,I1111', 'templates': 'standard.yaml', 'regions': 'us-west-2'}
+
+        config = cfnlint.config.CliArgs(['--regions', 'us-west-1', '--include-checks', 'I1234', '--', 'template1.yaml'])
+        self.assertEqual(config.cli_args.templates, ['template1.yaml'])
+        self.assertEqual(config.cli_args.include_checks, ['I1234'])
+        self.assertEqual(config.cli_args.regions, ['us-west-1'])
