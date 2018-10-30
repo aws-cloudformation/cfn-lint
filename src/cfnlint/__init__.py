@@ -172,6 +172,22 @@ class RulesCollection(object):
 
         return True
 
+    def run_check(self, check, filename, rule_id, *args):
+        """ Run a check """
+        try:
+            return check(*args)
+        except AttributeError as err:
+            LOGGER.debug('Attribute error while processing rule %s: %s', rule_id, str(err))
+            LOGGER.debug('Stack trace: %s', err, exc_info=True)
+            return []
+        except Exception as err:  # pylint: disable=W0703
+            if self.is_rule_enabled('E0002'):
+                message = 'Unknown exception while processing rule {}: {}'
+                return [
+                    cfnlint.Match(
+                        1, 1, 1, 1,
+                        filename, cfnlint.RuleError(), message.format(rule_id, str(err)))]
+
     def resource_property(self, filename, cfn, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
         matches = []
@@ -182,17 +198,12 @@ class RulesCollection(object):
             property_spec_name = '%s.%s' % (resource_type, property_type)
         if property_spec_name in property_spec:
             for rule in self.rules:
-                try:
-                    matches.extend(
-                        rule.matchall_resource_sub_properties(
-                            filename, cfn, properties, property_spec_name, path))
-                except Exception as err:  # pylint: disable=W0703
-                    if self.is_rule_enabled('E0002'):
-                        message = 'Unknown exception while processing rule {}: {}'
-                        matches.append(cfnlint.Match(
-                            1, 1,
-                            1, 1,
-                            filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
+                matches.extend(
+                    self.run_check(
+                        rule.matchall_resource_sub_properties, filename, rule.id,
+                        filename, cfn, properties, property_spec_name, path
+                    )
+                )
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
             if isinstance(properties, dict):
@@ -271,32 +282,23 @@ class RulesCollection(object):
         """Run rules"""
         matches = []
         for rule in self.rules:
-            try:
-                matches.extend(rule.matchall(filename, cfn))
-            except Exception as err:  # pylint: disable=W0703
-                if self.is_rule_enabled('E0002'):
-                    message = 'Unknown exception while processing rule {}: {}'
-                    matches.append(cfnlint.Match(
-                        1, 1,
-                        1, 1,
-                        filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
+            matches.extend(
+                self.run_check(
+                    rule.matchall, filename, rule.id, filename, cfn
+                )
+            )
 
         for resource_name, resource_attributes in cfn.get_resources().items():
             resource_type = resource_attributes.get('Type')
             resource_properties = resource_attributes.get('Properties', {})
             path = ['Resources', resource_name, 'Properties']
             for rule in self.rules:
-                try:
-                    matches.extend(
-                        rule.matchall_resource_properties(
-                            filename, cfn, resource_properties, resource_type, path))
-                except Exception as err:  # pylint: disable=W0703
-                    if self.is_rule_enabled('E0002'):
-                        message = 'Unknown exception while processing rule {}: {}'
-                        matches.append(cfnlint.Match(
-                            1, 1,
-                            1, 1,
-                            filename, cfnlint.RuleError(), message.format(rule.id, str(err))))
+                matches.extend(
+                    self.run_check(
+                        rule.matchall_resource_properties, filename, rule.id,
+                        filename, cfn, resource_properties, resource_type, path
+                    )
+                )
 
             matches.extend(
                 self.run_resource(
