@@ -9,6 +9,15 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.8.3
+###### Features
+- Add rule [E3022](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3022) to validate that there is only one SubnetRouteTableAssociation per subnet
+###### Fixes
+- Fix rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502) to check Arn and Name for AWS::EC2::LaunchTemplate resources
+- Fix rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3016) to remove use of Path which may not be defined in certain scenarios
+- Fix base rule Class so that resource_property_types and resource_sub_property_types is initialized from on every new rule and not copied from previous rules that were initialized
+- Fix conversions of transformed templates in which keys stayed as str(s) instead of str_node(s)
+
 ### 0.8.2
 ###### Fixes
 - Update rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502) to allow GetAtt against a nested stack or custom resource
