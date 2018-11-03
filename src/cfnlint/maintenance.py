@@ -55,7 +55,7 @@ def update_resource_specs():
         content = json.loads(req.content)
         content = patch_spec(content, region)
         with open(filename, 'w') as f:
-            json.dump(content, f, indent=2)
+            json.dump(content, f, indent=2, sort_keys=True)
 
 
 def update_documentation(rules):
