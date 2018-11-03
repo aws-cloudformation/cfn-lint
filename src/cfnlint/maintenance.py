@@ -305,6 +305,21 @@ def patch_spec(content, region):
             ])
         },
         {
+            'Name': 'AWS::SNS::Subscription TopicArn and Protocol IS required',
+            'Regions': ['All'],
+            'Patch': jsonpatch.JsonPatch([
+                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/TopicArn/Required', 'value': True},
+                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/Protocol/Required', 'value': True}
+            ])
+        },
+        {
+            'Name': 'AWS::EC2::NetworkAclEntry CidrBlock or Ipv6CidrBlock is required',
+            'Regions': ['All'],
+            'Patch': jsonpatch.JsonPatch([
+                {'op': 'replace', 'path': '/ResourceTypes/AWS::EC2::NetworkAclEntry/Properties/CidrBlock/Required', 'value': False}
+            ])
+        },
+        {
             'Name': 'AWS::SDB::Domain not supported for all regions',
             'Regions': ['us-east-2', 'ca-central-1', 'eu-central-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-2', 'ap-south-1'],
             'Patch': jsonpatch.JsonPatch([
