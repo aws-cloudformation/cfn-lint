@@ -14,16 +14,20 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.functions.IfExist import IfExist  # pylint: disable=E0401
+from cfnlint.rules.conditions.Exists import Exists  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestRulesIfExist(BaseRuleTestCase):
-    """Test Rules If conditions exist """
+class TestExistsConditions(BaseRuleTestCase):
+    """Test if the referenced Conditions are defined"""
     def setUp(self):
         """Setup"""
-        super(TestRulesIfExist, self).setUp()
-        self.collection.register(IfExist())
+        super(TestExistsConditions, self).setUp()
+        self.collection.register(Exists())
+
+    success_templates = [
+        'fixtures/templates/good/generic.yaml',
+    ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +35,4 @@ class TestRulesIfExist(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/conditions.yaml', 2)
+        self.helper_file_negative('fixtures/templates/bad/conditions.yaml', 3)

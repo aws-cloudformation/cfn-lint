@@ -43,10 +43,6 @@ class Used(CloudFormationLintRule):
                     ref_conditions.append(iftree[-1][0])
                 else:
                     ref_conditions.append(iftree[-1])
-            # Get resource's Conditions
-            for _, resource_values in cfn.get_resources().items():
-                if 'Condition' in resource_values:
-                    ref_conditions.append(resource_values['Condition'])
 
             # Get conditions used by another condition
             condtrees = cfn.search_deep_keys('Condition')
