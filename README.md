@@ -66,6 +66,17 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 ### Command Line
 From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template.
 
+### Config File
+You can define a yaml file in your project or home folder called `.cfnlintrc`.  In that file you can specify settings from the parameter section below.  
+
+Example:
+```
+templates:
+- test/fixtures/templates/good/**/*.yaml
+include_checks:
+- I
+```
+
 ### Parameters
 
 Optional parameters:

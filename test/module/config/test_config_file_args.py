@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
-from mock import patch, mock_open
+from mock import patch, mock_open, Mock
+import jsonschema
 import cfnlint.config  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -30,20 +31,36 @@ class TestConfigFileArgs(BaseTestCase):
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
 
-    @patch('cfnlint.config.ConfigParser')
-    def test_config_parser_read(self, config_parser_class_mock):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_parser_read(self, yaml_mock):
+        """ Testing one file successful """
+        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
+        yaml_mock.side_effect = [
+            {"regions": ["us-west-1"]},
+            {}
+        ]
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(results.file_args, {'regions': ['us-west-1']})
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_parser_read_merge(self, yaml_mock):
+        """ test the merge of config """
+
+        yaml_mock.side_effect = [
+            {"regions": ["us-west-1"]},
+            {"regions": ["us-east-1"]}
+        ]
+
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(results.file_args, {'regions': ['us-east-1']})
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_parser_fail_on_bad_config(self, yaml_mock):
         """ test the read call to the config parser is reading two files """
-        config_parser_mock = config_parser_class_mock.return_value
-        cfnlint.config.ConfigFileArgs()
 
-        config_parser_class_mock.assert_called_once_with()
-        config_parser_mock.read.assert_called_once_with(['~/.cfnlint', '.cfnlint'])
+        yaml_mock.side_effect = [
+            {"regions": True}, {}
+        ]
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_file_convert_list(self, mock_items, mock_sections):
-        """ Test conversions between string, comma lists into arrays """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'include_checks': 'I,I1111', 'templates': 'test.yaml'}
-        config = cfnlint.config.ConfigFileArgs()
-        self.assertEqual(config.file_args, {'include_checks': ['I', 'I1111'], 'templates': ['test.yaml']})
+        with self.assertRaises(jsonschema.exceptions.ValidationError):
+            cfnlint.config.ConfigFileArgs()

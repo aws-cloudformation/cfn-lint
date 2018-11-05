@@ -31,8 +31,29 @@ except ImportError:  # pragma: no cover
 LOGGER = logging.getLogger('cfnlint')
 
 
+def configure_logging(debug_logging):
+    """Setup Logging"""
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
+    if debug_logging:
+        LOGGER.setLevel(logging.DEBUG)
+    else:
+        LOGGER.setLevel(logging.INFO)
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(log_formatter)
+
+    # make sure all other log handlers are removed before adding it back
+    for handler in LOGGER.handlers:
+        LOGGER.removeHandler(handler)
+    LOGGER.addHandler(ch)
+
+
 class ConfigFileArgs(object):
-    """ Basic Config class"""
+    """
+        Config File arguments.
+        Parses .cfnlintrc in the Home and Project folder.
+    """
     file_args = {}
 
     def __init__(self, schema=None):
@@ -41,7 +62,8 @@ class ConfigFileArgs(object):
         self.__project_config_file = None
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath('data/CfnLintCli/config/schema.json')
-        self.default_schema = json.load(Path.open(self.default_schema_file))
+        with self.default_schema_file.open() as f:
+            self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
         self.load()
 
@@ -60,15 +82,15 @@ class ConfigFileArgs(object):
         self.__user_config_file = Path.home().joinpath(config_file_name)
         self.__project_config_file = Path.cwd().joinpath(config_file_name)
 
-        user_config_path = ""
-        project_config_path = ""
+        user_config_path = ''
+        project_config_path = ''
 
         if self._has_file(self.__user_config_file):
-            LOGGER.debug("Found User CFNLINTRC")
+            LOGGER.debug('Found User CFNLINTRC')
             user_config_path = self.__user_config_file
 
         if self._has_file(self.__project_config_file):
-            LOGGER.debug("Found Project level CFNLINTRC")
+            LOGGER.debug('Found Project level CFNLINTRC')
             project_config_path = self.__project_config_file
 
         return user_config_path, project_config_path
@@ -94,23 +116,23 @@ class ConfigFileArgs(object):
             CFLINTRC configuration
         """
 
-        LOGGER.debug("Looking for CFLINTRC before attempting to load")
+        LOGGER.debug('Looking for CFLINTRC before attempting to load')
         user_config, project_config = self._find_config()
 
         user_config = self._read_config(user_config)
-        LOGGER.debug("Validating User CFNLINTRC")
+        LOGGER.debug('Validating User CFNLINTRC')
         self.validate_config(user_config, self.schema)
 
         project_config = self._read_config(project_config)
-        LOGGER.debug("Validating Project CFNLINTRC")
+        LOGGER.debug('Validating Project CFNLINTRC')
         self.validate_config(project_config, self.schema)
 
-        LOGGER.debug("User configuration loaded as")
-        LOGGER.debug("%s", user_config)
-        LOGGER.debug("Project configuration loaded as")
-        LOGGER.debug("%s", project_config)
+        LOGGER.debug('User configuration loaded as')
+        LOGGER.debug('%s', user_config)
+        LOGGER.debug('Project configuration loaded as')
+        LOGGER.debug('%s', project_config)
 
-        LOGGER.debug("Merging configurations...")
+        LOGGER.debug('Merging configurations...')
         self.file_args = self.merge_config(user_config, project_config)
 
     def validate_config(self, config, schema):
@@ -126,12 +148,12 @@ class ConfigFileArgs(object):
         jsonschema.exceptions.ValidationError
             Returned when cfnlintrc doesn't match schema provided
         """
-        LOGGER.debug("Validating CFNLINTRC config with given JSONSchema")
-        LOGGER.debug("Schema used: %s", schema)
-        LOGGER.debug("Config used: %s", config)
+        LOGGER.debug('Validating CFNLINTRC config with given JSONSchema')
+        LOGGER.debug('Schema used: %s', schema)
+        LOGGER.debug('Config used: %s', config)
 
         jsonschema.validate(config, schema)
-        LOGGER.debug("CFNLINTRC looks valid!")
+        LOGGER.debug('CFNLINTRC looks valid!')
 
     def merge_config(self, user_config, project_config):
         """Merge project and user configuration into a single dictionary
@@ -160,7 +182,7 @@ class ConfigFileArgs(object):
                     self.merge_config(user_config[key], project_config[key])
                 else:
                     user_config[key] = project_config[key]
-                    LOGGER.debug("Overriding User's key %s with Project's specific value %s.", key, project_config[key])
+                    LOGGER.debug('Overriding User\'s key %s with Project\'s specific value %s.', key, project_config[key])
 
         # Project may have unique config we need to copy over too
         # so that we can have user+project config available as one
@@ -180,8 +202,8 @@ class ConfigFileArgs(object):
         config = Path(config)
         config_template = None
 
-        if config.is_file():
-            LOGGER.debug("Parsing CFNLINTRC")
+        if self._has_file(config):
+            LOGGER.debug('Parsing CFNLINTRC')
             config_template = yaml.safe_load(config.read_text())
 
         if not config_template:
@@ -339,6 +361,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     def __init__(self, cli_args):
         CliArgs.__init__(self, cli_args)
+        # configure debug as soon as we can
+        configure_logging(self.cli_args.debug)
         ConfigFileArgs.__init__(self)
         TemplateArgs.__init__(self, {})
 

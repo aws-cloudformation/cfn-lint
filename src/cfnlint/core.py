@@ -16,8 +16,9 @@
 """
 import logging
 import os
+from jsonschema.exceptions import ValidationError
 from cfnlint import RulesCollection
-from cfnlint.config import ConfigMixIn
+import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
@@ -52,24 +53,6 @@ def get_exit_code(matches):
     return exit_code
 
 
-def configure_logging(debug_logging):
-    """Setup Logging"""
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-
-    if debug_logging:
-        LOGGER.setLevel(logging.DEBUG)
-    else:
-        LOGGER.setLevel(logging.INFO)
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(log_formatter)
-
-    # make sure all other log handlers are removed before adding it back
-    for handler in LOGGER.handlers:
-        LOGGER.removeHandler(handler)
-    LOGGER.addHandler(ch)
-
-
 def get_formatter(fmt):
     """ Get Formatter"""
     formatter = {}
@@ -102,12 +85,19 @@ def get_rules(rulesdir, ignore_rules, include_rules):
     return rules
 
 
+def configure_logging(debug_logging):
+    """ Backwards compatibility for integrators """
+    LOGGER.debug('Update your integrations to use "cfnlint.config.configure_logging" instead')
+    cfnlint.config.configure_logging(debug_logging)
+
+
 def get_args_filenames(cli_args):
     """ Get Template Configuration items and set them as default values"""
-
-    config = ConfigMixIn(cli_args)
-
-    configure_logging(config.debug)
+    try:
+        config = cfnlint.config.ConfigMixIn(cli_args)
+    except ValidationError as e:
+        LOGGER.error('Error parsing config file: %s', str(e))
+        exit(1)
 
     fmt = config.format
     formatter = get_formatter(fmt)

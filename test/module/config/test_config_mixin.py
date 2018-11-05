@@ -30,22 +30,26 @@ class TestConfigMixIn(BaseTestCase):
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_mix_in(self, mock_items, mock_sections):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_mix_in(self, yaml_mock):
         """ Test mix in  """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'include_checks': 'I,I1111', 'regions': 'us-west-2'}
+        yaml_mock.side_effect = [
+            {"include_checks": ["I", "I1111"], "regions": ["us-west-2"]},
+            {}
+        ]
+
         config = cfnlint.config.ConfigMixIn(['--regions', 'us-west-1'])
         self.assertEqual(config.regions, ['us-west-1'])
         self.assertEqual(config.include_checks, ['I', 'I1111'])
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_precedence(self, mock_items, mock_sections):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_precedence(self, yaml_mock):
         """ Test precedence in  """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'include_checks': 'I', 'ignore_checks': 'E3001', 'regions': 'us-west-2'}
+
+        yaml_mock.side_effect = [
+            {"include_checks": ["I"], "ignore_checks": ["E3001"], "regions": ["us-west-2"]},
+            {}
+        ]
         config = cfnlint.config.ConfigMixIn(['--include-checks', 'I1234', 'I4321'])
         config.template_args = {
             'Metadata': {
@@ -64,23 +68,27 @@ class TestConfigMixIn(BaseTestCase):
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ['W3001'])
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_default_region(self, mock_items, mock_sections):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_default_region(self, yaml_mock):
         """ Test precedence in  """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {}
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
         self.assertEqual(config.regions, ['us-east-1'])
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_expand_paths(self, mock_items, mock_sections):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_expand_paths(self, yaml_mock):
         """ Test precedence in  """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'templates': 'fixtures/templates/public/*.yaml'}
+
+        yaml_mock.side_effect = [
+            {'templates': ['fixtures/templates/public/*.yaml']},
+            {}
+        ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
@@ -88,12 +96,14 @@ class TestConfigMixIn(BaseTestCase):
             'fixtures/templates/public/lambda-poller.yaml',
             'fixtures/templates/public/rds-cluster.yaml'])
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_config_expand_paths_failure(self, mock_items, mock_sections):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_expand_paths_failure(self, yaml_mock):
         """ Test precedence in  """
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'templates': '*.yaml'}
+
+        yaml_mock.side_effect = [
+            {'templates': ['*.yaml']},
+            {}
+        ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults

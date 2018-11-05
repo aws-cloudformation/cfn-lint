@@ -57,12 +57,8 @@ class TestArgsParser(BaseTestCase):
         self.assertEqual(config.cli_args.templates, [])
         self.assertEqual(config.cli_args.template_alt, ['template1.yaml', 'template2.yaml'])
 
-    @patch('cfnlint.config.ConfigParser.sections')
-    @patch('cfnlint.config.ConfigParser.items')
-    def test_create_parser_config_file(self, mock_items, mock_sections):
+    def test_create_parser_config_file(self):
         """Test success run"""
-        mock_sections.return_value = {'Defaults'}
-        mock_items.return_value = {'include_checks': 'I,I1111', 'templates': 'standard.yaml', 'regions': 'us-west-2'}
 
         config = cfnlint.config.CliArgs(['--regions', 'us-west-1', '--include-checks', 'I1234', '--', 'template1.yaml'])
         self.assertEqual(config.cli_args.templates, ['template1.yaml'])
