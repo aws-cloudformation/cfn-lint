@@ -43,9 +43,19 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 - `cfn-lint -t template.yaml`
 
 ##### Lint multiple files
+Multiple files can be linted by either specifying multiple specific files:
+
 - `cfn-lint template1.yaml template2.yaml`
 - `cfn-lint -t template1.yaml template2.yaml`
+
+
+Multiple files can also be specified using wildcards (globbing):
+
+Lint all `yaml` files in `path`:
 - `cfn-lint path/*.yaml`
+
+Lint all `yaml` files in `path` and all subdirectories (recursive):
+- `cfn-lint path/to/templates/**/*.yaml`
 
 ##### Specifying the template with other parameters
 - `cfn-lint -r us-east-1 ap-south-1 -- template.yaml`
@@ -54,7 +64,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 ## Configuration
 
 ### Command Line
-From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template
+From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template.
 
 ### Parameters
 
