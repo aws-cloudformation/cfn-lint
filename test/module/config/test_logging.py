@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
-import cfnlint.core  # pylint: disable=E0401
+import cfnlint.config  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 LOGGER = logging.getLogger('cfnlint')
@@ -31,13 +31,13 @@ class TestLogging(BaseTestCase):
     def test_logging_info(self):
         """Test success run"""
 
-        cfnlint.core.configure_logging(False)
+        cfnlint.config.configure_logging(False)
         self.assertEqual(logging.INFO, LOGGER.level)
         self.assertEqual(len(LOGGER.handlers), 1)
 
     def test_logging_debug(self):
         """Test debug level"""
 
-        cfnlint.core.configure_logging(True)
+        cfnlint.config.configure_logging(True)
         self.assertEqual(logging.DEBUG, LOGGER.level)
         self.assertEqual(len(LOGGER.handlers), 1)

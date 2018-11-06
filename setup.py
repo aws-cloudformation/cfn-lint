@@ -48,10 +48,11 @@ setup(
         'data/CloudSpecs/*.json',
         'data/AdditionalSpecs/*.json',
         'data/Serverless/*.json',
+        'data/CfnLintCli/config/schema.json'
     ]},
     packages=find_packages('src'),
     zip_safe=False,
-    install_requires=['pyyaml', 'six', 'requests', 'aws-sam-translator>=1.6.0', 'jsonpatch'],
+    install_requires=['pyyaml', 'six', 'requests', 'aws-sam-translator>=1.6.0', 'jsonpatch', 'jsonschema~=2.6.0', 'pathlib2'],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
         'console_scripts': [
