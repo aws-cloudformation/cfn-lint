@@ -40,13 +40,16 @@ class Configuration(CloudFormationLintRule):
 
         outputs = cfn.template.get('Outputs', {})
         if outputs:
-            for output_name, output_value in outputs.items():
-                for prop in output_value:
-                    if prop not in self.valid_keys:
-                        message = 'Output {0} has invalid property {1}'
-                        matches.append(RuleMatch(
-                            ['Outputs', output_name, prop],
-                            message.format(output_name, prop)
-                        ))
+            if isinstance(outputs, dict):
+                for output_name, output_value in outputs.items():
+                    for prop in output_value:
+                        if prop not in self.valid_keys:
+                            message = 'Output {0} has invalid property {1}'
+                            matches.append(RuleMatch(
+                                ['Outputs', output_name, prop],
+                                message.format(output_name, prop)
+                            ))
+            else:
+                matches.append(RuleMatch(['Outputs'], 'Outputs do not follow correct format.'))
 
         return matches

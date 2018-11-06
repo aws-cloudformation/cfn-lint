@@ -15,8 +15,11 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import sys
+import logging
 from copy import deepcopy
 import six
+
+LOGGER = logging.getLogger(__name__)
 
 
 def create_str_node_class(cls):
