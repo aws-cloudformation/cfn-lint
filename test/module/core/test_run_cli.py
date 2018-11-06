@@ -17,6 +17,8 @@
 import logging
 import cfnlint.core  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
+from mock import patch, mock_open
+import cfnlint.config  # pylint: disable=E0401
 
 LOGGER = logging.getLogger('cfnlint')
 
@@ -85,20 +87,19 @@ class TestCli(BaseTestCase):
         (args, _, _,) = cfnlint.core.get_args_filenames([
             '--template', filename, '--ignore-bad-template'])
 
-        self.assertEqual(vars(args), {
-            'append_rules': [],
-            'format': None,
-            'ignore_bad_template': True,
-            'ignore_checks': [],
-            'include_checks': [],
-            'listrules': False,
-            'debug': False,
-            'override_spec': None,
-            'regions': ['us-east-1'],
-            'template_alt': ['fixtures/templates/good/core/config_parameters.yaml'],
-            'templates': [],
-            'update_documentation': False,
-            'update_specs': False})
+        self.assertEqual(args.append_rules, [])
+        self.assertEqual(args.append_rules, [])
+        self.assertEqual(args.format, None)
+        self.assertEqual(args.ignore_bad_template, True)
+        self.assertEqual(args.ignore_checks, [])
+        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.listrules, False)
+        self.assertEqual(args.debug, False)
+        self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.regions, ['us-east-1'])
+        self.assertEqual(args.templates, ['fixtures/templates/good/core/config_parameters.yaml'])
+        self.assertEqual(args.update_documentation, False)
+        self.assertEqual(args.update_specs, False)
 
     def test_positional_template_parameters(self):
         """Test overriding parameters"""
@@ -107,20 +108,18 @@ class TestCli(BaseTestCase):
             filename, '--ignore-bad-template',
             '--ignore-checks', 'E0000'])
 
-        self.assertEqual(vars(args), {
-            'append_rules': [],
-            'format': None,
-            'ignore_bad_template': True,
-            'ignore_checks': ['E0000'],
-            'include_checks': [],
-            'listrules': False,
-            'debug': False,
-            'override_spec': None,
-            'regions': ['us-east-1'],
-            'template_alt': [],
-            'templates': ['fixtures/templates/good/core/config_parameters.yaml'],
-            'update_documentation': False,
-            'update_specs': False})
+        self.assertEqual(args.append_rules, [])
+        self.assertEqual(args.format, None)
+        self.assertEqual(args.ignore_bad_template, True)
+        self.assertEqual(args.ignore_checks, ['E0000'])
+        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.listrules, False)
+        self.assertEqual(args.debug, False)
+        self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.regions, ['us-east-1'])
+        self.assertEqual(args.templates, ['fixtures/templates/good/core/config_parameters.yaml'])
+        self.assertEqual(args.update_documentation, False)
+        self.assertEqual(args.update_specs, False)
 
     def test_override_parameters(self):
         """Test overriding parameters"""
@@ -129,20 +128,18 @@ class TestCli(BaseTestCase):
             '--template', filename, '--ignore-bad-template',
             '--ignore-checks', 'E0000'])
 
-        self.assertEqual(vars(args), {
-            'append_rules': [],
-            'format': None,
-            'ignore_bad_template': True,
-            'ignore_checks': ['E0000'],
-            'include_checks': [],
-            'listrules': False,
-            'debug': False,
-            'override_spec': None,
-            'regions': ['us-east-1'],
-            'template_alt': ['fixtures/templates/good/core/config_parameters.yaml'],
-            'templates': [],
-            'update_documentation': False,
-            'update_specs': False})
+        self.assertEqual(args.append_rules, [])
+        self.assertEqual(args.format, None)
+        self.assertEqual(args.ignore_bad_template, True)
+        self.assertEqual(args.ignore_checks, ['E0000'])
+        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.listrules, False)
+        self.assertEqual(args.debug, False)
+        self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.regions, ['us-east-1'])
+        self.assertEqual(args.templates, ['fixtures/templates/good/core/config_parameters.yaml'])
+        self.assertEqual(args.update_documentation, False)
+        self.assertEqual(args.update_specs, False)
 
     def test_bad_config(self):
         """ Test bad formatting in config"""
@@ -151,17 +148,15 @@ class TestCli(BaseTestCase):
         (args, _, _) = cfnlint.core.get_args_filenames([
             '--template', filename, '--ignore-bad-template'])
 
-        self.assertEqual(vars(args), {
-            'append_rules': [],
-            'format': None,
-            'ignore_bad_template': True,
-            'ignore_checks': [],
-            'include_checks': [],
-            'listrules': False,
-            'debug': False,
-            'override_spec': None,
-            'regions': ['us-east-1'],
-            'template_alt': [filename],
-            'templates': [],
-            'update_documentation': False,
-            'update_specs': False})
+        self.assertEqual(args.append_rules, [])
+        self.assertEqual(args.format, None)
+        self.assertEqual(args.ignore_bad_template, True)
+        self.assertEqual(args.ignore_checks, [])
+        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.listrules, False)
+        self.assertEqual(args.debug, False)
+        self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.regions, ['us-east-1'])
+        self.assertEqual(args.templates, [filename])
+        self.assertEqual(args.update_documentation, False)
+        self.assertEqual(args.update_specs, False)

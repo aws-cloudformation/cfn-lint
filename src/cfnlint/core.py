@@ -15,26 +15,19 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
-import sys
 import os
-import argparse
-import six
+from jsonschema.exceptions import ValidationError
 from cfnlint import RulesCollection
+import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
 
+
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
-
-
-class ArgumentParser(argparse.ArgumentParser):
-    """ Override Argument Parser so we can control the exit code"""
-    def error(self, message):
-        self.print_help(sys.stderr)
-        self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
 
 def run_cli(filename, template, rules, regions, override_spec):
@@ -58,118 +51,6 @@ def get_exit_code(matches):
             exit_code = exit_code | 2
 
     return exit_code
-
-
-def configure_logging(debug_logging):
-    """Setup Logging"""
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-
-    if debug_logging:
-        LOGGER.setLevel(logging.DEBUG)
-    else:
-        LOGGER.setLevel(logging.INFO)
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    ch.setFormatter(log_formatter)
-
-    # make sure all other log handlers are removed before adding it back
-    for handler in LOGGER.handlers:
-        LOGGER.removeHandler(handler)
-    LOGGER.addHandler(ch)
-
-
-def comma_separated_arg(string):
-    """ Split a comma separated string """
-    return string.split(',')
-
-
-def space_separated_arg(string):
-    """ Split a comma separated string """
-    return string.split(' ')
-
-
-class ExtendAction(argparse.Action):
-    """Support argument types that are lists and can be specified multiple times."""
-    def __call__(self, parser, namespace, values, option_string=None):
-        items = getattr(namespace, self.dest)
-        items = [] if items is None else items
-        for value in values:
-            if isinstance(value, list):
-                items.extend(value)
-            else:
-                items.append(value)
-        setattr(namespace, self.dest, items)
-
-
-def create_parser():
-    """Do first round of parsing parameters to set options"""
-    parser = ArgumentParser(description='CloudFormation Linter')
-    parser.register('action', 'extend', ExtendAction)
-
-    standard = parser.add_argument_group('Standard')
-    advanced = parser.add_argument_group('Advanced / Debugging')
-
-    # Alllow the template to be passes as an optional or a positional argument
-    standard.add_argument(
-        'templates', metavar='TEMPLATE', nargs='*', help='The CloudFormation template to be linted')
-    standard.add_argument(
-        '-t', '--template', metavar='TEMPLATE', dest='template_alt',
-        help='The CloudFormation template to be linted', nargs='+', default=[], action='extend')
-    standard.add_argument(
-        '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
-        action='store_true'
-    )
-    advanced.add_argument(
-        '-d', '--debug', help='Enable debug logging', action='store_true'
-    )
-    standard.add_argument(
-        '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
-    )
-
-    standard.add_argument(
-        '-l', '--list-rules', dest='listrules', default=False,
-        action='store_true', help='list all the rules'
-    )
-    standard.add_argument(
-        '-r', '--regions', dest='regions', nargs='+', default=[],
-        type=comma_separated_arg, action='extend',
-        help='list the regions to validate against.'
-    )
-    advanced.add_argument(
-        '-a', '--append-rules', dest='append_rules', nargs='+', default=[],
-        type=comma_separated_arg, action='extend',
-        help='specify one or more rules directories using '
-             'one or more --append-rules arguments. '
-    )
-    standard.add_argument(
-        '-i', '--ignore-checks', dest='ignore_checks', nargs='+', default=[],
-        type=comma_separated_arg, action='extend',
-        help='only check rules whose id do not match these values'
-    )
-    standard.add_argument(
-        '-c', '--include-checks', dest='include_checks', nargs='+', default=[],
-        type=comma_separated_arg, action='extend',
-        help='include rules whose id match these values'
-    )
-
-    advanced.add_argument(
-        '-o', '--override-spec', dest='override_spec',
-        help='A CloudFormation Spec override file that allows customization'
-    )
-
-    standard.add_argument(
-        '-v', '--version', help='Version of cfn-lint', action='version',
-        version='%(prog)s {version}'.format(version=__version__)
-    )
-    advanced.add_argument(
-        '-u', '--update-specs', help='Update the CloudFormation Specs',
-        action='store_true'
-    )
-    advanced.add_argument(
-        '--update-documentation', help=argparse.SUPPRESS,
-        action='store_true'
-    )
-    return parser
 
 
 def get_formatter(fmt):
@@ -204,53 +85,43 @@ def get_rules(rulesdir, ignore_rules, include_rules):
     return rules
 
 
+def configure_logging(debug_logging):
+    """ Backwards compatibility for integrators """
+    LOGGER.debug('Update your integrations to use "cfnlint.config.configure_logging" instead')
+    cfnlint.config.configure_logging(debug_logging)
+
+
 def get_args_filenames(cli_args):
     """ Get Template Configuration items and set them as default values"""
-    parser = create_parser()
-    args, _ = parser.parse_known_args(cli_args)
+    try:
+        config = cfnlint.config.ConfigMixIn(cli_args)
+    except ValidationError as e:
+        LOGGER.error('Error parsing config file: %s', str(e))
+        exit(1)
 
-    configure_logging(args.debug)
-
-    fmt = args.format
+    fmt = config.format
     formatter = get_formatter(fmt)
 
-    # Filename can be speficied as positional or optional argument. Positional
-    # is leading
-    if args.templates:
-        filenames = args.templates
-    elif args.template_alt:
-        filenames = args.template_alt
-    else:
-        filenames = None
+    rules = cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks)
 
-    # if only one is specified convert it to array
-    if isinstance(filenames, six.string_types):
-        filenames = [filenames]
-
-    # Set default regions if none are specified.
-    if not args.regions:
-        setattr(args, 'regions', ['us-east-1'])
-
-    if args.update_specs:
+    if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
-    if args.update_documentation:
-        # Load ALL rules when generating documentation
-        all_rules = cfnlint.core.get_rules([], [], ['E', 'W', 'I'])
-        cfnlint.maintenance.update_documentation(all_rules)
+    if config.update_documentation:
+        cfnlint.maintenance.update_documentation(rules)
         exit(0)
 
-    if args.listrules:
-        print(cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks))
+    if config.listrules:
+        print(rules)
         exit(0)
 
-    if not filenames:
+    if not config.templates:
         # Not specified, print the help
-        parser.print_help()
+        config.parser.print_help()
         exit(1)
 
-    return(args, filenames, formatter)
+    return(config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -261,44 +132,11 @@ def get_template_rules(filename, args):
     if matches:
         return(template, [], matches)
 
-    # If the template has cfn-lint Metadata but the same options are set on the command-
-    # line, ignore the template's configuration. This works because these are all appends
-    # that have default values of empty arrays or none.  The only one that really doesn't
-    # work is ignore_bad_template but you can't override that back to false at this point.
-    for section, values in get_default_args(template).items():
-        if not getattr(args, section):
-            setattr(args, section, values)
+    args.template_args = template
 
     rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
 
     return(template, rules, [])
-
-
-def get_default_args(template):
-    """ Parse and validate default args """
-    defaults = {}
-    if isinstance(template, dict):
-        configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
-
-        if isinstance(configs, dict):
-            for config_name, config_value in configs.items():
-                if config_name == 'ignore_checks':
-                    if isinstance(config_value, list):
-                        defaults['ignore_checks'] = config_value
-                if config_name == 'regions':
-                    if isinstance(config_value, list):
-                        defaults['regions'] = config_value
-                if config_name == 'append_rules':
-                    if isinstance(config_value, list):
-                        defaults['override_spec'] = config_value
-                if config_name == 'override_spec':
-                    if isinstance(config_value, (six.string_types, six.text_type)):
-                        defaults['override_spec'] = config_value
-                if config_name == 'ignore_bad_template':
-                    if isinstance(config_value, bool):
-                        defaults['ignore_bad_template'] = config_value
-
-    return defaults
 
 
 def run_checks(filename, template, rules, regions):
