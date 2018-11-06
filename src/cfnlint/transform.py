@@ -15,14 +15,14 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import os
+import logging
 import six
-
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 
 import cfnlint.helpers
-
+LOGGER = logging.getLogger('cfnlint')
 
 class Transform(object):
     """
@@ -119,6 +119,14 @@ class Transform(object):
                     1, 1,
                     1, 1,
                     self._filename, cfnlint.TransformError(), cause.message))
+        except Exception as e:  # pylint: disable=W0703
+            LOGGER.debug('Error transforming template: %s', str(e))
+            LOGGER.debug('Stack trace: %s', e, exc_info=True)
+            message = 'Error transforming template: {0}'
+            matches.append(cfnlint.Match(
+                1, 1,
+                1, 1,
+                self._filename, cfnlint.TransformError(), message.format(str(e))))
 
         return matches
 
