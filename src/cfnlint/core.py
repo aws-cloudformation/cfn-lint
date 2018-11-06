@@ -227,8 +227,6 @@ def get_args_filenames(cli_args):
     if isinstance(filenames, six.string_types):
         filenames = [filenames]
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
-
     # Set default regions if none are specified.
     if not args.regions:
         setattr(args, 'regions', ['us-east-1'])
@@ -238,11 +236,13 @@ def get_args_filenames(cli_args):
         exit(0)
 
     if args.update_documentation:
-        cfnlint.maintenance.update_documentation(rules)
+        # Load ALL rules when generating documentation
+        all_rules = cfnlint.core.get_rules([], [], ['E', 'W', 'I'])
+        cfnlint.maintenance.update_documentation(all_rules)
         exit(0)
 
     if args.listrules:
-        print(rules)
+        print(cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks))
         exit(0)
 
     if not filenames:
