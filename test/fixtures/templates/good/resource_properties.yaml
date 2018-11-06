@@ -218,6 +218,10 @@ Outputs:
           - ElasticLoadBalancer
           - DNSName
 Parameters:
+  azList:
+    Type: "AWS::SSM::Parameter::Value<List<String>>"
+    Description: "The list of AZs from Parameter Store"
+    Default: '/regionSettings/azList'
   InstanceType:
     AllowedValues:
     - t1.micro
@@ -606,3 +610,10 @@ Resources:
       DistributionConfig:
         Aliases: !Ref Aliases
         Enabled: True
+  cacheForumRedisV1:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      PreferredAvailabilityZones: !Ref azList
+      CacheNodeType: String
+      Engine: String
+      NumCacheNodes: 1
