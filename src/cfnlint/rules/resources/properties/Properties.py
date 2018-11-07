@@ -267,7 +267,7 @@ class Properties(CloudFormationLintRule):
         for resourcename, resourcevalue in cfn.get_resources().items():
             if 'Properties' in resourcevalue and 'Type' in resourcevalue:
                 resourcetype = resourcevalue.get('Type', None)
-                if resourcetype.startswith('Custom::'):
+                if resourcetype.startswith('Custom::') and resourcetype not in self.resourcetypes:
                     resourcetype = 'AWS::CloudFormation::CustomResource'
                 if resourcetype in self.resourcetypes:
                     path = ['Resources', resourcename, 'Properties']

@@ -14,6 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import cfnlint.helpers
+import json
 from cfnlint.rules.resources.properties.Required import Required  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
@@ -36,3 +38,23 @@ class TestResourceConfiguration(BaseRuleTestCase):
     def test_file_negative_generic(self):
         """Generic Test failure"""
         self.helper_file_negative('fixtures/templates/bad/generic.yaml', 7)
+
+
+class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
+    """Test Custom Resource Required Properties when override spec is provided"""
+    def setUp(self):
+        """Setup"""
+        super(TestSpecifiedCustomResourceRequiredProperties, self).setUp()
+        # Add a Spec override that specifies the Custom::SpecifiedCustomResource type
+        with open('fixtures/templates/override_spec/custom.json') as fp:
+            custom_spec = json.load(fp)
+        cfnlint.helpers.set_specs(custom_spec)
+        # Reset Spec override after test
+        self.addCleanup(cfnlint.helpers.initialize_specs)
+
+    # ... all TestResourceConfiguration test cases are re-run with override spec ...
+
+    def test_file_negative(self):
+        """Test failure"""
+        # Additional Custom::SpecifiedCustomResource failure detected with custom spec
+        self.helper_file_negative('fixtures/templates/bad/properties_required.yaml', 13)
