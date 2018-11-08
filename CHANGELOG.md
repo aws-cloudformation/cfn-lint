@@ -9,6 +9,22 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.9.0
+###### Features
+- Add rule [E8002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E8002) to validate if resource Conditions or Fn::If conditions are defined
+- Improve rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to validate custom resources when custom specs are addended to the resource spec using override-spec
+- Allow for configuration of cfn-lint using configuration files in the project and home folder called .cfnlintrc
+- Updated specs to versions release 2011-11-02
+###### Fixes
+- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when looking for lists of objects and using a FindInMap or GetAtt to a custom resource as both could suppliy a list of objects
+- Remove rule [E1025](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1025) which was duplicative to the more extensive rule E8002
+- Catch AttributeErrors when running rules and silently continue.  Rules are defined to validate the configuration and AttributeErrors occur when templates are really badly configured and we run into types that we don't expect
+- Add generic exception handling to SAM transforming functions
+- Complete redo how we handle arguments to fix issues created when linting multiple files with cfn-lint configurations in the file
+- New CloudFormation spec patch to not require CidrBlock on resource type AWS::EC2::NetworkAclEntry
+- New updates to AtLeastOne.json definition to require CidrBlock or Ipv6CidrBlock on resource type AWS::EC2::NetworkAclEntry
+- A few documentation improvements
+
 ### 0.8.3
 ###### Features
 - Add rule [E3022](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3022) to validate that there is only one SubnetRouteTableAssociation per subnet
