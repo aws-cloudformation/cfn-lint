@@ -623,3 +623,24 @@ Resources:
       CacheNodeType: String
       Engine: String
       NumCacheNodes: 1
+  ### Testing relationships for lists to Custom and Maps
+  Custom:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: arn.example
+
+  LB1:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      SecurityGroups: !GetAtt Custom.ExampleListOfStrings
+      # LoadBalancerAttributes: {Type: List, ItemType: LoadBalancerAttribute}
+      # should be allowed as the custom resource can return a list of objects
+      LoadBalancerAttributes: !GetAtt Custom.ExampleListOfKeyValuePairs
+  LB2:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      SecurityGroups: !GetAtt Custom.ExampleListOfStrings
+      # LoadBalancerAttributes: {Type: List, ItemType: LoadBalancerAttribute}
+      # Should be allowed because mappings can have a list of objects
+      # This mapping isn't correct but validation of the actually mapping is more difficult
+      LoadBalancerAttributes: !FindInMap [ AWSInstanceType2Arch, c1.medium, Arch ]

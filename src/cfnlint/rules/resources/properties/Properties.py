@@ -119,8 +119,26 @@ class Properties(CloudFormationLintRule):
                         message = 'Invalid !If condition specified at %s' % ('/'.join(map(str, path)))
                         matches.append(RuleMatch(path, message))
                 else:
-                    message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
-                    matches.append(RuleMatch(path, message))
+                    # FindInMaps can be lists of objects so skip checking those
+                    if sub_key != 'Fn::FindInMap':
+                        # if its a GetAtt to a custom resource that custom resource
+                        # can return a list of objects so skip.
+                        if sub_key == 'Fn::GetAtt':
+                            resource_name = None
+                            if isinstance(sub_value, list):
+                                resource_name = sub_value[0]
+                            elif isinstance(sub_value, six.string_types):
+                                resource_name = sub_value.split('.')[0]
+                            if resource_name:
+                                resource_type = self.cfn.template.get('Resources', {}).get(resource_name, {}).get('Type')
+                                if not (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')):
+                                    message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+                                    matches.append(RuleMatch(path, message))
+                        else:
+                            message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+                            matches.append(RuleMatch(path, message))
+                    else:
+                        self.logger.debug('Too much logic to handle whats actually in the map "%s" so skipping any more validation.', sub_value)
         else:
             message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
             matches.append(RuleMatch(path, message))
