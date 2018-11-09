@@ -38,4 +38,4 @@ class TestValue(BaseRuleTestCase):
 
     def test_file_negative_value(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources/properties/value.yaml', 4)
+        self.helper_file_negative('fixtures/templates/bad/resources/properties/value.yaml', 5)

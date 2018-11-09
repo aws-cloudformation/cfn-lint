@@ -99,3 +99,17 @@ Resources:
         Value: '50'
       SecurityGroups:
       - !GetAtt alb1.SecurityGroups  # Returns many not one
+  ### Test CloudFormation resource for Get Atts
+  SubStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://example.com
+  albCfn2:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internal
+      Subnets: !Ref pSubnets
+      LoadBalancerAttributes:
+      - Key: idle_timeout.timeout_seconds
+        Value: '50'
+      SecurityGroups: !GetAtt SubStack.Outputs.SecurityGroups

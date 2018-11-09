@@ -40,7 +40,7 @@ class Value(CloudFormationLintRule):
         for property_type_spec in self.property_value_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def is_list_or_in_a_list(self, path, property_name):
+    def is_value_a_list(self, path, property_name):
         """
             Determines if the value checked is a list or a value in a list
             We need to handle conditions in the path that could be nested, etc.
@@ -51,7 +51,7 @@ class Value(CloudFormationLintRule):
             # Property doesn't match the property name
             # Check if its a number and a condition
             if isinstance(path[-1], int) and path[-2] == 'Fn::If':
-                return self.is_list_or_in_a_list(path[:-2], property_name)
+                return self.is_value_a_list(path[:-2], property_name)
 
             return False
 
@@ -65,7 +65,7 @@ class Value(CloudFormationLintRule):
         list_value_specs = kwargs.get('list_value_specs', {}).get('Ref')
         property_type = kwargs.get('property_type')
         property_name = kwargs.get('property_name')
-        if path[-1] == 'Ref' and property_type == 'List' and self.is_list_or_in_a_list(path[:-1], property_name):
+        if path[-1] == 'Ref' and property_type == 'List' and self.is_value_a_list(path[:-1], property_name):
             specs = list_value_specs
         else:
             specs = value_specs
@@ -119,20 +119,19 @@ class Value(CloudFormationLintRule):
         ## All outputs are strings.  This should fail if its to a list
         matches = []
         cfn = kwargs.get('cfn')
-        value_specs = kwargs.get('value_specs', {}).get('GetAtt')
-        list_value_specs = kwargs.get('list_value_specs', {}).get('GetAtt')
+        value_specs = kwargs.get('value_specs', {}).get('GetAtt', {})
+        list_value_specs = kwargs.get('list_value_specs', {}).get('GetAtt', {})
         property_type = kwargs.get('property_type')
         property_name = kwargs.get('property_name')
-
         # You can sometimes get a list or a string with . in it
         if isinstance(value, list):
             resource_name = value[0]
-            resource_attribute = value[1]
+            resource_attribute = value[1:]
         elif isinstance(value, six.string_types):
             resource_name = value.split('.')[0]
             resource_attribute = value.split('.')[1:]
-
-        if path[-1] == 'Fn::GetAtt' and property_type == 'List' and self.is_list_or_in_a_list(path[:-1], property_name):
+        is_value_a_list = self.is_value_a_list(path[:-1], property_name)
+        if path[-1] == 'Fn::GetAtt' and property_type == 'List' and is_value_a_list:
             specs = list_value_specs
         else:
             specs = value_specs
@@ -141,6 +140,17 @@ class Value(CloudFormationLintRule):
 
         if cfnlint.helpers.is_custom_resource(resource_type):
             #  A custom resource voids the spec.  Move on
+            return matches
+
+        if resource_type == 'AWS::CloudFormation::Stack' and resource_attribute[0] == 'Outputs':
+            # Nested Stack Outputs
+            # if its a string type we are good and return matches
+            # if its a list its a failure as Outputs can only be strings
+
+            if is_value_a_list:
+                message = 'CloudFormation stack outputs need to be strings not lists at {0}'
+                matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
+
             return matches
         if not specs:
             message = 'Property "{0}" has no valid Fn::GetAtt options at {1}'
@@ -156,7 +166,7 @@ class Value(CloudFormationLintRule):
                         property_name,
                         ', '.join(map(str, specs)),
                         '/'.join(map(str, path)))))
-        elif resource_attribute != specs[resource_type]:
+        elif '.'.join(map(str, resource_attribute)) != specs[resource_type]:
             message = 'Property "{0}" can Fn::GetAtt to a resource attribute "{1}" at {2}'
             matches.append(
                 RuleMatch(
@@ -171,7 +181,6 @@ class Value(CloudFormationLintRule):
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
         matches = list()
-
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
