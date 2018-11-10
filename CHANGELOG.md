@@ -14,7 +14,7 @@
 - Add rule [E8002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E8002) to validate if resource Conditions or Fn::If conditions are defined
 - Improve rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to validate custom resources when custom specs are addended to the resource spec using override-spec
 - Allow for configuration of cfn-lint using configuration files in the project and home folder called .cfnlintrc
-- Updated specs to versions release 2011-11-02
+- Updated specs to versions release 2.12.0
 ###### Fixes
 - Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when looking for lists of objects and using a FindInMap or GetAtt to a custom resource as both could suppliy a list of objects
 - Remove rule [E1025](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1025) which was duplicative to the more extensive rule E8002
