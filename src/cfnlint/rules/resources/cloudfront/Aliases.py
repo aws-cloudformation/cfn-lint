@@ -17,7 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import FUNCTIONS
+from cfnlint.constants import FUNCTIONS
 
 
 class Aliases(CloudFormationLintRule):

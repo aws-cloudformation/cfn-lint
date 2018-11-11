@@ -17,6 +17,7 @@
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+import cfnlint.constants
 import cfnlint.helpers
 
 
@@ -53,7 +54,7 @@ class Properties(CloudFormationLintRule):
         if isinstance(value, dict):
             if len(value) == 1:
                 for sub_key, sub_value in value.items():
-                    if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                    if sub_key in cfnlint.constants.CONDITION_FUNCTIONS:
                         # not erroring on bad Ifs but not need to account for it
                         # so the rule doesn't error out
                         if isinstance(sub_value, list):
@@ -81,7 +82,7 @@ class Properties(CloudFormationLintRule):
         matches = []
         if len(text[prop]) == 1:
             for sub_key, sub_value in text[prop].items():
-                if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                if sub_key in cfnlint.constants.CONDITION_FUNCTIONS:
                     if len(sub_value) == 3:
                         for if_i, if_v in enumerate(sub_value[1:]):
                             condition_path = path[:] + [sub_key, if_i + 1]
@@ -198,7 +199,7 @@ class Properties(CloudFormationLintRule):
             proppath = path[:]
             proppath.append(prop)
             if prop not in resourcespec:
-                if prop in cfnlint.helpers.CONDITION_FUNCTIONS:
+                if prop in cfnlint.constants.CONDITION_FUNCTIONS:
                     cond_values = self.cfn.get_condition_values(text[prop])
                     for cond_value in cond_values:
                         matches.extend(self.propertycheck(

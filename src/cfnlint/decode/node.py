@@ -19,7 +19,7 @@ import logging
 import re
 from copy import deepcopy
 import six
-import cfnlint.helpers  # pylint: disable=R0401
+import cfnlint.constants
 
 LOGGER = logging.getLogger(__name__)
 
@@ -121,7 +121,7 @@ def create_dict_node_class(cls):
             if len(value) == 1:
                 for dict_name, _ in value.items():
                     # If this is a function we shouldn't fall back to a check_value check
-                    if dict_name in cfnlint.helpers.FUNCTIONS:
+                    if dict_name in cfnlint.constants.FUNCTIONS:
                         # convert the function name from camel case to underscore
                         # Example: Fn::FindInMap becomes check_find_in_map
                         function_name = 'check_%s' % camel_to_snake(dict_name.replace('Fn::', ''))

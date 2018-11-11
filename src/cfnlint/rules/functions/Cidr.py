@@ -18,8 +18,8 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+from cfnlint.constants import REGEX_CIDR
 
-from cfnlint.helpers import REGEX_CIDR
 
 class Cidr(CloudFormationLintRule):
     """Check if Cidr values are correct"""

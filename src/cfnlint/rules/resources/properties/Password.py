@@ -18,7 +18,7 @@ import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF
+from cfnlint.constants import REGEX_DYN_REF_SSM, REGEX_DYN_REF
 
 
 class Password(CloudFormationLintRule):

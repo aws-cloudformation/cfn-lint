@@ -17,6 +17,7 @@
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
+import cfnlint.constants
 
 
 class Required(CloudFormationLintRule):
@@ -64,11 +65,11 @@ class Required(CloudFormationLintRule):
         resource_objects = []
         base_object_properties = {}
         for key, value in text.items():
-            if key not in cfnlint.helpers.CONDITION_FUNCTIONS:
+            if key not in cfnlint.constants.CONDITION_FUNCTIONS:
                 base_object_properties[key] = value
         condition_found = False
         for key, value in text.items():
-            if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+            if key in cfnlint.constants.CONDITION_FUNCTIONS:
                 condition_found = True
                 cond_values = self.cfn.get_condition_values(value)
                 for cond_value in cond_values:

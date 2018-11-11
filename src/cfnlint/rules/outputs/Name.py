@@ -17,7 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import REGEX_ALPHANUMERIC
+from cfnlint.constants import REGEX_ALPHANUMERIC
 
 
 class Name(CloudFormationLintRule):

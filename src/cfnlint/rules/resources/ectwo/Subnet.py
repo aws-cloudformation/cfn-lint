@@ -17,7 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import AVAILABILITY_ZONES, REGEX_CIDR
+from cfnlint.constants import AVAILABILITY_ZONES, REGEX_CIDR
 
 
 class Subnet(CloudFormationLintRule):

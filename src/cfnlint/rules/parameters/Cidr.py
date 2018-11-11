@@ -17,7 +17,7 @@
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
-from cfnlint.helpers import REGEX_CIDR
+from cfnlint.constants import REGEX_CIDR
 
 
 class Cidr(CloudFormationLintRule):

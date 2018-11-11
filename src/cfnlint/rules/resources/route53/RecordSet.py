@@ -17,8 +17,7 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-
-from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
+from cfnlint.constants import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
 
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""

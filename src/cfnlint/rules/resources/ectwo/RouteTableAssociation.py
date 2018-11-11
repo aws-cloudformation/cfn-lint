@@ -18,7 +18,7 @@ from collections import defaultdict
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-import cfnlint.helpers
+import cfnlint.constants
 
 
 class RouteTableAssociation(CloudFormationLintRule):
@@ -39,7 +39,7 @@ class RouteTableAssociation(CloudFormationLintRule):
         if isinstance(subnetid, dict):
             if len(subnetid) == 1:
                 for key, value in subnetid.items():
-                    if key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                    if key in cfnlint.constants.CONDITION_FUNCTIONS:
                         if isinstance(value, list):
                             if len(value) == 3:
                                 property_condition = value[0]

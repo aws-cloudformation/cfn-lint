@@ -17,7 +17,7 @@
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-from cfnlint.helpers import LIMITS
+from cfnlint.constants import LIMITS
 
 
 class LimitValue(CloudFormationLintRule):

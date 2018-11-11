@@ -19,6 +19,7 @@ import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
+import cfnlint.constants
 
 
 class DynamicReferenceSecureString(CloudFormationLintRule):
@@ -64,7 +65,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         matches = []
 
         if isinstance(value, six.string_types):
-            if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
+            if re.match(cfnlint.constants.REGEX_DYN_REF_SSM_SECURE, value):
                 message = 'Dynamic Reference secure strings are not supported for this property at %s' % (
                     '/'.join(map(str, path[:])))
                 matches.append(RuleMatch(path[:], message))

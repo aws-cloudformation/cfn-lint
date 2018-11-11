@@ -23,6 +23,7 @@ from datetime import datetime
 import six
 from yaml.parser import ParserError
 import cfnlint.helpers
+from cfnlint.constants import CONDITION_FUNCTIONS
 from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)
@@ -543,7 +544,7 @@ class Template(object):
                 if isinstance(item, dict):
                     if len(item) == 1:
                         for sub_key, sub_value in item.items():
-                            if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                            if sub_key in CONDITION_FUNCTIONS:
                                 cond_values = self.get_condition_values(sub_value)
                                 results = []
                                 for cond_value in cond_values:
@@ -640,7 +641,7 @@ class Template(object):
                 # Checking for conditions inside of conditions
                 if isinstance(item, dict):
                     for sub_key, sub_value in item.items():
-                        if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
+                        if sub_key in CONDITION_FUNCTIONS:
                             results = self.get_condition_values(sub_value, result['Path'] + [sub_key])
                             if isinstance(results, list):
                                 matches.extend(results)

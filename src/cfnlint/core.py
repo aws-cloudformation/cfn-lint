@@ -23,7 +23,7 @@ import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.version import __version__
-from cfnlint.helpers import REGIONS
+from cfnlint.constants import REGIONS
 
 
 LOGGER = logging.getLogger('cfnlint')
