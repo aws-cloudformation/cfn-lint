@@ -32,3 +32,11 @@ class TestPropertyAllowedValues(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('fixtures/templates/bad/properties_allowedvalues.yaml', 1)
+
+    def test_file_negative_route53(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 1)
+
+    def test_file_negative_vpc_tenancy(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/properties_ec2_network.yaml', 1)

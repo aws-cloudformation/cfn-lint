@@ -29,15 +29,6 @@ class Vpc(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
     tags = ['properties', 'vpc']
 
-    def check_vpc_value(self, value, path):
-        """Check VPC Values"""
-        matches = []
-
-        if value not in ('default', 'dedicated'):
-            message = 'DefaultTenancy needs to be default or dedicated for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
-        return matches
-
     def check_vpc_ref(self, value, path, parameters, resources):
         """Check ref for VPC"""
         matches = []
@@ -102,13 +93,6 @@ class Vpc(CloudFormationLintRule):
         """Check EC2 VPC Resource Parameters"""
 
         matches = []
-        matches.extend(
-            cfn.check_resource_property(
-                'AWS::EC2::VPC', 'InstanceTenancy',
-                check_value=self.check_vpc_value,
-                check_ref=self.check_vpc_ref,
-            )
-        )
         matches.extend(
             cfn.check_resource_property(
                 'AWS::EC2::VPC', 'CidrBlock',
