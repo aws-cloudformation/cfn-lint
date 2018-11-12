@@ -24,6 +24,7 @@ import six
 from yaml.parser import ParserError
 import cfnlint.helpers
 from cfnlint.transform import Transform
+from cfnlint.decode.node import TemplateAttributeError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -176,6 +177,9 @@ class RulesCollection(object):
         """ Run a check """
         try:
             return check(*args)
+        except TemplateAttributeError as err:
+            LOGGER.debug(str(err))
+            return []
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled('E0002'):
                 message = 'Unknown exception while processing rule {}: {}'
