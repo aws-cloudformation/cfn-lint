@@ -19,6 +19,7 @@
 - Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when looking for lists of objects and using a FindInMap or GetAtt to a custom resource as both could suppliy a list of objects
 - Remove rule [E1025](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1025) which was duplicative to the more extensive rule E8002
 - Catch AttributeErrors when running rules and silently continue.  Rules are defined to validate the configuration and AttributeErrors occur when templates are really badly configured and we run into types that we don't expect
+- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for quotes when checking the length
 - Add generic exception handling to SAM transforming functions
 - Complete redo how we handle arguments to fix issues created when linting multiple files with cfn-lint configurations in the file
 - New CloudFormation spec patch to not require CidrBlock on resource type AWS::EC2::NetworkAclEntry
