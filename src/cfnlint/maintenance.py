@@ -137,14 +137,6 @@ def patch_spec(content, region):
                 {'op': 'move', 'from': '/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VPCEndpointType', 'path': '/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VpcEndpointType'}
             ])
         },
-        # RDS AutoScaling
-        {
-            'Name': 'RDS AutoScaling Pause',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'move', 'from': '/PropertyTypes/AWS::RDS::DBCluster.ScalingConfiguration/Properties/SecondsBeforeAutoPause', 'path': '/PropertyTypes/AWS::RDS::DBCluster.ScalingConfiguration/Properties/SecondsUntilAutoPause'}
-            ])
-        },
         {
             'Name': 'AWS::CloudFormation::WaitCondition has no required properties',
             'Regions': ['All'],

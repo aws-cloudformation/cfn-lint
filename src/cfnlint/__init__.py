@@ -176,10 +176,6 @@ class RulesCollection(object):
         """ Run a check """
         try:
             return check(*args)
-        except AttributeError as err:
-            LOGGER.debug('Attribute error while processing rule %s: %s', rule_id, str(err))
-            LOGGER.debug('Stack trace: %s', err, exc_info=True)
-            return []
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled('E0002'):
                 message = 'Unknown exception while processing rule {}: {}'
