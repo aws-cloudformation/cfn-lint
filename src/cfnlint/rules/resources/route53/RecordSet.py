@@ -154,7 +154,7 @@ class RecordSet(CloudFormationLintRule):
                 if not record.startswith('"') or not record.endswith('"'):
                     message = 'TXT record ({}) has to be enclosed in double quotation marks (")'
                     matches.append(RuleMatch(tree, message.format(record)))
-                elif len(record) > 255:
+                elif len(record) > 257:  # 2 extra characters for start and end double quotation marks
                     message = 'The length of the TXT record ({}) exceeds the limit (255)'
                     matches.append(RuleMatch(tree, message.format(len(record))))
 
