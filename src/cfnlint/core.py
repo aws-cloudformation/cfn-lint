@@ -102,18 +102,18 @@ def get_args_filenames(cli_args):
     fmt = config.format
     formatter = get_formatter(fmt)
 
-    rules = cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks)
-
     if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
     if config.update_documentation:
-        cfnlint.maintenance.update_documentation(rules)
+        # Load ALL rules when generating documentation
+        all_rules = cfnlint.core.get_rules([], [], ['E', 'W', 'I'])
+        cfnlint.maintenance.update_documentation(all_rules)
         exit(0)
 
     if config.listrules:
-        print(rules)
+        print(cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks))
         exit(0)
 
     if not config.templates:

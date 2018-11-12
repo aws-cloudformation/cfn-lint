@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **98** rules are applied by this linter:
+The following **99** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -97,6 +97,7 @@ The following **98** rules are applied by this linter:
 | E3020 <a name="E3020"></a> | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | [Source](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html) | `resources`,`route53`,`record_set` |
 | E3021 <a name="E3021"></a> | Check Events Rule Targets are less than or equal to 5 | CloudWatch Events Rule can only support up to 5 targets | [Source](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/cloudwatch_limits_cwe.html) | `resources`,`events` |
 | E3022 <a name="E3022"></a> | Resource SubnetRouteTableAssociation Properties | Validate there is only one SubnetRouteTableAssociation per subnet | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html) | `resources`,`subnet`,`route table` |
+| E3030 <a name="E3030"></a> | Check property values against allowed values | If an array of "AllowedValues" is speficied for a property, check the value of the property. PrimitiveType and Required is handled in other rules, so those are not checked here. | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`properties`,`allowedvalues` |
 | E4001 <a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
 | E6001 <a name="E6001"></a> | Outputs have appropriate properties | Making sure the outputs are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6002 <a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
