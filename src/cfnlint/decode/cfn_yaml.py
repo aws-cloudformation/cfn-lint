@@ -110,7 +110,7 @@ class NodeConstructor(SafeConstructor):
         """Throw a null error"""
         raise CfnParseError(
             self.filename,
-            'Null value at line {0} column {1}'.format(node.start_mark.line, node.start_mark.column),
+            'Null value at line {0} column {1}'.format(node.start_mark.line + 1, node.start_mark.column + 1),
             node.start_mark.line, node.start_mark.column, ' ')
 
 
