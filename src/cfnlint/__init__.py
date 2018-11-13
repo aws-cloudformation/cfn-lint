@@ -333,7 +333,7 @@ class RuleMatch(object):
         return hash((self.path, self.message))
 
 
-class Match(object):
+class Match(object):  # pylint: disable=R0902
     """Match Classes"""
 
     def __init__(
