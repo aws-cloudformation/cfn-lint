@@ -34,7 +34,7 @@ CONDITION_FUNCTIONS = ['Fn::If']
 REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
            'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
            'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
-           'sa-east-1']
+           'sa-east-1', 'eu-west-3', 'ap-northeast-3']
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
