@@ -60,6 +60,11 @@ class Required(CloudFormationLintRule):
             # Covered with Properties not with Required
             return matches
 
+        # Return empty matches if we run into a function that is being used to get an object
+        # Selects could be used to return an object when used with a FindInMap
+        if text.is_function_returning_object():
+            return matches
+
         # Check if all required properties are specified
         resource_objects = []
         base_object_properties = {}
