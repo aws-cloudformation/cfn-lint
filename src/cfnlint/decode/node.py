@@ -81,8 +81,7 @@ def create_dict_node_class(cls):
             self.condition_functions = ['Fn::If']
 
         def __deepcopy__(self, memo):
-            cls = self.__class__
-            result = cls.__new__(cls, self.start_mark, self.end_mark)
+            result = dict_node(self, self.start_mark, self.end_mark)
             memo[id(self)] = result
             for k, v in self.items():
                 result[deepcopy(k)] = deepcopy(v, memo)
@@ -160,8 +159,7 @@ def create_dict_list_class(cls):
             self.condition_functions = ['Fn::If']
 
         def __deepcopy__(self, memo):
-            cls = self.__class__
-            result = cls.__new__(cls, self.start_mark, self.end_mark)
+            result = list_node([], self.start_mark, self.end_mark)
             memo[id(self)] = result
             for _, v in enumerate(self):
                 result.append(deepcopy(v, memo))

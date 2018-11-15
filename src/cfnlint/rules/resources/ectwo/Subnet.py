@@ -34,7 +34,7 @@ class Subnet(CloudFormationLintRule):
 
         if value not in AVAILABILITY_ZONES:
             message = 'Not a valid Availbility Zone {0} at {1}'
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(value, ('/'.join(map(str, path))))))
         return matches
 
     def check_az_ref(self, value, path, parameters, resources):
@@ -46,7 +46,7 @@ class Subnet(CloudFormationLintRule):
         ]
         if value in resources:
             message = 'AvailabilityZone can\'t use a Ref to a resource for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
@@ -105,7 +105,7 @@ class Subnet(CloudFormationLintRule):
 
         if not value.startswith('vpc-'):
             message = 'VpcId needs to be of format vpc-xxxxxxxx at {1}'
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(value, ('/'.join(map(str, path))))))
         return matches
 
     def check_vpc_ref(self, value, path, parameters, resources):
@@ -114,7 +114,7 @@ class Subnet(CloudFormationLintRule):
         if value in resources:
             # Check if resource is a VPC
             message = 'VpcId can\'t use a Ref to a resource for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
