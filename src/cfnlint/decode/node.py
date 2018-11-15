@@ -22,6 +22,10 @@ import six
 LOGGER = logging.getLogger(__name__)
 
 
+class TemplateAttributeError(AttributeError):
+    """ Custom error to capture Attribute Errors in the Template """
+
+
 def create_str_node_class(cls):
     """
     Create string node class
@@ -45,6 +49,9 @@ def create_str_node_class(cls):
                 return cls.__new__(self, x.encode('ascii', 'ignore'))
 
             return cls.__new__(self, x)
+
+        def __getattr__(self, name):
+            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
 
         def __deepcopy__(self, memo):
             result = str_node(self, self.start_mark, self.end_mark)
@@ -74,8 +81,7 @@ def create_dict_node_class(cls):
             self.condition_functions = ['Fn::If']
 
         def __deepcopy__(self, memo):
-            cls = self.__class__
-            result = cls.__new__(cls, self.start_mark, self.end_mark)
+            result = dict_node(self, self.start_mark, self.end_mark)
             memo[id(self)] = result
             for k, v in self.items():
                 result[deepcopy(k)] = deepcopy(v, memo)
@@ -130,6 +136,9 @@ def create_dict_node_class(cls):
                 if isinstance(self, type_t) or not type_t:
                     yield self, path[:]
 
+        def __getattr__(self, name):
+            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
 
@@ -150,8 +159,7 @@ def create_dict_list_class(cls):
             self.condition_functions = ['Fn::If']
 
         def __deepcopy__(self, memo):
-            cls = self.__class__
-            result = cls.__new__(cls, self.start_mark, self.end_mark)
+            result = list_node([], self.start_mark, self.end_mark)
             memo[id(self)] = result
             for _, v in enumerate(self):
                 result.append(deepcopy(v, memo))
@@ -172,6 +180,9 @@ def create_dict_list_class(cls):
                 else:
                     if isinstance(v, type_t) or not type_t:
                         yield v, path[:] + [i]
+
+        def __getattr__(self, name):
+            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
 
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
