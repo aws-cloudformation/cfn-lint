@@ -22,12 +22,28 @@ import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
-from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
 
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
+
+
+class CfnLintExitException(Exception):
+    """Generic exception used when the cli should exit"""
+    def __init__(self, msg=None, exit_code=1):
+        if msg is None:
+            msg = 'process failed with exit code %s' % exit_code
+        super(CfnLintExitException, self).__init__(msg)
+        self.exit_code = exit_code
+
+
+class InvalidRegionException(CfnLintExitException):
+    """When an unsupported/invalid region is supplied"""
+
+
+class UnexpectedRuleException(CfnLintExitException):
+    """When processing a rule fails in an unexpected way"""
 
 
 def run_cli(filename, template, rules, regions, override_spec):
@@ -79,9 +95,7 @@ def get_rules(rulesdir, ignore_rules, include_rules):
             rules.extend(
                 RulesCollection.create_from_directory(rules_dir))
     except OSError as e:
-        LOGGER.error('Tried to append rules but got an error: %s', str(e))
-        exit(1)
-
+        raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
     return rules
 
 
@@ -142,11 +156,10 @@ def get_template_rules(filename, args):
 def run_checks(filename, template, rules, regions):
     """Run Checks against the template"""
     if regions:
-
-        for region in regions:
-            if region not in REGIONS:
-                LOGGER.error('Supported regions are %s', REGIONS)
-                exit(32)
+        if not set(regions).issubset(set(REGIONS)):
+            unsupported_regions = list(set(regions).difference(set(REGIONS)))
+            msg = 'Regions %s are unsupported. Supported regions are %s' % (unsupported_regions, REGIONS)
+            raise InvalidRegionException(msg, 32)
 
     matches = []
 
@@ -157,8 +170,8 @@ def run_checks(filename, template, rules, regions):
         try:
             matches.extend(runner.run())
         except Exception as err:  # pylint: disable=W0703
-            LOGGER.error('Tried to process rules on file %s but got an error: %s', filename, str(err))
-            exit(1)
+            msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
+            UnexpectedRuleException(msg, 1)
     matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
     return(matches)
