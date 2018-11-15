@@ -45,17 +45,17 @@ class FunctionMemorySize(CloudFormationLintRule):
                 matches.append(
                     RuleMatch(
                         path, message.format(
-                            self.min_memory, self.max_memory, ('/'.join(path)))))
+                            self.min_memory, self.max_memory, ('/'.join(map(str, path))))))
             elif value % 64 != 0:
                 matches.append(
                     RuleMatch(
                         path, message.format(
-                            self.min_memory, self.max_memory, ('/'.join(path)))))
+                            self.min_memory, self.max_memory, ('/'.join(map(str, path))))))
         except ValueError:
             matches.append(
                 RuleMatch(
                     path, message.format(
-                        self.min_memory, self.max_memory, ('/'.join(path)))))
+                        self.min_memory, self.max_memory, ('/'.join(map(str, path))))))
 
         return matches
 
@@ -72,7 +72,7 @@ class FunctionMemorySize(CloudFormationLintRule):
         matches = []
         if value in resources:
             message = 'MemorySize can\'t use a Ref to a resource for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             param_type = parameter.get('Type', '')
