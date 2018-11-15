@@ -35,7 +35,7 @@ class Vpc(CloudFormationLintRule):
 
         if value not in ('default', 'dedicated'):
             message = 'DefaultTenancy needs to be default or dedicated for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
         return matches
 
     def check_vpc_ref(self, value, path, parameters, resources):
@@ -46,7 +46,7 @@ class Vpc(CloudFormationLintRule):
         ]
         if value in resources:
             message = 'DefaultTenancy can\'t use a Ref to a resource for {0}'
-            matches.append(RuleMatch(path, message.format(('/'.join(path)))))
+            matches.append(RuleMatch(path, message.format(('/'.join(map(str, path))))))
         elif value in parameters:
             parameter = parameters.get(value, {})
             parameter_type = parameter.get('Type', None)
