@@ -340,9 +340,9 @@ class TemplateArgs(object):
                             defaults['regions'] = config_value
                     if config_name == 'append_rules':
                         if isinstance(config_value, list):
-                            defaults['override_spec'] = config_value
+                            defaults['append_rules'] = config_value
                     if config_name == 'override_spec':
-                        if isinstance(config_value, (six.string_types, six.text_type)):
+                        if isinstance(config_value, (six.string_types)):
                             defaults['override_spec'] = config_value
                     if config_name == 'ignore_bad_template':
                         if isinstance(config_value, bool):
@@ -377,7 +377,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
             return template_value
         if file_value and is_config_file:
             return file_value
-
         return cli_value
 
     @property

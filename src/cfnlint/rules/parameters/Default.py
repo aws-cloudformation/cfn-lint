@@ -33,8 +33,7 @@ class Default(CloudFormationLintRule):
             Check allowed value against allowed pattern
         """
         message = 'Default should be allowed by AllowedPattern'
-
-        if not re.match(allowed_pattern, allowed_value):
+        if not re.match(allowed_pattern, str(allowed_value)):
             return([RuleMatch(path, message)])
 
         return []
