@@ -64,6 +64,8 @@ AVAILABILITY_ZONES = [
     'ap-southeast-2a', 'ap-southeast-2b', 'ap-southeast-2c',
     'ap-south-1a', 'ap-south-1b',
     'cn-north-1a', 'cn-north-1b',
+    'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
+    'ap-northeast-3a',
 ]
 
 FUNCTIONS = [
