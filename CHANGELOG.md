@@ -9,6 +9,20 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.9.1
+###### Features
+- Add support for eu-west-3 and ap-northeast-3
+- Add Resource Type AWS::CloudFormation::Macro to CloudFormation Spec
+###### Fixes
+- Fix the error message for YAML null being off by 1 line and 1 column number
+- Add Custom Error for when trying to access an attribute in the classes that make up the template
+- Fix an issue with deepcopy not creating copies with start and end marks
+- Fix 4 rules that would fail when trying to create the path of the error and running into an integer
+- Fix rule [E2015](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2015) to force parameter default values to be a string when testing against the AllowedPattern regex pattern
+- Fix a bug in the config engine in which append rules would have gone to override spec
+- Remove exit calls from functions that are used in integrations preventing pre-mature failures
+- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003) to support functions that may be able to support objects
+
 ### 0.9.0
 ###### Features
 - Add rule [E8002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E8002) to validate if resource Conditions or Fn::If conditions are defined
