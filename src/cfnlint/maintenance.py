@@ -140,14 +140,6 @@ def patch_spec(content, region):
             ])
         },
         {
-            'Name': 'AWS::CloudFormation::WaitCondition has no required properties',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::CloudFormation::WaitCondition/Properties/Handle/Required', 'value': False},
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::CloudFormation::WaitCondition/Properties/Timeout/Required', 'value': False},
-            ])
-        },
-        {
             'Name': 'AWS::EC2::SpotFleet.SpotFleetTagSpecification supports Tags',
             'Regions': ['All'],
             'Patch': jsonpatch.JsonPatch([
@@ -165,129 +157,6 @@ def patch_spec(content, region):
             'Regions': ['All'],
             'Patch': jsonpatch.JsonPatch([
                 {'op': 'replace', 'path': '/PropertyTypes/AWS::Cognito::UserPool.SmsConfiguration/Properties/ExternalId/Required', 'value': True}
-            ])
-        },
-        {
-            'Name': 'Add type AWS::SSM::MaintenanceWindow',
-            'Regions': ['All'],  # need to double check this
-            'Patch': jsonpatch.JsonPatch([
-                {
-                    'op': 'add', 'path': '/ResourceTypes/AWS::SSM::MaintenanceWindow',
-                    'value': {
-                        'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html',
-                        'Properties': {
-                            'Description': {
-                                'Required': False,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-description',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'AllowUnassociatedTargets': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-allowunassociatedtargets',
-                                'PrimitiveType': 'Boolean',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Cutoff': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-cutoff',
-                                'PrimitiveType': 'Integer',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Schedule': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Duration': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-duration',
-                                'PrimitiveType': 'Integer',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Name': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            }
-                        }
-                    }
-                }
-            ])
-        },
-        {
-            'Name': 'Add type AWS::SSM::MaintenanceWindowTarget',
-            'Regions': ['All'],  # need to double check this
-            'Patch': jsonpatch.JsonPatch([
-                {
-                    'op': 'add', 'path': '/ResourceTypes/AWS::SSM::MaintenanceWindowTarget',
-                    'value': {
-                        'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html',
-                        'Properties': {
-                            'OwnerInformation': {
-                                'Required': False,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Description': {
-                                'Required': False,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'WindowId': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'ResourceType': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Targets': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets',
-                                'PrimitiveType': 'String',
-                                'Type': 'List',
-                                'ItemType': 'Target',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Name': {
-                                'Required': False,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                        }
-                    }
-                },
-                {
-                    'op': 'add', 'path': '/PropertyTypes/AWS::SSM::MaintenanceWindowTarget.Target',
-                    'value': {
-                        'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html',
-                        'Properties': {
-                            'Key': {
-                                'Required': True,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-key',
-                                'PrimitiveType': 'String',
-                                'UpdateType': 'Mutable'
-                            },
-                            'Values': {
-                                'Required': False,
-                                'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-maintenancewindowtarget-targets.html#cfn-ssm-maintenancewindowtarget-targets-values',
-                                'PrimitiveItemType': 'String',
-                                'UpdateType': 'Mutable',
-                                'Type': 'List',
-                            },
-                        }
-                    }
-                }
             ])
         },
         {
@@ -318,6 +187,50 @@ def patch_spec(content, region):
             'Regions': ['us-east-2', 'ca-central-1', 'eu-central-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-2', 'ap-south-1'],
             'Patch': jsonpatch.JsonPatch([
                 {'op': 'remove', 'path': '/ResourceTypes/AWS::SDB::Domain'}
+            ])
+        },
+        {
+            'Name': 'Add type AWS::CloudFormation::Macro',
+            'Regions': ['All'],  # need to double check this
+            'Patch': jsonpatch.JsonPatch([
+                {
+                    'op': 'add', 'path': '/ResourceTypes/AWS::CloudFormation::Macro',
+                    'value': {
+                        'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html',
+                        'Properties': {
+                            'Description': {
+                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-description',
+                                'PrimitiveType': 'String',
+                                'Required': False,
+                                'UpdateType': 'Mutable'
+                            },
+                            'FunctionName': {
+                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-functionname',
+                                'PrimitiveType': 'String',
+                                'Required': True,
+                                'UpdateType': 'Mutable'
+                            },
+                            'LogGroupName': {
+                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-loggroupname',
+                                'PrimitiveType': 'String',
+                                'Required': False,
+                                'UpdateType': 'Mutable'
+                            },
+                            'LogRoleARN': {
+                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-logrolearn',
+                                'PrimitiveType': 'String',
+                                'Required': False,
+                                'UpdateType': 'Mutable'
+                            },
+                            'Name': {
+                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-name',
+                                'PrimitiveType': 'String',
+                                'Required': True,
+                                'UpdateType': 'Immutable'
+                            }
+                        }
+                    }
+                }
             ])
         },
     ]

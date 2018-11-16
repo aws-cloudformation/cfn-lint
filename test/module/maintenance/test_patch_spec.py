@@ -43,14 +43,10 @@ class TestPatchJson(BaseTestCase):
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['DefaultCacheBehavior']['Required'])
         self.assertTrue(
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['Origins']['Required'])
-        self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Handle']['Required'])
-        self.assertFalse(patched['ResourceTypes']['AWS::CloudFormation::WaitCondition']['Properties']['Timeout']['Required'])
         self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
         self.assertIn('Tags', patched['PropertyTypes']['AWS::EC2::SpotFleet.SpotFleetTagSpecification']['Properties'])
         self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
-        self.assertIn('AWS::SSM::MaintenanceWindow', patched['ResourceTypes'])
-        self.assertIn('AWS::SSM::MaintenanceWindowTarget', patched['ResourceTypes'])
-        self.assertIn('AWS::SSM::MaintenanceWindowTarget.Target', patched['PropertyTypes'])
+        self.assertIn('AWS::CloudFormation::Macro', patched['ResourceTypes'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['TopicArn']['Required'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['Protocol']['Required'])
 
