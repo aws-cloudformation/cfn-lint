@@ -194,16 +194,23 @@ class Properties(CloudFormationLintRule):
                 matches.append(RuleMatch(path, message))
             return matches
 
+        # You can put in functions directly in place of objects as long as that is
+        # the only thing there (conditions, select) could all (possibly)
+        # return objects.  FindInMap cannot directly return an object.
+        len_of_text = len(text)
+
         for prop in text:
             proppath = path[:]
             proppath.append(prop)
             if prop not in resourcespec:
-                if prop in cfnlint.helpers.CONDITION_FUNCTIONS:
+                if prop in cfnlint.helpers.CONDITION_FUNCTIONS and len_of_text == 1:
                     cond_values = self.cfn.get_condition_values(text[prop])
                     for cond_value in cond_values:
                         matches.extend(self.propertycheck(
                             cond_value['Value'], proptype, parenttype, resourcename,
                             proppath + cond_value['Path'], root))
+                elif text.is_function_returning_object():
+                    self.logger.debug('Ran into function "%s".  Skipping remaining checks', prop)
                 elif not supports_additional_properties:
                     message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))
