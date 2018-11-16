@@ -168,14 +168,6 @@ def patch_spec(content, region):
             ])
         },
         {
-            'Name': 'AWS::SNS::Subscription TopicArn and Protocol IS required',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/TopicArn/Required', 'value': True},
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/Protocol/Required', 'value': True}
-            ])
-        },
-        {
             'Name': 'AWS::EC2::NetworkAclEntry CidrBlock or Ipv6CidrBlock is required',
             'Regions': ['All'],
             'Patch': jsonpatch.JsonPatch([
