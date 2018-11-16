@@ -3,6 +3,14 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
 Errors:
   Catch: Missing
+Mappings:
+  runtime:
+    us-east-1:
+      production:
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        ToPort: 80
+        FromPort: 80
 Parameters:
   myParam:
     Type: String
@@ -177,6 +185,21 @@ Resources:
           UnhealthyThreshold: '5'
           Interval: '30'
           Timeout: '5'
+  # Fail when not using FindInMap
+  lambdaMap1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: test
+      SecurityGroupIngress:
+        Fn::GetAZs: !Ref AWS::Region
+  # fail when using FindInMap for an object
+  # Fail when not using FindInMap
+  lambdaMap2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: test
+      SecurityGroupIngress:
+      - Fn::FindInMap: [ runtime, !Ref 'AWS::Region', production ]
 Outputs:
   myOutput:
     Value: !GetAtt ElasticLoadBalancer.CanonicalHostedZoneName

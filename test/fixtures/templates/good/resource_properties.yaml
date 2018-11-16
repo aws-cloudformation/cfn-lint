@@ -207,6 +207,13 @@ Mappings:
       Examples: https://s3-us-west-1.amazonaws.com/cloudformation-examples-us-west-1
     us-west-2:
       Examples: https://s3-us-west-2.amazonaws.com/cloudformation-examples-us-west-2
+  runtime:
+    us-east-1:
+      production:
+      - CidrIp: 0.0.0.0/0
+        IpProtocol: tcp
+        ToPort: 80
+        FromPort: 80
 Outputs:
   URL:
     Description: The URL of the website
@@ -644,3 +651,19 @@ Resources:
       # Should be allowed because mappings can have a list of objects
       # This mapping isn't correct but validation of the actually mapping is more difficult
       LoadBalancerAttributes: !FindInMap [ AWSInstanceType2Arch, c1.medium, Arch ]
+  # Don't fail when we have used a possible map
+  lambdaMap1:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: test
+      SecurityGroupIngress:
+        - Fn::Select:
+          - 0
+          - Fn::FindInMap: [ runtime, us-east-1, production ]
+  # Don't fail when we use the entire list from a map
+  lambdaMap2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: test
+      SecurityGroupIngress:
+        Fn::FindInMap: [ runtime, us-east-1, production ]
