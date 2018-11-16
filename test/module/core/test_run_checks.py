@@ -14,7 +14,6 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection
 import cfnlint.core
 import cfnlint.helpers  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -54,3 +53,15 @@ class TestRunChecks(BaseTestCase):
 
         assert(results[0].rule.id == 'W2506')
         assert(results[1].rule.id == 'W2001')
+
+    def test_bad_region(self):
+        """Test bad region"""
+        filename = 'fixtures/templates/good/generic.yaml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        err = None
+        try:
+            cfnlint.core.run_checks(filename, template, rules, ['not-a-region'])
+        except cfnlint.core.InvalidRegionException as e:
+            err = e
+        assert(type(err) == cfnlint.core.InvalidRegionException)
