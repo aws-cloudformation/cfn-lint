@@ -118,60 +118,92 @@ class Configuration(CloudFormationLintRule):
         }
     }
 
-    def check_primitive_type(self, value, prim_type, path, **kwargs):
-        """
-            Check primitive types
-        """
+    def check_value(self, value, path, **kwargs):
+        """ Check a primitive value """
         matches = []
 
-        if isinstance(value, dict):
-            # this could be a ref, getatt, findinmap
-            return matches
-
-        default_message = 'Value for {0} must be of type {1}'
-        if not isinstance(value, self.valid_attributes.get('primitive_types').get(prim_type)):
-            matches.append(
-                RuleMatch(path, default_message.format(path[-1], prim_type)))
-
-        if prim_type == 'List' and isinstance(value, list):
+        prim_type = kwargs.get('primitive_type')
+        if prim_type == 'List':
             valid_values = kwargs.get('valid_values')
             if valid_values:
-                for l_value in value:
-                    if l_value not in valid_values:
-                        message = 'Allowed values for {0} are ({1})'
-                        matches.append(
-                            RuleMatch(path, message.format(path[-1], ', '.join(map(str, valid_values)))))
+                if value not in valid_values:
+                    message = 'Allowed values for {0} are ({1})'
+                    matches.append(
+                        RuleMatch(path, message.format(kwargs.get('key_name'), ', '.join(map(str, valid_values)))))
+        else:
+            default_message = 'Value for {0} must be of type {1}'
+            if not isinstance(value, self.valid_attributes.get('primitive_types').get(prim_type)):
+                matches.append(
+                    RuleMatch(path, default_message.format(kwargs.get('key_name'), prim_type)))
 
         return matches
 
-    def check_attributes(self, properties, spec_type, path):
+    def check_attributes(self, cfn, properties, spec_type, path):
         """
             Check the properties against the spec
         """
         matches = []
         spec = self.valid_attributes.get('sub').get(spec_type)
         if isinstance(properties, dict):
-            for p_name, p_value in properties.items():
-                if p_name in spec:
-                    up_type_spec = spec.get(p_name)
-                    if 'Type' in up_type_spec:
-                        matches.extend(
-                            self.check_attributes(
-                                p_value, up_type_spec.get('Type'), path[:] + [p_name]))
+            for p_value_safe, p_path_safe in properties.items_safe(path):
+                for p_name, p_value in p_value_safe.items():
+                    if p_name in spec:
+                        up_type_spec = spec.get(p_name)
+                        if 'Type' in up_type_spec:
+                            matches.extend(
+                                self.check_attributes(
+                                    cfn, p_value, up_type_spec.get('Type'), p_path_safe[:] + [p_name]))
+                        else:
+                            matches.extend(
+                                cfn.check_value(
+                                    obj={p_name: p_value}, key=p_name, path=p_path_safe[:],
+                                    check_value=self.check_value,
+                                    valid_values=up_type_spec.get('ValidValues', []),
+                                    primitive_type=up_type_spec.get('PrimitiveType'),
+                                    key_name=p_name
+                                )
+                            )
                     else:
-                        matches.extend(
-                            self.check_primitive_type(
-                                p_value, up_type_spec.get('PrimitiveType'),
-                                path[:] + [p_name],
-                                valid_values=up_type_spec.get('ValidValues', [])))
-                else:
-                    message = 'UpdatePolicy doesn\'t support type {0}'
-                    matches.append(
-                        RuleMatch(path[:] + [p_name], message.format(p_name)))
+                        message = 'UpdatePolicy doesn\'t support type {0}'
+                        matches.append(
+                            RuleMatch(path[:] + [p_name], message.format(p_name)))
         else:
             message = '{0} should be an object'
             matches.append(
                 RuleMatch(path, message.format(path[-1])))
+
+        return matches
+
+    def check_update_policy(self, cfn, update_policy, path, resource_type):
+        """Check an update policy"""
+        matches = []
+        for up_type, up_value in update_policy.items():
+            up_path = path[:] + [up_type]
+            up_type_spec = self.valid_attributes.get('main').get(up_type)
+            if up_type_spec:
+                if resource_type not in up_type_spec.get('ResourceTypes'):
+                    message = 'UpdatePolicy only supports this type for resources of type ({0})'
+                    matches.append(
+                        RuleMatch(up_path, message.format(', '.join(map(str, up_type_spec.get('ResourceTypes'))))))
+                if 'Type' in up_type_spec:
+                    matches.extend(
+                        self.check_attributes(
+                            cfn, up_value, up_type_spec.get('Type'), up_path[:]))
+
+                else:
+                    matches.extend(
+                        cfn.check_value(
+                            obj={up_type: up_value}, key=up_type, path=up_path[:],
+                            check_value=self.check_value,
+                            valid_values=up_type_spec.get('ValidValues', []),
+                            primitive_type=up_type_spec.get('PrimitiveType'),
+                            key_name=up_type
+                        )
+                    )
+            else:
+                message = 'UpdatePolicy doesn\'t support type {0}'
+                matches.append(
+                    RuleMatch(up_path, message.format(up_type)))
 
         return matches
 
@@ -181,32 +213,14 @@ class Configuration(CloudFormationLintRule):
         matches = []
 
         for r_name, r_values in cfn.get_resources().items():
-            update_policy = r_values.get('UpdatePolicy', {})
+            update_policy = r_values.get('UpdatePolicy')
+            if update_policy is None:
+                continue
             resource_type = r_values.get('Type')
             if isinstance(update_policy, dict):
-                for up_type, up_value in update_policy.items():
-                    path = ['Resources', r_name, 'UpdatePolicy', up_type]
-                    up_type_spec = self.valid_attributes.get('main').get(up_type)
-                    if up_type_spec:
-                        if resource_type not in up_type_spec.get('ResourceTypes'):
-                            message = 'UpdatePolicy only supports this type for resources of type ({0})'
-                            matches.append(
-                                RuleMatch(path, message.format(', '.join(map(str, up_type_spec.get('ResourceTypes'))))))
-                        if 'Type' in up_type_spec:
-                            matches.extend(
-                                self.check_attributes(
-                                    up_value, up_type_spec.get('Type'), path[:]))
-
-                        else:
-                            matches.extend(
-                                self.check_primitive_type(
-                                    up_value, up_type_spec.get('PrimitiveType'),
-                                    path[:],
-                                    valid_values=up_type_spec.get('ValidValues', [])))
-                    else:
-                        message = 'UpdatePolicy doesn\'t support type {0}'
-                        matches.append(
-                            RuleMatch(path, message.format(up_type)))
+                path = ['Resources', r_name, 'UpdatePolicy']
+                for up_value_safe, up_path_safe in update_policy.items_safe(path):
+                    matches.extend(self.check_update_policy(cfn, up_value_safe, up_path_safe, resource_type))
             else:
                 message = 'UpdatePolicy should be an object'
                 matches.append(
