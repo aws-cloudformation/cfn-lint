@@ -17,8 +17,8 @@
 import re
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
-
 from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
+
 
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
@@ -45,6 +45,7 @@ class RecordSet(CloudFormationLintRule):
     ]
 
     REGEX_CNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
+    REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
 
     def check_a_record(self, path, recordset):
         """Check A record Configuration"""
@@ -150,13 +151,15 @@ class RecordSet(CloudFormationLintRule):
         for index, record in enumerate(resource_records):
             tree = path[:] + ['ResourceRecords', index]
 
-            if not isinstance(record, dict):
-                if not record.startswith('"') or not record.endswith('"'):
-                    message = 'TXT record ({}) has to be enclosed in double quotation marks (")'
-                    matches.append(RuleMatch(tree, message.format(record)))
-                elif len(record) > 257:  # 2 extra characters for start and end double quotation marks
-                    message = 'The length of the TXT record ({}) exceeds the limit (255)'
-                    matches.append(RuleMatch(tree, message.format(len(record))))
+            if not isinstance(record, dict) and not re.match(self.REGEX_TXT, record):
+                message = 'TXT record is not structured as one or more items up to 255 characters ' \
+                          'enclosed in double quotation marks at {0}'
+                matches.append(RuleMatch(
+                    tree,
+                    (
+                        message.format('/'.join(map(str, tree)))
+                    ),
+                ))
 
         return matches
 
