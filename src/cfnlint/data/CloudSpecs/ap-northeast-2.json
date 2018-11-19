@@ -1,4 +1,51 @@
 {
+  "ParameterTypes": {
+    "AvailabilityZone": [
+      "AWS::EC2::AvailabilityZone::Name",
+      "AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>"
+    ],
+    "AvailabilityZones": [
+      "List<AWS::EC2::AvailabilityZone::Name>",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>"
+    ],
+    "ImageId": [
+      "AWS::EC2::Image::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    ],
+    "KeyPair": [
+      "AWS::EC2::KeyPair::KeyName",
+      "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>"
+    ],
+    "SecurityGroup": [
+      "AWS::EC2::SecurityGroup::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>"
+    ],
+    "SecurityGroupIds": [
+      "List<AWS::EC2::SecurityGroup::Id>",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>"
+    ],
+    "String": [
+      "String",
+      "AWS::SSM::Parameter::Value<String>"
+    ],
+    "Strings": [
+      "CommaDelimitedList",
+      "AWS::SSM::Parameter::Value<List<String>>",
+      "AWS::SSM::Parameter::Value<CommaDelimitedList>"
+    ],
+    "SubnetId": [
+      "AWS::EC2::Subnet::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>"
+    ],
+    "SubnetIds": [
+      "List<AWS::EC2::Subnet::Id>",
+      "AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>"
+    ],
+    "VpcId": [
+      "AWS::EC2::VPC::Id",
+      "AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>"
+    ]
+  },
   "PropertyTypes": {
     "AWS::AmazonMQ::Broker.ConfigurationId": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-amazonmq-broker-configurationid.html",
@@ -1455,7 +1502,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig-blockdev-template.html#cfn-as-launchconfig-blockdev-template-volumetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsVolumeType"
+          }
         }
       }
     },
@@ -1642,7 +1692,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-instancerole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole"
+          }
         },
         "InstanceTypes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-instancetypes",
@@ -1686,7 +1739,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-spotiamfleetrole",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "Subnets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-subnets",
@@ -5225,7 +5281,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-ssmassociations.html#cfn-ec2-instance-ssmassociations-documentname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "SsmDocumentName"
+          }
         }
       }
     },
@@ -5351,13 +5410,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-launchtemplatedata-iaminstanceprofile.html#cfn-ec2-launchtemplate-launchtemplatedata-iaminstanceprofile-arn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile.Arn"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-launchtemplatedata-iaminstanceprofile.html#cfn-ec2-launchtemplate-launchtemplatedata-iaminstanceprofile-name",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
         }
       }
     },
@@ -5974,7 +6039,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-blockdevicemappings-ebs.html#cfn-ec2-spotfleet-ebsblockdevice-volumetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsVolumeType"
+          }
         }
       }
     },
@@ -6019,7 +6087,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-iaminstanceprofile.html#cfn-ec2-spotfleet-iaminstanceprofilespecification-arn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile.Arn"
+          }
         }
       }
     },
@@ -6344,7 +6415,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-iamfleetrole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "InstanceInterruptionBehavior": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-instanceinterruptionbehavior",
@@ -8546,7 +8620,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticbeanstalk-application-applicationresourcelifecycleconfig.html#cfn-elasticbeanstalk-application-applicationresourcelifecycleconfig-servicerole",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "VersionLifecycleConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticbeanstalk-application-applicationresourcelifecycleconfig.html#cfn-elasticbeanstalk-application-applicationresourcelifecycleconfig-versionlifecycleconfig",
@@ -12167,7 +12244,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opsworks-instance-ebsblockdevice.html#cfn-opsworks-instance-ebsblockdevice-volumetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsVolumeType"
+          }
         }
       }
     },
@@ -12412,7 +12492,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opsworks-layer-volumeconfiguration.html#cfn-opsworks-layer-volconfig-volumetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsVolumeType"
+          }
         }
       }
     },
@@ -13078,7 +13161,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "RecordSetType"
+          }
         },
         "Weight": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-weight",
@@ -13596,7 +13682,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-replicationconfiguration.html#cfn-s3-bucket-replicationconfiguration-role",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "Rules": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-replicationconfiguration.html#cfn-s3-bucket-replicationconfiguration-rules",
@@ -16219,7 +16308,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "AvailabilityZones",
+            "ValueType": "AvailabilityZone"
+          }
         },
         "Cooldown": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-cooldown",
@@ -16255,7 +16348,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-launchconfigurationname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "LaunchConfigurationName"
+          }
         },
         "LaunchTemplate": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-launchtemplate",
@@ -16277,7 +16373,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "LoadBalancerNames",
+            "ValueType": "LoadBalancerName"
+          }
         },
         "MaxSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-maxsize",
@@ -16339,7 +16439,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "TargetGroupArns",
+            "ValueType": "TargetGroupArn"
+          }
         },
         "TerminationPolicies": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-termpolicy",
@@ -16355,7 +16459,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "SubnetId"
+          }
         }
       }
     },
@@ -16400,13 +16507,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-iaminstanceprofile",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
         },
         "ImageId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-imageid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "ImageId"
+          }
         },
         "InstanceId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-instanceid",
@@ -16436,7 +16549,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-keyname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "KeyPair"
+          }
         },
         "LaunchConfigurationName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-autoscaling-launchconfig-launchconfigurationname",
@@ -16462,7 +16578,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ListValueType": "SecurityGroups",
+            "ValueType": "SecurityGroup"
+          }
         },
         "SpotPrice": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-spotprice",
@@ -16664,7 +16784,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-computeenvironment.html#cfn-batch-computeenvironment-servicerole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "State": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-computeenvironment.html#cfn-batch-computeenvironment-state",
@@ -18871,7 +18994,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-allocationid",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ValueType": "AllocationId"
+          }
         },
         "EIP": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-eip-association.html#cfn-ec2-eipassociation-eip",
@@ -18970,7 +19096,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-host.html#cfn-ec2-host-availabilityzone",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AvailabilityZone"
+          }
         },
         "InstanceType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-host.html#cfn-ec2-host-instancetype",
@@ -19070,7 +19199,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-iaminstanceprofile",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
         },
         "ImageId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-imageid",
@@ -19114,7 +19246,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-keyname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "KeyPair"
+          }
         },
         "LaunchTemplate": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-launchtemplate",
@@ -19148,13 +19283,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-placementgroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "PlacementGroup"
+          }
         },
         "PrivateIpAddress": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-privateipaddress",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "PrivateIpAddress"
+          }
         },
         "RamdiskId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-ramdiskid",
@@ -19168,7 +19309,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ListValueType": "SecurityGroupIds",
+            "ValueType": "SecurityGroupId"
+          }
         },
         "SecurityGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-securitygroups",
@@ -19176,7 +19321,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SecurityGroups"
+          }
         },
         "SourceDestCheck": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-sourcedestcheck",
@@ -19196,7 +19344,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-subnetid",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SubnetId"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-tags",
@@ -19306,7 +19457,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl.html#cfn-ec2-networkacl-vpcid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcId"
+          }
         }
       }
     },
@@ -19592,7 +19746,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route-table.html#cfn-ec2-routetable-vpcid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcId"
+          }
         }
       }
     },
@@ -19858,7 +20015,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html#cfn-awsec2subnet-prop-vpcid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcId"
+          }
         }
       }
     },
@@ -19875,7 +20035,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetcidrblock.html#cfn-ec2-subnetcidrblock-subnetid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SubnetId"
+          }
         }
       }
     },
@@ -20677,7 +20840,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-role",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "SchedulingStrategy": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-schedulingstrategy",
@@ -20880,7 +21046,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-autoscalingrole",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole"
+          }
         },
         "BootstrapActions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-bootstrapactions",
@@ -20920,7 +21089,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-jobflowrole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamInstanceProfile"
+          }
         },
         "KerberosAttributes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-kerberosattributes",
@@ -20962,7 +21134,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-servicerole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamRole"
+          }
         },
         "Steps": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticmapreduce-cluster.html#cfn-elasticmapreduce-cluster-steps",
@@ -21823,7 +21998,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ListValueType": "AvailabilityZones",
+            "ValueType": "AvailabilityZone"
+          }
         },
         "ConnectionDrainingPolicy": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-connectiondrainingpolicy",
@@ -21899,7 +22078,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "SecurityGroups",
+            "ValueType": "SecurityGroup"
+          }
         },
         "Subnets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-ec2-elb-subnets",
@@ -21907,7 +22090,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ListValueType": "SubnetIds",
+            "ValueType": "SubnetId"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb.html#cfn-elasticloadbalancing-loadbalancer-tags",
@@ -21942,7 +22129,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-loadbalancerarn",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "LoadBalancerV2Arn"
+          }
         },
         "Port": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-port",
@@ -22069,7 +22259,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "SecurityGroupIds",
+            "ValueType": "SecurityGroupId"
+          }
         },
         "SubnetMappings": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-subnetmappings",
@@ -22085,7 +22279,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "SubnetIds",
+            "ValueType": "SubnetId"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-loadbalancer.html#cfn-elasticloadbalancingv2-loadbalancer-tags",
@@ -22218,7 +22416,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-vpcid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcId"
+          }
         }
       }
     },
@@ -22584,7 +22785,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-role",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "Schedule": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-crawler.html#cfn-glue-crawler-schedule",
@@ -22744,7 +22948,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-role",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole"
+          }
         }
       }
     },
@@ -23594,7 +23801,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-alias.html#cfn-kms-alias-targetkeyid",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "KmsKey"
+          }
         }
       }
     },
@@ -23930,13 +24140,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-role",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamRole.Arn"
+          }
         },
         "Runtime": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-runtime",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "LambdaRuntime"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-tags",
@@ -24732,7 +24948,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opsworks-userprofile.html#cfn-opsworks-userprofile-iamuserarn",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamUser.Arn"
+          }
         },
         "SshPublicKey": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opsworks-userprofile.html#cfn-opsworks-userprofile-sshpublickey",
@@ -25959,7 +26178,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "RecordSetType"
+          }
         },
         "Weight": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-weight",
@@ -27711,6 +27933,332 @@
           "Required": true,
           "UpdateType": "Immutable"
         }
+      }
+    }
+  },
+  "ValueTypes": {
+    "AllocationId": {
+      "GetAtt": {
+        "AWS::EC2::EIP": "AllocationId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AvailabilityZone": {
+      "GetAtt": {
+        "AWS::EC2::Instance": "AvailabilityZone",
+        "AWS::EC2::Subnet": "AvailabilityZone",
+        "AWS::OpsWorks::Instance": "AvailabilityZone"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AvailabilityZone"
+        ]
+      }
+    },
+    "AvailabilityZones": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "AvailabilityZones"
+        ]
+      }
+    },
+    "EbsVolumeType": {
+      "AllowedValues": [
+        "gp2",
+        "io1",
+        "sc1",
+        "st1",
+        "standard"
+      ]
+    },
+    "IamInstanceProfile": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "IamInstanceProfile.Arn": {
+      "GetAtt": {
+        "AWS::IAM::InstanceProfile": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "IamRole": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "IamRole.Arn": {
+      "GetAtt": {
+        "AWS::IAM::Role": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "IamUser.Arn": {
+      "GetAtt": {
+        "AWS::IAM::User": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "ImageId": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "ImageId"
+        ]
+      }
+    },
+    "KeyPair": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "KeyPair"
+        ]
+      }
+    },
+    "KmsKey": {
+      "GetAtt": {
+        "AWS::KMS::Key": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      },
+      "Resources": [
+        "AWS::KMS::Key"
+      ]
+    },
+    "LambdaRuntime": {
+      "AllowedValues": [
+        "dotnetcore1.0",
+        "dotnetcore2.0",
+        "dotnetcore2.1",
+        "go1.x",
+        "java8",
+        "nodejs",
+        "nodejs4.3-edge",
+        "nodejs4.3",
+        "nodejs6.10",
+        "nodejs8.10",
+        "provided",
+        "python2.7",
+        "python3.6",
+        "python3.7",
+        "ruby2.5"
+      ]
+    },
+    "LaunchConfigurationName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::AutoScaling::LaunchConfiguration"
+        ]
+      }
+    },
+    "LoadBalancerName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancing::LoadBalancer"
+        ]
+      }
+    },
+    "LoadBalancerNames": {
+      "Ref": {
+        "Parameters": [
+          "Strings"
+        ]
+      }
+    },
+    "LoadBalancerV2Arn": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancingV2::LoadBalancer"
+        ]
+      }
+    },
+    "PlacementGroup": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::EC2::PlacementGroup"
+        ]
+      }
+    },
+    "PrivateIpAddress": {
+      "GetAtt": {
+        "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "RecordSetType": {
+      "AllowedValues": [
+        "A",
+        "AAAA",
+        "CAA",
+        "CNAME",
+        "MX",
+        "NAPTR",
+        "NS",
+        "PTR",
+        "SOA",
+        "SPF",
+        "SRV",
+        "TXT"
+      ]
+    },
+    "SecurityGroup": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SecurityGroupId": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "SecurityGroupIds": {
+      "GetAtt": {
+        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+      },
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "SecurityGroups": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "SsmDocumentName": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::SSM::Document"
+        ]
+      }
+    },
+    "String": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "SubnetId": {
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SubnetId"
+        ],
+        "Resources": [
+          "AWS::EC2::Subnet"
+        ]
+      }
+    },
+    "SubnetIds": {
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SubnetIds"
+        ]
+      }
+    },
+    "TargetGroupArn": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::ElasticLoadBalancingV2::TargetGroup"
+        ]
+      }
+    },
+    "TargetGroupArns": {
+      "Ref": {
+        "Parameters": [
+          "Strings"
+        ]
+      }
+    },
+    "VpcId": {
+      "GetAtt": {
+        "AWS::EC2::NetworkAcl": "VpcId",
+        "AWS::EC2::SecurityGroup": "VpcId",
+        "AWS::EC2::Subnet": "VpcId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "VpcId"
+        ],
+        "Resources": [
+          "AWS::EC2::VPC"
+        ]
       }
     }
   }

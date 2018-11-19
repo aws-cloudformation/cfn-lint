@@ -14,8 +14,10 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import logging
+import fnmatch
 import json
+import logging
+import os
 import requests
 import pkg_resources
 import jsonpointer
@@ -29,22 +31,22 @@ def update_resource_specs():
     """ Update Resource Specs """
 
     regions = {
-        'ap-south-1': 'https://d2senuesg1djtx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'ap-southeast-2': 'https://d2stg8d246z9di.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'ap-southeast-1': 'https://doigdx0kgq9el.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ap-northeast-1': 'https://d33vqc0rt9ld30.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'ap-northeast-3': 'https://d2zq80gdmjim8k.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'ap-south-1': 'https://d2senuesg1djtx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'ap-southeast-1': 'https://doigdx0kgq9el.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'ap-southeast-2': 'https://d2stg8d246z9di.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ca-central-1': 'https://d2s8ygphhesbe7.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'eu-central-1': 'https://d1mta8qj7i28i2.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'eu-west-2': 'https://d1742qcu2c1ncx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'eu-west-1': 'https://d3teyb21fexa9r.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'eu-west-2': 'https://d1742qcu2c1ncx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+        'eu-west-3': 'https://d2d0mfegowb3wk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'sa-east-1': 'https://d3c9jyj3w509b0.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'us-east-1': 'https://d1uauaxba7bl26.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'us-east-2': 'https://dnwj8swjjbsbt.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'us-west-1': 'https://d68hl49wbnanq.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'us-west-2': 'https://d201a2mn26r7lk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'eu-west-3': 'https://d2d0mfegowb3wk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
-        'ap-northeast-3': 'https://d2zq80gdmjim8k.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     }
 
     for region, url in regions.items():
@@ -54,8 +56,13 @@ def update_resource_specs():
         )
         LOGGER.debug('Downloading template %s into %s', url, filename)
         req = requests.get(url)
+
         content = json.loads(req.content)
+
+        # Patch the files
+        content = patch_spec(content, 'all')
         content = patch_spec(content, region)
+
         with open(filename, 'w') as f:
             json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
 
@@ -118,134 +125,27 @@ def update_documentation(rules):
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
 
-
 def patch_spec(content, region):
     """Patch the spec file"""
-    json_patches = [
-        # CloudFront DistributionConfig Origin and DefaultCacheBehavior
-        {
-            'Name': 'Origin and DefaultCacheBehavior required for AWS::CloudFront::Distribution.DistributionConfig',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/PropertyTypes/AWS::CloudFront::Distribution.DistributionConfig/Properties/DefaultCacheBehavior/Required', 'value': True},
-                {'op': 'replace', 'path': '/PropertyTypes/AWS::CloudFront::Distribution.DistributionConfig/Properties/Origins/Required', 'value': True},
-            ])
-        },
-        # VPC Endpoint and DNS Endpoint
-        {
-            'Name': 'VpcEndpointType in AWS::EC2::VPCEndpoint',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'move', 'from': '/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VPCEndpointType', 'path': '/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VpcEndpointType'}
-            ])
-        },
-        {
-            'Name': 'AWS::EC2::SpotFleet.SpotFleetTagSpecification supports Tags',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'add', 'path': '/PropertyTypes/AWS::EC2::SpotFleet.SpotFleetTagSpecification/Properties/Tags', 'value': {
-                    'Type': 'List',
-                    'Required': False,
-                    'Documentation': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-tagspecifications.html#cfn-ec2-spotfleet-spotfleettagspecification-tags',
-                    'ItemType': 'Tag',
-                    'UpdateType': 'Mutable'
-                }}
-            ])
-        },
-        {
-            'Name': 'AWS::Cognito::UserPool.SmsConfiguration ExternalId IS required',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/PropertyTypes/AWS::Cognito::UserPool.SmsConfiguration/Properties/ExternalId/Required', 'value': True}
-            ])
-        },
-        {
-            'Name': 'AWS::SNS::Subscription TopicArn and Protocol IS required',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/TopicArn/Required', 'value': True},
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::SNS::Subscription/Properties/Protocol/Required', 'value': True}
-            ])
-        },
-        {
-            'Name': 'AWS::EC2::NetworkAclEntry CidrBlock or Ipv6CidrBlock is required',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'replace', 'path': '/ResourceTypes/AWS::EC2::NetworkAclEntry/Properties/CidrBlock/Required', 'value': False}
-            ])
-        },
-        {
-            'Name': 'AWS::ServiceDiscovery::Instance InstanceAttributes PrimitiveItemType and ItemType',
-            'Regions': ['All'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'add', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/PrimitiveItemType', 'value': 'String'},
-                {'op': 'remove', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/PrimitiveType'},
-                {'op': 'add', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/Type', 'value': 'Map'},
-            ])
-        },
-        {
-            'Name': 'AWS::SDB::Domain not supported for all regions',
-            'Regions': ['us-east-2', 'ca-central-1', 'eu-central-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-2', 'ap-south-1'],
-            'Patch': jsonpatch.JsonPatch([
-                {'op': 'remove', 'path': '/ResourceTypes/AWS::SDB::Domain'}
-            ])
-        },
-        {
-            'Name': 'Add type AWS::CloudFormation::Macro',
-            'Regions': ['All'],  # need to double check this
-            'Patch': jsonpatch.JsonPatch([
-                {
-                    'op': 'add', 'path': '/ResourceTypes/AWS::CloudFormation::Macro',
-                    'value': {
-                        'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html',
-                        'Properties': {
-                            'Description': {
-                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-description',
-                                'PrimitiveType': 'String',
-                                'Required': False,
-                                'UpdateType': 'Mutable'
-                            },
-                            'FunctionName': {
-                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-functionname',
-                                'PrimitiveType': 'String',
-                                'Required': True,
-                                'UpdateType': 'Mutable'
-                            },
-                            'LogGroupName': {
-                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-loggroupname',
-                                'PrimitiveType': 'String',
-                                'Required': False,
-                                'UpdateType': 'Mutable'
-                            },
-                            'LogRoleARN': {
-                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-logrolearn',
-                                'PrimitiveType': 'String',
-                                'Required': False,
-                                'UpdateType': 'Mutable'
-                            },
-                            'Name': {
-                                'Documentation': 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-macro.html#cfn-cloudformation-macro-name',
-                                'PrimitiveType': 'String',
-                                'Required': True,
-                                'UpdateType': 'Immutable'
-                            }
-                        }
-                    }
-                }
-            ])
-        },
-    ]
+    LOGGER.info('Patching spec file for region "%s"', region)
 
-    for json_patch in json_patches:
-        for patch_region in json_patch.get('Regions'):
-            if patch_region in [region, 'All']:
+    append_dir = os.path.join(os.path.dirname(__file__), 'data', 'ExtendedSpecs', region)
+
+    for _, _, filenames in os.walk(append_dir):
+        filenames.sort()
+        for filename in fnmatch.filter(filenames, '*.json'):
+            LOGGER.info('Processing %s (%s)', filename, region)
+
+            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources('data/ExtendedSpecs/{}/{}'.format(region, filename)))
+
+            # Process the generic patches 1 by 1 so we can "ignore" failed ones
+            for all_patch in all_patches:
                 try:
-                    json_patch.get('Patch').apply(content, in_place=True)
-                    break  # only need to patch once
+                    jsonpatch.JsonPatch([all_patch]).apply(content, in_place=True)
                 except jsonpatch.JsonPatchConflict:
-                    LOGGER.info('Patch not applied: %s in region %s', json_patch.get('Name'), region)
+                    LOGGER.debug('Patch (%s) not applied in region %s', all_patch, region)
                 except jsonpointer.JsonPointerException:
                     # Debug as the parent element isn't supported in the region
-                    LOGGER.debug('Parent element not found for patch: %s in region %s', json_patch.get('Name'), region)
+                    LOGGER.debug('Parent element not found for patch (%s) in region %s', all_patch, region)
 
     return content
