@@ -1,0 +1,34 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  snapshotid:
+    Type: String
+Conditions:
+  snapshot: !Not [!Equals [!Ref snapshotid, ""]]
+Resources:
+  # Doesnt check if conditions are used
+  DBInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m4.xlarge
+      Engine: !If [snapshot, !Ref snapshotid, aurora-mysql ]
+  # Doesnt fail on valid instance type
+  DBInstance2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.r4.xlarge
+      Engine: aurora-mysql
+  # Doesnt fail on valid instance type with license
+  DBInstance3:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.x1e.xlarge
+      Engine: oracle-se2
+      LicenseModel: bring-your-own-license
+  # Doesnt fail on valid instance type with license
+  DBInstance4:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.r4.large
+      Engine: oracle-se2
+      LicenseModel: license-included

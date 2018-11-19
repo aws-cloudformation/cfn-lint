@@ -1,0 +1,29 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # Fails on invalid instance type
+  DBInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m4.xlarge
+      Engine: aurora-mysql
+  # invalid Instance Type
+  DBInstance2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.x2e.xlarge
+      Engine: oracle-se2
+      LicenseModel: bring-your-own-license
+  # db.x1e.xlarge isn't for license include
+  DBInstance3:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.x1e.xlarge
+      Engine: oracle-se2
+      LicenseModel: license-included
+  # Fails in another region
+  DBInstance4:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m4.xlarge
+      Engine: mysql
