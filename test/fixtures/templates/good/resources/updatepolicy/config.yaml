@@ -11,6 +11,8 @@ Parameters:
     Type: String
   MaxBatchSize:
     Type: Number
+Conditions:
+  spotInstances: !Equals ['us-east-1', !Ref "AWS::Region"]
 Resources:
   ASG:
     Type: 'AWS::AutoScaling::AutoScalingGroup'
@@ -51,3 +53,29 @@ Resources:
         DeploymentGroupName: !Ref CodeDeployDeploymentGroup
         BeforeAllowTrafficHook: !Ref PreHookLambdaFunction
         AfterAllowTrafficHook: !Ref PreHookLambdaFunction
+  ASG2:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    # Doesn't fail with many conditions
+    UpdatePolicy:
+      !If
+          - spotInstances
+          - AutoScalingReplacingUpdate:
+                WillReplace: true
+          - AutoScalingRollingUpdate:
+              !If
+                - spotInstances
+                - MinInstancesInService: 1
+                  MinSuccessfulInstancesPercent: 100
+                  MaxBatchSize: 1
+                  PauseTime: PT15M
+                  WaitOnResourceSignals: true
+                  SuspendProcesses:
+                      - !If [spotInstances, HealthCheck, !Ref "AWS::NoValue"]
+                      - ReplaceUnhealthy
+                      - AZRebalance
+                      - AlarmNotification
+                      - ScheduledActions
+                - !Ref AWS::NoValue
+    Properties:
+      MinSize: '1'
+      MaxSize: '1'
