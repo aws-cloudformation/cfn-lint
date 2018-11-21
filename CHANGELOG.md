@@ -9,6 +9,14 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.9.2
+###### Features
+- Update specs to version 2.15.0
+###### Fixes
+- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow multiple text records of up to 255 characters
+- Fix rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to handle conditions in Update Policies
+- Fix rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to not fail when using a Fn::Sub and a number for a param
+
 ### 0.9.1
 ###### Features
 - Add support for eu-west-3 and ap-northeast-3
