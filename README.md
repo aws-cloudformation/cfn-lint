@@ -67,7 +67,7 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template.
 
 ### Config File
-You can define a yaml file in your project or home folder called `.cfnlintrc`.  In that file you can specify settings from the parameter section below.  
+You can define a yaml file in your project or home folder called `.cfnlintrc`.  In that file you can specify settings from the parameter section below.
 
 Example:
 ```
@@ -94,7 +94,7 @@ Optional parameters:
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -d, --debug |  |  | Specify to enable debug logging |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
-| -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customise-specifications) |
+| -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
 | -v, --version | | | Version of cfn-lint |
 
 ### Info Rules
