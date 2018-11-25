@@ -43,10 +43,11 @@ class BaseRuleTestCase(BaseTestCase):
         good_runner.transform()
         self.assertEqual([], good_runner.run())
 
-    def helper_file_negative(self, filename, err_count):
+    def helper_file_negative(self, filename, err_count, regions=None):
         """Failure test"""
+        regions = regions or ['us-east-1']
         template = self.load_template(filename)
-        bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
+        bad_runner = Runner(self.collection, filename, template, regions, [])
         bad_runner.transform()
         errs = bad_runner.run()
         self.assertEqual(err_count, len(errs))
