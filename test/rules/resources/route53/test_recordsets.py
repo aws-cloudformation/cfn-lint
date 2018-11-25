@@ -34,4 +34,4 @@ class TestRoute53RecordSets(BaseRuleTestCase):
 
     def test_file_negative_alias(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 24)
+        self.helper_file_negative('fixtures/templates/bad/route53.yaml', 25)

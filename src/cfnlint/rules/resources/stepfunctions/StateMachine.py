@@ -122,15 +122,19 @@ class StateMachine(CloudFormationLintRule):
             matches.extend(self._check_state_json(state_value, state_name, path))
         return matches
 
-    def check_value(self, value, path):
+    def check_value(self, value, path, fail_on_loads=True):
         """Check Definition Value"""
         matches = []
         try:
             def_json = json.loads(value)
         # pylint: disable=W0703
         except Exception as err:
-            message = 'State Machine Definition needs to be formatted as JSON. Error %s' % err
-            matches.append(RuleMatch(path, message))
+            if fail_on_loads:
+                message = 'State Machine Definition needs to be formatted as JSON. Error %s' % err
+                matches.append(RuleMatch(path, message))
+                return matches
+
+            self.logger.debug('State Machine definition could not be parsed. Skipping')
             return matches
 
         matches.extend(self._check_definition_json(def_json, path))
@@ -140,9 +144,9 @@ class StateMachine(CloudFormationLintRule):
         """Check Sub Object"""
         matches = []
         if isinstance(value, list):
-            matches.extend(self.check_value(value[0], path))
+            matches.extend(self.check_value(value[0], path, False))
         elif isinstance(value, six.string_types):
-            matches.extend(self.check_value(value, path))
+            matches.extend(self.check_value(value, path, False))
 
         return matches
 

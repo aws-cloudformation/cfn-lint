@@ -14,5 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from cfnlint.rules.resources.iam.ManagedPolicyDescription import ManagedPolicyDescription  # pylint: disable=E0401
+from ... import BaseRuleTestCase
 
-__version__ = '0.9.2'
+
+class TestManagedPolicyDescription(BaseRuleTestCase):
+    """Test Managed Policy Description"""
+    def setUp(self):
+        """Setup"""
+        super(TestManagedPolicyDescription, self).setUp()
+        self.collection.register(ManagedPolicyDescription())
+        self.success_templates = [
+            'fixtures/templates/good/resources/iam/managed_policy_description.yaml'
+        ]
+
+    def test_file_positive(self):
+        """Test Positive"""
+        self.helper_file_positive()
+
+    def test_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative('fixtures/templates/bad/resources/iam/managed_policy_description.yaml', 1)

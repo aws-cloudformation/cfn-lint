@@ -28,17 +28,17 @@ class FunctionRuntime(CloudFormationLintRule):
 
     runtimes = [
         'nodejs', 'nodejs4.3', 'nodejs6.10', 'nodejs8.10', 'java8', 'python2.7',
-        'python3.6', 'dotnetcore1.0', 'dotnetcore2.0', 'dotnetcore2.1',
+        'python3.6', 'python3.7', 'dotnetcore1.0', 'dotnetcore2.0', 'dotnetcore2.1',
         'nodejs4.3-edge', 'go1.x'
     ]
 
     def check_value(self, value, path):
         """ Check runtime value """
         matches = []
-        message = 'You must specify a valid value for runtime ({0}) at {1}'
+        message = 'You must specify a valid value for runtime ({0}) at {1}.\nValid values are {2}'
 
         if value not in self.runtimes:
-            matches.append(RuleMatch(path, message.format(value, ('/'.join(map(str, path))))))
+            matches.append(RuleMatch(path, message.format(value, ('/'.join(map(str, path))), self.runtimes)))
 
         return matches
 
