@@ -47,7 +47,7 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 AVAILABILITY_ZONES = [
     'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
-    'us-east-2a' 'us-east-2b' 'us-east-2c',
+    'us-east-2a', 'us-east-2b', 'us-east-2c',
     'us-west-1a', 'us-west-1b', 'us-west-1c',
     'us-west-2a', 'us-west-2b', 'us-west-2c',
     'ca-central-1a', 'ca-central-1b',
