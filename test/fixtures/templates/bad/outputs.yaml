@@ -26,8 +26,12 @@ Outputs:
     Value: !Ref myInstance
     Export:
       BadName: instance
-  myBadArrayOutput:
+  myBadGetAttArrayOutput:
     Value: !GetAtt [ myVpc, CidrBlockAssociations ]
+  myBadArrayOutput:
+    Value:
+      - !Ref RouteTablePrivate1
+      - !Ref RouteTablePrivate2
   myGoodArrayOutput:
     Value:
       Fn::Join: [ ',', !GetAtt [ myVpc, CidrBlockAssociations ]]
