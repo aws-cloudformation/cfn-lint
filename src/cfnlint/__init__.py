@@ -19,11 +19,12 @@ import sys
 import os
 import re
 import traceback
-from copy import deepcopy
+from copy import deepcopy, copy
 from datetime import datetime
 import six
 from yaml.parser import ParserError
 import cfnlint.helpers
+import cfnlint.conditions
 from cfnlint.transform import Transform
 from cfnlint.decode.node import TemplateAttributeError
 
@@ -392,6 +393,7 @@ class Template(object):
             'Rules'
         ]
         self.transform_globals = {}
+        self.conditions = cfnlint.conditions.Conditions(self)
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -872,6 +874,182 @@ class Template(object):
                                 value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
+
+    def is_resource_available(self, path, resource):
+        """ Compares a path to resource to see if its available """
+        results = []
+        path_conditions = self.get_conditions_from_path(self.template, path)
+        resource_condition = self.template.get('Resources', {}).get(resource, {}).get('Condition')
+        if resource_condition and path_conditions:
+            # resource conditions are always true.  If the same resource condition exists in the path
+            # with the same True value then nothing else matters
+            test_path_conditions = copy(path_conditions)
+            if not test_path_conditions.get(resource_condition):
+                test_path_conditions[resource_condition] = set()
+            if not test_path_conditions.get(resource_condition):
+                if True not in test_path_conditions.get(resource_condition):
+                    scenarios = self.conditions.test(test_path_conditions.keys())
+                    for scenario in scenarios:
+                        # We care about when the resource condition is false but the REF would still exist
+                        if not scenario.get(resource_condition):
+                            scenario_count = 0
+                            for path_condition, path_values in test_path_conditions.items():
+                                if scenario.get(path_condition) in path_values:
+                                    scenario_count += 1
+
+                            if scenario_count == len(path_conditions):
+                                results.append({'Scenario': scenario, 'Result': False})
+                            else:
+                                results.append({'Scenario': scenario, 'Result': True})
+        # if resource condition isn't available then the resource is available
+        return results
+
+    def get_conditions_scenarios_from_object(self, value):
+        """
+            Get condition from objects
+        """
+        def get_conditions_from_property(value):
+            """ Recursively get conditions """
+            results = set()
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    for k, v in value.items():
+                        if k == 'Fn::If':
+                            if isinstance(v, list) and len(v) == 3:
+                                results.add(v[0])
+                                results = results.union(get_conditions_from_property(v[1]))
+                                results = results.union(get_conditions_from_property(v[2]))
+
+            return results
+
+        con = set()
+        if isinstance(value, dict):
+            for k, v in value.items():
+                # handle conditions directly under the object
+                if len(value) == 1 and k == 'Fn::If' and len(v) == 3:
+                    con.add(v[0])
+                    for r_c in v[1:]:
+                        if isinstance(r_c, dict):
+                            for _, s_v in r_c.items():
+                                con = con.union(get_conditions_from_property(s_v))
+                                con = con.union(get_conditions_from_property(s_v))
+                else:
+                    con = con.union(get_conditions_from_property(v))
+
+        return self.conditions.test(list(con))
+
+    def get_conditions_from_path(self, text, path):
+        """ Parent function to handle resources with conditions """
+
+        results = self._get_conditions_from_path(text, path)
+        if len(path) >= 2:
+            if path[0] == 'Resources':
+                condition = text.get('Resources', {}).get(path[1], {}).get('Condition')
+                if condition:
+                    if not results.get(condition):
+                        results[condition] = set()
+                    results[condition].add(True)
+
+        return results
+
+    def _get_conditions_from_path(self, text, path):
+        """
+            Get the conditions and their True/False value for the path provided
+        """
+        LOGGER.debug('Get conditions for path %s', path)
+        results = {}
+
+        def get_condition_name(value, num=None):
+            """Test conditions for validity before providing the name"""
+            con_path = set()
+            if num == 1:
+                con_path.add(True)
+            elif num == 2:
+                con_path.add(False)
+            else:
+                con_path = con_path.union((True, False))
+
+            if value:
+                if isinstance(value, list):
+                    if len(value) == 3:
+                        if not results.get(value[0]):
+                            results[value[0]] = set()
+                        results[value[0]] = results[value[0]].union(con_path)
+
+        try:
+            if path[0] == 'Fn::If':
+                condition = text.get('Fn::If')
+                if len(path) > 1:
+                    if path[1] in [1, 2]:
+                        get_condition_name(condition, path[1])
+                else:
+                    get_condition_name(condition)
+            if len(path) > 1:
+                child_results = self._get_conditions_from_path(text[path[0]], path[1:])
+                for c_r_k, c_r_v in child_results.items():
+                    if not results.get(c_r_k):
+                        results[c_r_k] = set()
+                    results[c_r_k] = results[c_r_k].union(c_r_v)
+            else:
+                if isinstance(text, (dict, list)):
+                    final_obj = text[path[0]]
+                    if isinstance(final_obj, dict):
+                        # if the final object is a single property
+                        for k, v in final_obj.items():
+                            if k == 'Fn::If':
+                                get_condition_name(v)
+                            if isinstance(v, dict):
+                                if len(v) == 1:
+                                    for s_k, s_v in v.items():
+                                        if s_k == 'Fn::If':
+                                            get_condition_name(s_v)
+
+        except KeyError as _:
+            pass
+
+        return results
+
+    def get_condition_scenarios_from_paths(self, paths):
+        """
+            Get related conditions.
+            Return an array where each element is a list of related conditions
+        """
+
+        # we need to get all the condition names in the path provided
+        con = set()
+        for p in paths:
+            con = con.union(self._get_conditions_from_path(self.template, p))
+
+        return self.conditions.test(list(con))
+
+    def _get_equals_scenarios(self, related_refs):
+        """
+            Get equals scenarios
+            Input: Related Refs
+            Outputs: Values for the Refs that will make conditions equals or false
+                Example: {
+                    'NumberOfAZs': ['4', '3', '4.3.x'],
+                    'CreatePrivateSubnets': ['true', 'true.x'],
+                    'AWS::Region': [
+                        'us-gov-west-1', 'cn-north-1',
+                        'us-east-1', 'us-gov-west-1.cn-north-1.us-east-1.x'
+                    ],
+                    'CreateAdditionalPrivateSubnets': ['true', 'true.x']
+                }
+        """
+        results = {}
+        for related_ref, related_values in related_refs.items():
+            for related_value in related_values:
+                if not results.get(related_value[0][1]):
+                    results[related_ref] = list()
+                if isinstance(related_value[1], (str, six.string_types)):
+                    results[related_ref].append(related_value[1])
+                if isinstance(related_value[0], (str, six.string_types)):
+                    results[related_ref].append(related_value[0])
+                # create one that can't be true
+            results[related_ref].append('%s.x' % ('.'.join(results[related_ref])))
+
+        return(results)
 
 
 class Runner(object):

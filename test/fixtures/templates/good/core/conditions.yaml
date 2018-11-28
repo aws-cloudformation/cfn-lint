@@ -1,0 +1,48 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Testing the conditions class and scenarios for testing
+Parameters:
+  myEnvironment:
+    Type: String
+Mappings:
+  location:
+    us-east-1:
+      primary: 'True'
+Conditions:
+  isProduction: !Equals [!Ref 'myEnvironment', 'Prod']
+  isPrimary: !Equals ['True', !FindInMap ['location', !Ref 'AWS::Region', primary]]
+  isPrimaryAndProduction: !And [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]
+  isProductionOrStaging: !Or [{'Condition': 'isProduction'}, {'Fn::Equals': [!Ref 'myEnvironment', 'Stage']}]
+  isNotProduction: !Not [{'Condition': 'isProduction'}]
+  isDevelopment: !Equals [!Ref 'myEnvironment', 'Dev']
+  isPrimaryAndProdOrStage: !And [{'Condition': 'isProductionOrStaging'}, !Equals ['True', !FindInMap ['location', !Ref 'AWS::Region', primary]]]
+Resources:
+  mySubnet:
+    Condition: isPrimaryAndProduction
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId: vpc-123456
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      SubnetId: !If [ isDevelopment, !Ref mySubnet, 'abc-123456']
+      ImageId: ami-123456
+  myInstanceX2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      BlockDeviceMappings:
+        Fn::If:
+        - isPrimaryAndProduction
+        - - VirtualName:
+              Fn::If:
+                - isPrimary
+                - /dev/hda
+                - /dev/hdb
+        - - Fn::If:
+            - isDevelopment
+            - VirtualName: /dev/hda
+              Ebs: {}
+            - !Ref AWS::NoValue

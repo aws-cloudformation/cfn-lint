@@ -77,6 +77,17 @@ FUNCTIONS = [
     'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
     'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
 
+PSEUDOPARAMS = [
+    'AWS::AccountId',
+    'AWS::NotificationARNs',
+    'AWS::NoValue',
+    'AWS::Partition',
+    'AWS::Region',
+    'AWS::StackId',
+    'AWS::StackName',
+    'AWS::URLSuffix'
+]
+
 LIMITS = {
     'mappings': {
         'number': 100,
