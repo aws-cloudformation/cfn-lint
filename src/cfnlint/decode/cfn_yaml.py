@@ -28,6 +28,8 @@ from yaml.constructor import ConstructorError
 import cfnlint
 from cfnlint.decode.node import str_node, dict_node, list_node
 
+import fileinput
+import sys
 try:
     from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
     cyaml = True
@@ -203,5 +205,14 @@ def load(filename):
     """
     Load the given YAML file
     """
-    with open(filename) as fp:
-        return loads(fp.read(), filename)
+
+    content = ""
+
+    if not sys.stdin.isatty():
+        for line in fileinput.input(files=filename):
+            content = content + line
+    else:
+        with open(filename) as fp:
+            content = fp.read()
+
+    return loads(content, filename)

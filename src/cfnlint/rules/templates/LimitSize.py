@@ -18,6 +18,11 @@ import os
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 from cfnlint.helpers import LIMITS
+try:  # pragma: no cover
+    from pathlib import Path
+except ImportError:  # pragma: no cover
+    from pathlib2 import Path
+
 
 
 class LimitSize(CloudFormationLintRule):
@@ -34,9 +39,12 @@ class LimitSize(CloudFormationLintRule):
 
         # Check number of resources against the defined limit
         filename = cfn.filename
-        statinfo = os.stat(filename)
-        if statinfo.st_size > LIMITS['template']['body']:
-            message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
-            matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
+
+        # Only check if the file exists. The template could be passed in using stdIn
+        if Path(filename).is_file():
+            statinfo = os.stat(filename)
+            if statinfo.st_size > LIMITS['template']['body']:
+                message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
+                matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
 
         return matches
