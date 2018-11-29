@@ -14,7 +14,9 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import fileinput
 import logging
+import sys
 import six
 from yaml.composer import Composer
 from yaml.reader import Reader
@@ -28,8 +30,6 @@ from yaml.constructor import ConstructorError
 import cfnlint
 from cfnlint.decode.node import str_node, dict_node, list_node
 
-import fileinput
-import sys
 try:
     from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
     cyaml = True
@@ -206,7 +206,7 @@ def load(filename):
     Load the given YAML file
     """
 
-    content = ""
+    content = ''
 
     if not sys.stdin.isatty():
         for line in fileinput.input(files=filename):
