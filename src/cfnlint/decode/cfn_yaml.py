@@ -30,8 +30,6 @@ from yaml.constructor import ConstructorError
 import cfnlint
 from cfnlint.decode.node import str_node, dict_node, list_node
 
-import fileinput
-import sys
 try:
     from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
     cyaml = True
