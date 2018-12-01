@@ -19,8 +19,9 @@ import argparse
 import logging
 import glob
 import json
-import yaml
+import os
 import six
+import yaml
 import jsonschema
 from cfnlint.version import __version__
 try:  # pragma: no cover
@@ -79,7 +80,10 @@ class ConfigFileArgs(object):
             > user_config, project_config = self._find_config()
         """
         config_file_name = '.cfnlintrc'
-        self.__user_config_file = Path.home().joinpath(config_file_name)
+        if six.PY34:
+            self.__user_config_file = Path(os.path.expanduser('~')).joinpath(config_file_name)
+        else:
+            self.__user_config_file = Path.home().joinpath(config_file_name)
         self.__project_config_file = Path.cwd().joinpath(config_file_name)
 
         user_config_path = ''
