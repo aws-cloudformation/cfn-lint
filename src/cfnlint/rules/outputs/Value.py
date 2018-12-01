@@ -80,4 +80,17 @@ class Value(CloudFormationLintRule):
                                             message.format(ref[1], obj)
                                         ))
 
+        # Check if the output values are not lists
+        outputs = cfn.template.get('Outputs', {})
+        for output_name, output in outputs.items():
+
+            value_obj = output.get('Value')
+            if value_obj:
+                if isinstance(value_obj, list):
+                    message = 'Output {0} value is of type list'
+                    matches.append(RuleMatch(
+                        output_name,
+                        message.format(output_name)
+                    ))
+
         return matches
