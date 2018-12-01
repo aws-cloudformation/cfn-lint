@@ -108,7 +108,6 @@ class Transform(object):
 
                 def warning(self, message):
                     """ Ignore warnings from SAM """
-                    pass
 
             with WarningSuppressLogger(parser.logging):
                 self._template = cfnlint.helpers.convert_dict(

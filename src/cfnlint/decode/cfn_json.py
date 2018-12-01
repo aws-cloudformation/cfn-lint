@@ -30,14 +30,12 @@ class DuplicateError(Exception):
     """
     Error thrown when the template contains duplicates
     """
-    pass
 
 
 class NullError(Exception):
     """
     Error thrown when the template contains Nulls
     """
-    pass
 
 
 def check_duplicates(ordered_pairs, beg_mark, end_mark):

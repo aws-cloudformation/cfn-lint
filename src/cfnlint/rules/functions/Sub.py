@@ -81,6 +81,7 @@ class Sub(CloudFormationLintRule):
             'Fn::If',
             'Fn::Join',
             'Fn::Select',
+            'Fn::Sub',
             'Ref'
         ]
 
