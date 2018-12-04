@@ -9,6 +9,22 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.10.0
+###### Features
+- Update specs to version 2.16.0
+###### Fixes
+- Require pathlib2 in Python versions earlier than 3.4.0
+- Update aws-sam-translator to v1.8.0
+- Update requests dependency to be at least version 2.15.0
+- Add Python 3.7 support for Lambda
+- Provide valid Python runtimes in rule [E2531](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2531) error message
+- Allow Fn::Sub inside a Fn::Sub for rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019)
+- Add hardcoded list check as invalid in rule [E6003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6003)
+- Fix home expansion with when looking for .cfnlintrc in Python 3.4
+- Add testing in Travis for Py34, Py35, Py37
+- Prevent spaces after the comma in spec file
+- Update allowed Lambda Runtimes to include provided and ruby
+
 ### 0.9.2
 ###### Features
 - Update specs to version 2.15.0
