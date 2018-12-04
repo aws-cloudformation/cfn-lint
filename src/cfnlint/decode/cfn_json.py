@@ -349,6 +349,15 @@ def get_beg_end_mark(s, start, end):
 
     return beg_mark, end_mark
 
+def load(filename):
+    """
+    Load the given JSON file
+    """
+
+    with open(filename) as fp:
+        template = json.load(fp, cls=CfnJSONDecoder)
+
+    return template
 
 class CfnJSONDecoder(json.JSONDecoder):
     """
