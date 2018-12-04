@@ -91,8 +91,7 @@ class TestCfnJson(BaseTestCase):
         filename = 'fixtures/templates/bad/json_parse.json'
 
         try:
-            with open(filename) as fp:
-                json.load(fp, cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+            template = cfnlint.decode.cfn_json.load(filename)
         except cfnlint.decode.cfn_json.JSONDecodeError:
             assert(True)
             return
