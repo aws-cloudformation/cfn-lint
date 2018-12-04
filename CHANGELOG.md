@@ -10,6 +10,12 @@
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
 ### 0.10.0
+###### Fixes
+- Remove dependency on regex package as it requires gcc
+- Remove rule [E3507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3507) because it depends on regex package
+- Support stdin for reading and testing templates
+
+### 0.10.0
 ###### Features
 - Update specs to version 2.16.0
 ###### Fixes
