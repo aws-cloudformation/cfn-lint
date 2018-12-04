@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import fileinput
 import sys
 import logging
 import json
@@ -349,6 +350,21 @@ def get_beg_end_mark(s, start, end):
 
     return beg_mark, end_mark
 
+def load(filename):
+    """
+    Load the given JSON file
+    """
+
+    content = ''
+
+    if not sys.stdin.isatty():
+        for line in fileinput.input(files=filename):
+            content = content + line
+    else:
+        with open(filename) as fp:
+            content = fp.read()
+
+    return json.loads(content, cls=CfnJSONDecoder)
 
 class CfnJSONDecoder(json.JSONDecoder):
     """

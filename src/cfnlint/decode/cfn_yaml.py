@@ -14,7 +14,9 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import fileinput
 import logging
+import sys
 import six
 from yaml.composer import Composer
 from yaml.reader import Reader
@@ -203,5 +205,14 @@ def load(filename):
     """
     Load the given YAML file
     """
-    with open(filename) as fp:
-        return loads(fp.read(), filename)
+
+    content = ''
+
+    if not sys.stdin.isatty():
+        for line in fileinput.input(files=filename):
+            content = content + line
+    else:
+        with open(filename) as fp:
+            content = fp.read()
+
+    return loads(content, filename)
