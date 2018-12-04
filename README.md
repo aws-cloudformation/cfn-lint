@@ -48,7 +48,6 @@ Multiple files can be linted by either specifying multiple specific files:
 - `cfn-lint template1.yaml template2.yaml`
 - `cfn-lint -t template1.yaml template2.yaml`
 
-
 Multiple files can also be specified using wildcards (globbing):
 
 Lint all `yaml` files in `path`:
@@ -56,6 +55,12 @@ Lint all `yaml` files in `path`:
 
 Lint all `yaml` files in `path` and all subdirectories (recursive):
 - `cfn-lint path/to/templates/**/*.yaml`
+
+##### Specifying the template as an input stream
+The template to be linted can also be passed using standard input:
+
+- `cat path/template.yaml | cfn-lint -`
+
 
 ##### Specifying the template with other parameters
 - `cfn-lint -r us-east-1 ap-south-1 -- template.yaml`
