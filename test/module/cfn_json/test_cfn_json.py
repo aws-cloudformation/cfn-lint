@@ -14,7 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
+import sys
 from cfnlint import Template, RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
@@ -63,6 +63,20 @@ class TestCfnJson(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get('filename')
             failures = values.get('failures')
+
+            template = cfnlint.decode.cfn_json.load(filename)
+            cfn = Template(filename, template, ['us-east-1'])
+
+            matches = []
+            matches.extend(self.rules.run(filename, cfn))
+            assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+
+    def test_success_parse_stdin(self):
+        """Test Successful JSON Parsing through stdin"""
+        for _, values in self.filenames.items():
+            filename = '-'
+            failures = values.get('failures')
+            sys.stdin = open(values.get('filename'), 'r')
 
             template = cfnlint.decode.cfn_json.load(filename)
             cfn = Template(filename, template, ['us-east-1'])

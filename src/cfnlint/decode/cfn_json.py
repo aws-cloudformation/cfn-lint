@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import fileinput
 import sys
 import logging
 import json
@@ -354,10 +355,16 @@ def load(filename):
     Load the given JSON file
     """
 
-    with open(filename) as fp:
-        template = json.load(fp, cls=CfnJSONDecoder)
+    content = ''
 
-    return template
+    if not sys.stdin.isatty():
+        for line in fileinput.input(files=filename):
+            content = content + line
+    else:
+        with open(filename) as fp:
+            content = fp.read()
+
+    return json.loads(content, cls=CfnJSONDecoder)
 
 class CfnJSONDecoder(json.JSONDecoder):
     """
