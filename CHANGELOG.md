@@ -9,11 +9,12 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
-### 0.10.0
+### 0.10.1
+###### Features
+- Support stdin for reading and testing templates
 ###### Fixes
 - Remove dependency on regex package as it requires gcc
 - Remove rule [E3507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3507) because it depends on regex package
-- Support stdin for reading and testing templates
 
 ### 0.10.0
 ###### Features
