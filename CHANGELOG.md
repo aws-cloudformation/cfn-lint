@@ -22,6 +22,8 @@
 - Add hardcoded list check as invalid in rule [E6003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6003)
 - Fix home expansion with when looking for .cfnlintrc in Python 3.4
 - Add testing in Travis for Py34, Py35, Py37
+- Prevent spaces after the comma in spec file
+- Update allowed Lambda Runtimes to include provided and ruby
 
 ### 0.9.2
 ###### Features
