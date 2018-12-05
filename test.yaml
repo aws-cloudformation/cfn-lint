@@ -1,0 +1,21 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  rKMSendpointC:
+    Type: AWS::EC2::VPCEndpoint
+    Condition: cKMSEPC
+    Properties:
+      VpcId: !Ref pProductionVPC
+      ServiceName:
+        Fn::Join:
+        - ''
+        - - com.amazonaws.
+          - !Ref 'AWS::Region'
+          - .kms
+      VpcEndpointType: "Interface"
+      SubnetIds:
+        - !Select [ "0", !Ref pSubnetCAZ1]
+        - !Select ["1", !Ref pSubnetCAZ1]
+        - !Select ["2", !Ref pSubnetCAZ1]
+      SecurityGroupIds:
+        - !Ref rSecurityGroupKMSEP
