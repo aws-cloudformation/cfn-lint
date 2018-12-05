@@ -1,30 +1,49 @@
 language: python
 sudo: true
 dist: xenial
-
+services:
+- docker
 stages:
-  - Linting
-  - Unit Tests
-
+- Linting
+- Unit Tests
+- Integration
+- name: Deploy
+  if: branch = master
 jobs:
   include:
-    # other python environments
-    - stage: Linting
-      python: 3.6
-      env: TOXENV=pylint36
-    - python: 2.7
-      env: TOXENV=pylint27
-    - stage: Unit Tests
-      python: 2.7
-      env: TOXENV=py27
-    - python: 3.4
-      env: TOXENV=py34
-    - python: 3.5
-      env: TOXENV=py35
-    - python: 3.6
-      env: TOXENV=py36
-    - python: 3.7
-      env: TOXENV=py37
+  - stage: Linting
+    python: 3.6
+    env: TOXENV=pylint36
+  - python: 2.7
+    env: TOXENV=pylint27
+  - stage: Unit Tests
+    python: 2.7
+    env: TOXENV=py27
+  - python: 3.4
+    env: TOXENV=py34
+  - python: 3.5
+    env: TOXENV=py35
+  - python: 3.6
+    env: TOXENV=py36
+  - python: 3.7
+    env: TOXENV=py37
+  - stage: Integration
+    python: 3.7
+    script: docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.7.1-alpine3.8
+      /bin/sh -c 'pip3 install -e . && cfn-lint test/fixtures/templates/good/generic.yaml'
+  - stage: Deploy
+    script: skip
+    python: 3.6
+    deploy:
+      provider: pypi
+      server: https://test.pypi.org/legacy/
+      user: kddejong
+      password:
+        secure: rUbraT+JMKj3mte4UNAe+rkrhV4WO5RrSpzhAcAaBP8GVNR6q7f+yFBXLANBj3TP4e7d9T62WM4i4KxoPu9rpa/CR99AYtr0KEMm36zhiuF/MnBAHwfpyoguGSWRFwffECJRdkkFCWEyqBEEkTAgHEVbDmkyntB5QKGSIn/45FMPUsqiJBx/Xs5KI7Si9icjsHHhqRYOozprJIKjDH2W/AidbZoHMdQQ6AtsCPnuvBxuvIYgQY2X5e73kvJ8tI6h3SZvOS4q0b4p3ZteSYeWV9BbsKWjqIalurc6LddGQ9w0TDDhTP7IZyrhQre4LU1CrEqPJa34cMDUW0otunCZq1EPPqoT+X6y7r1IBQuHWwWB3dDrBC6HuJKIPxFLTQ2oefHLWyzjDtq7bZjhHclKa6exl+u/RSHGuGPxl8qsxRhDZf3HOORmsJeplD1YHZA8bd6G5lUrnsAicGz/i3QrDqxmETROiTDG+VJK9xF63WKlpT1elzEqv3ROSp7km1VYz6h9+3V3l6ZEYwbvWhW/rnmhZ0Egp+dSA2UezkGZ8+cHbL6hHh5K/BJWXlsHMgw01xR/u9rAAozGXkpccH+iQ1nRzuGtCRIP13A3VWlMQ+t0DjrAzGm6MIDfqSUYs4W6iYOjEM1m1p8qYfUAGQ1XUzpyWvfNtpONefJN8EKgLUM=
+      on:
+        tags: true
+      distributions: sdist bdist_wheel
+      skip_existing: true
 install:
-  - pip install tox
+- pip install tox
 script: tox
