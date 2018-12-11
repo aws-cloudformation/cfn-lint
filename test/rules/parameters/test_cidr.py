@@ -26,7 +26,7 @@ class TestParameterCidr(BaseRuleTestCase):
         self.collection.register(Cidr())
 
     success_templates = [
-        'fixtures/templates/good/functions_cidr.yaml',
+        'test/fixtures/templates/good/functions_cidr.yaml',
     ]
 
     def test_file_positive(self):
@@ -35,16 +35,16 @@ class TestParameterCidr(BaseRuleTestCase):
 
     def test_file_negative_nist_app(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_application.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_application.yaml', 2)
 
     def test_file_negative_nist_mgmt(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_vpc_management.yaml', 6)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_vpc_management.yaml', 6)
 
     def test_file_negative_nist_prod(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_vpc_production.yaml', 9)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_vpc_production.yaml', 9)
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_ec2_network.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_ec2_network.yaml', 1)

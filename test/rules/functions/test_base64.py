@@ -31,4 +31,4 @@ class TestRulesBase64(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/functions_base64.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/functions_base64.yaml', 1)

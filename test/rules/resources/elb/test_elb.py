@@ -25,7 +25,7 @@ class TestPropertyElb(BaseRuleTestCase):
         super(TestPropertyElb, self).setUp()
         self.collection.register(Elb())
         self.success_templates = [
-            'fixtures/templates/good/properties_elb.yaml'
+            'test/fixtures/templates/good/properties_elb.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestPropertyElb(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_elb.yaml', 5)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_elb.yaml', 5)

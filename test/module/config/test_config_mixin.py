@@ -86,15 +86,15 @@ class TestConfigMixIn(BaseTestCase):
         """ Test precedence in  """
 
         yaml_mock.side_effect = [
-            {'templates': ['fixtures/templates/public/*.yaml']},
+            {'templates': ['test/fixtures/templates/public/*.yaml']},
             {}
         ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
         self.assertEqual(config.templates, [
-            'fixtures/templates/public/lambda-poller.yaml',
-            'fixtures/templates/public/rds-cluster.yaml'])
+            'test/fixtures/templates/public/lambda-poller.yaml',
+            'test/fixtures/templates/public/rds-cluster.yaml'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_expand_paths_failure(self, yaml_mock):

@@ -26,8 +26,8 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
         self.collection.register(ValuePrimitiveType())
 
     success_templates = [
-        'fixtures/templates/good/generic.yaml',
-        'fixtures/templates/good/resource_properties.yaml'
+        'test/fixtures/templates/good/generic.yaml',
+        'test/fixtures/templates/good/resource_properties.yaml'
     ]
 
     def test_file_positive(self):
@@ -36,16 +36,16 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
 
     def test_file_negative_nist_high_master(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_high_master.yaml', 6)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_high_master.yaml', 6)
 
     def test_file_negative_nist_high_app(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_application.yaml', 53)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_application.yaml', 53)
 
     def test_file_negative_nist_config_rules(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_config_rules.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_config_rules.yaml', 2)
 
     def test_file_negative_generic(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 7)
+        self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 7)

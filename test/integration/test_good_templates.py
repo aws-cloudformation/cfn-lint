@@ -32,35 +32,35 @@ class TestQuickStartTemplates(BaseTestCase):
 
         self.filenames = {
             'generic': {
-                "filename": 'fixtures/templates/good/generic.yaml',
+                "filename": 'test/fixtures/templates/good/generic.yaml',
                 "failures": 0
             },
             'minimal': {
-                "filename": 'fixtures/templates/good/minimal.yaml',
+                "filename": 'test/fixtures/templates/good/minimal.yaml',
                 "failures": 0
             },
             'transform': {
-                "filename": 'fixtures/templates/good/transform.yaml',
+                "filename": 'test/fixtures/templates/good/transform.yaml',
                 "failures": 0
             },
             'conditions': {
-                "filename": 'fixtures/templates/good/conditions.yaml',
+                "filename": 'test/fixtures/templates/good/conditions.yaml',
                 "failures": 0
             },
             'resources_codepipeline': {
-                'filename': 'fixtures/templates/good/resources_codepipeline.yaml',
+                'filename': 'test/fixtures/templates/good/resources_codepipeline.yaml',
                 'failures': 0
             },
             'transform_serverless_api': {
-                'filename': 'fixtures/templates/good/transform_serverless_api.yaml',
+                'filename': 'test/fixtures/templates/good/transform_serverless_api.yaml',
                 'failures': 0
             },
             'transform_serverless_function': {
-                'filename': 'fixtures/templates/good/transform_serverless_function.yaml',
+                'filename': 'test/fixtures/templates/good/transform_serverless_function.yaml',
                 'failures': 0
             },
             'transform_serverless_globals': {
-                'filename': 'fixtures/templates/good/transform_serverless_globals.yaml',
+                'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
                 'failures': 0
             }
         }

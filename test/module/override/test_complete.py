@@ -37,9 +37,9 @@ class TestComplete(BaseTestCase):
 
     def test_success_run(self):
         """Success test"""
-        filename = 'fixtures/templates/good/override/complete.yaml'
+        filename = 'test/fixtures/templates/good/override/complete.yaml'
         template = self.load_template(filename)
-        with open('fixtures/templates/override_spec/complete.json') as fp:
+        with open('test/fixtures/templates/override_spec/complete.json') as fp:
             custom_spec = json.load(fp)
 
         cfnlint.helpers.set_specs(custom_spec)
@@ -49,10 +49,10 @@ class TestComplete(BaseTestCase):
 
     def test_fail_run(self):
         """Failure test required"""
-        filename = 'fixtures/templates/bad/override/complete.yaml'
+        filename = 'test/fixtures/templates/bad/override/complete.yaml'
         template = self.load_template(filename)
 
-        with open('fixtures/templates/override_spec/complete.json') as fp:
+        with open('test/fixtures/templates/override_spec/complete.json') as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
 

@@ -25,7 +25,7 @@ class TestKeyName(BaseRuleTestCase):
         super(TestKeyName, self).setUp()
         self.collection.register(KeyName())
         self.success_templates = [
-            'fixtures/templates/good/mappings/key_name.yaml'
+            'test/fixtures/templates/good/mappings/key_name.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestKeyName(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/mappings/key_name.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/mappings/key_name.yaml', 3)

@@ -25,7 +25,7 @@ class TestTableDeletionPolicy(BaseRuleTestCase):
         super(TestTableDeletionPolicy, self).setUp()
         self.collection.register(TableDeletionPolicy())
         self.success_templates = [
-            'fixtures/templates/good/resources/dynamodb/delete_policy.yaml'
+            'test/fixtures/templates/good/resources/dynamodb/delete_policy.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestTableDeletionPolicy(BaseRuleTestCase):
 
     def test_file_negative_alias(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources/dynamodb/delete_policy.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/dynamodb/delete_policy.yaml', 1)

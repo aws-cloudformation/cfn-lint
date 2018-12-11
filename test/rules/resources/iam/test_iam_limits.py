@@ -31,16 +31,16 @@ class TestPropertyIamLimits(BaseRuleTestCase):
 
     def test_managedpolicyarns(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources_iam_managedpolicyarns.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_iam_managedpolicyarns.yaml', 3)
 
     def test_user_groups(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources_iam_user_groups.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_iam_user_groups.yaml', 1)
 
     def test_instance_profile_roles(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources_iam_instanceprofile_roles.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_iam_instanceprofile_roles.yaml', 1)
 
     def test_role_assume_role_policy_document(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources_iam_role_assume_role_policy_document.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_iam_role_assume_role_policy_document.yaml', 1)

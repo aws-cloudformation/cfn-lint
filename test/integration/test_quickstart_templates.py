@@ -33,52 +33,52 @@ class TestQuickStartTemplates(BaseTestCase):
 
         self.filenames = {
             'config_rule': {
-                "filename": 'fixtures/templates/public/lambda-poller.yaml',
+                "filename": 'test/fixtures/templates/public/lambda-poller.yaml',
                 "failures": 0
             },
             'watchmaker': {
-                "filename": 'fixtures/templates/public/watchmaker.json',
+                "filename": 'test/fixtures/templates/public/watchmaker.json',
                 "failures": 0
             },
             'nist_high_master': {
-                'filename': 'fixtures/templates/quickstart/nist_high_master.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_high_master.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_high_master.json'
             },
             'nist_application': {
-                'filename': 'fixtures/templates/quickstart/nist_application.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_application.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_application.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_application.json'
             },
             'nist_config_rules': {
-                'filename': 'fixtures/templates/quickstart/nist_config_rules.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_config_rules.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_config_rules.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_config_rules.json'
             },
             'nist_iam': {
-                'filename': 'fixtures/templates/quickstart/nist_iam.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_iam.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_iam.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_iam.json'
             },
             'nist_logging': {
-                'filename': 'fixtures/templates/quickstart/nist_logging.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_logging.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_logging.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_logging.json'
             },
             'nist_vpc_management': {
-                'filename': 'fixtures/templates/quickstart/nist_vpc_management.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_vpc_management.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_vpc_management.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_vpc_management.json'
             },
             'nist_vpc_production': {
-                'filename': 'fixtures/templates/quickstart/nist_vpc_production.yaml',
-                'results_filename': 'fixtures/results/quickstart/nist_vpc_production.json'
+                'filename': 'test/fixtures/templates/quickstart/nist_vpc_production.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/nist_vpc_production.json'
             },
             'openshift_master': {
-                'filename': 'fixtures/templates/quickstart/openshift_master.yaml',
+                'filename': 'test/fixtures/templates/quickstart/openshift_master.yaml',
                 'failures': 0
             },
             'openshift': {
-                'filename': 'fixtures/templates/quickstart/openshift.yaml',
-                'results_filename': 'fixtures/results/quickstart/openshift.json'
+                'filename': 'test/fixtures/templates/quickstart/openshift.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/openshift.json'
             },
             'cis_benchmark': {
-                'filename': 'fixtures/templates/quickstart/cis_benchmark.yaml',
-                'results_filename': 'fixtures/results/quickstart/cis_benchmark.json'
+                'filename': 'test/fixtures/templates/quickstart/cis_benchmark.yaml',
+                'results_filename': 'test/fixtures/results/quickstart/cis_benchmark.json'
             }
         }
 

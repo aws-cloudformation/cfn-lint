@@ -25,7 +25,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
         super(TestPropertyVpcId, self).setUp()
         self.collection.register(VpcId())
         self.success_templates = [
-            'fixtures/templates/good/properties_ec2_vpc.yaml'
+            'test/fixtures/templates/good/properties_ec2_vpc.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestPropertyVpcId(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_vpcid.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_vpcid.yaml', 1)

@@ -22,7 +22,7 @@ class TestTemplate(BaseTestCase):
     """Test Template Class in cfnlint """
     def setUp(self):
         """ SetUp template object"""
-        filename = 'fixtures/templates/good/generic.yaml'
+        filename = 'test/fixtures/templates/good/generic.yaml'
         template = self.load_template(filename)
         self.template = Template(filename, template)
         self.resource_names = [

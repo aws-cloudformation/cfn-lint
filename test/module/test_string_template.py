@@ -30,7 +30,7 @@ class TestNonObjectTemplate(BaseTestCase):
     def test_fail_yaml_run(self):
         """Test failure run"""
 
-        filename = 'fixtures/templates/bad/string.yaml'
+        filename = 'test/fixtures/templates/bad/string.yaml'
 
         _, matches = cfnlint.decode.decode(filename, True)
         assert len(matches) == 1

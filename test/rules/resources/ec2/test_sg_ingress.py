@@ -25,7 +25,7 @@ class TestPropertySgIngress(BaseRuleTestCase):
         super(TestPropertySgIngress, self).setUp()
         self.collection.register(SecurityGroupIngress())
         self.success_templates = [
-            'fixtures/templates/good/properties_ec2_vpc.yaml',
+            'test/fixtures/templates/good/properties_ec2_vpc.yaml',
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestPropertySgIngress(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_sg_ingress.yaml', 5)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_ingress.yaml', 5)

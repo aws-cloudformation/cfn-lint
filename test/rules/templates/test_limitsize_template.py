@@ -31,4 +31,4 @@ class TestTemplateLimitSize(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/limit_size.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/limit_size.yaml', 1)

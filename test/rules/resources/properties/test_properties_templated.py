@@ -31,4 +31,4 @@ class TestPropertiesTemplated(BaseRuleTestCase):
 
     def test_file_negative_4(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/bad/resources/properties/templated_code.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/templated_code.yaml', 1)

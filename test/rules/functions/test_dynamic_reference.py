@@ -25,7 +25,7 @@ class TestDynamicReferenceSecureString(BaseRuleTestCase):
         super(TestDynamicReferenceSecureString, self).setUp()
         self.collection.register(DynamicReferenceSecureString())
         self.success_templates = [
-            'fixtures/templates/good/functions/dynamic_reference.yaml'
+            'test/fixtures/templates/good/functions/dynamic_reference.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestDynamicReferenceSecureString(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/functions/dynamic_reference.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/dynamic_reference.yaml', 2)
