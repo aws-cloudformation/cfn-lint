@@ -28,6 +28,7 @@ class SubNeeded(CloudFormationLintRule):
 
     # Free-form text properties to exclude from this rule
     excludes = ['UserData', 'ZipFile', 'Resource', 'Condition']
+    api_excludes = ['Uri', 'Body']
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
@@ -45,7 +46,7 @@ class SubNeeded(CloudFormationLintRule):
         else:
             # Leaf node
             if isinstance(cfnelem, str) and re.match(searchRegex, cfnelem):
-                values.append(path + [cfnelem])
+                values.append(path + [re.match(searchRegex, cfnelem).group(1)])
 
         return values
 
@@ -59,13 +60,18 @@ class SubNeeded(CloudFormationLintRule):
         results.extend(self._match_values(searchRegex, cfn.template.get('Globals', {}), []))
         return results
 
+    def _api_exceptions(self, value):
+        """ Key value exceptions """
+        parameter_search = re.compile(r'^\$\{stageVariables\..*\}$')
+        return re.match(parameter_search, value)
+
     def match(self, cfn):
         """Basic Rule Matching"""
 
         matches = []
 
         # Generic regex to match a string containing at least one ${parameter}
-        parameter_search = re.compile(r'^(.*\$\{.*\}.*(\$\{.*\}.*)*)$')
+        parameter_search = re.compile(r'^.*(\$\{.*\}.*(\$\{.*\}.*)*)$')
 
         # Get a list of paths to every leaf node string containing at least one ${parameter}
         parameter_string_paths = self.match_values(parameter_search, cfn)
@@ -76,7 +82,10 @@ class SubNeeded(CloudFormationLintRule):
 
             # Does the path contain an 'Fn::Sub'?
             for step in parameter_string_path:
-                if step == 'Fn::Sub' or step in self.excludes:
+                if step in self.api_excludes:
+                    if self._api_exceptions(parameter_string_path[-1]):
+                        found_sub = True
+                elif step == 'Fn::Sub' or step in self.excludes:
                     found_sub = True
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
