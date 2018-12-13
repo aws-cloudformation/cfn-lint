@@ -18,3 +18,35 @@ Resources:
           Action:
             - "iam:UploadSSHPublicKey"
           Resource: "arn:aws:iam::*:user/${aws:username}"
+  GreetingRequest:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS
+        IntegrationHttpMethod: POST
+        Uri:
+          Fn::Join:
+          - ""
+          - - "arn:aws:apigateway:"
+            - !Ref "AWS::Region"
+            - ":lambda:path/2015-03-31/functions/"
+            - !GetAtt GreetingLambda.Arn
+            - ":${stageVariables.LambdaAlias}"
+            - "/invocations"
+        IntegrationResponses:
+        - StatusCode: '200'
+        RequestTemplates:
+          application/json:
+            Fn::Join:
+            - ""
+            - - "{"
+              - "  \"name\": \"$input.params('name')\""
+              - "}"
+      RequestParameters:
+        method.request.querystring.name: false
+      ResourceId: !Ref GreetingResource
+      RestApiId: !Ref GreetingApi
+      MethodResponses:
+      - StatusCode: '200'
