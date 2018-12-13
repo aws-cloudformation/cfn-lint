@@ -25,7 +25,7 @@ class TestPropertyPassword(BaseRuleTestCase):
         super(TestPropertyPassword, self).setUp()
         self.collection.register(Password())
         self.success_templates = [
-            'fixtures/templates/good/resources/properties/password.yaml'
+            'test/fixtures/templates/good/resources/properties/password.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestPropertyPassword(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_password.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_password.yaml', 3)

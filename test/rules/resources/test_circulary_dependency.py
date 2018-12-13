@@ -31,4 +31,4 @@ class TestRulesRefCircular(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources_circulary_dependency.yaml', 6)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_circulary_dependency.yaml', 6)

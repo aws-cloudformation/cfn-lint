@@ -25,7 +25,7 @@ class TestSubUnneeded(BaseRuleTestCase):
         super(TestSubUnneeded, self).setUp()
         self.collection.register(SubUnneeded())
         self.success_templates = [
-            'fixtures/templates/good/functions_sub.yaml',
+            'test/fixtures/templates/good/functions_sub.yaml',
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestSubUnneeded(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/functions/sub_unneeded.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/sub_unneeded.yaml', 1)

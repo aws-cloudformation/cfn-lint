@@ -35,27 +35,27 @@ class TestCfnJson(BaseTestCase):
 
         self.filenames = {
             "config_rule": {
-                "filename": 'fixtures/templates/quickstart/config-rules.json',
+                "filename": 'test/fixtures/templates/quickstart/config-rules.json',
                 "failures": 4
             },
             "iam": {
-                "filename": 'fixtures/templates/quickstart/iam.json',
+                "filename": 'test/fixtures/templates/quickstart/iam.json',
                 "failures": 4
             },
             "nat_instance": {
-                "filename": 'fixtures/templates/quickstart/nat-instance.json',
+                "filename": 'test/fixtures/templates/quickstart/nat-instance.json',
                 "failures": 2
             },
             "vpc_management": {
-                "filename": 'fixtures/templates/quickstart/vpc-management.json',
+                "filename": 'test/fixtures/templates/quickstart/vpc-management.json',
                 "failures": 35
             },
             "vpc": {
-                "filename": 'fixtures/templates/quickstart/vpc.json',
+                "filename": 'test/fixtures/templates/quickstart/vpc.json',
                 "failures": 40
             },
             "poller": {
-                "filename": 'fixtures/templates/public/lambda-poller.json',
+                "filename": 'test/fixtures/templates/public/lambda-poller.json',
                 "failures": 0
             }
         }
@@ -92,7 +92,7 @@ class TestCfnJson(BaseTestCase):
     def test_fail_run(self):
         """Test failure run"""
 
-        filename = 'fixtures/templates/bad/json_parse.json'
+        filename = 'test/fixtures/templates/bad/json_parse.json'
 
         try:
             template = cfnlint.decode.cfn_json.load(filename)

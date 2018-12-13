@@ -35,7 +35,7 @@ class TestDuplicate(BaseTestCase):
     def test_success_run(self):
         """Test success run"""
 
-        filename = 'fixtures/templates/good/generic.yaml'
+        filename = 'test/fixtures/templates/good/generic.yaml'
 
         try:
             cfnlint.decode.cfn_yaml.load(filename)
@@ -51,7 +51,7 @@ class TestDuplicate(BaseTestCase):
     def test_fail_run(self):
         """Test failure run"""
 
-        filename = 'fixtures/templates/bad/duplicate.json'
+        filename = 'test/fixtures/templates/bad/duplicate.json'
 
         try:
             with open(filename) as fp:
@@ -65,7 +65,7 @@ class TestDuplicate(BaseTestCase):
     def test_fail_yaml_run(self):
         """Test failure run"""
 
-        filename = 'fixtures/templates/bad/duplicate.yaml'
+        filename = 'test/fixtures/templates/bad/duplicate.yaml'
 
         try:
             cfnlint.decode.cfn_yaml.load(filename)

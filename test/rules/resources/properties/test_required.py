@@ -33,11 +33,11 @@ class TestResourceConfiguration(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_required.yaml', 12)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_required.yaml', 12)
 
     def test_file_negative_generic(self):
         """Generic Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 8)
+        self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 8)
 
 
 class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
@@ -46,7 +46,7 @@ class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
         """Setup"""
         super(TestSpecifiedCustomResourceRequiredProperties, self).setUp()
         # Add a Spec override that specifies the Custom::SpecifiedCustomResource type
-        with open('fixtures/templates/override_spec/custom.json') as fp:
+        with open('test/fixtures/templates/override_spec/custom.json') as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
         # Reset Spec override after test
@@ -57,4 +57,4 @@ class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
     def test_file_negative(self):
         """Test failure"""
         # Additional Custom::SpecifiedCustomResource failure detected with custom spec
-        self.helper_file_negative('fixtures/templates/bad/properties_required.yaml', 13)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_required.yaml', 13)

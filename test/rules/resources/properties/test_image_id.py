@@ -27,7 +27,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
         self.collection.register(ImageId())
 
     success_templates = [
-        'fixtures/templates/good/generic.yaml',
+        'test/fixtures/templates/good/generic.yaml',
     ]
 
     def test_file_positive(self):
@@ -36,12 +36,12 @@ class TestPropertyVpcId(BaseRuleTestCase):
 
     def test_file_negative_nist_app(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_application.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_application.yaml', 2)
 
     def test_file_negative_nist_mgmt(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/quickstart/nist_vpc_management.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_vpc_management.yaml', 1)
 
     def test_file_negative(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/bad/properties_imageid.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_imageid.yaml', 1)

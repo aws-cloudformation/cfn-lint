@@ -25,8 +25,8 @@ class TestPolicyVersion(BaseRuleTestCase):
         super(TestPolicyVersion, self).setUp()
         self.collection.register(PolicyVersion())
         self.success_templates = [
-            'fixtures/templates/good/resources/iam/resource_policy.yaml',
-            'fixtures/templates/good/resources/iam/policy.yaml',
+            'test/fixtures/templates/good/resources/iam/resource_policy.yaml',
+            'test/fixtures/templates/good/resources/iam/policy.yaml',
         ]
 
     def test_file_positive(self):
@@ -35,4 +35,4 @@ class TestPolicyVersion(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/resources/iam/policy_version.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/iam/policy_version.yaml', 1)

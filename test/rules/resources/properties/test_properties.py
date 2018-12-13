@@ -27,8 +27,8 @@ class TestResourceProperties(BaseRuleTestCase):
         super(TestResourceProperties, self).setUp()
         self.collection.register(Properties())
         self.success_templates = [
-            'fixtures/templates/good/resource_properties.yaml',
-            'fixtures/templates/good/resources/properties/templated_code.yaml',
+            'test/fixtures/templates/good/resource_properties.yaml',
+            'test/fixtures/templates/good/resources/properties/templated_code.yaml',
         ]
 
     def test_file_positive(self):
@@ -37,15 +37,15 @@ class TestResourceProperties(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/generic.yaml', 9)
+        self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 9)
 
     def test_file_negative_2(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/bad/object_should_be_list.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/object_should_be_list.yaml', 4)
 
     def test_file_negative_3(self):
         """Failure test"""
-        self.helper_file_negative('fixtures/templates/bad/resource_properties.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/resource_properties.yaml', 4)
 
 
 class TestSpecifiedCustomResourceProperties(TestResourceProperties):
@@ -54,7 +54,7 @@ class TestSpecifiedCustomResourceProperties(TestResourceProperties):
         """Setup"""
         super(TestSpecifiedCustomResourceProperties, self).setUp()
         # Add a Spec override that specifies the Custom::SpecifiedCustomResource type
-        with open('fixtures/templates/override_spec/custom.json') as fp:
+        with open('test/fixtures/templates/override_spec/custom.json') as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
         # Reset Spec override after test
@@ -64,4 +64,4 @@ class TestSpecifiedCustomResourceProperties(TestResourceProperties):
 
     def test_file_negative_custom(self):
         """Additional failure test for specified Custom Resource validation"""
-        self.helper_file_negative('fixtures/templates/bad/resources/properties/custom.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/custom.yaml', 2)

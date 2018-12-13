@@ -31,4 +31,4 @@ class TestPropertyEc2Ebs(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/properties_ebs.yaml', 5)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_ebs.yaml', 5)

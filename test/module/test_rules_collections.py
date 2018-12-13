@@ -46,7 +46,7 @@ class TestTemplate(BaseTestCase):
 
     def test_success_run(self):
         """ Test Run Logic"""
-        filename = 'fixtures/templates/good/generic.yaml'
+        filename = 'test/fixtures/templates/good/generic.yaml'
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 
@@ -56,7 +56,7 @@ class TestTemplate(BaseTestCase):
 
     def test_fail_run(self):
         """Test failure run"""
-        filename = 'fixtures/templates/bad/generic.yaml'
+        filename = 'test/fixtures/templates/bad/generic.yaml'
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
         expected_err_count = 35
@@ -66,7 +66,7 @@ class TestTemplate(BaseTestCase):
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""
-        filename = 'fixtures/templates/bad/properties_onlyone.yaml'
+        filename = 'test/fixtures/templates/bad/properties_onlyone.yaml'
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 

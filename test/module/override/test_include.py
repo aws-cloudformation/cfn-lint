@@ -35,10 +35,10 @@ class TestInclude(BaseTestCase):
 
     def test_fail_run(self):
         """Failure test required"""
-        filename = 'fixtures/templates/bad/override/include.yaml'
+        filename = 'test/fixtures/templates/bad/override/include.yaml'
         template = self.load_template(filename)
 
-        with open('fixtures/templates/override_spec/include.json') as fp:
+        with open('test/fixtures/templates/override_spec/include.json') as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
 

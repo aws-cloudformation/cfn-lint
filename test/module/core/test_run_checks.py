@@ -25,7 +25,7 @@ class TestRunChecks(BaseTestCase):
     def test_good_template(self):
         """Test success run"""
 
-        filename = 'fixtures/templates/good/generic.yaml'
+        filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames([
             '--template', filename])
 
@@ -41,7 +41,7 @@ class TestRunChecks(BaseTestCase):
     def test_bad_template(self):
         """Test bad template"""
 
-        filename = 'fixtures/templates/quickstart/nat-instance.json'
+        filename = 'test/fixtures/templates/quickstart/nat-instance.json'
         (args, filenames, _) = cfnlint.core.get_args_filenames([
             '--template', filename])
         results = []
@@ -56,7 +56,7 @@ class TestRunChecks(BaseTestCase):
 
     def test_bad_region(self):
         """Test bad region"""
-        filename = 'fixtures/templates/good/generic.yaml'
+        filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
         err = None

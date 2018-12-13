@@ -25,7 +25,7 @@ class TestOutputImportValue(BaseRuleTestCase):
         super(TestOutputImportValue, self).setUp()
         self.collection.register(ImportValue())
         self.success_templates = [
-            'fixtures/templates/good/outputs/importvalue.yaml',
+            'test/fixtures/templates/good/outputs/importvalue.yaml',
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestOutputImportValue(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/outputs.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/outputs.yaml', 1)

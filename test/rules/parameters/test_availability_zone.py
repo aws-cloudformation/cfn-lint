@@ -26,7 +26,7 @@ class TestParameterAvailabilityZone(BaseRuleTestCase):
         self.collection.register(AvailabilityZone())
 
     success_templates = [
-        'fixtures/templates/good/properties_ec2_vpc.yaml',
+        'test/fixtures/templates/good/properties_ec2_vpc.yaml',
     ]
 
     def test_file_positive(self):
@@ -35,4 +35,4 @@ class TestParameterAvailabilityZone(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/parameters_az.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/parameters_az.yaml', 3)

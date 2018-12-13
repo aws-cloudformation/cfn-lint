@@ -131,7 +131,7 @@ class TestMyNewRule(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('fixtures/templates/bad/mynewrule.yaml', 1) # Amount of expected matches
+        self.helper_file_negative('test/fixtures/templates/bad/mynewrule.yaml', 1) # Amount of expected matches
 ```
 
 As you can see `test_file_negative()` in this unit test makes specific use of a CloudFormation template from the Fixtures folder. It's important to provide examples of templates which pass your new rule, and also templates which generate the expected warning/error.
