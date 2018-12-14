@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **98** rules are applied by this linter:
+The following **99** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -47,7 +47,7 @@ The following **98** rules are applied by this linter:
 | E1016 <a name="E1016"></a> | ImportValue validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-importvalue.html) | `functions`,`importvalue` |
 | E1017 <a name="E1017"></a> | Select validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html) | `functions`,`select` |
 | E1018 <a name="E1018"></a> | Split validation of parameters | Making sure the split function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-split.html) | `functions`,`split` |
-| E1019 <a name="E1019"></a> | Sub validation of parameters | Making sure the split function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
+| E1019 <a name="E1019"></a> | Sub validation of parameters | Making sure the sub function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | E1020 <a name="E1020"></a> | Ref validation of value | Making the Ref has a value of String (no other functions are supported) | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `functions`,`ref` |
 | E1021 <a name="E1021"></a> | Base64 validation of parameters | Making sure the function not is of list | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html) | `functions`,`base64` |
 | E1022 <a name="E1022"></a> | Join validation of parameters | Making sure the join function is properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html) | `functions`,`join` |
@@ -68,7 +68,7 @@ The following **98** rules are applied by this linter:
 | E2502 <a name="E2502"></a> | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | [Source](https://github.com/awslabs/cfn-python-lint) | `properties` |
 | E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
 | E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
-| E2505 <a name="E2505"></a> | Resource EC2 VPC Properties | See if EC2 VPC Properties are set correctly | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
+| E2505 <a name="E2505"></a> | Resource EC2 VPC Properties | Check if the default tenancy is default or dedicated and that CidrBlock is a valid CIDR range. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
 | E2506 <a name="E2506"></a> | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html) | `resources`,`securitygroup` |
 | E2507 <a name="E2507"></a> | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html) | `properties`,`iam` |
 | E2508 <a name="E2508"></a> | Check IAM resource limits | See if IAM resources do not breach limits | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`iam` |
@@ -97,6 +97,7 @@ The following **98** rules are applied by this linter:
 | E3020 <a name="E3020"></a> | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | [Source](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html) | `resources`,`route53`,`record_set` |
 | E3021 <a name="E3021"></a> | Check Events Rule Targets are less than or equal to 5 | CloudWatch Events Rule can only support up to 5 targets | [Source](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/cloudwatch_limits_cwe.html) | `resources`,`events` |
 | E3022 <a name="E3022"></a> | Resource SubnetRouteTableAssociation Properties | Validate there is only one SubnetRouteTableAssociation per subnet | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html) | `resources`,`subnet`,`route table` |
+| E3025 <a name="E3025"></a> | RDS instance type is compatible with the RDS type | Check the RDS instance types are supported by the type of RDS engine. Only if the values are strings will this be checked. | [Source](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html) | `resources`,`rds` |
 | E4001 <a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
 | E6001 <a name="E6001"></a> | Outputs have appropriate properties | Making sure the outputs are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6002 <a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
