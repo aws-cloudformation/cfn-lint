@@ -12,6 +12,7 @@
 ### 0.10.2
 ###### Features
 - Code coverage testing integrated into the CI process
+- Update CloudFormation specs to 2.18.0
 ###### Fixes
 - Fix rule E2505 to allow for SSM parameters when checking Cidr and Tenancy parameters
 - Fix rule E1029 to not error on API Gateway stageVariables
