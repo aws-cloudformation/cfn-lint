@@ -9,6 +9,13 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.10.2
+###### Features
+- Code coverage testing integrated into the CI process
+###### Fixes
+- Fix rule E2505 to allow for SSM parameters when checking Cidr and Tenancy parameters
+- Fix rule E1029 to not error on API Gateway stageVariables
+
 ### 0.10.1
 ###### Features
 - Support stdin for reading and testing templates
