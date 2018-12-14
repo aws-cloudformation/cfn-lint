@@ -54,7 +54,7 @@ class Vpc(CloudFormationLintRule):
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = 'CidrBlock parameter should be of type [{0}] for {1}'
+                message = 'DefaultTenancy parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         path_error,
@@ -77,7 +77,8 @@ class Vpc(CloudFormationLintRule):
         matches = []
 
         allowed_types = [
-            'String'
+            'String',
+            'AWS::SSM::Parameter::Value<String>',
         ]
         if value in resources:
             resource_obj = resources.get(value, {})

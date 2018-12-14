@@ -17,6 +17,9 @@ Parameters:
     AllowedValues:
       - '127.0.0.1/32'
       - '8.8.8.8/32'
+  cidrBlockSsm:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /Infra/VpcCidr
   vpcTenancy:
     Type: String
     AllowedValues:
@@ -43,6 +46,11 @@ Resources:
     Properties:
       InstanceTenancy: !Ref vpcTenancy
       CidrBlock: !Ref cidrBlockAllowedPatternValues
+  myVpc5:
+    Type: AWS::EC2::VPC
+    Properties:
+      InstanceTenancy: dedicated
+      CidrBlock: !Ref cidrBlockSsm
   mySubnet21:
     Type: AWS::EC2::Subnet
     Properties:
