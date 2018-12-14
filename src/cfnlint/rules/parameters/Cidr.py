@@ -62,14 +62,16 @@ class Cidr(CloudFormationLintRule):
 
         if value in parameters:
             parameter = parameters.get(value, {})
+            parameter_type = parameter.get('Type')
             allowed_pattern = parameter.get('AllowedPattern', None)
             allowed_values = parameter.get('AllowedValues', None)
-            if not allowed_pattern and not allowed_values:
-                param_path = ['Parameters', value]
-                full_param_path = '/'.join(param_path)
-                message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. ' \
-                          'Example for AllowedPattern: "{0}"'
-                matches.append(RuleMatch(param_path, message.format(REGEX_CIDR.pattern, full_param_path)))
+            if parameter_type not in ['AWS::SSM::Parameter::Value<String>']:
+                if not allowed_pattern and not allowed_values:
+                    param_path = ['Parameters', value]
+                    full_param_path = '/'.join(param_path)
+                    message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. ' \
+                              'Example for AllowedPattern: "{0}"'
+                    matches.append(RuleMatch(param_path, message.format(REGEX_CIDR.pattern, full_param_path)))
 
         return matches
 

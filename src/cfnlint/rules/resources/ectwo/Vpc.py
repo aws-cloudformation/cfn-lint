@@ -25,7 +25,8 @@ class Vpc(CloudFormationLintRule):
     """Check if EC2 VPC Resource Properties"""
     id = 'E2505'
     shortdesc = 'Resource EC2 VPC Properties'
-    description = 'See if EC2 VPC Properties are set correctly'
+    description = 'Check if the default tenancy is default or dedicated and ' \
+                  'that CidrBlock is a valid CIDR range.'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
     tags = ['properties', 'vpc']
 
@@ -42,7 +43,8 @@ class Vpc(CloudFormationLintRule):
         """Check ref for VPC"""
         matches = []
         allowed_types = [
-            'String'
+            'String',
+            'AWS::SSM::Parameter::Value<String>',
         ]
         if value in resources:
             message = 'DefaultTenancy can\'t use a Ref to a resource for {0}'
@@ -52,7 +54,7 @@ class Vpc(CloudFormationLintRule):
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
+                message = 'DefaultTenancy parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         path_error,
@@ -75,7 +77,8 @@ class Vpc(CloudFormationLintRule):
         matches = []
 
         allowed_types = [
-            'String'
+            'String',
+            'AWS::SSM::Parameter::Value<String>',
         ]
         if value in resources:
             resource_obj = resources.get(value, {})
@@ -89,7 +92,7 @@ class Vpc(CloudFormationLintRule):
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 path_error = ['Parameters', value, 'Type']
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
+                message = 'CidrBlock parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         path_error,

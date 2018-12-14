@@ -27,6 +27,7 @@ class TestParameterCidr(BaseRuleTestCase):
 
     success_templates = [
         'test/fixtures/templates/good/functions_cidr.yaml',
+        'test/fixtures/templates/good/properties_ec2_vpc.yaml',
     ]
 
     def test_file_positive(self):
