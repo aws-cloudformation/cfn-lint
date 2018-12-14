@@ -175,6 +175,15 @@ def patch_spec(content, region):
             ])
         },
         {
+            'Name': 'AWS::ServiceDiscovery::Instance InstanceAttributes PrimitiveItemType and ItemType',
+            'Regions': ['All'],
+            'Patch': jsonpatch.JsonPatch([
+                {'op': 'add', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/PrimitiveItemType', 'value': 'String'},
+                {'op': 'remove', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/PrimitiveType'},
+                {'op': 'add', 'path': '/ResourceTypes/AWS::ServiceDiscovery::Instance/Properties/InstanceAttributes/Type', 'value': 'Map'},
+            ])
+        },
+        {
             'Name': 'AWS::SDB::Domain not supported for all regions',
             'Regions': ['us-east-2', 'ca-central-1', 'eu-central-1', 'eu-west-2', 'eu-west-3', 'ap-northeast-2', 'ap-south-1'],
             'Patch': jsonpatch.JsonPatch([

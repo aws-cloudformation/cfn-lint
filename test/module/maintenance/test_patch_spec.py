@@ -49,6 +49,8 @@ class TestPatchJson(BaseTestCase):
         self.assertIn('AWS::CloudFormation::Macro', patched['ResourceTypes'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['TopicArn']['Required'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['Protocol']['Required'])
+        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['Type'], 'Map')
+        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['PrimitiveItemType'], 'String')
 
     def test_success_sbd_domain_removed(self):
         """Success removal of SBD Domain form unsupported regions"""

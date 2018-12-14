@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **98** rules are applied by this linter:
+The following **99** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -68,7 +68,7 @@ The following **98** rules are applied by this linter:
 | E2502 <a name="E2502"></a> | Check if IamInstanceProfile are using the name and not ARN | See if there are any properties IamInstanceProfileare using name and not ARN | [Source](https://github.com/awslabs/cfn-python-lint) | `properties` |
 | E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
 | E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
-| E2505 <a name="E2505"></a> | Resource EC2 VPC Properties | See if EC2 VPC Properties are set correctly | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
+| E2505 <a name="E2505"></a> | Resource EC2 VPC Properties | Check if the default tenancy is default or dedicated and that CidrBlock is a valid CIDR range. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
 | E2506 <a name="E2506"></a> | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html) | `resources`,`securitygroup` |
 | E2507 <a name="E2507"></a> | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html) | `properties`,`iam` |
 | E2508 <a name="E2508"></a> | Check IAM resource limits | See if IAM resources do not breach limits | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`iam` |
@@ -115,6 +115,7 @@ The following **98** rules are applied by this linter:
 | E7012 <a name="E7012"></a> | Mapping attribute limit not exceeded | Check if the amount of Mapping attributes in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E8001 <a name="E8001"></a> | Conditions have appropriate properties | Check if Conditions are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
 | E8002 <a name="E8002"></a> | Check if the referenced Conditions are defined | Making sure the used conditions are actually defined in the Conditions section | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
+| I3011 <a name="I3011"></a> | Check DynamoDB tables have a set DeletionPolicy | The default action when removing a DynamoDB Table is to delete it. This check requires you to specifically set a DeletionPolicy and you know the risks | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`dynamodb` |
 | W1019 <a name="W1019"></a> | Sub validation of parameters | Validate that Fn::Sub Parameters are used | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | W1020 <a name="W1020"></a> | Sub isn't needed if it doesn't have a variable defined | Checks sub strings to see if a variable is defined. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
