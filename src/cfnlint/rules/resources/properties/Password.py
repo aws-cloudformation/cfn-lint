@@ -62,7 +62,7 @@ class Password(CloudFormationLintRule):
                                     param = cfn.template['Parameters'][value]
                                     if 'NoEcho' in param:
                                         if not param['NoEcho']:
-                                            fix_params.append({'Name': value,'Use': password_property})
+                                            fix_params.append({'Name': value, 'Use': password_property})
                                     else:
                                         fix_params.append({'Name': value, 'Use': password_property})
                     else:
