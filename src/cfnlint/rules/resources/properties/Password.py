@@ -35,12 +35,12 @@ class Password(CloudFormationLintRule):
         matches = []
         password_properties = ['Password', 'DbPassword', 'MasterUserPassword']
 
-        parameters  = cfn.get_parameter_names()
-        fix_params  = []
+        parameters = cfn.get_parameter_names()
+        fix_params = []
         for password_property in password_properties:
             # Build the list of refs
-            refs    = cfn.search_deep_keys(password_property)
-            trees   = [tree for tree in refs if tree[0] == 'Resources']
+            refs = cfn.search_deep_keys(password_property)
+            trees = [tree for tree in refs if tree[0] == 'Resources']
 
             for tree in trees:
                 obj = tree[-1]
@@ -72,6 +72,6 @@ class Password(CloudFormationLintRule):
 
         for paramname in fix_params:
             message = 'Parameter {} used as {}, therefore NoEcho should be True'.format(paramname['Name'], paramname['Use'])
-            tree    = ['Parameters', paramname['Name']]
+            tree = ['Parameters', paramname['Name']]
             matches.append(RuleMatch(tree, message))
         return matches
