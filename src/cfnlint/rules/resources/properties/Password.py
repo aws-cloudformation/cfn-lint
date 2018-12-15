@@ -35,12 +35,13 @@ class Password(CloudFormationLintRule):
         matches = []
         password_properties = ['Password', 'DbPassword', 'MasterUserPassword']
 
-        parameters = cfn.get_parameter_names()
-        fix_params = set()
+        parameters  = cfn.get_parameter_names()
+        fix_params  = []
         for password_property in password_properties:
             # Build the list of refs
-            trees = cfn.search_deep_keys(password_property)
-            trees = [x for x in trees if x[0] == 'Resources']
+            refs    = cfn.search_deep_keys(password_property)
+            trees   = [tree for tree in refs if tree[0] == 'Resources']
+
             for tree in trees:
                 obj = tree[-1]
                 if isinstance(obj, (six.string_types)):
@@ -61,16 +62,16 @@ class Password(CloudFormationLintRule):
                                     param = cfn.template['Parameters'][value]
                                     if 'NoEcho' in param:
                                         if not param['NoEcho']:
-                                            fix_params.add(value)
+                                            fix_params.append({'Name': value,'Use': password_property})
                                     else:
-                                        fix_params.add(value)
+                                        fix_params.append({'Name': value, 'Use': password_property})
                     else:
                         message = 'Inappropriate map found for password on %s' % (
                             '/'.join(map(str, tree[:-1])))
                         matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_params:
-            message = 'Parameter %s should have NoEcho True' % (paramname)
-            tree = ['Parameters', paramname]
+            message = 'Parameter {} used as {}, therefore NoEcho should be True'.format(paramname['Name'], paramname['Use'])
+            tree    = ['Parameters', paramname['Name']]
             matches.append(RuleMatch(tree, message))
         return matches
