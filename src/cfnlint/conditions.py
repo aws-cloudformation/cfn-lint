@@ -18,6 +18,9 @@ import hashlib
 from copy import copy
 import json
 import six
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 
 class equals_value(object):
@@ -157,9 +160,12 @@ class Conditions(object):
     def __init__(self, cfn):
         self.Conditions = {}
         self.Equals = {}
-        self.Equals = self._get_condition_equals(cfn.search_deep_keys('Fn::Equals'))
-        for condition_name in cfn.template.get('Conditions', {}):
-            self.Conditions[condition_name] = Condition(cfn.template, condition_name)
+        try:
+            self.Equals = self._get_condition_equals(cfn.search_deep_keys('Fn::Equals'))
+            for condition_name in cfn.template.get('Conditions', {}):
+                self.Conditions[condition_name] = Condition(cfn.template, condition_name)
+        except Exception as err:  # pylint: disable=W0703
+            LOGGER.debug('While processing conditions got error: %s', err)
 
     def _get_condition_equals(self, equals):
         """
@@ -241,6 +247,13 @@ class Conditions(object):
         matched_equals = {}
         matched_conditions = []
 
+        results = []
+
+        # When conditions don't properly get loaded (configuration error)
+        # lets just return an empty list
+        if not self.Conditions:
+            return results
+
         for condition in conditions:
             for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
                 if not matched_equals.get(equal_key):
@@ -275,7 +288,6 @@ class Conditions(object):
 
             return results
 
-        results = []
         if not matched_conditions:
             for condition in conditions:
                 results = self.multiply_conditions(results, condition, [True, False])

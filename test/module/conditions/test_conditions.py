@@ -24,7 +24,7 @@ class TestConditions(BaseTestCase):
     """Test Conditions Logic """
     def setUp(self):
         """ setup the cfn object """
-        filename = 'fixtures/templates/good/core/conditions.yaml'
+        filename = 'test/fixtures/templates/good/core/conditions.yaml'
         template = self.load_template(filename)
         self.runner = Runner([], filename, template, ['us-east-1'], [])
         self.conditions = self.runner.cfn.conditions
@@ -196,3 +196,23 @@ class TestConditions(BaseTestCase):
                 {'isProduction': False, 'isPrimaryAndProdOrStage': False},
             ]
         )
+
+
+class TestBadConditions(BaseTestCase):
+    """Test Badly Formmated Conditions """
+    def test_no_failure_on_list(self):
+        """ setup the cfn object """
+        filename = 'test/fixtures/templates/bad/core/conditions_list.yaml'
+        template = self.load_template(filename)
+        runner = Runner([], filename, template, ['us-east-1'], [])
+        self.assertEqual(runner.cfn.conditions.Conditions, {})
+
+    def test_no_failure_on_missing(self):
+        """ setup the cfn object """
+        filename = 'test/fixtures/templates/bad/core/conditions_list.yaml'
+        template = self.load_template(filename)
+        runner = Runner([], filename, template, ['us-east-1'], [])
+        self.assertEqual(runner.cfn.conditions.Conditions, {})
+
+        scenarios = runner.cfn.conditions.test(['isProduction'])
+        self.assertEqual(scenarios, [])
