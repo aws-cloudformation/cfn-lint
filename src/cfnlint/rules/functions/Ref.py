@@ -15,7 +15,6 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import six
-from cfnlint.helpers import PSEUDOPARAMS
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -39,18 +38,5 @@ class Ref(CloudFormationLintRule):
             if not isinstance(value, (six.string_types)):
                 message = 'Ref can only be a string for {0}'
                 matches.append(RuleMatch(ref_obj[:-1], message.format('/'.join(map(str, ref_obj[:-1])))))
-            elif value not in PSEUDOPARAMS:
-                scenarios = cfn.is_resource_available(ref_obj, value)
-                for scenario in scenarios:
-                    if not scenario.get('Result', True):
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.get('Scenario').items()])
-                        message = 'Ref to resource "{0}" that many not be available when {1} at {2}'
-                        matches.append(
-                            RuleMatch(
-                                ref_obj[:-1],
-                                message.format(
-                                    value,
-                                    scenario_text,
-                                    '/'.join(map(str, ref_obj[:-1])))))
 
         return matches

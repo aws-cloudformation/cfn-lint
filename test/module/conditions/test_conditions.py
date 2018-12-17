@@ -14,9 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
 from cfnlint import conditions, Runner
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
 
@@ -156,7 +154,7 @@ class TestConditions(BaseTestCase):
     def test_condition_relationship(self):
         """ Test condition relationships """
         self.assertEqualUnordered(
-            self.conditions.test(['isProduction', 'isPrimaryAndProduction']),
+            self.conditions.get_scenarios(['isProduction', 'isPrimaryAndProduction']),
             [
                 {'isProduction': True, 'isPrimaryAndProduction': True},
                 {'isProduction': True, 'isPrimaryAndProduction': False},
@@ -164,7 +162,7 @@ class TestConditions(BaseTestCase):
             ]
         )
         self.assertEqualUnordered(
-            self.conditions.test(['isProduction', 'isDevelopment']),
+            self.conditions.get_scenarios(['isProduction', 'isDevelopment']),
             [
                 {'isProduction': True, 'isDevelopment': False},
                 {'isProduction': False, 'isDevelopment': True},
@@ -172,14 +170,14 @@ class TestConditions(BaseTestCase):
             ]
         )
         self.assertEqualUnordered(
-            self.conditions.test(['isProduction', 'isNotProduction']),
+            self.conditions.get_scenarios(['isProduction', 'isNotProduction']),
             [
                 {'isProduction': True, 'isNotProduction': False},
                 {'isProduction': False, 'isNotProduction': True}
             ]
         )
         self.assertEqualUnordered(
-            self.conditions.test(['isProduction', 'isProductionOrStaging']),
+            self.conditions.get_scenarios(['isProduction', 'isProductionOrStaging']),
             [
                 {'isProduction': True, 'isProductionOrStaging': True},
                 {'isProduction': False, 'isProductionOrStaging': True},
@@ -188,7 +186,7 @@ class TestConditions(BaseTestCase):
         )
 
         self.assertEqualUnordered(
-            self.conditions.test(['isProduction', 'isPrimaryAndProdOrStage']),
+            self.conditions.get_scenarios(['isProduction', 'isPrimaryAndProdOrStage']),
             [
                 {'isProduction': True, 'isPrimaryAndProdOrStage': True},
                 {'isProduction': True, 'isPrimaryAndProdOrStage': False},
@@ -214,5 +212,5 @@ class TestBadConditions(BaseTestCase):
         runner = Runner([], filename, template, ['us-east-1'], [])
         self.assertEqual(runner.cfn.conditions.Conditions, {})
 
-        scenarios = runner.cfn.conditions.test(['isProduction'])
+        scenarios = runner.cfn.conditions.get_scenarios(['isProduction'])
         self.assertEqual(scenarios, [])

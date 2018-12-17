@@ -17,13 +17,18 @@
 import hashlib
 from copy import copy
 import json
-import six
 import logging
+import six
 
 LOGGER = logging.getLogger(__name__)
 
 
-class equals_value(object):
+def get_hash(obj):
+    """ Return a hasl of an object """
+    return hashlib.sha1(json.dumps(obj, sort_keys=True).encode('utf-8')).hexdigest()
+
+
+class EqualsValue(object):
     """ holds the values of a equals """
     Function = None
     String = None
@@ -31,7 +36,8 @@ class equals_value(object):
     def __init__(self, value):
         if isinstance(value, dict):
             if len(value) == 1:
-                self.Function = hashlib.sha1(json.dumps(value, sort_keys=True).encode('utf-8')).hexdigest()
+                # Save hashes of the dict for consistency and sorting
+                self.Function = get_hash(value)
         elif isinstance(value, six.string_types):
             self.String = value
 
@@ -48,8 +54,8 @@ class Equals(object):
 
         if isinstance(equals, list):
             if len(equals) == 2:
-                self.Left = equals_value(equals[0])
-                self.Right = equals_value(equals[1])
+                self.Left = EqualsValue(equals[0])
+                self.Right = EqualsValue(equals[1])
 
     def test(self, scenarios):
         """ Do an equals based on the provided scenario """
@@ -186,11 +192,11 @@ class Conditions(object):
                         dict_hash_2 = None
                         value_2 = None
                         if isinstance(equals[0], dict):
-                            dict_hash_1 = hashlib.sha1(json.dumps(equals[0], sort_keys=True).encode('utf-8')).hexdigest()
+                            dict_hash_1 = get_hash(equals[0])
                         elif isinstance(equals[0], six.string_types):
                             value_1 = equals[0]
                         if isinstance(equals[1], dict):
-                            dict_hash_2 = hashlib.sha1(json.dumps(equals[1], sort_keys=True).encode('utf-8')).hexdigest()
+                            dict_hash_2 = get_hash(equals[1])
                         elif isinstance(equals[1], six.string_types):
                             value_2 = equals[1]
 
@@ -242,7 +248,7 @@ class Conditions(object):
 
         return results
 
-    def test(self, conditions):
+    def get_scenarios(self, conditions):
         """Get scenarios for all conditions provided"""
         matched_equals = {}
         matched_conditions = []

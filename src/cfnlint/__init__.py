@@ -880,7 +880,7 @@ class Template(object):
         results = []
         path_conditions = self.get_conditions_from_path(self.template, path)
         resource_condition = self.template.get('Resources', {}).get(resource, {}).get('Condition')
-        if resource_condition and path_conditions:
+        if resource_condition:
             # resource conditions are always true.  If the same resource condition exists in the path
             # with the same True value then nothing else matters
             test_path_conditions = copy(path_conditions)
@@ -888,7 +888,7 @@ class Template(object):
                 test_path_conditions[resource_condition] = set()
             if not test_path_conditions.get(resource_condition):
                 if True not in test_path_conditions.get(resource_condition):
-                    scenarios = self.conditions.test(test_path_conditions.keys())
+                    scenarios = self.conditions.get_scenarios(test_path_conditions.keys())
                     for scenario in scenarios:
                         # We care about when the resource condition is false but the REF would still exist
                         if not scenario.get(resource_condition):
@@ -936,15 +936,15 @@ class Template(object):
                 else:
                     con = con.union(get_conditions_from_property(v))
 
-        return self.conditions.test(list(con))
+        return self.conditions.get_scenarios(list(con))
 
     def get_conditions_from_path(self, text, path):
         """ Parent function to handle resources with conditions """
 
         results = self._get_conditions_from_path(text, path)
         if len(path) >= 2:
-            if path[0] == 'Resources':
-                condition = text.get('Resources', {}).get(path[1], {}).get('Condition')
+            if path[0] in ['Resources', 'Outputs']:
+                condition = text.get(path[0], {}).get(path[1], {}).get('Condition')
                 if condition:
                     if not results.get(condition):
                         results[condition] = set()
@@ -992,64 +992,23 @@ class Template(object):
                     results[c_r_k] = results[c_r_k].union(c_r_v)
             else:
                 if isinstance(text, (dict, list)):
-                    final_obj = text[path[0]]
-                    if isinstance(final_obj, dict):
-                        # if the final object is a single property
-                        for k, v in final_obj.items():
-                            if k == 'Fn::If':
-                                get_condition_name(v)
-                            if isinstance(v, dict):
-                                if len(v) == 1:
-                                    for s_k, s_v in v.items():
-                                        if s_k == 'Fn::If':
-                                            get_condition_name(s_v)
+                    if isinstance(path[0], six.string_types):
+                        final_obj = text[path[0]]
+                        if isinstance(final_obj, dict):
+                            # if the final object is a single property
+                            for k, v in final_obj.items():
+                                if k == 'Fn::If':
+                                    get_condition_name(v)
+                                if isinstance(v, dict):
+                                    if len(v) == 1:
+                                        for s_k, s_v in v.items():
+                                            if s_k == 'Fn::If':
+                                                get_condition_name(s_v)
 
         except KeyError as _:
             pass
 
         return results
-
-    def get_condition_scenarios_from_paths(self, paths):
-        """
-            Get related conditions.
-            Return an array where each element is a list of related conditions
-        """
-
-        # we need to get all the condition names in the path provided
-        con = set()
-        for p in paths:
-            con = con.union(self._get_conditions_from_path(self.template, p))
-
-        return self.conditions.test(list(con))
-
-    def _get_equals_scenarios(self, related_refs):
-        """
-            Get equals scenarios
-            Input: Related Refs
-            Outputs: Values for the Refs that will make conditions equals or false
-                Example: {
-                    'NumberOfAZs': ['4', '3', '4.3.x'],
-                    'CreatePrivateSubnets': ['true', 'true.x'],
-                    'AWS::Region': [
-                        'us-gov-west-1', 'cn-north-1',
-                        'us-east-1', 'us-gov-west-1.cn-north-1.us-east-1.x'
-                    ],
-                    'CreateAdditionalPrivateSubnets': ['true', 'true.x']
-                }
-        """
-        results = {}
-        for related_ref, related_values in related_refs.items():
-            for related_value in related_values:
-                if not results.get(related_value[0][1]):
-                    results[related_ref] = list()
-                if isinstance(related_value[1], (str, six.string_types)):
-                    results[related_ref].append(related_value[1])
-                if isinstance(related_value[0], (str, six.string_types)):
-                    results[related_ref].append(related_value[0])
-                # create one that can't be true
-            results[related_ref].append('%s.x' % ('.'.join(results[related_ref])))
-
-        return(results)
 
 
 class Runner(object):
