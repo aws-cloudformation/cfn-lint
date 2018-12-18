@@ -54,7 +54,19 @@ Resources:
                 "Resource": "{$createPublishedRequest}",
                 "ResultPath":"$.publishedRequest",
                 "OutputPath":"$.publishedRequest",
-                "Next": "PutRequest"
+                "Next": "Read Next Message from DynamoDB"
+              },
+              "Read Next Message from DynamoDB": {
+                "Type": "Task",
+                "Resource": "arn:aws:states:::dynamodb:getItem",
+                "Parameters": {
+                  "TableName": "sqsconnector-DDBTable-1CAFOJWP8QD6I",
+                  "Key": {
+                    "MessageId": {"S.$": "$.List[0]"}
+                  }
+                },
+                "ResultPath": "$.DynamoDB",
+                "Next": "CreatePublishedRequest"
               },
               "Sleep": {
                 "Type": "Wait",
