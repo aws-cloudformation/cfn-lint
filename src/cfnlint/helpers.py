@@ -34,7 +34,8 @@ CONDITION_FUNCTIONS = ['Fn::If']
 REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
            'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
            'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
-           'sa-east-1', 'eu-west-3', 'ap-northeast-3']
+           'sa-east-1', 'eu-west-3', 'ap-northeast-3', 'us-gov-west-1',
+           'us-gov-east-1', 'eu-north-1']
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
@@ -66,6 +67,9 @@ AVAILABILITY_ZONES = [
     'cn-north-1a', 'cn-north-1b',
     'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
     'ap-northeast-3a',
+    'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
+    'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
+    'eu-north-1a', 'eu-north-1b', 'eu-north-1c'
 ]
 
 FUNCTIONS = [
