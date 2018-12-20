@@ -1,0 +1,332 @@
+[
+  {
+    "op": "add",
+    "path": "/ValueTypes",
+    "value": {
+      "AllocationId": {
+        "GetAtt": {
+          "AWS::EC2::EIP": "AllocationId"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "AvailabilityZone": {
+        "GetAtt": {
+          "AWS::EC2::Instance": "AvailabilityZone",
+          "AWS::EC2::Subnet": "AvailabilityZone",
+          "AWS::OpsWorks::Instance": "AvailabilityZone"
+        },
+        "Ref": {
+          "Parameters": [
+            "String",
+            "AvailabilityZone"
+          ]
+        }
+      },
+      "AvailabilityZones": {
+        "Ref": {
+          "Parameters": [
+            "Strings",
+            "AvailabilityZones"
+          ]
+        }
+      },
+      "EbsVolumeType": {
+        "AllowedValues": [
+          "gp2",
+          "io1",
+          "sc1",
+          "st1",
+          "standard"
+        ]
+      },
+      "IamInstanceProfile": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::IAM::InstanceProfile"
+          ]
+        }
+      },
+      "IamInstanceProfile.Arn": {
+        "GetAtt": {
+          "AWS::IAM::InstanceProfile": "Arn"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "IamRole": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::IAM::Role"
+          ]
+        }
+      },
+      "IamRole.Arn": {
+        "GetAtt": {
+          "AWS::IAM::Role": "Arn"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "IamUser.Arn": {
+        "GetAtt": {
+          "AWS::IAM::User": "Arn"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "ImageId": {
+        "Ref": {
+          "Parameters": [
+            "String",
+            "ImageId"
+          ]
+        }
+      },
+      "KeyPair": {
+        "Ref": {
+          "Parameters": [
+            "String",
+            "KeyPair"
+          ]
+        }
+      },
+      "KmsKey": {
+        "GetAtt": {
+          "AWS::KMS::Key": "Arn"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        },
+        "Resources": [
+          "AWS::KMS::Key"
+        ]
+      },
+      "LambdaRuntime": {
+        "AllowedValues": [
+          "dotnetcore1.0",
+          "dotnetcore2.0",
+          "dotnetcore2.1",
+          "go1.x",
+          "java8",
+          "nodejs",
+          "nodejs4.3-edge",
+          "nodejs4.3",
+          "nodejs6.10",
+          "nodejs8.10",
+          "provided",
+          "python2.7",
+          "python3.6",
+          "python3.7",
+          "ruby2.5"
+        ]
+      },
+      "LaunchConfigurationName": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::AutoScaling::LaunchConfiguration"
+          ]
+        }
+      },
+      "LoadBalancerName": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::ElasticLoadBalancing::LoadBalancer"
+          ]
+        }
+      },
+      "LoadBalancerNames": {
+        "Ref": {
+          "Parameters": [
+            "Strings"
+          ]
+        }
+      },
+      "LoadBalancerV2Arn": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::ElasticLoadBalancingV2::LoadBalancer"
+          ]
+        }
+      },
+      "PlacementGroup": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::EC2::PlacementGroup"
+          ]
+        }
+      },
+      "PrivateIpAddress": {
+        "GetAtt": {
+          "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "RecordSetType": {
+        "AllowedValues": [
+          "A",
+          "AAAA",
+          "CAA",
+          "CNAME",
+          "MX",
+          "NAPTR",
+          "NS",
+          "PTR",
+          "SOA",
+          "SPF",
+          "SRV",
+          "TXT"
+        ]
+      },
+      "SecurityGroup": {
+        "Ref": {
+          "Parameters": [
+            "String",
+            "SecurityGroupId"
+          ],
+          "Resources": [
+            "AWS::EC2::SecurityGroup"
+          ]
+        }
+      },
+      "SecurityGroupId": {
+        "GetAtt": {
+          "AWS::EC2::SecurityGroup": "GroupId"
+        },
+        "Ref": {
+          "Parameters": [
+            "String",
+            "SecurityGroupId"
+          ],
+          "Resources": [
+            "AWS::EC2::SecurityGroup"
+          ]
+        }
+      },
+      "SecurityGroupIds": {
+        "Ref": {
+          "Parameters": [
+            "Strings",
+            "SecurityGroupIds"
+          ]
+        },
+        "GetAtt": {
+          "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+        }
+      },
+      "SecurityGroups": {
+        "Ref": {
+          "Parameters": [
+            "Strings",
+            "SecurityGroupIds"
+          ]
+        }
+      },
+      "SsmDocumentName": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::SSM::Document"
+          ]
+        }
+      },
+      "String": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "SubnetId": {
+        "Ref": {
+          "Parameters": [
+            "String",
+            "SubnetId"
+          ],
+          "Resources": [
+            "AWS::EC2::Subnet"
+          ]
+        }
+      },
+      "SubnetIds": {
+        "Ref": {
+          "Parameters": [
+            "Strings",
+            "SubnetIds"
+          ]
+        }
+      },
+      "TargetGroupArn": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::ElasticLoadBalancingV2::TargetGroup"
+          ]
+        }
+      },
+      "TargetGroupArns": {
+        "Ref": {
+          "Parameters": [
+            "Strings"
+          ]
+        }
+      },
+      "VpcId": {
+        "GetAtt": {
+          "AWS::EC2::NetworkAcl": "VpcId",
+          "AWS::EC2::SecurityGroup": "VpcId",
+          "AWS::EC2::Subnet": "VpcId"
+        },
+        "Ref": {
+          "Parameters": [
+            "String",
+            "VpcId"
+          ],
+          "Resources": [
+            "AWS::EC2::VPC"
+          ]
+        }
+      }
+    }
+  }
+]
