@@ -42,16 +42,15 @@ class RelationshipConditions(CloudFormationLintRule):
             if value not in PSEUDOPARAMS:
                 scenarios = cfn.is_resource_available(ref_obj, value)
                 for scenario in scenarios:
-                    if not scenario.get('Result', True):
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.get('Scenario').items()])
-                        message = 'Ref to resource "{0}" that many not be available when {1} at {2}'
-                        matches.append(
-                            RuleMatch(
-                                ref_obj[:-1],
-                                message.format(
-                                    value,
-                                    scenario_text,
-                                    '/'.join(map(str, ref_obj[:-1])))))
+                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = 'Ref to resource "{0}" that many not be available when {1} at {2}'
+                    matches.append(
+                        RuleMatch(
+                            ref_obj[:-1],
+                            message.format(
+                                value,
+                                scenario_text,
+                                '/'.join(map(str, ref_obj[:-1])))))
 
         # The do GetAtt
         getatt_objs = cfn.search_deep_keys('Fn::GetAtt')
@@ -66,15 +65,14 @@ class RelationshipConditions(CloudFormationLintRule):
                 if value not in PSEUDOPARAMS:
                     scenarios = cfn.is_resource_available(getatt_obj, value)
                     for scenario in scenarios:
-                        if not scenario.get('Result', True):
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.get('Scenario').items()])
-                            message = 'GetAtt to resource "{0}" that many not be available when {1} at {2}'
-                            matches.append(
-                                RuleMatch(
-                                    getatt_obj[:-1],
-                                    message.format(
-                                        value,
-                                        scenario_text,
-                                        '/'.join(map(str, getatt_obj[:-1])))))
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        message = 'GetAtt to resource "{0}" that many not be available when {1} at {2}'
+                        matches.append(
+                            RuleMatch(
+                                getatt_obj[:-1],
+                                message.format(
+                                    value,
+                                    scenario_text,
+                                    '/'.join(map(str, getatt_obj[:-1])))))
 
         return matches

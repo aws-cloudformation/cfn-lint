@@ -878,7 +878,10 @@ class Template(object):
         return matches
 
     def is_resource_available(self, path, resource):
-        """ Compares a path to resource to see if its available """
+        """
+            Compares a path to resource to see if its available
+            Returns scenarios that may result in the resource doesn't exist
+        """
         results = []
         path_conditions = self.get_conditions_from_path(self.template, path)
         resource_condition = self.template.get('Resources', {}).get(resource, {}).get('Condition')
@@ -900,9 +903,8 @@ class Template(object):
                                     scenario_count += 1
 
                             if scenario_count == len(path_conditions):
-                                results.append({'Scenario': scenario, 'Result': False})
-                            else:
-                                results.append({'Scenario': scenario, 'Result': True})
+                                results.append(scenario)
+
         # if resource condition isn't available then the resource is available
         return results
 
@@ -932,9 +934,9 @@ class Template(object):
                     con.add(v[0])
                     for r_c in v[1:]:
                         if isinstance(r_c, dict):
-                            for _, s_v in r_c.items():
-                                con = con.union(get_conditions_from_property(s_v))
-                                con = con.union(get_conditions_from_property(s_v))
+                            for s_k, s_v in r_c.items():
+                                if s_k == 'Fn::If':
+                                    con = con.union(get_conditions_from_property({s_k: s_v}))
                 else:
                     con = con.union(get_conditions_from_property(v))
 
@@ -979,6 +981,7 @@ class Template(object):
                         results[value[0]] = results[value[0]].union(con_path)
 
         try:
+            # Found a condition at the root of the Path
             if path[0] == 'Fn::If':
                 condition = text.get('Fn::If')
                 if len(path) > 1:
@@ -986,26 +989,13 @@ class Template(object):
                         get_condition_name(condition, path[1])
                 else:
                     get_condition_name(condition)
+            # Iterate if the Path has more than one value
             if len(path) > 1:
                 child_results = self._get_conditions_from_path(text[path[0]], path[1:])
                 for c_r_k, c_r_v in child_results.items():
                     if not results.get(c_r_k):
                         results[c_r_k] = set()
                     results[c_r_k] = results[c_r_k].union(c_r_v)
-            else:
-                if isinstance(text, (dict, list)):
-                    if isinstance(path[0], six.string_types):
-                        final_obj = text[path[0]]
-                        if isinstance(final_obj, dict):
-                            # if the final object is a single property
-                            for k, v in final_obj.items():
-                                if k == 'Fn::If':
-                                    get_condition_name(v)
-                                if isinstance(v, dict):
-                                    if len(v) == 1:
-                                        for s_k, s_v in v.items():
-                                            if s_k == 'Fn::If':
-                                                get_condition_name(s_v)
 
         except KeyError as _:
             pass

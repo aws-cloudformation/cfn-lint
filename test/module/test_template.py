@@ -145,3 +145,121 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(results, [
             {'Path': [1], 'Value': {'Ref': 'Sample'}}, {'Path': [2], 'Value': 'String'}
         ])
+
+    def test_is_resource_available(self):
+        """ Test is resource available """
+        filename = 'test/fixtures/templates/good/core/conditions.yaml'
+        template = self.load_template(filename)
+        template = Template(filename, template)
+        self.assertEqual(
+            template.is_resource_available(
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            []
+        )
+        self.assertEqual(
+            template.is_resource_available(
+                ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            []
+        )
+
+    def test_is_resource_not_available(self):
+        """ Test is resource available """
+        filename = 'test/fixtures/templates/bad/functions/relationship_conditions.yaml'
+        template = self.load_template(filename)
+        template = Template(filename, template)
+        self.assertEqual(
+            template.is_resource_available(
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            [{'isPrimary': False}]
+        )
+        self.assertEqual(
+            template.is_resource_available(
+                ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            [{'isPrimary': False}]
+        )
+
+    def test_get_conditions_from_path(self):
+        """ Test is resource available """
+        filename = 'test/fixtures/templates/good/core/conditions.yaml'
+        template = self.load_template(filename)
+        template = Template(filename, template)
+        # Gets the condition when in the middle of the Path
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+            ),
+            {'isPrimary': {True}}
+        )
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+            ),
+            {'isPrimary': {True}}
+        )
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'InstanceProfile', 'Properties', 'Roles', 0, 'Ref', 'LambdaExecutionRole']
+            ),
+            {'isPrimaryAndProduction': {True}}
+        )
+
+    def test_failure_get_conditions_from_path(self):
+        """ Test get conditions from path when things arne't formatted correctly """
+        filename = 'test/fixtures/templates/bad/core/conditions.yaml'
+        template = self.load_template(filename)
+        template = Template(filename, template)
+        # Gets no condition names when it isn't a valid list
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+            ),
+            {}
+        )
+        # Gets no condition names when it isn't really a list
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'myInstance4', 'Properties', 'InstanceType', 'Fn::If', 'Fn::If', 0]
+            ),
+            {}
+        )
+
+    def test_get_conditions_scenarios_from_object(self):
+        """ Test Getting condition names in an object/list """
+        filename = 'test/fixtures/templates/good/core/conditions.yaml'
+        template = self.load_template(filename)
+        template = Template(filename, template)
+        # includes nested IFs
+        self.assertEqualListOfDicts(
+            template.get_conditions_scenarios_from_object(
+                template.template.get('Resources', {}).get('myInstance4', {}).get('Properties', {})
+            ),
+            [
+                {'isPrimary': True, 'isProduction': True, 'isPrimaryAndProduction': True},
+                {'isPrimary': True, 'isProduction': False, 'isPrimaryAndProduction': False},
+                {'isPrimary': False, 'isProduction': True, 'isPrimaryAndProduction': False},
+                {'isPrimary': False, 'isProduction': False, 'isPrimaryAndProduction': False}
+            ]
+        )
+        self.assertEqualListOfDicts(
+            template.get_conditions_scenarios_from_object(
+                template.template.get('Resources', {}).get('myInstance3', {}).get('Properties', {})
+            ),
+            [
+                {'isPrimaryAndProduction': True, 'isDevelopment': False},
+                {'isPrimaryAndProduction': False, 'isDevelopment': True},
+                {'isPrimaryAndProduction': False, 'isDevelopment': False},
+            ]
+        )
