@@ -42,7 +42,7 @@ class EqualsValue(object):
             self.String = value
 
     def __eq__(self, other):
-        return self.Function == other or self.String == other
+        return other in [self.Function, self.String]
 
 
 class Equals(object):
@@ -272,7 +272,7 @@ class Conditions(object):
         def multiply_equals(currents, s_hash, sets):
             """  Multiply Equals when building scenarios """
             results = []
-            false_case = ""
+            false_case = ''
             if not currents:
                 for s_set in sets:
                     new = {}

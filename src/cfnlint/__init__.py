@@ -30,6 +30,8 @@ from cfnlint.decode.node import TemplateAttributeError
 
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=too-many-lines
+
 
 class CloudFormationLintRule(object):
     """CloudFormation linter rules"""
