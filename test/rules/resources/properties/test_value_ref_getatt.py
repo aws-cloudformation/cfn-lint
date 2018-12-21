@@ -14,18 +14,18 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.iam.InstanceProfile import InstanceProfile  # pylint: disable=E0401
+from cfnlint.rules.resources.properties.ValueRefGetAtt import ValueRefGetAtt  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestPropertyVpcId(BaseRuleTestCase):
+class TestValueRefGetAtt(BaseRuleTestCase):
     """Test Password Property Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestPropertyVpcId, self).setUp()
-        self.collection.register(InstanceProfile())
+        super(TestValueRefGetAtt, self).setUp()
+        self.collection.register(ValueRefGetAtt())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/iam/instance_profile.yaml'
+            'test/fixtures/templates/good/resources/properties/value.yaml',
         ]
 
     def test_file_positive(self):
@@ -35,3 +35,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 2)
+
+    def test_file_negative_value(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/value.yaml', 5)
