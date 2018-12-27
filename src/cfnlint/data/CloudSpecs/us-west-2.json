@@ -27807,7 +27807,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "KmsKey"
+            "ValueType": "KmsKey.IdOrArn"
           }
         }
       }
@@ -33033,7 +33033,7 @@
         ]
       }
     },
-    "KmsKey": {
+    "KmsKey.Arn": {
       "GetAtt": {
         "AWS::KMS::Key": "Arn"
       },
@@ -33041,10 +33041,30 @@
         "Parameters": [
           "String"
         ]
+      }
+    },
+    "KmsKey.Id": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::KMS::Key"
+        ]
+      }
+    },
+    "KmsKey.IdOrArn": {
+      "GetAtt": {
+        "AWS::KMS::Key": "Arn"
       },
-      "Resources": [
-        "AWS::KMS::Key"
-      ]
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::KMS::Key"
+        ]
+      }
     },
     "LambdaRuntime": {
       "AllowedValues": [
@@ -33240,7 +33260,6 @@
     },
     "VpcId": {
       "GetAtt": {
-        "AWS::EC2::NetworkAcl": "VpcId",
         "AWS::EC2::SecurityGroup": "VpcId",
         "AWS::EC2::Subnet": "VpcId"
       },
