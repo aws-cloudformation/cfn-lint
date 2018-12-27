@@ -16,7 +16,7 @@
       "AWS::EC2::KeyPair::KeyName",
       "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>"
     ],
-    "SecurityGroup": [
+    "SecurityGroupId": [
       "AWS::EC2::SecurityGroup::Id",
       "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>"
     ],
@@ -17980,7 +17980,8 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SecurityGroups"
+            "ListValueType": "SecurityGroups",
+            "ValueType": "SecurityGroup"
           }
         },
         "SourceDestCheck": {
@@ -26765,6 +26766,9 @@
         "Parameters": [
           "Strings",
           "SecurityGroupIds"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
         ]
       }
     },
