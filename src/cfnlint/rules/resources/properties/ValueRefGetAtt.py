@@ -94,8 +94,6 @@ class ValueRefGetAtt(CloudFormationLintRule):
         if value in cfn.template.get('Resources', {}):
             resource = cfn.template.get('Resources').get(value, {})
             resource_type = resource.get('Type')
-            print(property_name, property_type)
-            print(specs, specs.get('Resources'))
             if not specs.get('Resources'):
                 message = 'Property "{0}" has no valid Refs to Resources at {1}'
                 matches.append(RuleMatch(path, message.format(property_name, '/'.join(map(str, path)))))
