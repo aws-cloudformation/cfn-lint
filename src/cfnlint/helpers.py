@@ -182,7 +182,7 @@ def set_specs(override_spec_data):
 
 def is_custom_resource(resource_type):
     """ Return True if resource_type is a custom resource """
-    return resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')
+    return resource_type and (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::'))
 
 
 def initialize_specs():
