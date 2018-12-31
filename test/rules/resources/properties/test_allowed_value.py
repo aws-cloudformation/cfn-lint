@@ -14,21 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.parameters.LambdaRuntime import LambdaRuntime  # pylint: disable=E0401
-from .. import BaseRuleTestCase
+from cfnlint.rules.resources.properties.AllowedValue import AllowedValue  # pylint: disable=E0401
+from ... import BaseRuleTestCase
 
 
-class TestParameterLambdaRuntime(BaseRuleTestCase):
-    """Test template parameter configurations"""
+class TestAllowedValue(BaseRuleTestCase):
+    """Test Allowed Value Property Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestParameterLambdaRuntime, self).setUp()
-        self.collection.register(LambdaRuntime())
+        super(TestAllowedValue, self).setUp()
+        self.collection.register(AllowedValue())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources_lambda.yaml'
+        ]
 
-    def atest_file_positive(self):
+    def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_lambda.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_lambda.yaml', 2)
