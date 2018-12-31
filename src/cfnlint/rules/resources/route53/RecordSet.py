@@ -28,22 +28,6 @@ class RecordSet(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html'
     tags = ['resources', 'route53', 'record_set']
 
-    # https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html
-    VALID_RECORD_TYPES = [
-        'A',
-        'AAAA',
-        'CAA',
-        'CNAME',
-        'MX',
-        'NAPTR',
-        'NS',
-        'PTR',
-        'SOA'
-        'SPF',
-        'SRV',
-        'TXT'
-    ]
-
     REGEX_CNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
     REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
 
@@ -171,10 +155,7 @@ class RecordSet(CloudFormationLintRule):
 
         # Skip Intrinsic functions
         if not isinstance(recordset_type, dict):
-            if recordset_type not in self.VALID_RECORD_TYPES:
-                message = 'Invalid record type "{0}" specified'
-                matches.append(RuleMatch(path + ['Type'], message.format(recordset_type)))
-            elif not recordset.get('AliasTarget'):
+            if not recordset.get('AliasTarget'):
                 # Record type specific checks
                 if recordset_type == 'A':
                     matches.extend(self.check_a_record(path, recordset))

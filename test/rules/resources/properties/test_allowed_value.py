@@ -32,6 +32,10 @@ class TestAllowedValue(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative(self):
+    def test_file_negative_runtime(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/resources_lambda.yaml', 3)
+
+    def test_file_negative_recordset(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/route53.yaml', 1)
