@@ -156,8 +156,12 @@ class RecordSet(CloudFormationLintRule):
         # Skip Intrinsic functions
         if not isinstance(recordset_type, dict):
             if not recordset.get('AliasTarget'):
+                # If no Alias is specified, ResourceRecords has to be specified
+                if not recordset.get('ResourceRecords'):
+                    message = 'Property ResourceRecords missing at {}'
+                    matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
                 # Record type specific checks
-                if recordset_type == 'A':
+                elif recordset_type == 'A':
                     matches.extend(self.check_a_record(path, recordset))
                 elif recordset_type == 'AAAA':
                     matches.extend(self.check_aaaa_record(path, recordset))
