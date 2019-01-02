@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Template with all the resources that are covered by the AllowedValues.
+  Minimal configuration for each resource to be "valid". Properties that are part
+  of the AllowedValues check are marked for transparancy
+Resources:
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: t1.micro
+      KeyName: ""
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: "gp2" # Valid AllowedValue
+  GlueConnection:
+    Type: "AWS::Glue::Connection"
+    Properties:
+      CatalogId: !Ref "AWS::AccountId"
+      ConnectionInput:
+        ConnectionProperties: "{}"
+        ConnectionType: "SFTP" # Valid AllowedValue
+  RecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Name: "www.example.com"
+      Type: "A" # Valid AllowedValue
+      ResourceRecords:
+        - '127.0.0.1'
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/8"
+      InstanceTenancy: "default" # Valid AllowedValue
