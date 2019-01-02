@@ -16,3 +16,7 @@ Although there are situations in which a warning would be sufficient (Python/YAM
 
 ### Properties
 The Properties rule ([`E3002`](/docs/rules.md#E3002)) checks if the basic property configuration of resources is correct. It checks the properties from the [Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification-format.html#cfn-resource-specification-format-resourcetype) and [property specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification-format.html#cfn-resource-specification-format-propertytypes) to check if the specified properties are valid and performs basic checks on the Type (e.g. sub-properties and Lists).
+
+### AllowedValue
+There are properties that need to specified with a specific enumerator, like the [Lambda Runtime](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-Runtime). This information is not part of the default Specification.
+The linter extends the specification with these allowed values. The AllowedValue rule ([E3030](/docs/rules.md#E3030)) checks if specified values contain allowed values. 

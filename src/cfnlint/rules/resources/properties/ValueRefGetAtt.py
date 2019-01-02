@@ -67,8 +67,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
             specs = value_specs
 
         if not specs:
-            message = 'Property "{0}" has no valid Refs at {1}'
-            matches.append(RuleMatch(path, message.format(property_name, '/'.join(map(str, path)))))
+            # If no Ref's are specified, just skip
             return matches
 
         if value in cfn.template.get('Parameters', {}):
