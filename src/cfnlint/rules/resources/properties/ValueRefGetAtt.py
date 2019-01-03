@@ -68,6 +68,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
         if not specs:
             # If no Ref's are specified, just skip
+            # Opposite of GetAtt you will always have a Ref to a Parameter so if this is
+            # None it just hasn't been defined and we can skip
             return matches
 
         if value in cfn.template.get('Parameters', {}):
@@ -112,8 +114,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         """Check GetAtt"""
         matches = []
         cfn = kwargs.get('cfn')
-        value_specs = kwargs.get('value_specs', {}).get('GetAtt', {})
-        list_value_specs = kwargs.get('list_value_specs', {}).get('GetAtt', {})
+        value_specs = kwargs.get('value_specs', {}).get('GetAtt')
+        list_value_specs = kwargs.get('list_value_specs', {}).get('GetAtt')
         property_type = kwargs.get('property_type')
         property_name = kwargs.get('property_name')
         # You can sometimes get a list or a string with . in it
@@ -146,7 +148,11 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
             return matches
 
+        if specs is None:
+            # GetAtt specs aren't specified skip
+            return matches
         if not specs:
+            # GetAtt is specified but empty so there are no valid options
             message = 'Property "{0}" has no valid Fn::GetAtt options at {1}'
             matches.append(RuleMatch(path, message.format(property_name, '/'.join(map(str, path)))))
             return matches

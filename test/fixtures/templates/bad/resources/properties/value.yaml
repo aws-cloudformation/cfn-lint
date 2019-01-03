@@ -29,7 +29,13 @@ Resources:
       CidrBlock: 10.0.1.0/24
   Instance:
     Type: AWS::EC2::Instance
-    Properties: {}
+    Properties:
+      ImageId: ami-123456
+      KeyName: !GetAtt LoadBalancer.DNSName
+      BlockDeviceMappings:
+      - DeviceName: /dev/sda
+        Ebs:
+          VolumeType: !Ref LoadBalancer
   LoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
