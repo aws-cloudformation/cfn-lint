@@ -5,6 +5,12 @@ Description: >
   Minimal configuration for each resource to be "valid". Properties that are part
   of the AllowedValues check are marked for transparancy
 Resources:
+  DmsEndpoint:
+    Type: "AWS::DMS::Endpoint"
+    Properties:
+      EndpointType: "source" # Valid AllowedValue
+      EngineName: "mysql" # Valid AllowedValue
+      SslMode: "verify-full" # Valid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -30,8 +36,22 @@ Resources:
       Type: "A" # Valid AllowedValue
       ResourceRecords:
         - '127.0.0.1'
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      VersioningConfiguration:
+        Status: "Enabled" # Valid AllowedValue
   Vpc:
-    Type: AWS::EC2::VPC
+    Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "default" # Valid AllowedValue
+  WAFRule:
+    Type: "AWS::WAFRegional::Rule"
+    Properties:
+      Name: "WAF Rule"
+      MetricName: "MetricName"
+      Predicates:
+        - DataId: "DataId"
+          Negated: false
+          Type: "ByteMatch" # Valid AllowedValue

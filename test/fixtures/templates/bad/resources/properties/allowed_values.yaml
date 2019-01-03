@@ -5,6 +5,12 @@ Description: >
   Minimal configuration for each resource to be "valid", apart from the properties
   that are part of the AllowedValues check.
 Resources:
+  DmsEndpoint:
+    Type: "AWS::DMS::Endpoint"
+    Properties:
+      EndpointType: "random" # Invalid AllowedValue
+      EngineName: "database" # Invalid AllowedValue
+      SslMode: "ssl" # Valid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
@@ -30,8 +36,22 @@ Resources:
           DeviceName: /dev/sdm
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      VersioningConfiguration:
+        Status: "disabled" # Invalid AllowedValue
   Vpc:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "Default" # Invalid AllowedValue
+  WAFRule:
+    Type: "AWS::WAFRegional::Rule"
+    Properties:
+      Name: "WAF Rule"
+      MetricName: "MetricName"
+      Predicates:
+        - DataId: "DataId"
+          Negated: false
+          Type: "Bytematch" # Invalid AllowedValue
