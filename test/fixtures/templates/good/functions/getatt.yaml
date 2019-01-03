@@ -1,9 +1,50 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  ProjectS3Root:
+    Type: String
+  SSMMasterDBUsernameKeyFullName:
+    Type: String
+  SSMMasterDBPasswordKeyFullName:
+    Type: String
+  SSMLambdaARN:
+    Type: String
+  SSMModifiedAt:
+    Type: String
+  SSMLookup:
+    Type: String
+    Default: true
+  PGMasterUser:
+    Type: String
+    Default: NONE
+  PGMasterPassword:
+    Type: String
+    Default: NONE
+Conditions:
+  UseSSM: !Equals [ !Ref SSMLookup, true ]
 Resources:
   myElasticSearch:
     Type: AWS::Elasticsearch::Domain
     Properties: {}
+  RDSCredentials:
+    Condition: UseSSM
+    Type: AWS::CloudFormation::CustomResource
+    Version: 1.0
+    Properties:
+      ServiceToken: !Ref SSMLambdaARN
+      SSMKeyList: !Sub ${SSMMasterDBUsernameKeyFullName},${SSMMasterDBPasswordKeyFullName}
+      SSMModifiedAt: !Ref SSMModifiedAt
+
+  ############################## Setup Backends ##############################
+  Postgres:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Join [ "/", [ !Ref ProjectS3Root, "templates/backends/rds.yaml" ] ]
+      Parameters:
+        EnvironmentName: !Ref AWS::StackName
+        # Shouldn't raise an error when using a Ref for the attribute
+        RdsMasterUsername: !If [ UseSSM, "Fn::GetAtt": [ RDSCredentials, !Ref SSMMasterDBUsernameKeyFullName ], !Ref PGMasterUser ]
+        RdsMasterPassword: !If [ UseSSM, "Fn::GetAtt": [ RDSCredentials, !Ref SSMMasterDBPasswordKeyFullName ], !Ref PGMasterPassword ]
 Outputs:
   ElasticSearchHostname:
     Value:
