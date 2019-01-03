@@ -28,7 +28,7 @@ class RecordSet(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html'
     tags = ['resources', 'route53', 'record_set']
 
-    REGEX_CNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
+    REGEX_DOMAINNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
     REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
 
     def check_a_record(self, path, recordset):
@@ -116,12 +116,45 @@ class RecordSet(CloudFormationLintRule):
             for index, record in enumerate(resource_records):
                 if not isinstance(record, dict):
                     tree = path[:] + ['ResourceRecords', index]
-                    if (not re.match(self.REGEX_CNAME, record)
+                    if (not re.match(self.REGEX_DOMAINNAME, record)
                             # ACM Route 53 validation uses invalid CNAMEs starting with `_`,
                             # special-case them rather than complicate the regex.
                             and not record.endswith('.acm-validations.aws.')):
                         message = 'CNAME record ({}) does not contain a valid domain name'
                         matches.append(RuleMatch(tree, message.format(record)))
+
+        return matches
+
+    def check_mx_record(self, path, recordset):
+        """Check MX record Configuration"""
+        matches = []
+
+        resource_records = recordset.get('ResourceRecords')
+
+        for index, record in enumerate(resource_records):
+            tree = path[:] + ['ResourceRecords', index]
+
+            if not isinstance(record, dict):
+                # Split the record up to the mandatory settings (priority domainname)
+                items = record.split(' ')
+
+                # Check if the 3 settings are given.
+                if len(items) != 2:
+                    message = 'MX record must contain 2 settings (priority domainname), record contains {} settings.'
+                    matches.append(RuleMatch(tree, message.format(len(items), record)))
+                else:
+                    # Check the priority value
+                    if not items[0].isdigit():
+                        message = 'MX record priority setting ({}) should be of type Integer.'
+                        matches.append(RuleMatch(tree, message.format(items[0], record)))
+                    else:
+                        if not 0 <= int(items[0]) <= 65535:
+                            message = 'Invalid MX record priority setting ({}) given, must be between 0 and 65535.'
+                            matches.append(RuleMatch(tree, message.format(items[0], record)))
+
+                    # Check the domainname value
+                    if not re.match(self.REGEX_DOMAINNAME, items[1]):
+                        matches.append(RuleMatch(tree, message.format(items[1])))
 
         return matches
 
@@ -169,6 +202,8 @@ class RecordSet(CloudFormationLintRule):
                     matches.extend(self.check_caa_record(path, recordset))
                 elif recordset_type == 'CNAME':
                     matches.extend(self.check_cname_record(path, recordset))
+                elif recordset_type == 'MX':
+                    matches.extend(self.check_mx_record(path, recordset))
                 elif recordset_type == 'TXT':
                     matches.extend(self.check_txt_record(path, recordset))
 
