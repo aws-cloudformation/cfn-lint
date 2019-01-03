@@ -436,7 +436,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         # some shells don't expand * and configparser won't expand wildcards
         all_filenames = []
         for filename in filenames:
-            add_filenames = glob.glob(filename)
+            if sys.version_info >= (3, 5):
+                # pylint: disable=E1123
+                add_filenames = glob.glob(filename, recursive=True)
+            else:
+                add_filenames = glob.glob(filename)
             # only way to know of the glob failed is to test it
             # then add the filename as requested
             if not add_filenames:
