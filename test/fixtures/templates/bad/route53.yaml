@@ -71,6 +71,16 @@ Resources:
       ResourceRecords: # Multiple records
         - "cname1.example.com"
         - "cname2.example.com"
+  MyMXRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "example.com."
+      Type: "MX"
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1"
+        - "10 my domain"
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -117,6 +127,12 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "No valid domain name" # No valid domain name
+        - Name: "example.com."
+          Type: "MX"
+          TTL: "300"
+          ResourceRecords:
+            - "mx1.example.com"
+            - "65536 mx2.example.com"
   MySecondRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:

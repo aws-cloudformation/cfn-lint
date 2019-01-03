@@ -91,6 +91,16 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - !Sub "www.${DomainName}"
+  MyMXRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "example.com."
+      Type: "MX"
+      TTL: "300"
+      ResourceRecords:
+        - "10 mx1.example.com"
+        - "10 mx1.example.com"
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
@@ -124,3 +134,9 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "\"MS=ms123123123\""
+        - Name: "example.com."
+          Type: "MX"
+          TTL: "300"
+          ResourceRecords:
+            - "0 mx.example.com"
+            - "65535 mx2.example.com"
