@@ -5,6 +5,22 @@ Description: >
   Minimal configuration for each resource to be "valid". Properties that are part
   of the AllowedValues check are marked for transparancy
 Resources:
+  AmazonMQBroker:
+    Type: "AWS::AmazonMQ::Broker"
+    Properties:
+      AutoMinorVersionUpgrade: false
+      BrokerName: "myBroker"
+      DeploymentMode: "SINGLE_INSTANCE" # Valid AllowedValue
+      EngineType: "ACTIVEMQ" # Valid AllowedValue
+      EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
+      PubliclyAccessible: false
+      HostInstanceType: "mq.t2.micro" # Valid AllowedValue
+      Users:
+        - ConsoleAccess: false
+          Groups:
+            - "group1"
+          Password: "{{resolve:ssm-secure:MyPassword:1}}"
+          Username: "user"  
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
