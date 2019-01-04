@@ -44,9 +44,7 @@ class TestPatchJson(BaseTestCase):
         self.assertTrue(
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['Origins']['Required'])
         self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
-        self.assertIn('Tags', patched['PropertyTypes']['AWS::EC2::SpotFleet.SpotFleetTagSpecification']['Properties'])
         self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
-        self.assertIn('AWS::CloudFormation::Macro', patched['ResourceTypes'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['TopicArn']['Required'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['Protocol']['Required'])
         self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['Type'], 'Map')
