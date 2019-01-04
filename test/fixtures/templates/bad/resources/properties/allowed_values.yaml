@@ -13,7 +13,7 @@ Resources:
       DeploymentMode: "production" # Invalid AllowedValue
       EngineType: "activemq" # Invalid AllowedValue
       EngineVersion: "ActiveMQ 5.10.8" # Invalid AllowedValue
-      PubliclyAccessible: false 
+      PubliclyAccessible: false
       HostInstanceType: "t2.micro" # Invalid AllowedValue
       Users:
         - ConsoleAccess: false
@@ -21,6 +21,13 @@ Resources:
             - "group1"
           Password: "{{resolve:ssm-secure:MyPassword:1}}"
           Username: "user"
+  AmazonMQConfiguration:
+    Type: "AWS::AmazonMQ::Configuration"
+    Properties:
+      Data: ""
+      EngineType: "ACTIVE_MQ" # Invalid AllowedValue
+      EngineVersion: "ActiveMQ" # Invalid AllowedValue
+      Name: "Configuration"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
