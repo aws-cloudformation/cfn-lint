@@ -28,6 +28,26 @@ Resources:
       EngineType: "ACTIVEMQ" # Valid AllowedValue
       EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
       Name: "Configuration"
+  ApiGatewayAuthorizer:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      RestApiId: !Ref "ApiGatewayRestAPI"
+      Type: "COGNITO_USER_POOLS" # Valid AllowedValue
+  ApiGatewayResponse:
+    Type: "AWS::ApiGateway::GatewayResponse"
+    Properties:
+      ResponseType: "DEFAULT_5XX" # Valid AllowedValue
+      RestApiId: !Ref "ApiGatewayRestAPI"
+  ApiGatewayRestAPI:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      ApiKeySourceType: "AUTHORIZER" # Valid AllowedValue
+  ApiGatewayUsagePlanKey:
+    Type: "AWS::ApiGateway::UsagePlanKey"
+    Properties:
+      KeyId: "ApiGatewayUsagePlanKey"
+      KeyType: "API_KEY" # Valid AllowedValue
+      UsagePlanId: "UsagePlanId"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:

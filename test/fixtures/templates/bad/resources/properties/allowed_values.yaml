@@ -28,6 +28,26 @@ Resources:
       EngineType: "ACTIVE_MQ" # Invalid AllowedValue
       EngineVersion: "ActiveMQ" # Invalid AllowedValue
       Name: "Configuration"
+  ApiGatewayAuthorizer:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      RestApiId: !Ref "ApiGatewayRestAPI"
+      Type: "Cognito" # Invalid AllowedValue
+  ApiGatewayResponse:
+    Type: "AWS::ApiGateway::GatewayResponse"
+    Properties:
+      ResponseType: "200 OK" # Invalid AllowedValue
+      RestApiId: !Ref "ApiGatewayRestAPI"
+  ApiGatewayRestAPI:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      ApiKeySourceType: "AUTHORISER" # Invalid AllowedValue
+  ApiGatewayUsagePlanKey:
+    Type: "AWS::ApiGateway::UsagePlanKey"
+    Properties:
+      KeyId: "ApiGatewayUsagePlanKey"
+      KeyType: "random value" # Invalid AllowedValue
+      UsagePlanId: "UsagePlanId"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
