@@ -38,12 +38,7 @@ class Ebs(CloudFormationLintRule):
                 for volume_type_obj in volume_types_obj:
                     volume_type = volume_type_obj.get('Value')
                     if isinstance(volume_type, six.string_types):
-                        if volume_type not in ['standard', 'io1', 'gp2', 'sc1', 'st1']:
-                            pathmessage = path[:] + ['VolumeType', volume_type['Path']]
-                            message = 'VolumeType should be of standard | io1 | gp2 | sc1 | st1] for {0}'
-                            matches.append(
-                                RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                        elif volume_type == 'io1':
+                        if volume_type == 'io1':
                             if iops_obj is None:
                                 pathmessage = path[:] + ['VolumeType']
                                 message = 'VolumeType io1 requires Iops to be specified for {0}'

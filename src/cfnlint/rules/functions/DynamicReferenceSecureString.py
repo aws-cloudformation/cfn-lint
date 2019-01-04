@@ -53,7 +53,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
             'AWS::OpsWorks::Stack.RdsDbInstance': 'DbPassword',
             'AWS::RDS::DBCluster': 'MasterUserPassword',
             'AWS::RDS::DBInstance': 'MasterUserPassword',
-            'AWS::Redshift::Cluster': 'MasterUserPassword',
+            'AWS::Redshift::Cluster': 'MasterUserPassword'
         }
 
     def check_dyn_ref_value(self, value, path):

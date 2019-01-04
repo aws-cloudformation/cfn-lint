@@ -30,9 +30,14 @@ Parameters:
   myParameterRuntime:
     Type: String
     Description: Runtime
+    Default: 'nodejs4.5'
     AllowedValues:
       - nodejs4.4
       - nodejs4.3
+  myParameterRuntime2:
+    Type: String
+    Description: Runtime
+    Default: 'nodejs4.5'
 Resources:
   myLambdaFunction:
     Type: AWS::Lambda::Function
@@ -61,7 +66,7 @@ Resources:
     Properties:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
-      Runtime: !Ref myParameterRuntime
+      Runtime: !Ref myParameterRuntime2
       MemorySize: !Ref myParameterMemorySize
   myLambda3:
     Type: AWS::Lambda::Function

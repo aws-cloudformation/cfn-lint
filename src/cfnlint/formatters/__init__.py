@@ -52,6 +52,8 @@ class JsonFormatter(BaseFormatter):
             if isinstance(o, Match):
                 if o.rule.id[0] == 'W':
                     level = 'Warning'
+                elif o.rule.id[0] == 'I':
+                    level = 'Informational'
                 else:
                     level = 'Error'
 

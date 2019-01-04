@@ -52,7 +52,7 @@ class StateMachine(CloudFormationLintRule):
         ]
         state_key_types = {
             'Pass': ['Result', 'ResultPath'],
-            'Task': ['Resource', 'ResultPath', 'Retry', 'Catch', 'TimeoutSeconds', 'HeartbeatSeconds'],
+            'Task': ['Resource', 'ResultPath', 'Retry', 'Catch', 'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
             'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],

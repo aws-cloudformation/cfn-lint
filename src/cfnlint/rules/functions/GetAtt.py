@@ -41,6 +41,9 @@ class GetAtt(CloudFormationLintRule):
 
         getatts = cfn.search_deep_keys('Fn::GetAtt')
         valid_getatts = cfn.get_valid_getatts()
+
+        valid_attribute_functions = ['Ref']
+
         for getatt in getatts:
             if len(getatt[-1]) < 2:
                 message = 'Invalid GetAtt for {0}'
@@ -49,16 +52,47 @@ class GetAtt(CloudFormationLintRule):
             if isinstance(getatt[-1], six.string_types):
                 resname, restype = getatt[-1].split('.')
             else:
-                resname = getatt[-1][0]
-                restype = '.'.join(getatt[-1][1:])
+                resname = None
+                restype = None
+                if isinstance(getatt[-1][1], six.string_types):
+                    resname = getatt[-1][0]
+                    restype = '.'.join(getatt[-1][1:])
+                elif isinstance(getatt[-1][1], dict):
+                    # You can ref the secondary part of a getatt
 
-            if resname in valid_getatts:
-                if restype not in valid_getatts[resname] and '*' not in valid_getatts[resname]:
+                    resname = getatt[-1][0]
+                    restype = getatt[-1][1]
+                    if len(restype) == 1:
+                        for k in restype.keys():
+                            if k not in valid_attribute_functions:
+                                message = 'GetAtt only supports functions "{0}" for attributes at {1}'
+                                matches.append(
+                                    RuleMatch(
+                                        getatt,
+                                        message.format(
+                                            ', '.join(map(str, valid_attribute_functions)),
+                                            '/'.join(map(str, getatt[:-1])))))
+                    else:
+                        message = 'Invalid GetAtt structure {0} at {1}'
+                        matches.append(RuleMatch(getatt, message.format(getatt[-1], '/'.join(map(str, getatt[:-1])))))
+
+                    # setting restype to None as we can't validate that anymore
+                    restype = None
+                else:
+                    message = 'Invalid GetAtt structure {0} at {1}'
+                    matches.append(RuleMatch(getatt, message.format(getatt[-1], '/'.join(map(str, getatt[:-1])))))
+
+            # only check resname if its set.  if it isn't it is because of bad structure
+            # and an error is already provided
+            if resname:
+                if resname in valid_getatts:
+                    if restype is not None:
+                        if restype not in valid_getatts[resname] and '*' not in valid_getatts[resname]:
+                            message = 'Invalid GetAtt {0}.{1} for resource {2}'
+                            matches.append(RuleMatch(
+                                getatt[:-1], message.format(resname, restype, getatt[1])))
+                else:
                     message = 'Invalid GetAtt {0}.{1} for resource {2}'
-                    matches.append(RuleMatch(
-                        getatt[:-1], message.format(resname, restype, getatt[1])))
-            else:
-                message = 'Invalid GetAtt {0}.{1} for resource {2}'
-                matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
+                    matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
 
         return matches

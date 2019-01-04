@@ -56,6 +56,8 @@ Lint all `yaml` files in `path`:
 Lint all `yaml` files in `path` and all subdirectories (recursive):
 - `cfn-lint path/to/templates/**/*.yaml`
 
+*Note*: Glob in Python 3.5 supports recursive searching `**/*.yaml`.  If you are using an earlier version of Python you will have to handle this manually (`folder1/*.yaml`, `folder2/*.yaml`, etc).
+
 ##### Specifying the template as an input stream
 The template to be linted can also be passed using standard input:
 

@@ -38,15 +38,13 @@ class TestPatchJson(BaseTestCase):
 
     def test_success_rds_dbcluster(self):
         """Success test"""
-        patched = patch_spec(self.spec, 'us-east-1')
+        patched = patch_spec(self.spec, 'all')
         self.assertTrue(
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['DefaultCacheBehavior']['Required'])
         self.assertTrue(
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['Origins']['Required'])
         self.assertIn('VpcEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])
-        self.assertIn('Tags', patched['PropertyTypes']['AWS::EC2::SpotFleet.SpotFleetTagSpecification']['Properties'])
         self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
-        self.assertIn('AWS::CloudFormation::Macro', patched['ResourceTypes'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['TopicArn']['Required'])
         self.assertTrue(patched['ResourceTypes']['AWS::SNS::Subscription']['Properties']['Protocol']['Required'])
         self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['Type'], 'Map')
@@ -63,7 +61,7 @@ class TestPatchJson(BaseTestCase):
         """
         spec = self.spec
         del spec['ResourceTypes']['AWS::SNS::Subscription']
-        patched = patch_spec(spec, 'us-east-1')
+        patched = patch_spec(spec, 'all')
         self.assertNotIn('AWS::SNS::Subscription', patched['ResourceTypes'])
 
     def test_failure_in_patch_move(self):
@@ -72,5 +70,5 @@ class TestPatchJson(BaseTestCase):
         """
         spec = self.spec
         del spec['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties']['VPCEndpointType']
-        patched = patch_spec(spec, 'us-east-1')
+        patched = patch_spec(spec, 'all')
         self.assertNotIn('VPCEndpointType', patched['ResourceTypes']['AWS::EC2::VPCEndpoint']['Properties'])

@@ -1,0 +1,122 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Template with all the resources that are covered by the AllowedValues.
+  Minimal configuration for each resource to be "valid". Properties that are part
+  of the AllowedValues check are marked for transparancy
+Parameters:
+  Password:
+    Type: String
+    NoEcho: True
+Resources:
+  AmazonMQBroker:
+    Type: "AWS::AmazonMQ::Broker"
+    Properties:
+      AutoMinorVersionUpgrade: false
+      BrokerName: "myBroker"
+      DeploymentMode: "SINGLE_INSTANCE" # Valid AllowedValue
+      EngineType: "ACTIVEMQ" # Valid AllowedValue
+      EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
+      PubliclyAccessible: false
+      HostInstanceType: "mq.t2.micro" # Valid AllowedValue
+      Users:
+        - ConsoleAccess: false
+          Groups:
+            - "group1"
+          Password: !Ref "Password"
+          Username: "user"
+  AmazonMQConfiguration:
+    Type: "AWS::AmazonMQ::Configuration"
+    Properties:
+      Data: ""
+      EngineType: "ACTIVEMQ" # Valid AllowedValue
+      EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
+      Name: "Configuration"
+  ApiGatewayAuthorizer:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      RestApiId: !Ref "ApiGatewayRestAPI"
+      Type: "COGNITO_USER_POOLS" # Valid AllowedValue
+  ApiGatewayResponse:
+    Type: "AWS::ApiGateway::GatewayResponse"
+    Properties:
+      ResponseType: "DEFAULT_5XX" # Valid AllowedValue
+      RestApiId: !Ref "ApiGatewayRestAPI"
+  ApiGatewayRestAPI:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      ApiKeySourceType: "AUTHORIZER" # Valid AllowedValue
+  ApiGatewayUsagePlanKey:
+    Type: "AWS::ApiGateway::UsagePlanKey"
+    Properties:
+      KeyId: "ApiGatewayUsagePlanKey"
+      KeyType: "API_KEY" # Valid AllowedValue
+      UsagePlanId: "UsagePlanId"
+  AppSyncDataSource:
+    Type: "AWS::AppSync::DataSource"
+    Properties:
+      ApiId: "ApiId"
+      Name: "AppSyncDataSource"
+      Type: "AWS_LAMBDA" # Valid AllowedValue
+  AppSyncGraphQLApi:
+    Type: "AWS::AppSync::GraphQLApi"
+    Properties:
+      Name: "AppSyncGraphQLApi"
+      AuthenticationType: "AMAZON_COGNITO_USER_POOLS" # Valid AllowedValue
+  AppSyncResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: "ApiId"
+      FieldName: "field"
+      Kind: "PIPELINE" # Valid AllowedValue
+      TypeName: "type"
+  DmsEndpoint:
+    Type: "AWS::DMS::Endpoint"
+    Properties:
+      EndpointType: "source" # Valid AllowedValue
+      EngineName: "mysql" # Valid AllowedValue
+      SslMode: "verify-full" # Valid AllowedValue
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: t1.micro
+      KeyName: ""
+      BlockDeviceMappings:
+        -
+          DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: "gp2" # Valid AllowedValue
+  GlueConnection:
+    Type: "AWS::Glue::Connection"
+    Properties:
+      CatalogId: !Ref "AWS::AccountId"
+      ConnectionInput:
+        ConnectionProperties: "{}"
+        ConnectionType: "SFTP" # Valid AllowedValue
+  RecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Name: "www.example.com"
+      Type: "A" # Valid AllowedValue
+      ResourceRecords:
+        - '127.0.0.1'
+  S3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      VersioningConfiguration:
+        Status: "Enabled" # Valid AllowedValue
+  Vpc:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.0.0.0/8"
+      InstanceTenancy: "default" # Valid AllowedValue
+  WAFRule:
+    Type: "AWS::WAFRegional::Rule"
+    Properties:
+      Name: "WAF Rule"
+      MetricName: "MetricName"
+      Predicates:
+        - DataId: "DataId"
+          Negated: false
+          Type: "ByteMatch" # Valid AllowedValue

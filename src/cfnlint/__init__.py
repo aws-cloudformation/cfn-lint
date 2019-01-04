@@ -809,7 +809,7 @@ class Template(object):
 
     # pylint: disable=W0613
     def check_value(self, obj, key, path,
-                    check_value=None, check_ref=None,
+                    check_value=None, check_ref=None, check_get_att=None,
                     check_find_in_map=None, check_split=None, check_join=None,
                     check_import_value=None, check_sub=None,
                     **kwargs):
