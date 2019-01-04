@@ -27,7 +27,8 @@ class SubNeeded(CloudFormationLintRule):
     tags = ['functions', 'sub']
 
     # Free-form text properties to exclude from this rule
-    excludes = ['UserData', 'ZipFile', 'Resource', 'Condition']
+    # content is part of AWS::CloudFormation::Init
+    excludes = ['UserData', 'ZipFile', 'Resource', 'Condition', 'AWS::CloudFormation::Init']
     api_excludes = ['Uri', 'Body']
 
     def _match_values(self, searchRegex, cfnelem, path):
