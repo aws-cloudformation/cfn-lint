@@ -23,7 +23,7 @@ Resources:
         - ConsoleAccess: false
           Groups:
             - "group1"
-          Password: !Ref "PassWord"
+          Password: !Ref "Password"
           Username: "user"
   AmazonMQConfiguration:
     Type: "AWS::AmazonMQ::Configuration"
@@ -52,6 +52,16 @@ Resources:
       KeyId: "ApiGatewayUsagePlanKey"
       KeyType: "random value" # Invalid AllowedValue
       UsagePlanId: "UsagePlanId"
+  ApplicationAutoScalingPolicy:
+    Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
+    Properties:
+      PolicyName: "ApplicationAutoScalingPolicy"
+      PolicyType: "SimpleScaling" # Invalid AllowedValue
+      ScalingTargetId: ""
+      TargetTrackingScalingPolicyConfiguration:
+        TargetValue: 50.0
+        PredefinedMetricSpecification:
+          PredefinedMetricType: "DynamoDbReadCapacityUtilization" # Invalid AllowedValue
   AppSyncDataSource:
     Type: "AWS::AppSync::DataSource"
     Properties:
@@ -70,6 +80,68 @@ Resources:
       FieldName: "field"
       Kind: "PIPELINES" # Invlid AllowedValue
       TypeName: "type"
+  AutoScalingGroup:
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      HealthCheckType: "elb" # Invalid AlllowedValue
+      LifecycleHookSpecificationList:
+        - DefaultResult: " ABANDON" # Invalid AlllowedValue
+          LifecycleHookName: "hook"
+          LifecycleTransition: "autoscaling: EC2_INSTANCE_TERMINATING" # Invalid AllowedValue
+      MaxSize: "1"
+      MinSize: "1"
+  AutoScalingLaunchConfiguration:
+    Type: "AWS::AutoScaling::LaunchConfiguration"
+    Properties:
+      BlockDeviceMappings:
+        - DeviceName: /dev/sdm
+          Ebs:
+            VolumeType: "ssd" # Invalid AllowedValue
+      ImageId: "ami-1234"
+      InstanceType: "t2.4xlarge"
+      PlacementTenancy: "Standard" # Invalid AllowedValue
+  AutoScalingLifecycleHook:
+    Type: "AWS::AutoScaling::LifecycleHook"
+    Properties:
+      DefaultResult: "ABORT" # Invalid AlllowedValue
+      AutoScalingGroupName: !Ref "AutoScalingGroup"
+      LifecycleTransition: "EC2_INSTANCE_LAUNCHING" # Invalid AllowedValue
+  AutoScalingPolicy:
+    Type: "AWS::AutoScaling::ScalingPolicy"
+    Properties:
+      AdjustmentType: "ChangeCapacity" # Invalid AllowedValue
+      AutoScalingGroupName: !Ref "AutoScalingGroup"
+      MetricAggregationType: "max" # Invalid AllowedValue
+      PolicyType: "Simplescaling" # Invalid AllowedValue
+      TargetTrackingConfiguration:
+        CustomizedMetricSpecification:
+          MetricName: "MetricName"
+          Namespace: "Namespace"
+          Statistic: "Sample Count" # Invalid AllowedValue
+        PredefinedMetricSpecification:
+          PredefinedMetricType: "MaxCount" # Invalid AllowedValue
+        TargetValue: 10.5
+  AutoScalingPlan:
+    Type: "AWS::AutoScalingPlans::ScalingPlan"
+    Properties:
+      ApplicationSource:
+        CloudFormationStackARN: "StackArn"
+      ScalingInstructions:
+        - MaxCapacity: 1
+          MinCapacity: 1
+          ResourceId: "ResourceId"
+          ScalableDimension: "dynamodb:WriteCapacityUnits" # Invalid AllowedValues
+          ServiceNamespace: "dynamoDB" # Invalid AllowedValues
+          PredictiveScalingMaxCapacityBehavior: "SetForecastCapacityToMaxCapacity ok" # Invalid AllowedValue
+          PredictiveScalingMode: "Forecast" # Invalid AllowedValue
+          TargetTrackingConfigurations:
+            - CustomizedScalingMetricSpecification:
+                MetricName: "MetricName"
+                Namespace: "Namespace"
+                Statistic: "sample count" # Invalid AllowedValue
+              PredefinedScalingMetricSpecification:
+                PredefinedScalingMetricType: "RequestCountPerTarget" # Invalid AllowedValue
+              TargetValue: 10.5
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
@@ -94,11 +166,10 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: "ami-2f726546"
-      InstanceType: t1.micro
+      InstanceType: "t1.micro"
       KeyName: ""
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
+        - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
   S3Bucket:
