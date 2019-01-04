@@ -9,13 +9,41 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.11.0
+###### Features
+- Add rule [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030) to use the newly patched spec to check resource properties values.  Update the following rules replaced by [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030).
+  - Delete rule [W2512](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2512)
+  - Delete rule [E2531](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2531)
+  - Move allowed values check in rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505)
+- Add rule [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008) to use the newly patched spec to check a resource properties Ref and GetAtt.  Update the following rules replaced by [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008).
+  - Delete rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502)
+  - Delete rule [W2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2505)
+- Improve rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to check MX records
+###### CloudFormation Specifications
+- Update CloudFormation specs to 2.18.1
+- Append the CloudFormation spec to include:
+  - AllowedValues for resource properties
+  - Allowed Ref/GetAtts for resource properties
+- Add specs for regions `eu-north-1`, `us-gov-east-1`, `us-gov-west-1`
+- Add `AWS::StepFunctions::StateMachine` in all supported regions
+- Add `AWS::CloudWatch::Alarm.Metric`, `AWS::CloudWatch::Alarm.MetricDataQuery` and `AWS::CloudWatch::Alarm.MetricStat` in all supported regions
+- Add `AWS::Lambda::LayerVersion`, `AWS::Lambda::LayerVersion.Content`, and `AWS::Lambda::LayerVersionPermission` in all supported regions
+###### Fixes
+- Fix description on rule [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to be more informative
+- Update rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow `Parameters` in a `Task` in a Step Function
+- Fix rule [E1010](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1010) to allow Refs in the GetAtt attribute section
+- Add `AWS::CloudFormation::Init` as an exception for rule E1029
+- Add `Informational` error messages to JSON outputs
+- Fix file searching `**/*` to recursively search in Python 3.5 and greater
+- Update CopyRight from 2018 to 2019
+
 ### 0.10.2
 ###### Features
 - Code coverage testing integrated into the CI process
 - Update CloudFormation specs to 2.18.0
 ###### Fixes
-- Fix rule E2505 to allow for SSM parameters when checking Cidr and Tenancy parameters
-- Fix rule E1029 to not error on API Gateway stageVariables
+- Fix rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505) to allow for SSM parameters when checking Cidr and Tenancy parameters
+- Fix rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to not error on API Gateway stageVariables
 
 ### 0.10.1
 ###### Features
