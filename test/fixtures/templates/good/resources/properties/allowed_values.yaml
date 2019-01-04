@@ -52,6 +52,24 @@ Resources:
       KeyId: "ApiGatewayUsagePlanKey"
       KeyType: "API_KEY" # Valid AllowedValue
       UsagePlanId: "UsagePlanId"
+  AppSyncDataSource:
+    Type: "AWS::AppSync::DataSource"
+    Properties:
+      ApiId: "ApiId"
+      Name: "AppSyncDataSource"
+      Type: "AWS_LAMBDA" # Valid AllowedValue
+  AppSyncGraphQLApi:
+    Type: "AWS::AppSync::GraphQLApi"
+    Properties:
+      Name: "AppSyncGraphQLApi"
+      AuthenticationType: "AMAZON_COGNITO_USER_POOLS" # Valid AllowedValue
+  AppSyncResolver:
+    Type: "AWS::AppSync::Resolver"
+    Properties:
+      ApiId: "ApiId"
+      FieldName: "field"
+      Kind: "PIPELINE" # Valid AllowedValue
+      TypeName: "type"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
