@@ -32,13 +32,16 @@
         ]
       },
       "AmazonMQHostInstanceType": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "ApiGatewatRestApiKeySourceType": {
         "AllowedValues": [
-          "mq.m4.large",
-          "mq.m5.2xlarge",
-          "mq.m5.4xlarge",
-          "mq.m5.large",
-          "mq.m5.xlarge",
-          "mq.t2.micro"
+          "AUTHORIZER",
+          "HEADER"
         ]
       },
       "ApiGatewayAuthorizerType": {
@@ -72,36 +75,9 @@
           "UNSUPPORTED_MEDIA_TYPE"
         ]
       },
-      "ApiGatewatRestApiKeySourceType": {
-        "AllowedValues": [
-          "AUTHORIZER",
-          "HEADER"
-        ]
-      },
       "ApiGatewayUsagePlanKeyType": {
         "AllowedValues": [
           "API_KEY"
-        ]
-      },
-      "ApplicationAutoScalingPolicyType": {
-        "AllowedValues": [
-          "StepScaling",
-          "TargetTrackingScaling"
-        ]
-      },
-      "ApplicationAutoScalingPredefinedMetricSpecificationType": {
-        "AllowedValues": [
-          "ALBRequestCountPerTarget",
-          "DynamoDBReadCapacityUtilization",
-          "DynamoDBWriteCapacityUtilization",
-          "EC2SpotFleetRequestAverageCPUUtilization",
-          "EC2SpotFleetRequestAverageNetworkIn",
-          "EC2SpotFleetRequestAverageNetworkOut",
-          "ECSServiceAverageCPUUtilization",
-          "ECSServiceAverageMemoryUtilization",
-          "RDSReaderAverageCPUUtilization",
-          "RDSReaderAverageDatabaseConnections",
-          "SageMakerVariantInvocationsPerInstance"
         ]
       },
       "AppSyncDataSourceType": {
@@ -128,27 +104,26 @@
           "UNIT"
         ]
       },
-      "AvailabilityZone": {
-        "GetAtt": {
-          "AWS::EC2::Instance": "AvailabilityZone",
-          "AWS::EC2::Subnet": "AvailabilityZone",
-          "AWS::OpsWorks::Instance": "AvailabilityZone"
-        },
-        "Ref": {
-          "Parameters": [
-            "String",
-            "AvailabilityZone"
-          ]
-        }
+      "ApplicationAutoScalingPolicyType": {
+        "AllowedValues": [
+          "StepScaling",
+          "TargetTrackingScaling"
+        ]
       },
-      "AvailabilityZones": {
-        "Ref": {
-          "Parameters": [
-            "Strings",
-            "AvailabilityZones"
-          ]
-        },
-        "GetAtt": {}
+      "ApplicationAutoScalingPredefinedMetricSpecificationType": {
+        "AllowedValues": [
+          "ALBRequestCountPerTarget",
+          "DynamoDBReadCapacityUtilization",
+          "DynamoDBWriteCapacityUtilization",
+          "EC2SpotFleetRequestAverageCPUUtilization",
+          "EC2SpotFleetRequestAverageNetworkIn",
+          "EC2SpotFleetRequestAverageNetworkOut",
+          "ECSServiceAverageCPUUtilization",
+          "ECSServiceAverageMemoryUtilization",
+          "RDSReaderAverageCPUUtilization",
+          "RDSReaderAverageDatabaseConnections",
+          "SageMakerVariantInvocationsPerInstance"
+        ]
       },
       "AutoScalingGroupHealthCheckType": {
         "AllowedValues": [
@@ -188,6 +163,29 @@
           "StepScaling",
           "TargetTrackingScaling"
         ]
+      },
+      "AvailabilityZone": {
+        "GetAtt": {
+          "AWS::EC2::Instance": "AvailabilityZone",
+          "AWS::EC2::Subnet": "AvailabilityZone",
+          "AWS::OpsWorks::Instance": "AvailabilityZone"
+        },
+        "Ref": {
+          "Parameters": [
+            "String",
+            "AvailabilityZone"
+          ]
+        }
+      },
+      "AvailabilityZones": {
+        "GetAtt": {
+        },
+        "Ref": {
+          "Parameters": [
+            "Strings",
+            "AvailabilityZones"
+          ]
+        }
       },
       "CodeDeployApplicationPlatform": {
         "AllowedValues": [
@@ -267,6 +265,14 @@
           "target"
         ]
       },
+      "EC2ScalingPolicyPredifinedMetricSpecificationType": {
+        "AllowedValues": [
+          "ALBRequestCountPerTarget",
+          "ASGAverageCPUUtilization",
+          "ASGAverageNetworkIn",
+          "ASGAverageNetworkOut"
+        ]
+      },
       "EbsVolumeType": {
         "AllowedValues": [
           "gp2",
@@ -276,13 +282,12 @@
           "standard"
         ]
       },
-      "EC2ScalingPolicyPredifinedMetricSpecificationType": {
-        "AllowedValues": [
-          "ALBRequestCountPerTarget",
-          "ASGAverageCPUUtilization",
-          "ASGAverageNetworkIn",
-          "ASGAverageNetworkOut"
-        ]
+      "Ec2InstanceType": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
       },
       "GlueConnectionInputType": {
         "AllowedValues": [
@@ -297,6 +302,8 @@
         ]
       },
       "IamInstanceProfile": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -304,8 +311,7 @@
           "Resources": [
             "AWS::IAM::InstanceProfile"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "IamInstanceProfile.Arn": {
         "GetAtt": {
@@ -321,6 +327,8 @@
         }
       },
       "IamRole": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -328,8 +336,7 @@
           "Resources": [
             "AWS::IAM::Role"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "IamRole.Arn": {
         "GetAtt": {
@@ -355,33 +362,22 @@
         }
       },
       "ImageId": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String",
             "ImageId"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "KeyPair": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String",
             "KeyPair"
-          ]
-        },
-        "GetAtt": {}
-      },
-      "KmsKey.IdOrArn": {
-        "GetAtt": {
-          "AWS::KMS::Key": "Arn"
-        },
-        "Ref": {
-          "Parameters": [
-            "String"
-          ],
-          "Resources": [
-            "AWS::KMS::Key"
           ]
         }
       },
@@ -396,6 +392,8 @@
         }
       },
       "KmsKey.Id": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -403,8 +401,20 @@
           "Resources": [
             "AWS::KMS::Key"
           ]
+        }
+      },
+      "KmsKey.IdOrArn": {
+        "GetAtt": {
+          "AWS::KMS::Key": "Arn"
         },
-        "GetAtt": {}
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::KMS::Key"
+          ]
+        }
       },
       "LambdaRuntime": {
         "AllowedValues": [
@@ -426,6 +436,8 @@
         ]
       },
       "LaunchConfigurationName": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -433,10 +445,11 @@
           "Resources": [
             "AWS::AutoScaling::LaunchConfiguration"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "LoadBalancerName": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -444,18 +457,20 @@
           "Resources": [
             "AWS::ElasticLoadBalancing::LoadBalancer"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "LoadBalancerNames": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "Strings"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "LoadBalancerV2Arn": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -463,10 +478,11 @@
           "Resources": [
             "AWS::ElasticLoadBalancingV2::LoadBalancer"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "PlacementGroup": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -474,24 +490,13 @@
           "Resources": [
             "AWS::EC2::PlacementGroup"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "PlacementTenancy": {
-        "Ref": {
-          "Parameters": [
-            "String"
-          ]
-        },
         "AllowedValues": [
           "dedicated",
           "default"
-        ]
-      },
-      "PrivateIpAddress": {
-        "GetAtt": {
-          "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
-        },
+        ],
         "Ref": {
           "Parameters": [
             "String"
@@ -509,6 +514,29 @@
           "XssMatch"
         ]
       },
+      "PrivateIpAddress": {
+        "GetAtt": {
+          "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "RdsInstanceType": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
+      "RecordSetFailover": {
+        "AllowedValues": [
+          "PRIMARY",
+          "SECONDARY"
+        ]
+      },
       "RecordSetGeoContinentCode": {
         "AllowedValues": [
           "AF",
@@ -518,12 +546,6 @@
           "NA",
           "OC",
           "SA"
-        ]
-      },
-      "RecordSetFailover": {
-        "AllowedValues": [
-          "PRIMARY",
-          "SECONDARY"
         ]
       },
       "RecordSetType": {
@@ -541,6 +563,18 @@
           "SRV",
           "TXT"
         ]
+      },
+      "RestApiId": {
+        "GetAtt": {
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::ApiGateway::RestApi"
+          ]
+        }
       },
       "Route53HealthCheckConfigHealthStatus": {
         "AllowedValues": [
@@ -573,17 +607,6 @@
           "SYSTEM"
         ]
       },
-      "RestApiId": {
-        "Ref": {
-          "Parameters": [
-            "String"
-          ],
-          "Resources": [
-            "AWS::ApiGateway::RestApi"
-          ]
-        },
-        "GetAtt": {}
-      },
       "S3BucketAccelerationStatus": {
         "AllowedValues": [
           "Enabled",
@@ -608,12 +631,6 @@
           "aws:kms"
         ]
       },
-      "S3BucketVersioningConfigurationStatus": {
-        "AllowedValues": [
-          "Enabled",
-          "Suspended"
-        ]
-      },
       "S3BucketTopicConfigurationEvent": {
         "AllowedValues": [
           "s3:ObjectCreated:*",
@@ -627,6 +644,12 @@
           "s3:ObjectRestore:Completed",
           "s3:ObjectRestore:Post",
           "s3:ReducedRedundancyLostObject"
+        ]
+      },
+      "S3BucketVersioningConfigurationStatus": {
+        "AllowedValues": [
+          "Enabled",
+          "Suspended"
         ]
       },
       "ScalingInstructionPredictiveScalingMaxCapacityBehavior": {
@@ -672,7 +695,15 @@
           "Sum"
         ]
       },
+      "SecretsManagerTargetType": {
+        "AllowedValues": [
+          "AWS::RDS::DBCluster",
+          "AWS::RDS::DBInstance"
+        ]
+      },
       "SecurityGroup": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String",
@@ -681,8 +712,7 @@
           "Resources": [
             "AWS::EC2::SecurityGroup"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "SecurityGroupId": {
         "GetAtt": {
@@ -700,17 +730,19 @@
         }
       },
       "SecurityGroupIds": {
+        "GetAtt": {
+          "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+        },
         "Ref": {
           "Parameters": [
             "Strings",
             "SecurityGroupIds"
           ]
-        },
-        "GetAtt": {
-          "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
         }
       },
       "SecurityGroups": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "Strings",
@@ -719,14 +751,7 @@
           "Resources": [
             "AWS::EC2::SecurityGroup"
           ]
-        },
-        "GetAtt": {}
-      },
-      "SecretsManagerTargetType": {
-        "AllowedValues": [
-          "AWS::RDS::DBCluster",
-          "AWS::RDS::DBInstance"
-        ]
+        }
       },
       "SesReceiptRuleTlsPolicy": {
         "AllowedValues": [
@@ -747,6 +772,8 @@
         ]
       },
       "SsmDocumentName": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -754,18 +781,20 @@
           "Resources": [
             "AWS::SSM::Document"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "String": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "SubnetId": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String",
@@ -774,19 +803,21 @@
           "Resources": [
             "AWS::EC2::Subnet"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "SubnetIds": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "Strings",
             "SubnetIds"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "TargetGroupArn": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "String"
@@ -794,16 +825,16 @@
           "Resources": [
             "AWS::ElasticLoadBalancingV2::TargetGroup"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "TargetGroupArns": {
+        "GetAtt": {
+        },
         "Ref": {
           "Parameters": [
             "Strings"
           ]
-        },
-        "GetAtt": {}
+        }
       },
       "VpcId": {
         "GetAtt": {
