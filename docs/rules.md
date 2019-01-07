@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **98** rules are applied by this linter:
+The following **97** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -120,7 +120,6 @@ The following **98** rules are applied by this linter:
 | W1020 <a name="W1020"></a> | Sub isn't needed if it doesn't have a variable defined | Checks sub strings to see if a variable is defined. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
 | W2501 <a name="W2501"></a> | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds) | `parameters`,`passwords` |
-| W2505 <a name="W2505"></a> | Check if VpcID Parameters have the correct type | See if there are any refs for VpcId to a parameter of inappropriate type. Appropriate Types are [AWS::EC2::VPC::Id, AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>] | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`vpcid` |
 | W2506 <a name="W2506"></a> | Check if ImageId Parameters have the correct type | See if there are any refs for ImageId to a parameter of inappropriate type. Appropriate Types are [AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>] | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`imageid` |
 | W2507 <a name="W2507"></a> | Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`securitygroup` |
 | W2508 <a name="W2508"></a> | Availability Zone Parameters are of correct type AWS::EC2::AvailabilityZone::Name | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::AvailabilityZone::Name | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`availabilityzone` |
