@@ -18,6 +18,7 @@ import logging
 import sys
 import os
 import re
+import traceback
 from copy import deepcopy
 from datetime import datetime
 import six
@@ -182,11 +183,16 @@ class RulesCollection(object):
             return []
         except Exception as err:  # pylint: disable=W0703
             if self.is_rule_enabled('E0002'):
+                # In debug mode, print the error include complete stack trace
+                if LOGGER.getEffectiveLevel() == logging.DEBUG:
+                    error_message = traceback.format_exc()
+                else:
+                    error_message = str(err)
                 message = 'Unknown exception while processing rule {}: {}'
                 return [
                     cfnlint.Match(
                         1, 1, 1, 1,
-                        filename, cfnlint.RuleError(), message.format(rule_id, str(err)))]
+                        filename, cfnlint.RuleError(), message.format(rule_id, error_message))]
 
     def resource_property(self, filename, cfn, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
