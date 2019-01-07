@@ -83,6 +83,27 @@
           "API_KEY"
         ]
       },
+      "ApplicationAutoScalingPolicyType": {
+        "AllowedValues": [
+          "StepScaling",
+          "TargetTrackingScaling"
+        ]
+      },
+      "ApplicationAutoScalingPredefinedMetricSpecificationType": {
+        "AllowedValues": [
+          "ALBRequestCountPerTarget",
+          "DynamoDBReadCapacityUtilization",
+          "DynamoDBWriteCapacityUtilization",
+          "EC2SpotFleetRequestAverageCPUUtilization",
+          "EC2SpotFleetRequestAverageNetworkIn",
+          "EC2SpotFleetRequestAverageNetworkOut",
+          "ECSServiceAverageCPUUtilization",
+          "ECSServiceAverageMemoryUtilization",
+          "RDSReaderAverageCPUUtilization",
+          "RDSReaderAverageDatabaseConnections",
+          "SageMakerVariantInvocationsPerInstance"
+        ]
+      },
       "AppSyncDataSourceType": {
         "AllowedValues": [
           "AMAZON_DYNAMODB",
@@ -129,6 +150,45 @@
         },
         "GetAtt": {}
       },
+      "AutoScalingGroupHealthCheckType": {
+        "AllowedValues": [
+          "EC2",
+          "ELB"
+        ]
+      },
+      "AutoScalingLifecycleHookResult": {
+        "AllowedValues": [
+          "ABANDON",
+          "CONTINUE"
+        ]
+      },
+      "AutoScalingLifecycleTransition": {
+        "AllowedValues": [
+          "autoscaling:EC2_INSTANCE_LAUNCHING",
+          "autoscaling:EC2_INSTANCE_TERMINATING"
+        ]
+      },
+      "AutoScalingPolicyAdjustmentType": {
+        "AllowedValues": [
+          "ChangeInCapacity",
+          "ExactCapacity",
+          "PercentChangeInCapacity"
+        ]
+      },
+      "AutoScalingPolicyMetricAggregationType": {
+        "AllowedValues": [
+          "Average",
+          "Maximum",
+          "Minimum"
+        ]
+      },
+      "AutoScalingPolicyType": {
+        "AllowedValues": [
+          "SimpleScaling",
+          "StepScaling",
+          "TargetTrackingScaling"
+        ]
+      },
       "DmsEndpointEngineName": {
         "AllowedValues": [
           "aurora-postgresql",
@@ -168,6 +228,14 @@
           "sc1",
           "st1",
           "standard"
+        ]
+      },
+      "EC2ScalingPolicyPredifinedMetricSpecificationType": {
+        "AllowedValues": [
+          "ALBRequestCountPerTarget",
+          "ASGAverageCPUUtilization",
+          "ASGAverageNetworkIn",
+          "ASGAverageNetworkOut"
         ]
       },
       "GlueConnectionInputType": {
@@ -351,6 +419,17 @@
         },
         "GetAtt": {}
       },
+      "PlacementTenancy": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        },
+        "AllowedValues": [
+          "dedicated",
+          "default"
+        ]
+      },
       "PrivateIpAddress": {
         "GetAtt": {
           "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
@@ -388,10 +467,64 @@
           "TXT"
         ]
       },
+      "RestApiId": {
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::ApiGateway::RestApi"
+          ]
+        },
+        "GetAtt": {}
+      },
       "S3BucketVersioningConfigurationStatus": {
         "AllowedValues": [
           "Enabled",
           "Suspended"
+        ]
+      },
+      "ScalingInstructionPredictiveScalingMaxCapacityBehavior": {
+        "AllowedValues": [
+          "SetForecastCapacityToMaxCapacity",
+          "SetMaxCapacityToForecastCapacity",
+          "SetMaxCapacityAboveForecastCapacity"
+        ]
+      },
+      "ScalingInstructionPredictiveScalingMode": {
+        "AllowedValues": [
+          "ForecastAndScale",
+          "ForecastOnly"
+        ]
+      },
+      "ScalingInstructionScalableDimension": {
+        "AllowedValues": [
+          "autoscaling:autoScalingGroup:DesiredCapacity",
+          "ecs:service:DesiredCount",
+          "ec2:spot-fleet-request:TargetCapacity",
+          "dynamodb:table:ReadCapacityUnits",
+          "dynamodb:table:WriteCapacityUnits",
+          "dynamodb:index:ReadCapacityUnits",
+          "dynamodb:index:WriteCapacityUnits",
+          "rds:cluster:ReadReplicaCount"
+        ]
+      },
+      "ScalingInstructionServiceNamespace": {
+        "AllowedValues": [
+          "autoscaling",
+          "dynamodb",
+          "ecs",
+          "ec2",
+          "rds"
+        ]
+      },
+      "ScalingPolicyCustomizedMetricSpecificationStatistic": {
+        "AllowedValues": [
+          "Average",
+          "Minimum",
+          "Maximum",
+          "SampleCount",
+          "Sum"
         ]
       },
       "SecurityGroup": {
@@ -516,17 +649,6 @@
             "AWS::EC2::VPC"
           ]
         }
-      },
-      "VpcTenancy": {
-        "Ref": {
-          "Parameters": [
-            "String"
-          ]
-        },
-        "AllowedValues": [
-          "dedicated",
-          "default"
-        ]
       }
     }
   }

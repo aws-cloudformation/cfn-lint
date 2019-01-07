@@ -105,6 +105,11 @@ Resources:
         Value: '50'
       SecurityGroups:
       - !GetAtt alb1.SecurityGroups  # Returns many not one
+  ApiGatewayAuthorizer:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      RestApiId: !Ref "alb2"
+      Type: "TOKEN"
   ### Test CloudFormation resource for Get Atts
   SubStack:
     Type: AWS::CloudFormation::Stack
