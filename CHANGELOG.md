@@ -9,6 +9,14 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.11.1
+###### CloudFormation Specifications
+- Support Ref to IAM::Role or IAM::InstanceProfile with values looking for an ARN
+- AWS::Batch::ComputeEnvironment InstanceRole is an InstanceProfile not Role
+###### Fixes
+- Add debug options to print a stack trace for rule E0002
+- Update rule [E2015](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2015) to include a try/catch around AllowedPattern testing to catch errors caused by non Python supported regex
+
 ### 0.11.0
 ###### Features
 - Add rule [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030) to use the newly patched spec to check resource properties values.  Update the following rules replaced by [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030).
