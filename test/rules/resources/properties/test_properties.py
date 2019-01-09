@@ -47,6 +47,28 @@ class TestResourceProperties(BaseRuleTestCase):
         """Failure test"""
         self.helper_file_negative('test/fixtures/templates/bad/resource_properties.yaml', 4)
 
+    def test_E3012_in_bad_template(self):
+        """Test E3012 in known-bad template"""
+        filename = 'test/fixtures/templates/bad/resource_properties.yml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
+        matched_rule_ids = [r.rule.id for r in results]
+        self.assertIn('E3012', matched_rule_ids)
+
+    def test_E3012_match_has_extra_attributes(self):
+        """Test E3012 in has custom attributes"""
+        filename = 'test/fixtures/templates/bad/resource_properties.yml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
+        custom_attrs = ['actual_type', 'expected_type']
+        for r in results:
+            if r.rule.id == 'E3012':
+                for ca in custom_attrs:
+                    with self.subTest(custom_attr=ca):
+                        self.assertTrue(hasattr(r, ca))
+
 
 class TestSpecifiedCustomResourceProperties(TestResourceProperties):
     """Repeat Resource Properties tests with Custom Resource override spec provided"""

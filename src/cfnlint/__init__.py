@@ -330,7 +330,7 @@ class RuleMatch(object):
         self.path = path
         self.path_string = '/'.join(map(str, path))
         self.message = message
-        for k,v in kwargs.items():
+        for k, v in kwargs.items():
             setattr(self, k, v)
 
     def __eq__(self, item):
@@ -357,7 +357,7 @@ class Match(object):  # pylint: disable=R0902
         self.rule = rule
         self.message = message  # or rule.shortdesc
         if rulematch_obj:
-            for k,v in vars(rulematch_obj).items():
+            for k, v in vars(rulematch_obj).items():
                 if not hasattr(self, k):
                     setattr(self, k, v)
 

@@ -50,7 +50,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         if item_type in ['String']:
             if not isinstance(value, (str, six.text_type, six.string_types)):
                 message = 'Property %s should be of type String' % ('/'.join(map(str, path)))
-                extra_args={'actual_type': type(value).__name__, 'expected_type': str.__name__}
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
                 matches.append(RuleMatch(path, message, **extra_args))
         elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
