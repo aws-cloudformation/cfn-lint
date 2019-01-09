@@ -175,8 +175,29 @@ Resources:
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
+      AccelerateConfiguration:
+        AccelerationStatus: "Disabled" # Inalid AllowedValue
+      AccessControl: "PrivateRead" # Invalid AllowedValue
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: "KMS" # Invalid AllowedValue
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Topic: "MyTopic"
+            Event: "s3:ObjectCreated:Get" # Invalid AllowedValue
       VersioningConfiguration:
         Status: "disabled" # Invalid AllowedValue
+      WebsiteConfiguration:
+        IndexDocument: "index.html"
+        RedirectAllRequestsTo:
+          HostName: "example.com"
+          Protocol: "tcp" # Invalid AllowedValue
+  SnsSubscription:
+    Type: "AWS::SNS::Subscription"
+    Properties:
+      Protocol: "mail" # Invalid AllowedValue
+      TopicArn: "TopicArn"
   Vpc:
     Type: AWS::EC2::VPC
     Properties:

@@ -15013,7 +15013,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-accelerateconfiguration.html#cfn-s3-bucket-accelerateconfiguration-accelerationstatus",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketAccelerationStatus"
+          }
         }
       }
     },
@@ -15457,7 +15460,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-websiteconfiguration-redirectallrequeststo.html#cfn-s3-websiteconfiguration-redirectallrequeststo-protocol",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "HttpProtocol"
+          }
         }
       }
     },
@@ -15731,7 +15737,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-serversideencryptionbydefault.html#cfn-s3-bucket-serversideencryptionbydefault-ssealgorithm",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketSSEAlgorithm"
+          }
         }
       }
     },
@@ -15803,7 +15812,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-notificationconfig-topicconfig.html#cfn-s3-bucket-notificationconfig-topicconfig-event",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketTopicConfigurationEvent"
+          }
         },
         "Filter": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-notificationconfig-topicconfig.html#cfn-s3-bucket-notificationconfig-topicconfig-filter",
@@ -29440,7 +29452,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html#cfn-s3-bucket-accesscontrol",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketAccessControl"
+          }
         },
         "AnalyticsConfigurations": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html#cfn-s3-bucket-analyticsconfigurations",
@@ -29578,7 +29593,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-protocol",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SnsSubscriptionProtocol"
+          }
         },
         "RawMessageDelivery": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-subscription.html#cfn-sns-subscription-rawmessagedelivery",
@@ -31625,6 +31643,12 @@
         "SFTP"
       ]
     },
+    "HttpProtocol": {
+      "AllowedValues": [
+        "http",
+        "https"
+      ]
+    },
     "IamInstanceProfile": {
       "GetAtt": {},
       "Ref": {
@@ -31865,6 +31889,45 @@
         ]
       }
     },
+    "S3BucketAccelerationStatus": {
+      "AllowedValues": [
+        "Enabled",
+        "Suspended"
+      ]
+    },
+    "S3BucketAccessControl": {
+      "AllowedValues": [
+        "AuthenticatedRead",
+        "AwsExecRead",
+        "BucketOwnerFullControl",
+        "BucketOwnerRead",
+        "LogDeliveryWrite",
+        "Private",
+        "PublicRead",
+        "PublicReadWrite"
+      ]
+    },
+    "S3BucketSSEAlgorithm": {
+      "AllowedValues": [
+        "AES256",
+        "aws:kms"
+      ]
+    },
+    "S3BucketTopicConfigurationEvent": {
+      "AllowedValues": [
+        "s3:ObjectCreated:*",
+        "s3:ObjectCreated:CompleteMultipartUpload",
+        "s3:ObjectCreated:Copy",
+        "s3:ObjectCreated:Post",
+        "s3:ObjectCreated:Put",
+        "s3:ObjectRemoved:*",
+        "s3:ObjectRemoved:Delete",
+        "s3:ObjectRemoved:DeleteMarkerCreated",
+        "s3:ObjectRestore:Completed",
+        "s3:ObjectRestore:Post",
+        "s3:ReducedRedundancyLostObject"
+      ]
+    },
     "S3BucketVersioningConfigurationStatus": {
       "AllowedValues": [
         "Enabled",
@@ -31963,6 +32026,18 @@
           "AWS::EC2::SecurityGroup"
         ]
       }
+    },
+    "SnsSubscriptionProtocol": {
+      "AllowedValues": [
+        "application",
+        "email-json",
+        "email",
+        "http",
+        "https",
+        "lambda",
+        "sms",
+        "sqs"
+      ]
     },
     "SsmDocumentName": {
       "GetAtt": {},
