@@ -325,10 +325,12 @@ class RulesCollection(object):
 class RuleMatch(object):
     """Rules Error"""
 
-    def __init__(self, path, message):
+    def __init__(self, path, message, **kwargs):
         """Init"""
         self.path = path
         self.message = message
+        for k,v in kwargs.items():
+            setattr(self, k, v)
 
     def __eq__(self, item):
         """Override unique"""
@@ -344,7 +346,7 @@ class Match(object):  # pylint: disable=R0902
 
     def __init__(
             self, linenumber, columnnumber, linenumberend,
-            columnnumberend, filename, rule, message=None):
+            columnnumberend, filename, rule, message=None, rulematch_obj=None):
         """Init"""
         self.linenumber = linenumber
         self.columnnumber = columnnumber
@@ -353,6 +355,10 @@ class Match(object):  # pylint: disable=R0902
         self.filename = filename
         self.rule = rule
         self.message = message  # or rule.shortdesc
+        if rulematch_obj:
+            for k,v in vars(rulematch_obj):
+                if not hasattr(self, k):
+                    setattr(self, k, v)
 
     def __repr__(self):
         """Represent"""
