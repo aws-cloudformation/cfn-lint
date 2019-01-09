@@ -2,6 +2,9 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   Test Sub Functions
+Parameters:
+  CidrBlock:
+    Type: CommaDelimitedList
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
@@ -42,6 +45,24 @@ Resources:
           Fn::Sub:
           - yum install ${package}; echo ${AWS::Region}; echo ${!Literal}"
           - mypackage: httpd
+  myVPc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Sub "${CidrBlock}"
+  myVPc2:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:
+        Fn::Sub:
+        - "${myCidr}"
+        - myCidr: !Ref CidrBlock
 Outputs:
   myOutput:
     Value: !Sub "${myInstance3.PrivateDnsName1}"
+  list:
+    Value: !Sub "${myVPc.CidrBlockAssociations}"
+  list2:
+    Value:
+      Fn::Sub:
+      - "${myCidr}"
+      - myCidr: !GetAtt myVPc.CidrBlockAssociations
