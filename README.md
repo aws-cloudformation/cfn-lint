@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/awslabs/cfn-python-lint.svg?branch=master)](https://travis-ci.com/awslabs/cfn-python-lint)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
+[![codecov](https://codecov.io/gh/awslabs/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/awslabs/cfn-python-lint)
 
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
 checks.  Includes checking valid values for resource properties and best practices.
