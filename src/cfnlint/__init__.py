@@ -80,12 +80,12 @@ class CloudFormationLintRule(object):
                         matches.append(Match(
                             linenumbers[0] + 1, linenumbers[1] + 1,
                             linenumbers[2] + 1, linenumbers[3] + 1,
-                            filename, self, result.message))
+                            filename, self, result.message, result))
                     else:
                         matches.append(Match(
                             1, 1,
                             1, 1,
-                            filename, self, result.message))
+                            filename, self, result.message, result))
 
             return matches
         return wrapper
@@ -328,6 +328,7 @@ class RuleMatch(object):
     def __init__(self, path, message, **kwargs):
         """Init"""
         self.path = path
+        self.path_string = '/'.join(map(str, path))
         self.message = message
         for k,v in kwargs.items():
             setattr(self, k, v)
@@ -356,7 +357,7 @@ class Match(object):  # pylint: disable=R0902
         self.rule = rule
         self.message = message  # or rule.shortdesc
         if rulematch_obj:
-            for k,v in vars(rulematch_obj):
+            for k,v in vars(rulematch_obj).items():
                 if not hasattr(self, k):
                     setattr(self, k, v)
 
