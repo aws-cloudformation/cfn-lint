@@ -25,7 +25,7 @@ class TestSubNeeded(BaseRuleTestCase):
         super(TestSubNeeded, self).setUp()
         self.collection.register(SubNeeded())
         self.success_templates = [
-            'test/fixtures/templates/good/functions_sub.yaml',
+            'test/fixtures/templates/good/functions/sub.yaml',
             'test/fixtures/templates/good/functions/sub_needed.yaml',
         ]
 
