@@ -59,6 +59,62 @@ class FindInMap(CloudFormationLintRule):
 
         return matches
 
+    def map_name(self, map_name, mappings, tree):
+        """ Check the map name """
+        matches = []
+        if isinstance(map_name, (six.string_types, dict)):
+            if isinstance(map_name, dict):
+                matches.extend(self.check_dict(map_name, tree[:] + [0]))
+            else:
+                if map_name not in mappings:
+                    message = 'Map Name {0} doesnt exist for {0}'
+                    matches.append(RuleMatch(
+                        tree[:] + [0], message.format(map_name, '/'.join(map(str, tree)))))
+        else:
+            message = 'Map Name should be a {0}, or string at {1}'
+            matches.append(RuleMatch(
+                tree[:] + [0],
+                message.format(
+                    ', '.join(map(str, self.supported_functions)),
+                    '/'.join(map(str, tree)))))
+
+        return matches
+
+    def first_key(self, first_key, tree):
+        """ Check the validity of the first key """
+        matches = []
+        if isinstance(first_key, (six.string_types, int)):
+            return matches
+        if isinstance(first_key, (dict)):
+            matches.extend(self.check_dict(first_key, tree[:] + [1]))
+        else:
+            message = 'FindInMap first key should be a {0}, string, or int at {1}'
+            matches.append(RuleMatch(
+                tree[:] + [1],
+                message.format(
+                    ', '.join(map(str, self.supported_functions)),
+                    '/'.join(map(str, tree)))))
+
+        return matches
+
+    def second_key(self, second_key, tree):
+        """ Check the validity of the second key """
+        matches = []
+        if isinstance(second_key, (six.string_types, int)):
+            return matches
+
+        if isinstance(second_key, (dict)):
+            matches.extend(self.check_dict(second_key, tree[:] + [2]))
+        else:
+            message = 'FindInMap second key should be a {0}, string, or int at {1}'
+            matches.append(RuleMatch(
+                tree[:] + [2],
+                message.format(
+                    ', '.join(map(str, self.supported_functions)),
+                    '/'.join(map(str, tree)))))
+
+        return matches
+
     def match(self, cfn):
         """Check CloudFormation GetAtt"""
 
@@ -79,43 +135,9 @@ class FindInMap(CloudFormationLintRule):
                 first_key = map_obj[1]
                 second_key = map_obj[2]
 
-                if isinstance(map_name, (six.string_types, six.text_type, dict)):
-                    if isinstance(map_name, dict):
-                        matches.extend(self.check_dict(map_name, tree[:] + [0]))
-                    else:
-                        if map_name not in mappings:
-                            message = 'Map Name {0} doesnt exist for {0}'
-                            matches.append(RuleMatch(
-                                tree[:] + [0], message.format(map_name, '/'.join(map(str, tree)))))
-                else:
-                    message = 'Map Name should be a {0}, or string at {1}'
-                    matches.append(RuleMatch(
-                        tree[:] + [0],
-                        message.format(
-                            ', '.join(map(str, self.supported_functions)),
-                            '/'.join(map(str, tree)))))
-
-                if isinstance(first_key, (six.text_type, six.string_types, dict, int)):
-                    if isinstance(first_key, dict):
-                        matches.extend(self.check_dict(first_key, tree[:] + [1]))
-                else:
-                    message = 'Map first key should be a {0}, string, or int at {1}'
-                    matches.append(RuleMatch(
-                        tree[:] + [1],
-                        message.format(
-                            ', '.join(map(str, self.supported_functions)),
-                            '/'.join(map(str, tree)))))
-
-                if isinstance(second_key, (six.text_type, six.string_types, dict, int)):
-                    if isinstance(second_key, dict):
-                        matches.extend(self.check_dict(second_key, tree[:] + [2]))
-                else:
-                    message = 'Map second key should be a {0}, string, or int at {1}'
-                    matches.append(RuleMatch(
-                        tree[:] + [2],
-                        message.format(
-                            ', '.join(map(str, self.supported_functions)),
-                            '/'.join(tree))))
+                matches.extend(self.map_name(map_name, mappings, tree))
+                matches.extend(self.first_key(first_key, tree))
+                matches.extend(self.second_key(second_key, tree))
 
             else:
                 message = 'FindInMap is a list with 3 values for {0}'

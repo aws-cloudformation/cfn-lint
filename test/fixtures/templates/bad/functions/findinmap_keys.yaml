@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Mappings:
+  CertificateMap:
+    us-east-1:
+      Arn: arn:aws:acm:us-east-1:<account>:certificate/<id>
+Resources:
+  AppAlbListener1:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn:  # Fails when the first key is bad
+            Fn::FindInMap: [CertificateMap, 'us-west-2', Arn]
+  AppAlbListener2:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn:  # Fails when the 2nd key doesn't exist and first key is string
+            Fn::FindInMap: [CertificateMap, 'us-west-2', id]
+  AppAlbListener3:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Certificates:
+        - CertificateArn:  # Fails when the 2nd key doesn't exist and the first key is a dict
+            Fn::FindInMap: [CertificateMap, !Ref 'AWS::Region', id]
