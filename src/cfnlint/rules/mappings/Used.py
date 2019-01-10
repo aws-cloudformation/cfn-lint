@@ -56,7 +56,7 @@ class Used(CloudFormationLintRule):
             # Check if the mappings are used
             for mapname, _ in mappings.items():
                 if mapname not in findinmap_mappings:
-                    message = 'Mapping {0} not used'
+                    message = 'Mapping \'{0}\' is defined but not used'
                     matches.append(RuleMatch(
                         ['Mappings', mapname],
                         message.format(mapname)
