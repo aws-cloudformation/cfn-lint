@@ -21,10 +21,10 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 
 class AllowedValue(CloudFormationLintRule):
-    """Check if properties have a valid value"""
-    id = 'E3030'
-    shortdesc = 'Check if properties have a valid value'
-    description = 'Check if properties have a valid value in case of an enumator'
+    """Check if parameters have a valid value"""
+    id = 'W2030'
+    shortdesc = 'Check if parameters have a valid value'
+    description = 'Check if parameters have a valid value in case of an enumator. The Parameter''s allowed values is based on the usages in property (Ref)'
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
     tags = ['resources', 'property', 'allowed value']
 
@@ -36,16 +36,32 @@ class AllowedValue(CloudFormationLintRule):
         for property_type_spec in RESOURCE_SPECS.get('us-east-1').get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check_value(self, value, path, property_name, **kwargs):
-        """Check Value"""
+    def check_value_ref(self, value, **kwargs):
+        """Check Ref"""
         matches = []
 
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
+        cfn = kwargs.get('cfn')
 
         if allowed_value_specs:
-            if value not in allowed_value_specs:
-                message = 'You must specify a valid value for {0} ({1}).\nValid values are {2}'
-                matches.append(RuleMatch(path, message.format(property_name, value, allowed_value_specs)))
+            if value in cfn.template.get('Parameters', {}):
+                param = cfn.template.get('Parameters').get(value, {})
+                parameter_values = param.get('AllowedValues')
+                default_value = param.get('Default')
+
+                # Check Allowed Values
+                if parameter_values:
+                    for index, allowed_value in enumerate(parameter_values):
+                        if allowed_value not in allowed_value_specs:
+                            param_path = ['Parameters', value, 'AllowedValues', index]
+                            message = 'You must specify a valid allowed value for {0} ({1}).\nValid values are {2}'
+                            matches.append(RuleMatch(param_path, message.format(value, allowed_value, allowed_value_specs)))
+                elif default_value:
+                    # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
+                    if default_value not in allowed_value_specs:
+                        param_path = ['Parameters', value, 'Default']
+                        message = 'You must specify a valid Default value for {0} ({1}).\nValid values are {2}'
+                        matches.append(RuleMatch(param_path, message.format(value, default_value, allowed_value_specs)))
 
         return matches
 
@@ -62,7 +78,7 @@ class AllowedValue(CloudFormationLintRule):
                         matches.extend(
                             cfn.check_value(
                                 p_value, prop, p_path,
-                                check_value=self.check_value,
+                                check_ref=self.check_value_ref,
                                 value_specs=RESOURCE_SPECS.get('us-east-1').get('ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )

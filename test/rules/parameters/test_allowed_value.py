@@ -14,12 +14,12 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.properties.AllowedValue import AllowedValue  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.parameters.AllowedValue import AllowedValue  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
 class TestAllowedValue(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
+    """Test Allowed Value Parameter Configuration"""
     def setUp(self):
         """Setup"""
         super(TestAllowedValue, self).setUp()
@@ -34,4 +34,4 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/allowed_values.yaml', 49)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/allowed_values.yaml', 1)
