@@ -154,21 +154,7 @@ Resources:
     Properties:
       EndpointType: "random" # Invalid AllowedValue
       EngineName: "database" # Invalid AllowedValue
-      SslMode: "ssl" # Valid AllowedValue
-  GlueConnection:
-    Type: "AWS::Glue::Connection"
-    Properties:
-      CatalogId: !Ref "AWS::AccountId"
-      ConnectionInput:
-        ConnectionProperties: "{}"
-        ConnectionType: "FTP" # Invalid AllowedValue
-  RecordSet:
-    Type: "AWS::Route53::RecordSet"
-    Properties:
-      Name: "www.example.com"
-      Type: "X" # AllowedValue
-      ResourceRecords:
-        - ''
+      SslMode: "ssl" # Invalid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -179,6 +165,54 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
+  GlueConnection:
+    Type: "AWS::Glue::Connection"
+    Properties:
+      CatalogId: !Ref "AWS::AccountId"
+      ConnectionInput:
+        ConnectionProperties: "{}"
+        ConnectionType: "FTP" # Invalid AllowedValue
+  Route53HealthCheck:
+    Type: "AWS::Route53::HealthCheck"
+    Properties:
+      HealthCheckConfig:
+        Type: "HTTP_MATCH" # Invalid AllowedValue
+  Route53RecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      GeoLocation:
+        ContinentCode: "US" # Invalid AllowedValue
+      Failover: "primary" # Invalid AllowedValue
+      Name: "www.example.com"
+      Type: "AA" # Invalid AllowedValue
+      ResourceRecords:
+        - '127.0.0.1'
+  Route53RecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneName: "www.example.com"
+      RecordSets:
+        - Failover: "Secondary" # Invalid AllowedValue
+          GeoLocation:
+            ContinentCode: "A" # Invalid AllowedValue
+          Name: "www.example.com"
+          Type: "ABC" # Invalid AllowedValue
+          ResourceRecords:
+            - 'www.example.com'
+  Route53ResolverEndpoint:
+    Type: "AWS::Route53Resolver::ResolverEndpoint"
+    Properties:
+      Direction: "left" # Invalid AlowedValue
+      IpAddresses:
+        - Ip: '127.0.0.1'
+          SubnetId: "SubnetId"
+      SecurityGroupIds:
+        - "sg"
+  Route53ResolverRule:
+    Type: "AWS::Route53Resolver::ResolverRule"
+    Properties:
+      DomainName: "example.com"
+      RuleType: "default" # Invalid AllowedValue
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
