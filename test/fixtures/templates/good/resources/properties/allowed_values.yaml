@@ -172,13 +172,47 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "SFTP" # Valid AllowedValue
-  RecordSet:
+  Route53HealthCheck:
+    Type: "AWS::Route53::HealthCheck"
+    Properties:
+      HealthCheckConfig:
+        Type: "CLOUDWATCH_METRIC"
+  Route53RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
+      Failover: "PRIMARY" # Valid AllowedValue
+      GeoLocation:
+        ContinentCode: "EU" # Valid AllowedValue
       Name: "www.example.com"
       Type: "A" # Valid AllowedValue
       ResourceRecords:
         - '127.0.0.1'
+  Route53RecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneName: "www.example.com"
+      RecordSets:
+        - Failover: "SECONDARY" # Valid AllowedValue
+          GeoLocation:
+            ContinentCode: "AF" # Valid AllowedValue
+          Name: "www.example.com"
+          Type: "CNAME" # Valid AllowedValue
+          ResourceRecords:
+            - 'www.example.com'
+  Route53ResolverEndpoint:
+    Type: "AWS::Route53Resolver::ResolverEndpoint"
+    Properties:
+      Direction: "INBOUND" # Valid AlowedValue
+      IpAddresses:
+        - Ip: '127.0.0.1'
+          SubnetId: "SubnetId"
+      SecurityGroupIds:
+        - "sg"
+  Route53ResolverRule:
+    Type: "AWS::Route53Resolver::ResolverRule"
+    Properties:
+      DomainName: "example.com"
+      RuleType: "SYSTEM" # Valid AllowedValue
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
