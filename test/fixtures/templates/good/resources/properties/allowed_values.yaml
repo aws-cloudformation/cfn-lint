@@ -193,6 +193,18 @@ Resources:
         RedirectAllRequestsTo:
           HostName: "example.com"
           Protocol: "https" # Valid AllowedValue
+  SecretManagerSecretTargetAttachment:
+    Type: "AWS::SecretsManager::SecretTargetAttachment"
+    Properties:
+      SecretId: "SecretArn"
+      TargetId: "RefToCluster"
+      TargetType: "AWS::RDS::DBCluster" # Valid AllowedValue
+  SesReceiptRule:
+    Type: "AWS::SES::ReceiptRule"
+    Properties:
+      Rule:
+        TlsPolicy: "Require" # Valid AllowedValue
+      RuleSetName: "SesReceiptRule"
   SnsSubscription:
     Type: "AWS::SNS::Subscription"
     Properties:
