@@ -8,6 +8,13 @@ Parameters:
   Password:
     Type: String
     NoEcho: True
+  AutoScalingLaunchConfigurationVolume:
+    Type: String
+    Default: "standard"
+    AllowedValues: # Valid AllowedValues
+      - "io1"
+      - "gp2"
+      - "standard"
 Resources:
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
@@ -96,7 +103,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sdm
           Ebs:
-            VolumeType: "gp2" # Valid AllowedValue
+            VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Valid AllowedValue
       ImageId: "ami-1234"
       InstanceType: "t2.small"
       PlacementTenancy: "default" # Valid AllowedValue
