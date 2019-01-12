@@ -116,11 +116,11 @@ def get_args_filenames(cli_args):
     fmt = config.format
     formatter = get_formatter(fmt)
 
-    rules = cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks)
-
     if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
         exit(0)
+
+    rules = cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks)
 
     if config.update_documentation:
         cfnlint.maintenance.update_documentation(rules)
