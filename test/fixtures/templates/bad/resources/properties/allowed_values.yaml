@@ -15,6 +15,8 @@ Parameters:
       - "io1"
       - "gp2"
       - "ssd" # Invalid AllowedValue
+  ImageId:
+    Type: "AWS::EC2::Image::Id"
 Resources:
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
@@ -91,6 +93,7 @@ Resources:
     Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
       HealthCheckType: "elb" # Invalid AlllowedValue
+      LaunchConfigurationName: "launch-configuration"
       LifecycleHookSpecificationList:
         - DefaultResult: " ABANDON" # Invalid AlllowedValue
           LifecycleHookName: "hook"
@@ -104,7 +107,7 @@ Resources:
         - DeviceName: /dev/sdm
           Ebs:
             VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Invalid AllowedValue
-      ImageId: "ami-1234"
+      ImageId: !Ref "ImageId"
       InstanceType: "t2.4xlarge"
       PlacementTenancy: "Standard" # Invalid AllowedValue
   AutoScalingLifecycleHook:
@@ -180,9 +183,10 @@ Resources:
   Route53RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
+      Failover: "primary" # Invalid AllowedValue
       GeoLocation:
         ContinentCode: "US" # Invalid AllowedValue
-      Failover: "primary" # Invalid AllowedValue
+      HostedZoneName: "www.example.com"
       Name: "www.example.com"
       Type: "AA" # Invalid AllowedValue
       ResourceRecords:
