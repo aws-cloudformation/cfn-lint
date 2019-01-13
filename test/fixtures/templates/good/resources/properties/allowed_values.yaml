@@ -152,6 +152,33 @@ Resources:
               PredefinedScalingMetricSpecification:
                 PredefinedScalingMetricType: "ALBRequestCountPerTarget" # Valid AllowedValue
               TargetValue: 10.5
+  CodeDeployApplication:
+    Type: "AWS::CodeDeploy::Application"
+    Properties:
+      ApplicationName: "CodeDeployApplication"
+      ComputePlatform: "Server" # Valid AllowedValue
+  CodeDeployDeploymentConfig:
+    Type: "AWS::CodeDeploy::DeploymentConfig"
+    Properties:
+      DeploymentConfigName: "CodeDeployDeploymentConfig"
+      MinimumHealthyHosts:
+        Type: "HOST_COUNT" # Valid AllowedValue
+        Value: 1
+  CodeDeployDeploymentGroup:
+    Type: "AWS::CodeDeploy::DeploymentGroup"
+    Properties:
+      ApplicationName: "CodeDeployDeploymentGroup"
+      AutoRollbackConfiguration:
+        Events:
+          - "DEPLOYMENT_FAILURE" # Valid AllowedValue
+          - "DEPLOYMENT_STOP_ON_ALARM" # Valid AllowedValue
+      DeploymentStyle:
+        DeploymentOption: "WITH_TRAFFIC_CONTROL" # Valid AllowedValue
+        DeploymentType: "IN_PLACE" # Valid AllowedValue
+      ServiceRoleArn: "ServiceRoleArn"
+      TriggerConfigurations:
+        - TriggerEvents:
+            - "DeploymentStart" # Valid AllowedValue
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
@@ -179,6 +206,7 @@ Resources:
     Type: "AWS::Route53::HealthCheck"
     Properties:
       HealthCheckConfig:
+        InsufficientDataHealthStatus: "Healthy" # Valid AllowedValue
         Type: "CLOUDWATCH_METRIC"
   Route53RecordSet:
     Type: "AWS::Route53::RecordSet"

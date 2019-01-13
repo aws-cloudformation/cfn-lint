@@ -57,7 +57,8 @@ class TestQuickStartTemplates(BaseTestCase):
                     # List Value if a singular value is set and the type is List
                     if p_values.get('Type') == 'List':
                         p_list_value_type = p_values.get('Value', {}).get('ListValueType')
-                        self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+                        if p_list_value_type:
+                            self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
 
     def test_property_value_types(self):
         """Test Property Value Types"""
