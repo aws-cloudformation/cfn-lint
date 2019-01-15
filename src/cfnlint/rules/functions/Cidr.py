@@ -92,6 +92,7 @@ class Cidr(CloudFormationLintRule):
             'Fn::Select',
             'Ref',
             'Fn::GetAtt',
+            'Fn::Sub',
             'Fn::ImportValue'
         ]
 
@@ -114,7 +115,7 @@ class Cidr(CloudFormationLintRule):
                         if len(ip_block_obj) == 1:
                             for index_key, _ in ip_block_obj.items():
                                 if index_key not in supported_functions:
-                                    message = 'Cidr ipBlock should be Cidr Range, Ref, GetAtt, or Select for {0}'
+                                    message = 'Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}'
                                     matches.append(RuleMatch(
                                         tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
                     elif isinstance(ip_block_obj, (six.text_type, six.string_types)):
