@@ -33,6 +33,25 @@ class TestCondition(BaseTestCase):
         self.assertTrue(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1'}))
         self.assertFalse(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-1'}))
 
+    def test_basic_condition_w_int(self):
+        """ Test getting a condition setup """
+        template = {
+            'Conditions': {
+                'myCondition1': {
+                    'Fn::Equals': [{'Ref': 'myParameter'}, 1]
+                },
+                'myCondition2': {
+                    'Fn::Equals': [1, {'Ref': 'myParameter'}]
+                }
+            }
+        }
+        result = conditions.Condition(template, 'myCondition1')
+        self.assertFalse(result.test({'410f41081170ebc3bc99d8f424ad8e01633f444a': '2'}))
+        self.assertTrue(result.test({'410f41081170ebc3bc99d8f424ad8e01633f444a': '1'}))
+        result = conditions.Condition(template, 'myCondition2')
+        self.assertFalse(result.test({'410f41081170ebc3bc99d8f424ad8e01633f444a': '2'}))
+        self.assertTrue(result.test({'410f41081170ebc3bc99d8f424ad8e01633f444a': '1'}))
+
     def test_not_condition(self):
         """ Test getting a condition setup """
         template = {
@@ -91,3 +110,94 @@ class TestCondition(BaseTestCase):
             result.test({
                 '36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-1',
                 'd60d12101638186a2c742b772ec8e69b3e2382b9': 'prod'}))
+
+    def test_two_function_condition(self):
+        """ Test getting a condition setup """
+        template = {
+            'Conditions': {
+                'myCondition': {
+                    'Fn::Equals': [{'Ref': 'AWS::Region'}, {'Ref': 'PrimaryRegion'}]
+                }
+            }
+        }
+        result = conditions.Condition(template, 'myCondition')
+        self.assertFalse(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1'}))
+        self.assertTrue(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': '36cf15035d5be0f36e03d67b66cddb6081f5855d'}))
+
+
+class TestBadConditions(BaseTestCase):
+    """Test Badly Formmated Condition """
+    def test_bad_format_condition(self):
+        """ Badly formmated Condition """
+        template = {
+            'Conditions': {
+                'isProduction': [{'Fn::Equals': [{'Ref:' 'myEnvironment'}, 'prod']}]
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isProduction')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {})
+
+    def test_bad_format_condition_2(self):
+        """ Badly formmated Condition """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [[{'Ref:' 'myEnvironment'}], 'prod']}
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isProduction')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {})
+
+    def test_bad_format_condition_3(self):
+        """ Badly formmated Condition """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment', 'Ref1': 'myEnvironment'}, 'prod']}
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isProduction')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {})
+
+    def test_bad_format_condition_bad_equals_dict(self):
+        """ Badly formmated Condition """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': {'Ref': 'myEnvironment', 'Value': 'prod'}}
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isProduction')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {})
+
+    def test_bad_format_condition_bad_equals_size(self):
+        """ Badly formmated Condition """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Value', 'prod']}
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isProduction')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {})

@@ -881,6 +881,15 @@ class Template(object):
         """
             Compares a path to resource to see if its available
             Returns scenarios that may result in the resource doesn't exist
+            Input:
+                Path: An array that is a Path to the object being checked
+                Resource: The resource being compared to
+            Output:
+                If the resource is available the result is an empty array []
+                If the resource is not available you will get a an array of Condition Names
+                    and when that condition is True or False will result in the resource
+                    not being available when trying to be associated.
+                    [{'ConditionName'}: False]
         """
         results = []
         path_conditions = self.get_conditions_from_path(self.template, path)
@@ -891,7 +900,6 @@ class Template(object):
             test_path_conditions = copy(path_conditions)
             if not test_path_conditions.get(resource_condition):
                 test_path_conditions[resource_condition] = set()
-            if not test_path_conditions.get(resource_condition):
                 if True not in test_path_conditions.get(resource_condition):
                     scenarios = self.conditions.get_scenarios(test_path_conditions.keys())
                     for scenario in scenarios:
@@ -943,7 +951,16 @@ class Template(object):
         return self.conditions.get_scenarios(list(con))
 
     def get_conditions_from_path(self, text, path):
-        """ Parent function to handle resources with conditions """
+        """
+            Parent function to handle resources with conditions.
+            Input:
+                text: The object to start processing through the Path
+                path: The path to recursively look for
+            Output:
+                An Object with keys being the Condition Names and the values are what
+                    if its in the True or False part of the path.
+                    {'condition': {True}}
+        """
 
         results = self._get_conditions_from_path(text, path)
         if len(path) >= 2:
@@ -959,6 +976,13 @@ class Template(object):
     def _get_conditions_from_path(self, text, path):
         """
             Get the conditions and their True/False value for the path provided
+            Input:
+                text: The object to start processing through the Path
+                path: The path to recursively look for
+            Output:
+                An Object with keys being the Condition Names and the values are what
+                    if its in the True or False part of the path.
+                    {'condition': {True}}
         """
         LOGGER.debug('Get conditions for path %s', path)
         results = {}

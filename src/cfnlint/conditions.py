@@ -19,12 +19,19 @@ from copy import copy
 import json
 import logging
 import six
+import cfnlint.helpers
 
 LOGGER = logging.getLogger(__name__)
 
 
+class ConditionParseError(Exception):
+    """
+    Error thrown when the template has poorly formatted condition
+    """
+
+
 def get_hash(obj):
-    """ Return a hasl of an object """
+    """ Return a hash of an object """
     return hashlib.sha1(json.dumps(obj, sort_keys=True).encode('utf-8')).hexdigest()
 
 
@@ -38,8 +45,16 @@ class EqualsValue(object):
             if len(value) == 1:
                 # Save hashes of the dict for consistency and sorting
                 self.Function = get_hash(value)
+            else:
+                LOGGER.debug('Length of the object needs to be 1')
+                raise ConditionParseError
         elif isinstance(value, six.string_types):
             self.String = value
+        elif isinstance(value, six.integer_types):
+            self.String = str(value)
+        else:
+            LOGGER.debug('Equals value has to be string or object')
+            raise ConditionParseError
 
     def __eq__(self, other):
         return other in [self.Function, self.String]
@@ -51,11 +66,16 @@ class Equals(object):
     Right = None
 
     def __init__(self, equals):
-
         if isinstance(equals, list):
             if len(equals) == 2:
                 self.Left = EqualsValue(equals[0])
                 self.Right = EqualsValue(equals[1])
+            else:
+                LOGGER.debug('Length of Equals needs to be 2')
+                raise ConditionParseError
+        else:
+            LOGGER.debug('Equals needs to be a list')
+            raise ConditionParseError
 
     def test(self, scenarios):
         """ Do an equals based on the provided scenario """
@@ -82,7 +102,11 @@ class Condition(object):
         self.Not = []
         self.Influenced_Equals = {}
         value = template.get('Conditions', {}).get(name, {})
-        self.process_condition(template, value)
+        try:
+            self.process_condition(template, value)
+        except ConditionParseError:
+            LOGGER.debug('Error parsing condition: %s', name)
+            self.Equal = None
 
     def test(self, scenarios):
         """ Test a condition based on a scenario """
@@ -124,16 +148,22 @@ class Condition(object):
         if isinstance(value, dict):
             if len(value) == 1:
                 for func_name, func_value in value.items():
-                    if func_name == 'Fn::And':
+                    if func_name == cfnlint.helpers.FUNCTION_AND:
                         self.And = self.process_function(template, func_value)
-                    elif func_name == 'Fn::Or':
+                    elif func_name == cfnlint.helpers.FUNCTION_OR:
                         self.Or = self.process_function(template, func_value)
-                    elif func_name == 'Fn::Not':
+                    elif func_name == cfnlint.helpers.FUNCTION_NOT:
                         self.Not = self.process_function(template, func_value)
-                    elif func_name == 'Fn::Equals':
+                    elif func_name == cfnlint.helpers.FUNCTION_EQUALS:
                         equal = Equals(func_value)
                         self.process_influenced_equal(equal)
                         self.Equals = equal
+            else:
+                LOGGER.debug('Length of the object must be 1')
+                raise ConditionParseError
+        else:
+            LOGGER.debug('Condition has to be an object')
+            raise ConditionParseError
 
     def process_function(self, template, values):
         """ Process Function """
@@ -150,7 +180,7 @@ class Condition(object):
                                     self.Influenced_Equals[i_e_k] = set()
                                 for s_v in i_e_v:
                                     self.Influenced_Equals[i_e_k].add(s_v)
-                        elif k == 'Fn::Equals':
+                        elif k == cfnlint.helpers.FUNCTION_EQUALS:
                             equal = Equals(v)
                             self.process_influenced_equal(equal)
                             results.append(equal)
@@ -167,7 +197,7 @@ class Conditions(object):
         self.Conditions = {}
         self.Equals = {}
         try:
-            self.Equals = self._get_condition_equals(cfn.search_deep_keys('Fn::Equals'))
+            self.Equals = self._get_condition_equals(cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS))
             for condition_name in cfn.template.get('Conditions', {}):
                 self.Conditions[condition_name] = Condition(cfn.template, condition_name)
         except Exception as err:  # pylint: disable=W0703
@@ -195,10 +225,14 @@ class Conditions(object):
                             dict_hash_1 = get_hash(equals[0])
                         elif isinstance(equals[0], six.string_types):
                             value_1 = equals[0]
+                        elif isinstance(equals[0], six.integer_types):
+                            value_1 = str(equals[0])
                         if isinstance(equals[1], dict):
                             dict_hash_2 = get_hash(equals[1])
                         elif isinstance(equals[1], six.string_types):
                             value_2 = equals[1]
+                        elif isinstance(equals[1], six.integer_types):
+                            value_2 = str(equals[1])
 
                         if dict_hash_1:
                             if dict_hash_1 not in results:
@@ -242,7 +276,7 @@ class Conditions(object):
                 results.append(new)
         for current in currents:
             for value in values:
-                new = current
+                new = copy(current)
                 new[condition] = value
                 results.append(new)
 
@@ -261,6 +295,9 @@ class Conditions(object):
             return results
 
         for condition in conditions:
+            # When one of the conditions don't exist we return an empty result
+            if not self.Conditions.get(condition):
+                return []
             for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
                 if not matched_equals.get(equal_key):
                     matched_equals[equal_key] = set()

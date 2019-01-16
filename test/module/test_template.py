@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import cfnlint.helpers
 from cfnlint import Template  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 
@@ -148,9 +149,36 @@ class TestTemplate(BaseTestCase):
 
     def test_is_resource_available(self):
         """ Test is resource available """
-        filename = 'test/fixtures/templates/good/core/conditions.yaml'
-        template = self.load_template(filename)
-        template = Template(filename, template)
+        temp_obj = cfnlint.helpers.convert_dict({
+            'Mappings': {'location': {'us-east-1': {'primary': 'True'}}},
+            'Conditions': {
+                'isPrimary': {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]},
+            },
+            'Resources': {
+                'LambdaExecutionRole': {
+                    'Condition': 'isPrimary',
+                    'Type': 'AWS::IAM::Role',
+                    'Properties': {}
+                },
+                'AMIIDLookup': {
+                    'Type': 'AWS::Lambda::Function',
+                    'Properties': {
+                        'Handler': 'index.handler',
+                        'Role': {
+                            'Fn::If': ['isPrimary', {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}, {'Ref': 'AWS::NoValue'}]
+                        }
+                    }
+                }
+            },
+            'Outputs': {
+                'lambdaArn': {
+                    'Condition': 'isPrimary',
+                    'Value': {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}
+                }
+            }
+        })
+        template = Template('test.yaml', temp_obj)
+        # Doesn't fail with a Fn::If based condition
         self.assertEqual(
             template.is_resource_available(
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
@@ -158,6 +186,7 @@ class TestTemplate(BaseTestCase):
             ),
             []
         )
+        # Doesn't fail when the Output has a Condition defined
         self.assertEqual(
             template.is_resource_available(
                 ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
@@ -165,12 +194,43 @@ class TestTemplate(BaseTestCase):
             ),
             []
         )
+        # Doesn't fail when the Resource doesn't exist
+        self.assertEqual(
+            template.is_resource_available(
+                ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'UnknownResource'
+            ),
+            []
+        )
 
     def test_is_resource_not_available(self):
         """ Test is resource available """
-        filename = 'test/fixtures/templates/bad/functions/relationship_conditions.yaml'
-        template = self.load_template(filename)
-        template = Template(filename, template)
+        temp_obj = cfnlint.helpers.convert_dict({
+            'Mappings': {'location': {'us-east-1': {'primary': 'True'}}},
+            'Conditions': {
+                'isPrimary': {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]},
+            },
+            'Resources': {
+                'LambdaExecutionRole': {
+                    'Condition': 'isPrimary',
+                    'Type': 'AWS::IAM::Role',
+                    'Properties': {}
+                },
+                'AMIIDLookup': {
+                    'Type': 'AWS::Lambda::Function',
+                    'Properties': {
+                        'Handler': 'index.handler',
+                        'Role': {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}
+                    }
+                }
+            },
+            'Outputs': {
+                'lambdaArn': {
+                    'Value': {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}
+                }
+            }
+        })
+        template = Template('test.yaml', temp_obj)
         self.assertEqual(
             template.is_resource_available(
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
@@ -181,6 +241,23 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.is_resource_available(
                 ['Outputs', 'lambdaArn', 'Value', 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            [{'isPrimary': False}]
+        )
+        # Doesn't fail when the Path doesn't exist.  Still shows an error based on the fact there
+        # are no conditions in the path that is workable
+        self.assertEqual(
+            template.is_resource_available(
+                ['Resources', 'AMIIDLookup', 'Properties', 'BadProperty', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                'LambdaExecutionRole'
+            ),
+            [{'isPrimary': False}]
+        )
+        # Gives appropriate response when there is no condition in path
+        self.assertEqual(
+            template.is_resource_available(
+                ['Resources', 'AMIIDLookup', 'Properties', 'Handler'],
                 'LambdaExecutionRole'
             ),
             [{'isPrimary': False}]
@@ -188,9 +265,33 @@ class TestTemplate(BaseTestCase):
 
     def test_get_conditions_from_path(self):
         """ Test is resource available """
-        filename = 'test/fixtures/templates/good/core/conditions.yaml'
-        template = self.load_template(filename)
-        template = Template(filename, template)
+        temp_obj = cfnlint.helpers.convert_dict({
+            'Resources': {
+                'AMIIDLookup': {
+                    'Type': 'AWS::Lambda::Function',
+                    'Properties': {
+                        'Role': {
+                            'Fn::If': ['isPrimary', {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}, {'Ref': 'AWS::NoValue'}]
+                        }
+                    }
+                },
+                'InstanceProfile': {
+                    'Condition': 'isPrimaryAndProduction',
+                    'Type': 'AWS::IAM::InstanceProfile',
+                    'Properties': {
+                        'Path': '/',
+                        'Roles': [{'Ref': 'LambdaExecutionRole'}]
+                    }
+                }
+            },
+            'Outputs': {
+                'lambdaArn': {
+                    'Condition': 'isPrimary',
+                    'Value': {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}
+                }
+            }
+        })
+        template = Template('test.yaml', temp_obj)
         # Gets the condition when in the middle of the Path
         self.assertEqual(
             template.get_conditions_from_path(
@@ -198,6 +299,13 @@ class TestTemplate(BaseTestCase):
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
             ),
             {'isPrimary': {True}}
+        )
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If']
+            ),
+            {'isPrimary': {True, False}}
         )
         self.assertEqual(
             template.get_conditions_from_path(
@@ -213,12 +321,39 @@ class TestTemplate(BaseTestCase):
             ),
             {'isPrimaryAndProduction': {True}}
         )
+        self.assertEqual(
+            template.get_conditions_from_path(
+                template.template,
+                ['Resources', 'AMIIDLookup', 'Properties', 'Handler', 'Ref', 'LambdaHandler']
+            ),
+            {}
+        )
 
     def test_failure_get_conditions_from_path(self):
         """ Test get conditions from path when things arne't formatted correctly """
-        filename = 'test/fixtures/templates/bad/core/conditions.yaml'
-        template = self.load_template(filename)
-        template = Template(filename, template)
+        temp_obj = cfnlint.helpers.convert_dict({
+            'Resources': {
+                'AMIIDLookup': {
+                    'Type': 'AWS::Lambda::Function',
+                    'Properties': {
+                        'Role': {
+                            'Fn::If': ['isPrimary', {'Fn::GetAtt': 'LambdaExecutionRole.Arn'}]
+                        }
+                    }
+                },
+                'myInstance4': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'InstanceType': {
+                            'Fn::If': {
+                                'Fn::If': ['isPrimary', 't3.2xlarge', 't3.xlarge']
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        template = Template('test.yaml', temp_obj)
         # Gets no condition names when it isn't a valid list
         self.assertEqual(
             template.get_conditions_from_path(
@@ -238,13 +373,63 @@ class TestTemplate(BaseTestCase):
 
     def test_get_conditions_scenarios_from_object(self):
         """ Test Getting condition names in an object/list """
-        filename = 'test/fixtures/templates/good/core/conditions.yaml'
-        template = self.load_template(filename)
-        template = Template(filename, template)
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Prod']},
+                'isPrimary': {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]},
+                'isPrimaryAndProduction': {'Fn::And': [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]},
+                'isDevelopment': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Dev']}
+            },
+            'Resources': {
+                'myInstance1': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'Fn::If': [
+                            'isPrimaryAndProduction',
+                            {
+                                'ImageId': 'ami-1234567',
+                                'InstanceType': 't2.medium'
+                            },
+                            {
+                                'Fn::If': [
+                                    'isDevelopment',
+                                    {
+                                        'ImageId': 'ami-abcdefg',
+                                        'InstanceType': 't2.xlarge'
+                                    },
+                                    {
+                                        'ImageId': 'ami-123abcd',
+                                        'InstanceType': 'm3.medium'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                'myInstance2': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': {
+                            'Fn::If': ['isProduction', 'ami-123456', 'ami-abcdef']
+                        },
+                        'InstanceType': {
+                            'Fn::If': [
+                                'isPrimaryAndProduction',
+                                {
+                                    'Fn::If': ['isPrimary', 't3.2xlarge', 't3.xlarge']
+                                },
+                                't3.medium'
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+        template = Template('test.yaml', template)
         # includes nested IFs
         self.assertEqualListOfDicts(
             template.get_conditions_scenarios_from_object(
-                template.template.get('Resources', {}).get('myInstance4', {}).get('Properties', {})
+                template.template.get('Resources', {}).get('myInstance2', {}).get('Properties', {})
             ),
             [
                 {'isPrimary': True, 'isProduction': True, 'isPrimaryAndProduction': True},
@@ -255,7 +440,7 @@ class TestTemplate(BaseTestCase):
         )
         self.assertEqualListOfDicts(
             template.get_conditions_scenarios_from_object(
-                template.template.get('Resources', {}).get('myInstance3', {}).get('Properties', {})
+                template.template.get('Resources', {}).get('myInstance1', {}).get('Properties', {})
             ),
             [
                 {'isPrimaryAndProduction': True, 'isDevelopment': False},
