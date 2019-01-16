@@ -9,6 +9,13 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.12.1
+###### CloudFormation Specifications
+- Add AWS::WorkSpaces::Workspace.WorkspaceProperties ComputeTypeName, RunningMode allowed values
+- Fix AWS::CloudWatch::Alarm to point Metrics at AWS::CloudWatch::Alarm.MetricDataQuery
+###### Fixes
+- Update rule E1024 to support Fn::Sub inside Fn::Cidr
+
 ### 0.12.0
 ###### Features
 - Update rule E1019 to not allow for lists directly when doing a Ref or GetAtt to a list
