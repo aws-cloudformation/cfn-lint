@@ -9,6 +9,21 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.12.0
+###### Features
+- Update rule E1019 to not allow for lists directly when doing a Ref or GetAtt to a list
+- Move parameter checks from rule E3030 to a new rule W2030
+###### CloudFormation Specifications
+- Updated to version 2.19.0
+- Add S3 Bucket Allowed Values
+- Add Route53 Allowed Values
+- Add CodeDeploy Allowed Values
+- Add AWS::SecretsManager::SecretTargetAttachment TargetType Allowed Values
+- Add AWS::SES::ReceiptRule.Rule TlsPolicy Allowed Values
+- Add AWS::AutoScaling::AutoScalingGroup, AWS::Route53::RecordSetGroup, and AWS::AutoScaling::AutoScalingGroup to OnlyOne
+###### Fixes
+- Improve W7001 error message
+
 ### 0.11.1
 ###### CloudFormation Specifications
 - Support Ref to IAM::Role or IAM::InstanceProfile with values looking for an ARN

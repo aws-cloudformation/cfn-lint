@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **97** rules are applied by this linter:
+The following **98** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -119,6 +119,7 @@ The following **97** rules are applied by this linter:
 | W1019 <a name="W1019"></a> | Sub validation of parameters | Validate that Fn::Sub Parameters are used | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | W1020 <a name="W1020"></a> | Sub isn't needed if it doesn't have a variable defined | Checks sub strings to see if a variable is defined. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub` |
 | W2001 <a name="W2001"></a> | Check if Parameters are Used | Making sure the parameters defined are used | [Source](https://github.com/awslabs/cfn-python-lint) | `parameters` |
+| W2030 <a name="W2030"></a> | Check if parameters have a valid value | Check if parameters have a valid value in case of an enumator. The Parameters allowed values is based on the usages in property (Ref) | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`allowed value` |
 | W2501 <a name="W2501"></a> | Check if Password Properties are correctly configured | Password properties should be strings and if parameter using NoEcho | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds) | `parameters`,`passwords` |
 | W2506 <a name="W2506"></a> | Check if ImageId Parameters have the correct type | See if there are any refs for ImageId to a parameter of inappropriate type. Appropriate Types are [AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>] | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`imageid` |
 | W2507 <a name="W2507"></a> | Security Group Parameters are of correct type AWS::EC2::SecurityGroup::Id | Check if a parameter is being used in a resource for Security Group.  If it is make sure it is of type AWS::EC2::SecurityGroup::Id | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes) | `parameters`,`securitygroup` |
