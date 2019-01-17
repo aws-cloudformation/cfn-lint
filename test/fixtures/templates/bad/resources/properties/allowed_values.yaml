@@ -152,6 +152,21 @@ Resources:
               PredefinedScalingMetricSpecification:
                 PredefinedScalingMetricType: "RequestCountPerTarget" # Invalid AllowedValue
               TargetValue: 10.5
+  Budget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetType: "UTILIZATION" # Invalid AllowedValue
+        TimeUnit: "month" # Invalid AllowedValue
+      NotificationsWithSubscribers:
+        - Subscribers:
+          - SubscriptionType: "e-mail" # Invalid AllowedValue
+            Address: "test@test.com"
+          Notification:
+            ThresholdType: "ACTUAL" # Invalid AllowedValue
+            Threshold: 80
+            NotificationType: "FORECAST" # Invalid AllowedValue
+            ComparisonOperator: "GREATER" # Invalid AllowedValue
   CodeDeployApplication:
     Type: AWS::CodeDeploy::Application
     Properties:
