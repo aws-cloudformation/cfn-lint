@@ -152,6 +152,21 @@ Resources:
               PredefinedScalingMetricSpecification:
                 PredefinedScalingMetricType: "ALBRequestCountPerTarget" # Valid AllowedValue
               TargetValue: 10.5
+  Budget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetType: "RI_UTILIZATION" # Valid AllowedValue
+        TimeUnit: "MONTHLY" # Valid AllowedValue
+      NotificationsWithSubscribers:
+        - Subscribers:
+          - SubscriptionType: "EMAIL" #Valid AllowedValue
+            Address: "test@test.com"
+          Notification:
+            ThresholdType: "PERCENTAGE" # Valid AllowedValue
+            Threshold: 80
+            NotificationType: "ACTUAL" # Valid AllowedValue
+            ComparisonOperator: "GREATER_THAN" # Valid AllowedValue
   CodeDeployApplication:
     Type: "AWS::CodeDeploy::Application"
     Properties:
