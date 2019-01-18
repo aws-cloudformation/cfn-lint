@@ -152,7 +152,7 @@ repos:
     rev: v0.12.1  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
-    files: path/to/cfn/dir/.*\.(json|yml|yaml)$
+        files: path/to/cfn/dir/.*\.(json|yml|yaml)$
 ```
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
