@@ -31,7 +31,7 @@ class TestCodePipelineStageActions(BaseRuleTestCase):
 
     def test_file_artifact_counts(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_artifact_counts.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_artifact_counts.yaml', 2)
 
     def test_file_invalid_owner(self):
         """Test failure"""

@@ -37,4 +37,23 @@ Resources:
                 ProjectName: cfn-python-lint
               InputArtifacts:
               - Name: MyApp
-              - Name: MyApp2
+              - Name: MyApp2  # No Longer an error
+              OutputArtifacts:
+              - Name: MyOutput1
+              - Name: MyOutput2  # No Longer an error
+        - Name: MyApprovalStage
+          Actions:
+            - Name: MyApprovalAction
+              ActionTypeId:
+                Category: Approval
+                Owner: AWS
+                Version: "1"
+                Provider: Manual
+              InputArtifacts:
+              - Name: MyApp # Error
+              OutputArtifacts:
+              - Name: MyOutput1 # Error
+              Configuration:
+                NotificationArn: arn:aws:sns:us-east-2:80398EXAMPLE:MyApprovalTopic
+                ExternalEntityLink: http://example.com
+                CustomData: The latest changes include feedback from Bob.
