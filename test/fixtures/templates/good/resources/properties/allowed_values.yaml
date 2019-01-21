@@ -205,19 +205,32 @@ Resources:
       ArtifactStore:
         Location: "S3Bucket"
         Type: "S3" # Valid AllowedValue
+      ArtifactStores:
+        - ArtifactStore:
+            Location: "S3Bucket"
+            Type: "S3" # Valid AllowedValue
+          Region: "eu-west-1"
       RoleArn: "my-role-arn"
       Stages:
         - Name: "stage1"
           Actions:
             - Name: "action1"
               ActionTypeId:
-                Category: "Test" # Valid AllowedValue
+                Category: "Source" # Valid AllowedValue
                 Owner: "AWS" # Valid AllowedValue
                 Provider: "provider"
-                Version: "latest"
+                Version: "1"
           Blockers:
             - Name: "blocker1"
               Type: "Schedule" # Valid AllowedValue
+        - Name: "stage2"
+          Actions:
+            - Name: "action2"
+              ActionTypeId:
+                Category: "Test" # Valid AllowedValue
+                Owner: "AWS" # Valid AllowedValue
+                Provider: "provider"
+                Version: "1"
   CodePipelineCustomActionType:
     Type: AWS::CodePipeline::CustomActionType
     Properties:
