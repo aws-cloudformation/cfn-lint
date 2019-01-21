@@ -113,17 +113,18 @@ class CodepipelineStages(CloudFormationLintRule):
                     return matches
 
                 try:
+                    stage_path = path + s_stage_p
                     matches.extend(
-                        self.check_stage_count(s_stage_v, s_stage_p)
+                        self.check_stage_count(s_stage_v, stage_path)
                     )
                     matches.extend(
-                        self.check_first_stage(s_stage_v, s_stage_p)
+                        self.check_first_stage(s_stage_v, stage_path)
                     )
                     matches.extend(
-                        self.check_source_actions(s_stage_v, s_stage_p)
+                        self.check_source_actions(s_stage_v, stage_path)
                     )
                     matches.extend(
-                        self.check_names_unique(s_stage_v, s_stage_p)
+                        self.check_names_unique(s_stage_v, stage_path)
                     )
                 except AttributeError as err:
                     self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
