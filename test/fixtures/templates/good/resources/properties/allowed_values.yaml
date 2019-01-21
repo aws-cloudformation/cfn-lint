@@ -199,6 +199,53 @@ Resources:
       TriggerConfigurations:
         - TriggerEvents:
             - "DeploymentStart" # Valid AllowedValue
+  CodePipeline:
+    Type: "AWS::CodePipeline::Pipeline"
+    Properties:
+      ArtifactStore:
+        Location: "S3Bucket"
+        Type: "S3" # Valid AllowedValue
+      RoleArn: "my-role-arn"
+      Stages:
+        - Name: "stage1"
+          Actions:
+            - Name: "action1"
+              ActionTypeId:
+                Category: "Test" # Valid AllowedValue
+                Owner: "AWS" # Valid AllowedValue
+                Provider: "provider"
+                Version: "latest"
+          Blockers:
+            - Name: "blocker1"
+              Type: "Schedule" # Valid AllowedValue
+  CodePipelineCustomActionType:
+    Type: AWS::CodePipeline::CustomActionType
+    Properties:
+      Category: "Test" # Valid AllowedValue
+      ConfigurationProperties:
+        - Key: True
+          Name: "My-Name"
+          Required: True
+          Secret: False
+          Type: "String" # Valid AllowedValue
+      InputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      OutputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      Provider: "My-Build-Provider-Name"
+  CodePipelineWebhook:
+    Type: "AWS::CodePipeline::Webhook"
+    Properties:
+      Authentication: "GITHUB_HMAC" # Valid AllowedValue
+      AuthenticationConfiguration:
+        SecretToken: "githubtoken"
+      Filters:
+        - JsonPath: ""
+      TargetAction: "action1"
+      TargetPipeline: ""
+      TargetPipelineVersion: 1
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
