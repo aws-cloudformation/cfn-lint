@@ -30,6 +30,7 @@ class RecordSet(CloudFormationLintRule):
 
     REGEX_DOMAINNAME = re.compile(r'^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])(.)$')
     REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
+    REGEX_CNAME_VALIDATIONS = re.compile(r'^.*\.acm-validations\.aws\.?$')
 
     def check_a_record(self, path, recordset):
         """Check A record Configuration"""
@@ -116,10 +117,10 @@ class RecordSet(CloudFormationLintRule):
             for index, record in enumerate(resource_records):
                 if not isinstance(record, dict):
                     tree = path[:] + ['ResourceRecords', index]
-                    if (not re.match(self.REGEX_DOMAINNAME, record)
-                            # ACM Route 53 validation uses invalid CNAMEs starting with `_`,
-                            # special-case them rather than complicate the regex.
-                            and not record.endswith('.acm-validations.aws.')):
+                    if (not re.match(self.REGEX_DOMAINNAME, record) and
+                            not re.match(self.REGEX_CNAME_VALIDATIONS, record)):
+                        # ACM Route 53 validation uses invalid CNAMEs starting with `_`,
+                        # special-case them rather than complicate the regex.
                         message = 'CNAME record ({}) does not contain a valid domain name'
                         matches.append(RuleMatch(tree, message.format(record)))
 
