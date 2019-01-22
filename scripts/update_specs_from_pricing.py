@@ -52,7 +52,21 @@ region_map = {
 }
 
 session = boto3.session.Session()
-client = session.client('pricing', region_name='us-east-1', )
+client = session.client('pricing', region_name='us-east-1')
+
+def configure_logging():
+    """Setup Logging"""
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+
+    LOGGER.setLevel(logging.INFO)
+    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(log_formatter)
+
+    # make sure all other log handlers are removed before adding it back
+    for handler in LOGGER.handlers:
+        LOGGER.removeHandler(handler)
+    LOGGER.addHandler(ch)
 
 
 def update_outputs(key, values, outputs):
@@ -70,6 +84,8 @@ def update_outputs(key, values, outputs):
 
 def get_ec2_pricing():
     """ Get Ec2 Pricing """
+
+    LOGGER.info('Get EC2 pricing')
     paginator = client.get_paginator('get_products')
     page_iterator = paginator.paginate(
         ServiceCode='AmazonEC2',
@@ -90,9 +106,34 @@ def get_ec2_pricing():
                     )
     return results
 
+def get_redshift_pricing():
+    """ Get Redshift Pricing """
+
+    LOGGER.info('Get Redshift pricing')
+    paginator = client.get_paginator('get_products')
+    page_iterator = paginator.paginate(
+        ServiceCode='AmazonRedshift',
+        FormatVersion='aws_v1',
+    )
+
+    results = {}
+    for page in page_iterator:
+        for price_item in page.get('PriceList', []):
+            products = json.loads(price_item)
+            product = products.get('product', {})
+            if product:
+                if product.get('productFamily') == 'Compute Instance':
+                    if not results.get(region_map[product.get('attributes').get('location')]):
+                        results[region_map[product.get('attributes').get('location')]] = set()
+                    results[region_map[product.get('attributes').get('location')]].add(
+                        product.get('attributes').get('instanceType')
+                    )
+    return results
+
 
 def get_mq_pricing():
     """ Get MQ Instance Pricing """
+    LOGGER.info('Get AmazonMQ pricing')
     paginator = client.get_paginator('get_products')
     page_iterator = paginator.paginate(
         ServiceCode='AmazonMQ',
@@ -122,6 +163,7 @@ def get_mq_pricing():
 
 def get_rds_pricing():
     """ Get RDS Pricing """
+    LOGGER.info('Get RDS pricing')
     paginator = client.get_paginator('get_products')
     page_iterator = paginator.paginate(
         ServiceCode='AmazonRDS',
@@ -145,6 +187,8 @@ def get_rds_pricing():
 
 def main():
     """ main function """
+    configure_logging()
+
     outputs = {}
     for region in region_map.values():
         outputs[region] = []
@@ -152,7 +196,9 @@ def main():
     outputs = update_outputs('Ec2InstanceType', get_ec2_pricing(), outputs)
     outputs = update_outputs('AmazonMQHostInstanceType', get_mq_pricing(), outputs)
     outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
+    outputs = update_outputs('RedshiftInstanceType', get_redshift_pricing(), outputs)
 
+    LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
         filename = 'src/cfnlint/data/ExtendedSpecs/%s/05_pricing_property_values.json' % region
         with open(filename, 'w+') as f:
