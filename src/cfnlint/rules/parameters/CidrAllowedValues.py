@@ -30,8 +30,9 @@ class CidrAllowedValues(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters', 'cidr']
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
+    def __init__(self):
+        """Init"""
+        super(CidrAllowedValues, self).__init__()
         resource_type_specs = [
             'AWS::EC2::Subnet',
             'AWS::EC2::VPC',

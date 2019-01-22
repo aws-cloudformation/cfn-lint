@@ -28,6 +28,11 @@ class Value(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'
     tags = ['outputs']
 
+    def __init__(self):
+        """Init """
+        super(Value, self).__init__()
+        self.resourcetypes = []
+
     def initialize(self, cfn):
         resourcespecs = RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']

@@ -28,8 +28,9 @@ class PolicyVersion(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html'
     tags = ['properties', 'iam']
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
+    def __init__(self):
+        """Init"""
+        super(PolicyVersion, self).__init__()
         self.resources_and_keys = {
             'AWS::SNS::TopicPolicy': 'PolicyDocument',
             'AWS::S3::BucketPolicy': 'PolicyDocument',

@@ -26,8 +26,9 @@ class AvailabilityZone(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['parameters', 'availabilityzone']
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
+    def __init__(self):
+        """Init"""
+        super(AvailabilityZone, self).__init__()
         resource_type_specs = [
             'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',

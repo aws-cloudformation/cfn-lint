@@ -28,8 +28,9 @@ class Exclusive(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
+    def __init__(self):
+        """Init"""
+        super(Exclusive, self).__init__()
         exclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Exclusive.json')
         self.resource_types_specs = exclusivespec['ResourceTypes']
         self.property_types_specs = exclusivespec['PropertyTypes']

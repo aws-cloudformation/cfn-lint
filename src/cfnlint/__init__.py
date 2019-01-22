@@ -54,7 +54,6 @@ class CloudFormationLintRule(object):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        pass
 
     match = None
     match_resource_properties = None

@@ -32,15 +32,11 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html'
     tags = ['functions', 'dynamic reference']
 
-    def initialize(self, cfn):
+    def __init__(self):
         """Init """
-        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
-        self.property_specs = specs.get('PropertyTypes')
-        self.resource_specs = specs.get('ResourceTypes')
-        for resource_spec in self.resource_specs:
-            self.resource_property_types.append(resource_spec)
-        for property_spec in self.property_specs:
-            self.resource_sub_property_types.append(property_spec)
+        super(DynamicReferenceSecureString, self).__init__()
+        self.property_specs = []
+        self.resource_specs = []
         self.exceptions = {
             'AWS::DirectoryService::MicrosoftAD': 'Password',
             'AWS::DirectoryService::SimpleAD': 'Password',
@@ -54,6 +50,16 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
             'AWS::RDS::DBInstance': 'MasterUserPassword',
             'AWS::Redshift::Cluster': 'MasterUserPassword'
         }
+
+    def initialize(self, cfn):
+        """Init """
+        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
+        self.property_specs = specs.get('PropertyTypes')
+        self.resource_specs = specs.get('ResourceTypes')
+        for resource_spec in self.resource_specs:
+            self.resource_property_types.append(resource_spec)
+        for property_spec in self.property_specs:
+            self.resource_sub_property_types.append(property_spec)
 
     def check_dyn_ref_value(self, value, path):
         """Chec item type"""

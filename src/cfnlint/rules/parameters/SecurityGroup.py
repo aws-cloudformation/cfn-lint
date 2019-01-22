@@ -28,8 +28,9 @@ class SecurityGroup(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'securitygroup']
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
+    def __init__(self):
+        """Init"""
+        super(SecurityGroup, self).__init__()
         resource_type_specs = [
             'AWS::ElasticLoadBalancingV2::LoadBalancer',
             'AWS::AutoScaling::LaunchConfiguration',

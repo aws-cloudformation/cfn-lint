@@ -28,6 +28,12 @@ class GetAtt(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html'
     tags = ['functions', 'getatt']
 
+    def __init__(self):
+        """Init """
+        super(GetAtt, self).__init__()
+        self.propertytypes = []
+        self.resourcetypes = []
+
     def initialize(self, cfn):
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']
