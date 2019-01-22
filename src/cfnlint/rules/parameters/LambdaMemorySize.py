@@ -27,9 +27,8 @@ class LambdaMemorySize(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize'
     tags = ['parameters', 'lambda']
 
-    def __init__(self):
-        """Init"""
-        super(LambdaMemorySize, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         resource_type_specs = [
             'AWS::Lambda::Function',
         ]

@@ -28,8 +28,8 @@ class PropertiesTemplated(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html'
     tags = ['resources']
 
-    def __init__(self):
-        super(PropertiesTemplated, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.resource_property_types.extend([
             'AWS::ApiGateway::RestApi',
             'AWS::Lambda::Function',

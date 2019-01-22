@@ -29,9 +29,8 @@ class StateMachine(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html'
     tags = ['resources', 'stepfunctions']
 
-    def __init__(self):
-        """Init"""
-        super(StateMachine, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.resource_property_types.append('AWS::StepFunctions::StateMachine')
 
     def _check_state_json(self, def_json, state_name, path):

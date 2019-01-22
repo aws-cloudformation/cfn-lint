@@ -30,10 +30,9 @@ class ValuePrimitiveType(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype'
     tags = ['resources']
 
-    def __init__(self, ):
-        """Init """
-        super(ValuePrimitiveType, self).__init__()
-        specs = cfnlint.helpers.RESOURCE_SPECS.get('us-east-1')
+    def initialize(self, cfn):
+        """Initialize the rule"""
+        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')
         for resource_spec in self.resource_specs:

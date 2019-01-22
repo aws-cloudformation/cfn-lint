@@ -31,9 +31,8 @@ class Policy(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html'
     tags = ['properties', 'iam']
 
-    def __init__(self):
-        """Init"""
-        super(Policy, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.resource_exceptions = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
         }

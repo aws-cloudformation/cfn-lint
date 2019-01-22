@@ -29,9 +29,8 @@ class OnlyOne(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
-    def __init__(self):
-        """Init"""
-        super(OnlyOne, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         onlyonespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/OnlyOne.json')
         self.resource_types_specs = onlyonespec['ResourceTypes']
         self.property_types_specs = onlyonespec['PropertyTypes']

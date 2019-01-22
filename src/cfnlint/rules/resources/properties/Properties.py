@@ -29,8 +29,8 @@ class Properties(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
     tags = ['resources']
 
-    def __init__(self):
-        super(Properties, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.cfn = {}
         self.resourcetypes = {}
         self.propertytypes = {}

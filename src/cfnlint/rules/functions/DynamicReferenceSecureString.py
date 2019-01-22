@@ -32,10 +32,9 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html'
     tags = ['functions', 'dynamic reference']
 
-    def __init__(self, ):
+    def initialize(self, cfn):
         """Init """
-        super(DynamicReferenceSecureString, self).__init__()
-        specs = cfnlint.helpers.RESOURCE_SPECS.get('us-east-1')
+        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')
         for resource_spec in self.resource_specs:

@@ -29,9 +29,8 @@ class Cidr(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters', 'availabilityzone']
 
-    def __init__(self):
-        """Init"""
-        super(Cidr, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         resource_type_specs = [
             'AWS::EC2::Subnet',
             'AWS::EC2::VPC',

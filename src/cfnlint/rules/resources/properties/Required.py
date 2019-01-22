@@ -30,9 +30,9 @@ class Required(CloudFormationLintRule):
 
     cfn = {}
 
-    def __init__(self):
-        super(Required, self).__init__()
-        resourcespecs = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
+    def initialize(self, cfn):
+        """Initialize the rule"""
+        resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
 

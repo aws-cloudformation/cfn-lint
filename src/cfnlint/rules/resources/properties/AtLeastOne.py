@@ -29,9 +29,8 @@ class AtLeastOne(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
-    def __init__(self):
-        """Init"""
-        super(AtLeastOne, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         atleastonespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/AtLeastOne.json')
         self.resource_types_specs = atleastonespec['ResourceTypes']
         self.property_types_specs = atleastonespec['PropertyTypes']

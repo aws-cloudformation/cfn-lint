@@ -28,9 +28,8 @@ class Inclusive(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources']
 
-    def __init__(self):
-        """Init"""
-        super(Inclusive, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         inclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Inclusive.json')
         self.resource_types_specs = inclusivespec['ResourceTypes']
         self.property_types_specs = inclusivespec['PropertyTypes']

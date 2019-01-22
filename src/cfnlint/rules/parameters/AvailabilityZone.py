@@ -27,9 +27,8 @@ class AvailabilityZone(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
     tags = ['parameters', 'availabilityzone']
 
-    def __init__(self):
-        """Init"""
-        super(AvailabilityZone, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.multiple_resource_type_specs = [
             'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',

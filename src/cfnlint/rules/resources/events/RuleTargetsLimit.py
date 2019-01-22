@@ -27,9 +27,8 @@ class RuleTargetsLimit(CloudFormationLintRule):
     tags = ['resources', 'events']
     max_count = 5
 
-    def __init__(self):
-        """Init"""
-        super(RuleTargetsLimit, self).__init__()
+    def initialize(self, cfn):
+        """Initialize the rule"""
         self.resource_property_types = ['AWS::Events::Rule']
         self.limits = {}
 
