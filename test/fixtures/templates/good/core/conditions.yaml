@@ -1,0 +1,116 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Testing the conditions class and scenarios for testing
+Parameters:
+  myEnvironment:
+    Type: String
+Mappings:
+  location:
+    us-east-1:
+      primary: 'True'
+Conditions:
+  isProduction: !Equals [!Ref 'myEnvironment', 'Prod']
+  isPrimary: !Equals ['True', !FindInMap ['location', !Ref 'AWS::Region', primary]]
+  isPrimaryAndProduction: !And [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]
+  isProductionOrStaging: !Or [{'Condition': 'isProduction'}, {'Fn::Equals': [!Ref 'myEnvironment', 'Stage']}]
+  isNotProduction: !Not [{'Condition': 'isProduction'}]
+  isDevelopment: !Equals [!Ref 'myEnvironment', 'Dev']
+  isPrimaryAndProdOrStage: !And [{'Condition': 'isProductionOrStaging'}, !Equals ['True', !FindInMap ['location', !Ref 'AWS::Region', primary]]]
+Resources:
+  mySubnet:
+    Condition: isPrimaryAndProduction
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      VpcId: vpc-123456
+  myInstance1:
+    Type: AWS::EC2::Instance
+    Properties:
+      SubnetId: !If [ isDevelopment, !Ref mySubnet, 'abc-123456']
+      ImageId: ami-123456
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      BlockDeviceMappings:
+        Fn::If:
+        - isPrimaryAndProduction
+        - - VirtualName:
+              Fn::If:
+                - isPrimary
+                - /dev/hda
+                - /dev/hdb
+        - - Fn::If:
+            - isDevelopment
+            - VirtualName: /dev/hda
+              Ebs: {}
+            - !Ref AWS::NoValue
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      Fn::If:
+      - isPrimaryAndProduction
+      - ImageId: ami-1234567
+        InstanceType: t2.medium
+      - Fn::If:
+        - isDevelopment
+        - ImageId: ami-abcdefg
+          InstanceType: t2.xlarge
+        - ImageId: ami-123abcd
+          InstanceType: m3.medium
+  myInstance4:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !If [isProduction, 'ami-123456', 'ami-abcdef']
+      InstanceType:
+        Fn::If:
+        - isPrimaryAndProduction
+        - Fn::If:
+          - isPrimary
+          - t3.2xlarge
+          - t3.xlarge
+        - t3.medium
+  LambdaExecutionRole:
+    Condition: isPrimary
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+  InstanceProfile:
+    Condition: isPrimaryAndProduction
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref LambdaExecutionRole
+  AMIIDLookup:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role:
+        Fn::If:
+        - isPrimary
+        - !GetAtt LambdaExecutionRole.Arn
+        - !Ref 'AWS::NoValue'
+      Code:
+        S3Bucket: lambda-functions
+        S3Key: amilookup.zip
+      Runtime: nodejs4.3
+      Timeout: 25
+      TracingConfig:
+        Mode: Active
+Outputs:
+  lambdaArn:
+    Condition: isPrimary
+    Value: !GetAtt LambdaExecutionRole.Arn

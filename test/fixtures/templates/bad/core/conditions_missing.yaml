@@ -1,0 +1,12 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myEnvironment:
+    Type: String
+Conditions:
+  isProduction: !Equals [!Ref myEnvironment, 'prod']
+  isPrimaryAndProduction:
+    Fn::And:
+    - Condition: isProduction
+    - Condition: isPrimary   # missing is Primary
+Resources: {}
