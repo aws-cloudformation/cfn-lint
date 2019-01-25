@@ -124,6 +124,21 @@ class TestCondition(BaseTestCase):
         self.assertFalse(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1'}))
         self.assertTrue(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': '36cf15035d5be0f36e03d67b66cddb6081f5855d'}))
 
+    def test_empty_string_in_equals(self):
+        """ Empty String in Condition """
+        template = {
+            'Conditions': {
+                'isSet': {'Fn::Equals': [{'Ref': 'myEnvironment'}, '']}
+            },
+            'Resources': {}
+        }
+        result = conditions.Condition(template, 'isSet')
+        self.assertEqual(result.And, [])  # No And
+        self.assertEqual(result.Or, [])  # No Or
+        self.assertEqual(result.Not, [])  # No Not
+        self.assertIsNotNone(result.Equals)
+        self.assertEqual(result.Influenced_Equals, {'d60d12101638186a2c742b772ec8e69b3e2382b9': {''}})
+
 
 class TestBadConditions(BaseTestCase):
     """Test Badly Formmated Condition """
