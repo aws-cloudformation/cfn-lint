@@ -26,8 +26,6 @@ class CodepipelineStageActions(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#pipeline-requirements'
     tags = ['resources', 'codepipeline']
 
-    VALID_OWNER_STRINGS = {'AWS', 'ThirdParty', 'Custom'}
-
     CONSTRAINTS = {
         'AWS': {
             'Source': {
@@ -39,12 +37,6 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     'InputArtifactRange': 0,
                     'OutputArtifactRange': 1,
                 }
-            },
-            'Build': {
-                'CodeBuild': {
-                    'InputArtifactRange': 1,
-                    'OutputArtifactRange': (0, 1),
-                },
             },
             'Test': {
                 'CodeBuild': {
@@ -156,25 +148,6 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
-    def check_owner(self, action, path):
-        """Check that action type owner is valid."""
-        matches = []
-
-        owner = action.get('ActionTypeId').get('Owner')
-        if owner not in self.VALID_OWNER_STRINGS and owner is not None:
-            message = (
-                'For all currently supported action types, the only valid owner '
-                'strings are {owners}'
-            ).format(
-                owners=', '.join(list(self.VALID_OWNER_STRINGS))
-            )
-            matches.append(RuleMatch(
-                path + ['ActionTypeId', 'Owner'],
-                message
-            ))
-
-        return matches
-
     def check_version(self, action, path):
         """Check that action type version is valid."""
         matches = []
@@ -228,11 +201,11 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
                         for l_i_a_action, l_i_a_path in s_action_v.items_safe(s_action_p):
                             try:
-                                matches.extend(self.check_names_unique(l_i_a_action, l_i_a_path, action_names))
-                                matches.extend(self.check_version(l_i_a_action, l_i_a_path))
-                                matches.extend(self.check_owner(l_i_a_action, l_i_a_path))
-                                matches.extend(self.check_artifact_counts(l_i_a_action, 'InputArtifacts', l_i_a_path))
-                                matches.extend(self.check_artifact_counts(l_i_a_action, 'OutputArtifacts', l_i_a_path))
+                                full_path = path + l_i_a_path
+                                matches.extend(self.check_names_unique(l_i_a_action, full_path, action_names))
+                                matches.extend(self.check_version(l_i_a_action, full_path))
+                                matches.extend(self.check_artifact_counts(l_i_a_action, 'InputArtifacts', full_path))
+                                matches.extend(self.check_artifact_counts(l_i_a_action, 'OutputArtifacts', full_path))
                             except AttributeError as err:
                                 self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
                                                   'Ignoring the error here: %s', str(err))

@@ -1,5 +1,5 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
@@ -14,24 +14,15 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.properties.AllowedValue import AllowedValue  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint import conditions
+from testlib.testcase import BaseTestCase
 
 
-class TestAllowedValue(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
-    def setUp(self):
-        """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
-        self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/allowed_values.yaml'
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/allowed_values.yaml', 80)
+class TestEquals(BaseTestCase):
+    """ Test Equals Logic """
+    def test_equal_value_string(self):
+        """ Test equals setup """
+        template = 'us-east-1'
+        result = conditions.EqualsValue(template)
+        self.assertTrue(result == 'us-east-1')
+        self.assertFalse(result == 'us-west-2')

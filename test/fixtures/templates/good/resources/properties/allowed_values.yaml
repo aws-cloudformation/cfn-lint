@@ -167,6 +167,11 @@ Resources:
             Threshold: 80
             NotificationType: "ACTUAL" # Valid AllowedValue
             ComparisonOperator: "GREATER_THAN" # Valid AllowedValue
+  Certificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: "example.com"
+      ValidationMethod: "DNS" # Valid AllowedValue
   CodeDeployApplication:
     Type: "AWS::CodeDeploy::Application"
     Properties:
@@ -194,6 +199,61 @@ Resources:
       TriggerConfigurations:
         - TriggerEvents:
             - "DeploymentStart" # Valid AllowedValue
+  CodePipeline:
+    Type: "AWS::CodePipeline::Pipeline"
+    Properties:
+      ArtifactStore:
+        Location: "S3Bucket"
+        Type: "S3" # Valid AllowedValue
+      RoleArn: "my-role-arn"
+      Stages:
+        - Name: "stage1"
+          Actions:
+            - Name: "action1"
+              ActionTypeId:
+                Category: "Source" # Valid AllowedValue
+                Owner: "AWS" # Valid AllowedValue
+                Provider: "provider"
+                Version: "1"
+          Blockers:
+            - Name: "blocker1"
+              Type: "Schedule" # Valid AllowedValue
+        - Name: "stage2"
+          Actions:
+            - Name: "action2"
+              ActionTypeId:
+                Category: "Test" # Valid AllowedValue
+                Owner: "AWS" # Valid AllowedValue
+                Provider: "provider"
+                Version: "1"
+  CodePipelineCustomActionType:
+    Type: AWS::CodePipeline::CustomActionType
+    Properties:
+      Category: "Test" # Valid AllowedValue
+      ConfigurationProperties:
+        - Key: True
+          Name: "My-Name"
+          Required: True
+          Secret: False
+          Type: "String" # Valid AllowedValue
+      InputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      OutputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      Provider: "My-Build-Provider-Name"
+  CodePipelineWebhook:
+    Type: "AWS::CodePipeline::Webhook"
+    Properties:
+      Authentication: "GITHUB_HMAC" # Valid AllowedValue
+      AuthenticationConfiguration:
+        SecretToken: "githubtoken"
+      Filters:
+        - JsonPath: ""
+      TargetAction: "action1"
+      TargetPipeline: ""
+      TargetPipelineVersion: 1
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:

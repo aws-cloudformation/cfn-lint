@@ -1,5 +1,5 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
@@ -14,29 +14,24 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.codepipeline.CodepipelineStageActions import CodepipelineStageActions  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.functions.RelationshipConditions import RelationshipConditions  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestCodePipelineStageActions(BaseRuleTestCase):
-    """Test CodePipeline Stage Actions Configuration"""
+class TestRulesRelationshipConditions(BaseRuleTestCase):
+    """Test Rules Ref exists """
     def setUp(self):
         """Setup"""
-        super(TestCodePipelineStageActions, self).setUp()
-        self.collection.register(CodepipelineStageActions())
+        super(TestRulesRelationshipConditions, self).setUp()
+        self.collection.register(RelationshipConditions())
+        self.success_templates = [
+            'test/fixtures/templates/good/functions/relationship_conditions.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_artifact_counts(self):
+    def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_artifact_counts.yaml', 2)
-
-    def test_file_invalid_version(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_invalid_version.yaml', 1)
-
-    def test_file_non_unique(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_non_unique.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/relationship_conditions.yaml', 3)
