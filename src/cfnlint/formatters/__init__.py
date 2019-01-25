@@ -82,7 +82,10 @@ class JsonFormatter(BaseFormatter):
 
     def print_matches(self, matches):
         # JSON formatter outputs a single JSON object
-        print(json.dumps(matches, indent=4, cls=self.CustomEncoder))
+        print(
+            json.dumps(
+                matches, indent=4, cls=self.CustomEncoder,
+                sort_keys=True, separators=(',', ': ')))
 
 
 class QuietFormatter(BaseFormatter):
