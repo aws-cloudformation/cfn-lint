@@ -39,6 +39,7 @@ class Configuration(CloudFormationLintRule):
             'DependsOn',
             'Metadata',
             'UpdatePolicy',
+            'UpdateReplacePolicy',
             'Properties',
             'Type',
             'Condition'
@@ -101,7 +102,7 @@ class Configuration(CloudFormationLintRule):
                                     ))
 
                 if 'Properties' not in resource_values:
-                    resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1']
+                    resource_spec = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
                     if resource_type in resource_spec['ResourceTypes']:
                         properties_spec = resource_spec['ResourceTypes'][resource_type]['Properties']
                         # pylint: disable=len-as-condition

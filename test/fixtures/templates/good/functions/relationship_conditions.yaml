@@ -1,0 +1,53 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myEnvironment:
+    Type: String
+Conditions:
+  isProduction: !Equals [!Ref myEnvironment, 'prod']
+  isPrimary: !Equals [!Ref 'AWS::NoValue', 'us-east-1']
+  isPrimaryAndProduction: !And [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]
+Resources:
+  LambdaExecutionRole:
+    Condition: isPrimary
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+  InstanceProfile:
+    Condition: isPrimaryAndProduction
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: '/'
+      Roles:
+      - !Ref LambdaExecutionRole
+  AMIIDLookup:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role:
+        Fn::If:
+        - isPrimary
+        - !GetAtt LambdaExecutionRole.Arn
+        - !Ref 'AWS::NoValue'
+      Code:
+        S3Bucket: lambda-functions
+        S3Key: amilookup.zip
+      Runtime: nodejs4.3
+      Timeout: 25
+      TracingConfig:
+        Mode: Active
+Outputs:
+  lambdaArn:
+    Condition: isPrimary
+    Value: !GetAtt LambdaExecutionRole.Arn
