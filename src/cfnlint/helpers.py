@@ -77,6 +77,23 @@ FUNCTIONS = [
     'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
     'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
 
+FUNCTION_IF = 'Fn::If'
+FUNCTION_AND = 'Fn::And'
+FUNCTION_OR = 'Fn::Or'
+FUNCTION_NOT = 'Fn::Not'
+FUNCTION_EQUALS = 'Fn::Equals'
+
+PSEUDOPARAMS = [
+    'AWS::AccountId',
+    'AWS::NotificationARNs',
+    'AWS::NoValue',
+    'AWS::Partition',
+    'AWS::Region',
+    'AWS::StackId',
+    'AWS::StackName',
+    'AWS::URLSuffix'
+]
+
 LIMITS = {
     'mappings': {
         'number': 100,

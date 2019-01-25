@@ -1,5 +1,5 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
@@ -14,18 +14,18 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.ectwo.Vpc import Vpc  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint.rules.functions.RelationshipConditions import RelationshipConditions  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
 
-class TestPropertyEc2Vpc(BaseRuleTestCase):
-    """Test Ec2 VPC Resources"""
+class TestRulesRelationshipConditions(BaseRuleTestCase):
+    """Test Rules Ref exists """
     def setUp(self):
         """Setup"""
-        super(TestPropertyEc2Vpc, self).setUp()
-        self.collection.register(Vpc())
+        super(TestRulesRelationshipConditions, self).setUp()
+        self.collection.register(RelationshipConditions())
         self.success_templates = [
-            'test/fixtures/templates/good/properties_ec2_vpc.yaml',
+            'test/fixtures/templates/good/functions/relationship_conditions.yaml',
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestPropertyEc2Vpc(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_ec2_network.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/relationship_conditions.yaml', 3)

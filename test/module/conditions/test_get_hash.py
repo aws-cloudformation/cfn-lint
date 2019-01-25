@@ -1,5 +1,5 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
   Permission is hereby granted, free of charge, to any person obtaining a copy of this
   software and associated documentation files (the "Software"), to deal in the Software
@@ -14,24 +14,20 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.ectwo.Vpc import Vpc  # pylint: disable=E0401
-from ... import BaseRuleTestCase
+from cfnlint import conditions
+from testlib.testcase import BaseTestCase
 
 
-class TestPropertyEc2Vpc(BaseRuleTestCase):
-    """Test Ec2 VPC Resources"""
-    def setUp(self):
-        """Setup"""
-        super(TestPropertyEc2Vpc, self).setUp()
-        self.collection.register(Vpc())
-        self.success_templates = [
-            'test/fixtures/templates/good/properties_ec2_vpc.yaml',
-        ]
+class TestHash(BaseTestCase):
+    """ Test gethash """
 
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
+    def test_get_hash(self):
+        """ Test get hash """
+        self.assertEqual(
+            conditions.get_hash({'Ref': 'AWS::NoValue'}),
+            'f59194a5833190961f28f921cedf05825d749193')
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_ec2_network.yaml', 3)
+        self.assertEqual(
+            conditions.get_hash({'Fn::FindInMap': ['MapName', {'Ref': 'AWS::Region'}, 'AmiId']}),
+            '21f3e3d3b41d4ddbd3a6af7b29c107e6ccbe84e7'
+        )

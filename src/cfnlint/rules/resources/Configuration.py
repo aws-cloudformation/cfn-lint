@@ -39,6 +39,7 @@ class Configuration(CloudFormationLintRule):
             'DependsOn',
             'Metadata',
             'UpdatePolicy',
+            'UpdateReplacePolicy',
             'Properties',
             'Type',
             'Condition'
