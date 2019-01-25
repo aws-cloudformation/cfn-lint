@@ -12237,7 +12237,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "Ec2InstanceType"
+          }
         },
         "KernelId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-launchconfig.html#cfn-as-launchconfig-kernelid",
@@ -14263,7 +14266,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-instancetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ValueType": "Ec2InstanceType"
+          }
         },
         "Ipv6AddressCount": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-ipv6addresscount",
@@ -21240,14 +21246,11 @@
       ]
     },
     "AmazonMQHostInstanceType": {
-      "AllowedValues": [
-        "mq.m4.large",
-        "mq.m5.2xlarge",
-        "mq.m5.4xlarge",
-        "mq.m5.large",
-        "mq.m5.xlarge",
-        "mq.t2.micro"
-      ]
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
     },
     "ApiGatewatRestApiKeySourceType": {
       "AllowedValues": [
@@ -21580,6 +21583,68 @@
         "standard"
       ]
     },
+    "Ec2InstanceType": {
+      "AllowedValues": [
+        "c5.18xlarge",
+        "c5.2xlarge",
+        "c5.4xlarge",
+        "c5.9xlarge",
+        "c5.large",
+        "c5.xlarge",
+        "c5d.18xlarge",
+        "c5d.2xlarge",
+        "c5d.4xlarge",
+        "c5d.9xlarge",
+        "c5d.large",
+        "c5d.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "d2.xlarge",
+        "i3.16xlarge",
+        "i3.2xlarge",
+        "i3.4xlarge",
+        "i3.8xlarge",
+        "i3.large",
+        "i3.xlarge",
+        "m5.12xlarge",
+        "m5.24xlarge",
+        "m5.2xlarge",
+        "m5.4xlarge",
+        "m5.large",
+        "m5.xlarge",
+        "m5d.12xlarge",
+        "m5d.24xlarge",
+        "m5d.2xlarge",
+        "m5d.4xlarge",
+        "m5d.large",
+        "m5d.xlarge",
+        "r5.12xlarge",
+        "r5.24xlarge",
+        "r5.2xlarge",
+        "r5.4xlarge",
+        "r5.large",
+        "r5.xlarge",
+        "r5d.12xlarge",
+        "r5d.24xlarge",
+        "r5d.2xlarge",
+        "r5d.4xlarge",
+        "r5d.large",
+        "r5d.xlarge",
+        "t3.2xlarge",
+        "t3.large",
+        "t3.medium",
+        "t3.micro",
+        "t3.nano",
+        "t3.small",
+        "t3.xlarge"
+      ],
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
     "GlueConnectionInputType": {
       "AllowedValues": [
         "JDBC",
@@ -21799,6 +21864,33 @@
       "GetAtt": {
         "AWS::EC2::NetworkInterface": "PrimaryPrivateIpAddress"
       },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "RdsInstanceType": {
+      "AllowedValues": [
+        "db.m5.12xlarge",
+        "db.m5.24xlarge",
+        "db.m5.2xlarge",
+        "db.m5.4xlarge",
+        "db.m5.large",
+        "db.m5.xlarge",
+        "db.r5.12xlarge",
+        "db.r5.24xlarge",
+        "db.r5.2xlarge",
+        "db.r5.4xlarge",
+        "db.r5.large",
+        "db.r5.xlarge",
+        "db.t3.2xlarge",
+        "db.t3.large",
+        "db.t3.medium",
+        "db.t3.micro",
+        "db.t3.small",
+        "db.t3.xlarge"
+      ],
       "Ref": {
         "Parameters": [
           "String"

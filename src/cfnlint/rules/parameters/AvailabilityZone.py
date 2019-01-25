@@ -28,7 +28,7 @@ class AvailabilityZone(CloudFormationLintRule):
     tags = ['parameters', 'availabilityzone']
 
     def __init__(self):
-        """Init"""
+        """Init """
         super(AvailabilityZone, self).__init__()
         self.multiple_resource_type_specs = [
             'AWS::DAX::Cluster',

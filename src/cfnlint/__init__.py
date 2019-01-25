@@ -55,6 +55,9 @@ class CloudFormationLintRule(object):
         """Verbose output"""
         return '%s: %s\n%s' % (self.id, self.shortdesc, self.description)
 
+    def initialize(self, cfn):
+        """Initialize the rule"""
+
     match = None
     match_resource_properties = None
     match_resource_sub_properties = None
@@ -290,6 +293,10 @@ class RulesCollection(object):
     def run(self, filename, cfn):
         """Run rules"""
         matches = []
+
+        for rule in self.rules:
+            rule.initialize(cfn)
+
         for rule in self.rules:
             matches.extend(
                 self.run_check(

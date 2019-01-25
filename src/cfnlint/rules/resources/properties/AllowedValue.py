@@ -28,12 +28,11 @@ class AllowedValue(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
     tags = ['resources', 'property', 'allowed value']
 
-    def __init__(self, ):
-        """Init """
-        super(AllowedValue, self).__init__()
-        for resource_type_spec in RESOURCE_SPECS.get('us-east-1').get('ResourceTypes'):
+    def initialize(self, cfn):
+        """Initialize the rule"""
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get('us-east-1').get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
 
     def check_value(self, value, path, property_name, **kwargs):
@@ -63,7 +62,7 @@ class AllowedValue(CloudFormationLintRule):
                             cfn.check_value(
                                 p_value, prop, p_path,
                                 check_value=self.check_value,
-                                value_specs=RESOURCE_SPECS.get('us-east-1').get('ValueTypes').get(value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -74,8 +73,8 @@ class AllowedValue(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type, {}).get('Properties', {})
-        property_specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
         return matches
@@ -84,8 +83,8 @@ class AllowedValue(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type, {}).get('Properties', {})
-        resource_specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
         return matches

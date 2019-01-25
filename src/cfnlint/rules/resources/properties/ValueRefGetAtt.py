@@ -28,12 +28,11 @@ class ValueRefGetAtt(CloudFormationLintRule):
     description = 'Checks resource properties for Ref and GetAtt values'
     tags = ['resources']
 
-    def __init__(self, ):
-        """Init """
-        super(ValueRefGetAtt, self).__init__()
-        for resource_type_spec in RESOURCE_SPECS.get('us-east-1').get('ResourceTypes'):
+    def initialize(self, cfn):
+        """Initialize the rule"""
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get('us-east-1').get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
 
     def is_value_a_list(self, path, property_name):
@@ -77,7 +76,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
             parameter_type = param.get('Type')
             valid_parameter_types = []
             for parameter in specs.get('Parameters'):
-                for param_type in RESOURCE_SPECS.get('us-east-1').get('ParameterTypes').get(parameter):
+                for param_type in RESOURCE_SPECS.get(cfn.regions[0]).get('ParameterTypes').get(parameter):
                     valid_parameter_types.append(param_type)
 
             if not specs.get('Parameters'):
@@ -194,8 +193,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
                                 p_value, prop, p_path,
                                 check_ref=self.check_value_ref,
                                 check_get_att=self.check_value_getatt,
-                                value_specs=RESOURCE_SPECS.get('us-east-1').get('ValueTypes').get(value_type, {}),
-                                list_value_specs=RESOURCE_SPECS.get('us-east-1').get('ValueTypes').get(list_value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
+                                list_value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(list_value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -206,8 +205,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type, {}).get('Properties', {})
-        property_specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
         return matches
@@ -216,8 +215,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type, {}).get('Properties', {})
-        resource_specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
         return matches
