@@ -36,6 +36,14 @@ class Vpc(CloudFormationLintRule):
         if not re.match(cfnlint.helpers.REGEX_CIDR, value):
             message = 'CidrBlock needs to be of x.x.x.x/y at {0}'
             matches.append(RuleMatch(path, message.format(('/'.join(['Parameters', value])))))
+        else:
+            # CHeck the netmask block, has to be between /16 and /28
+            netmask = int(value.split('/')[1])
+
+            if netmask < 16 or netmask > 28:
+                message = 'VPC Cidrblock netmask ({}) must be between /16 and /28'
+                matches.append(RuleMatch(path, message.format(value)))
+
         return matches
 
     def check_cidr_ref(self, value, path, parameters, resources):
