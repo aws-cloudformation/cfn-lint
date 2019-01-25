@@ -2,14 +2,29 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   At Least One Property types
+Parameters:
+  myAmiId:
+    Type: String
+    Default: ''
+  LaunchConfiguration:
+    Type: String
+Conditions:
+  useAmiId: !Not [!Equals [!Ref myAmiId, '']]
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-1234567
+      ImageId: ami-132456
       BlockDeviceMappings:
       -
         DeviceName: myDevice
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      InstanceId: !If ['useAmiId', {'Ref': 'myAmiId'}, {'Ref': 'AWS::NoValue'}]
+      LaunchConfigurationName: !If ['useAmiId', {'Ref': 'LaunchConfiguration'}, {'Ref': 'AWS::NoValue'}]
+      MaxSize: '3'
+      MinSize: '1'
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
