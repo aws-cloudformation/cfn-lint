@@ -86,14 +86,13 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir, ignore_rules, include_rules, include_experimental=False):
+def get_rules(rulesdir, ignore_rules, include_rules, configure_rules=None, include_experimental=False):
     """Get rules"""
-    rules = RulesCollection(ignore_rules, include_rules, include_experimental)
+    rules = RulesCollection(ignore_rules, include_rules, configure_rules, include_experimental)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
     try:
         for rules_dir in rules_dirs:
-            rules.extend(
-                RulesCollection.create_from_directory(rules_dir))
+            rules.create_from_directory(rules_dir)
     except OSError as e:
         raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
     return rules
@@ -120,11 +119,16 @@ def get_args_filenames(cli_args):
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
-    rules = cfnlint.core.get_rules(config.append_rules, config.ignore_checks, config.include_checks)
+    rules = cfnlint.core.get_rules(
+        config.append_rules,
+        config.ignore_checks,
+        config.include_checks,
+        config.configure_rules
+    )
 
     if config.update_documentation:
         # Get ALL rules (ignore the CLI))
-        documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], True)
+        documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}, True)
         cfnlint.maintenance.update_documentation(documentation_rules)
         exit(0)
 
@@ -154,7 +158,13 @@ def get_template_rules(filename, args):
 
     args.template_args = template
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks, args.include_experimental)
+    rules = cfnlint.core.get_rules(
+        args.append_rules,
+        args.ignore_checks,
+        args.include_checks,
+        args.configure_rules,
+        args.include_experimental,
+    )
 
     return(template, rules, [])
 

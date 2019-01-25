@@ -27,8 +27,7 @@ class TestTemplate(BaseTestCase):
         self.rules = RulesCollection()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
-            self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+            self.rules.create_from_directory(rulesdir)
 
     def test_rule_ids_unique(self):
         """Test Rule IDs are Unique"""

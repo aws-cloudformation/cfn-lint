@@ -48,6 +48,7 @@ class CloudFormationLintRule(object):
     def __init__(self):
         self.resource_property_types = []
         self.resource_sub_property_types = []
+        self.config = {}  # `-X E3012:strict=false`... Show more
 
     def __repr__(self):
         return '%s: %s' % (self.id, self.shortdesc)
@@ -58,6 +59,9 @@ class CloudFormationLintRule(object):
 
     def initialize(self, cfn):
         """Initialize the rule"""
+
+    def configure(self, configs):
+        """ Set the configuration """
 
     match = None
     match_resource_properties = None
@@ -134,7 +138,7 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None, include_rules=None, include_experimental=False):
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False):
         self.rules = []
 
         # Whether "experimental" rules should be added
@@ -143,7 +147,7 @@ class RulesCollection(object):
         # Make Ignore Rules not required
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
-
+        self.configure_rules = configure_rules or []
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         self.include_rules.extend(['W', 'E'])
@@ -342,14 +346,17 @@ class RulesCollection(object):
 
         return matches
 
-    @classmethod
-    def create_from_directory(cls, rulesdir):
+    def create_from_directory(self, rulesdir):
         """Create rules from directory"""
-        result = cls([])
+        result = []
         if rulesdir != '':
-            result.rules = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
+            result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
 
-        return result
+        for rule in result:
+            if rule.id in self.configure_rules:
+                rule.configure(self.configure_rules[rule.id])
+
+        self.extend(result)
 
 
 class RuleMatch(object):

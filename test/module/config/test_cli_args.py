@@ -64,3 +64,9 @@ class TestArgsParser(BaseTestCase):
         self.assertEqual(config.cli_args.templates, ['template1.yaml'])
         self.assertEqual(config.cli_args.include_checks, ['I1234'])
         self.assertEqual(config.cli_args.regions, ['us-west-1'])
+
+    def test_create_parser_rule_configuration(self):
+        """Test success run"""
+
+        config = cfnlint.config.CliArgs(['-x', 'E3012:strict=true', '-x', 'E3012:key=value,E3001:key=value'])
+        self.assertEqual(config.cli_args.configure_rules, {'E3012': {'key': 'value', 'strict': 'true'}, 'E3001': {'key': 'value'}})
