@@ -421,10 +421,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         """ templates """
         templates_args = self._get_argument_value('templates', False, True)
         template_alt_args = self._get_argument_value('template_alt', False, False)
-        if templates_args:
-            filenames = templates_args
-        elif template_alt_args:
+        if template_alt_args:
             filenames = template_alt_args
+        elif templates_args:
+            filenames = templates_args
         else:
             return None
 
