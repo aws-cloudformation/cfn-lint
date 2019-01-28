@@ -53,6 +53,7 @@ class PropertiesTemplated(CloudFormationLintRule):
         templated_exceptions = {
             'AWS::ApiGateway::RestApi': ['BodyS3Location'],
             'AWS::Lambda::Function': ['Code'],
+            'AWS::Lambda::LayerVersion': ['Content'],
             'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
         }
 
