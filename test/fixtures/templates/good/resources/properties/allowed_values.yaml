@@ -108,7 +108,7 @@ Resources:
           Ebs:
             VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Valid AllowedValue
       ImageId: !Ref "ImageId"
-      InstanceType: "t2.small"
+      InstanceType: "t2.small" # Valid AllowedValue
       PlacementTenancy: "default" # Valid AllowedValue
   AutoScalingLifecycleHook:
     Type: "AWS::AutoScaling::LifecycleHook"
@@ -168,10 +168,18 @@ Resources:
             NotificationType: "ACTUAL" # Valid AllowedValue
             ComparisonOperator: "GREATER_THAN" # Valid AllowedValue
   Certificate:
-    Type: AWS::CertificateManager::Certificate
+    Type: "AWS::CertificateManager::Certificate"
     Properties:
       DomainName: "example.com"
       ValidationMethod: "DNS" # Valid AllowedValue
+  CodeCommitRepository:
+    Type: "AWS::CodeCommit::Repository"
+    Properties:
+      RepositoryName: "CodeCommitRepository"
+      Triggers:
+      - Name: "Trigger"
+        Events:
+          - "updateReference" # Valid AllowedValue
   CodeDeployApplication:
     Type: "AWS::CodeDeploy::Application"
     Properties:
@@ -227,7 +235,7 @@ Resources:
                 Provider: "provider"
                 Version: "1"
   CodePipelineCustomActionType:
-    Type: AWS::CodePipeline::CustomActionType
+    Type: "AWS::CodePipeline::CustomActionType"
     Properties:
       Category: "Test" # Valid AllowedValue
       ConfigurationProperties:
@@ -264,7 +272,7 @@ Resources:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: "ami-2f726546"
-      InstanceType: "t1.micro"
+      InstanceType: "t1.micro" # Valid AllowedValue
       KeyName: ""
       BlockDeviceMappings:
         - DeviceName: "/dev/sdm"
