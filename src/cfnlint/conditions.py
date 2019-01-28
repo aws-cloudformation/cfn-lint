@@ -133,14 +133,14 @@ class Condition(object):
                 self.Influenced_Equals[equal.Left.Function] = set()
             if equal.Right.Function:
                 self.Influenced_Equals[equal.Left.Function].add(equal.Right.Function)
-            elif equal.Right.String:
+            elif equal.Right.String is not None:
                 self.Influenced_Equals[equal.Left.Function].add(equal.Right.String)
         if equal.Right.Function:
             if not self.Influenced_Equals.get(equal.Right.Function):
                 self.Influenced_Equals[equal.Right.Function] = set()
             if equal.Left.Function:
                 self.Influenced_Equals[equal.Right.Function].add(equal.Left.Function)
-            elif equal.Left.String:
+            elif equal.Left.String is not None:
                 self.Influenced_Equals[equal.Right.Function].add(equal.Left.String)
 
     def process_condition(self, template, value):
