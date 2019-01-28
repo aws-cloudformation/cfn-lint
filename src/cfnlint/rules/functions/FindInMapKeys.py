@@ -39,21 +39,21 @@ class FindInMapKeys(CloudFormationLintRule):
                 if mapping:
                     if isinstance(first_key, (six.string_types, int)):
                         if isinstance(map_name, (six.string_types)):
-                            if not mapping.get(first_key):
+                            if mapping.get(first_key) is None:
                                 message = 'FindInMap first key "{0}" doesn\'t exist in map "{1}" at {3}'
                                 matches.append(RuleMatch(
                                     tree[:] + [1],
                                     message.format(first_key, map_name, first_key, '/'.join(map(str, tree)))))
                         if mapping.get(first_key):
                             # Don't double error if they first key doesn't exist
-                            if not mapping.get(first_key, {}).get(second_key):
+                            if mapping.get(first_key, {}).get(second_key) is None:
                                 message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
                                 matches.append(RuleMatch(
                                     tree[:] + [2],
                                     message.format(second_key, map_name, first_key, '/'.join(map(str, tree)))))
                     else:
                         for key, value in mapping.items():
-                            if not value.get(second_key):
+                            if value.get(second_key) is None:
                                 message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
                                 matches.append(RuleMatch(
                                     tree[:] + [2],
