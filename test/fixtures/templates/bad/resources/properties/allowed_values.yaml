@@ -172,6 +172,27 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "Dns" # Invalid AllowedValue
+  CodeBuildProject:
+    Type: "AWS::CodeBuild::Project"
+    Properties:
+      Artifacts:
+        Packaging: "gzip" # Invalid AllowedValue
+        Type: "codebuild" # Invalid AllowedValue
+      Cache:
+        Type: "CACHE" # Invalid AllowedValue
+      Environment:
+        ComputeType: "BUILD_GENERAL2_LARGE" # Invalid AllowedValue
+        Image: "registry/repository:latest"
+        ImagePullCredentialsType: "GITHUB" # Invalid AllowedValue
+        Type: "Windows" # Invalid AllowedValue
+      LogsConfig:
+        CloudWatchLogs:
+          Status: "SUSPENDED" # Invalid AllowedValue
+        S3Logs:
+          Status: "Disabled" # Invalid AllowedValue
+      ServiceRole: ""
+      Source:
+        Type: "SOURCEFORGE" # Invalid AllowedValue
   CodeCommitRepository:
     Type: "AWS::CodeCommit::Repository"
     Properties:
