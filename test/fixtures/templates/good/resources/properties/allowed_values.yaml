@@ -172,6 +172,27 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "DNS" # Valid AllowedValue
+  CodeBuildProject:
+    Type: "AWS::CodeBuild::Project"
+    Properties:
+      Artifacts:
+        Packaging: "ZIP" # Valid AllowedValue
+        Type: "CODEPIPELINE" # Valid AllowedValue
+      Cache:
+        Type: "NO_CACHE" # Valid AllowedValue
+      Environment:
+        ComputeType: "BUILD_GENERAL1_LARGE" # Valid AllowedValue
+        Image: "registry/repository:latest"
+        ImagePullCredentialsType: "CODEBUILD" # Valid AllowedValue
+        Type: "LINUX_CONTAINER" # Valid AllowedValue
+      LogsConfig:
+        CloudWatchLogs:
+          Status: "ENABLED" # Valid AllowedValue
+        S3Logs:
+          Status: "DISABLED" # Valid AllowedValue
+      ServiceRole: ""
+      Source:
+        Type: "GITHUB_ENTERPRISE" # Valid AllowedValue
   CodeCommitRepository:
     Type: "AWS::CodeCommit::Repository"
     Properties:
