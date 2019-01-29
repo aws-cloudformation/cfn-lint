@@ -172,6 +172,30 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "Dns" # Invalid AllowedValue
+  CloudWatchAlarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      ComparisonOperator: "GreaterThan" # Invalid AllowedValue
+      EvaluationPeriods: 1
+      Statistic: "Total" # Invalid AllowedValue
+      Threshold: 0.0
+      TreatMissingData: "not_breaching" # Invalid AllowedValue
+      Unit: "Teraflops" # Invalid AllowedValue
+  CloudWatchEventRule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      EventPattern: ""
+      State: "SUSPENDED" # Invalid AllowedValue
+  CloudWatchEventBusPolicy:
+    Type: "AWS::Events::EventBusPolicy"
+    Properties:
+      Action: "events:GetEvents" # Invalid AllowedValue
+      Condition:
+        Type: "GreaterOrEquals" # Invalid AllowedValue
+        Key: "aws:PrincipalOrg" # Invalid AllowedValue
+        Value: "o-1234567890"
+      Principal: "*"
+      StatementId: "x"
   CodeBuildProject:
     Type: "AWS::CodeBuild::Project"
     Properties:
