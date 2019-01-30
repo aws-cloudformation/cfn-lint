@@ -172,6 +172,18 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "Dns" # Invalid AllowedValue
+  CloudTrail:
+    Type: "AWS::CloudTrail::Trail"
+    Properties:
+      EventSelectors:
+        - ReadWriteType: "Read" # Invalid AllowedValue
+          DataResources:
+            - Type: "AWS::S3:Object" # Invalid AllowedValue
+              Values:
+                - "Arn1"
+                - "Arn2"
+      IsLogging: True
+      S3BucketName: "MyBucket"
   CloudWatchAlarm:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
