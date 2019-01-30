@@ -24,6 +24,16 @@ class TestConditions(BaseTestCase):
         """ setup the cfn object """
         filename = 'test/fixtures/templates/good/core/conditions.yaml'
         template = {
+            'Parameters': {
+                'NatType': {
+                    'Type': 'String',
+                    'AllowedValues': ['None', 'Single NAT', 'High Availability']
+                },
+                'myEnvironment': {
+                    'Type': 'String',
+                    'AllowedValues': ['Dev', 'Stage', 'Prod']
+                }
+            },
             'Conditions': {
                 'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Prod']},
                 'isPrimary': {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]},
@@ -31,7 +41,14 @@ class TestConditions(BaseTestCase):
                 'isProductionOrStaging': {'Fn::Or': [{'Condition': 'isProduction'}, {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Stage']}]},
                 'isNotProduction': {'Fn::Not': [{'Condition': 'isProduction'}]},
                 'isDevelopment': {'Fn::Equals': ['Dev', {'Ref': 'myEnvironment'}]},
-                'isPrimaryAndProdOrStage': {'Fn::And': [{'Condition': 'isProductionOrStaging'}, {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]}]}
+                'isPrimaryAndProdOrStage': {'Fn::And': [{'Condition': 'isProductionOrStaging'}, {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]}]},
+                'DeployNatGateway': {'Fn::Not': [{'Fn::Equals': [{'Ref': 'NatType'}, 'None']}]},
+                'Az1Nat': {
+                    'Fn::Or': [
+                        {'Fn::Equals': [{'Ref': 'NatType'}, 'Single NAT']},
+                        {'Fn::Equals': [{'Ref': 'NatType'}, 'High Availability']}
+                    ]
+                }
             },
             'Resources': {}
         }
@@ -40,7 +57,10 @@ class TestConditions(BaseTestCase):
 
     def test_success_size_of_conditions(self):
         """Test success run"""
-        self.assertEqual(len(self.conditions.Conditions), 7)
+        self.assertEqual(len(self.conditions.Conditions), 9)
+        self.assertEqual(len(self.conditions.Parameters), 2)
+        print(self.conditions.Parameters)
+        self.assertListEqual(self.conditions.Parameters['55caa18684cddafa866bdb947fb31ea563b2ea73'], ['None', 'Single NAT', 'High Availability'])
 
     def test_success_is_production(self):
         """ test isProduction """
@@ -241,6 +261,14 @@ class TestConditions(BaseTestCase):
                 {'isProduction': True, 'isPrimary': False},
                 {'isProduction': False, 'isPrimary': True},
                 {'isProduction': False, 'isPrimary': False},
+            ]
+        )
+        # Multiple conditions with parameters specified
+        self.assertEqualListOfDicts(
+            self.conditions.get_scenarios(['DeployNatGateway', 'Az1Nat']),
+            [
+                {'DeployNatGateway': True, 'Az1Nat': True},
+                {'DeployNatGateway': False, 'Az1Nat': False}
             ]
         )
 
