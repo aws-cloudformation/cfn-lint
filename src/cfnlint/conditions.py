@@ -192,14 +192,23 @@ class Conditions(object):
     """ All the conditions """
     Conditions = None
     Equals = None
+    Parameters = None
 
     def __init__(self, cfn):
         self.Conditions = {}
         self.Equals = {}
+        self.Parameters = {}
         try:
             self.Equals = self._get_condition_equals(cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS))
             for condition_name in cfn.template.get('Conditions', {}):
                 self.Conditions[condition_name] = Condition(cfn.template, condition_name)
+            # Configure parametrs Allowed Values if they have them
+            for parameter_name, parameter_values in cfn.template.get('Parameters', {}).items():
+                # ALlowed Values must be a list so validate they are
+                if isinstance(parameter_values.get('AllowedValues'), list):
+                    # Any parameter in a condition could be used but would have to be done by
+                    # Ref so build a ref to match for getting an equivalent hash
+                    self.Parameters[get_hash({'Ref': parameter_name})] = parameter_values.get('AllowedValues')
         except Exception as err:  # pylint: disable=W0703
             LOGGER.debug('While processing conditions got error: %s', err)
 
@@ -306,28 +315,50 @@ class Conditions(object):
                 for s_v in equal_values:
                     matched_equals[equal_key].add(s_v)
 
-        def multiply_equals(currents, s_hash, sets):
+        def multiply_equals(currents, s_hash, sets, parameter_values):
             """  Multiply Equals when building scenarios """
             results = []
             false_case = ''
             if not currents:
-                for s_set in sets:
+                # If the Parameter being REFed has Allowed Values use those instead
+                if parameter_values:
+                    for p_value in parameter_values:
+                        # the allowed value must be an integer or string
+                        # protecting against really badlyl formatted templates
+                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                            new = {}
+                            # the allowed values could be numbers so force a string
+                            new[s_hash] = str(p_value)
+                            results.append(new)
+                else:
+                    for s_set in sets:
+                        new = {}
+                        new[s_hash] = s_set
+                        false_case += s_set
+                        results.append(new)
                     new = {}
-                    new[s_hash] = s_set
-                    false_case += s_set
+                    new[s_hash] = false_case + '.bad'
                     results.append(new)
-                new = {}
-                new[s_hash] = false_case + '.bad'
-                results.append(new)
             for current in currents:
-                for s_set in sets:
+                # If the Parameter being REFed has Allowed Values use those instead
+                if parameter_values:
+                    for p_value in parameter_values:
+                        # the allowed value must be an integer or string
+                        # protecting against really badlyl formatted templates
+                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                            new = copy(current)
+                            # the allowed values could be numbers so force a string
+                            new[s_hash] = str(p_value)
+                            results.append(new)
+                else:
+                    for s_set in sets:
+                        new = copy(current)
+                        new[s_hash] = s_set
+                        false_case += s_set
+                        results.append(new)
                     new = copy(current)
-                    new[s_hash] = s_set
-                    false_case += s_set
+                    new[s_hash] = false_case + '.bad'
                     results.append(new)
-                new = copy(current)
-                new[s_hash] = false_case + '.bad'
-                results.append(new)
 
             return results
 
@@ -338,9 +369,9 @@ class Conditions(object):
             return results
 
         if matched_conditions:
-            scenarios = set()
+            scenarios = []
             for con_hash, sets in matched_equals.items():
-                scenarios = multiply_equals(scenarios, con_hash, sets)
+                scenarios = multiply_equals(scenarios, con_hash, sets, self.Parameters.get(con_hash))
 
         for scenario in scenarios:
             r_condition = {}
