@@ -9,6 +9,13 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.13.1
+###### CloudFormation Specifications
+- Add allowed values for AWS::CloudTrail::Trail resources
+- Patch spec to have AWS::CodePipeline::CustomActionType Version included
+###### Fixes
+- Fix conditions logic to use AllowedValues when REFing a Parameter that has AllowedValues specified
+
 ### 0.13.0
 ###### Features
 - New rule W1011 to check if a FindInMap is using the correct map name and keys
