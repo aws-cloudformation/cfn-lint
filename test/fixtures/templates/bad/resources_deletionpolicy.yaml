@@ -1,0 +1,26 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Bad Template for testing DeletionPolicies
+Resources:
+  MyDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    DeletionPolicy: [Snapshot, Retain]
+  MyDB2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    DeletionPolicy: CopyRegion
+  MyIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      # Username field not supported for secure strings
+      UserName: 'bob'
+    DeletionPolicy: Snapshot
+
