@@ -2,21 +2,32 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   Bad Template for testing DeletionPolicies
+Parameters:
+  DBPolicy:
+    Type: String
+    Default: 'Retain'
 Resources:
-  MyDB:
+  PolicyList:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage: '5'
       DBInstanceClass: db.m1.small
       Engine: MySQL
     DeletionPolicy: [Snapshot, Retain]
-  MyDB2:
+  MadeUpPolicy:
     Type: AWS::RDS::DBInstance
     Properties:
       AllocatedStorage: '5'
       DBInstanceClass: db.m1.small
       Engine: MySQL
     DeletionPolicy: CopyRegion
+  RefPolicy:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    DeletionPolicy: !Ref DBPolicy
   MyIAMUser:
     Type: AWS::IAM::User
     Properties:
