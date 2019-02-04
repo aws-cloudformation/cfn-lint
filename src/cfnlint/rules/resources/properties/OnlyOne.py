@@ -43,20 +43,28 @@ class OnlyOne(CloudFormationLintRule):
     def check(self, properties, onlyoneprops, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
+        property_sets = cfn.get_object_without_conditions(properties)
         for property_set in property_sets:
             for onlyoneprop in onlyoneprops:
                 count = 0
                 for prop in onlyoneprop:
-                    if prop in property_set['Value']:
+                    if prop in property_set['Object']:
                         count += 1
 
                 if count != 1:
-                    message = 'Only one of [{0}] should be specified for {1}'
-                    matches.append(RuleMatch(
-                        property_set['Path'],
-                        message.format(', '.join(map(str, onlyoneprop)), '/'.join(map(str, property_set['Path'])))
-                    ))
+                    if property_set['Scenario'] is None:
+                        message = 'Only one of [{0}] should be specified for {1}'
+                        matches.append(RuleMatch(
+                            path,
+                            message.format(', '.join(map(str, onlyoneprop)), '/'.join(map(str, path)))
+                        ))
+                    else:
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
+                        message = 'Only one of [{0}] should be specified {1} at {2}'
+                        matches.append(RuleMatch(
+                            path,
+                            message.format(', '.join(map(str, onlyoneprop)), scenario_text, '/'.join(map(str, path)))
+                        ))
 
         return matches
 
