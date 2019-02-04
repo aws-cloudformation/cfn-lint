@@ -17,6 +17,7 @@
 import os
 import logging
 import six
+import samtranslator
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
@@ -81,6 +82,9 @@ class Transform(object):
         matches = []
 
         try:
+            # Output the SAM Translator version in debug mode
+            LOGGER.debug('SAM Translator: %s', samtranslator.__version__)
+
             sam_translator = Translator(managed_policy_map=self._managed_policy_map,
                                         sam_parser=self._sam_parser)
 
