@@ -21,7 +21,7 @@ from cfnlint import RuleMatch
 
 class DeletionPolicy(CloudFormationLintRule):
     """Check Base Resource Configuration"""
-    id = 'E3007'
+    id = 'E3035'
     shortdesc = 'Check DeletionPolicy values for Resources'
     description = 'Check that the DeletionPolicy values are valid'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html'
