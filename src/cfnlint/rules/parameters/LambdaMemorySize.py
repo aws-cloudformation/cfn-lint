@@ -34,8 +34,8 @@ class LambdaMemorySize(CloudFormationLintRule):
             'AWS::Lambda::Function',
         ]
 
-        for resoruce_type_spec in resource_type_specs:
-            self.resource_property_types.append(resoruce_type_spec)
+        for resource_type_spec in resource_type_specs:
+            self.resource_property_types.append(resource_type_spec)
 
     # pylint: disable=W0613
     def check_lambda_memory_size_ref(self, value, path, parameters, resources):
