@@ -312,6 +312,37 @@ Resources:
       TargetAction: "action1"
       TargetPipeline: ""
       TargetPipelineVersion: 1
+  CognitoIdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    Properties:
+      AllowUnauthenticatedIdentities: False
+      CognitoStreams:
+        StreamingStatus: "SUSPENDED" # Invalid AllowedValue
+  CognitoUserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AliasAttributes:
+        - "phonenumber" # Invalid AllowedValue
+      AutoVerifiedAttributes:
+        - "e-mail" # Invalid AllowedValue
+      MfaConfiguration: "MANDATORY" # Invalid AllowedValue
+      Schema:
+        - AttributeDataType: "String " # Invalid AllowedValue
+      UsernameAttributes:
+        - "phone" # Imvalid AllowedValue
+  CognitoUserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ExplicitAuthFlows:
+        - "CUSTOM_AUTHFLOW_ONLY" # Invalid AllowedValue
+      UserPoolId: "pool1"
+  CognitoUserPoolUser:
+    Type: "AWS::Cognito::UserPoolUser"
+    Properties:
+      DesiredDeliveryMediums:
+        - "MAIL" # Invalid AllowedValue
+      MessageAction: "RESEND." # Invalid AllowedValue
+      UserPoolId: "pool1"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
