@@ -15,6 +15,11 @@
     "value": true
   },
   {
+    "op": "replace",
+    "path": "/ResourceTypes/AWS::CodePipeline::CustomActionType/Properties/Version/Required",
+    "value": true
+  },
+  {
     "op": "move",
     "from": "/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VPCEndpointType",
     "path": "/ResourceTypes/AWS::EC2::VPCEndpoint/Properties/VpcEndpointType"
@@ -158,7 +163,7 @@
     "path": "/ResourceTypes/AWS::CloudWatch::Alarm/Properties/Metrics",
     "value": {
       "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarm-metrics",
-      "ItemType": "DataQuery",
+      "ItemType": "MetricDataQuery",
       "Required": false,
       "Type": "List",
       "UpdateType": "Mutable"
@@ -166,100 +171,47 @@
   },
   {
     "op": "add",
-    "path": "/ResourceTypes/AWS::Lambda::LayerVersion",
+    "path": "/ResourceTypes/AWS::SSM::MaintenanceWindowTarget",
     "value": {
-      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-layerversion-content.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html",
       "Properties": {
-        "CompatibleRuntimes": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-compatibleruntimes",
-          "PrimitiveItemType": "String",
+        "OwnerInformation": {
           "Required": false,
-          "Type": "List",
-          "UpdateType": "Immutable"
-        },
-        "Content": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-content",
-          "Type": "Content",
-          "Required": true,
-          "UpdateType": "Immutable"
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-ownerinformation",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
         },
         "Description": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-description",
-          "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
-        },
-        "LayerName": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-layername",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-description",
           "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "WindowId": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-windowid",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "ResourceType": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-resourcetype",
+          "PrimitiveType": "String",
+          "UpdateType": "Mutable"
+        },
+        "Targets": {
+          "Required": true,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-targets",
+          "PrimitiveType": "String",
+          "Type": "List",
+          "ItemType": "Target",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
           "Required": false,
-          "UpdateType": "Immutable"
-        },
-        "LicenseInfo": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-licenseinfo",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtarget.html#cfn-ssm-maintenancewindowtarget-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
-        }
-      }
-    }
-  },
-  {
-    "op": "add",
-    "path": "/PropertyTypes/AWS::Lambda::LayerVersion.Content",
-    "value": {
-      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-layerversion-content.html",
-      "Properties": {
-        "S3Bucket": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-layerversion-content.html#cfn-lambda-layerversion-content-s3bucket",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
-        },
-        "S3Key": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-layerversion-content.html#cfn-lambda-layerversion-content-s3key",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
-        },
-        "S3ObjectVersion": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-layerversion-content.html#cfn-lambda-layerversion-content-s3objectversion",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
-        }
-      }
-    }
-  },
-  {
-    "op": "add",
-    "path": "/ResourceTypes/AWS::Lambda::LayerVersionPermission",
-    "value": {
-      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversionpermission.html",
-      "Properties": {
-        "Action": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-action",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
-        },
-        "LayerVersionArn": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-layerversionarn",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
-        },
-        "OrganizationId": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-organizationid",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
-        },
-        "Principal": {
-          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversionpermission.html#cfn-lambda-layerversionpermission-principal",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     }

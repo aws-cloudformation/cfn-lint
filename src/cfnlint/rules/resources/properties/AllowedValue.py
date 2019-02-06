@@ -28,42 +28,12 @@ class AllowedValue(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
     tags = ['resources', 'property', 'allowed value']
 
-    def __init__(self, ):
-        """Init """
-        super(AllowedValue, self).__init__()
-        for resource_type_spec in RESOURCE_SPECS.get('us-east-1').get('ResourceTypes'):
+    def initialize(self, cfn):
+        """Initialize the rule"""
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get('us-east-1').get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
-
-    def check_value_ref(self, value, **kwargs):
-        """Check Ref"""
-        matches = []
-
-        allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
-        cfn = kwargs.get('cfn')
-
-        if allowed_value_specs:
-            if value in cfn.template.get('Parameters', {}):
-                param = cfn.template.get('Parameters').get(value, {})
-                parameter_values = param.get('AllowedValues')
-                default_value = param.get('Default')
-
-                # Check Allowed Values
-                if parameter_values:
-                    for index, allowed_value in enumerate(parameter_values):
-                        if allowed_value not in allowed_value_specs:
-                            param_path = ['Parameters', value, 'AllowedValues', index]
-                            message = 'You must specify a valid allowed value for {0} ({1}).\nValid values are {2}'
-                            matches.append(RuleMatch(param_path, message.format(value, allowed_value, allowed_value_specs)))
-                elif default_value:
-                    # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
-                    if default_value not in allowed_value_specs:
-                        param_path = ['Parameters', value, 'Default']
-                        message = 'You must specify a valid Default value for {0} ({1}).\nValid values are {2}'
-                        matches.append(RuleMatch(param_path, message.format(value, default_value, allowed_value_specs)))
-
-        return matches
 
     def check_value(self, value, path, property_name, **kwargs):
         """Check Value"""
@@ -91,9 +61,8 @@ class AllowedValue(CloudFormationLintRule):
                         matches.extend(
                             cfn.check_value(
                                 p_value, prop, p_path,
-                                check_ref=self.check_value_ref,
                                 check_value=self.check_value,
-                                value_specs=RESOURCE_SPECS.get('us-east-1').get('ValueTypes').get(value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -104,8 +73,8 @@ class AllowedValue(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type, {}).get('Properties', {})
-        property_specs = RESOURCE_SPECS.get('us-east-1').get('PropertyTypes').get(property_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
         return matches
@@ -114,8 +83,8 @@ class AllowedValue(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type, {}).get('Properties', {})
-        resource_specs = RESOURCE_SPECS.get('us-east-1').get('ResourceTypes').get(resource_type)
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
         return matches

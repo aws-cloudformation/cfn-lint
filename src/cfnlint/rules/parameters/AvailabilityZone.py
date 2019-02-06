@@ -28,7 +28,7 @@ class AvailabilityZone(CloudFormationLintRule):
     tags = ['parameters', 'availabilityzone']
 
     def __init__(self):
-        """Init"""
+        """Init """
         super(AvailabilityZone, self).__init__()
         self.multiple_resource_type_specs = [
             'AWS::DAX::Cluster',
@@ -56,10 +56,10 @@ class AvailabilityZone(CloudFormationLintRule):
             'AWS::EC2::SpotFleet.LaunchTemplateOverrides',
         ]
 
-        for resoruce_type_spec in self.singular_resource_type_specs:
-            self.resource_property_types.append(resoruce_type_spec)
-        for resoruce_type_spec in self.multiple_resource_type_specs:
-            self.resource_property_types.append(resoruce_type_spec)
+        for resource_type_spec in self.singular_resource_type_specs:
+            self.resource_property_types.append(resource_type_spec)
+        for resource_type_spec in self.multiple_resource_type_specs:
+            self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.singular_property_type_specs:
             self.resource_sub_property_types.append(property_type_spec)
 

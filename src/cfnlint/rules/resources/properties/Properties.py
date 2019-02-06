@@ -30,6 +30,7 @@ class Properties(CloudFormationLintRule):
     tags = ['resources']
 
     def __init__(self):
+        """Init"""
         super(Properties, self).__init__()
         self.cfn = {}
         self.resourcetypes = {}
@@ -153,6 +154,7 @@ class Properties(CloudFormationLintRule):
         templated_exceptions = {
             'AWS::ApiGateway::RestApi': ['BodyS3Location'],
             'AWS::Lambda::Function': ['Code'],
+            'AWS::Lambda::LayerVersion': ['Content'],
             'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
         }
 

@@ -9,6 +9,61 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.13.1
+###### CloudFormation Specifications
+- Add allowed values for AWS::CloudTrail::Trail resources
+- Patch spec to have AWS::CodePipeline::CustomActionType Version included
+###### Fixes
+- Fix conditions logic to use AllowedValues when REFing a Parameter that has AllowedValues specified
+
+### 0.13.0
+###### Features
+- New rule W1011 to check if a FindInMap is using the correct map name and keys
+- New rule W1001 to check if a Ref/GetAtt to a resource that exists when Conditions are used
+- Removed logic in E1011 and moved it to W1011 for validating keys
+- Add property relationships for AWS::ApplicationAutoScaling::ScalingPolicy into Inclusive, Exclusive, and AtLeastOne
+- Update rule E2505 to check the netmask bit
+- Include the ability to update the CloudFormation Specs using the Pricing API
+###### CloudFormation Specifications
+- Update to version 2.21.0
+- Add allowed values for AWS::Budgets::Budget
+- Add allowed values for AWS::CertificateManager resources
+- Add allowed values for AWS::CodePipeline resources
+- Add allowed values for AWS::CodeCommit resources
+- Add allowed values for EC2 InstanceTypes from pricing API
+- Add allowed values for RedShift InstanceTypes from pricing API
+- Add allowed values for MQ InstanceTypes from pricing API
+- Add allowed values for RDS InstanceTypes from pricing API
+###### Fixes
+- Fixed README indentation issue with .pre-commit-config.yaml
+- Fixed rule E2541 to allow for multiple inputs/outputs in a CodeBuild task
+- Fixed rule E3020 to allow for a period or no period at the end of a ACM registration record
+- Update rule E3001 to support UpdateReplacePolicy
+- Fix a cli issue where `--template` wouldn't be used when a .cfnlintrc was in the same folder
+- Update rule E3002 and W3002 to support packaging of AWS::Lambda::LayerVersion content
+
+### 0.12.1
+###### CloudFormation Specifications
+- Add AWS::WorkSpaces::Workspace.WorkspaceProperties ComputeTypeName, RunningMode allowed values
+- Fix AWS::CloudWatch::Alarm to point Metrics at AWS::CloudWatch::Alarm.MetricDataQuery
+###### Fixes
+- Update rule E1024 to support Fn::Sub inside Fn::Cidr
+
+### 0.12.0
+###### Features
+- Update rule E1019 to not allow for lists directly when doing a Ref or GetAtt to a list
+- Move parameter checks from rule E3030 to a new rule W2030
+###### CloudFormation Specifications
+- Updated to version 2.19.0
+- Add S3 Bucket Allowed Values
+- Add Route53 Allowed Values
+- Add CodeDeploy Allowed Values
+- Add AWS::SecretsManager::SecretTargetAttachment TargetType Allowed Values
+- Add AWS::SES::ReceiptRule.Rule TlsPolicy Allowed Values
+- Add AWS::AutoScaling::AutoScalingGroup, AWS::Route53::RecordSetGroup, and AWS::AutoScaling::AutoScalingGroup to OnlyOne
+###### Fixes
+- Improve W7001 error message
+
 ### 0.11.1
 ###### CloudFormation Specifications
 - Support Ref to IAM::Role or IAM::InstanceProfile with values looking for an ARN

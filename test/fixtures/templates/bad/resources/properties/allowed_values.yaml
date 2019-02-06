@@ -8,6 +8,15 @@ Parameters:
   Password:
     Type: String
     NoEcho: True
+  AutoScalingLaunchConfigurationVolume:
+    Type: String
+    Default: "ssd" # Invalid AllowedValue
+    AllowedValues:
+      - "io1"
+      - "gp2"
+      - "ssd" # Invalid AllowedValue
+  ImageId:
+    Type: "AWS::EC2::Image::Id"
 Resources:
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
@@ -84,6 +93,7 @@ Resources:
     Type: "AWS::AutoScaling::AutoScalingGroup"
     Properties:
       HealthCheckType: "elb" # Invalid AlllowedValue
+      LaunchConfigurationName: "launch-configuration"
       LifecycleHookSpecificationList:
         - DefaultResult: " ABANDON" # Invalid AlllowedValue
           LifecycleHookName: "hook"
@@ -96,9 +106,9 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sdm
           Ebs:
-            VolumeType: "ssd" # Invalid AllowedValue
-      ImageId: "ami-1234"
-      InstanceType: "t2.4xlarge"
+            VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Invalid AllowedValue
+      ImageId: !Ref "ImageId"
+      InstanceType: "t2.16xlarge" # Invalid AllowedValue
       PlacementTenancy: "Standard" # Invalid AllowedValue
   AutoScalingLifecycleHook:
     Type: "AWS::AutoScaling::LifecycleHook"
@@ -142,12 +152,182 @@ Resources:
               PredefinedScalingMetricSpecification:
                 PredefinedScalingMetricType: "RequestCountPerTarget" # Invalid AllowedValue
               TargetValue: 10.5
+  Budget:
+    Type: "AWS::Budgets::Budget"
+    Properties:
+      Budget:
+        BudgetType: "UTILIZATION" # Invalid AllowedValue
+        TimeUnit: "month" # Invalid AllowedValue
+      NotificationsWithSubscribers:
+        - Subscribers:
+          - SubscriptionType: "e-mail" # Invalid AllowedValue
+            Address: "test@test.com"
+          Notification:
+            ThresholdType: "ACTUAL" # Invalid AllowedValue
+            Threshold: 80
+            NotificationType: "FORECAST" # Invalid AllowedValue
+            ComparisonOperator: "GREATER" # Invalid AllowedValue
+  Certificate:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "example.com"
+      ValidationMethod: "Dns" # Invalid AllowedValue
+  CloudTrail:
+    Type: "AWS::CloudTrail::Trail"
+    Properties:
+      EventSelectors:
+        - ReadWriteType: "Read" # Invalid AllowedValue
+          DataResources:
+            - Type: "AWS::S3:Object" # Invalid AllowedValue
+              Values:
+                - "Arn1"
+                - "Arn2"
+      IsLogging: True
+      S3BucketName: "MyBucket"
+  CloudWatchAlarm:
+    Type: "AWS::CloudWatch::Alarm"
+    Properties:
+      ComparisonOperator: "GreaterThan" # Invalid AllowedValue
+      EvaluationPeriods: 1
+      Statistic: "Total" # Invalid AllowedValue
+      Threshold: 0.0
+      TreatMissingData: "not_breaching" # Invalid AllowedValue
+      Unit: "Teraflops" # Invalid AllowedValue
+  CloudWatchEventRule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      EventPattern: ""
+      State: "SUSPENDED" # Invalid AllowedValue
+  CloudWatchEventBusPolicy:
+    Type: "AWS::Events::EventBusPolicy"
+    Properties:
+      Action: "events:GetEvents" # Invalid AllowedValue
+      Condition:
+        Type: "GreaterOrEquals" # Invalid AllowedValue
+        Key: "aws:PrincipalOrg" # Invalid AllowedValue
+        Value: "o-1234567890"
+      Principal: "*"
+      StatementId: "x"
+  CodeBuildProject:
+    Type: "AWS::CodeBuild::Project"
+    Properties:
+      Artifacts:
+        Packaging: "gzip" # Invalid AllowedValue
+        Type: "codebuild" # Invalid AllowedValue
+      Cache:
+        Type: "CACHE" # Invalid AllowedValue
+      Environment:
+        ComputeType: "BUILD_GENERAL2_LARGE" # Invalid AllowedValue
+        Image: "registry/repository:latest"
+        ImagePullCredentialsType: "GITHUB" # Invalid AllowedValue
+        Type: "Windows" # Invalid AllowedValue
+      LogsConfig:
+        CloudWatchLogs:
+          Status: "SUSPENDED" # Invalid AllowedValue
+        S3Logs:
+          Status: "Disabled" # Invalid AllowedValue
+      ServiceRole: ""
+      Source:
+        Type: "SOURCEFORGE" # Invalid AllowedValue
+  CodeCommitRepository:
+    Type: "AWS::CodeCommit::Repository"
+    Properties:
+      RepositoryName: "CodeCommitRepository"
+      Triggers:
+      - Name: "Trigger"
+        Events:
+          - "test" # Invalid AllowedValue
+  CodeDeployApplication:
+    Type: "AWS::CodeDeploy::Application"
+    Properties:
+      ApplicationName: "CodeDeployApplication"
+      ComputePlatform: "EC2" # Invalid AllowedValue
+  CodeDeployDeploymentConfig:
+    Type: "AWS::CodeDeploy::DeploymentConfig"
+    Properties:
+      DeploymentConfigName: "CodeDeployDeploymentConfig"
+      MinimumHealthyHosts:
+        Type: "HOST_PERCENTAGE" # Invalid AllowedValue
+        Value: 1
+  CodeDeployDeploymentGroup:
+    Type: "AWS::CodeDeploy::DeploymentGroup"
+    Properties:
+      ApplicationName: "CodeDeployDeploymentGroup"
+      AutoRollbackConfiguration:
+        Events:
+          - "DEPLOYMENTFAILURE" # Invalid AllowedValue
+          - "DEPLOYMENT_STOP_ALARM" # Invalid AllowedValue
+      DeploymentStyle:
+        DeploymentOption: "TRAFFIC_CONTROL" # Invalid AllowedValue
+        DeploymentType: "IN PLACE" # Invalid AllowedValue
+      ServiceRoleArn: "ServiceRoleArn"
+      TriggerConfigurations:
+        - TriggerEvents:
+            - "DeploymentStart" # Invalid AllowedValue
+  CodePipelineCustomActionType:
+    Type: "AWS::CodePipeline::CustomActionType"
+    Properties:
+      Category: "Custom" # Invalid AllowedValue
+      ConfigurationProperties:
+        - Key: True
+          Name: "My-Name"
+          Required: True
+          Secret: False
+          Type: "string" # Invalid AllowedValue
+      InputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      OutputArtifactDetails:
+        MaximumCount: 1
+        MinimumCount: 1
+      Provider: "My-Build-Provider-Name"
+      Version: "1a"
+  CodePipeline:
+    Type: "AWS::CodePipeline::Pipeline"
+    Properties:
+      ArtifactStore:
+        Location: "S3Bucket"
+        Type: "ec2" # Invalid AllowedValue
+      RoleArn: "my-role-arn"
+      Stages:
+        - Name: "stage1"
+          Actions:
+            - Name: "action1"
+              ActionTypeId:
+                Category: "Testing" # Invalid AllowedValue
+                Owner: "me" # Invalid AllowedValue
+                Provider: "provider"
+                Version: "latest"
+          Blockers:
+            - Name: "blocker1"
+              Type: "blocker" # Invalid AllowedValue
+  CodePipelineWebhook:
+    Type: "AWS::CodePipeline::Webhook"
+    Properties:
+      Authentication: "GITHUB" # InValid AllowedValue
+      AuthenticationConfiguration:
+        SecretToken: "githubtoken"
+      Filters:
+        - JsonPath: ""
+      TargetAction: "action1"
+      TargetPipeline: ""
+      TargetPipelineVersion: 1
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
       EndpointType: "random" # Invalid AllowedValue
       EngineName: "database" # Invalid AllowedValue
-      SslMode: "ssl" # Valid AllowedValue
+      SslMode: "ssl" # Invalid AllowedValue
+  EC2Instance:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: "t1.small" # Invalid AllowedValue
+      KeyName: ""
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sdm"
+          Ebs:
+            VolumeType: "magnetic" # Invalid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
@@ -155,30 +335,89 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "FTP" # Invalid AllowedValue
-  RecordSet:
+  Route53HealthCheck:
+    Type: "AWS::Route53::HealthCheck"
+    Properties:
+      HealthCheckConfig:
+        InsufficientDataHealthStatus: "" # Invalid AllowedValue
+        Type: "HTTP_MATCH" # Invalid AllowedValue
+  Route53RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
+      Failover: "primary" # Invalid AllowedValue
+      GeoLocation:
+        ContinentCode: "US" # Invalid AllowedValue
+      HostedZoneName: "www.example.com"
       Name: "www.example.com"
-      Type: "X" # AllowedValue
+      Type: "AA" # Invalid AllowedValue
       ResourceRecords:
-        - ''
-  EC2Instance:
-    Type: "AWS::EC2::Instance"
+        - '127.0.0.1'
+  Route53RecordSetGroup:
+    Type: "AWS::Route53::RecordSetGroup"
     Properties:
-      ImageId: "ami-2f726546"
-      InstanceType: "t1.micro"
-      KeyName: ""
-      BlockDeviceMappings:
-        - DeviceName: "/dev/sdm"
-          Ebs:
-            VolumeType: "magnetic" # Invalid AllowedValue
+      HostedZoneName: "www.example.com"
+      RecordSets:
+        - Failover: "Secondary" # Invalid AllowedValue
+          GeoLocation:
+            ContinentCode: "A" # Invalid AllowedValue
+          Name: "www.example.com"
+          Type: "ABC" # Invalid AllowedValue
+          ResourceRecords:
+            - 'www.example.com'
+  Route53ResolverEndpoint:
+    Type: "AWS::Route53Resolver::ResolverEndpoint"
+    Properties:
+      Direction: "left" # Invalid AlowedValue
+      IpAddresses:
+        - Ip: '127.0.0.1'
+          SubnetId: "SubnetId"
+      SecurityGroupIds:
+        - "sg"
+  Route53ResolverRule:
+    Type: "AWS::Route53Resolver::ResolverRule"
+    Properties:
+      DomainName: "example.com"
+      RuleType: "default" # Invalid AllowedValue
   S3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
+      AccelerateConfiguration:
+        AccelerationStatus: "Disabled" # Inalid AllowedValue
+      AccessControl: "PrivateRead" # Invalid AllowedValue
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: "KMS" # Invalid AllowedValue
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Topic: "MyTopic"
+            Event: "s3:ObjectCreated:Get" # Invalid AllowedValue
       VersioningConfiguration:
         Status: "disabled" # Invalid AllowedValue
+      WebsiteConfiguration:
+        IndexDocument: "index.html"
+        RedirectAllRequestsTo:
+          HostName: "example.com"
+          Protocol: "tcp" # Invalid AllowedValue
+  SecretManagerSecretTargetAttachment:
+    Type: "AWS::SecretsManager::SecretTargetAttachment"
+    Properties:
+      SecretId: "SecretArn"
+      TargetId: "RefToCluster"
+      TargetType: "AWS::RDS:DBCluster" # Invalid AllowedValue
+  SesReceiptRule:
+    Type: "AWS::SES::ReceiptRule"
+    Properties:
+      Rule:
+        TlsPolicy: "required" # Invalid AllowedValue
+      RuleSetName: "SesReceiptRule"
+  SnsSubscription:
+    Type: "AWS::SNS::Subscription"
+    Properties:
+      Protocol: "mail" # Invalid AllowedValue
+      TopicArn: "TopicArn"
   Vpc:
-    Type: AWS::EC2::VPC
+    Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "Default" # Invalid AllowedValue
@@ -191,3 +430,12 @@ Resources:
         - DataId: "DataId"
           Negated: false
           Type: "Bytematch" # Invalid AllowedValue
+  Workspace:
+    Type: "AWS::WorkSpaces::Workspace"
+    Properties:
+      BundleId: "Workspace"
+      DirectoryId: "DirectoryId"
+      UserName: "test"
+      WorkspaceProperties:
+        ComputeTypeName: "DEFAULT" # Invalid AllowedValue
+        RunningMode: "ALWAYS_OFF" # Invalid AllowedValue

@@ -19,15 +19,18 @@ import sys
 import os
 import re
 import traceback
-from copy import deepcopy
+from copy import deepcopy, copy
 from datetime import datetime
 import six
 from yaml.parser import ParserError
 import cfnlint.helpers
+import cfnlint.conditions
 from cfnlint.transform import Transform
 from cfnlint.decode.node import TemplateAttributeError
 
 LOGGER = logging.getLogger(__name__)
+
+# pylint: disable=too-many-lines
 
 
 class CloudFormationLintRule(object):
@@ -51,6 +54,9 @@ class CloudFormationLintRule(object):
     def verbose(self):
         """Verbose output"""
         return '%s: %s\n%s' % (self.id, self.shortdesc, self.description)
+
+    def initialize(self, cfn):
+        """Initialize the rule"""
 
     match = None
     match_resource_properties = None
@@ -287,6 +293,10 @@ class RulesCollection(object):
     def run(self, filename, cfn):
         """Run rules"""
         matches = []
+
+        for rule in self.rules:
+            rule.initialize(cfn)
+
         for rule in self.rules:
             matches.extend(
                 self.run_check(
@@ -399,6 +409,7 @@ class Template(object):
             'Rules'
         ]
         self.transform_globals = {}
+        self.conditions = cfnlint.conditions.Conditions(self)
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -879,6 +890,258 @@ class Template(object):
                                 value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
+
+    def is_resource_available(self, path, resource):
+        """
+            Compares a path to resource to see if its available
+            Returns scenarios that may result in the resource doesn't exist
+            Input:
+                Path: An array that is a Path to the object being checked
+                Resource: The resource being compared to
+            Output:
+                If the resource is available the result is an empty array []
+                If the resource is not available you will get a an array of Condition Names
+                    and when that condition is True or False will result in the resource
+                    not being available when trying to be associated.
+                    [{'ConditionName'}: False]
+        """
+        results = []
+        path_conditions = self.get_conditions_from_path(self.template, path)
+        resource_condition = self.template.get('Resources', {}).get(resource, {}).get('Condition')
+        if resource_condition:
+            # resource conditions are always true.  If the same resource condition exists in the path
+            # with the same True value then nothing else matters
+            test_path_conditions = copy(path_conditions)
+            if not test_path_conditions.get(resource_condition):
+                test_path_conditions[resource_condition] = set()
+                if True not in test_path_conditions.get(resource_condition):
+                    scenarios = self.conditions.get_scenarios(test_path_conditions.keys())
+                    for scenario in scenarios:
+                        # We care about when the resource condition is false but the REF would still exist
+                        if not scenario.get(resource_condition):
+                            scenario_count = 0
+                            for path_condition, path_values in test_path_conditions.items():
+                                if scenario.get(path_condition) in path_values:
+                                    scenario_count += 1
+
+                            if scenario_count == len(path_conditions):
+                                results.append(scenario)
+
+        # if resource condition isn't available then the resource is available
+        return results
+
+    def get_object_without_conditions(self, obj):
+        """
+            Gets a list of object values without conditions included
+            Input:
+                obj: The object/dict that makes up a set of properties
+                Example:
+                    {
+                        "DBSnapshotIdentifier" : {
+                            "Fn::If" : [
+                                "UseDBSnapshot",
+                                {"Ref" : "DBSnapshotName"},
+                                {"Ref" : "AWS::NoValue"}
+                            ]
+                        }
+                    }
+            Output:
+                A list of objects with scenarios for the conditions played out.
+                If Ref to AWS::NoValue remove the property
+                Example: [
+                    {
+                        Object: {
+                            "DBSnapshotIdentifier" : {"Ref" : "DBSnapshotName"}
+                        },
+                        Scenario: {UseDBSnapshot: True}
+                    }, {
+                        Object: {
+                        },
+                        Scenario: {UseDBSnapshot: False}
+                    }
+                ]
+        """
+        results = []
+        scenarios = self.get_conditions_scenarios_from_object(obj)
+
+        if not isinstance(obj, dict):
+            return results
+
+        if not scenarios:
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get('Ref') == 'AWS::NoValue':
+                        return results
+            return [{
+                'Scenario': None,
+                'Object': obj
+            }]
+
+        def get_value(value, scenario):  # pylint: disable=R0911
+            """ Get the value based on the scenario resolving nesting """
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    if 'Fn::If' in value:
+                        if_values = value.get('Fn::If')
+                        if len(if_values) == 3:
+                            if_path = scenario.get(if_values[0], None)
+                            if if_path is not None:
+                                if if_path:
+                                    return get_value(if_values[1], scenario)
+                                return get_value(if_values[2], scenario)
+                    elif value.get('Ref') == 'AWS::NoValue':
+                        return None
+                    else:
+                        return value
+
+                return value
+            if isinstance(value, list):
+                new_list = []
+                for item in value:
+                    new_value = get_value(item, scenario)
+                    if new_value is not None:
+                        new_list.append(get_value(item, scenario))
+
+                return new_list
+
+            return value
+
+        for scenario in scenarios:
+            result = {
+                'Scenario': scenario,
+                'Object': {}
+            }
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get('Fn::If'):
+                        new_value = get_value(obj, scenario)
+                        if new_value is not None:
+                            result['Object'] = new_value
+                            results.append(result)
+                    else:
+                        for key, value in obj.items():
+                            new_value = get_value(value, scenario)
+                            if new_value is not None:
+                                result['Object'][key] = new_value
+                        results.append(result)
+                else:
+                    for key, value in obj.items():
+                        new_value = get_value(value, scenario)
+                        if new_value is not None:
+                            result['Object'][key] = new_value
+                    results.append(result)
+
+        return results
+
+    def get_conditions_scenarios_from_object(self, value):
+        """
+            Get condition from objects
+        """
+        def get_conditions_from_property(value):
+            """ Recursively get conditions """
+            results = set()
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    for k, v in value.items():
+                        if k == 'Fn::If':
+                            if isinstance(v, list) and len(v) == 3:
+                                results.add(v[0])
+                                results = results.union(get_conditions_from_property(v[1]))
+                                results = results.union(get_conditions_from_property(v[2]))
+
+            return results
+
+        con = set()
+        if isinstance(value, dict):
+            for k, v in value.items():
+                # handle conditions directly under the object
+                if len(value) == 1 and k == 'Fn::If' and len(v) == 3:
+                    con.add(v[0])
+                    for r_c in v[1:]:
+                        if isinstance(r_c, dict):
+                            for s_k, s_v in r_c.items():
+                                if s_k == 'Fn::If':
+                                    con = con.union(get_conditions_from_property({s_k: s_v}))
+                else:
+                    con = con.union(get_conditions_from_property(v))
+
+        return self.conditions.get_scenarios(list(con))
+
+    def get_conditions_from_path(self, text, path):
+        """
+            Parent function to handle resources with conditions.
+            Input:
+                text: The object to start processing through the Path
+                path: The path to recursively look for
+            Output:
+                An Object with keys being the Condition Names and the values are what
+                    if its in the True or False part of the path.
+                    {'condition': {True}}
+        """
+
+        results = self._get_conditions_from_path(text, path)
+        if len(path) >= 2:
+            if path[0] in ['Resources', 'Outputs']:
+                condition = text.get(path[0], {}).get(path[1], {}).get('Condition')
+                if condition:
+                    if not results.get(condition):
+                        results[condition] = set()
+                    results[condition].add(True)
+
+        return results
+
+    def _get_conditions_from_path(self, text, path):
+        """
+            Get the conditions and their True/False value for the path provided
+            Input:
+                text: The object to start processing through the Path
+                path: The path to recursively look for
+            Output:
+                An Object with keys being the Condition Names and the values are what
+                    if its in the True or False part of the path.
+                    {'condition': {True}}
+        """
+        LOGGER.debug('Get conditions for path %s', path)
+        results = {}
+
+        def get_condition_name(value, num=None):
+            """Test conditions for validity before providing the name"""
+            con_path = set()
+            if num == 1:
+                con_path.add(True)
+            elif num == 2:
+                con_path.add(False)
+            else:
+                con_path = con_path.union((True, False))
+
+            if value:
+                if isinstance(value, list):
+                    if len(value) == 3:
+                        if not results.get(value[0]):
+                            results[value[0]] = set()
+                        results[value[0]] = results[value[0]].union(con_path)
+
+        try:
+            # Found a condition at the root of the Path
+            if path[0] == 'Fn::If':
+                condition = text.get('Fn::If')
+                if len(path) > 1:
+                    if path[1] in [1, 2]:
+                        get_condition_name(condition, path[1])
+                else:
+                    get_condition_name(condition)
+            # Iterate if the Path has more than one value
+            if len(path) > 1:
+                child_results = self._get_conditions_from_path(text[path[0]], path[1:])
+                for c_r_k, c_r_v in child_results.items():
+                    if not results.get(c_r_k):
+                        results[c_r_k] = set()
+                    results[c_r_k] = results[c_r_k].union(c_r_v)
+
+        except KeyError as _:
+            pass
+
+        return results
 
 
 class Runner(object):
