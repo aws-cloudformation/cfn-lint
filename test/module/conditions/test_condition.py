@@ -216,3 +216,47 @@ class TestBadConditions(BaseTestCase):
         self.assertEqual(result.Not, [])  # No Not
         self.assertIsNone(result.Equals)
         self.assertEqual(result.Influenced_Equals, {})
+
+    def test_nested_conditions(self):
+        """ Test getting a condition setup """
+        template = {
+            'Conditions': {
+                'condition1': {
+                    'Fn::Equals': [{'Ref': 'AWS::Region'}, 'us-east-1']
+                },
+                'condition2': {
+                    'Fn::Equals': [{'Ref': 'myEnvironment'}, 'prod']
+                },
+                'orCondition': {'Fn::Or': [
+                    {'Fn::And': [{'Condition': 'condition1'}, {'Condition': 'condition2'}]},
+                    {'Fn::Or': [
+                        {'Fn::Equals': [{'Ref': 'AWS::Region'}, 'us-west-2']},
+                        {'Fn::Equals': [{'Ref': 'AWS::Region'}, 'eu-north-1']},
+                    ]}
+                ]}
+            }
+        }
+        result = conditions.Condition(template, 'orCondition')
+        self.assertEqual(
+            result.Influenced_Equals,
+            {
+                '36305712594f5e76fbcbbe2f82cd3f850f6018e9': {'us-east-1', 'us-west-2', 'eu-north-1'},
+                'd60d12101638186a2c742b772ec8e69b3e2382b9': {'prod'}
+            }
+        )
+        self.assertTrue(
+            result.test({
+                '36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1',
+                'd60d12101638186a2c742b772ec8e69b3e2382b9': 'prod'}))
+        self.assertFalse(
+            result.test({
+                '36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1',
+                'd60d12101638186a2c742b772ec8e69b3e2382b9': 'dev'}))
+        self.assertFalse(
+            result.test({
+                '36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-1',
+                'd60d12101638186a2c742b772ec8e69b3e2382b9': 'prod'}))
+        self.assertTrue(
+            result.test({
+                '36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-2',
+                'd60d12101638186a2c742b772ec8e69b3e2382b9': 'dev'}))

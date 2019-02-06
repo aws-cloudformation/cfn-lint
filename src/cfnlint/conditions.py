@@ -96,17 +96,24 @@ class Condition(object):
     Equals = None
     Influenced_Equals = None
 
-    def __init__(self, template, name):
+    def __init__(self, template, name=None, sub_condition=None):
         self.And = []
         self.Or = []
         self.Not = []
         self.Influenced_Equals = {}
-        value = template.get('Conditions', {}).get(name, {})
-        try:
-            self.process_condition(template, value)
-        except ConditionParseError:
-            LOGGER.debug('Error parsing condition: %s', name)
-            self.Equal = None
+        if name is not None:
+            value = template.get('Conditions', {}).get(name, {})
+            try:
+                self.process_condition(template, value)
+            except ConditionParseError:
+                LOGGER.debug('Error parsing condition: %s', name)
+                self.Equals = None
+        elif sub_condition is not None:
+            try:
+                self.process_condition(template, sub_condition)
+            except ConditionParseError:
+                LOGGER.debug('Error parsing condition: %s', name)
+                self.Equals = None
 
     def test(self, scenarios):
         """ Test a condition based on a scenario """
@@ -123,7 +130,6 @@ class Condition(object):
         if self.Not:
             for n in self.Not:
                 return not n.test(scenarios)
-
         return self.Equals.test(scenarios)
 
     def process_influenced_equal(self, equal):
@@ -172,7 +178,11 @@ class Condition(object):
             if isinstance(value, dict):
                 if len(value) == 1:
                     for k, v in value.items():
-                        if k == 'Condition':
+                        if k == cfnlint.helpers.FUNCTION_EQUALS:
+                            equal = Equals(v)
+                            self.process_influenced_equal(equal)
+                            results.append(equal)
+                        elif k == 'Condition':
                             condition = Condition(template, v)
                             results.append(condition)
                             for i_e_k, i_e_v in condition.Influenced_Equals.items():
@@ -180,10 +190,14 @@ class Condition(object):
                                     self.Influenced_Equals[i_e_k] = set()
                                 for s_v in i_e_v:
                                     self.Influenced_Equals[i_e_k].add(s_v)
-                        elif k == cfnlint.helpers.FUNCTION_EQUALS:
-                            equal = Equals(v)
-                            self.process_influenced_equal(equal)
-                            results.append(equal)
+                        else:
+                            condition = Condition(template, None, value)
+                            results.append(condition)
+                            for i_e_k, i_e_v in condition.Influenced_Equals.items():
+                                if not self.Influenced_Equals.get(i_e_k):
+                                    self.Influenced_Equals[i_e_k] = set()
+                                for s_v in i_e_v:
+                                    self.Influenced_Equals[i_e_k].add(s_v)
 
         return results
 
