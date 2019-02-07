@@ -76,7 +76,7 @@ setup(
         'pyyaml',
         'six~=1.11',
         'requests>=2.15.0',
-        'aws-sam-translator>=1.8.0',
+        'aws-sam-translator>=1.9.0',
         'jsonpatch',
         'jsonschema~=2.6',
         'pathlib2>=2.3.0;python_version<"3.4"'

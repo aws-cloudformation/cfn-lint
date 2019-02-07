@@ -51,8 +51,8 @@ class SecurityGroup(CloudFormationLintRule):
             'AWS::EC2::SecurityGroup.Ingress',
         ]
 
-        for resoruce_type_spec in resource_type_specs:
-            self.resource_property_types.append(resoruce_type_spec)
+        for resource_type_spec in resource_type_specs:
+            self.resource_property_types.append(resource_type_spec)
         for property_type_spec in property_type_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
