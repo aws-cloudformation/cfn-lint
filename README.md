@@ -1,6 +1,6 @@
 # CloudFormation Linter
 
-<img src="logo.png?raw=true" width="150" align="right">
+<img src="https://github.com/awslabs/cfn-python-lint/blob/master/logo.png?raw=true" width="150" align="right">
 
 [![Build Status](https://travis-ci.com/awslabs/cfn-python-lint.svg?branch=master)](https://travis-ci.com/awslabs/cfn-python-lint)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
