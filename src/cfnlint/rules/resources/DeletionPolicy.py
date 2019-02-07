@@ -25,7 +25,7 @@ class DeletionPolicy(CloudFormationLintRule):
     shortdesc = 'Check DeletionPolicy values for Resources'
     description = 'Check that the DeletionPolicy values are valid'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html'
-    tags = ['resources', 'dependson']
+    tags = ['resources', 'deletionpolicy']
 
     def check_value(self, key, path, res_type):
         """Check resource names for DeletionPolicy"""

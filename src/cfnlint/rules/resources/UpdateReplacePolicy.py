@@ -25,7 +25,7 @@ class UpdateReplacePolicy(CloudFormationLintRule):
     shortdesc = 'Check UpdateReplacePolicy values for Resources'
     description = 'Check that the UpdateReplacePolicy values are valid'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html'
-    tags = ['resources', 'dependson']
+    tags = ['resources', 'updatereplacepolicy']
 
     def check_value(self, key, path, res_type):
         """Check resource names for UpdateReplacePolicy"""
