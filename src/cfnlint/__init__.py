@@ -923,6 +923,109 @@ class Template(object):
         # if resource condition isn't available then the resource is available
         return results
 
+    def get_object_without_conditions(self, obj):
+        """
+            Gets a list of object values without conditions included
+            Input:
+                obj: The object/dict that makes up a set of properties
+                Example:
+                    {
+                        "DBSnapshotIdentifier" : {
+                            "Fn::If" : [
+                                "UseDBSnapshot",
+                                {"Ref" : "DBSnapshotName"},
+                                {"Ref" : "AWS::NoValue"}
+                            ]
+                        }
+                    }
+            Output:
+                A list of objects with scenarios for the conditions played out.
+                If Ref to AWS::NoValue remove the property
+                Example: [
+                    {
+                        Object: {
+                            "DBSnapshotIdentifier" : {"Ref" : "DBSnapshotName"}
+                        },
+                        Scenario: {UseDBSnapshot: True}
+                    }, {
+                        Object: {
+                        },
+                        Scenario: {UseDBSnapshot: False}
+                    }
+                ]
+        """
+        results = []
+        scenarios = self.get_conditions_scenarios_from_object(obj)
+
+        if not isinstance(obj, dict):
+            return results
+
+        if not scenarios:
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get('Ref') == 'AWS::NoValue':
+                        return results
+            return [{
+                'Scenario': None,
+                'Object': obj
+            }]
+
+        def get_value(value, scenario):  # pylint: disable=R0911
+            """ Get the value based on the scenario resolving nesting """
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    if 'Fn::If' in value:
+                        if_values = value.get('Fn::If')
+                        if len(if_values) == 3:
+                            if_path = scenario.get(if_values[0], None)
+                            if if_path is not None:
+                                if if_path:
+                                    return get_value(if_values[1], scenario)
+                                return get_value(if_values[2], scenario)
+                    elif value.get('Ref') == 'AWS::NoValue':
+                        return None
+                    else:
+                        return value
+
+                return value
+            if isinstance(value, list):
+                new_list = []
+                for item in value:
+                    new_value = get_value(item, scenario)
+                    if new_value is not None:
+                        new_list.append(get_value(item, scenario))
+
+                return new_list
+
+            return value
+
+        for scenario in scenarios:
+            result = {
+                'Scenario': scenario,
+                'Object': {}
+            }
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get('Fn::If'):
+                        new_value = get_value(obj, scenario)
+                        if new_value is not None:
+                            result['Object'] = new_value
+                            results.append(result)
+                    else:
+                        for key, value in obj.items():
+                            new_value = get_value(value, scenario)
+                            if new_value is not None:
+                                result['Object'][key] = new_value
+                        results.append(result)
+                else:
+                    for key, value in obj.items():
+                        new_value = get_value(value, scenario)
+                        if new_value is not None:
+                            result['Object'][key] = new_value
+                    results.append(result)
+
+        return results
+
     def get_conditions_scenarios_from_object(self, value):
         """
             Get condition from objects

@@ -9,6 +9,16 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+
+ ### 0.13.2
+###### Features
+- Introducing the cfn-lint logo!
+- Update SAM dependency version
+###### Fixes
+- Fix CloudWatchAlarmComparisonOperator allowed values.
+- Fix typo resoruce_type_spec in several files
+- Better support for nested And, Or, and Not when processing Conditions
+
 ### 0.13.1
 ###### CloudFormation Specifications
 - Add allowed values for AWS::CloudTrail::Trail resources

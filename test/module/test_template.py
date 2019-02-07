@@ -448,3 +448,277 @@ class TestTemplate(BaseTestCase):
                 {'isPrimaryAndProduction': False, 'isDevelopment': False},
             ]
         )
+
+    def test_get_object_without_conditions(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'useAmiId': {'Fn::Not': [{'Fn::Equals': [{'Ref': 'myAmiId'}, '']}]}
+            },
+            'Resources': {
+                'myInstance': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': {'Fn::If': ['useAmiId', {'Ref': 'myAmiId'}, {'Ref': 'AWS::NoValue'}]},
+                        'LaunchConfiguration': {'Fn::If': ['useAmiId', {'Ref': 'AWS::NoValue'}, {'Ref': 'LaunchConfiguration'}]}
+                    }
+                }
+            }
+        }
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources', {}).get('myInstance', {}).get('Properties', {})
+        )
+
+        for result in results:
+            if result['Scenario'] == {'useAmiId': True}:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'ImageId': {'Ref': 'myAmiId'}
+                    }
+                )
+            elif result['Scenario'] == {'useAmiId': False}:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'LaunchConfiguration': {'Ref': 'LaunchConfiguration'}
+                    }
+                )
+
+    def test_get_object_without_conditions_no_value(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'CreateAppVolume': {'Fn::Equals': [{'Ref': 'myAppVolume'}, 'true']}
+            },
+            'Resources': {
+                'myInstance': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': 'ami-123456',
+                        'BlockDeviceMappings': [
+                            {
+                                'DeviceName': '/dev/hda1',
+                                'Ebs': {
+                                    'DeleteOnTermination': True,
+                                    'VolumeType': 'gp2'
+                                }
+                            },
+                            {
+                                'Fn::If': [
+                                    'CreateAppVolume',
+                                    {
+                                        'DeviceName': '/dev/xvdf',
+                                        'Ebs': {
+                                            'DeleteOnTermination': True,
+                                            'VolumeType': 'gp2'
+                                        }
+                                    },
+                                    {
+                                        'Ref': 'AWS::NoValue'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')[1].get('Fn::If')[2]
+        )
+
+        self.assertEqual(results, [])
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+        )
+        # when item is a list return empty list
+        self.assertEqual(results, [])
+
+        # when item is a string return empty list
+        self.assertEqual(template.get_object_without_conditions('String'), [])
+
+    def test_get_object_without_conditions_for_list(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'CreateAppVolume': {'Fn::Equals': [{'Ref': 'CreateVolums'}, 'true']}
+            },
+            'Resources': {
+                'myInstance': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': 'ami-123456',
+                        'BlockDeviceMappings': {
+                            'Fn::If': [
+                                'CreateAppVolume',
+                                [
+                                    {
+                                        'DeviceName': '/dev/hda1',
+                                        'Ebs': {
+                                            'DeleteOnTermination': True,
+                                            'VolumeType': 'gp2'
+                                        }
+                                    },
+                                    {
+                                        'DeviceName': '/dev/xvdf',
+                                        'Ebs': {
+                                            'DeleteOnTermination': True,
+                                            'VolumeType': 'gp2'
+                                        }
+                                    }
+                                ],
+                                {
+                                    'Ref': 'AWS::NoValue'
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+        )
+        # handles IFs for a list
+        self.assertEqual(
+            results,
+            [
+                {
+                    'Scenario': {'CreateAppVolume': True},
+                    'Object': [
+                        {'DeviceName': '/dev/hda1', 'Ebs': {'DeleteOnTermination': True, 'VolumeType': 'gp2'}},
+                        {'DeviceName': '/dev/xvdf', 'Ebs': {'DeleteOnTermination': True, 'VolumeType': 'gp2'}}
+                    ]
+                }
+            ]
+        )
+
+    def test_get_object_without_conditions_for_bad_formats(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'CreateAppVolume': {'Fn::Equals': [{'Ref': 'CreateVolums'}, 'true']}
+            },
+            'Resources': {
+                'myInstance': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': 'ami-123456',
+                        'BlockDeviceMappings': {
+                            'Fn::If': [
+                                'CreateAppVolume',
+                                {
+                                    'Ref': 'AWS::NoValue'
+                                }
+                            ]
+                        }
+                    }
+                },
+                'myInstance1': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': 'ami-123456',
+                        'BlockDeviceMappings': {
+                            'Fn::If': [
+                                'CreateAppVolume'
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+        )
+        # There is no False here but it still passes the 1st item back
+        self.assertEqual(
+            results,
+            [
+                {
+                    'Object': {'Fn::If': ['CreateAppVolume', {'Ref': 'AWS::NoValue'}]},
+                    'Scenario': None
+                }
+            ]
+        )
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources').get('myInstance1').get('Properties').get('BlockDeviceMappings')
+        )
+        # There is no False here but it still passes the 1st item back
+        self.assertEqual(
+            results,
+            [{'Object': {'Fn::If': ['CreateAppVolume']}, 'Scenario': None}]
+        )
+
+    def test_get_object_without_nested_conditions(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'prod']},
+                'isDevelopment': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'dev']}
+            },
+            'Resources': {
+                'myInstance': {
+                    'Type': 'AWS::EC2::Instance',
+                    'Properties': {
+                        'ImageId': {
+                            'Fn::If': [
+                                'isProduction',
+                                'ami-prod1234',
+                                {
+                                    'Fn::If': [
+                                        'isDevelopment',
+                                        'ami-dev1234',
+                                        'ami-lab1234'
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_conditions(
+            template.template.get('Resources', {}).get('myInstance', {}).get('Properties', {})
+        )
+
+        self.assertEqual(len(results), 3)
+        for result in results:
+            if result['Scenario']['isProduction'] and not result['Scenario']['isDevelopment']:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'ImageId': 'ami-prod1234'
+                    }
+                )
+            elif result['Scenario'] == {'isProduction': False, 'isDevelopment': True}:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'ImageId': 'ami-dev1234'
+                    }
+                )
+            elif result['Scenario'] == {'isProduction': False, 'isDevelopment': False}:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'ImageId': 'ami-lab1234'
+                    }
+                )
+            else:
+                # Blanket assertion error
+                self.assertDictEqual(result['Scenario'], {})
