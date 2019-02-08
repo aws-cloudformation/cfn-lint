@@ -181,6 +181,56 @@ Resources:
           Value: 'true'
         InstancePorts:
         - '80'
+  NetworkLoadBalancer:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      LoadBalancerAttributes:
+        - Key: 'load_balancing.cross_zone.enabled'
+          Value: true
+        - Key: access_logs.s3.enabled
+          Value: 'false'
+        # - Key: access_logs.s3.bucket
+        #   Value:
+        # - Key: access_logs.s3.prefix
+        #   Value:
+      Scheme: !Ref Scheme
+      Subnets: !Ref Subnets
+      Type: network
+  NlbTargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Port: 8080
+      Protocol: TCP
+      TargetType: ip
+      TargetGroupAttributes:
+      - Key: 'deregistration_delay.timeout_seconds'
+        Value: 60
+      VpcId: !Ref Vpc
+  NlbListenerTcp:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      DefaultActions:
+      - TargetGroupArn: !Ref NlbTargetGroup
+        Type: forward
+      LoadBalancerArn: !Ref NetworkLoadBalancer
+      Port: 80
+      Protocol: TCP
+  NlbListenerTls:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      Certificates:
+        - arn:aws:iam::782895515015:server-certificate/self-signed-test
+      DefaultActions:
+      - TargetGroupArn: !Ref NlbTargetGroup
+        Type: forward
+      LoadBalancerArn: !Ref NetworkLoadBalancer
+      Port: 443
+      Protocol: TLS
 Outputs:
   Arn:
     Value: !Ref LoadBalancer
