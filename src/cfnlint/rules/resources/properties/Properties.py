@@ -80,7 +80,7 @@ class Properties(CloudFormationLintRule):
     def check_list_for_condition(self, text, prop, parenttype, resourcename, propspec, path):
         """Checks lists that are a dict for conditions"""
         matches = []
-        if len(text[prop]) == 1:
+        if len(text[prop]) == 1:  # pylint: disable=R1702
             for sub_key, sub_value in text[prop].items():
                 if sub_key in cfnlint.helpers.CONDITION_FUNCTIONS:
                     if len(sub_value) == 3:
@@ -98,11 +98,26 @@ class Properties(CloudFormationLintRule):
                                 if len(if_v) == 1:
                                     for d_k, d_v in if_v.items():
                                         if d_k != 'Ref' or d_v != 'AWS::NoValue':
-                                            message = 'Property {0} should be of type List for resource {1} at {2}'
-                                            matches.append(
-                                                RuleMatch(
-                                                    condition_path,
-                                                    message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
+                                            if d_k == 'Fn::GetAtt':
+                                                resource_name = None
+                                                if isinstance(d_v, list):
+                                                    resource_name = d_v[0]
+                                                elif isinstance(d_v, six.string_types):
+                                                    resource_name = d_v.split('.')[0]
+                                                if resource_name:
+                                                    resource_type = self.cfn.template.get('Resources', {}).get(resource_name, {}).get('Type')
+                                                    if not (resource_type.startswith('Custom::')):
+                                                        message = 'Property {0} should be of type List for resource {1} at {2}'
+                                                        matches.append(
+                                                            RuleMatch(
+                                                                condition_path,
+                                                                message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
+                                            else:
+                                                message = 'Property {0} should be of type List for resource {1} at {2}'
+                                                matches.append(
+                                                    RuleMatch(
+                                                        condition_path,
+                                                        message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
                                 else:
                                     message = 'Property {0} should be of type List for resource {1} at {2}'
                                     matches.append(
