@@ -55,8 +55,8 @@ HTTPS has certificate HTTP has no certificate'
                 cfn.check_value(
                     result['Value'], 'Protocol', result['Path'],
                     check_value=self.check_protocol_value,
-                    accepted_protocols=['HTTP', 'HTTPS', 'TCP'],
-                    certificate_protocols=['HTTPS'],
+                    accepted_protocols=['HTTP', 'HTTPS', 'TCP', 'TLS'],
+                    certificate_protocols=['HTTPS', 'TLS'],
                     certificates=result['Value'].get('Certificates')))
 
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancing::LoadBalancer', 'Listeners'])
