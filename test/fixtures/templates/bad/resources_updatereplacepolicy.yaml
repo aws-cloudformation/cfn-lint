@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Bad Template for testing UpdateReplacePolicies
+Parameters:
+  DBPolicy:
+    Type: String
+    Default: 'Retain'
+Resources:
+  PolicyList:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    UpdateReplacePolicy: [Snapshot, Retain]
+  MadeUpPolicy:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    UpdateReplacePolicy: CopyRegion
+  RefPolicy:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    UpdateReplacePolicy: !Ref DBPolicy
+  MyIAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      # Username field not supported for secure strings
+      UserName: 'bob'
+    UpdateReplacePolicy: Snapshot
+
