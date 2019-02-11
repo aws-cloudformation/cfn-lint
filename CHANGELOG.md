@@ -10,7 +10,19 @@
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
 
- ### 0.13.2
+### 0.14.0
+###### Features
+- Add rule [E3035](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3035) to check the values of DeletionPolicy
+- Add rule [E3036](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3036) to check the values of UpdateReplacePolicy
+- Add rule [E2014](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2014) to check that there are no REFs in the Parameter section
+- Update rule [E2503](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2503) to support TLS on NLBs
+###### CloudFormation Specifications
+- Update CloudFormation spec to version 2.22.0
+- Add allowed values for AWS::Cognito::* resources
+###### Fixes
+- Update rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow GetAtts to Custom Resources under a Condition
+
+### 0.13.2
 ###### Features
 - Introducing the cfn-lint logo!
 - Update SAM dependency version
@@ -28,11 +40,11 @@
 
 ### 0.13.0
 ###### Features
-- New rule W1011 to check if a FindInMap is using the correct map name and keys
-- New rule W1001 to check if a Ref/GetAtt to a resource that exists when Conditions are used
-- Removed logic in E1011 and moved it to W1011 for validating keys
+- New rule [W1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1011) to check if a FindInMap is using the correct map name and keys
+- New rule [W1001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1001) to check if a Ref/GetAtt to a resource that exists when Conditions are used
+- Removed logic in [E1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1011) and moved it to [W1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1011) for validating keys
 - Add property relationships for AWS::ApplicationAutoScaling::ScalingPolicy into Inclusive, Exclusive, and AtLeastOne
-- Update rule E2505 to check the netmask bit
+- Update rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505) to check the netmask bit
 - Include the ability to update the CloudFormation Specs using the Pricing API
 ###### CloudFormation Specifications
 - Update to version 2.21.0
@@ -46,23 +58,23 @@
 - Add allowed values for RDS InstanceTypes from pricing API
 ###### Fixes
 - Fixed README indentation issue with .pre-commit-config.yaml
-- Fixed rule E2541 to allow for multiple inputs/outputs in a CodeBuild task
-- Fixed rule E3020 to allow for a period or no period at the end of a ACM registration record
-- Update rule E3001 to support UpdateReplacePolicy
+- Fixed rule [E2541](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2541) to allow for multiple inputs/outputs in a CodeBuild task
+- Fixed rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for a period or no period at the end of a ACM registration record
+- Update rule [E3001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3001) to support UpdateReplacePolicy
 - Fix a cli issue where `--template` wouldn't be used when a .cfnlintrc was in the same folder
-- Update rule E3002 and W3002 to support packaging of AWS::Lambda::LayerVersion content
+- Update rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) and [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3002) to support packaging of AWS::Lambda::LayerVersion content
 
 ### 0.12.1
 ###### CloudFormation Specifications
 - Add AWS::WorkSpaces::Workspace.WorkspaceProperties ComputeTypeName, RunningMode allowed values
 - Fix AWS::CloudWatch::Alarm to point Metrics at AWS::CloudWatch::Alarm.MetricDataQuery
 ###### Fixes
-- Update rule E1024 to support Fn::Sub inside Fn::Cidr
+- Update rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to support Fn::Sub inside Fn::Cidr
 
 ### 0.12.0
 ###### Features
-- Update rule E1019 to not allow for lists directly when doing a Ref or GetAtt to a list
-- Move parameter checks from rule E3030 to a new rule W2030
+- Update rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019) to not allow for lists directly when doing a Ref or GetAtt to a list
+- Move parameter checks from rule [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030) to a new rule [W2030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2030)
 ###### CloudFormation Specifications
 - Updated to version 2.19.0
 - Add S3 Bucket Allowed Values
@@ -72,7 +84,7 @@
 - Add AWS::SES::ReceiptRule.Rule TlsPolicy Allowed Values
 - Add AWS::AutoScaling::AutoScalingGroup, AWS::Route53::RecordSetGroup, and AWS::AutoScaling::AutoScalingGroup to OnlyOne
 ###### Fixes
-- Improve W7001 error message
+- Improve [W7001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W7001) error message
 
 ### 0.11.1
 ###### CloudFormation Specifications
