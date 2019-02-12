@@ -30,26 +30,18 @@ class ValuePrimitiveType(CloudFormationLintRule):
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype'
     tags = ['resources']
 
-    def configure(self, configs):
-        """Set configuration """
-
-        # Set the defaults
-        self.config['strict'] = True
-
-        if isinstance(configs, dict):
-            if len(configs) == 1:
-                for key, value in configs.items():
-                    if key == 'strict' and value == 'false':
-                        self.config[key] = False
-
     def __init__(self):
         """Init"""
         super(ValuePrimitiveType, self).__init__()
         self.resource_specs = []
         self.property_specs = []
-        self.config = {
-            'strict': True
+        self.config_definition = {
+            'strict': {
+                'default': True,
+                'type': 'boolean'
+            }
         }
+        self.configure()
 
     def initialize(self, cfn):
         """Initialize the rule"""
@@ -61,17 +53,28 @@ class ValuePrimitiveType(CloudFormationLintRule):
         for property_spec in self.property_specs:
             self.resource_sub_property_types.append(property_spec)
 
-    def _value_non_strict(self, value, path, item_type, extra_args):
+    def _value_check(self, value, path, item_type, extra_args):
         """ Checks non strict """
         matches = []
-        try:
-            if item_type in ['String']:
-                str(value)
-            elif item_type in ['Boolean']:
-                bool(value)
-            elif item_type in ['Integer']:
-                int(value)
-        except Exception:  # pylint: disable=W0703
+        if not self.config['strict']:
+            try:
+                if item_type in ['String']:
+                    str(value)
+                elif item_type in ['Boolean']:
+                    bool(value)
+                elif item_type in ['Integer']:
+                    int(value)
+                elif item_type in ['Long']:
+                    if sys.version_info < (3,):
+                        long(value)  # pylint: disable=undefined-variable
+                    else:
+                        int(value)
+                elif item_type in ['Double']:
+                    float(value)
+            except Exception:  # pylint: disable=W0703
+                message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                matches.append(RuleMatch(path, message, **extra_args))
+        else:
             message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
             matches.append(RuleMatch(path, message, **extra_args))
 
@@ -86,38 +89,27 @@ class ValuePrimitiveType(CloudFormationLintRule):
         if item_type in ['String']:
             if not isinstance(value, (six.string_types)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
-                if not self.config['strict']:
-                    matches.extend(self._value_non_strict(value, path, item_type, extra_args))
-                else:
-                    message = 'Property %s should be of type String' % ('/'.join(map(str, path)))
-                    matches.append(RuleMatch(path, message, **extra_args))
+                matches.extend(self._value_check(value, path, item_type, extra_args))
         elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
-                message = 'Property %s should be of type Boolean' % ('/'.join(map(str, path)))
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': bool.__name__}
-                matches.append(RuleMatch(path, message, **extra_args))
+                matches.extend(self._value_check(value, path, item_type, extra_args))
         elif item_type in ['Double']:
             if not isinstance(value, (float, int)):
-                message = 'Property %s should be of type Double' % ('/'.join(map(str, path)))
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': [float.__name__, int.__name__]}
-                matches.append(RuleMatch(path, message, **extra_args))
+                matches.extend(self._value_check(value, path, item_type, extra_args))
         elif item_type in ['Integer']:
             if not isinstance(value, (int)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
-                if self.config['strict'] is False:
-                    matches.extend(self._value_non_strict(value, path, item_type, extra_args))
-                else:
-                    message = 'Property %s should be of type Integer' % ('/'.join(map(str, path)))
-                    matches.append(RuleMatch(path, message, **extra_args))
+                matches.extend(self._value_check(value, path, item_type, extra_args))
         elif item_type in ['Long']:
             if sys.version_info < (3,):
                 integer_types = (int, long,)  # pylint: disable=undefined-variable
             else:
                 integer_types = (int,)
             if not isinstance(value, integer_types):
-                message = 'Property %s should be of type Long' % ('/'.join(map(str, path)))
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([x.__name__ for x in integer_types])}
-                matches.append(RuleMatch(path, message, **extra_args))
+                matches.extend(self._value_check(value, path, item_type, extra_args))
         elif isinstance(value, list):
             message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
             extra_args = {'actual_type': type(value).__name__, 'expected_type': list.__name__}

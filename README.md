@@ -121,6 +121,8 @@ Optional parameters:
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
+| -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false                    
+  -v, --version         Version of cfn-lint
 | -d, --debug |  |  | Specify to enable debug logging |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
@@ -166,6 +168,18 @@ Resources:
 ### Precedence
 
 cfn-lint applies the configuration from the CloudFormation Metadata first and then overrides those values with anything specified in the CLI.
+
+### Configure Rules
+
+Certain rules will support configuration properties. You can configure these rules by using `configure_rules` parameter.
+
+From the command line the format is `E3012:strict=false`
+From the cfnlintrc or Metadata section the format is
+```
+configure_rules:
+  E3012:
+    strict: False  
+```
 
 ### Getting Started Guides
 

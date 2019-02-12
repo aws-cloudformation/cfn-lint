@@ -49,6 +49,7 @@ class CloudFormationLintRule(object):
         self.resource_property_types = []
         self.resource_sub_property_types = []
         self.config = {}  # `-X E3012:strict=false`... Show more
+        self.config_definition = {}
 
     def __repr__(self):
         return '%s: %s' % (self.id, self.shortdesc)
@@ -60,8 +61,23 @@ class CloudFormationLintRule(object):
     def initialize(self, cfn):
         """Initialize the rule"""
 
-    def configure(self, configs):
+    def configure(self, configs=None):
         """ Set the configuration """
+
+        # set defaults
+        if isinstance(self.config_definition, dict):
+            for config_name, config_values in self.config_definition.items():
+                self.config[config_name] = config_values['default']
+
+        if isinstance(configs, dict):
+            for key, value in configs.items():
+                if key in self.config_definition:
+                    if self.config_definition[key]['type'] == 'boolean':
+                        self.config[key] = bool(value)
+                    elif self.config_definition[key]['type'] == 'string':
+                        self.config[key] = str(value)
+                    elif self.config_definition[key]['type'] == 'integer':
+                        self.config[key] = int(value)
 
     match = None
     match_resource_properties = None
@@ -156,6 +172,8 @@ class RulesCollection(object):
         """Register rules"""
         if self.is_rule_enabled(rule.id, rule.experimental):
             self.rules.append(rule)
+            if rule.id in self.configure_rules:
+                rule.configure(self.configure_rules[rule.id])
 
     def __iter__(self):
         return iter(self.rules)
@@ -168,6 +186,8 @@ class RulesCollection(object):
         for rule in more:
             if self.is_rule_enabled(rule.id, rule.experimental):
                 self.rules.append(rule)
+                if rule.id in self.configure_rules:
+                    rule.configure(self.configure_rules[rule.id])
 
     def __repr__(self):
         return '\n'.join([rule.verbose()

@@ -27,12 +27,23 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
 
     success_templates = [
         'test/fixtures/templates/good/generic.yaml',
-        'test/fixtures/templates/good/resource_properties.yaml'
+        'test/fixtures/templates/good/resource_properties.yaml',
     ]
 
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive()
+
+    def test_template_config(self):
+        """Test strict false"""
+        self.helper_file_rule_config(
+            'test/fixtures/templates/good/resources/properties/value_non_strict.yaml',
+            {'strict': False}, 0
+        )
+        self.helper_file_rule_config(
+            'test/fixtures/templates/bad/resources/properties/value_non_strict.yaml',
+            {'strict': False}, 3
+        )
 
     def test_file_negative_nist_high_master(self):
         """Generic Test failure"""
