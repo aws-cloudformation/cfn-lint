@@ -49,7 +49,7 @@ class TestResourceProperties(BaseRuleTestCase):
 
     def test_E3012_in_bad_template(self):
         """Test E3012 in known-bad template"""
-        filename = 'test/fixtures/templates/bad/resource_properties.yml'
+        filename = 'test/fixtures/templates/bad/resource_properties.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
         results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
@@ -58,7 +58,7 @@ class TestResourceProperties(BaseRuleTestCase):
 
     def test_E3012_match_has_extra_attributes(self):
         """Test E3012 in has custom attributes"""
-        filename = 'test/fixtures/templates/bad/resource_properties.yml'
+        filename = 'test/fixtures/templates/bad/resource_properties.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
         results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
