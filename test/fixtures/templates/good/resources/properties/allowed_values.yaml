@@ -320,6 +320,37 @@ Resources:
       TargetAction: "action1"
       TargetPipeline: ""
       TargetPipelineVersion: 1
+  CognitoIdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    Properties:
+      AllowUnauthenticatedIdentities: False
+      CognitoStreams:
+        StreamingStatus: "ENABLED" # Valid AllowedValue
+  CognitoUserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AliasAttributes:
+        - "phone_number" # Valid AllowedValue
+      AutoVerifiedAttributes:
+        - "email" # Valid AllowedValue
+      MfaConfiguration: "OPTIONAL" # Valid AllowedValue
+      Schema:
+        - AttributeDataType: "String" # Valid AllowedValue
+      UsernameAttributes:
+        - "phone_number" # Valid AllowedValue
+  CognitoUserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ExplicitAuthFlows:
+        - "CUSTOM_AUTH_FLOW_ONLY" # Valid AllowedValue
+      UserPoolId: "pool1"
+  CognitoUserPoolUser:
+    Type: "AWS::Cognito::UserPoolUser"
+    Properties:
+      DesiredDeliveryMediums:
+        - "SMS" # Valid AllowedValue
+      MessageAction: "RESEND" # Valid AllowedValue
+      UserPoolId: "pool1"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:

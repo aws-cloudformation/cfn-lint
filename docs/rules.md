@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **100** rules are applied by this linter:
+The following **103** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -64,6 +64,7 @@ The following **100** rules are applied by this linter:
 | E2010 <a name="E2010"></a> | Parameter limit not exceeded | Check the number of Parameters in the template is lessthan the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
 | E2011 <a name="E2011"></a> | Parameter name limit not exceeded | Check the size of Parameter names in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
 | E2012 <a name="E2012"></a> | Parameter value limit not exceeded | Check if the size of Parameter values in the template is less than the upper limit | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `parameters`,`limits` |
+| E2014 <a name="E2014"></a> | Default value cannot use Refs | Check if Refs are not used in Parameter Defaults | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters` |
 | E2015 <a name="E2015"></a> | Default value is within parameter constraints | Making sure the parameters have a default value inside AllowedValues, MinValue, MaxValue, AllowedPattern | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters` |
 | E2503 <a name="E2503"></a> | Resource ELB Properties | See if Elb Resource Properties are set correctly HTTPS has certificate HTTP has no certificate | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html) | `properties`,`elb` |
 | E2504 <a name="E2504"></a> | Check Ec2 Ebs Properties | See if Ec2 Eb2 Properties are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html) | `properties`,`ec2`,`ebs` |
@@ -98,6 +99,8 @@ The following **100** rules are applied by this linter:
 | E3022 <a name="E3022"></a> | Resource SubnetRouteTableAssociation Properties | Validate there is only one SubnetRouteTableAssociation per subnet | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html) | `resources`,`subnet`,`route table` |
 | E3025 <a name="E3025"></a> | RDS instance type is compatible with the RDS type | Check the RDS instance types are supported by the type of RDS engine. Only if the values are strings will this be checked. | [Source](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html) | `resources`,`rds` |
 | E3030 <a name="E3030"></a> | Check if properties have a valid value | Check if properties have a valid value in case of an enumator | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`allowed value` |
+| E3035 <a name="E3035"></a> | Check DeletionPolicy values for Resources | Check that the DeletionPolicy values are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`deletionpolicy` |
+| E3036 <a name="E3036"></a> | Check UpdateReplacePolicy values for Resources | Check that the UpdateReplacePolicy values are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html) | `resources`,`updatereplacepolicy` |
 | E4001 <a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
 | E6001 <a name="E6001"></a> | Outputs have appropriate properties | Making sure the outputs are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6002 <a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |

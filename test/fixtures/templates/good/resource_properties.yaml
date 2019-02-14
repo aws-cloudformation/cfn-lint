@@ -313,6 +313,11 @@ Parameters:
     Default: "foo.com, bar.com"
 Conditions:
   HasSingleClusterInstance: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  Conditions:
+    ConditionTrue:
+      Fn::Equals:
+        - ""
+        - ""
 Resources:
   CPUAlarmHigh:
     Properties:
@@ -667,3 +672,31 @@ Resources:
       GroupDescription: test
       SecurityGroupIngress:
         Fn::FindInMap: [ runtime, us-east-1, production ]
+  MyCustomEnvironmentVariables:
+    Type: Custom::EnvironmentVariables
+    Properties:
+      ServiceToken:
+        Fn::ImportValue: "MyServiceToken"
+      String: "envvar1=1, envvar2=2"
+
+  ProjectBuild:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: "My Project"
+      Description: "My Description"
+      Artifacts:
+        Type: CODEPIPELINE
+      ServiceRole:
+        Fn::ImportValue: "ServiceRole"
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/python:3.7.1
+        Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          Fn::If:
+            - ConditionTrue
+            - Fn::GetAtt: [MyCustomEnvironmentVariables, Variables]
+            - Ref: AWS::NoValue
+      Source:
+        BuildSpec: buildspec.yaml
+        Type: CODEPIPELINE

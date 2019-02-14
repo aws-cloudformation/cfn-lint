@@ -59,7 +59,6 @@ class TestConditions(BaseTestCase):
         """Test success run"""
         self.assertEqual(len(self.conditions.Conditions), 9)
         self.assertEqual(len(self.conditions.Parameters), 2)
-        print(self.conditions.Parameters)
         self.assertListEqual(self.conditions.Parameters['55caa18684cddafa866bdb947fb31ea563b2ea73'], ['None', 'Single NAT', 'High Availability'])
 
     def test_success_is_production(self):

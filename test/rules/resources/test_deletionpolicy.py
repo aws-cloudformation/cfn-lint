@@ -14,5 +14,21 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from cfnlint.rules.resources.DeletionPolicy import DeletionPolicy  # pylint: disable=E0401
+from .. import BaseRuleTestCase
 
-__version__ = '0.14.0'
+
+class TestResourceDeletionPolicy(BaseRuleTestCase):
+    """Test base template"""
+    def setUp(self):
+        """Setup"""
+        super(TestResourceDeletionPolicy, self).setUp()
+        self.collection.register(DeletionPolicy())
+
+    def test_file_positive(self):
+        """Test Positive"""
+        self.helper_file_positive()
+
+    def test_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/resources_deletionpolicy.yaml', 4)
