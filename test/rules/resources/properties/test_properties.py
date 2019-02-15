@@ -66,9 +66,7 @@ class TestResourceProperties(BaseRuleTestCase):
         for r in results:
             if r.rule.id == 'E3012':
                 for ca in custom_attrs:
-                    with self.subTest(custom_attr=ca):
-                        self.assertTrue(hasattr(r, ca))
-
+                    assert hasattr(r, ca), "Attribute {} was not found".format(ca)
 
 class TestSpecifiedCustomResourceProperties(TestResourceProperties):
     """Repeat Resource Properties tests with Custom Resource override spec provided"""
