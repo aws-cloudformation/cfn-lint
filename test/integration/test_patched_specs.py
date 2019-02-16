@@ -50,51 +50,64 @@ class TestPatchedSpecs(BaseTestCase):
 
     def test_property_type_values(self):
         """Test Property Type Values"""
+        def _test_property_type_values(values, r_name, p_name):
+            p_value_type = values.get('Value', {}).get('ValueType')
+            if p_value_type:
+                self.assertIn(p_value_type, self.spec.get('ValueTypes'), 'PropertyType: %s, Property: %s' % (r_name, p_name))
+                # List Value if a singular value is set and the type is List
+                if values.get('Type') == 'List':
+                    p_list_value_type = values.get('Value', {}).get('ListValueType')
+                    if p_list_value_type:
+                        self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+
         for r_name, r_values in self.spec.get('PropertyTypes').items():
-            for p_name, p_values in r_values.get('Properties').items():
-                p_value_type = p_values.get('Value', {}).get('ValueType')
-                if p_value_type:
-                    self.assertIn(p_value_type, self.spec.get('ValueTypes'), 'PropertyType: %s, Property: %s' % (r_name, p_name))
-                    # List Value if a singular value is set and the type is List
-                    if p_values.get('Type') == 'List':
-                        p_list_value_type = p_values.get('Value', {}).get('ListValueType')
-                        if p_list_value_type:
-                            self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+            if r_values.get('Properties') is None:
+                _test_property_type_values(r_values, r_name, '')
+            else:
+                for p_name, p_values in r_values.get('Properties', {}).items():
+                    _test_property_type_values(p_values, r_name, p_name)
 
-    def _test_sub_properties(self, resource_name, properties):
+    def _test_sub_properties(self, resource_name, v_propertyname, v_propertyvalues):
         property_types = self.spec.get('PropertyTypes').keys()
-        for v_propertyname, v_propertyvalues in properties:
-            if 'PrimitiveType' not in v_propertyvalues and 'PrimitiveItemType' not in v_propertyvalues:
-                v_propertytype = ''
-                if 'ItemType' in v_propertyvalues:
-                    v_propertytype = v_propertyvalues['ItemType']
-                elif 'Type' in v_propertyvalues:
-                    v_propertytype = v_propertyvalues['Type']
+        if 'PrimitiveType' not in v_propertyvalues and 'PrimitiveItemType' not in v_propertyvalues:
+            v_propertytype = ''
+            if 'ItemType' in v_propertyvalues:
+                v_propertytype = v_propertyvalues['ItemType']
+            elif 'Type' in v_propertyvalues:
+                v_propertytype = v_propertyvalues['Type']
 
-                v_subproperty_type = str.format('{0}.{1}', resource_name, v_propertytype)
+            v_subproperty_type = str.format('{0}.{1}', resource_name, v_propertytype)
 
-                property_exists = False
-                if v_subproperty_type in property_types:
-                    property_exists = True
-                elif v_propertytype in property_types:
-                    # Special: There is a "Tag" Property type that's used as a "CatchAll" mechanism for Tags,
-                    # If the subproperty is not found, check if it exists with the resource in the property
-                    property_exists = True
+            property_exists = False
+            if v_subproperty_type in property_types:
+                property_exists = True
+            elif v_propertytype in property_types:
+                # Special: There is a "Tag" Property type that's used as a "CatchAll" mechanism for Tags,
+                # If the subproperty is not found, check if it exists with the resource in the property
+                property_exists = True
 
-                self.assertEqual(property_exists, True, 'Specified property type {} not found for property {}'.format(v_subproperty_type, v_propertyname))
+            self.assertEqual(property_exists, True, 'Specified property type {} not found for property {}'.format(v_subproperty_type, v_propertyname))
 
     def test_sub_properties(self):
         """Test Resource sub-Property definitions"""
         # Test properties from resources
         for v_name, v_values in self.spec.get('ResourceTypes').items():
-            self._test_sub_properties(v_name, v_values.get('Properties').items())
+            v_value_properties = v_values.get('Properties', {})
+            for p_name, p_values in v_value_properties.items():
+                self._test_sub_properties(v_name, p_name, p_values)
 
         # Test properties from subproperties
         for v_name, v_values in self.spec.get('PropertyTypes').items():
             # Grab the resource part from the subproperty
             resource_name = v_name.split('.', 1)[0]
             if resource_name:
-                self._test_sub_properties(resource_name, v_values.get('Properties').items())
+                v_value_properties = v_values.get('Properties', {})
+                if v_value_properties is None:
+                    print(v_values)
+                    self._test_sub_properties(resource_name, '', v_values)
+                else:
+                    for p_name, p_values in v_value_properties.items():
+                        self._test_sub_properties(resource_name, p_name, p_values)
 
     def test_property_value_types(self):
         """Test Property Value Types"""
