@@ -26,8 +26,11 @@ class BaseFormatter(object):
     def print_matches(self, matches):
         """Output all the matches"""
         # Output each match on a separate line by default
+        output = []
         for match in matches:
-            print(self._format(match))
+            output.append(self._format(match))
+
+        return '\n'.join(output)
 
 class Formatter(BaseFormatter):
     """Generic Formatter"""
@@ -82,10 +85,9 @@ class JsonFormatter(BaseFormatter):
 
     def print_matches(self, matches):
         # JSON formatter outputs a single JSON object
-        print(
-            json.dumps(
-                matches, indent=4, cls=self.CustomEncoder,
-                sort_keys=True, separators=(',', ': ')))
+        return json.dumps(
+            matches, indent=4, cls=self.CustomEncoder,
+            sort_keys=True, separators=(',', ': '))
 
 
 class QuietFormatter(BaseFormatter):
