@@ -140,8 +140,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
             # Nested Stack Outputs
             # if its a string type we are good and return matches
             # if its a list its a failure as Outputs can only be strings
-
-            if is_value_a_list:
+            if is_value_a_list and property_type == 'List':
                 message = 'CloudFormation stack outputs need to be strings not lists at {0}'
                 matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
 
