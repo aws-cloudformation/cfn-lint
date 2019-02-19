@@ -700,3 +700,23 @@ Resources:
       Source:
         BuildSpec: buildspec.yaml
         Type: CODEPIPELINE
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole: Arn
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        Image: String
+        ComputeType: BUILD_GENERAL1_LARGE
+      Source:
+        Type: S3
+      Triggers:
+        Webhook: true
+        FilterGroups:
+        - - Type: EVENT
+            Pattern: PULL_REQUEST_CREATED,PULL_REQUEST_UPDATED,PULL_REQUEST_REOPENED
+          - Type: BASE_REF
+            Pattern: ^refs/heads/master$
+            ExcludeMatchedPattern: false

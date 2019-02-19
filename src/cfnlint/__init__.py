@@ -208,6 +208,7 @@ class RulesCollection(object):
             property_spec_name = 'Tag'
         else:
             property_spec_name = '%s.%s' % (resource_type, property_type)
+
         if property_spec_name in property_spec:
             for rule in self.rules:
                 matches.extend(
@@ -218,6 +219,16 @@ class RulesCollection(object):
                 )
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
+            if not resource_spec_properties:
+                if property_spec.get(property_spec_name, {}).get('Type') == 'List':
+                    if isinstance(properties, list):
+                        property_type = property_spec.get(property_spec_name, {}).get('ItemType')
+                        for index, item in enumerate(properties):
+                            matches.extend(self.resource_property(
+                                filename, cfn,
+                                path[:] + [index],
+                                item, resource_type, property_type))
+                return matches
             if isinstance(properties, dict):
                 for resource_property, resource_property_value in properties.items():
                     property_path = path[:] + [resource_property]

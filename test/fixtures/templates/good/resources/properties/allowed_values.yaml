@@ -25,7 +25,7 @@ Resources:
       BrokerName: "myBroker"
       DeploymentMode: "SINGLE_INSTANCE" # Valid AllowedValue
       EngineType: "ACTIVEMQ" # Valid AllowedValue
-      EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
+      EngineVersion: "5.15.8" # Valid AllowedValue
       PubliclyAccessible: false
       HostInstanceType: "mq.t2.micro" # Valid AllowedValue
       Users:
@@ -39,7 +39,7 @@ Resources:
     Properties:
       Data: ""
       EngineType: "ACTIVEMQ" # Valid AllowedValue
-      EngineVersion: "ActiveMQ 5.15.8" # Valid AllowedValue
+      EngineVersion: "5.15.8" # Valid AllowedValue
       Name: "Configuration"
   ApiGatewayAuthorizer:
     Type: "AWS::ApiGateway::Authorizer"
@@ -351,6 +351,38 @@ Resources:
         - "SMS" # Valid AllowedValue
       MessageAction: "RESEND" # Valid AllowedValue
       UserPoolId: "pool1"
+  ConfigAggregationAuthorization:
+    Type: "AWS::Config::AggregationAuthorization"
+    Properties:
+      AuthorizedAccountId: "123456789012"
+      AuthorizedAwsRegion: "eu-west-1" # Valid AllowedValue
+  ConfigRule:
+    Type: "AWS::Config::ConfigRule"
+    Properties:
+      MaximumExecutionFrequency: "One_Hour" # Valid AllowedValue
+      Scope:
+        ComplianceResourceTypes:
+          - "AWS::CloudFront::StreamingDistribution" # Valid AllowedValue
+      Source:
+        Owner: "CUSTOM_LAMBDA" # Valid AllowedValue
+        SourceDetails:
+          - EventSource: "aws.config" # Valid AllowedValue
+            MaximumExecutionFrequency: "TwentyFour_Hours" # Valid AllowedValue
+            MessageType: "ConfigurationItemChangeNotification" # Valid AllowedValue
+        SourceIdentifier: "arn:aws:lambda:us-east-2:123456789012:function:custom_rule_name"
+  ConfigRecorder:
+    Type: "AWS::Config::ConfigurationRecorder"
+    Properties:
+      RecordingGroup:
+        ResourceTypes:
+          - "AWS::CloudFront::Distribution" # Valid AllowedValue
+      RoleARN: ""
+  ConfigDeliveryChannel:
+    Type: "AWS::Config::DeliveryChannel"
+    Properties:
+      ConfigSnapshotDeliveryProperties:
+        DeliveryFrequency: "Six_Hours" # Valid AllowedValue
+      S3BucketName: !Ref "S3Bucket"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:

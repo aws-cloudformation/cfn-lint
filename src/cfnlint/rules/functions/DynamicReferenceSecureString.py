@@ -133,8 +133,9 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
-        property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
-        matches.extend(self.check(cfn, properties, property_specs, property_type, path))
+        if self.property_specs.get(property_type, {}).get('Properties'):
+            property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
+            matches.extend(self.check(cfn, properties, property_specs, property_type, path))
 
         return matches
 
