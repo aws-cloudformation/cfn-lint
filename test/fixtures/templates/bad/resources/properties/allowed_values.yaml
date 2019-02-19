@@ -468,6 +468,15 @@ Resources:
       SecretId: "SecretArn"
       TargetId: "RefToCluster"
       TargetType: "AWS::RDS:DBCluster" # Invalid AllowedValue
+  ServiceDiscoveryService:
+    Type: "AWS::ServiceDiscovery::Service"
+    Properties:
+      HealthCheckConfig:
+        Type: "SSH" # Invalid AllowedValue
+      DnsConfig:
+        DnsRecords:
+          - Type: "CNAME" # Invalid AllowedValue
+            TTL: "60"
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:
