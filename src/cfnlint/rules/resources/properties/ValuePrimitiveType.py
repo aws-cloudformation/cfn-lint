@@ -79,6 +79,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 integer_types = (int,)
             if not isinstance(value, integer_types):
                 message = 'Property %s should be of type Long' % ('/'.join(map(str, path)))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([x.__name__ for x in integer_types])}
                 matches.append(RuleMatch(path, message, **extra_args))
         elif isinstance(value, list):
             message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
