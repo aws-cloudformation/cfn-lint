@@ -9,6 +9,16 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.14.1
+###### CloudFormation Specifications
+- Update CloudFormation Specs to version 2.23.0
+- Add allowed values for AWS::Config::* resources
+- Add allowed values for AWS::ServiceDiscovery::* resources
+- Fix allowed values for Apache MQ
+###### Fixes
+- Update rule [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008) to not error when using a list from a custom resource
+- Support simple types in the CloudFormation spec
+- Add tests for the formatters
 
 ### 0.14.0
 ###### Features
