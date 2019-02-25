@@ -172,6 +172,67 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "DNS" # Valid AllowedValue
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        CustomErrorResponses:
+          - ErrorCode: 504 # Valid AllowedValue
+            ResponseCode: 414 # Valid AllowedValue
+            ResponsePagePath: "/404-errors/403-forbidden.html"
+        CacheBehaviors:
+          - ForwardedValues:
+              QueryString: False
+            LambdaFunctionAssociations:
+              - EventType: "viewer-request" # Valid AllowedValue
+                LambdaFunctionARN: "LambdaArn"
+            PathPattern: "images/*.jpg"
+            TargetOriginId: "2"
+            ViewerProtocolPolicy: "allow-all" # Valid AllowedValue
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: False
+          TargetOriginId: "1"
+          ViewerProtocolPolicy: "redirect-to-https" # Valid AllowedValue
+        Enabled: False
+        HttpVersion: "http1.1" # Valid AllowedValue
+        PriceClass: "PriceClass_100" # Valid AllowedValue
+        Origins:
+          - DomainName: !GetAtt "S3Bucket.DomainName"
+            Id: "1"
+            S3OriginConfig:
+              OriginAccessIdentity: "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+          - Id: "2"
+            DomainName: "example.com"
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: "match-viewer" # Valid AllowedValue
+              OriginSSLProtocols:
+                - "TLSv1.2" # Valid AllowedValue
+        Restrictions:
+          GeoRestriction:
+            Locations:
+              - "NL" # Valid AllowedValue
+            RestrictionType: "whitelist" # Valid AllowedValue
+        ViewerCertificate:
+          AcmCertificateArn: !Ref "Certificate"
+          MinimumProtocolVersion: "TLSv1.2_2018" # Valid AllowedValue
+          SslSupportMethod: "sni-only" # Valid AllowedValue
+  CloudFrontStreamingDistribution:
+    Type: "AWS::CloudFront::StreamingDistribution"
+    Properties:
+      StreamingDistributionConfig:
+        Comment: "Mandatory comment"
+        Enabled: False
+        PriceClass: "PriceClass_All" # Valid AllowedValue
+        S3Origin:
+          DomainName: !GetAtt "S3Bucket.DomainName"
+          OriginAccessIdentity: "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+        TrustedSigners:
+          Enabled: False
+      Tags:
+        - Key: "Mandatory"
+          Value: "Tag"
   CloudTrail:
     Type: "AWS::CloudTrail::Trail"
     Properties:
