@@ -312,6 +312,69 @@ Resources:
       TargetAction: "action1"
       TargetPipeline: ""
       TargetPipelineVersion: 1
+  CognitoIdentityPool:
+    Type: "AWS::Cognito::IdentityPool"
+    Properties:
+      AllowUnauthenticatedIdentities: False
+      CognitoStreams:
+        StreamingStatus: "SUSPENDED" # Invalid AllowedValue
+  CognitoUserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+      AliasAttributes:
+        - "phonenumber" # Invalid AllowedValue
+      AutoVerifiedAttributes:
+        - "e-mail" # Invalid AllowedValue
+      MfaConfiguration: "MANDATORY" # Invalid AllowedValue
+      Schema:
+        - AttributeDataType: "String " # Invalid AllowedValue
+      UsernameAttributes:
+        - "phone" # Imvalid AllowedValue
+  CognitoUserPoolClient:
+    Type: "AWS::Cognito::UserPoolClient"
+    Properties:
+      ExplicitAuthFlows:
+        - "CUSTOM_AUTHFLOW_ONLY" # Invalid AllowedValue
+      UserPoolId: "pool1"
+  CognitoUserPoolUser:
+    Type: "AWS::Cognito::UserPoolUser"
+    Properties:
+      DesiredDeliveryMediums:
+        - "MAIL" # Invalid AllowedValue
+      MessageAction: "RESEND." # Invalid AllowedValue
+      UserPoolId: "pool1"
+  ConfigAggregationAuthorization:
+    Type: "AWS::Config::AggregationAuthorization"
+    Properties:
+      AuthorizedAccountId: "123456789012"
+      AuthorizedAwsRegion: "eu-west-12" # Invalid AllowedValue
+  ConfigRule:
+    Type: "AWS::Config::ConfigRule"
+    Properties:
+      MaximumExecutionFrequency: "OneHour" # Invalid AllowedValue
+      Scope:
+        ComplianceResourceTypes:
+          - "AWS:CloudFront::StreamingDistribution" # Invalid AllowedValue
+      Source:
+        Owner: "Lambda" # Invalid AllowedValue
+        SourceDetails:
+          - EventSource: "aws.ec2" # Invalid AllowedValue
+            MaximumExecutionFrequency: "24 Hours" # Invalid AllowedValue
+            MessageType: "Schedulednotification" # Invalid AllowedValue
+        SourceIdentifier: "arn:aws:lambda:us-east-2:123456789012:function:custom_rule_name"
+  ConfigRecorder:
+    Type: "AWS::Config::ConfigurationRecorder"
+    Properties:
+      RecordingGroup:
+        ResourceTypes:
+          - "AWS::DMS::Endpoint" # Invalid AllowedValue
+      RoleARN: ""
+  ConfigDeliveryChannel:
+    Type: "AWS::Config::DeliveryChannel"
+    Properties:
+      ConfigSnapshotDeliveryProperties:
+        DeliveryFrequency: "Minute" # Invalid AllowedValue
+      S3BucketName: !Ref "S3Bucket"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
@@ -405,6 +468,15 @@ Resources:
       SecretId: "SecretArn"
       TargetId: "RefToCluster"
       TargetType: "AWS::RDS:DBCluster" # Invalid AllowedValue
+  ServiceDiscoveryService:
+    Type: "AWS::ServiceDiscovery::Service"
+    Properties:
+      HealthCheckConfig:
+        Type: "SSH" # Invalid AllowedValue
+      DnsConfig:
+        DnsRecords:
+          - Type: "CNAME" # Invalid AllowedValue
+            TTL: "60"
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:

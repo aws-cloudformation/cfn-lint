@@ -201,6 +201,17 @@ class Properties(CloudFormationLintRule):
                 resourcetype = str.format('{0}.{1}', parenttype, proptype)
 
         resourcespec = specs[resourcetype].get('Properties', {})
+        if not resourcespec:
+            if specs[resourcetype].get('Type') == 'List':
+                if isinstance(text, list):
+                    property_type = specs[resourcetype].get('ItemType')
+                    for index, item in enumerate(text):
+                        matches.extend(
+                            self.propertycheck(
+                                item, property_type, parenttype, resourcename,
+                                path[:] + [index], root))
+
+            return matches
         supports_additional_properties = specs[resourcetype].get('AdditionalProperties', False)
 
         if text == 'AWS::NoValue':
