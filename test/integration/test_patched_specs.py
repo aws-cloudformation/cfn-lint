@@ -137,7 +137,7 @@ class TestPatchedSpecs(BaseTestCase):
                 elif p_name == 'AllowedValues':
                     self.assertIsInstance(p_values, list)
                     for l_value in p_values:
-                        self.assertIsInstance(l_value, six.string_types, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
+                        self.assertIsInstance(l_value, (six.string_types, six.integer_types), 'ValueTypes: %s, Type: %s' % (v_name, p_name))
 
     def test_parameter_types(self):
         """Test Parameter Types"""

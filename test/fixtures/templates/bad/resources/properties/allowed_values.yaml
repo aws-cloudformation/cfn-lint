@@ -172,6 +172,67 @@ Resources:
     Properties:
       DomainName: "example.com"
       ValidationMethod: "Dns" # Invalid AllowedValue
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      DistributionConfig:
+        CustomErrorResponses:
+          - ErrorCode: 200 # Invalid AllowedValue
+            ResponseCode: 301 # Invalid AllowedValue
+            ResponsePagePath: "/404-errors/403-forbidden.html"
+        CacheBehaviors:
+          - ForwardedValues:
+              QueryString: False
+            LambdaFunctionAssociations:
+              - EventType: "viewerrequest" # Invalid AllowedValue
+                LambdaFunctionARN: "LambdaArn"
+            PathPattern: "images/*.jpg"
+            TargetOriginId: "2"
+            ViewerProtocolPolicy: "http" # Invalid AllowedValue
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: False
+          TargetOriginId: "1"
+          ViewerProtocolPolicy: "https" # Invalid AllowedValue
+        Enabled: False
+        HttpVersion: "http1.2" # Invalid AllowedValue
+        PriceClass: "Cheap" # Invalid AllowedValue
+        Origins:
+          - DomainName: !GetAtt "S3Bucket.DomainName"
+            Id: "1"
+            S3OriginConfig:
+              OriginAccessIdentity: "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+          - Id: "2"
+            DomainName: "example.com"
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: "MatchViewer" # Invalid AllowedValue
+              OriginSSLProtocols:
+                - "TLSv1.3" # Invalid AllowedValue
+        Restrictions:
+          GeoRestriction:
+            Locations:
+              - "EN" # Invalid AllowedValue
+            RestrictionType: "white-list" # Invalid AllowedValue
+        ViewerCertificate:
+          AcmCertificateArn: !Ref "Certificate"
+          MinimumProtocolVersion: "TLSv1.2-2018" # Invalid AllowedValue
+          SslSupportMethod: "sni" # Invalid AllowedValue
+  CloudFrontStreamingDistribution:
+    Type: "AWS::CloudFront::StreamingDistribution"
+    Properties:
+      StreamingDistributionConfig:
+        Comment: "Mandatory comment"
+        Enabled: False
+        PriceClass: "PriceClassAll" # Invalid AllowedValue
+        S3Origin:
+          DomainName: !GetAtt "S3Bucket.DomainName"
+          OriginAccessIdentity: "origin-access-identity/cloudfront/E15MNIMTCFKK4C"
+        TrustedSigners:
+          Enabled: False
+      Tags:
+        - Key: "Mandatory"
+          Value: "Tag"
   CloudTrail:
     Type: "AWS::CloudTrail::Trail"
     Properties:
