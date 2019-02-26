@@ -19,6 +19,10 @@ from mock import patch, mock_open, Mock
 import jsonschema
 import cfnlint.config  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
+try:  # pragma: no cover
+    from pathlib import Path
+except ImportError:  # pragma: no cover
+    from pathlib2 import Path
 
 
 LOGGER = logging.getLogger('cfnlint')
@@ -30,6 +34,20 @@ class TestConfigFileArgs(BaseTestCase):
         """Setup"""
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
+
+    def test_config_parser_read_config(self):
+        """ Testing one file successful """
+        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
+        config = cfnlint.config.ConfigFileArgs()
+        config_file = Path('test/fixtures/configs/cfnlintrc_read.yaml')
+        config_template = config._read_config(config_file)
+        self.assertEqual(
+            config_template,
+            {
+                'templates': ['test/fixtures/templates/good/**/*.yaml'],
+                'include_checks': ['I']
+            }
+        )
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_parser_read(self, yaml_mock):

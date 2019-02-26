@@ -21,8 +21,8 @@ import glob
 import json
 import os
 import six
-import yaml
 import jsonschema
+import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
 try:  # pragma: no cover
     from pathlib import Path
@@ -208,7 +208,7 @@ class ConfigFileArgs(object):
 
         if self._has_file(config):
             LOGGER.debug('Parsing CFNLINTRC')
-            config_template = yaml.safe_load(config.read_text())
+            config_template = cfnlint.decode.cfn_yaml.load(str(config))
 
         if not config_template:
             config_template = {}
