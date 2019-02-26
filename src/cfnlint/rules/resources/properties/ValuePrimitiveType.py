@@ -55,19 +55,23 @@ class ValuePrimitiveType(CloudFormationLintRule):
         if item_type in ['String']:
             if not isinstance(value, (str, six.text_type, six.string_types)):
                 message = 'Property %s should be of type String' % ('/'.join(map(str, path)))
-                matches.append(RuleMatch(path, message))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
+                matches.append(RuleMatch(path, message, **extra_args))
         elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
                 message = 'Property %s should be of type Boolean' % ('/'.join(map(str, path)))
-                matches.append(RuleMatch(path, message))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': bool.__name__}
+                matches.append(RuleMatch(path, message, **extra_args))
         elif item_type in ['Double']:
             if not isinstance(value, (float, int)):
                 message = 'Property %s should be of type Double' % ('/'.join(map(str, path)))
-                matches.append(RuleMatch(path, message))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': [float.__name__, int.__name__]}
+                matches.append(RuleMatch(path, message, **extra_args))
         elif item_type in ['Integer']:
             if not isinstance(value, (int)):
                 message = 'Property %s should be of type Integer' % ('/'.join(map(str, path)))
-                matches.append(RuleMatch(path, message))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
+                matches.append(RuleMatch(path, message, **extra_args))
         elif item_type in ['Long']:
             if sys.version_info < (3,):
                 integer_types = (int, long,)  # pylint: disable=undefined-variable
@@ -75,10 +79,12 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 integer_types = (int,)
             if not isinstance(value, integer_types):
                 message = 'Property %s should be of type Long' % ('/'.join(map(str, path)))
-                matches.append(RuleMatch(path, message))
+                extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([x.__name__ for x in integer_types])}
+                matches.append(RuleMatch(path, message, **extra_args))
         elif isinstance(value, list):
             message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
-            matches.append(RuleMatch(path, message))
+            extra_args = {'actual_type': type(value).__name__, 'expected_type': list.__name__}
+            matches.append(RuleMatch(path, message, **extra_args))
 
         return matches
 
