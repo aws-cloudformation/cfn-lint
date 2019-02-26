@@ -66,13 +66,13 @@ class TestTemplate(BaseTestCase):
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""
-        filename = 'test/fixtures/templates/bad/properties_onlyone.yaml'
+        filename = 'test/fixtures/templates/bad/resources/properties/onlyone.yaml'
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
 
         matches = []
         matches.extend(self.rules.run(filename, cfn))
-        assert len(matches) == 5, 'Expected {} failures, got {}'.format(5, len(matches))
+        assert len(matches) == 6, 'Expected {} failures, got {}'.format(5, len(matches))
 
     def test_success_filtering_of_rules_default(self):
         """Test extend function"""

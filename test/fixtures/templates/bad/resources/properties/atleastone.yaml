@@ -1,0 +1,24 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  At Least One Property types
+Conditions:
+  cPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  myPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      # Missing Roles, Groups, and Users
+      PolicyName: myPolicy
+      PolicyDocument: {}
+  myPolicy2:
+    Type: AWS::IAM::Policy
+    Properties:
+      Fn::If:
+      - cPrimaryRegion
+      - PolicyName: myPolicy
+        PolicyDocument: {}
+      - PolicyName: myPolicy
+        PolicyDocument: {}
+        Users:
+        - test

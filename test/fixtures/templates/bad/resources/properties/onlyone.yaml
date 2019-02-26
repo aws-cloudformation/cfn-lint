@@ -25,6 +25,18 @@ Resources:
       LaunchConfigurationName: !If ['useAmiId', {'Ref': 'LaunchConfiguration'}, {'Ref': 'AWS::NoValue'}]
       MaxSize: '3'
       MinSize: '1'
+  AutoScalingGroup2:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      Fn::If:
+      - useAmiId
+      - InstanceId: !Ref myAmiId
+        LaunchConfigurationName: myLaunchConfiguration
+        MaxSize: '3'
+        MinSize: '1'
+      - InstanceId: !Ref myAmiId
+        MaxSize: '3'
+        MinSize: '1'
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
