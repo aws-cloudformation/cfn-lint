@@ -1,0 +1,26 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  cIsPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  Route53HealthCheck:
+    Type: "AWS::Route53::HealthCheck"
+    Properties:
+      HealthCheckConfig:
+        InsufficientDataHealthStatus: "Healthy"
+        Type: "CLOUDWATCH_METRIC"
+        AlarmIdentifier:
+          Name: String
+          Region: String
+  Route53HealthCheck1:
+    Type: "AWS::Route53::HealthCheck"
+    Properties:
+      HealthCheckConfig:
+        InsufficientDataHealthStatus: "Healthy"
+        Type: !If [cIsPrimaryRegion, "CLOUDWATCH_METRIC", "HTTP"]
+        AlarmIdentifier:
+          Fn::If:
+          - cIsPrimaryRegion
+          - Name: String
+            Region: String
+          - !Ref 'AWS::NoValue'
