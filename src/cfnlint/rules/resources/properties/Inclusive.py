@@ -39,40 +39,48 @@ class Inclusive(CloudFormationLintRule):
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, inclusions, path):
+    def check(self, properties, inclusions, path, cfn):
         """Check itself"""
         matches = []
-        # property_sets = cfn.get_values({'Properties': properties}, 'Properties', path)
         if not properties:
             return matches
 
-        for items, p in properties.items_safe(path=path, type_t=(dict)):
-            for k in items.keys():
-                if k in inclusions:
-                    for incl_property in inclusions[k]:
-                        if incl_property not in items.keys():
-                            message = 'Property {0} should exist with {1} for {2}'
-                            matches.append(RuleMatch(
-                                p,
-                                message.format(incl_property, k, '/'.join(map(str, p)))
-                            ))
+        property_sets = cfn.get_object_without_conditions(properties)
+        for property_set in property_sets:
+            for prop in property_set['Object']:
+                if prop in inclusions:
+                    for incl_property in inclusions[prop]:
+                        if incl_property not in property_set['Object']:
+                            if property_set['Scenario'] is None:
+                                message = 'Property {0} should exist with {1} for {2}'
+                                matches.append(RuleMatch(
+                                    path,
+                                    message.format(incl_property, prop, '/'.join(map(str, path)))
+                                ))
+                            else:
+                                scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
+                                message = 'Property {0} should exist with {1} {2} for {3}'
+                                matches.append(RuleMatch(
+                                    path,
+                                    message.format(incl_property, prop, scenario_text, '/'.join(map(str, path)))
+                                ))
 
         return matches
 
-    def match_resource_sub_properties(self, properties, property_type, path, _):
+    def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
         matches = []
 
         inclusions = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, inclusions, path))
+        matches.extend(self.check(properties, inclusions, path, cfn))
 
         return matches
 
-    def match_resource_properties(self, properties, resource_type, path, _):
+    def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
 
         inclusions = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, inclusions, path))
+        matches.extend(self.check(properties, inclusions, path, cfn))
 
         return matches

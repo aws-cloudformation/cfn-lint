@@ -1,0 +1,27 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Exclusive Property types
+Conditions:
+  cPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-123456
+      SubnetId: subnet-123456
+      NetworkInterfaces:
+      -
+        DeviceIndex: String
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      Fn::If:
+      - cPrimaryRegion
+      - ImageId: ami-123456
+        SubnetId: subnet-123456
+        NetworkInterfaces:
+        -
+          DeviceIndex: String
+      - ImageId: ami-123456
+        SubnetId: subnet-123456

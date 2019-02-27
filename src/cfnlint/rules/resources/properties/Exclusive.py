@@ -39,36 +39,46 @@ class Exclusive(CloudFormationLintRule):
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check(self, properties, exclusions, path):
+    def check(self, properties, exclusions, path, cfn):
         """Check itself"""
         matches = []
 
-        for prop in properties:
-            if prop in exclusions:
-                for excl_property in exclusions[prop]:
-                    if excl_property in properties:
-                        message = 'Property {0} should NOT exist with {1} for {2}'
-                        matches.append(RuleMatch(
-                            path + [prop],
-                            message.format(excl_property, prop, '/'.join(map(str, path)))
-                        ))
+        property_sets = cfn.get_object_without_conditions(properties)
+        for property_set in property_sets:
+            for prop in property_set['Object']:
+                if prop in exclusions:
+                    for excl_property in exclusions[prop]:
+                        if excl_property in property_set['Object']:
+                            if property_set['Scenario'] is None:
+                                message = 'Property {0} should NOT exist with {1} for {2}'
+                                matches.append(RuleMatch(
+                                    path + [prop],
+                                    message.format(excl_property, prop, '/'.join(map(str, path)))
+                                ))
+                            else:
+                                scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
+                                message = 'Property {0} should NOT exist with {1} {2} for {3}'
+                                matches.append(RuleMatch(
+                                    path + [prop],
+                                    message.format(excl_property, prop, scenario_text, '/'.join(map(str, path)))
+                                ))
 
         return matches
 
-    def match_resource_sub_properties(self, properties, property_type, path, _):
+    def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
         matches = []
 
         exclusions = self.property_types_specs.get(property_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        matches.extend(self.check(properties, exclusions, path, cfn))
 
         return matches
 
-    def match_resource_properties(self, properties, resource_type, path, _):
+    def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
 
         exclusions = self.resource_types_specs.get(resource_type, {})
-        matches.extend(self.check(properties, exclusions, path))
+        matches.extend(self.check(properties, exclusions, path, cfn))
 
         return matches
