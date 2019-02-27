@@ -10,3 +10,20 @@ Resources:
     Properties:
       ImageId: "${AMIId}" # Sub without a variable
       AdditionalInfo: !Sub "${AMIId}" # We add a valid sub in to silence W2001
+  myPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+      - testRole
+      PolicyName: test
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Action:
+            - "iam:UploadSSHPublicKey"
+          Resource: "arn:aws:iam::${AWS::AccountId}:user/${aws:username}-${AMIId}"
+  mySnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "${aws:username}-topic"

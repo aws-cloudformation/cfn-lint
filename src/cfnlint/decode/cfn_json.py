@@ -51,8 +51,7 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
             raise NullError('"{}"'.format(key))
         if key in mapping:
             raise DuplicateError('"{}"'.format(key))
-        else:
-            mapping[key] = value
+        mapping[key] = value
     return mapping
 
 
@@ -124,9 +123,8 @@ def py_scanstring(s, end, strict=True,
             if strict:
                 msg = 'Invalid control character {0!r} at'.format(terminator)
                 raise JSONDecodeError(msg, s, end)
-            else:
-                _append(terminator)
-                continue
+            _append(terminator)
+            continue
         try:
             esc = s[end]
         except IndexError:
