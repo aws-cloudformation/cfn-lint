@@ -1,0 +1,28 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  cIsPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  DynamoDb:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      KeySchema:
+      -
+        AttributeName: String
+        KeyType: String
+      BillingMode: PAY_PER_REQUEST
+  DynamoDbConditioned:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      KeySchema:
+      -
+        AttributeName: String
+        KeyType: String
+      BillingMode: !If [cIsPrimaryRegion, PAY_PER_REQUEST, PROVISIONED]
+      ProvisionedThroughput:
+        Fn::If:
+        - cIsPrimaryRegion
+        - !Ref "AWS::NoValue"
+        - WriteCapacityUnits: 1
+          ReadCapacityUnits: 1
+  
