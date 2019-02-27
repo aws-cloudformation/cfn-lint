@@ -28,8 +28,14 @@ class SubNeeded(CloudFormationLintRule):
 
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
-    excludes = ['UserData', 'ZipFile', 'Resource', 'Condition', 'AWS::CloudFormation::Init']
+    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init']
     api_excludes = ['Uri', 'Body']
+
+    # IAM Policy has special variables that don't require !Sub, Check for these
+    # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html
+    resource_excludes = ['${aws:CurrentTime}', '${aws:EpochTime}', '${aws:TokenIssueTime}', '${aws:principaltype}',
+                         '${aws:SecureTransport}', '${aws:SourceIp}', '${aws:UserAgent}', '${aws:userid}',
+                         '${aws:username}', '${ec2:SourceInstanceARN}']
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
@@ -47,7 +53,10 @@ class SubNeeded(CloudFormationLintRule):
         else:
             # Leaf node
             if isinstance(cfnelem, str) and re.match(searchRegex, cfnelem):
-                values.append(path + [re.match(searchRegex, cfnelem).group(1)])
+                # Get all variables as seperate paths
+                regex = re.compile(r'(\$\{.*?\.?.*?})')
+                for variable in re.findall(regex, cfnelem):
+                    values.append(path + [variable])
 
         return values
 
@@ -79,8 +88,14 @@ class SubNeeded(CloudFormationLintRule):
 
         # We want to search all of the paths to check if each one contains an 'Fn::Sub'
         for parameter_string_path in parameter_string_paths:
-            found_sub = False
 
+            # Exxclude the special IAM variables
+            variable = parameter_string_path[-1]
+            if 'Resource' in parameter_string_path:
+                if variable in self.resource_excludes:
+                    continue
+
+            found_sub = False
             # Does the path contain an 'Fn::Sub'?
             for step in parameter_string_path:
                 if step in self.api_excludes:
@@ -91,7 +106,9 @@ class SubNeeded(CloudFormationLintRule):
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
             if not found_sub:
-                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format('/'.join(map(str, parameter_string_path)))
-                matches.append(RuleMatch(parameter_string_path, message))
+                # Remove the last item (the variable) to prevent multiple errors on 1 line errors
+                path = parameter_string_path[:-1]
+                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format('/'.join(map(str, path)))
+                matches.append(RuleMatch(path, message))
 
         return matches
