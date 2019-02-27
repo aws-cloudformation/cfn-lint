@@ -51,7 +51,7 @@ region_map = {
     'US West (N. California)': 'us-west-1',
 }
 
-session = boto3.session.Session()
+session = boto3.session.Session(profile_name='development')
 client = session.client('pricing', region_name='us-east-1')
 
 def configure_logging():
@@ -130,6 +130,30 @@ def get_redshift_pricing():
                     )
     return results
 
+def get_dax_pricing():
+
+    LOGGER.info('Get DAX pricing')
+    paginator = client.get_paginator('get_products')
+    page_iterator = paginator.paginate(
+        ServiceCode='AmazonDAX',
+        FormatVersion='aws_v1',
+    )
+
+    results = {}
+    for page in page_iterator:
+        for price_item in page.get('PriceList', []):
+            products = json.loads(price_item)
+            product = products.get('product', {})
+            if product:
+                if product.get('productFamily') == 'DAX':
+                    if not results.get(region_map[product.get('attributes').get('location')]):
+                        results[region_map[product.get('attributes').get('location')]] = set()
+                    usage_type = product.get('attributes').get('usagetype').split(':')[1]
+                    results[region_map[product.get('attributes').get('location')]].add(
+                        usage_type
+                    )
+    return results
+
 
 def get_mq_pricing():
     """ Get MQ Instance Pricing """
@@ -197,6 +221,7 @@ def main():
     outputs = update_outputs('AmazonMQHostInstanceType', get_mq_pricing(), outputs)
     outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
     outputs = update_outputs('RedshiftInstanceType', get_redshift_pricing(), outputs)
+    outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
