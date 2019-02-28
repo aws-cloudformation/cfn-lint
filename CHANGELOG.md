@@ -9,6 +9,22 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.15.0
+###### Features
+- Add scaffolding for arbitrary Match attributes, adding attributes for Type checks
+- Add rule [E3024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3024) to validate that ProvisionedThroughput is not specified with BillingMode PAY_PER_REQUEST
+###### CloudFormation Specifications
+- Update Spec files to 2.24.0
+- Update OnlyOne spec to have BlockDeviceMapping to include NoDevice with Ebs and VirtualName
+- Add all the allowed values of the AWS::CloudFront::* Resources
+- Add all the allowed values of the AWS::DAX::* Resources
+###### Fixes
+- Update config parsing to use the builtin Yaml decoder
+- Add condition support for Inclusive [E2521](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2521), Exclusive [E2520](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2520), and AtLeastOne [E2522](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2522) rules
+- Update rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to better check Resource strings inside IAM Policies
+- Improve the line/column information of a Match with array support
+
+
 ### 0.14.1
 ###### CloudFormation Specifications
 - Update CloudFormation Specs to version 2.23.0

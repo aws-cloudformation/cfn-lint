@@ -29,7 +29,7 @@ Rule `E3012` is used to check the types for value of a resource property.  A num
 
 
 ## Rules
-The following **103** rules are applied by this linter:
+The following **104** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -97,6 +97,7 @@ The following **103** rules are applied by this linter:
 | E3020 <a name="E3020"></a> | Validate Route53 RecordSets | Check if all RecordSets are correctly configured | [Source](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html) | `resources`,`route53`,`record_set` |
 | E3021 <a name="E3021"></a> | Check Events Rule Targets are less than or equal to 5 | CloudWatch Events Rule can only support up to 5 targets | [Source](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/cloudwatch_limits_cwe.html) | `resources`,`events` |
 | E3022 <a name="E3022"></a> | Resource SubnetRouteTableAssociation Properties | Validate there is only one SubnetRouteTableAssociation per subnet | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html) | `resources`,`subnet`,`route table` |
+| E3024 <a name="E3024"></a> | Validate that ProvisionedThroughput is not specified with BillingMode PAY_PER_REQUEST | When using ProvisionedThroughput with BillingMode PAY_PER_REQUEST will result in BillingMode being changed to PROVISIONED | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html) | `resources`,`dynamodb`,`provisioned_throughput`,`billing_mode` |
 | E3025 <a name="E3025"></a> | RDS instance type is compatible with the RDS type | Check the RDS instance types are supported by the type of RDS engine. Only if the values are strings will this be checked. | [Source](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html) | `resources`,`rds` |
 | E3030 <a name="E3030"></a> | Check if properties have a valid value | Check if properties have a valid value in case of an enumator | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`allowed value` |
 | E3035 <a name="E3035"></a> | Check DeletionPolicy values for Resources | Check that the DeletionPolicy values are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`deletionpolicy` |
