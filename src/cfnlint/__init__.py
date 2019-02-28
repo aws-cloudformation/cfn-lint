@@ -812,12 +812,18 @@ class Template(object):
                 except AttributeError as err:
                     LOGGER.debug(err)
         else:
-            try:
-                for key in text:
-                    if key == path[0]:
-                        result = self._loc(key)
-            except AttributeError as err:
-                LOGGER.debug(err)
+            # If the last item of the path is an integer, and the vaue is an array,
+            # Get the location of the item in the array
+            if isinstance(text, list) and isinstance(path[0], int):
+                result = self._loc(text[path[0]])
+            else:
+                try:
+                    for key in text:
+                        if key == path[0]:
+                            result = self._loc(key)
+                except AttributeError as err:
+                    LOGGER.debug(err)
+
         return result
 
     def check_resource_property(self, resource_type, resource_property,
