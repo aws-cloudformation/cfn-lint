@@ -50,7 +50,7 @@ class Ebs(CloudFormationLintRule):
                                         iops = iops_obj[0]['Value']
                                         if isinstance(iops, (six.string_types, int)) and not iops_obj[0]['Path']:
                                             iops_value = int(iops)
-                                            if iops_value < 100 or iops_value > 2000:
+                                            if iops_value < 100 or iops_value > 20000:
                                                 pathmessage = path[:] + ['Iops']
                                                 message = 'Property Iops should be Int between 100 to 20000 {0}'
                                                 matches.append(
