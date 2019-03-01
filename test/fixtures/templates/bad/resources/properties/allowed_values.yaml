@@ -442,6 +442,26 @@ Resources:
       IAMRoleARN: "iam"
       NodeType: "t2.small" # Invalid AllowedValue
       ReplicationFactor: 1
+  DirectoryServiceMicrosoftAD:
+    Type: "AWS::DirectoryService::MicrosoftAD"
+    Properties:
+      Edition: "Special" # Invalid AllowedValue
+      Name: "MicrosoftAD"
+      Password: !Ref "Password"
+      VpcSettings:
+        SubnetIds:
+          - "a1"
+        VpcId: "123"
+  DirectoryServiceSimpleAD:
+    Type: "AWS::DirectoryService::SimpleAD"
+    Properties:
+      Name: "SimpleAD"
+      Password: !Ref "Password"
+      Size: "t2.Small" # Invalid AllowedValue
+      VpcSettings:
+        SubnetIds:
+          - "a1"
+        VpcId: "123"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:

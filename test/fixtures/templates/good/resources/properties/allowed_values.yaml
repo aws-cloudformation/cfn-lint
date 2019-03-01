@@ -450,6 +450,26 @@ Resources:
       IAMRoleARN: "iam"
       NodeType: "dax.t2.small" # Valid AllowedValue
       ReplicationFactor: 1
+  DirectoryServiceMicrosoftAD:
+    Type: "AWS::DirectoryService::MicrosoftAD"
+    Properties:
+      Edition: "Standard" # Valid AllowedValue
+      Name: "MicrosoftAD"
+      Password: !Ref "Password"
+      VpcSettings:
+        SubnetIds:
+          - "a1"
+        VpcId: "123"
+  DirectoryServiceSimpleAD:
+    Type: "AWS::DirectoryService::SimpleAD"
+    Properties:
+      Name: "SimpleAD"
+      Password: !Ref "Password"
+      Size: "Small" # Valid AllowedValue
+      VpcSettings:
+        SubnetIds:
+          - "a1"
+        VpcId: "123"
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
