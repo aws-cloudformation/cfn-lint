@@ -45,9 +45,17 @@ class ImportValue(CloudFormationLintRule):
             'Ref'
         ]
 
+        unsupported_locations = [
+            'Conditions'
+        ]
+
         for iv_obj in iv_objs:
             iv_value = iv_obj[-1]
             tree = iv_obj[:-1]
+            if iv_obj[0] in unsupported_locations:
+                message = 'ImportValue cannot be used inside {0} at {1}'
+                matches.append(RuleMatch(
+                    tree, message.format(iv_obj[0], '/'.join(map(str, tree[:-1])))))
             if isinstance(iv_value, dict):
                 if len(iv_value) == 1:
                     for key, _ in iv_value.items():

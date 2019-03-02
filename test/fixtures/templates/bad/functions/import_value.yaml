@@ -1,0 +1,14 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  primaryRegion: !Equals [!Ref 'AWS::Region', !ImportValue PrimaryRegion]
+Resources:
+  subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock:
+        Fn::ImportValue:
+          Fn::ImportValue: CidrBlock
+      VpcId:
+        Fn::ImportValue:
+        - PrimaryRegion
