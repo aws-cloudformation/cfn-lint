@@ -12,7 +12,7 @@
 ### 0.15.0
 ###### Features
 - Add scaffolding for arbitrary Match attributes, adding attributes for Type checks
-- Add rule [E3024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3024) to validate that ProvisionedThroughput is not specified with BillingMode PAY_PER_REQUEST
+- Add rule [E3024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3024) to validate that ProvisionedThroughput is not specified with BillingMode PAY_PER_REQUEST
 ###### CloudFormation Specifications
 - Update Spec files to 2.24.0
 - Update OnlyOne spec to have BlockDeviceMapping to include NoDevice with Ebs and VirtualName
@@ -20,8 +20,8 @@
 - Add all the allowed values of the AWS::DAX::* Resources
 ###### Fixes
 - Update config parsing to use the builtin Yaml decoder
-- Add condition support for Inclusive [E2521](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2521), Exclusive [E2520](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2520), and AtLeastOne [E2522](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2522) rules
-- Update rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to better check Resource strings inside IAM Policies
+- Add condition support for Inclusive [E2521](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2521), Exclusive [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2520), and AtLeastOne [E2522](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2522) rules
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to better check Resource strings inside IAM Policies
 - Improve the line/column information of a Match with array support
 
 
@@ -32,21 +32,21 @@
 - Add allowed values for AWS::ServiceDiscovery::* resources
 - Fix allowed values for Apache MQ
 ###### Fixes
-- Update rule [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008) to not error when using a list from a custom resource
+- Update rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) to not error when using a list from a custom resource
 - Support simple types in the CloudFormation spec
 - Add tests for the formatters
 
 ### 0.14.0
 ###### Features
-- Add rule [E3035](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3035) to check the values of DeletionPolicy
-- Add rule [E3036](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3036) to check the values of UpdateReplacePolicy
-- Add rule [E2014](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2014) to check that there are no REFs in the Parameter section
-- Update rule [E2503](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2503) to support TLS on NLBs
+- Add rule [E3035](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3035) to check the values of DeletionPolicy
+- Add rule [E3036](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3036) to check the values of UpdateReplacePolicy
+- Add rule [E2014](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2014) to check that there are no REFs in the Parameter section
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to support TLS on NLBs
 ###### CloudFormation Specifications
 - Update CloudFormation spec to version 2.22.0
 - Add allowed values for AWS::Cognito::* resources
 ###### Fixes
-- Update rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow GetAtts to Custom Resources under a Condition
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow GetAtts to Custom Resources under a Condition
 
 ### 0.13.2
 ###### Features
@@ -66,11 +66,11 @@
 
 ### 0.13.0
 ###### Features
-- New rule [W1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1011) to check if a FindInMap is using the correct map name and keys
-- New rule [W1001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1001) to check if a Ref/GetAtt to a resource that exists when Conditions are used
-- Removed logic in [E1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1011) and moved it to [W1011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1011) for validating keys
+- New rule [W1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1011) to check if a FindInMap is using the correct map name and keys
+- New rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1001) to check if a Ref/GetAtt to a resource that exists when Conditions are used
+- Removed logic in [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1011) and moved it to [W1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1011) for validating keys
 - Add property relationships for AWS::ApplicationAutoScaling::ScalingPolicy into Inclusive, Exclusive, and AtLeastOne
-- Update rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505) to check the netmask bit
+- Update rule [E2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2505) to check the netmask bit
 - Include the ability to update the CloudFormation Specs using the Pricing API
 ###### CloudFormation Specifications
 - Update to version 2.21.0
@@ -84,23 +84,23 @@
 - Add allowed values for RDS InstanceTypes from pricing API
 ###### Fixes
 - Fixed README indentation issue with .pre-commit-config.yaml
-- Fixed rule [E2541](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2541) to allow for multiple inputs/outputs in a CodeBuild task
-- Fixed rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for a period or no period at the end of a ACM registration record
-- Update rule [E3001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3001) to support UpdateReplacePolicy
+- Fixed rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to allow for multiple inputs/outputs in a CodeBuild task
+- Fixed rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for a period or no period at the end of a ACM registration record
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to support UpdateReplacePolicy
 - Fix a cli issue where `--template` wouldn't be used when a .cfnlintrc was in the same folder
-- Update rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) and [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3002) to support packaging of AWS::Lambda::LayerVersion content
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) and [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3002) to support packaging of AWS::Lambda::LayerVersion content
 
 ### 0.12.1
 ###### CloudFormation Specifications
 - Add AWS::WorkSpaces::Workspace.WorkspaceProperties ComputeTypeName, RunningMode allowed values
 - Fix AWS::CloudWatch::Alarm to point Metrics at AWS::CloudWatch::Alarm.MetricDataQuery
 ###### Fixes
-- Update rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to support Fn::Sub inside Fn::Cidr
+- Update rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1024) to support Fn::Sub inside Fn::Cidr
 
 ### 0.12.0
 ###### Features
-- Update rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019) to not allow for lists directly when doing a Ref or GetAtt to a list
-- Move parameter checks from rule [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030) to a new rule [W2030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2030)
+- Update rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) to not allow for lists directly when doing a Ref or GetAtt to a list
+- Move parameter checks from rule [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) to a new rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030)
 ###### CloudFormation Specifications
 - Updated to version 2.19.0
 - Add S3 Bucket Allowed Values
@@ -110,7 +110,7 @@
 - Add AWS::SES::ReceiptRule.Rule TlsPolicy Allowed Values
 - Add AWS::AutoScaling::AutoScalingGroup, AWS::Route53::RecordSetGroup, and AWS::AutoScaling::AutoScalingGroup to OnlyOne
 ###### Fixes
-- Improve [W7001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W7001) error message
+- Improve [W7001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W7001) error message
 
 ### 0.11.1
 ###### CloudFormation Specifications
@@ -118,18 +118,18 @@
 - AWS::Batch::ComputeEnvironment InstanceRole is an InstanceProfile not Role
 ###### Fixes
 - Add debug options to print a stack trace for rule E0002
-- Update rule [E2015](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2015) to include a try/catch around AllowedPattern testing to catch errors caused by non Python supported regex
+- Update rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2015) to include a try/catch around AllowedPattern testing to catch errors caused by non Python supported regex
 
 ### 0.11.0
 ###### Features
-- Add rule [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030) to use the newly patched spec to check resource properties values.  Update the following rules replaced by [E3030](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3030).
-  - Delete rule [W2512](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2512)
-  - Delete rule [E2531](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2531)
-  - Move allowed values check in rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505)
-- Add rule [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008) to use the newly patched spec to check a resource properties Ref and GetAtt.  Update the following rules replaced by [E3008](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3008).
-  - Delete rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502)
-  - Delete rule [W2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2505)
-- Improve rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to check MX records
+- Add rule [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) to use the newly patched spec to check resource properties values.  Update the following rules replaced by [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030).
+  - Delete rule [W2512](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2512)
+  - Delete rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2531)
+  - Move allowed values check in rule [E2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2505)
+- Add rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) to use the newly patched spec to check a resource properties Ref and GetAtt.  Update the following rules replaced by [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008).
+  - Delete rule [E2502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2502)
+  - Delete rule [W2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2505)
+- Improve rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to check MX records
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 2.18.1
 - Append the CloudFormation spec to include:
@@ -140,9 +140,9 @@
 - Add `AWS::CloudWatch::Alarm.Metric`, `AWS::CloudWatch::Alarm.MetricDataQuery` and `AWS::CloudWatch::Alarm.MetricStat` in all supported regions
 - Add `AWS::Lambda::LayerVersion`, `AWS::Lambda::LayerVersion.Content`, and `AWS::Lambda::LayerVersionPermission` in all supported regions
 ###### Fixes
-- Fix description on rule [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to be more informative
-- Update rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow `Parameters` in a `Task` in a Step Function
-- Fix rule [E1010](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1010) to allow Refs in the GetAtt attribute section
+- Fix description on rule [W2501](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2501) to be more informative
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow `Parameters` in a `Task` in a Step Function
+- Fix rule [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) to allow Refs in the GetAtt attribute section
 - Add `AWS::CloudFormation::Init` as an exception for rule E1029
 - Add `Informational` error messages to JSON outputs
 - Fix file searching `**/*` to recursively search in Python 3.5 and greater
@@ -153,15 +153,15 @@
 - Code coverage testing integrated into the CI process
 - Update CloudFormation specs to 2.18.0
 ###### Fixes
-- Fix rule [E2505](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2505) to allow for SSM parameters when checking Cidr and Tenancy parameters
-- Fix rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to not error on API Gateway stageVariables
+- Fix rule [E2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2505) to allow for SSM parameters when checking Cidr and Tenancy parameters
+- Fix rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to not error on API Gateway stageVariables
 
 ### 0.10.1
 ###### Features
 - Support stdin for reading and testing templates
 ###### Fixes
 - Remove dependency on regex package as it requires gcc
-- Remove rule [E3507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3507) because it depends on regex package
+- Remove rule [E3507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3507) because it depends on regex package
 
 ### 0.10.0
 ###### Features
@@ -171,9 +171,9 @@
 - Update aws-sam-translator to v1.8.0
 - Update requests dependency to be at least version 2.15.0
 - Add Python 3.7 support for Lambda
-- Provide valid Python runtimes in rule [E2531](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2531) error message
-- Allow Fn::Sub inside a Fn::Sub for rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019)
-- Add hardcoded list check as invalid in rule [E6003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6003)
+- Provide valid Python runtimes in rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2531) error message
+- Allow Fn::Sub inside a Fn::Sub for rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019)
+- Add hardcoded list check as invalid in rule [E6003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6003)
 - Fix home expansion with when looking for .cfnlintrc in Python 3.4
 - Add testing in Travis for Py34, Py35, Py37
 - Prevent spaces after the comma in spec file
@@ -183,9 +183,9 @@
 ###### Features
 - Update specs to version 2.15.0
 ###### Fixes
-- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow multiple text records of up to 255 characters
-- Fix rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to handle conditions in Update Policies
-- Fix rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to not fail when using a Fn::Sub and a number for a param
+- Fix rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow multiple text records of up to 255 characters
+- Fix rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to handle conditions in Update Policies
+- Fix rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to not fail when using a Fn::Sub and a number for a param
 
 ### 0.9.1
 ###### Features
@@ -196,21 +196,21 @@
 - Add Custom Error for when trying to access an attribute in the classes that make up the template
 - Fix an issue with deepcopy not creating copies with start and end marks
 - Fix 4 rules that would fail when trying to create the path of the error and running into an integer
-- Fix rule [E2015](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2015) to force parameter default values to be a string when testing against the AllowedPattern regex pattern
+- Fix rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2015) to force parameter default values to be a string when testing against the AllowedPattern regex pattern
 - Fix a bug in the config engine in which append rules would have gone to override spec
 - Remove exit calls from functions that are used in integrations preventing pre-mature failures
-- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003) to support functions that may be able to support objects
+- Fix rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) [E3003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003) to support functions that may be able to support objects
 
 ### 0.9.0
 ###### Features
-- Add rule [E8002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E8002) to validate if resource Conditions or Fn::If conditions are defined
-- Improve rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to validate custom resources when custom specs are addended to the resource spec using override-spec
+- Add rule [E8002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8002) to validate if resource Conditions or Fn::If conditions are defined
+- Improve rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to validate custom resources when custom specs are addended to the resource spec using override-spec
 - Allow for configuration of cfn-lint using configuration files in the project and home folder called .cfnlintrc
 - Updated specs to versions release 2.12.0
 ###### Fixes
-- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when looking for lists of objects and using a FindInMap or GetAtt to a custom resource as both could suppliy a list of objects
-- Remove rule [E1025](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1025) which was duplicative to the more extensive rule E8002
-- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for quotes when checking the length
+- Fix rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when looking for lists of objects and using a FindInMap or GetAtt to a custom resource as both could suppliy a list of objects
+- Remove rule [E1025](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1025) which was duplicative to the more extensive rule E8002
+- Fix rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow for quotes when checking the length
 - Add generic exception handling to SAM transforming functions
 - Complete redo how we handle arguments to fix issues created when linting multiple files with cfn-lint configurations in the file
 - New CloudFormation spec patch to not require CidrBlock on resource type AWS::EC2::NetworkAclEntry
@@ -219,35 +219,35 @@
 
 ### 0.8.3
 ###### Features
-- Add rule [E3022](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3022) to validate that there is only one SubnetRouteTableAssociation per subnet
+- Add rule [E3022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3022) to validate that there is only one SubnetRouteTableAssociation per subnet
 ###### Fixes
-- Fix rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502) to check Arn and Name for AWS::EC2::LaunchTemplate resources
-- Fix rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3016) to remove use of Path which may not be defined in certain scenarios
+- Fix rule [E2502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2502) to check Arn and Name for AWS::EC2::LaunchTemplate resources
+- Fix rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3016) to remove use of Path which may not be defined in certain scenarios
 - Fix base rule Class so that resource_property_types and resource_sub_property_types is initialized from on every new rule and not copied from previous rules that were initialized
 - Fix conversions of transformed templates in which keys stayed as str(s) instead of str_node(s)
 
 ### 0.8.2
 ###### Fixes
-- Update rule [E2502](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2502) to allow GetAtt against a nested stack or custom resource
-- Update rules [E2541](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2541) and [E2540](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2540) to support conditions inside the CodePipeline
-- Fix types in rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to now include InputPath and OutputPath
-- Update rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to skip missing sub when looking at parameters in IAM policies
-- Update rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow for strings in the IAM policy
-- Update rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow the policy statement to be an object along with a list
+- Update rule [E2502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2502) to allow GetAtt against a nested stack or custom resource
+- Update rules [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) and [E2540](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2540) to support conditions inside the CodePipeline
+- Fix types in rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to now include InputPath and OutputPath
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to skip missing sub when looking at parameters in IAM policies
+- Update rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow for strings in the IAM policy
+- Update rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to allow the policy statement to be an object along with a list
 
 ### 0.8.1
 ###### Features
 - Update Specs to the versions released October 19th, 2018
 ###### Fixes
-- Fix rule [E2541](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2541) to not fail on non-string values
+- Fix rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to not fail on non-string values
 
 ### 0.8.0
 ###### Features
 - Created a process to patch the CloudFormation Spec and patched a bunch of issues
 - Support pre-commit hooks for linting templates
-- Add rule [E3021](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3021) to that 5 or less targets are added to a CloudWatch Event
-- Add rule [E1029](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1029) to look for Sub variables that aren't inside a Sub
-- Add rule [I3011](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#I3011) to validate that DynamDB Tables have deletion policy specified as the default is to delete the database.
+- Add rule [E3021](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3021) to that 5 or less targets are added to a CloudWatch Event
+- Add rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to look for Sub variables that aren't inside a Sub
+- Add rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to validate that DynamDB Tables have deletion policy specified as the default is to delete the database.
 - Add support for `info` errors
 ###### Fixes
 - Update search_deep_keys to look for items in the Global section which is lost in a Transformation
@@ -256,29 +256,29 @@
 ### 0.7.4
 ###### Features
 - Support parsing multiple files from the command line
-- New rule [E3016](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3016) to validate a resources UpdatePolicy configuration
+- New rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3016) to validate a resources UpdatePolicy configuration
 ###### Fixes
-- Removes sub parameter check from rule [E1012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1012). The same check is covered by
-[E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019)
-- Fix rule [E1010](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1010) when using a string not an array with Fn::Sub
-- Fix rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) ignore intrinsic functions when checking values
+- Removes sub parameter check from rule [E1012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1012). The same check is covered by
+[E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019)
+- Fix rule [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) when using a string not an array with Fn::Sub
+- Fix rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) ignore intrinsic functions when checking values
 
 ### 0.7.3
 ###### Features
 - Update the custom objects for the template to directly allow the calling of getting items and checking items that is condition safe
 - Update CloudFormation Specs to 2018-09-21 released specs
 ###### Fixes
-- Fix rule [E2540](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2540) to not fail when the stage names aren't strings
-- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when processing Ref AWS::NoValue
+- Fix rule [E2540](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2540) to not fail when the stage names aren't strings
+- Fix rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to not fail when processing Ref AWS::NoValue
 - Core functionality updated to fail when extending rules directory doesn't exist
-- Fix rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) metadata isn't supported as a resource property
-- Fix rule [E2509](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2509) to not error when using a function for description
+- Fix rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) metadata isn't supported as a resource property
+- Fix rule [E2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2509) to not error when using a function for description
 
 ### 0.7.2
 ###### Fixes
-- Fix rule [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to support dashes in KMS Key name
-- Fix rule [E2543](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2543) to not fail when the type of a step isn't known
-- Fix rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to have an exception for ECR Policies.  Resource isn't required.
+- Fix rule [W2501](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2501) to support dashes in KMS Key name
+- Fix rule [E2543](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2543) to not fail when the type of a step isn't known
+- Fix rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to have an exception for ECR Policies.  Resource isn't required.
 - Several Python cleanup items around initializing lists, how version is loaded, and dropping 'discover' in testing
 
 ### 0.7.1
@@ -287,16 +287,16 @@
 
 ### 0.7.0
 ###### Features
-- New Rule [W1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1019) to make sure any Sub variables are used in the string
-- New Rule [E2532](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2532) to start basic validation of state machine syntax
-- New Rule [W1020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W1020) to see if Sub is needed and variables are being used
-- New Rule [E1028](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1028) validate that first element in a Fn::If array is a string
-- New Rule [W3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3002) to warn when templated templates are used
-- Update Rule [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to check resource base policies
-- Add Rule [W2511](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2511) to warn when using an older version of IAM Policy Version
+- New Rule [W1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1019) to make sure any Sub variables are used in the string
+- New Rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to start basic validation of state machine syntax
+- New Rule [W1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1020) to see if Sub is needed and variables are being used
+- New Rule [E1028](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1028) validate that first element in a Fn::If array is a string
+- New Rule [W3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3002) to warn when templated templates are used
+- Update Rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to check resource base policies
+- Add Rule [W2511](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2511) to warn when using an older version of IAM Policy Version
 ###### Fixes
-- Update Rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow for templated code
-- Update Rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to allow Cidr function to use GetAtt
+- Update Rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to allow for templated code
+- Update Rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1024) to allow Cidr function to use GetAtt
 - Fix core functionality to not error if the template is an array or string instead of an object
 
 ### 0.6.1
@@ -306,46 +306,46 @@
 ### 0.6.0
 ###### Features
 - Update formatters to be similar from JSON and text outputs and modularize for easier growth later
-- Don't raise an error with [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) when doing ACM DNS validation registration
-- Add rule [E7003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E7003) to validate that mapping keys are strings.  
-- Add rule [E1027](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1027) to validate that dynamic reference secure strings are to supported properties
-- Add rule [E1004](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1004) to validate that the Template Description is only a string
-- Add rule [E6005](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is only a string
-- Add rule [E6012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is less than the maximum length
+- Don't raise an error with [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) when doing ACM DNS validation registration
+- Add rule [E7003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E7003) to validate that mapping keys are strings.  
+- Add rule [E1027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1027) to validate that dynamic reference secure strings are to supported properties
+- Add rule [E1004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1004) to validate that the Template Description is only a string
+- Add rule [E6005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is only a string
+- Add rule [E6012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is less than the maximum length
 ###### Fixes
 - Fix core libraries to handle conditions around resource properties so that the resource and property checks still run
 - Fix core libraries to handle the special property type `Tag` so that its checked when a rule is doing a Property Check
 
 ### 0.5.2
 ###### Fixes
-- Support additional attributes in spec file for [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003)
-- Check custom resources as if they are 'AWS::CloudFormation::CustomResource' in rule [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003)
-- Fix [W6001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W6001) when an ImportValue is used to another function
-- Fix [W2501](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W2501) to support the new dynamic reference feature
+- Support additional attributes in spec file for [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003)
+- Check custom resources as if they are 'AWS::CloudFormation::CustomResource' in rule [E3003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003)
+- Fix [W6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W6001) when an ImportValue is used to another function
+- Fix [W2501](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2501) to support the new dynamic reference feature
 
 ### 0.5.1
 ###### Features
-- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to support CAA and CNAME record checks
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to support CAA and CNAME record checks
 - Update specs to ones released on August 16, 2018
 
 ### 0.5.0
 ###### Features
 - Load all instances of CloudFormationLintRule in a file. Class doesn't need to match the filename anymore
 - Allow load yaml to accept a string allowing people to use cfn-lint as a module
-- Add rule [W6001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W6001) to test outputs that are just using an import value
+- Add rule [W6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W6001) to test outputs that are just using an import value
 - Update specs to ones released on August 10, 2018
 ###### Fixes
-- Update [E2507](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2507) to support conditions and using get_values to test all condition paths
-- Update [E2521](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2521), [E2523](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2523) to support conditions and using get_values to test all condition paths
-- Rewrite [E2503](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2503) to support intrinsic functions and conditions and lower case protocols
-- Fix [E1018](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1018) to support Sub inside a Split function
-- Fix [E3003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3003) description messages to be more informative
-- Fix [E3001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3001) to not require parameters when CreationPolicy is used
+- Update [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to support conditions and using get_values to test all condition paths
+- Update [E2521](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2521), [E2523](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2523) to support conditions and using get_values to test all condition paths
+- Rewrite [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to support intrinsic functions and conditions and lower case protocols
+- Fix [E1018](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1018) to support Sub inside a Split function
+- Fix [E3003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003) description messages to be more informative
+- Fix [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to not require parameters when CreationPolicy is used
 - Fix SAM region when no region is available from a local AWS profile or environment variable.
 
 ### 0.4.2
 ###### Features
-- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to support AAAA record checks
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to support AAAA record checks
 ###### Fixes
 - Fix many rules that would fail if a sub parameter had a space at the beginning or end
 - Fix crashing issues when trying to get resources that aren't properly configured
@@ -364,29 +364,29 @@
 ###### Fixes
 - Fix a bunch of typos across many different rules
 - Support DeepCopy with Template and custom String classes used for marking up templates
-- Fix Rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) to support CommaDelimitedList when looking for List Parameters
+- Fix Rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to support CommaDelimitedList when looking for List Parameters
 - Fix core engine to check that something is a Dict instead of assuming it is
 
 ### 0.3.5
 ###### Features
 - Update CloudFormation Specs to July 12th, 2018
-- Rule [E7012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E7012) added to check the limits of attributes in a Mapping
-- Rule [E2012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2012) added to check maximum size of a parameter value
-- Rule [E1003](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1003) added to check the maximum length of the template Description
+- Rule [E7012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E7012) added to check the limits of attributes in a Mapping
+- Rule [E2012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2012) added to check maximum size of a parameter value
+- Rule [E1003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1003) added to check the maximum length of the template Description
 - Guide created to help new users write new rules
 ###### Fixes
 - Catch KeyError when trying to discover the line and column number of an error
 - Update Lambda rules to support dotnet core
-- Fix rule [E1017](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1017) so we unpack first element of select as a dict
-- Fix rule [E1024](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1024) to support ImportValue and appropriately checking number for the last element
+- Fix rule [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1017) so we unpack first element of select as a dict
+- Fix rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1024) to support ImportValue and appropriately checking number for the last element
 
 ### 0.3.3
 ###### Features
 - Support for Yaml C Parser when available.
 - Catch rule processing errors and raise a lint error in their place.
 - Add rules for the limit on Parameter, Mapping, Resource and Output names
-- Add Rule [W3005](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W3005) to warn for when DependsOn is specified but not needed
-- Add Rule [E2509](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2509) to check if Security Group Descriptions are properly configured
+- Add Rule [W3005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3005) to warn for when DependsOn is specified but not needed
+- Add Rule [E2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2509) to check if Security Group Descriptions are properly configured
 - Add `source_url` to rules so rule reference documentation can be provided
 ###### Fixes
 - Fixed issues when Conditions had lists for values
@@ -402,24 +402,24 @@
 
 ### 0.3.1
 ###### Features
-- Update rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020) to validate A recordsets
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to validate A recordsets
 ###### Fixes
 - Require "aws-sam-translator" dependency be at least 1.6.0
-- Add support for wildcards in rule [E3013](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3013) - Support conditions in Lists for rule [E3002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3002) - Include filename when we run into Null and Duplicate values when parsing yaml
+- Add support for wildcards in rule [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3013) - Support conditions in Lists for rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) - Include filename when we run into Null and Duplicate values when parsing yaml
 - Rule W2510 now allows for AllowedValues instead of just Min/MaxValue for compliance of Lambda MemorySize
-- Rule [E2530](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2530) updated to checked AllowedValues for compliance of Lambda MemorySize
+- Rule [E2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2530) updated to checked AllowedValues for compliance of Lambda MemorySize
 
 ### 0.3.0
 ###### Features
 - Serverless Transforms now handled by SAM libraries
-- Add Rule [E2508](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2508): Add checks for IAM
+- Add Rule [E2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2508): Add checks for IAM
   - Managed Policies attached to IAM user, group or role can't be more than 10
   - An IAM user can be a member of no more than 10 groups
   - There can only be 1 role in an instance profile
   - AssumeRolePolicyDocument size is less than <2048 characters
-- Add Rule [E1002](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1002): Check overall template size to make sure its below
-- Add Rule [E3013](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3013): CloudFront aliases should contain valid domain names
-- Add Rule [E3020](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3020): Check if all RecordSets are correctly configured
+- Add Rule [E1002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1002): Check overall template size to make sure its below
+- Add Rule [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3013): CloudFront aliases should contain valid domain names
+- Add Rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020): Check if all RecordSets are correctly configured
   - Strings end and start with double quotes
   - Size is less than 256 characters
   - Record Types are within the specification
@@ -438,24 +438,24 @@
 ### 0.2.1
 ###### Features
 - Added AllowedValues for Cidr parameter checking Rule W2509
-- Add Rule [E2004](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E2004) to check Allowed values for Cidr parameters are a valid Cidr range
-- Disable mapping Name checks [W7001](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#W7001) if dynamic mapping names are used (Ref, FindInMap)
-- New Rule [E1026](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1026) to make sure Ref's in 'Conditions' are to parameters and not resources
+- Add Rule [E2004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2004) to check Allowed values for Cidr parameters are a valid Cidr range
+- Disable mapping Name checks [W7001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W7001) if dynamic mapping names are used (Ref, FindInMap)
+- New Rule [E1026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1026) to make sure Ref's in 'Conditions' are to parameters and not resources
 - Updated CloudFormation specs to June 5th, 2018
 ###### Fixes
-- Fixed an issue with Rule [E1019](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E1019) not giving errors when there was a bad pseudo parameter
+- Fixed an issue with Rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) not giving errors when there was a bad pseudo parameter
 - Fixed an issue where conditions with Refs were validated as strings instead of Refs
 - Fix crash errors when an empty yaml file is provided
 - Updated condition functions to return the full object (Ref isn't translated while looking for AWS::NoValue)
-- Support Map Type properties when doing PrimitiveType check [E3012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3012) - Fix an issue when boolean values not being checked when using check_value
+- Support Map Type properties when doing PrimitiveType check [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3012) - Fix an issue when boolean values not being checked when using check_value
 
 ### 0.2.0
 ###### Features
-- Standard cfn-lint Errors ([E0000](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E0000)) for null, duplicate, and parse errors
+- Standard cfn-lint Errors ([E0000](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E0000)) for null, duplicate, and parse errors
 - Add a new check for CloudFormation limits
 - Add a new check for Parameter, Resource, Output, and Mapping names
 - Update specs to those released on May 25th, 2018
-- Strong type checking for property values result in Errors ([E3012](https://github.com/awslabs/cfn-python-lint/blob/master/docs/rules.md#E3012))
+- Strong type checking for property values result in Errors ([E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3012))
 ###### Fixes
 - Transform logic updated to not add a Role if one is specified for a serverless function
 - Fixed logic around Fn::If when the result is an object

@@ -26,7 +26,7 @@ class OnlyOne(CloudFormationLintRule):
     description = 'Making sure CloudFormation properties ' + \
                   'that require only one property from a list. ' + \
                   'One has to be specified.'
-    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 
     def __init__(self):
