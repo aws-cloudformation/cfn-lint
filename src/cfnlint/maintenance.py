@@ -60,7 +60,7 @@ def update_resource_specs():
         LOGGER.debug('Downloading template %s into %s', url, filename)
         req = requests.get(url)
 
-        content = json.loads(req.content)
+        content = json.loads(req.content.decode('utf-8'))
 
         # Patch the files
         content = patch_spec(content, 'all')
