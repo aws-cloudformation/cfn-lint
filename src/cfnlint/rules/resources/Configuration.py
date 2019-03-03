@@ -25,7 +25,7 @@ class Configuration(CloudFormationLintRule):
     shortdesc = 'Basic CloudFormation Resource Check'
     description = 'Making sure the basic CloudFormation resources ' + \
                   'are properly configured'
-    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 
     def match(self, cfn):

@@ -42,7 +42,7 @@ setup(
     keywords='aws, lint',
     author='kddejong',
     author_email='kddejong@amazon.com',
-    url='https://github.com/awslabs/cfn-python-lint',
+    url='https://github.com/aws-cloudformation/cfn-python-lint',
     package_dir={'': 'src'},
     package_data={'cfnlint': [
         'data/CloudSpecs/*.json',

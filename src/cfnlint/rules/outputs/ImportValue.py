@@ -23,7 +23,7 @@ class ImportValue(CloudFormationLintRule):
     id = 'W6001'
     shortdesc = 'Check Outputs using ImportValue'
     description = 'Check if the Output value is set using ImportValue, so creating an Output of an Output'
-    source_url = 'https://github.com/awslabs/cfn-python-lint'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['outputs', 'importvalue']
 
     def match(self, cfn):

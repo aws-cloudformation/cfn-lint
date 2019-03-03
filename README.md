@@ -1,10 +1,10 @@
 # CloudFormation Linter
 
-<img alt="[cfn-lint logo]" src="https://github.com/awslabs/cfn-python-lint/blob/master/logo.png?raw=true" width="150" align="right">
+<img alt="[cfn-lint logo]" src="https://github.com/aws-cloudformation/cfn-python-lint/blob/master/logo.png?raw=true" width="150" align="right">
 
-[![Build Status](https://travis-ci.com/awslabs/cfn-python-lint.svg?branch=master)](https://travis-ci.com/awslabs/cfn-python-lint)
+[![Build Status](https://travis-ci.com/aws-cloudformation/cfn-python-lint.svg?branch=master)](https://travis-ci.com/aws-cloudformation/cfn-python-lint)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
-[![codecov](https://codecov.io/gh/awslabs/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/awslabs/cfn-python-lint)
+[![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
 checks.  Includes checking valid values for resource properties and best practices.
@@ -167,7 +167,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 
 ```yaml
 repos:
--   repo: https://github.com/awslabs/cfn-python-lint
+-   repo: https://github.com/aws-cloudformation/cfn-python-lint
     rev: v0.15.0  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
@@ -175,7 +175,7 @@ repos:
 ```
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
-* You can see available cfn-lint versions on the [releases page](https://github.com/awslabs/cfn-python-lint/releases).
+* You can see available cfn-lint versions on the [releases page](https://github.com/aws-cloudformation/cfn-python-lint/releases).
 
 ----
 **PyPi:**
