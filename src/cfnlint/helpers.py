@@ -121,7 +121,7 @@ LIMITS = {
 }
 
 
-def load_resources(filename='/data/CloudSpecs/us-east-1.json'):
+def load_resources(filename='data/CloudSpecs/us-east-1.json'):
     """Load resources"""
 
     filename = pkg_resources.resource_filename(
@@ -205,7 +205,7 @@ def is_custom_resource(resource_type):
 def initialize_specs():
     """ Reload Resource Specs """
     for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resources(filename=('/data/CloudSpecs/%s.json' % reg))
+        RESOURCE_SPECS[reg] = load_resources(filename=('data/CloudSpecs/%s.json' % reg))
 
 
 initialize_specs()
