@@ -29,7 +29,7 @@ class InstanceSize(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html'
     tags = ['resources', 'rds']
 
-    valid_instance_types = cfnlint.helpers.load_resources('/data/AdditionalSpecs/RdsProperties.json')
+    valid_instance_types = cfnlint.helpers.load_resources('data/AdditionalSpecs/RdsProperties.json')
 
     def get_resources(self, cfn):
         """ Get resources that can be checked """
