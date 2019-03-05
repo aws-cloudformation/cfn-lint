@@ -1065,6 +1065,9 @@ class Template(object):
                                 results.add(v[0])
                                 results = results.union(get_conditions_from_property(v[1]))
                                 results = results.union(get_conditions_from_property(v[2]))
+            elif isinstance(value, list):
+                for v in value:
+                    results = results.union(get_conditions_from_property(v))
 
             return results
 
