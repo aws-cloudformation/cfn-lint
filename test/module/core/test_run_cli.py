@@ -81,8 +81,14 @@ class TestCli(BaseTestCase):
 
         self.assertEqual(len(matches), 1)
 
-    def test_template_config(self):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_template_config(self, yaml_mock):
         """Test template config"""
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
         filename = 'test/fixtures/templates/good/core/config_parameters.yaml'
         (args, _, _,) = cfnlint.core.get_args_filenames([
             '--template', filename, '--ignore-bad-template'])
@@ -101,8 +107,14 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
 
-    def test_positional_template_parameters(self):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_positional_template_parameters(self, yaml_mock):
         """Test overriding parameters"""
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
         filename = 'test/fixtures/templates/good/core/config_parameters.yaml'
         (args, _, _) = cfnlint.core.get_args_filenames([
             filename, '--ignore-bad-template',
@@ -121,8 +133,14 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
 
-    def test_override_parameters(self):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_override_parameters(self, yaml_mock):
         """Test overriding parameters"""
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
         filename = 'test/fixtures/templates/good/core/config_parameters.yaml'
         (args, _, _) = cfnlint.core.get_args_filenames([
             '--template', filename, '--ignore-bad-template',
@@ -141,8 +159,13 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
 
-    def test_bad_config(self):
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_bad_config(self, yaml_mock):
         """ Test bad formatting in config"""
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
 
         filename = 'test/fixtures/templates/bad/core/config_parameters.yaml'
         (args, _, _) = cfnlint.core.get_args_filenames([

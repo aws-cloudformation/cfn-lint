@@ -265,6 +265,10 @@ class CliArgs(object):
             '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
             action='store_true'
         )
+        standard.add_argument(
+            '--ignore-templates', dest='ignore_templates',
+            help='Ignore templates', nargs='+', default=[], action='extend'
+        )
         advanced.add_argument(
             '-d', '--debug', help='Enable debug logging', action='store_true'
         )
@@ -427,6 +431,40 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
             filenames = templates_args
         else:
             return None
+
+        # if only one is specified convert it to array
+        if isinstance(filenames, six.string_types):
+            filenames = [filenames]
+
+        # handle different shells and Config files
+        # some shells don't expand * and configparser won't expand wildcards
+        all_filenames = []
+        ignore_templates = self._ignore_templates()
+        for filename in filenames:
+            if sys.version_info >= (3, 5):
+                # pylint: disable=E1123
+                add_filenames = glob.glob(filename, recursive=True)
+            else:
+                add_filenames = glob.glob(filename)
+            # only way to know of the glob failed is to test it
+            # then add the filename as requested
+            if not add_filenames:
+                if filename not in ignore_templates:
+                    all_filenames.append(filename)
+            else:
+                for add_filename in add_filenames:
+                    if add_filename not in ignore_templates:
+                        all_filenames.append(add_filename)
+
+        return all_filenames
+
+    def _ignore_templates(self):
+        """ templates """
+        ignore_template_args = self._get_argument_value('ignore_templates', False, True)
+        if ignore_template_args:
+            filenames = ignore_template_args
+        else:
+            return []
 
         # if only one is specified convert it to array
         if isinstance(filenames, six.string_types):
