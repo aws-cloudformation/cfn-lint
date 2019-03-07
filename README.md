@@ -94,6 +94,8 @@ Example:
 ```yaml
 templates:
 - test/fixtures/templates/good/**/*.yaml
+ignore_templates:
+- codebuild.yaml
 include_checks:
 - I
 ```
@@ -110,6 +112,7 @@ Optional parameters:
 | -l, --list-rules | | | List all the rules |
 | -r, --regions | regions | [REGIONS [REGIONS ...]]  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
 | -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
+| --ignore-templates | IGNORE_TEMPLATES [IGNORE_TEMPLATES ...] | Ignore templates from being scanned
 | -a, --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values

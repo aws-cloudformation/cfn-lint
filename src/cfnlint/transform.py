@@ -94,28 +94,8 @@ class Transform(object):
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
-            # In the Paser class, within the SAM Translator, they log a warning for when the template
-            # does not match the schema. The logger they use is the root logger instead of one scoped to
-            # their module. Currently this does not cause templates to fail, so we will suppress this
-            # by patching the logging.warning method that is used in that class.
-            class WarningSuppressLogger(object):
-                """ Patch the Logger in SAM """
-
-                def __init__(self, obj_to_patch):
-                    self.obj_to_patch = obj_to_patch
-
-                def __enter__(self):
-                    self.obj_to_patch.warning = self.warning
-
-                def __exit__(self, exc_type, exc_val, exc_tb):
-                    self.obj_to_patch.warning = self.obj_to_patch.warning
-
-                def warning(self, message):
-                    """ Ignore warnings from SAM """
-
-            with WarningSuppressLogger(parser.logging):
-                self._template = cfnlint.helpers.convert_dict(
-                    sam_translator.translate(sam_template=self._template, parameter_values={}))
+            self._template = cfnlint.helpers.convert_dict(
+                sam_translator.translate(sam_template=self._template, parameter_values={}))
         except InvalidDocumentException as e:
             for cause in e.causes:
                 matches.append(cfnlint.Match(

@@ -101,10 +101,26 @@ class TestConfigMixIn(BaseTestCase):
         """ Test precedence in  """
 
         yaml_mock.side_effect = [
-            {'templates': ['*.yaml']},
+            {'templates': ['test/fixtures/templates/badpath/*.yaml']},
             {}
         ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
-        self.assertEqual(config.templates, ['*.yaml'])
+        self.assertEqual(config.templates, ['test/fixtures/templates/badpath/*.yaml'])
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_expand_ignore_templates(self, yaml_mock):
+        """ Test ignore templates """
+
+        yaml_mock.side_effect = [
+            {
+                'templates': ['test/fixtures/templates/bad/resources/iam/*.yaml'],
+                'ignore_templates': ['test/fixtures/templates/bad/resources/iam/resource_*.yaml']},
+            {}
+        ]
+        config = cfnlint.config.ConfigMixIn([])
+
+        # test defaults
+        self.assertNotIn('test/fixtures/templates/bad/resources/iam/resource_policy.yaml', config.templates)
+        self.assertEqual(len(config.templates), 2)
