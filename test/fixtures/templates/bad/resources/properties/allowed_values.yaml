@@ -106,7 +106,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sdm
           Ebs:
-            VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Invalid AllowedValue
+            VolumeType: !Ref "AutoScalingLaunchConfigurationVolume"
       ImageId: !Ref "ImageId"
       InstanceType: "t2.16xlarge" # Invalid AllowedValue
       PlacementTenancy: "Standard" # Invalid AllowedValue
@@ -462,6 +462,13 @@ Resources:
         SubnetIds:
           - "a1"
         VpcId: "123"
+  DLMPolicy:
+    Type: "AWS::DLM::LifecyclePolicy"
+    Properties:
+      PolicyDetails:
+        ResourceTypes:
+          - "VOLUMES" # Invalid AllowedValue
+      State: "SUSPENDED" # Invalid AllowedValue
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
