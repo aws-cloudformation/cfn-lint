@@ -96,6 +96,8 @@ class Transform(object):
 
             self._template = cfnlint.helpers.convert_dict(
                 sam_translator.translate(sam_template=self._template, parameter_values={}))
+
+            LOGGER.debug('Transformed template: %s', self._template)
         except InvalidDocumentException as e:
             for cause in e.causes:
                 matches.append(cfnlint.Match(
