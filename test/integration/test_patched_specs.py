@@ -113,7 +113,7 @@ class TestPatchedSpecs(BaseTestCase):
         """Test Property Value Types"""
         for v_name, v_values in self.spec.get('ValueTypes').items():
             for p_name, p_values in v_values.items():
-                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues'])
+                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex'])
                 if p_name == 'Ref':
                     self.assertIsInstance(p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for r_name, r_value in p_values.items():
