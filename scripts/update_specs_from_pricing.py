@@ -51,7 +51,7 @@ region_map = {
     'US West (N. California)': 'us-west-1',
 }
 
-session = boto3.session.Session(profile_name='development')
+session = boto3.session.Session()
 client = session.client('pricing', region_name='us-east-1')
 
 def configure_logging():
