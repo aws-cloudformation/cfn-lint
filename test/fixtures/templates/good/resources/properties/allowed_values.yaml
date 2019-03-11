@@ -483,6 +483,17 @@ Resources:
       EndpointType: "source" # Valid AllowedValue
       EngineName: "mysql" # Valid AllowedValue
       SslMode: "verify-full" # Valid AllowedValue
+  DocumentDBCluster:
+    Type: "AWS::DocDB::DBCluster"
+    Properties:
+      AvailabilityZones:
+        - String
+      EngineVersion: "docdb" # Valid AllowedValue
+  DocumentDBInstance:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      DBClusterIdentifier: !Ref "DocumentDBCluster"
+      DBInstanceClass: "db.r4.16xlarge" # Valid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
