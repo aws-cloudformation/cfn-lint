@@ -40,8 +40,8 @@ class CodepipelineStageActions(CloudFormationLintRule):
             },
             'Test': {
                 'CodeBuild': {
-                    'InputArtifactRange': 1,
-                    'OutputArtifactRange': (0, 1),
+                    'InputArtifactRange': (1, 5),
+                    'OutputArtifactRange': (0, 5),
                 }
             },
             'Approval': {

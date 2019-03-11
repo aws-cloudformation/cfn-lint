@@ -470,6 +470,13 @@ Resources:
         SubnetIds:
           - "a1"
         VpcId: "123"
+  DLMPolicy:
+    Type: "AWS::DLM::LifecyclePolicy"
+    Properties:
+      PolicyDetails:
+        ResourceTypes:
+          - "VOLUME" # Valid AllowedValue
+      State: "ENABLED" # Valid AllowedValue
   DmsEndpoint:
     Type: "AWS::DMS::Endpoint"
     Properties:
@@ -498,7 +505,7 @@ Resources:
     Properties:
       HealthCheckConfig:
         InsufficientDataHealthStatus: "Healthy" # Valid AllowedValue
-        Type: "CLOUDWATCH_METRIC"
+        Type: "CALCULATED" # Valid AllowedValue
   Route53RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:

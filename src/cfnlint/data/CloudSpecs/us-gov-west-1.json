@@ -11084,7 +11084,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "2.25.0",
+  "ResourceSpecificationVersion": "2.26.0",
   "ResourceTypes": {
     "AWS::ApiGateway::Account": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
@@ -17561,7 +17561,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchEventRuleState"
+            "ValueType": "DefaultEnabledState"
           }
         },
         "Targets": {
@@ -21132,6 +21132,12 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "EndDate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-enddate",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-name",
           "PrimitiveType": "String",
@@ -21142,6 +21148,25 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-schedule",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "ScheduleTimezone": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-scheduletimezone",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "StartDate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-startdate",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindow.html#cfn-ssm-maintenancewindow-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
           "UpdateType": "Mutable"
         }
       }
@@ -21878,12 +21903,6 @@
         "StringEquals"
       ]
     },
-    "CloudWatchEventRuleState": {
-      "AllowedValues": [
-        "DISABLED",
-        "ENABLED"
-      ]
-    },
     "CodeBuildArtifactPackaging": {
       "AllowedValues": [
         "NONE",
@@ -21920,12 +21939,6 @@
       "AllowedValues": [
         "LINUX_CONTAINER",
         "WINDOWS_CONTAINER"
-      ]
-    },
-    "CodeBuildLogConfigStatus": {
-      "AllowedValues": [
-        "DISABLED",
-        "ENABLED"
       ]
     },
     "CodeBuildSourceType": {
@@ -22081,12 +22094,6 @@
         "String"
       ]
     },
-    "CognitoStreamingStatus": {
-      "AllowedValues": [
-        "DISABLED",
-        "ENABLED"
-      ]
-    },
     "ConfigFrequency": {
       "AllowedValues": [
         "One_Hour",
@@ -22173,7 +22180,19 @@
         "CUSTOM_LAMBDA"
       ]
     },
-    "CountryCodeAlpha2": {
+    "DAXInstanceType": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "DLMPolicyResourceType": {
+      "AllowedValues": [
+        "VOLUME"
+      ]
+    },
+    "DefaultCountryCodeAlpha2": {
       "AllowedValues": [
         "AD",
         "AE",
@@ -22426,12 +22445,11 @@
         "ZW"
       ]
     },
-    "DAXInstanceType": {
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
+    "DefaultEnabledState": {
+      "AllowedValues": [
+        "DISABLED",
+        "ENABLED"
+      ]
     },
     "DmsEndpointEngineName": {
       "AllowedValues": [
