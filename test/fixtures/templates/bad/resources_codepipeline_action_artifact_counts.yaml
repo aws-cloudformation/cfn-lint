@@ -41,6 +41,30 @@ Resources:
               OutputArtifacts:
               - Name: MyOutput1
               - Name: MyOutput2  # No Longer an error
+        - Name: Test
+          Actions:
+            - Name: Validate
+              ActionTypeId:
+                Category: Test
+                Owner: AWS
+                Provider: CodeBuild
+                Version: "1"
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+                - Name: MyOutput1
+                - Name: MyOutput2
+                - Name: MyOutput3
+                - Name: MyOutput4
+                - Name: MyOutput5
+                - Name: MyOutput6 # Error
+              OutputArtifacts:
+                - Name: MyOutput1
+                - Name: MyOutput2
+                - Name: MyOutput3
+                - Name: MyOutput4
+                - Name: MyOutput5
+                - Name: MyOutput6 # Error
         - Name: MyApprovalStage
           Actions:
             - Name: MyApprovalAction
