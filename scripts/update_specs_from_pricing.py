@@ -51,7 +51,7 @@ region_map = {
     'US West (N. California)': 'us-west-1',
 }
 
-session = boto3.session.Session()
+session = boto3.session.Session(profile_name='development')
 client = session.client('pricing', region_name='us-east-1')
 
 def configure_logging():
@@ -131,7 +131,6 @@ def get_redshift_pricing():
     return results
 
 def get_dax_pricing():
-
     LOGGER.info('Get DAX pricing')
     paginator = client.get_paginator('get_products')
     page_iterator = paginator.paginate(
@@ -153,7 +152,6 @@ def get_dax_pricing():
                         usage_type
                     )
     return results
-
 
 def get_mq_pricing():
     """ Get MQ Instance Pricing """
@@ -184,7 +182,6 @@ def get_mq_pricing():
                     )
     return results
 
-
 def get_rds_pricing():
     """ Get RDS Pricing """
     LOGGER.info('Get RDS pricing')
@@ -208,6 +205,27 @@ def get_rds_pricing():
                     )
     return results
 
+def get_documentdb_pricing():
+    LOGGER.info('Get DocumentDB pricing')
+    paginator = client.get_paginator('get_products')
+    page_iterator = paginator.paginate(
+        ServiceCode='AmazonDocDB',
+        FormatVersion='aws_v1',
+    )
+
+    results = {}
+    for page in page_iterator:
+        for price_item in page.get('PriceList', []):
+            products = json.loads(price_item)
+            product = products.get('product', {})
+            if product:
+                if product.get('productFamily') == 'Database Instance':
+                    if not results.get(region_map[product.get('attributes').get('location')]):
+                        results[region_map[product.get('attributes').get('location')]] = set()
+                    results[region_map[product.get('attributes').get('location')]].add(
+                        product.get('attributes').get('instanceType')
+                    )
+    return results
 
 def main():
     """ main function """
@@ -222,6 +240,7 @@ def main():
     outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
     outputs = update_outputs('RedshiftInstanceType', get_redshift_pricing(), outputs)
     outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
+    outputs = update_outputs('DocumentDBInstanceClass', get_documentdb_pricing(), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
