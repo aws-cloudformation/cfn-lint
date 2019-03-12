@@ -92,16 +92,20 @@ class Transform(object):
 
             # Tell SAM to use the region we're linting in, this has to be controlled using the default AWS mechanisms, see also:
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
+            LOGGER.debug('Setting AWS_DEFAULT_REGION to %s', self._region)
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
             self._template = cfnlint.helpers.convert_dict(
                 sam_translator.translate(sam_template=self._template, parameter_values={}))
+
+            LOGGER.debug('Transformed template: %s', self._template)
         except InvalidDocumentException as e:
+            message = 'Error transforming template: {0}'
             for cause in e.causes:
                 matches.append(cfnlint.Match(
                     1, 1,
                     1, 1,
-                    self._filename, cfnlint.TransformError(), cause.message))
+                    self._filename, cfnlint.TransformError(), message.format(cause.message)))
         except Exception as e:  # pylint: disable=W0703
             LOGGER.debug('Error transforming template: %s', str(e))
             LOGGER.debug('Stack trace: %s', e, exc_info=True)
