@@ -156,7 +156,7 @@ class TestNode(BaseTestCase):
         }, (0, 1), (2, 3))
 
         obj = template.get_safe("Test")
-        self.assertEqual(obj, [('True', ['Fn::If', 1]), ('False', ['Fn::If', 2])])
+        self.assertEqual(obj, [('True', ['Test', 'Fn::If', 1]), ('False', ['Test', 'Fn::If', 2])])
 
     def test_success_fnif_get_nested(self):
         """Test Dict Object"""
@@ -177,9 +177,9 @@ class TestNode(BaseTestCase):
 
         obj = template.get_safe("Test")
         self.assertEqual(obj, [
-            ('True,True', ['Fn::If', 1, 'Fn::If', 1]),
-            ('True,False', ['Fn::If', 1, 'Fn::If', 2]),
-            ('False', ['Fn::If', 2])
+            ('True,True', ['Test', 'Fn::If', 1, 'Fn::If', 1]),
+            ('True,False', ['Test', 'Fn::If', 1, 'Fn::If', 2]),
+            ('False', ['Test', 'Fn::If', 2])
         ])
 
     def test_success_fnif_list_strings(self):

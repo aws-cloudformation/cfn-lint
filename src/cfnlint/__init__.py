@@ -947,6 +947,62 @@ class Template(object):
         # if resource condition isn't available then the resource is available
         return results
 
+    def get_value_from_scenario(self, obj, scenario):
+        """
+            Get object values from a provided scenario
+        """
+
+        def get_value(value, scenario):  # pylint: disable=R0911
+            """ Get the value based on the scenario resolving nesting """
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    if 'Fn::If' in value:
+                        if_values = value.get('Fn::If')
+                        if len(if_values) == 3:
+                            if_path = scenario.get(if_values[0], None)
+                            if if_path is not None:
+                                if if_path:
+                                    return get_value(if_values[1], scenario)
+                                return get_value(if_values[2], scenario)
+                    elif value.get('Ref') == 'AWS::NoValue':
+                        return None
+                    else:
+                        return value
+
+                return value
+            if isinstance(value, list):
+                new_list = []
+                for item in value:
+                    new_value = get_value(item, scenario)
+                    if new_value is not None:
+                        new_list.append(get_value(item, scenario))
+
+                return new_list
+
+            return value
+
+        result = {}
+        if isinstance(obj, dict):
+            if len(obj) == 1:
+                if obj.get('Fn::If'):
+                    new_value = get_value(obj, scenario)
+                    if new_value is not None:
+                        result = new_value
+                else:
+                    result = {}
+                    for key, value in obj.items():
+                        new_value = get_value(value, scenario)
+                        if new_value is not None:
+                            result[key] = new_value
+            else:
+                result = {}
+                for key, value in obj.items():
+                    new_value = get_value(value, scenario)
+                    if new_value is not None:
+                        result[key] = new_value
+
+        return result
+
     def get_object_without_conditions(self, obj):
         """
             Gets a list of object values without conditions included
@@ -979,7 +1035,7 @@ class Template(object):
                 ]
         """
         results = []
-        scenarios = self.get_conditions_scenarios_from_object(obj)
+        scenarios = self.get_conditions_scenarios_from_object([obj])
 
         if not isinstance(obj, dict):
             return results
@@ -994,63 +1050,17 @@ class Template(object):
                 'Object': obj
             }]
 
-        def get_value(value, scenario):  # pylint: disable=R0911
-            """ Get the value based on the scenario resolving nesting """
-            if isinstance(value, dict):
-                if len(value) == 1:
-                    if 'Fn::If' in value:
-                        if_values = value.get('Fn::If')
-                        if len(if_values) == 3:
-                            if_path = scenario.get(if_values[0], None)
-                            if if_path is not None:
-                                if if_path:
-                                    return get_value(if_values[1], scenario)
-                                return get_value(if_values[2], scenario)
-                    elif value.get('Ref') == 'AWS::NoValue':
-                        return None
-                    else:
-                        return value
-
-                return value
-            if isinstance(value, list):
-                new_list = []
-                for item in value:
-                    new_value = get_value(item, scenario)
-                    if new_value is not None:
-                        new_list.append(get_value(item, scenario))
-
-                return new_list
-
-            return value
-
         for scenario in scenarios:
-            result = {
-                'Scenario': scenario,
-                'Object': {}
-            }
-            if isinstance(obj, dict):
-                if len(obj) == 1:
-                    if obj.get('Fn::If'):
-                        new_value = get_value(obj, scenario)
-                        if new_value is not None:
-                            result['Object'] = new_value
-                            results.append(result)
-                    else:
-                        for key, value in obj.items():
-                            new_value = get_value(value, scenario)
-                            if new_value is not None:
-                                result['Object'][key] = new_value
-                        results.append(result)
-                else:
-                    for key, value in obj.items():
-                        new_value = get_value(value, scenario)
-                        if new_value is not None:
-                            result['Object'][key] = new_value
-                    results.append(result)
+            result_obj = self.get_value_from_scenario(obj, scenario)
+            if result_obj:
+                results.append({
+                    'Scenario': scenario,
+                    'Object': result_obj
+                })
 
         return results
 
-    def get_conditions_scenarios_from_object(self, value):
+    def get_conditions_scenarios_from_object(self, objs):
         """
             Get condition from objects
         """
@@ -1072,18 +1082,23 @@ class Template(object):
             return results
 
         con = set()
-        if isinstance(value, dict):
-            for k, v in value.items():
-                # handle conditions directly under the object
-                if len(value) == 1 and k == 'Fn::If' and len(v) == 3:
-                    con.add(v[0])
-                    for r_c in v[1:]:
-                        if isinstance(r_c, dict):
-                            for s_k, s_v in r_c.items():
-                                if s_k == 'Fn::If':
-                                    con = con.union(get_conditions_from_property({s_k: s_v}))
-                else:
-                    con = con.union(get_conditions_from_property(v))
+
+        if isinstance(objs, dict):
+            objs = [objs]
+
+        for obj in objs:
+            if isinstance(obj, dict):
+                for k, v in obj.items():
+                    # handle conditions directly under the object
+                    if len(obj) == 1 and k == 'Fn::If' and len(v) == 3:
+                        con.add(v[0])
+                        for r_c in v[1:]:
+                            if isinstance(r_c, dict):
+                                for s_k, s_v in r_c.items():
+                                    if s_k == 'Fn::If':
+                                        con = con.union(get_conditions_from_property({s_k: s_v}))
+                    else:
+                        con = con.union(get_conditions_from_property(v))
 
         return self.conditions.get_scenarios(list(con))
 

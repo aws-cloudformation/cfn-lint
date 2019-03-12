@@ -132,7 +132,7 @@ def create_dict_node_class(cls):
                     return [(value, (path[:] + [key]))]
 
             results = []
-            for sub_v, sub_path in value.items_safe(path):
+            for sub_v, sub_path in value.items_safe(path + [key]):
                 if isinstance(sub_v, type_t) or not type_t:
                     results.append((sub_v, sub_path))
 
@@ -159,7 +159,7 @@ def create_dict_node_class(cls):
                                     else:
                                         if isinstance(if_v, type_t) or not type_t:
                                             yield if_v, path[:] + [k, i + 1]
-                    elif k != 'Ref' and v != 'AWS::NoValue':
+                    elif not (k == 'Ref' and v == 'AWS::NoValue'):
                         if isinstance(self, type_t) or not type_t:
                             yield self, path[:]
             else:
