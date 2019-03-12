@@ -475,6 +475,17 @@ Resources:
       EndpointType: "random" # Invalid AllowedValue
       EngineName: "database" # Invalid AllowedValue
       SslMode: "ssl" # Invalid AllowedValue
+  DocumentDBCluster:
+    Type: "AWS::DocDB::DBCluster"
+    Properties:
+      AvailabilityZones:
+        - String
+      EngineVersion: "documentdb" # Invalid AllowedValue
+  DocumentDBInstance:
+    Type: "AWS::DocDB::DBInstance"
+    Properties:
+      DBClusterIdentifier: !Ref "DocumentDBCluster"
+      DBInstanceClass: "db.r4.16xl" # Invalid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:

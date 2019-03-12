@@ -25,10 +25,10 @@ from cfnlint.helpers import RESOURCE_SPECS
 class AllowedPattern(CloudFormationLintRule):
     """Check if properties have a valid value"""
     id = 'E3031'
-    shortdesc = 'Check if properties have a valid value'
-    description = 'Check if properties have a valid value in case of an enumator'
-    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
-    tags = ['resources', 'property', 'allowed value']
+    shortdesc = 'Check if property values adhere to a specific pattern'
+    description = 'Check if properties have a valid value in case of a pattern (Regular Expression)'
+    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern'
+    tags = ['resources', 'property', 'allowed pattern', 'regex']
 
     def initialize(self, cfn):
         """Initialize the rule"""
