@@ -9,6 +9,28 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.16.0
+###### Features
+- Add rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) to look for regex patterns based on the patched spec file
+- Remove regex checks from rule [E2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2509)
+- Add parameter `ignore-templates` to allow the ignoring of templates when doing bulk linting
+###### CloudFormation Specifications
+- Update Spec files to 2.26.0
+- Add all the allowed values of the AWS::DirectoryService::* Resources
+- Add all the allowed values of the AWS::DynamoDB::* Resources
+- Added AWS::Route53Resolver resources to the Spec Patches of ap-southeast-2
+- Patch the spec file with regex patterns
+- Add all the allowed values of the AWS::DocDb::* Resources
+###### Fixes
+- Update rule [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) to have '20000' as the max value
+- Update rule [E1016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1016) to not allow ImportValue inside of Conditions
+- Update rule [E2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2508) to check conditions when providing limit checks on managed policies
+- Convert unicode to strings when in Py 3.4/3.5 and updating specs
+- Convert from `awslabs` to `aws-cloudformation` organization
+- Remove suppression of logging that was removed from samtranslator >1.7.0 and incompatibility with
+samtranslator 1.10.0
+
+
 ### 0.15.0
 ###### Features
 - Add scaffolding for arbitrary Match attributes, adding attributes for Type checks
