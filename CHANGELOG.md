@@ -17,6 +17,7 @@
 ###### CloudFormation Specifications
 - Update Spec files to 2.26.0
 - Add all the allowed values of the AWS::DirectoryService::* Resources
+- Add all the allowed values of the AWS::DynamoDB::* Resources
 - Added AWS::Route53Resolver resources to the Spec Patches of ap-southeast-2
 - Patch the spec file with regex patterns
 - Add all the allowed values of the AWS::DocDb::* Resources
@@ -26,6 +27,8 @@
 - Update rule [E2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2508) to check conditions when providing limit checks on managed policies
 - Convert unicode to strings when in Py 3.4/3.5 and updating specs
 - Convert from `awslabs` to `aws-cloudformation` organization
+- Remove suppression of logging that was removed from samtranslator >1.7.0 and incompatibility with
+samtranslator 1.10.0
 
 
 ### 0.15.0
