@@ -39,7 +39,8 @@ def main():
                 matches.extend(template_matches)
             LOGGER.debug('Completed linting of file: %s', str(filename))
 
-        print(formatter.print_matches(matches))
+        if matches:
+            print(formatter.print_matches(matches))
         return cfnlint.core.get_exit_code(matches)
     except cfnlint.core.CfnLintExitException as e:
         LOGGER.error(str(e))
