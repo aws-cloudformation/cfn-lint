@@ -494,6 +494,25 @@ Resources:
     Properties:
       DBClusterIdentifier: !Ref "DocumentDBCluster"
       DBInstanceClass: "db.r4.16xlarge" # Valid AllowedValue
+  DynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      BillingMode: "PROVISIONED" # Valid AllowedValue
+      AttributeDefinitions:
+        - AttributeName: "Id"
+          AttributeType: "S" # Valid AllowedValue
+      GlobalSecondaryIndexes:
+        - IndexName: "GlobalIndex1"
+          KeySchema:
+          - AttributeName: "Id"
+            KeyType: "RANGE" # Valid AllowedValue
+          Projection:
+            ProjectionType: "KEYS_ONLY" # Valid AlloedValue
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH" # Valid AllowedValue
+      StreamSpecification:
+        StreamViewType: "NEW_AND_OLD_IMAGES" # Valid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -511,6 +530,15 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "SFTP" # Valid AllowedValue
+  RedshiftCluster:
+    Type: "AWS::Redshift::Cluster"
+    Properties:
+      ClusterType: "single-node" # Valid AllowedValue
+      ClusterVersion: "1.0" # Valid AllowedValue
+      DBName: "redshift-cluster"
+      MasterUserPassword: !Ref "Password"
+      MasterUsername: "PUBLIC"
+      NodeType: "dc2.large" # Valid AllowedValue
   Route53HealthCheck:
     Type: "AWS::Route53::HealthCheck"
     Properties:

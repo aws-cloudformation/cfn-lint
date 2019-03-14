@@ -486,6 +486,25 @@ Resources:
     Properties:
       DBClusterIdentifier: !Ref "DocumentDBCluster"
       DBInstanceClass: "db.r4.16xl" # Invalid AllowedValue
+  DynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      BillingMode: "PAY_PER _REQUEST" # Invalid AllowedValue
+      AttributeDefinitions:
+        - AttributeName: "Id"
+          AttributeType: "T" # Invalid AllowedValue
+      GlobalSecondaryIndexes:
+        - IndexName: "GlobalIndex1"
+          KeySchema:
+          - AttributeName: "Id"
+            KeyType: "hash" # Invalid AllowedValue
+          Projection:
+            ProjectionType: "KEY_ONLY" # Invalid AlloedValue
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "hash" # Invalid AllowedValue
+      StreamSpecification:
+        StreamViewType: "NEW_AND_OLD" # Invalid AllowedValue
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -503,6 +522,15 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "FTP" # Invalid AllowedValue
+  RedshiftCluster:
+    Type: "AWS::Redshift::Cluster"
+    Properties:
+      ClusterType: "cluster" # Invalid AllowedValue
+      ClusterVersion: "1" # Invalid AllowedValue
+      DBName: "redshift-cluster"
+      MasterUserPassword: !Ref "Password"
+      MasterUsername: "PUBLIC"
+      NodeType: "dc2.2xlarge" # Invalid AllowedValue
   Route53HealthCheck:
     Type: "AWS::Route53::HealthCheck"
     Properties:

@@ -5077,7 +5077,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-attributedef.html#cfn-dynamodb-attributedef-attributename-attributetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "DynamoDBAttributeType"
+          }
         }
       }
     },
@@ -5125,7 +5128,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-keyschema.html#aws-properties-dynamodb-keyschema-keytype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "DynamoDBKeyType"
+          }
         }
       }
     },
@@ -5180,7 +5186,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-projectionobject.html#cfn-dynamodb-projectionobj-projtype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "DynamoDBProjectionType"
+          }
         }
       }
     },
@@ -5219,7 +5228,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-streamspecification.html#cfn-dynamodb-streamspecification-streamviewtype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "DynamoDBStreamViewType"
+          }
         }
       }
     },
@@ -18983,7 +18995,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-billingmode",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "DynamoDBBillingMode"
+          }
         },
         "GlobalSecondaryIndexes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-gsi",
@@ -26175,13 +26190,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clustertype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "RedshiftClusterType"
+          }
         },
         "ClusterVersion": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-clusterversion",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "RedshiftClusterVersion"
+          }
         },
         "DBName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-dbname",
@@ -26249,7 +26270,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-nodetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "RedshiftInstanceType"
+          }
         },
         "NumberOfNodes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html#cfn-redshift-cluster-nodetype",
@@ -29402,6 +29426,40 @@
         ]
       }
     },
+    "DynamoDBAttributeType": {
+      "AllowedValues": [
+        "B",
+        "N",
+        "S"
+      ]
+    },
+    "DynamoDBBillingMode": {
+      "AllowedValues": [
+        "PAY_PER_REQUEST",
+        "PROVISIONED"
+      ]
+    },
+    "DynamoDBKeyType": {
+      "AllowedValues": [
+        "HASH",
+        "RANGE"
+      ]
+    },
+    "DynamoDBProjectionType": {
+      "AllowedValues": [
+        "ALL",
+        "INCLUDE",
+        "KEYS_ONLY"
+      ]
+    },
+    "DynamoDBStreamViewType": {
+      "AllowedValues": [
+        "KEYS_ONLY",
+        "NEW_AND_OLD_IMAGES",
+        "NEW_IMAGE",
+        "OLD_IMAGE"
+      ]
+    },
     "EC2ScalingPolicyPredifinedMetricSpecificationType": {
       "AllowedValues": [
         "ALBRequestCountPerTarget",
@@ -29565,9 +29623,6 @@
       "Ref": {
         "Parameters": [
           "String"
-        ],
-        "Resources": [
-          "AWS::IAM::Role"
         ]
       }
     },
@@ -29825,6 +29880,17 @@
         "SPF",
         "SRV",
         "TXT"
+      ]
+    },
+    "RedshiftClusterType": {
+      "AllowedValues": [
+        "multi-node",
+        "single-node"
+      ]
+    },
+    "RedshiftClusterVersion": {
+      "AllowedValues": [
+        "1.0"
       ]
     },
     "RedshiftInstanceType": {
