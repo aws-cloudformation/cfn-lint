@@ -73,6 +73,17 @@ class TestCfnJson(BaseTestCase):
             matches.extend(self.rules.run(filename, cfn))
             assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
 
+    def test_success_escape_character(self):
+        """Test Successful JSON Parsing"""
+        failures = 1
+        filename = 'test/fixtures/templates/good/decode/parsing.json'
+        template = cfnlint.decode.cfn_json.load(filename)
+        cfn = Template(filename, template, ['us-east-1'])
+
+        matches = []
+        matches.extend(self.rules.run(filename, cfn))
+        assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+
     def test_success_parse_stdin(self):
         """Test Successful JSON Parsing through stdin"""
         for _, values in self.filenames.items():
