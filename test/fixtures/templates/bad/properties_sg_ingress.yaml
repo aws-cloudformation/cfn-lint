@@ -16,6 +16,9 @@ Parameters:
   mySecurityGroupList:
     Description: Security Group List
     Type: List<Number>
+  myCidrIP:
+    Type: String
+    Default: "10.0.0.0/8"
 Resources:
   mySecurityGroupNonVpc:
     Type: AWS::EC2::SecurityGroup
@@ -41,6 +44,9 @@ Resources:
       -
         IpProtocol: "1"
         CidrIp: "10.0.0.0"
+      -
+        IpProtocol: "1"
+        CidrIp: !Sub "${myCidrIP}"
       -
         IpProtocol: 1
         SourceSecurityGroupId: !Ref mySecurityGroupNonVpc

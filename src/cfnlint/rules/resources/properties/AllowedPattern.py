@@ -45,11 +45,13 @@ class AllowedPattern(CloudFormationLintRule):
             if isinstance(value[0], six.string_types):
                 # Remove the sub (${}) from the value
                 stripped_value = re.sub(r'\${.*}', '', value[0])
-                matches.extend(self.check_value(stripped_value, path[:] + [0], property_name, **kwargs))
+                if stripped_value:
+                    matches.extend(self.check_value(stripped_value, path[:] + [0], property_name, **kwargs))
         else:
             # Remove the sub (${}) from the value
             stripped_value = re.sub(r'\${.*}', '', value)
-            matches.extend(self.check_value(stripped_value, path[:], property_name, **kwargs))
+            if stripped_value:
+                matches.extend(self.check_value(stripped_value, path[:], property_name, **kwargs))
         return matches
 
     def check_value(self, value, path, property_name, **kwargs):
