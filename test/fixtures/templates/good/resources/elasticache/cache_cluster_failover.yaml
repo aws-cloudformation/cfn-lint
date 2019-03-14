@@ -71,3 +71,22 @@ Resources:
       - sg-12345abc
       SnapshotRetentionLimit: 5
       SnapshotWindow: 10:00-12:00
+  ThirdReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      AutoMinorVersionUpgrade: true
+      CacheParameterGroupName: !Ref MyClusterParameterGroup  # Don't fail when missing
+      CacheNodeType: cache.r3.large
+      CacheSubnetGroupName: subnetgroup
+      Engine: redis
+      EngineVersion: '3.2'
+      NumNodeGroups: 2
+      NumCacheClusters: 2
+      ReplicasPerNodeGroup: 3
+      Port: 6379
+      PreferredMaintenanceWindow: sun:05:00-sun:09:00
+      ReplicationGroupDescription: A sample replication group
+      SecurityGroupIds:
+      - sg-12345abc
+      SnapshotRetentionLimit: 5
+      SnapshotWindow: 10:00-12:00
