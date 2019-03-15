@@ -25,6 +25,7 @@ import boto3
 import json
 import logging
 
+
 LOGGER = logging.getLogger('cfnlint')
 
 
