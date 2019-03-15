@@ -25,6 +25,9 @@ class BaseFormatter(object):
 
     def print_matches(self, matches):
         """Output all the matches"""
+        if not matches:
+            return None
+
         # Output each match on a separate line by default
         output = []
         for match in matches:
