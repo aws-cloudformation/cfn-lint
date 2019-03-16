@@ -150,3 +150,23 @@ def patch_spec(content, region):
                     LOGGER.debug('Parent element not found for patch (%s) in region %s', all_patch, region)
 
     return content
+
+def update_iam_policies():
+    """update iam policies file"""
+
+    url = 'https://awspolicygen.s3.amazonaws.com/js/policies.js'
+
+    filename = pkg_resources.resource_filename(
+        __name__,
+        '/data/AdditionalSpecs/Policies.json',
+    )
+    LOGGER.debug('Downloading policies %s into %s', url, filename)
+
+    req = requests.get(url)
+
+    content = req.content.decode()
+
+    content = content.split('app.PolicyEditorConfig=')[1]
+
+    with open(filename, 'w') as f:
+        f.write(content)

@@ -1,0 +1,42 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  ManagedPolicy:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "kafk:*"
+            Resource: "*"
+          - Effect: "Allow"
+            Action:
+              - "sns:SendMessage"
+            Resource:
+              - "*"
+          - Effect: "Allow"
+            Action:
+              - "ec2:ReleaseHosts"
+            Resource:
+              - "*"
+  ManagedPolicy2:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Deny"
+          Action: "ec2:*"
+          Resource: "*"
+  ManagedPolicy3:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Deny"
+          Action:
+            - "cldoufront:CreateDistribution"
+          Resource: "*"
