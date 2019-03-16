@@ -123,4 +123,4 @@ class TestConfigMixIn(BaseTestCase):
 
         # test defaults
         self.assertNotIn('test/fixtures/templates/bad/resources/iam/resource_policy.yaml', config.templates)
-        self.assertEqual(len(config.templates), 2)
+        self.assertEqual(len(config.templates), 3)
