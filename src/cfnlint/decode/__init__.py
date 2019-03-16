@@ -57,11 +57,12 @@ def decode(filename, ignore_bad_template):
     except cfnlint.decode.cfn_yaml.CfnParseError as err:
         err.match.Filename = filename
         matches = [err.match]
-
     except ParserError as err:
         matches = [create_match_yaml_parser_error(err, filename)]
     except ScannerError as err:
-        if err.problem == 'found character \'\\t\' that cannot start any token':
+        if err.problem in [
+                'found character \'\\t\' that cannot start any token',
+                'found unknown escape character']:
             try:
                 template = cfnlint.decode.cfn_json.load(filename)
             except cfnlint.decode.cfn_json.JSONDecodeError as json_err:
