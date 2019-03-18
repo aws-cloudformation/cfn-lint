@@ -128,6 +128,10 @@ def get_args_filenames(cli_args):
         cfnlint.maintenance.update_documentation(documentation_rules)
         exit(0)
 
+    if config.update_iam_policies:
+        cfnlint.maintenance.update_iam_policies()
+        exit(0)
+
     if config.listrules:
         print(rules)
         exit(0)

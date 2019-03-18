@@ -319,6 +319,10 @@ class CliArgs(object):
             '--update-documentation', help=argparse.SUPPRESS,
             action='store_true'
         )
+        advanced.add_argument(
+            '--update-iam-policies', help=argparse.SUPPRESS,
+            action='store_true'
+        )
 
         return parser
 
@@ -507,6 +511,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def update_documentation(self):
         """ update_specs """
         return self._get_argument_value('update_documentation', False, False)
+
+    @property
+    def update_iam_policies(self):
+        """ update_iam_policies """
+        return self._get_argument_value('update_iam_policies', False, False)
 
     @property
     def listrules(self):
