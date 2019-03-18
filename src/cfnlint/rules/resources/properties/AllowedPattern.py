@@ -15,7 +15,6 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import re
-import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -36,21 +35,6 @@ class AllowedPattern(CloudFormationLintRule):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
-
-    def check_sub(self, value, path, property_name, **kwargs):
-        """Check Value of a Sub"""
-        matches = []
-
-        if isinstance(value, list):
-            if isinstance(value[0], six.string_types):
-                # Remove the sub (${}) from the value
-                stripped_value = re.sub(r'\${.*}', '', value[0])
-                matches.extend(self.check_value(stripped_value, path[:] + [0], property_name, **kwargs))
-        else:
-            # Remove the sub (${}) from the value
-            stripped_value = re.sub(r'\${.*}', '', value)
-            matches.extend(self.check_value(stripped_value, path[:], property_name, **kwargs))
-        return matches
 
     def check_value(self, value, path, property_name, **kwargs):
         """Check Value"""
@@ -86,7 +70,6 @@ class AllowedPattern(CloudFormationLintRule):
                             cfn.check_value(
                                 p_value, prop, p_path,
                                 check_value=self.check_value,
-                                check_sub=self.check_sub,
                                 value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
