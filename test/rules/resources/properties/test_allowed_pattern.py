@@ -44,7 +44,7 @@ class TestAllowedPattern(BaseRuleTestCase):
 
     def test_file_negative_sg_description(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_description.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_description.yaml', 1)
 
     def test_file_negative_sg_ingress(self):
         """Test failure"""

@@ -28,7 +28,7 @@ class SubNeeded(CloudFormationLintRule):
 
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
-    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init']
+    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init', 'CloudWatchAlarmDefinition']
     api_excludes = ['Uri', 'Body']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
@@ -91,9 +91,14 @@ class SubNeeded(CloudFormationLintRule):
 
             # Exxclude the special IAM variables
             variable = parameter_string_path[-1]
+
             if 'Resource' in parameter_string_path:
                 if variable in self.resource_excludes:
                     continue
+
+            # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
+            if variable.startswith('${!'):
+                continue
 
             found_sub = False
             # Does the path contain an 'Fn::Sub'?

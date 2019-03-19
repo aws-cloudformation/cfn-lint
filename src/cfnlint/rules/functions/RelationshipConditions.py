@@ -42,8 +42,9 @@ class RelationshipConditions(CloudFormationLintRule):
             if value not in PSEUDOPARAMS:
                 scenarios = cfn.is_resource_available(ref_obj, value)
                 for scenario in scenarios:
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
-                    message = 'Ref to resource "{0}" that many not be available when {1} at {2}'
+                    scenario_text = ' and '.join(
+                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = 'Ref to resource "{0}" that may not be available {1} at {2}'
                     matches.append(
                         RuleMatch(
                             ref_obj[:-1],
@@ -65,8 +66,9 @@ class RelationshipConditions(CloudFormationLintRule):
                 if value not in PSEUDOPARAMS:
                     scenarios = cfn.is_resource_available(getatt_obj, value)
                     for scenario in scenarios:
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
-                        message = 'GetAtt to resource "{0}" that many not be available when {1} at {2}'
+                        scenario_text = ' and '.join(
+                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        message = 'GetAtt to resource "{0}" that may not be available {1} at {2}'
                         matches.append(
                             RuleMatch(
                                 getatt_obj[:-1],
