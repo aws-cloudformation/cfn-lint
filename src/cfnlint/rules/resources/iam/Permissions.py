@@ -28,8 +28,8 @@ class Permissions(CloudFormationLintRule):
     id = 'W3037'
     shortdesc = 'Check IAM Permission configuration'
     description = 'Check for valid IAM Permissions'
-    source_url = 'https://awspolicygen.s3.amazonaws.com/js/policies.js'
-    tags = ['properties', 'iam']
+    source_url = 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_action.html'
+    tags = ['properties', 'iam', 'permissions']
 
     IAM_PERMISSION_RESOURCE_TYPES = [
         'AWS::IAM::ManagedPolicy',
@@ -47,11 +47,15 @@ class Permissions(CloudFormationLintRule):
         policy_service_map = {}
 
         for _, properties in service_map.items():
+            # The services and actions are case insensitive
+            service = properties['StringPrefix'].lower()
+            actions = [x.lower() for x in properties['Actions']]
+
             # Some services have the same name for different generations; like elasticloadbalancing.
-            if properties['StringPrefix'] in policy_service_map:
-                policy_service_map[properties['StringPrefix']] += properties['Actions']
+            if service in policy_service_map:
+                policy_service_map[service] += actions
             else:
-                policy_service_map[properties['StringPrefix']] = properties['Actions']
+                policy_service_map[service] = actions
 
         return policy_service_map
 
@@ -65,27 +69,29 @@ class Permissions(CloudFormationLintRule):
             return matches
 
         service, permission = action.split(':')
+        # Get lowercase so we can check case insenstive. Keep the original values for the message
+        service_value = service.lower()
+        permission_value = permission.lower()
 
-        if service in service_map:
-            if permission.endswith('*'):
-                wilcarded_permission = permission.split('*')[0]
-                if not any(wilcarded_permission in action for action in service_map[service]):
+        if service_value in service_map:
+            if permission_value.endswith('*'):
+                wilcarded_permission = permission_value.split('*')[0]
+                if not any(wilcarded_permission in action for action in service_map[service_value]):
                     message = 'Invalid permission "{}" for "{}" found in permissions'
                     matches.append(
                         RuleMatch(
                             path,
                             message.format(permission, service, '/'.join(path))))
 
-            elif permission.startswith('*'):
-                wilcarded_permission = permission.split('*')[1]
-                if not any(wilcarded_permission in action for action in service_map[service]):
+            elif permission_value.startswith('*'):
+                wilcarded_permission = permission_value.split('*')[1]
+                if not any(wilcarded_permission in action for action in service_map[service_value]):
                     message = 'Invalid permission "{}" for "{}" found in permissions'
                     matches.append(
                         RuleMatch(
                             path,
                             message.format(permission, service, '/'.join(path))))
-
-            elif permission not in service_map[service]:
+            elif permission_value not in service_map[service_value]:
                 message = 'Invalid permission "{}" for "{}" found in permissions'
                 matches.append(
                     RuleMatch(
