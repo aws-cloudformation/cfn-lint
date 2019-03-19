@@ -3444,7 +3444,7 @@
         "LambdaFunctionARN": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-lambdafunctionassociation.html#cfn-cloudfront-distribution-lambdafunctionassociation-lambdafunctionarn",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         }
       }
@@ -27047,7 +27047,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole"
+            "ValueType": "IamRole.NameOrArn"
           }
         }
       }
@@ -34329,6 +34329,19 @@
       "Ref": {
         "Parameters": [
           "String"
+        ]
+      }
+    },
+    "IamRole.NameOrArn": {
+      "GetAtt": {
+        "AWS::IAM::Role": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
         ]
       }
     },
