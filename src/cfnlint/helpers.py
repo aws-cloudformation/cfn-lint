@@ -23,6 +23,7 @@ import logging
 import re
 import inspect
 import pkg_resources
+import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 
 LOGGER = logging.getLogger(__name__)
@@ -200,6 +201,18 @@ def set_specs(override_spec_data):
 def is_custom_resource(resource_type):
     """ Return True if resource_type is a custom resource """
     return resource_type and (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::'))
+
+
+def bool_compare(first, second):
+    """ Compare strings to boolean values """
+
+    if isinstance(first, six.string_types):
+        first = bool(first.lower() == 'true')
+
+    if isinstance(second, six.string_types):
+        second = bool(second.lower() == 'true')
+
+    return first is second
 
 
 def initialize_specs():
