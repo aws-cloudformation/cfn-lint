@@ -164,9 +164,12 @@ def update_iam_policies():
 
     req = requests.get(url)
 
-    content = req.content.decode()
+    content = req.content.decode('utf-8')
 
     content = content.split('app.PolicyEditorConfig=')[1]
+    content = json.loads(content)
+    content['serviceMap']['Manage Amazon API Gateway']['Actions'].extend(['HEAD', 'OPTIONS'])
+    content['serviceMap']['Amazon Kinesis Video Streams']['Actions'].append('StartStreamEncryption')
 
     with open(filename, 'w') as f:
-        f.write(content)
+        json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
