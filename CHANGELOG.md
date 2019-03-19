@@ -9,6 +9,24 @@
 - Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
 - More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
 
+### 0.17.0
+###### Features
+- Add new rule [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037) to validate IAM resource policies
+###### CloudFormation Specifications
+- Update Spec files to 2.28.0
+- Add all the allowed values of the AWS::Redshift::* Resources
+- Add all the allowed values of the AWS::Neptune::* Resources
+- Patch spec to make AWS::CloudFront::Distribution.LambdaFunctionAssociation.LambdaFunctionARN required
+- Patch spec to make AWS::DynamoDB::Table AttributeDefinitions required
+###### Fixes
+- Remove extra blank lines when there is no errors in the output
+- Update IAM rules
+- Add exception to rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to have exceptions for EMR CloudWatchAlarmDefinition
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to allow for literals in a Sub
+- Remove sub checks from rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) as it won't match in all cases of an allowed pattern regex check
+- Correct typos for errors in rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1001)
+- Switch from parsing a template as Yaml to Json when finding an escape character
+
 ### 0.16.0
 ###### Features
 - Add rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) to look for regex patterns based on the patched spec file

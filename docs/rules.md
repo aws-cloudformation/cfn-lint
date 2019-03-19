@@ -44,6 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
+<<<<<<< HEAD
 The following **108** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
