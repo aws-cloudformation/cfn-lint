@@ -106,36 +106,45 @@ def update_documentation(rules):
         new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
 
-        rule_output = '| {0}<a name="{0}"></a><sup>{1}</sup> | {2} | {3} | [Source]({4}) | {5} |\n'
+        rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
         tags = ','.join('`{0}`'.format(tag) for tag in parseerror.tags)
         new_file.write(rule_output.format(
-            parseerror.id, '1', parseerror.shortdesc, parseerror.description, '', tags))
+            parseerror.id, parseerror.shortdesc, parseerror.description, '', tags))
 
         transformerror = cfnlint.TransformError()
         tags = ','.join('`{0}`'.format(tag) for tag in transformerror.tags)
         new_file.write(rule_output.format(
-            transformerror.id, '1', transformerror.shortdesc, transformerror.description, '', tags))
+            transformerror.id, transformerror.shortdesc, transformerror.description, '', tags))
 
         ruleerror = cfnlint.RuleError()
         tags = ','.join('`{0}`'.format(tag) for tag in ruleerror.tags)
         new_file.write(
-            rule_output.format(ruleerror.id, '1', ruleerror.shortdesc, ruleerror.description, '', tags))
+            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', tags))
+
+        # Seprate the experimental rules
+        experimental_rules = []
 
         for rule in sorted_rules:
-            tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-            experimental = ''
-            if rule.experimental:
-                experimental = '2'
-            new_file.write(rule_output.format(rule.id, experimental, rule.shortdesc, rule.description, rule.source_url, tags))
 
-        # Add explanation
-        new_file.write('\n')
-        new_file.write('\n')
-        new_file.write('_<sup>1</sup> : System rule. Used for loading, transforming and processing the templates and rules._  \n')
-        new_file.write('_<sup>2</sup> : Experimental rule. Only processed if the Experimental flag (`-e/--include-experimental`) is specified_\n')
+            if rule.experimental:
+                experimental_rules.append(rule)
+                continue
+
+            tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
+            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
+
+        # Output the experimental rules (if any)
+        if experimental_rules:
+            new_file.write('### Experimental rules\n')
+            new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
+            new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
+
+            for rule in experimental_rules:
+                tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
+                new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
 
 def patch_spec(content, region):
     """Patch the spec file"""
