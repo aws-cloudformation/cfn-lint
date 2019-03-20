@@ -301,6 +301,9 @@ class CliArgs(object):
             type=comma_separated_arg, action='extend',
             help='include rules whose id match these values'
         )
+        standard.add_argument(
+            '-e', '--include-experimental', help='Include experimental rules', action='store_true'
+        )
 
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
@@ -400,6 +403,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def include_checks(self):
         """ include_checks """
         return self._get_argument_value('include_checks', True, True)
+
+    @property
+    def include_experimental(self):
+        """ include_experimental """
+        return self._get_argument_value('include_experimental', True, True)
 
     @property
     def regions(self):

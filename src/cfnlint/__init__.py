@@ -41,6 +41,7 @@ class CloudFormationLintRule(object):
     description = ''
     source_url = ''
     tags = []
+    experimental = False
 
     logger = logging.getLogger(__name__)
 
@@ -133,19 +134,23 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None, include_rules=None):
+    def __init__(self, ignore_rules=None, include_rules=None, include_experimental=False):
         self.rules = []
+
+        # Whether "experimental" rules should be added
+        self.include_experimental = include_experimental
 
         # Make Ignore Rules not required
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
+
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         self.include_rules.extend(['W', 'E'])
 
     def register(self, rule):
         """Register rules"""
-        if self.is_rule_enabled(rule.id):
+        if self.is_rule_enabled(rule.id, rule.experimental):
             self.rules.append(rule)
 
     def __iter__(self):
@@ -157,15 +162,19 @@ class RulesCollection(object):
     def extend(self, more):
         """Extend rules"""
         for rule in more:
-            if self.is_rule_enabled(rule.id):
+            if self.is_rule_enabled(rule.id, rule.experimental):
                 self.rules.append(rule)
 
     def __repr__(self):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
-    def is_rule_enabled(self, rule_id):
+    def is_rule_enabled(self, rule_id, experimental):
         """ Cheks if an individual rule is valid """
+        # Evaluate experimental rules
+        if experimental and not self.include_experimental:
+            return False
+
         # Evaluate includes first:
         include_filter = False
         for include_rule in self.include_rules:
@@ -188,7 +197,7 @@ class RulesCollection(object):
             LOGGER.debug(str(err))
             return []
         except Exception as err:  # pylint: disable=W0703
-            if self.is_rule_enabled('E0002'):
+            if self.is_rule_enabled('E0002', False):
                 # In debug mode, print the error include complete stack trace
                 if LOGGER.getEffectiveLevel() == logging.DEBUG:
                     error_message = traceback.format_exc()
