@@ -6,6 +6,7 @@ Parameters:
     Default: 'yes'
 Conditions:
   isCluster: !Equals [!Ref 'toCluster', 'yes']
+  IsTesting: !Equals [!Ref 'AWS::Region', 'us-east-1']
 Resources:
   MyParameterGroup:
     Type: AWS::ElastiCache::ParameterGroup
@@ -42,7 +43,6 @@ Resources:
       Engine: redis
       EngineVersion: '3.2'
       NumNodeGroups: 2
-      NumCacheClusters: 2
       ReplicasPerNodeGroup: 3
       Port: 6379
       PreferredMaintenanceWindow: sun:05:00-sun:09:00
@@ -61,7 +61,7 @@ Resources:
       CacheSubnetGroupName: subnetgroup
       Engine: redis
       EngineVersion: '3.2'
-      NumNodeGroups: 2
+      NumNodeGroups: 1
       NumCacheClusters: 2
       ReplicasPerNodeGroup: 3
       Port: 6379
@@ -90,3 +90,19 @@ Resources:
       - sg-12345abc
       SnapshotRetentionLimit: 5
       SnapshotWindow: 10:00-12:00
+  FourthReplicationGroup:
+    Type: "AWS::ElastiCache::ReplicationGroup"
+    Properties:
+      AtRestEncryptionEnabled: true
+      AutomaticFailoverEnabled: true
+      CacheNodeType: cache.r3.large
+      CacheParameterGroupName: !Ref "MyClusterParameterGroup"
+      CacheSubnetGroupName: subnetGroup
+      Engine: "redis"
+      EngineVersion: "4.0.10"
+      NumNodeGroups: !If [IsTesting, 1, 3]  # No Error when NumNodeGroups specified
+      ReplicasPerNodeGroup: 1
+      PreferredMaintenanceWindow: "Mon:04:00-Mon:06:00"
+      ReplicationGroupDescription: test
+      SecurityGroupIds:
+      - sg-test

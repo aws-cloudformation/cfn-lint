@@ -42,7 +42,6 @@ Resources:
       Engine: redis
       EngineVersion: '3.2'
       NumNodeGroups: 2
-      NumCacheClusters: 1
       ReplicasPerNodeGroup: 3
       Port: 6379
       PreferredMaintenanceWindow: sun:05:00-sun:09:00
@@ -61,9 +60,43 @@ Resources:
       CacheSubnetGroupName: subnetgroup
       Engine: redis
       EngineVersion: '3.2'
-      NumNodeGroups: 2
       NumCacheClusters: 1
-      ReplicasPerNodeGroup: 3
+      Port: 6379
+      PreferredMaintenanceWindow: sun:05:00-sun:09:00
+      ReplicationGroupDescription: A sample replication group
+      SecurityGroupIds:
+      - sg-12345abc
+      SnapshotRetentionLimit: 5
+      SnapshotWindow: 10:00-12:00
+  # Error when no cache or node groups specified
+  ThirdReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      AutomaticFailoverEnabled: true
+      AutoMinorVersionUpgrade: true
+      CacheParameterGroupName: !Ref MyClusterParameterGroup
+      CacheNodeType: cache.r3.large
+      CacheSubnetGroupName: subnetgroup
+      Engine: redis
+      EngineVersion: '3.2'
+      Port: 6379
+      PreferredMaintenanceWindow: sun:05:00-sun:09:00
+      ReplicationGroupDescription: A sample replication group
+      SecurityGroupIds:
+      - sg-12345abc
+      SnapshotRetentionLimit: 5
+      SnapshotWindow: 10:00-12:00
+  FourtReplicationGroup:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      AutomaticFailoverEnabled: true
+      AutoMinorVersionUpgrade: true
+      CacheParameterGroupName: !Ref MyClusterParameterGroup
+      CacheNodeType: cache.r3.large
+      CacheSubnetGroupName: subnetgroup
+      NumCacheClusters: 1  # Failure without scenario
+      Engine: redis
+      EngineVersion: '3.2'
       Port: 6379
       PreferredMaintenanceWindow: sun:05:00-sun:09:00
       ReplicationGroupDescription: A sample replication group
