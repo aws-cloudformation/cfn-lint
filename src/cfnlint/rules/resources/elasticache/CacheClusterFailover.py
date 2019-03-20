@@ -67,18 +67,21 @@ class CacheClusterFailover(CloudFormationLintRule):
                     scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                     results.append(
                         RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
-            num_cach_nodes = c_props.get('NumCacheClusters', 0)
-            if num_cach_nodes <= 1:
-                pathmessage = path[:] + ['NumCacheClusters']
-                if scenario is None:
-                    message = '"NumCacheClusters" must be greater than one when creating a cluster at {0}'
-                    results.append(
-                        RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                else:
-                    message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
-                    results.append(
-                        RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
+            num_node_groups = c_props.get('NumNodeGroups')
+            if not num_node_groups:
+                # only test cache nodes if num node groups aren't specified
+                num_cache_nodes = c_props.get('NumCacheClusters', 0)
+                if num_cache_nodes <= 1:
+                    pathmessage = path[:] + ['NumCacheClusters']
+                    if scenario is None:
+                        message = '"NumCacheClusters" must be greater than one when creating a cluster at {0}'
+                        results.append(
+                            RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
+                    else:
+                        message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        results.append(
+                            RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
 
         return results
 
@@ -90,9 +93,13 @@ class CacheClusterFailover(CloudFormationLintRule):
             properties,
             pg_properties
         ])
-        for scenario in scenarios:
+        if scenarios:
+            for scenario in scenarios:
+                results.extend(
+                    self._test_cluster_settings(properties, path, pg_properties, pg_path, cfn, scenario))
+        else:
             results.extend(
-                self._test_cluster_settings(properties, path, pg_properties, pg_path, cfn, scenario))
+                self._test_cluster_settings(properties, path, pg_properties, pg_path, cfn, None))
         return results
 
     def match_resource_properties(self, properties, _, path, cfn):

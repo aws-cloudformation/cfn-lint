@@ -34,4 +34,4 @@ class TestElasticCacheClusterFailover(BaseRuleTestCase):
 
     def test_file_artifact_failure(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/elasticache/cache_cluster_failover.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/elasticache/cache_cluster_failover.yaml', 5)
