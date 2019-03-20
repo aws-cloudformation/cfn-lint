@@ -86,9 +86,9 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir, ignore_rules, include_rules):
+def get_rules(rulesdir, ignore_rules, include_rules, include_experimental=False):
     """Get rules"""
-    rules = RulesCollection(ignore_rules, include_rules)
+    rules = RulesCollection(ignore_rules, include_rules, include_experimental)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
     try:
         for rules_dir in rules_dirs:
@@ -124,7 +124,7 @@ def get_args_filenames(cli_args):
 
     if config.update_documentation:
         # Get ALL rules (ignore the CLI))
-        documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'])
+        documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], True)
         cfnlint.maintenance.update_documentation(documentation_rules)
         exit(0)
 
@@ -154,7 +154,7 @@ def get_template_rules(filename, args):
 
     args.template_args = template
 
-    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks)
+    rules = cfnlint.core.get_rules(args.append_rules, args.ignore_checks, args.include_checks, args.include_experimental)
 
     return(template, rules, [])
 

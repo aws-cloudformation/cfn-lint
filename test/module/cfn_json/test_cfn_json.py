@@ -27,7 +27,7 @@ class TestCfnJson(BaseTestCase):
     """Test JSON Parsing """
     def setUp(self):
         """ SetUp template object"""
-        self.rules = RulesCollection()
+        self.rules = RulesCollection(include_experimental=True)
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.extend(

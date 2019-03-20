@@ -115,6 +115,7 @@ Optional parameters:
 | --ignore-templates | IGNORE_TEMPLATES [IGNORE_TEMPLATES ...] | Ignore templates from being scanned
 | -a, --append-rules | append_rules | [RULESDIR [RULESDIR ...]] | Specify one or more rules directories using one or more --append-rules arguments. |
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
+| -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -d, --debug |  |  | Specify to enable debug logging |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |

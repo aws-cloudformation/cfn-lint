@@ -22,7 +22,6 @@ from cfnlint import RuleMatch
 import cfnlint.helpers
 
 
-
 class Permissions(CloudFormationLintRule):
     """Check IAM Permission configuration"""
     id = 'W3037'
@@ -30,6 +29,7 @@ class Permissions(CloudFormationLintRule):
     description = 'Check for valid IAM Permissions'
     source_url = 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_action.html'
     tags = ['properties', 'iam', 'permissions']
+    experimental = True
 
     IAM_PERMISSION_RESOURCE_TYPES = [
         'AWS::IAM::ManagedPolicy',

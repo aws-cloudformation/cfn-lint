@@ -106,7 +106,7 @@ def update_documentation(rules):
         new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
 
-        rule_output = '| {0} <a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
+        rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
@@ -124,9 +124,27 @@ def update_documentation(rules):
         new_file.write(
             rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', tags))
 
+        # Seprate the experimental rules
+        experimental_rules = []
+
         for rule in sorted_rules:
+
+            if rule.experimental:
+                experimental_rules.append(rule)
+                continue
+
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
+
+        # Output the experimental rules (if any)
+        if experimental_rules:
+            new_file.write('### Experimental rules\n')
+            new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
+            new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
+
+            for rule in experimental_rules:
+                tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
+                new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
 
 def patch_spec(content, region):
     """Patch the spec file"""

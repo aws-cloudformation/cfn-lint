@@ -25,7 +25,7 @@ class BaseRuleTestCase(BaseTestCase):
 
     def setUp(self):
         """Setup"""
-        self.collection = RulesCollection(include_rules=['I'])
+        self.collection = RulesCollection(include_rules=['I'],include_experimental=True)
 
     def helper_file_positive(self):
         """Success test"""
