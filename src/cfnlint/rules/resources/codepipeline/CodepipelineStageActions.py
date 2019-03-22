@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -39,6 +40,12 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 }
             },
             'Test': {
+                'CodeBuild': {
+                    'InputArtifactRange': (1, 5),
+                    'OutputArtifactRange': (0, 5),
+                }
+            },
+            'Build': {
                 'CodeBuild': {
                     'InputArtifactRange': (1, 5),
                     'OutputArtifactRange': (0, 5),
@@ -167,12 +174,14 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action names are unique."""
         matches = []
 
-        if action.get('Name') in action_names:
-            message = 'All action names within a stage must be unique. ({name})'.format(
-                name=action.get('Name')
-            )
-            matches.append(RuleMatch(path + ['Name'], message))
-        action_names.add(action.get('Name'))
+        action_name = action.get('Name')
+        if isinstance(action_name, six.string_types):
+            if action.get('Name') in action_names:
+                message = 'All action names within a stage must be unique. ({name})'.format(
+                    name=action.get('Name')
+                )
+                matches.append(RuleMatch(path + ['Name'], message))
+            action_names.add(action.get('Name'))
 
         return matches
 

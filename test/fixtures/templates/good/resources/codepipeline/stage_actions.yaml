@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >
-  Bad CodePipeline Template
+  Good CodePipeline Template
+Parameters:
+  CodeBuild:
+    Type: String
 Resources:
   TestPipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -29,21 +32,7 @@ Resources:
                 OAuthToken: 'secret-token'
         - Name: MoreSource
           Actions:
-            - Name: !Ref Github
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
-                Version: "1"
-              OutputArtifacts:
-                - Name: MyApp2
-              Configuration:
-                Owner: aws-cloudformation
-                Repo: cfn-python-lint
-                PollForSourceChanges: true
-                Branch: master
-                OAuthToken: 'secret-token'
-            - Name: CodeBuild
+            - Name: !Ref CodeBuild   # doesn't fail when Ref is used
               ActionTypeId:
                 Category: Build
                 Owner: AWS

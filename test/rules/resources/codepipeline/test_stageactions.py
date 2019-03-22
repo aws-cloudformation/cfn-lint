@@ -24,6 +24,9 @@ class TestCodePipelineStageActions(BaseRuleTestCase):
         """Setup"""
         super(TestCodePipelineStageActions, self).setUp()
         self.collection.register(CodepipelineStageActions())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/codepipeline/stage_actions.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
