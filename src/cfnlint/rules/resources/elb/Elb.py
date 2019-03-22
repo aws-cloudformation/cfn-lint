@@ -71,4 +71,12 @@ HTTPS has certificate HTTP has no certificate'
                             certificate_protocols=['HTTPS', 'SSL'],
                             certificates=listener.get('SSLCertificateId')))
 
+        results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::LoadBalancer'])
+        for result in results:
+            properties = result['Value']
+            if 'Type' in properties and properties['Type'] == 'network':
+                if 'SecurityGroups' in properties:
+                    path = result['Path'] + ['SecurityGroups']
+                    matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
+
         return matches
