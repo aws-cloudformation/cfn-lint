@@ -8,6 +8,13 @@ Resources:
       Handler: index.handler
       Runtime: nodejs4.3
       CodeUri: 's3://testBucket/mySourceCode.zip'
+  ExampleLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+        LayerName: "Example"
+        ContentUri: "./layers/example.zip"
+        CompatibleRuntimes:
+            - python3.6
 Outputs:
   myOutput:
     Value: !GetAtt [ MyServerlessFunctionLogicalID, Arn ]
