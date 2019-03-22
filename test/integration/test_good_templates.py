@@ -43,6 +43,10 @@ class TestQuickStartTemplates(BaseTestCase):
                 "filename": 'test/fixtures/templates/good/transform.yaml',
                 "failures": 0
             },
+            'transform_bad': {
+                "filename": 'test/fixtures/templates/bad/transform_serverless_template.yaml',
+                "failures": 3
+            },
             'conditions': {
                 "filename": 'test/fixtures/templates/good/conditions.yaml',
                 "failures": 0
