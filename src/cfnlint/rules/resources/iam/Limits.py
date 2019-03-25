@@ -34,37 +34,6 @@ class Limits(CloudFormationLintRule):
             return obj.isoformat()
         raise TypeError('Object of type {} is not JSON serializable'.format(obj.__class__.__name__))
 
-    def check_managed_policy_arns(self, properties, path, cfn):
-        """Check ManagedPolicyArns is within limits"""
-        matches = []
-
-        if 'ManagedPolicyArns' not in properties:
-            return matches
-
-        property_sets = cfn.get_object_without_conditions(properties)
-        for property_set in property_sets:
-            managed_policies = property_set.get('Object').get('ManagedPolicyArns')
-            if isinstance(managed_policies, list):
-                if len(managed_policies) > 10:
-                    if property_set['Scenario'] is None:
-                        matches.append(
-                            RuleMatch(
-                                path + ['ManagedPolicyArns'],
-                                'IAM resources cannot have more than 10 ManagedPolicyArns',
-                            )
-                        )
-                    else:
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
-                        message = 'IAM resources cannot have more than 10 ManagedPolicyArns when {0}'
-                        matches.append(
-                            RuleMatch(
-                                path + ['ManagedPolicyArns'],
-                                message.format(scenario_text),
-                            )
-                        )
-
-        return matches
-
     def check_instance_profile_roles(self, properties, path, cfn):
         """Check InstanceProfile.Roles is within limits"""
         matches = []
@@ -96,37 +65,6 @@ class Limits(CloudFormationLintRule):
 
         return matches
 
-    def check_user_groups(self, properties, path, cfn):
-        """Check User.Groups is within limits"""
-        matches = []
-
-        if 'Groups' not in properties:
-            return matches
-
-        property_sets = cfn.get_object_without_conditions(properties)
-        for property_set in property_sets:
-            groups = property_set.get('Object').get('Groups')
-            if isinstance(groups, list):
-                if len(groups) > 10:
-                    if property_set['Scenario'] is None:
-                        matches.append(
-                            RuleMatch(
-                                path + ['Groups'],
-                                'User can be a member of maximum 10 groups',
-                            )
-                        )
-                    else:
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
-                        message = 'User can be a member of maximum 10 groups when {0}'
-                        matches.append(
-                            RuleMatch(
-                                path + ['Groups'],
-                                message.format(scenario_text),
-                            )
-                        )
-
-        return matches
-
     def check_role_assume_role_policy_document(self, properties, path, _):
         """Check Role.AssumeRolePolicyDocument is within limits"""
         matches = []
@@ -149,18 +87,13 @@ class Limits(CloudFormationLintRule):
         matches = []
         types = {
             'AWS::IAM::User': [
-                self.check_managed_policy_arns,
-                self.check_user_groups,
             ],
             'AWS::IAM::Group': [
-                self.check_managed_policy_arns,
             ],
             'AWS::IAM::Role': [
-                self.check_managed_policy_arns,
                 self.check_role_assume_role_policy_document,
             ],
             'AWS::IAM::InstanceProfile': [
-                self.check_instance_profile_roles,
             ],
         }
 

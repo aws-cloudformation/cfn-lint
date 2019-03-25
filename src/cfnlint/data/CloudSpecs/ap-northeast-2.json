@@ -26865,7 +26865,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-path",
@@ -26909,7 +26912,10 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfileRole"
+          }
         }
       }
     },
@@ -27030,7 +27036,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "MaxSessionDuration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-maxsessionduration",
@@ -27103,7 +27112,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamGroup"
+          }
         },
         "LoginProfile": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-loginprofile",
@@ -27117,7 +27129,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-path",
@@ -33065,6 +33080,18 @@
         "https"
       ]
     },
+    "IamGroup": {
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Group"
+        ]
+      }
+    },
     "IamInstanceProfile": {
       "GetAtt": {},
       "Ref": {
@@ -33086,6 +33113,33 @@
         ],
         "Resources": [
           "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "IamInstanceProfileRole": {
+      "GetAtt": {},
+      "ListMax": 1,
+      "ListMin": 1,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "IamManagedPolicy.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+      "GetAtt": {},
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::ManagedPolicy"
         ]
       }
     },
