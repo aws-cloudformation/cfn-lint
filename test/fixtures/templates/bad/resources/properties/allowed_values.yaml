@@ -522,6 +522,34 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "FTP" # Invalid AllowedValue
+  GlueCrawler:
+    Type: "AWS::Glue::Crawler"
+    Properties:
+      DatabaseName: "database"
+      Role: "role"
+      SchemaChangePolicy:
+        UpdateBehavior: "UPDATE" # Invalid AllowedValue
+        DeleteBehavior: "DELETE_IN_DATABASE" # Invalid AllowedValue
+      Targets:
+        S3Targets: []
+  GlueTable:
+    Type: "AWS::Glue::Table"
+    Properties:
+      CatalogId: !Ref "AWS::AccountId"
+      DatabaseName: "database"
+      TableInput:
+        TableType: "VIRTUALVIEW" # Invalid AllowedValue
+  GlueTrigger:
+    Type: "AWS::Glue::Trigger"
+    Properties:
+      Actions:
+        - JobName: "Trigger"
+      Type: "ONDEMAND" # Invalid AllowedValue
+      Predicate:
+        Logical: "OR" # Invalid AllowedValue
+        Conditions:
+          - LogicalOperator: "GREATER_THAN" # Invalid AllowedValue
+            State: "SUCEEDED" # Invalid AllowedValue
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:

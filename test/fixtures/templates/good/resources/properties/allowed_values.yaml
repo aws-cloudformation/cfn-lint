@@ -530,6 +530,34 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "SFTP" # Valid AllowedValue
+  GlueCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      DatabaseName: "database"
+      Role: "role"
+      SchemaChangePolicy:
+        UpdateBehavior: "LOG" # Valid AllowedValue
+        DeleteBehavior: "DELETE_FROM_DATABASE" # Valid AllowedValue
+      Targets:
+        S3Targets: []
+  GlueTable:
+    Type: "AWS::Glue::Table"
+    Properties:
+      CatalogId: !Ref "AWS::AccountId"
+      DatabaseName: "database"
+      TableInput:
+        TableType: "VIRTUAL_VIEW" # Valid AllowedValue
+  GlueTrigger:
+    Type: "AWS::Glue::Trigger"
+    Properties:
+      Actions:
+        - JobName: "Trigger"
+      Type: "ON_DEMAND" # Valid AllowedValue
+      Predicate:
+        Logical: "AND" # Valid AllowedValue
+        Conditions:
+          - LogicalOperator: "EQUALS" # Valid AllowedValue
+            State: "SUCCEEDED" # Valid AllowedValue
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:
