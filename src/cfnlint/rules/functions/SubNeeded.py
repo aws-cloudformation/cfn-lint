@@ -33,9 +33,13 @@ class SubNeeded(CloudFormationLintRule):
 
     # IAM Policy has special variables that don't require !Sub, Check for these
     # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html
+    # https://docs.aws.amazon.com/iot/latest/developerguide/basic-policy-variables.html
+    # https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html
     resource_excludes = ['${aws:CurrentTime}', '${aws:EpochTime}', '${aws:TokenIssueTime}', '${aws:principaltype}',
                          '${aws:SecureTransport}', '${aws:SourceIp}', '${aws:UserAgent}', '${aws:userid}',
-                         '${aws:username}', '${ec2:SourceInstanceARN}']
+                         '${aws:username}', '${ec2:SourceInstanceARN}',
+                         '${iot:Connection.Thing.ThingName}', '${iot:Connection.Thing.ThingTypeName}',
+                         '${iot:Connection.Thing.IsAttached}', '${iot:ClientId}']
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
