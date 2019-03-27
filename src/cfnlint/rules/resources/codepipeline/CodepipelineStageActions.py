@@ -169,16 +169,11 @@ class CodepipelineStageActions(CloudFormationLintRule):
         if isinstance(version, dict):
             self.logger.debug('Unable to validate version when an object is used.  Skipping')
         elif isinstance(version, (six.string_types)):
-            if len(version) < LENGTH_MIN:
-                message = 'Version string ({0}) is not minimum character length ({1})'
+            if not LENGTH_MIN <= len(version) <= LENGTH_MAX:
+                message = 'Version string ({0}) must be between {1} and {2} characters in length.'
                 matches.append(RuleMatch(
                     path + ['ActionTypeId', 'Version'],
-                    message.format(version, LENGTH_MIN)))
-            elif len(version) > LENGTH_MAX:
-                message = 'Version string ({0}) exceeds maximum character length ({1})'
-                matches.append(RuleMatch(
-                    path + ['ActionTypeId', 'Version'],
-                    message.format(version, LENGTH_MAX)))
+                    message.format(version, LENGTH_MIN, LENGTH_MAX)))
             elif not re.match(REGEX_VERSION_STRING, version):
                 message = 'Version string must match the pattern [0-9A-Za-z_-]+.'
                 matches.append(RuleMatch(
