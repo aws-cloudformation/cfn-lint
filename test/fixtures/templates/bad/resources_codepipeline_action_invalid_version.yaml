@@ -16,7 +16,7 @@ Resources:
                 Category: Source
                 Owner: ThirdParty
                 Provider: GitHub
-                Version: "2"
+                Version: ""
               OutputArtifacts:
                 - Name: MyApp
               Configuration:
@@ -31,7 +31,19 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: "1"
+                Version: "1234567890"
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+              - Name: MyApp
+        - Name: Deploy
+          Actions:
+            - Name: CodeDeploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "123456*"
                 Provider: CodeBuild
               Configuration:
                 ProjectName: cfn-python-lint

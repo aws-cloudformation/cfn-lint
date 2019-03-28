@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import re
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
@@ -101,6 +102,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         'OutputArtifacts': 'OutputArtifactRange',
     }
 
+
     def check_artifact_counts(self, action, artifact_type, path):
         """Check that artifact counts are within valid ranges."""
         matches = []
@@ -159,15 +161,25 @@ class CodepipelineStageActions(CloudFormationLintRule):
         """Check that action type version is valid."""
         matches = []
 
+        REGEX_VERSION_STRING = re.compile(r'^[0-9A-Za-z_-]+$')
+        LENGTH_MIN = 1
+        LENGTH_MAX = 9
+
         version = action.get('ActionTypeId', {}).get('Version')
         if isinstance(version, dict):
             self.logger.debug('Unable to validate version when an object is used.  Skipping')
-        elif version != '1':
-            message = 'For all currently supported action types, the only valid version string is "1".'
-            matches.append(RuleMatch(
-                path + ['ActionTypeId', 'Version'],
-                message
-            ))
+        elif isinstance(version, (six.string_types)):
+            if not LENGTH_MIN <= len(version) <= LENGTH_MAX:
+                message = 'Version string ({0}) must be between {1} and {2} characters in length.'
+                matches.append(RuleMatch(
+                    path + ['ActionTypeId', 'Version'],
+                    message.format(version, LENGTH_MIN, LENGTH_MAX)))
+            elif not re.match(REGEX_VERSION_STRING, version):
+                message = 'Version string must match the pattern [0-9A-Za-z_-]+.'
+                matches.append(RuleMatch(
+                    path + ['ActionTypeId', 'Version'],
+                    message
+                ))
         return matches
 
     def check_names_unique(self, action, path, action_names):
@@ -210,7 +222,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
                         for l_i_a_action, l_i_a_path in s_action_v.items_safe(s_action_p):
                             try:
-                                full_path = path + l_i_a_path
+                                full_path = path + l_i_path + l_i_a_path
                                 matches.extend(self.check_names_unique(l_i_a_action, full_path, action_names))
                                 matches.extend(self.check_version(l_i_a_action, full_path))
                                 matches.extend(self.check_artifact_counts(l_i_a_action, 'InputArtifacts', full_path))
