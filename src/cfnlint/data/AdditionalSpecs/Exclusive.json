@@ -1,5 +1,10 @@
 {
   "PropertyTypes": {
+    "AWS::AutoScaling::LaunchConfiguration.BlockDeviceMapping": {
+      "VirtualName": [
+        "Ebs"
+      ]
+    },
     "AWS::CloudFront::Distribution.ViewerCertificate": {
       "CloudFrontDefaultCertificate": [
         "SslSupportMethod"
@@ -10,31 +15,9 @@
         "Ebs"
       ]
     },
-    "AWS::EC2::SpotFleet.BlockDeviceMapping": {
-      "VirtualName": [
-        "Ebs"
-      ]
-    },
-    "AWS::AutoScaling::LaunchConfiguration.BlockDeviceMapping": {
-      "VirtualName": [
-        "Ebs"
-      ]
-    },
     "AWS::EC2::LaunchTemplate.BlockDeviceMapping": {
       "VirtualName": [
         "Ebs"
-      ]
-    },
-    "AWS::OpsWorks::Instance.BlockDeviceMapping": {
-      "VirtualName": [
-        "Ebs"
-      ]
-    },
-    "AWS::S3::Bucket.WebsiteConfiguration": {
-      "RedirectAllRequestsTo": [
-        "ErrorDocument",
-        "IndexDocument",
-        "RoutingRules"
       ]
     },
     "AWS::EC2::SecurityGroup.Ingress": {
@@ -50,6 +33,23 @@
       "SourceSecurityGroupId": [
         "SourceSecurityGroupName"
       ]
+    },
+    "AWS::EC2::SpotFleet.BlockDeviceMapping": {
+      "VirtualName": [
+        "Ebs"
+      ]
+    },
+    "AWS::OpsWorks::Instance.BlockDeviceMapping": {
+      "VirtualName": [
+        "Ebs"
+      ]
+    },
+    "AWS::S3::Bucket.WebsiteConfiguration": {
+      "RedirectAllRequestsTo": [
+        "ErrorDocument",
+        "IndexDocument",
+        "RoutingRules"
+      ]
     }
   },
   "ResourceTypes": {
@@ -60,32 +60,24 @@
         "ServiceNamespace"
       ]
     },
+    "AWS::CloudWatch::Alarm": {
+      "Metrics": [
+        "Dimensions",
+        "Period",
+        "Namespace",
+        "Statistic",
+        "ExtendedStatistic"
+      ],
+      "Statistic": [
+        "ExtendedStatistic"
+      ]
+    },
     "AWS::EC2::Instance": {
       "NetworkInterfaces": [
         "SubnetId"
       ]
     },
-    "AWS::RDS::DBCluster": {
-      "SnapshotIdentifier": [
-        "MasterUsername",
-        "MasterUserPassword"
-      ]
-    },
-    "AWS::RDS::DBInstance": {
-      "SourceDBInstanceIdentifier": [
-        "CharacterSetName",
-        "MasterUsername",
-        "MasterUserPassword",
-        "StorageEncrypted"
-      ],
-      "DBClusterIdentifier": [
-        "StorageEncrypted"
-      ]
-    },
     "AWS::EC2::SecurityGroupIngress": {
-      "GroupId": [
-        "GroupName"
-      ],
       "CidrIp": [
         "SourceSecurityGroupName",
         "SourceSecurityGroupId",
@@ -95,8 +87,28 @@
         "SourceSecurityGroupName",
         "SourceSecurityGroupId"
       ],
+      "GroupId": [
+        "GroupName"
+      ],
       "SourceSecurityGroupId": [
         "SourceSecurityGroupName"
+      ]
+    },
+    "AWS::RDS::DBCluster": {
+      "SnapshotIdentifier": [
+        "MasterUsername",
+        "MasterUserPassword"
+      ]
+    },
+    "AWS::RDS::DBInstance": {
+      "DBClusterIdentifier": [
+        "StorageEncrypted"
+      ],
+      "SourceDBInstanceIdentifier": [
+        "CharacterSetName",
+        "MasterUsername",
+        "MasterUserPassword",
+        "StorageEncrypted"
       ]
     }
   }
