@@ -824,7 +824,10 @@ class Template(object):
             # If the last item of the path is an integer, and the vaue is an array,
             # Get the location of the item in the array
             if isinstance(text, list) and isinstance(path[0], int):
-                result = self._loc(text[path[0]])
+                try:
+                    result = self._loc(text[path[0]])
+                except AttributeError as err:
+                    LOGGER.debug(err)
             else:
                 try:
                     for key in text:
