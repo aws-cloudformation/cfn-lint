@@ -1,17 +1,22 @@
-### Roadmap
-- Be able to test transforms (include)
-- Add tests around common resource types
-  - AutoScaling
-  - Ec2 Instances
-  - Load Balancers
-  - RDS
-- Create a framework to test ARNs
-- Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
-- More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
+### 0.17.1
+###### Features
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to make sure NLBs don't have a Security Group configured
+###### CloudFormation Specifications
+- Add all the allowed values of the `AWS::Glue` Resources
+- Update OnlyOne check for `AWS::CloudWatch::Alarm` to only `MetricName` or `Metrics`
+- Update Exclusive check for `AWS::CloudWatch::Alarm` for properties mixed with `Metrics` and `Statistic`
+- Update CloudFormation specs to 2.29.0
+- Fix type with MariaDB in the AllowedValues
+- Update pricing information for data available on 2018.3.29
+###### Fixes
+- Fix rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to not look for a sub is needed when looking for iot strings in policies
+- Fix rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to allow for ActionId Versions of length 1-9 and meets regex `[0-9A-Za-z_-]+`
+- Fix rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow for `Parameters` inside a `Pass` action
+- Fix an issue when getting the location of an error in which numbers are causing an attribute error
 
 ### 0.17.0
 ###### Features
-- Add new rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037) to validate Redis cluster settings including AutomaticFailoverEnabled and NumCacheClusters.  Status: Released
+- Add new rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3026) to validate Redis cluster settings including AutomaticFailoverEnabled and NumCacheClusters.  Status: Released
 - Add new rule [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037) to validate IAM resource policies.  Status: Experimental
 - Add new parameter `-e/--include-experimental` to allow for new rules in that aren't ready to be fully released
 ###### CloudFormation Specifications
