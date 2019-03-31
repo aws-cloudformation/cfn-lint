@@ -14,16 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.iam.Limits import Limits  # pylint: disable=E0401
+from cfnlint.rules.resources.properties.JsonSize import JsonSize  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestPropertyIamLimits(BaseRuleTestCase):
-    """Test IAM Limits"""
+class TestJsonSize(BaseRuleTestCase):
+    """Test Json Size"""
     def setUp(self):
         """Setup"""
-        super(TestPropertyIamLimits, self).setUp()
-        self.collection.register(Limits())
+        super(TestJsonSize, self).setUp()
+        self.collection.register(JsonSize())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/json_size.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +34,4 @@ class TestPropertyIamLimits(BaseRuleTestCase):
 
     def test_role_assume_role_policy_document(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_iam_role_assume_role_policy_document.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/json_size.yaml', 2)
