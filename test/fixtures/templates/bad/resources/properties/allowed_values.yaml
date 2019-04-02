@@ -695,6 +695,28 @@ Resources:
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "Default" # Invalid AllowedValue
+  VpcEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcId: !Ref "Vpc"
+      ServiceName: "com.amazonaws.vpce.us-east-1.vpce-svc-03d5ebb7d9579a2b3"
+      VpcEndpointType: "InternetGateway" # Invalid AllowedValue
+  VpcEndpointConnectionNotification:
+    Type: "AWS::EC2::VPCEndpointConnectionNotification"
+    Properties:
+      ConnectionEvents:
+        - "Accept." # Invalid Allowed alue
+      ConnectionNotificationArn: "TopicArn"
+  VPNConnection:
+    Type: "AWS::EC2::VPNConnection"
+    Properties:
+      CustomerGatewayId: "1"
+      Type: "ipsec.2" # Invalid AllowedValue
+      VpnGatewayId: !Ref VPNGateway
+  VPNGateway:
+    Type: "AWS::EC2::VPNGateway"
+    Properties:
+      Type: "ipsec1" # Invalid AllowedValue
   WAFRule:
     Type: "AWS::WAFRegional::Rule"
     Properties:
