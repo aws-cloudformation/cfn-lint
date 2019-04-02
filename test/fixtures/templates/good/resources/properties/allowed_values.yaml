@@ -702,6 +702,18 @@ Resources:
     Properties:
       CidrBlock: "10.0.0.0/16"
       InstanceTenancy: "default" # Valid AllowedValue
+  VpcEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcId: !Ref "Vpc"
+      ServiceName: "com.amazonaws.vpce.us-east-1.vpce-svc-03d5ebb7d9579a2b3"
+      VpcEndpointType: "Gateway" # Valid AllowedValue
+  VpcEndpointConnectionNotification:
+    Type: "AWS::EC2::VPCEndpointConnectionNotification"
+    Properties:
+      ConnectionEvents:
+        - "Accept" # Valid Allowed alue
+      ConnectionNotificationArn: "TopicArn"
   VPNConnection:
     Type: "AWS::EC2::VPNConnection"
     Properties:
