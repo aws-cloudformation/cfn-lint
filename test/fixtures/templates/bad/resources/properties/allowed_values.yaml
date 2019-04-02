@@ -249,6 +249,7 @@ Resources:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
       ComparisonOperator: "GreaterThan" # Invalid AllowedValue
+      MetricName: "my-metric"
       EvaluationPeriods: 1
       Statistic: "Total" # Invalid AllowedValue
       Threshold: 0.0
@@ -465,6 +466,7 @@ Resources:
   DLMPolicy:
     Type: "AWS::DLM::LifecyclePolicy"
     Properties:
+      ExecutionRoleArn: ""
       PolicyDetails:
         ResourceTypes:
           - "VOLUMES" # Invalid AllowedValue
@@ -550,6 +552,41 @@ Resources:
         Conditions:
           - LogicalOperator: "GREATER_THAN" # Invalid AllowedValue
             State: "SUCEEDED" # Invalid AllowedValue
+  GuardDutyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: True
+      FindingPublishingFrequency: "HOURLY" # Invalid AllowedValue
+  GuardDutyFilter:
+    Type: "AWS::GuardDuty::Filter"
+    Properties:
+      Action: "Noop" # Invalid AllowedValue
+      Description: "A mandatory Description"
+      DetectorId: "-1"
+      FindingCriteria:
+        Criterion: {}
+      Rank: 1
+  GuardDutyIPSet:
+    Type: "AWS::GuardDuty::IPSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "stix" # Invalid AllowedValue
+      Location: "http://localhost"
+  GuardDutyMember:
+    Type: AWS::GuardDuty::Member
+    Properties:
+      Email: "info@example.com"
+      MemberId: !Ref "AWS::AccountId"
+      DetectorId: "-1"
+      Status: "Active" # Invalid AllowedValue
+  GuardDutyThreadIntelSet:
+    Type: "AWS::GuardDuty::ThreatIntelSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "ALIENVAULT" # Invalid AllowedValue
+      Location: "http://localhost"
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:
@@ -641,7 +678,7 @@ Resources:
       DnsConfig:
         DnsRecords:
           - Type: "CNAME" # Invalid AllowedValue
-            TTL: "60"
+            TTL: 60
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:
@@ -658,6 +695,28 @@ Resources:
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "Default" # Invalid AllowedValue
+  VpcEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcId: !Ref "Vpc"
+      ServiceName: "com.amazonaws.vpce.us-east-1.vpce-svc-03d5ebb7d9579a2b3"
+      VpcEndpointType: "InternetGateway" # Invalid AllowedValue
+  VpcEndpointConnectionNotification:
+    Type: "AWS::EC2::VPCEndpointConnectionNotification"
+    Properties:
+      ConnectionEvents:
+        - "Accept." # Invalid Allowed alue
+      ConnectionNotificationArn: "TopicArn"
+  VPNConnection:
+    Type: "AWS::EC2::VPNConnection"
+    Properties:
+      CustomerGatewayId: "1"
+      Type: "ipsec.2" # Invalid AllowedValue
+      VpnGatewayId: !Ref VPNGateway
+  VPNGateway:
+    Type: "AWS::EC2::VPNGateway"
+    Properties:
+      Type: "ipsec1" # Invalid AllowedValue
   WAFRule:
     Type: "AWS::WAFRegional::Rule"
     Properties:
