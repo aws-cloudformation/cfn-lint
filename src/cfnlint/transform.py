@@ -78,8 +78,10 @@ class Transform(object):
                     resource_dict['Location'] = ''
                     Transform._update_to_s3_uri('Location', resource_dict)
             if resource_type == 'AWS::Serverless::Api':
-                if 'DefinitionBody' not in resource_dict:
+                if 'DefinitionBody' not in resource_dict and 'Auth' not in resource_dict:
                     Transform._update_to_s3_uri('DefinitionUri', resource_dict)
+                else:
+                    resource_dict['DefinitionBody'] = ''
 
     def transform_template(self):
         """

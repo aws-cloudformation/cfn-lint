@@ -15334,7 +15334,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcEndpointType"
+          }
         },
         "VpcId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcid",
@@ -15446,7 +15449,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection.html#cfn-ec2-vpnconnection-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpnType"
+          }
         },
         "VpnGatewayId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection.html#cfn-ec2-vpnconnection-vpngatewayid",
@@ -15502,7 +15508,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gateway.html#cfn-ec2-vpngateway-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpnType"
+          }
         }
       }
     },
@@ -17632,7 +17641,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-path",
@@ -17676,7 +17688,10 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfileRole"
+          }
         }
       }
     },
@@ -17789,7 +17804,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-assumerolepolicydocument",
           "PrimitiveType": "Json",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamAssumeRoleDocument"
+          }
         },
         "ManagedPolicyArns": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-managepolicyarns",
@@ -17797,7 +17815,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "MaxSessionDuration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-maxsessionduration",
@@ -17847,7 +17868,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamGroup"
+          }
         },
         "LoginProfile": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-loginprofile",
@@ -17861,7 +17885,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-path",
@@ -22394,11 +22421,71 @@
         "SCHEDULED"
       ]
     },
+    "GuardDutyDetectorFrequency": {
+      "AllowedValues": [
+        "FIFTEEN_MINUTES",
+        "ONE_HOUR",
+        "SIX_HOURS"
+      ]
+    },
+    "GuardDutyFilterAction": {
+      "AllowedValues": [
+        "ARCHIVE",
+        "NOOP"
+      ]
+    },
+    "GuardDutyIPSetFormat": {
+      "AllowedValues": [
+        "OTX_CSV",
+        "STIX",
+        "TXT"
+      ]
+    },
+    "GuardDutyMemberStatus": {
+      "AllowedValues": [
+        "Created",
+        "Disabled",
+        "Enabled",
+        "Invited",
+        "Removed",
+        "Resigned"
+      ]
+    },
+    "GuardDutyThreadIntelSetFormat": {
+      "AllowedValues": [
+        "ALIEN_VAULT",
+        "FIRE_EYE",
+        "OTX_CSV",
+        "PROOF_POINT",
+        "STIX",
+        "TXT"
+      ]
+    },
     "HttpProtocol": {
       "AllowedValues": [
         "http",
         "https"
       ]
+    },
+    "IamAssumeRoleDocument": {
+      "JsonMax": 2048,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "IamGroup": {
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Group"
+        ]
+      }
     },
     "IamInstanceProfile": {
       "GetAtt": {},
@@ -22421,6 +22508,33 @@
         ],
         "Resources": [
           "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "IamInstanceProfileRole": {
+      "GetAtt": {},
+      "ListMax": 1,
+      "ListMin": 1,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "IamManagedPolicy.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+      "GetAtt": {},
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::ManagedPolicy"
         ]
       }
     },
@@ -22593,6 +22707,12 @@
           "String"
         ]
       }
+    },
+    "PerformanceInsightsRetentionPeriod": {
+      "AllowedValues": [
+        7,
+        731
+      ]
     },
     "PlacementGroup": {
       "GetAtt": {},
@@ -23030,6 +23150,20 @@
         ]
       }
     },
+    "VpcEndpointConnectionEvents": {
+      "AllowedValues": [
+        "Accept",
+        "Connect",
+        "Delete",
+        "Reject"
+      ]
+    },
+    "VpcEndpointType": {
+      "AllowedValues": [
+        "Gateway",
+        "Interface"
+      ]
+    },
     "VpcId": {
       "GetAtt": {
         "AWS::EC2::SecurityGroup": "VpcId",
@@ -23043,6 +23177,11 @@
           "AWS::EC2::VPC"
         ]
       }
+    },
+    "VpnType": {
+      "AllowedValues": [
+        "ipsec.1"
+      ]
     },
     "WorkspacePropertyComputeType": {
       "AllowedValues": [

@@ -722,3 +722,203 @@ class TestTemplate(BaseTestCase):
             else:
                 # Blanket assertion error
                 self.assertDictEqual(result['Scenario'], {})
+
+    def test_get_object_without_nested_conditions_iam(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Conditions': {
+                'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'prod']},
+                'isDevelopment': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'dev']}
+            },
+            'Resources': {
+                'Role': {
+                    'Type': 'AWS::IAM::Role',
+                    'Properties': {
+                        'AssumeRolePolicyDocument': {
+                            'Version': '2012-10-17',
+                            'Statement': [
+                                {
+                                    'Sid': '',
+                                    'Action': 'sts:AssumeRole',
+                                    'Effect': 'Allow',
+                                    'Principal': {
+                                        'AWS': {
+                                            'Fn::If': [
+                                                'isProduction',
+                                                '123456789012',
+                                                '210987654321'
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        'ManagedPolicyArns': [
+                            'arn:aws:iam::aws:policy/AdministratorAccess'
+                        ],
+                        'Path': '/'
+                    }
+                }
+            }
+        }
+
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_nested_conditions(
+            template.template.get('Resources', {}).get('Role', {}).get('Properties', {}).get('AssumeRolePolicyDocument', {}),
+            ['Resources', 'Role', 'Properties', 'AssumeRolePolicyDocument']
+        )
+
+        self.assertEqual(len(results), 2)
+        for result in results:
+            if not result['Scenario']['isProduction']:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'Version': '2012-10-17',
+                        'Statement': [
+                            {
+                                'Sid': '',
+                                'Action': 'sts:AssumeRole',
+                                'Effect': 'Allow',
+                                'Principal': {
+                                    'AWS': '210987654321'
+                                }
+                            }
+                        ]
+                    }
+                )
+            if result['Scenario']['isProduction']:
+                self.assertDictEqual(
+                    result['Object'],
+                    {
+                        'Version': '2012-10-17',
+                        'Statement': [
+                            {
+                                'Sid': '',
+                                'Action': 'sts:AssumeRole',
+                                'Effect': 'Allow',
+                                'Principal': {
+                                    'AWS': '123456789012'
+                                }
+                            }
+                        ]
+                    }
+                )
+
+    def test_get_object_without_nested_conditions_basic(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Resources': {
+                'Test': 'Test'
+            }
+        }
+
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_nested_conditions(
+            template.template.get('Resources', {}).get('Test', {}),
+            ['Resources', 'Test']
+        )
+        self.assertEqual(results, [])
+
+    def test_get_object_without_nested_conditions_ref(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Resources': {
+                'Test': {
+                    'Ref': 'AWS::NoValue'
+                }
+            }
+        }
+
+        template = Template('test.yaml', template)
+
+        results = template.get_object_without_nested_conditions(
+            template.template.get('Resources', {}).get('Test', {}),
+            ['Resources', 'Test']
+        )
+        self.assertEqual(results, [])
+        results = template.get_object_without_nested_conditions(
+            template.template.get('Resources', {}),
+            ['Resources']
+        )
+        self.assertEqual(results, [{'Object': {'Test': {'Ref': 'AWS::NoValue'}}, 'Scenario': None}])
+
+    def test_get_condition_scenarios_below_path(self):
+        """ Test Getting condition names in an object/list """
+        template = {
+            'Parameters': {
+                'Environment': {
+                    'Type': 'String'
+                }
+            },
+            'Conditions': {
+                'isPrimaryRegion': {'Fn::Equals': [{'Ref': 'AWS::Region'}, 'us-east-1']},
+                'isProduction': {'Fn::Equals': [{'Ref': 'Environment'}, 'prod']},
+            },
+            'Resources': {
+                'Role': {
+                    'Type': 'AWS::IAM::Role',
+                    'Properties': {
+                        'AssumeRolePolicyDocument': {
+                            'Version': '2012-10-17',
+                            'Statement': [
+                                {
+                                    'Sid': '',
+                                    'Action': 'sts:AssumeRole',
+                                    'Effect': 'Allow',
+                                    'Principal': {
+                                        'AWS': {
+                                            'Fn::If': [
+                                                'isProduction',
+                                                {
+                                                    'Fn::Sub': [
+                                                        '{account}',
+                                                        {
+                                                            'account': {
+                                                                'Fn::If': [
+                                                                    'isPrimaryRegion',
+                                                                    '123456789012',
+                                                                    'ABCDEFGHIJKL'
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                '210987654321'
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        'ManagedPolicyArns': [
+                            'arn:aws:iam::aws:policy/AdministratorAccess'
+                        ],
+                        'Path': '/'
+                    }
+                }
+            }
+        }
+
+        template = Template('test.yaml', template)
+        results = template.get_condition_scenarios_below_path(
+            ['Resources', 'Role', 'Properties', 'AssumeRolePolicyDocument']
+        )
+        self.assertEqualListOfDicts(
+            results,
+            [{'isProduction': True}, {'isProduction': False}]
+        )
+        results = template.get_condition_scenarios_below_path(
+            ['Resources', 'Role', 'Properties', 'AssumeRolePolicyDocument'], True
+        )
+        self.assertEqualListOfDicts(
+            results,
+            [
+                {'isPrimaryRegion': False, 'isProduction': False},
+                {'isPrimaryRegion': False, 'isProduction': True},
+                {'isPrimaryRegion': True, 'isProduction': False},
+                {'isPrimaryRegion': True, 'isProduction': True},
+            ]
+        )

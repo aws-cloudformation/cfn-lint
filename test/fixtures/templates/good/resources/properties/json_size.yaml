@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Test bad ManagedPolicyArns setup
+Parameters:
+  UserName:
+    Type: String
+Conditions:
+  cPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+  IsLimitAdminUse: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AdministratorAccess
+      - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AutoScalingConsoleReadOnlyAccess
+      - arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess
+      - arn:aws:iam::aws:policy/AWSCodeBuildReadOnlyAccess
+      - !If [cPrimaryRegion, 'arn:aws:iam::aws:policy/IAMReadOnlyAccess', !Ref 'AWS::NoValue']
+  IamGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns:
+        Fn::If:
+        - cPrimaryRegion
+        - - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        - - arn:aws:iam::aws:policy/AdministratorAccess
+  AdminRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: 'true'
+            Effect: Allow
+            Principal:
+              AWS: !If
+                - IsLimitAdminUse
+                # Too many characters but filtered down to ok because the Subs are replaces
+                - - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                - !Sub
+                  - arn:aws:iam::${Account}:root
+                  - Account: !Ref AWS::AccountId
+            Sid: ''
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Path: /
