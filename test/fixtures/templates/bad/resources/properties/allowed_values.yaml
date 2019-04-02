@@ -249,6 +249,7 @@ Resources:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
       ComparisonOperator: "GreaterThan" # Invalid AllowedValue
+      MetricName: "my-metric"
       EvaluationPeriods: 1
       Statistic: "Total" # Invalid AllowedValue
       Threshold: 0.0
@@ -465,6 +466,7 @@ Resources:
   DLMPolicy:
     Type: "AWS::DLM::LifecyclePolicy"
     Properties:
+      ExecutionRoleArn: ""
       PolicyDetails:
         ResourceTypes:
           - "VOLUMES" # Invalid AllowedValue
@@ -676,7 +678,7 @@ Resources:
       DnsConfig:
         DnsRecords:
           - Type: "CNAME" # Invalid AllowedValue
-            TTL: "60"
+            TTL: 60
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:
