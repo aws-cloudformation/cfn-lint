@@ -250,6 +250,7 @@ Resources:
     Properties:
       ComparisonOperator: "GreaterThanOrEqualToThreshold" # Valid AllowedValue
       EvaluationPeriods: 1
+      MetricName: "my-metric"
       Statistic: "SampleCount" # Valid AllowedValue
       Threshold: 0.0
       TreatMissingData: "notBreaching" # Valid AllowedValue
@@ -473,6 +474,7 @@ Resources:
   DLMPolicy:
     Type: "AWS::DLM::LifecyclePolicy"
     Properties:
+      ExecutionRoleArn: ""
       PolicyDetails:
         ResourceTypes:
           - "VOLUME" # Valid AllowedValue
@@ -558,6 +560,41 @@ Resources:
         Conditions:
           - LogicalOperator: "EQUALS" # Valid AllowedValue
             State: "SUCCEEDED" # Valid AllowedValue
+  GuardDutyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: True
+      FindingPublishingFrequency: "FIFTEEN_MINUTES" # Valid AllowedValue
+  GuardDutyFilter:
+    Type: "AWS::GuardDuty::Filter"
+    Properties:
+      Action: "NOOP" # Valid AllowedValue
+      Description: "A mandatory Description"
+      DetectorId: "-1"
+      FindingCriteria:
+        Criterion: {}
+      Rank: 1
+  GuardDutyIPSet:
+    Type: "AWS::GuardDuty::IPSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "STIX" # Valid AllowedValue
+      Location: "http://localhost"
+  GuardDutyMember:
+    Type: AWS::GuardDuty::Member
+    Properties:
+      Email: "info@example.com"
+      MemberId: !Ref "AWS::AccountId"
+      DetectorId: "-1"
+      Status: "Resigned" # Valid AllowedValue
+  GuardDutyThreadIntelSet:
+    Type: "AWS::GuardDuty::ThreatIntelSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "ALIEN_VAULT" # Valid AllowedValue
+      Location: "http://localhost"
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:
@@ -648,7 +685,7 @@ Resources:
       DnsConfig:
         DnsRecords:
           - Type: "A" # Valid AllowedValue
-            TTL: "60"
+            TTL: 60
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:

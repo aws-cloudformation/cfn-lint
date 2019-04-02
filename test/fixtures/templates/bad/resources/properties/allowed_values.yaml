@@ -249,6 +249,7 @@ Resources:
     Type: "AWS::CloudWatch::Alarm"
     Properties:
       ComparisonOperator: "GreaterThan" # Invalid AllowedValue
+      MetricName: "my-metric"
       EvaluationPeriods: 1
       Statistic: "Total" # Invalid AllowedValue
       Threshold: 0.0
@@ -465,6 +466,7 @@ Resources:
   DLMPolicy:
     Type: "AWS::DLM::LifecyclePolicy"
     Properties:
+      ExecutionRoleArn: ""
       PolicyDetails:
         ResourceTypes:
           - "VOLUMES" # Invalid AllowedValue
@@ -550,6 +552,41 @@ Resources:
         Conditions:
           - LogicalOperator: "GREATER_THAN" # Invalid AllowedValue
             State: "SUCEEDED" # Invalid AllowedValue
+  GuardDutyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: True
+      FindingPublishingFrequency: "HOURLY" # Invalid AllowedValue
+  GuardDutyFilter:
+    Type: "AWS::GuardDuty::Filter"
+    Properties:
+      Action: "Noop" # Invalid AllowedValue
+      Description: "A mandatory Description"
+      DetectorId: "-1"
+      FindingCriteria:
+        Criterion: {}
+      Rank: 1
+  GuardDutyIPSet:
+    Type: "AWS::GuardDuty::IPSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "stix" # Invalid AllowedValue
+      Location: "http://localhost"
+  GuardDutyMember:
+    Type: AWS::GuardDuty::Member
+    Properties:
+      Email: "info@example.com"
+      MemberId: !Ref "AWS::AccountId"
+      DetectorId: "-1"
+      Status: "Active" # Invalid AllowedValue
+  GuardDutyThreadIntelSet:
+    Type: "AWS::GuardDuty::ThreatIntelSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "ALIENVAULT" # Invalid AllowedValue
+      Location: "http://localhost"
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:
@@ -641,7 +678,7 @@ Resources:
       DnsConfig:
         DnsRecords:
           - Type: "CNAME" # Invalid AllowedValue
-            TTL: "60"
+            TTL: 60
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:
