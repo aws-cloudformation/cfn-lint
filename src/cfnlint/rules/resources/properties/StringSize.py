@@ -60,19 +60,18 @@ class StringSize(CloudFormationLintRule):
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in specs:
-                    value = specs.get(prop).get('Value', {})
-                    if value:
-                        value_type = value.get('ValueType', '')
+                    value_type = specs.get(prop).get('Value', {}).get('ValueType', '')
+                    if value_type:
                         property_type = specs.get(prop).get('PrimitiveType')
-                        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
-                        if specs.get('StringMax') and specs.get('StringMin'):
-                            if value_type and property_type == 'String':
+                        value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
+                        if value_specs.get('StringMax') and value_specs.get('StringMin'):
+                            if property_type == 'String':
                                 matches.extend(
                                     cfn.check_value(
                                         properties, prop, p_path,
                                         check_value=self._check_string_length,
-                                        string_max=specs.get('StringMax'),
-                                        string_min=specs.get('StringMin')
+                                        string_max=value_specs.get('StringMax'),
+                                        string_min=value_specs.get('StringMin')
                                     )
                                 )
         return matches
