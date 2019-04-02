@@ -695,6 +695,16 @@ Resources:
     Properties:
       CidrBlock: "10.0.0.0/8"
       InstanceTenancy: "Default" # Invalid AllowedValue
+  VPNConnection:
+    Type: "AWS::EC2::VPNConnection"
+    Properties:
+      CustomerGatewayId: "1"
+      Type: "ipsec.2" # Invalid AllowedValue
+      VpnGatewayId: !Ref VPNGateway
+  VPNGateway:
+    Type: "AWS::EC2::VPNGateway"
+    Properties:
+      Type: "ipsec1" # Invalid AllowedValue
   WAFRule:
     Type: "AWS::WAFRegional::Rule"
     Properties:
