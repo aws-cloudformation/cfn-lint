@@ -1516,7 +1516,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "InstanceTypes": {
@@ -5181,7 +5181,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html#cfn-ec2-blockdev-template-iops",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsIops"
+          }
         },
         "SnapshotId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html#cfn-ec2-blockdev-template-snapshotid",
@@ -5588,7 +5591,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         }
       }
@@ -16086,7 +16089,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -18604,7 +18607,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -20371,7 +20374,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "KerberosAttributes": {
@@ -22269,7 +22272,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "Policies": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-policies",
@@ -22299,7 +22305,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "Roles": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles",
@@ -22341,7 +22350,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html#cfn-ec2-dhcpoptions-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PolicyDocument": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html#cfn-iam-managedpolicy-policydocument",
@@ -22449,7 +22461,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PermissionsBoundary": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-permissionsboundary",
@@ -22536,7 +22551,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PermissionsBoundary": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-permissionsboundary",
@@ -27313,6 +27331,11 @@
         "updateReference"
       ]
     },
+    "CodeCommitRepositoryName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9._-]+(?<!\\.git)$",
+      "StringMax": 100,
+      "StringMin": 1
+    },
     "CodeDeployApplicationPlatform": {
       "AllowedValues": [
         "ECS",
@@ -27905,6 +27928,10 @@
         "ASGAverageNetworkOut"
       ]
     },
+    "EbsIops": {
+      "NumberMax": 20000,
+      "NumberMin": 100
+    },
     "EbsVolumeType": {
       "AllowedValues": [
         "gp2",
@@ -28122,6 +28149,7 @@
       }
     },
     "IamInstanceProfile": {
+      "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
       "GetAtt": {},
       "Ref": {
         "Parameters": [
@@ -28139,9 +28167,6 @@
       "Ref": {
         "Parameters": [
           "String"
-        ],
-        "Resources": [
-          "AWS::IAM::InstanceProfile"
         ]
       }
     },
@@ -28169,6 +28194,14 @@
         ],
         "Resources": [
           "AWS::IAM::ManagedPolicy"
+        ]
+      }
+    },
+    "IamPath": {
+      "AllowedPatternRegex": "^/([a-zA-Z0-9]+/)*$",
+      "Ref": {
+        "Parameters": [
+          "String"
         ]
       }
     },
@@ -28676,7 +28709,9 @@
       }
     },
     "SecurityGroupDescription": {
-      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$"
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
     },
     "SecurityGroupId": {
       "GetAtt": {
