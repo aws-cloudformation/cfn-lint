@@ -38,6 +38,7 @@ class Transform(object):
         self._filename = filename
         self._template = template
         self._region = region
+        self._parameters = {}
 
         self._managed_policy_map = self.load_managed_policies()
         self._sam_parser = parser.Parser()
@@ -70,6 +71,13 @@ class Transform(object):
             if resource_type == 'AWS::Serverless::Function':
 
                 Transform._update_to_s3_uri('CodeUri', resource_dict)
+                auto_publish_alias = resource_dict.get('AutoPublishAlias')
+                if isinstance(auto_publish_alias, dict):
+                    if len(auto_publish_alias) == 1:
+                        for k, v in auto_publish_alias.items():
+                            if k == 'Ref':
+                                if v in self._template.get('Parameters'):
+                                    self._parameters[v] = 'Alias'
             if resource_type in ['AWS::Serverless::LayerVersion']:
                 if resource_dict.get('ContentUri'):
                     Transform._update_to_s3_uri('ContentUri', resource_dict)
@@ -104,7 +112,10 @@ class Transform(object):
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
             self._template = cfnlint.helpers.convert_dict(
-                sam_translator.translate(sam_template=self._template, parameter_values={}))
+                sam_translator.translate(sam_template=self._template, parameter_values=self._parameters))
+
+            for p_name in self._parameters:
+                del self._template['Parameters'][p_name]
 
             LOGGER.info('Transformed template: \n%s', cfnlint.helpers.format_json_string(self._template))
         except InvalidDocumentException as e:
