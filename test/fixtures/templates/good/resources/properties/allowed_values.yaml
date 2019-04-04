@@ -17,6 +17,10 @@ Parameters:
       - "standard"
   ImageId:
     Type: "AWS::EC2::Image::Id"
+  SsmInstanceType:
+    Default: /Demo/DemoInstanceType # Recommend t3.nano
+    Description: EC2 instance type to use to create the collector host
+    Type: AWS::SSM::Parameter::Value<String>
 Resources:
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
@@ -525,6 +529,11 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "gp2" # Valid AllowedValue
+  EC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: !Ref SsmInstanceType
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
