@@ -44,6 +44,24 @@ HTTPS has certificate HTTP has no certificate'
 
         return matches
 
+    def check_alb_subnets(self, props, path):
+        """ Validate at least two subnets with ALBs"""
+        matches = []
+        elb_type = props.get('Type')
+        if elb_type == 'application':
+            subnets = props.get('Subnets')
+            if isinstance(subnets, list):
+                if len(subnets) < 2:
+                    path = path + ['Subnets']
+                    matches.append(RuleMatch(path, 'You must specify at least two Subnets for load balancers with type "application"'))
+            subnet_mappings = props.get('SubnetMappings')
+            if isinstance(subnet_mappings, list):
+                if len(subnet_mappings) < 2:
+                    path = path + ['SubnetMappings']
+                    matches.append(RuleMatch(path, 'You must specify at least two SubnetMappings for load balancers with type "application"'))
+
+        return matches
+
     def match(self, cfn):
         """Check ELB Resource Parameters"""
 
@@ -74,9 +92,12 @@ HTTPS has certificate HTTP has no certificate'
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::LoadBalancer'])
         for result in results:
             properties = result['Value']
-            if 'Type' in properties and properties['Type'] == 'network':
+            elb_type = properties.get('Type')
+            if elb_type == 'network':
                 if 'SecurityGroups' in properties:
                     path = result['Path'] + ['SecurityGroups']
                     matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
+
+            matches.extend(self.check_alb_subnets(properties, result['Path']))
 
         return matches
