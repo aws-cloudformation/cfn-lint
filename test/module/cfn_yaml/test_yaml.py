@@ -39,7 +39,7 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": 'test/fixtures/templates/bad/generic.yaml',
-                "failures": 34
+                "failures": 35
             }
         }
 
@@ -69,4 +69,4 @@ class TestYamlParse(BaseTestCase):
 
                 matches = []
                 matches.extend(self.rules.run(filename, cfn))
-                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), values.get('filename'))

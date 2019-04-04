@@ -44,24 +44,6 @@ class Ebs(CloudFormationLintRule):
                                 message = 'VolumeType io1 requires Iops to be specified for {0}'
                                 matches.append(
                                     RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                            else:
-                                try:
-                                    if len(iops_obj) == 1:
-                                        iops = iops_obj[0]['Value']
-                                        if isinstance(iops, (six.string_types, int)) and not iops_obj[0]['Path']:
-                                            iops_value = int(iops)
-                                            if iops_value < 100 or iops_value > 20000:
-                                                pathmessage = path[:] + ['Iops']
-                                                message = 'Property Iops should be Int between 100 to 20000 {0}'
-                                                matches.append(
-                                                    RuleMatch(
-                                                        pathmessage,
-                                                        message.format('/'.join(map(str, pathmessage)))))
-                                except ValueError:
-                                    pathmessage = path[:] + ['Iops']
-                                    message = 'Property Iops should be Int between 100 to 20000 {0}'
-                                    matches.append(
-                                        RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                         elif volume_type:
                             if iops_obj is not None:
                                 pathmessage = path[:] + ['Iops']
