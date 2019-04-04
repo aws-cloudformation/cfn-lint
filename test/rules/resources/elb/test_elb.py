@@ -35,3 +35,66 @@ class TestPropertyElb(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/properties_elb.yaml', 6)
+
+    def test_alb_subnets(self):
+        """ Test ALB Subnet Logic"""
+        rule = Elb()
+
+        # Failure when 1 subnet defined
+        props = {
+            "Type": "application",
+            "Subnets": [
+                "subnet-123456"
+            ]
+        }
+
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        self.assertEqual(len(matches), 1)
+
+        # No Failure when 2 subnets defined
+        props = {
+            "Type": "application",
+            "Subnets": [
+                "subnet-123456",
+                "subnet-abcdef"
+            ]
+        }
+
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        self.assertEqual(len(matches), 0)
+
+        # Failure when 1 SubnetMapping defined
+        props = {
+            "Type": "application",
+            "SubnetMappings": [
+                {
+                    "SubnetId": "subnet-123456"
+                }
+            ]
+        }
+
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        self.assertEqual(len(matches), 1)
+
+        # No Failure when 2 SubnetMapping defined
+        props = {
+            "Type": "application",
+            "SubnetMappings": [
+                {"SubnetId": "subnet-123456"},
+                {"SubnetId": "subnet-abcdef"}
+            ]
+        }
+
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        self.assertEqual(len(matches), 0)
+
+        # No Failure when 1 Subnet and NLB
+        props = {
+            "Type": "network",
+            "Subnets": [
+                "subnet-123456"
+            ]
+        }
+
+        matches = rule.check_alb_subnets(props, ['Resources', 'NLB', 'Properties'])
+        self.assertEqual(len(matches), 0)
