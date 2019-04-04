@@ -2775,7 +2775,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "InstanceTypes": {
@@ -7344,7 +7344,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         }
       }
@@ -21385,7 +21385,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -24655,7 +24655,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -26631,7 +26631,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "KerberosAttributes": {
@@ -35302,6 +35302,11 @@
         "updateReference"
       ]
     },
+    "CodeCommitRepositoryName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9._-]+(?<!\\.git)$",
+      "StringMax": 100,
+      "StringMin": 1
+    },
     "CodeDeployApplicationPlatform": {
       "AllowedValues": [
         "ECS",
@@ -36173,6 +36178,7 @@
       }
     },
     "IamInstanceProfile": {
+      "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
       "GetAtt": {},
       "Ref": {
         "Parameters": [
@@ -36190,9 +36196,6 @@
       "Ref": {
         "Parameters": [
           "String"
-        ],
-        "Resources": [
-          "AWS::IAM::InstanceProfile"
         ]
       }
     },
@@ -36737,7 +36740,9 @@
       }
     },
     "SecurityGroupDescription": {
-      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$"
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
     },
     "SecurityGroupId": {
       "GetAtt": {

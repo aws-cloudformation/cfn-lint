@@ -474,6 +474,11 @@
           "updateReference"
         ]
       },
+      "CodeCommitRepositoryName": {
+        "AllowedPatternRegex": "^[a-zA-Z0-9._-]+(?<!\\.git)$",
+        "StringMax": 100,
+        "StringMin": 1
+      },
       "CodeDeployApplicationPlatform": {
         "AllowedValues": [
           "ECS",
@@ -1038,13 +1043,6 @@
           "VIRTUAL_VIEW"
         ]
       },
-      "GlueTriggerType": {
-        "AllowedValues": [
-          "CONDITIONAL",
-          "ON_DEMAND",
-          "SCHEDULED"
-        ]
-      },
       "GlueTriggerPredicateLogical": {
         "AllowedValues": [
           "AND"
@@ -1058,6 +1056,13 @@
       "GlueTriggerPredicateState": {
         "AllowedValues": [
           "SUCCEEDED"
+        ]
+      },
+      "GlueTriggerType": {
+        "AllowedValues": [
+          "CONDITIONAL",
+          "ON_DEMAND",
+          "SCHEDULED"
         ]
       },
       "GuardDutyDetectorFrequency": {
@@ -1126,20 +1131,6 @@
           ]
         }
       },
-      "IamInstanceProfileRole": {
-        "GetAtt": {
-        },
-        "Ref": {
-          "Parameters": [
-            "String"
-          ],
-          "Resources": [
-            "AWS::IAM::Role"
-          ]
-        },
-        "ListMax": 1,
-        "ListMin": 1
-      },
       "IamInstanceProfile": {
         "GetAtt": {
         },
@@ -1162,6 +1153,21 @@
           ],
           "Resources": [
             "AWS::IAM::InstanceProfile"
+          ]
+        },
+        "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+"
+      },
+      "IamInstanceProfileRole": {
+        "GetAtt": {
+        },
+        "ListMax": 1,
+        "ListMin": 1,
+        "Ref": {
+          "Parameters": [
+            "String"
+          ],
+          "Resources": [
+            "AWS::IAM::Role"
           ]
         }
       },
@@ -1639,7 +1645,9 @@
         }
       },
       "SecurityGroupDescription": {
-        "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$"
+        "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+        "StringMin": "",
+        "StringMax": "255"
       },
       "SecurityGroupId": {
         "GetAtt": {
@@ -1783,20 +1791,6 @@
           ]
         }
       },
-      "VpcId": {
-        "GetAtt": {
-          "AWS::EC2::SecurityGroup": "VpcId",
-          "AWS::EC2::Subnet": "VpcId"
-        },
-        "Ref": {
-          "Parameters": [
-            "VpcId"
-          ],
-          "Resources": [
-            "AWS::EC2::VPC"
-          ]
-        }
-      },
       "VpcEndpointConnectionEvents": {
         "AllowedValues": [
           "Accept",
@@ -1810,6 +1804,20 @@
           "Gateway",
           "Interface"
         ]
+      },
+      "VpcId": {
+        "GetAtt": {
+          "AWS::EC2::SecurityGroup": "VpcId",
+          "AWS::EC2::Subnet": "VpcId"
+        },
+        "Ref": {
+          "Parameters": [
+            "VpcId"
+          ],
+          "Resources": [
+            "AWS::EC2::VPC"
+          ]
+        }
       },
       "VpnType": {
         "AllowedValues": [
