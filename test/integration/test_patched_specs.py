@@ -113,10 +113,13 @@ class TestPatchedSpecs(BaseTestCase):
         """Test Property Value Types"""
         for v_name, v_values in self.spec.get('ValueTypes').items():
             list_count = 0
+            string_count = 0
             for p_name, p_values in v_values.items():
-                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'ListMin', 'ListMax', 'JsonMax'])
+                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'ListMin', 'ListMax', 'JsonMax', 'StringMax', 'StringMin'])
                 if p_name in ['ListMin', 'ListMax']:
                     list_count += 1
+                if p_name in ['ListMin', 'ListMax']:
+                    string_count += 1
                 if p_name == 'Ref':
                     self.assertIsInstance(p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for r_name, r_value in p_values.items():
@@ -142,6 +145,7 @@ class TestPatchedSpecs(BaseTestCase):
                     for l_value in p_values:
                         self.assertIsInstance(l_value, (six.string_types, six.integer_types), 'ValueTypes: %s, Type: %s' % (v_name, p_name))
             self.assertIn(list_count, [0, 2], 'Both ListMin and ListMax must be specified')
+            self.assertIn(string_count, [0, 2], 'Both StringMin and StringMax must be specified')
 
     def test_parameter_types(self):
         """Test Parameter Types"""
