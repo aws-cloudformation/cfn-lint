@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **108** rules are applied by this linter:
+The following **110** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Source | Tags |
 | -------- | ----- | ----------- | ------ | ---- |
@@ -86,8 +86,6 @@ The following **108** rules are applied by this linter:
 | E2505<a name="E2505"></a> | Resource EC2 VPC Properties | Check if the default tenancy is default or dedicated and that CidrBlock is a valid CIDR range. | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html) | `properties`,`vpc` |
 | E2506<a name="E2506"></a> | Resource EC2 Security Group Ingress Properties | See if EC2 Security Group Ingress Properties are set correctly. Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are  are exclusive and using the type of Ref or GetAtt  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html) | `resources`,`securitygroup` |
 | E2507<a name="E2507"></a> | Check if IAM Policies are properly configured | See if there elements inside an IAM policy are correct | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-policy.html) | `properties`,`iam` |
-| E2508<a name="E2508"></a> | Check IAM resource limits | See if IAM resources do not breach limits | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`iam` |
-| E2509<a name="E2509"></a> | Validate SecurityGroup description length | Check if SecurityGroup descriptions are not longer that 255 characters | [Source](https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateSecurityGroup.html) | `resources`,`securitygroup` |
 | E2510<a name="E2510"></a> | Resource EC2 PropertiesEc2Subnet Properties | See if EC2 Subnet Properties are set correctly | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html) | `properties`,`subnet` |
 | E2520<a name="E2520"></a> | Check Properties that are mutually exclusive | Making sure CloudFormation properties that are exclusive are not defined | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `resources` |
 | E2521<a name="E2521"></a> | Check Properties that are required together | Make sure CloudFormation resource properties are included together when required | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `resources` |
@@ -118,8 +116,12 @@ The following **108** rules are applied by this linter:
 | E3026<a name="E3026"></a> | Check Elastic Cache Redis Cluster settings | Evaluate Redis Cluster groups to make sure automatic failover is enabled when cluster mode is enabled | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`elasticcache` |
 | E3030<a name="E3030"></a> | Check if properties have a valid value | Check if properties have a valid value in case of an enumator | [Source](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`allowed value` |
 | E3031<a name="E3031"></a> | Check if property values adhere to a specific pattern | Check if properties have a valid value in case of a pattern (Regular Expression) | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`allowed pattern`,`regex` |
+| E3032<a name="E3032"></a> | Check if a list has between min and max number of values specified | Check lists for the number of items in the list to validate they are between the minimum and maximum | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`list`,`size` |
+| E3033<a name="E3033"></a> | Check if a string has between min and max number of values specified | Check strings for its length between the minimum and maximum | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`string`,`size` |
+| E3034<a name="E3034"></a> | Check if a number is between min and max | Check numbers for its value being between the minimum and maximum | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`number`,`size` |
 | E3035<a name="E3035"></a> | Check DeletionPolicy values for Resources | Check that the DeletionPolicy values are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`deletionpolicy` |
 | E3036<a name="E3036"></a> | Check UpdateReplacePolicy values for Resources | Check that the UpdateReplacePolicy values are valid | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html) | `resources`,`updatereplacepolicy` |
+| E3502<a name="E3502"></a> | Check if a JSON Object is within size limits | Validate properties that are JSON values so that their length is within the limits | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`limits`,`json` |
 | E4001<a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
 | E6001<a name="E6001"></a> | Outputs have appropriate properties | Making sure the outputs are properly configured | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |
 | E6002<a name="E6002"></a> | Outputs have required properties | Making sure the outputs have required properties | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) | `outputs` |

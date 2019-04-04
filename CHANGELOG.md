@@ -1,3 +1,33 @@
+### 0.18.0
+###### Features
+- New rule [E3032](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3032) to check the size of lists
+- New rule [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502) to check JSON Object Size using definitions in the spec file
+- New rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3033) to test the minimum and maximum length of a string
+- New rule [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3034) to validate the min and max of a number
+- Remove Ebs Iops check from [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) and use rule [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3034) instead
+- Remove rule [E2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2509) and use rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3033) instead
+- Remove rule [E2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2508) as it replaced by [E3032](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3032) and [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502)
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to check that there are at least two 2 Subnets or SubnetMappings for ALBs
+- SAM requirement upped to minimal version of 1.10.0
+###### CloudFormation Specifications
+- Extend specs to include:
+  - `ListMin` and `ListMax` for the minimum and maximum size of a list
+  - `JsonMax` to check the max size of a JSON Object
+  - `StringMin` and `StringMax` to check the minimum and maximum length of a String
+  - `NumberMin` and `NumberMax` to check the minimum and maximum value of a Number, Float, Long
+- Update State and ExecutionRoleArn to be required on AWS::DLM::LifecyclePolicy
+- Add AllowedValues for PerformanceInsightsRetentionPeriod for AWS::RDS::Instance
+- Add AllowedValues for the AWS::GuardDuty Resources
+- Add AllowedValues for AWS::EC2 VPC and VPN Resources
+- Switch IAM Instance Profiles for certain resources to the type that only takes the name
+- Add regex pattern for IAM Instance Profile when a name (not Arn) is used
+- Add regex pattern for IAM Paths
+- Add Regex pattern for IAM Role Arn
+- Update OnlyOne spec to require require at least one of Subnets or SubnetMappings with ELB v2
+###### Fixes
+- Fix serverless transform to use DefinitionBody when Auth is in the API definition
+- Fix rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030) to not error when checking SSM or List Parameters
+
 ### 0.17.1
 ###### Features
 - Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to make sure NLBs don't have a Security Group configured
