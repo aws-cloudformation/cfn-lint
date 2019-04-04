@@ -115,7 +115,7 @@ class TestPatchedSpecs(BaseTestCase):
             list_count = 0
             string_count = 0
             for p_name, p_values in v_values.items():
-                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'ListMin', 'ListMax', 'JsonMax', 'StringMax', 'StringMin'])
+                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'ListMin', 'ListMax', 'JsonMax', 'NumberMax', 'NumberMin', 'StringMax', 'StringMin'])
                 if p_name in ['ListMin', 'ListMax']:
                     list_count += 1
                 if p_name in ['ListMin', 'ListMax']:
