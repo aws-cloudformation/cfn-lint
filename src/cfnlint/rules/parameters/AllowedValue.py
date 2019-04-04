@@ -50,8 +50,8 @@ class AllowedValue(CloudFormationLintRule):
                 default_value = param.get('Default')
                 parameter_type = param.get('Type')
                 if isinstance(parameter_type, six.string_types):
-                    if (not parameter_type.startswith('List<') and
-                            not parameter_type.startwith('AWS::SSM::Parameter::Value<') and
+                    if ((not parameter_type.startswith('List<')) and
+                            (not parameter_type.startswith('AWS::SSM::Parameter::Value<')) and
                             parameter_type not in ['CommaDelimitedList']):
                         # Check Allowed Values
                         if parameter_values:
