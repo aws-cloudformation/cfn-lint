@@ -27,6 +27,9 @@ class TestAllowedPattern(BaseRuleTestCase):
         """Setup"""
         super(TestAllowedPattern, self).setUp()
         self.collection.register(AllowedPattern())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/allowed_pattern.yaml'
+        ]
 
         # Load the specfile to validate all the regexes specified
         filename = '../../../../src/cfnlint/data/CloudSpecs/us-east-1.json'
