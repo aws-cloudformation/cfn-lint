@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  TESTROLE:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: StatesExecutionRole
+      Path: /service-role/
+      Policies:
+      - PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: "Allow"
+            Action:
+            - lambda:InvokeFunction
+            Resource: '*'
+        PolicyName: "StatesExecutionPolicy"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: "Allow"
+          Principal:
+            Service: "states.amazonaws.com"
+          Action: "sts:AssumeRole"
