@@ -1,3 +1,13 @@
+### 0.18.1
+###### CloudFormation Specifications
+- Update CloudFormation Specs to 2.30.0
+- Fix IAM Regex Path to support more character types
+- Update AWS::Batch::ComputeEnvironment.ComputeResources InstanceRole to reference an
+InstanceProfile or GetAtt the InstanceProfile Arn
+- Allow VPC IDs to Ref a Parameter of type String
+###### Fixes
+- Fix [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502) to check the size of the property instead of the parent object
+
 ### 0.18.0
 ###### Features
 - New rule [E3032](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3032) to check the size of lists
