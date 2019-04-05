@@ -191,6 +191,34 @@ def get_rds_pricing():
         FormatVersion='aws_v1',
     )
 
+    product_map = {
+        '10': ['sqlserver-ex'],
+        '11': ['sqlserver-web'],
+        '12': ['sqlserver-se'],
+        '14': ['postgres'],
+        '15': ['sqlserver-ee'],
+        '16': ['aurora-mysql', 'aurora'],
+        '18': ['mariadb'],
+        '19': ['oracle-se2'],
+        '2': ['mysql'],
+        '20': ['oracle-se2'],
+        '21': ['aurora-postgresql'],
+        '3': ['oracle-se1'],
+        '4': ['oracle-se'],
+        '5': ['oracle-ee'],
+        '6': ['oracle-se1'],
+        '8': ['sqlserver-se'],
+        '9': ['sqlserver-ee'],
+    }
+
+    license_map = {
+        'License included': 'license-included',
+        'Bring your own license': 'bring-your-own-license',
+        'No license required': 'general-public-license'
+    }
+
+    rds_specs = {}
+
     results = {}
     for page in page_iterator:
         for price_item in page.get('PriceList', []):
@@ -198,11 +226,36 @@ def get_rds_pricing():
             product = products.get('product', {})
             if product:
                 if product.get('productFamily') == 'Database Instance':
+                    # Get overall instance types
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(
                         product.get('attributes').get('instanceType')
                     )
+                    # Rds Instance Size spec
+                    product_names = product_map.get(product.get('attributes').get('engineCode'), [])
+                    product_region = region_map.get(product.get('attributes').get('location'))
+                    license_name = license_map.get(product.get('attributes').get('licenseModel'))
+                    instance_type = product.get('attributes').get('instanceType')
+                    for product_name in product_names:
+                        if not rds_specs.get(license_name):
+                            rds_specs[license_name] = {}
+                        if not rds_specs.get(license_name).get(product_name):
+                            rds_specs[license_name][product_name] = {}
+                        if not rds_specs.get(license_name).get(product_name).get(product_region):
+                            rds_specs[license_name][product_name][product_region] = set()
+
+                        rds_specs[license_name][product_name][product_region].add(instance_type)
+
+    for license_name, license_values in rds_specs.items():
+        for product_name, product_values in license_values.items():
+            for product_region, instance_types in product_values.items():
+                rds_specs[license_name][product_name][product_region] = list(sorted(instance_types))
+
+    LOGGER.info('Updating RDS Spec files')
+    filename = 'src/cfnlint/data/AdditionalSpecs/RdsProperties.json'
+    with open(filename, 'w+') as f:
+        json.dump(rds_specs, f, indent=2, sort_keys=True, separators=(',', ': '))
     return results
 
 def get_neptune_pricing():
