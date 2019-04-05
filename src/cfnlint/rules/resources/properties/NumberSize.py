@@ -41,7 +41,7 @@ class NumberSize(CloudFormationLintRule):
         number_max = kwargs.get('number_max')
 
         if isinstance(value, six.integer_types):
-            if not number_min <= value <= number_max:
+            if not (number_min <= value <= number_max):
                 message = 'Value has to be between {0} and {1} at {2}'
                 matches.append(
                     RuleMatch(
