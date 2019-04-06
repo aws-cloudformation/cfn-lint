@@ -1144,6 +1144,16 @@
           ]
         }
       },
+      "IamInstanceProfile.Arn": {
+        "GetAtt": {
+          "AWS::IAM::InstanceProfile": "Arn"
+        },
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
+      },
       "IamInstanceProfile.NameOrArn": {
         "GetAtt": {
           "AWS::IAM::InstanceProfile": "Arn"
@@ -1154,16 +1164,6 @@
           ],
           "Resources": [
             "AWS::IAM::InstanceProfile"
-          ]
-        }
-      },
-      "IamInstanceProfile.Arn": {
-        "GetAtt": {
-          "AWS::IAM::InstanceProfile": "Arn"
-        },
-        "Ref": {
-          "Parameters": [
-            "String"
           ]
         }
       },
@@ -1196,13 +1196,21 @@
           ]
         }
       },
-      "IamPath": {
+      "IamManagedPolicyDocument": {
+        "JsonMax": 6144,
         "Ref": {
           "Parameters": [
             "String"
           ]
-        },
-        "AllowedPatternRegex": "^/(.+/)*$"
+        }
+      },
+      "IamPath": {
+        "AllowedPatternRegex": "^/(.+/)*$",
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        }
       },
       "IamRole": {
         "GetAtt": {
@@ -1217,7 +1225,7 @@
         }
       },
       "IamRole.Arn": {
-        "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_\/]+",
+        "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
         "GetAtt": {
           "AWS::IAM::Role": "Arn"
         },
@@ -1665,8 +1673,8 @@
       },
       "SecurityGroupDescription": {
         "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
-        "StringMin": "",
-        "StringMax": "255"
+        "StringMax": "255",
+        "StringMin": ""
       },
       "SecurityGroupId": {
         "GetAtt": {
