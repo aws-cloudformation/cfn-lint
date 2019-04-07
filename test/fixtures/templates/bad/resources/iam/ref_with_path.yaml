@@ -1,0 +1,81 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      ServiceRole: !Ref CodeBuildRole
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/ubuntu-base:14.04
+        EnvironmentVariables:
+          - Name: varName1
+            Value: varValue1
+          - Name: varName2
+            Value: varValue2
+            Type: PLAINTEXT
+          - Name: varName3
+            Value: /CodeBuild/testParameter
+            Type: PARAMETER_STORE
+      Source:
+        Type: CODEPIPELINE
+      TimeoutInMinutes: 10
+      VpcConfig:
+        VpcId: !Ref CodeBuildVPC
+        Subnets: [!Ref CodeBuildSubnet]
+        SecurityGroupIds: [!Ref CodeBuildSecurityGroup]
+      Cache:
+        Type: S3
+        Location: mybucket/prefix
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: ['sts:AssumeRole']
+          Effect: Allow
+          Principal:
+            Service: [codebuild.amazonaws.com]
+        Version: '2012-10-17'
+      Path: /test/
+      Policies:
+        - PolicyName: CodeBuildAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                - 'logs:*'
+                - 'ec2:CreateNetworkInterface'
+                - 'ec2:DescribeNetworkInterfaces'
+                - 'ec2:DeleteNetworkInterface'
+                - 'ec2:DescribeSubnets'
+                - 'ec2:DescribeSecurityGroups'
+                - 'ec2:DescribeDhcpOptions'
+                - 'ec2:DescribeVpcs'
+                - 'ec2:CreateNetworkInterfacePermission'
+                Effect: Allow
+                Resource: '*'
+  CodeBuildVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: True
+      EnableDnsHostnames: True
+      Tags:
+        - Key: name
+          Value: codebuild
+  CodeBuildSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId:
+        Ref: CodeBuildVPC
+      CidrBlock: 10.0.1.0/24
+  CodeBuildSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Codebuild Internet Group
+      GroupDescription: 'CodeBuild SecurityGroup'
+      VpcId: !Ref CodeBuildVPC
