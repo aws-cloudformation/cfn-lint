@@ -690,6 +690,23 @@ Resources:
     Properties:
       Protocol: "mail" # Invalid AllowedValue
       TopicArn: "TopicArn"
+  SpotFleet:
+    Type: "AWS::EC2::SpotFleet"
+    Properties:
+      SpotFleetRequestConfigData:
+        AllocationStrategy: "lowest_price" # Invalid AllowedValue
+        ExcessCapacityTerminationPolicy: "Default" # Invalid AllowedValue
+        IamFleetRole: "arn:aws:iam::123456789012:role/MyRole"
+        InstanceInterruptionBehavior: "" # Invalid AllowedValue
+        LaunchSpecifications:
+          - BlockDeviceMappings:
+              - DeviceName: /dev/sdm
+                Ebs:
+                  VolumeType: "ssd" # Invalid AllowedValue
+            ImageId: !Ref "ImageId"
+            InstanceType: "t1.small" # Invalid AllowedValue
+        TargetCapacity: 1
+        Type: "instantly" # Invalid AllowedValue
   TransitGateway:
     Type: "AWS::EC2::TransitGateway"
     Properties:
