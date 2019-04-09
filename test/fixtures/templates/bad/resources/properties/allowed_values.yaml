@@ -288,7 +288,7 @@ Resources:
           Status: "SUSPENDED" # Invalid AllowedValue
         S3Logs:
           Status: "Disabled" # Invalid AllowedValue
-      ServiceRole: ""
+      ServiceRole: "arn:aws:iam::123456789012:role/CodeBuild-service-role"
       Source:
         Type: "SOURCEFORGE" # Invalid AllowedValue
   CodeCommitRepository:
@@ -528,7 +528,7 @@ Resources:
     Type: "AWS::Glue::Crawler"
     Properties:
       DatabaseName: "database"
-      Role: "role"
+      Role: "arn:aws:iam::123456789012:role/MyRole"
       SchemaChangePolicy:
         UpdateBehavior: "UPDATE" # Invalid AllowedValue
         DeleteBehavior: "DELETE_IN_DATABASE" # Invalid AllowedValue
@@ -690,6 +690,36 @@ Resources:
     Properties:
       Protocol: "mail" # Invalid AllowedValue
       TopicArn: "TopicArn"
+  SpotFleet:
+    Type: "AWS::EC2::SpotFleet"
+    Properties:
+      SpotFleetRequestConfigData:
+        AllocationStrategy: "lowest_price" # Invalid AllowedValue
+        ExcessCapacityTerminationPolicy: "Default" # Invalid AllowedValue
+        IamFleetRole: "arn:aws:iam::123456789012:role/MyRole"
+        InstanceInterruptionBehavior: "" # Invalid AllowedValue
+        LaunchSpecifications:
+          - BlockDeviceMappings:
+              - DeviceName: /dev/sdm
+                Ebs:
+                  VolumeType: "ssd" # Invalid AllowedValue
+            ImageId: !Ref "ImageId"
+            InstanceType: "t1.small" # Invalid AllowedValue
+        TargetCapacity: 1
+        Type: "instantly" # Invalid AllowedValue
+  TransitGateway:
+    Type: "AWS::EC2::TransitGateway"
+    Properties:
+      AutoAcceptSharedAttachments: "disabled" # Invalid AllowedValue
+      DefaultRouteTableAssociation: "enabled" # Invalid AllowedValue
+      DefaultRouteTablePropagation: "on" # Invalid AllowedValue
+      DnsSupport: "true" # Invalid AllowedValue
+      VpnEcmpSupport: "Disable" # Invalid AllowedValue
+  Volume:
+    Type: "AWS::EC2::Volume"
+    Properties:
+      AvailabilityZone: "eu-west-1a"
+      VolumeType: "sssd" # Invalid AllowedValue
   Vpc:
     Type: "AWS::EC2::VPC"
     Properties:
