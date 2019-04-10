@@ -608,6 +608,12 @@ Resources:
     Type: "AWS::Neptune::DBInstance"
     Properties:
       DBInstanceClass: "db.r4.8xlarge" # Valid AllowedValue
+  NetworkInterfacePermission:
+    Type: "AWS::EC2::NetworkInterfacePermission"
+    Properties:
+      AwsAccountId: !Ref "AWS::AccountId"
+      NetworkInterfaceId: "-1"
+      Permission: "EIP-ASSOCIATE" # Valid AllowedValue
   PlacementGroup:
     Type: "AWS::EC2::PlacementGroup"
     Properties:
