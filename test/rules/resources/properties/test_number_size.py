@@ -22,6 +22,9 @@ class TestNumberSize(BaseRuleTestCase):
         """Setup"""
         super(TestNumberSize, self).setUp()
         self.collection.register(NumberSize())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/number_size.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -29,4 +32,4 @@ class TestNumberSize(BaseRuleTestCase):
 
     def test_file_negative_string_size(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/number_size.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/number_size.yaml', 4)

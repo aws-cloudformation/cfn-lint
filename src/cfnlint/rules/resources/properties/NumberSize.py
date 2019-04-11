@@ -12,7 +12,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import six
+import sys
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -23,7 +23,7 @@ class NumberSize(CloudFormationLintRule):
     """Check if a String has a length within the limit"""
     id = 'E3034'
     shortdesc = 'Check if a number is between min and max'
-    description = 'Check numbers for its value being between the minimum and maximum'
+    description = 'Check numbers (integers and floats) for its value being between the minimum and maximum'
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern'
     tags = ['resources', 'property', 'number', 'size']
 
@@ -35,12 +35,18 @@ class NumberSize(CloudFormationLintRule):
             self.resource_sub_property_types.append(property_type_spec)
 
     def _check_number_value(self, value, path, **kwargs):
-        """ """
+        """ Check if the value is in the given ranges"""
         matches = []
         number_min = kwargs.get('number_min')
         number_max = kwargs.get('number_max')
 
-        if isinstance(value, six.integer_types):
+        # The Python types considered a "number"
+        if sys.version_info < (3,):
+            number_types = (float, int, long,)  # pylint: disable=undefined-variable
+        else:
+            number_types = (float, int,)
+
+        if isinstance(value, number_types):
             if not (number_min <= value <= number_max):
                 message = 'Value has to be between {0} and {1} at {2}'
                 matches.append(
