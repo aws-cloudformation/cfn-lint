@@ -15202,7 +15202,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-cidrblock",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "CidrIp"
+          }
         },
         "Egress": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-egress",
@@ -15244,13 +15247,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-ruleaction",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "NetworkAclRuleAction"
+          }
         },
         "RuleNumber": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-rulenumber",
           "PrimitiveType": "Integer",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "NetworkAclRuleNumber"
+          }
         }
       }
     },
@@ -15388,7 +15397,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfacepermission.html#cfn-ec2-networkinterfacepermission-permission",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "NetworkInterfacePermission"
+          }
         }
       }
     },
@@ -15399,7 +15411,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "PlacementGroupStrategy"
+          }
         }
       }
     },
@@ -23962,6 +23977,22 @@
         ]
       }
     },
+    "NetworkAclRuleAction": {
+      "AllowedValues": [
+        "allow",
+        "deny"
+      ]
+    },
+    "NetworkAclRuleNumber": {
+      "NumberMax": 32766,
+      "NumberMin": 1
+    },
+    "NetworkInterfacePermission": {
+      "AllowedValues": [
+        "EIP-ASSOCIATE",
+        "INSTANCE-ATTACH"
+      ]
+    },
     "PerformanceInsightsRetentionPeriod": {
       "AllowedValues": [
         7,
@@ -23978,6 +24009,13 @@
           "AWS::EC2::PlacementGroup"
         ]
       }
+    },
+    "PlacementGroupStrategy": {
+      "AllowedValues": [
+        "cluster",
+        "partition",
+        "spread"
+      ]
     },
     "PlacementTenancy": {
       "AllowedValues": [

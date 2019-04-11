@@ -591,6 +591,24 @@ Resources:
     Type: "AWS::Neptune::DBInstance"
     Properties:
       DBInstanceClass: "db.r3.xlarge" # Invalid AllowedValue
+  NetworkAclEntry:
+    Type: "AWS::EC2::NetworkAclEntry"
+    Properties:
+      CidrBlock: "127.0.0.1/32"
+      NetworkAclId: "-1"
+      Protocol: -1
+      RuleAction: "ALLOW" # Invlid AllowedValue
+      RuleNumber: 1
+  NetworkInterfacePermission:
+    Type: "AWS::EC2::NetworkInterfacePermission"
+    Properties:
+      AwsAccountId: !Ref "AWS::AccountId"
+      NetworkInterfaceId: "-1"
+      Permission: "Associate" # Invalid AllowedValue
+  PlacementGroup:
+    Type: "AWS::EC2::PlacementGroup"
+    Properties:
+      Strategy: "combined" # Invalid AllowedValue
   RedshiftCluster:
     Type: "AWS::Redshift::Cluster"
     Properties:
