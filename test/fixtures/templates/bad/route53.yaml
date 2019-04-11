@@ -31,7 +31,7 @@ Resources:
       Comment: "Invalid A Record"
       HostedZoneId: !Ref "MyHostedZone"
       Name: "www.example.com"
-      Type: "X" # Invalid record type
+      Type: "A"
       TTL: "300"
       ResourceRecords:
         - "127.0.0.1"
@@ -81,6 +81,26 @@ Resources:
       ResourceRecords:
         - "127.0.0.1"
         - "10 my domain"
+  MyNSRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "A valid NS Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "NS"
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1"
+  MyPTRRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "A valid NS Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "www.example.com"
+      Type: "PTR"
+      TTL: "300"
+      ResourceRecords:
+        - "127.0.0.1"
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
