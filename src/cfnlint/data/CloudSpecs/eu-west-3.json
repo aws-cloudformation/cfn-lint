@@ -16290,7 +16290,11 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ListValueType": "CloudWatchAlarmActions",
+            "ValueType": "CloudWatchAlarmAction"
+          }
         },
         "AlarmDescription": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cw-alarm.html#cfn-cloudwatch-alarms-alarmdescription",
@@ -21356,6 +21360,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
+            "ListValueType": "IamManagedPolicy.Arns",
             "ValueType": "IamManagedPolicy.Arn"
           }
         },
@@ -21409,6 +21414,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
+            "ListValueType": "IamInstanceProfileRoles",
             "ValueType": "IamInstanceProfileRole"
           }
         }
@@ -21542,6 +21548,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
+            "ListValueType": "IamManagedPolicy.Arns",
             "ValueType": "IamManagedPolicy.Arn"
           }
         },
@@ -21621,6 +21628,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
+            "ListValueType": "IamGroups",
             "ValueType": "IamGroup"
           }
         },
@@ -21638,6 +21646,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
+            "ListValueType": "IamManagedPolicy.Arns",
             "ValueType": "IamManagedPolicy.Arn"
           }
         },
@@ -26374,6 +26383,14 @@
         "WriteOnly"
       ]
     },
+    "CloudWatchAlarmAction": {
+      "StringMax": 1024,
+      "StringMin": 1
+    },
+    "CloudWatchAlarmActions": {
+      "ListMax": 5,
+      "ListMin": 0
+    },
     "CloudWatchAlarmComparisonOperator": {
       "AllowedValues": [
         "GreaterThanOrEqualToThreshold",
@@ -27315,8 +27332,6 @@
       }
     },
     "IamGroup": {
-      "ListMax": 10,
-      "ListMin": 0,
       "Ref": {
         "Parameters": [
           "String"
@@ -27325,6 +27340,10 @@
           "AWS::IAM::Group"
         ]
       }
+    },
+    "IamGroups": {
+      "ListMax": 10,
+      "ListMin": 0
     },
     "IamInstanceProfile": {
       "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
@@ -27363,8 +27382,6 @@
     },
     "IamInstanceProfileRole": {
       "GetAtt": {},
-      "ListMax": 1,
-      "ListMin": 1,
       "Ref": {
         "Parameters": [
           "String"
@@ -27374,11 +27391,13 @@
         ]
       }
     },
+    "IamInstanceProfileRoles": {
+      "ListMax": 1,
+      "ListMin": 1
+    },
     "IamManagedPolicy.Arn": {
       "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
       "GetAtt": {},
-      "ListMax": 10,
-      "ListMin": 0,
       "Ref": {
         "Parameters": [
           "String"
@@ -27387,6 +27406,10 @@
           "AWS::IAM::ManagedPolicy"
         ]
       }
+    },
+    "IamManagedPolicy.Arns": {
+      "ListMax": 10,
+      "ListMin": 0
     },
     "IamManagedPolicyDocument": {
       "JsonMax": 6144,
