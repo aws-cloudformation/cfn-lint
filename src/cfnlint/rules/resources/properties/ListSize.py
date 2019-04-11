@@ -77,7 +77,7 @@ class ListSize(CloudFormationLintRule):
                 if prop in specs:
                     value = specs.get(prop).get('Value', {})
                     if value:
-                        value_type = value.get('ValueType', '')
+                        value_type = value.get('ListValueType', '')
                         property_type = specs.get(prop).get('Type')
                         if property_type == 'List':
                             matches.extend(
