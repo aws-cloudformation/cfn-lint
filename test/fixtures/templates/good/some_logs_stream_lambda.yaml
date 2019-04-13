@@ -1,15 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  subscription-filter-failed-template
+  subscription-filter-success-template
+  Sample SAM Template for subscription-filter-success-template
 
-  Sample SAM Template for subscription-filter-failed-template
-
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
       Timeout: 30
-
 
 Resources:
 
@@ -36,6 +33,7 @@ Resources:
     Properties:
       LogGroupName: !Sub /aws/lambda/${FunctionB}
       RetentionInDays: 3
+
   FunctionC:
     Type: AWS::Serverless::Function
     Properties:
@@ -49,7 +47,7 @@ Resources:
       RetentionInDays: 3
 
   LogSubscriptionFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: subscription_function/build/
       Handler: app.lambda_handler
