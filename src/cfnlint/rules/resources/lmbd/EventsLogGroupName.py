@@ -26,7 +26,8 @@ class EventsLogGroupName(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#user-content-cloudwatchlogs'
     tags = ['resources', 'lambda']
 
-    def check_events_subscription_deprecated(self, cfn):
+    def check_events_subscription_duplicated(self, cfn):
+        """Check if Lambda Events Subscription is duplicated"""
         matches = []
         message = 'You must specify the AWS::Serverless::Function event correctly. ' \
                   'LogGroups are duplicated. '
@@ -42,9 +43,9 @@ class EventsLogGroupName(CloudFormationLintRule):
 
         return matches
 
-    def __is_duplicated(self, list):
-        unique_list = self.__remove(list)
-        return len(unique_list) != len(list)
+    def __is_duplicated(self, duplicate_list):
+        unique_list = self.__remove(duplicate_list)
+        return len(unique_list) != len(duplicate_list)
 
     def __remove(self, duplicate):
         final_list = []
@@ -55,13 +56,14 @@ class EventsLogGroupName(CloudFormationLintRule):
 
     def __get_log_group_name_list(self, cfn):
         log_group_name_list = []
-        for key, value in cfn.get_resources('AWS::Logs::SubscriptionFilter').items():
+        for value in cfn.get_resources('AWS::Logs::SubscriptionFilter').items():
             log_group_name_list.append(value.get('Properties').get('LogGroupName'))
         return log_group_name_list
 
     def match(self, cfn):
+        """Check if Lambda Events Subscription is duplicated"""
         matches = []
         matches.extend(
-            self.check_events_subscription_deprecated(cfn)
+            self.check_events_subscription_duplicated(cfn)
         )
         return matches
