@@ -34,12 +34,12 @@ class TestCodePipelineStageActions(BaseRuleTestCase):
 
     def test_file_artifact_counts(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_artifact_counts.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/codepipeline/action_artifact_counts.yaml', 4)
 
     def test_file_invalid_version(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_invalid_version.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/codepipeline/action_invalid_version.yaml', 3)
 
     def test_file_non_unique(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources_codepipeline_action_non_unique.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/codepipeline/action_non_unique.yaml', 1)
