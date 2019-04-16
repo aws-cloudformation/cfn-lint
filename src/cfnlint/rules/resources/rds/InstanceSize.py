@@ -31,24 +31,48 @@ class InstanceSize(CloudFormationLintRule):
 
     valid_instance_types = cfnlint.helpers.load_resources('data/AdditionalSpecs/RdsProperties.json')
 
+    def _get_license_model(self, engine, license_model):
+        """ Logic to get the correct license model"""
+        if not license_model:
+            if engine in self.valid_instance_types.get('license-included'):
+                license_model = 'license-included'
+            elif engine in self.valid_instance_types.get('bring-your-own-license'):
+                license_model = 'bring-your-own-license'
+            else:
+                license_model = 'general-public-license'
+            self.logger.debug('Based on Engine: %s we determined the default license will be %s', engine, license_model)
+
+        return license_model
+
     def get_resources(self, cfn):
         """ Get resources that can be checked """
         results = []
         for resource_name, resource_values in cfn.get_resources('AWS::RDS::DBInstance').items():
             path = ['Resources', resource_name, 'Properties']
             properties = resource_values.get('Properties')
+            # Properties items_safe heps remove conditions and focusing on the actual values and scenarios
             for prop_safe, prop_path_safe in properties.items_safe(path):
                 engine = prop_safe.get('Engine')
                 inst_class = prop_safe.get('DBInstanceClass')
                 license_model = prop_safe.get('LicenseModel')
+
+                # Need to get a default license model if none provided
+                # Also need to validate all these values are strings otherwise we cannot
+                # do validation
                 if isinstance(engine, six.string_types) and isinstance(inst_class, six.string_types):
-                    results.append(
-                        {
-                            'Engine': engine,
-                            'DBInstanceClass': inst_class,
-                            'Path': prop_path_safe,
-                            'LicenseModel': license_model
-                        })
+                    license_model = self._get_license_model(engine, license_model)
+                    if isinstance(license_model, six.string_types):
+                        results.append(
+                            {
+                                'Engine': engine,
+                                'DBInstanceClass': inst_class,
+                                'Path': prop_path_safe,
+                                'LicenseModel': license_model
+                            })
+                    else:
+                        self.logger.debug('Skip evaluation based on [LicenseModel] not being a string.')
+                else:
+                    self.logger.debug('Skip evaluation based on [Engine] or [DBInstanceClass] not being strings.')
 
         return results
 
@@ -56,31 +80,20 @@ class InstanceSize(CloudFormationLintRule):
         """ Check db properties """
         matches = []
 
-        for valid_instance_type in self.valid_instance_types:
-            engine = properties.get('Engine')
-            if engine in valid_instance_type.get('engines'):
-                if region in valid_instance_type.get('regions'):
-                    db_license = properties.get('LicenseModel')
-                    valid_licenses = valid_instance_type.get('license')
-                    db_instance_class = properties.get('DBInstanceClass')
-                    valid_instance_types = valid_instance_type.get('instance_types')
-                    if db_license and valid_licenses:
-                        if db_license not in valid_licenses:
-                            self.logger.debug('Skip evaluation based on license not matching.')
-                            continue
-                    if db_instance_class not in valid_instance_types:
-                        if db_license is None:
-                            message = 'DBInstanceClass "{0}" is not compatible with engine type "{1}" in region "{2}". Use instance types [{3}]'
-                            matches.append(
-                                RuleMatch(
-                                    properties.get('Path') + ['DBInstanceClass'], message.format(
-                                        db_instance_class, engine, region, ', '.join(map(str, valid_instance_types)))))
-                        else:
-                            message = 'DBInstanceClass "{0}" is not compatible with engine type "{1}" and LicenseModel "{2}" in region "{3}". Use instance types [{4}]'
-                            matches.append(
-                                RuleMatch(
-                                    properties.get('Path') + ['DBInstanceClass'], message.format(
-                                        db_instance_class, engine, db_license, region, ', '.join(map(str, valid_instance_types)))))
+        db_engine = properties.get('Engine')
+        db_license = properties.get('LicenseModel')
+        db_instance_class = properties.get('DBInstanceClass')
+        if db_license in self.valid_instance_types:
+            if db_engine in self.valid_instance_types[db_license]:
+                if region in self.valid_instance_types[db_license][db_engine]:
+                    if db_instance_class not in self.valid_instance_types[db_license][db_engine][region]:
+                        message = 'DBInstanceClass "{0}" is not compatible with engine type "{1}" and LicenseModel "{2}" in region "{3}". Use instance types [{4}]'
+                        matches.append(
+                            RuleMatch(
+                                properties.get('Path') + ['DBInstanceClass'], message.format(
+                                    db_instance_class, db_engine, db_license, region, ', '.join(map(str, self.valid_instance_types[db_license][db_engine][region])))))
+        else:
+            self.logger.debug('Skip evaluation based on license [%s] not matching.', db_license)
         return matches
 
     def match(self, cfn):

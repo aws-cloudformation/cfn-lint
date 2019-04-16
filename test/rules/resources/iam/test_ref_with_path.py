@@ -14,18 +14,18 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.properties.AllowedValue import AllowedValue  # pylint: disable=E0401
+from cfnlint.rules.resources.iam.RefWithPath import RefWithPath  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestAllowedValue(BaseRuleTestCase):
-    """Test Allowed Value Property Configuration"""
+class TestRefWithPath(BaseRuleTestCase):
+    """Test IAM Policies"""
     def setUp(self):
         """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
+        super(TestRefWithPath, self).setUp()
+        self.collection.register(RefWithPath())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/allowed_values.yaml'
+            'test/fixtures/templates/good/resources/iam/ref_with_path.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,4 +34,4 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/allowed_values.yaml', 185)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/iam/ref_with_path.yaml', 1)

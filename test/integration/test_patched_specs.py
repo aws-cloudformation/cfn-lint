@@ -154,7 +154,7 @@ class TestPatchedSpecs(BaseTestCase):
                 elif p_name == 'AllowedValues':
                     self.assertIsInstance(p_values, list)
                     for l_value in p_values:
-                        self.assertIsInstance(l_value, (six.string_types, six.integer_types), 'ValueTypes: %s, Type: %s' % (v_name, p_name))
+                        self.assertIsInstance(l_value, six.string_types, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
             self.assertIn(list_count, [0, 2], 'Both ListMin and ListMax must be specified')
             self.assertIn(number_count, [0, 2], 'Both NumberMin and NumberMax must be specified')
             self.assertIn(string_count, [0, 2], 'Both StringMin and StringMax must be specified')
