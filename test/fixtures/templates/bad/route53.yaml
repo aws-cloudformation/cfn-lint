@@ -4,6 +4,8 @@ Parameters:
   DomainName:
     Type: String
     Default: "www.example.com"
+Conditions:
+  isPrimaryRegion: !Equals [!Ref 'AWS::Region', 'us-east-1']
 Resources:
   MyHostedZone:
     Type: "AWS::Route53::HostedZone"
@@ -63,7 +65,7 @@ Resources:
   MyCNAMERecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
-      Comment: "Invalid CAA Record"
+      Comment: "Invalid CNAME Record"
       HostedZoneId: !Ref "MyHostedZone"
       Name: "cname.example.com"
       Type: "CNAME"
@@ -71,6 +73,20 @@ Resources:
       ResourceRecords: # Multiple records
         - "cname1.example.com"
         - "cname2.example.com"
+  MyCNAMERecordSetConditions:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "Invalid CNAME Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "cname.example.com"
+      Type: "CNAME"
+      TTL: "300"
+      ResourceRecords: # Multiple records
+        Fn::If:
+        - isPrimaryRegion
+        - - "cname1.example.com"
+          - "cname2.example.com"
+        - - "cname1.example.com"
   MyMXRecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
@@ -141,6 +157,7 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "1 issue \"amazon.com; example.com\"" # Invalid flag
+            - "A issue \"amazon.com; example.com\"" # Invalid flag
             - "0 special-value \"amazon.com\"" # Invalid tag (not numeric)
         - Name: "cname.example.com"
           Type: "CNAME"
@@ -163,3 +180,12 @@ Resources:
           TTL: "300"
           ResourceRecords:
             - "\"henk\""
+  PoorlyConfiguredRoute53:
+    Type: "AWS::Route53::RecordSetGroup"
+    Properties:
+      HostedZoneId: !Ref "MyHostedZone"
+      RecordSets:
+        - Name: "z.example.com"
+          Type: "TXT"
+          TTL: "300"
+          # Missing AliasTarget and ResourceRecords.  Don't fail
