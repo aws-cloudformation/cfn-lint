@@ -27,6 +27,9 @@ class TestAllowedPattern(BaseRuleTestCase):
         """Setup"""
         super(TestAllowedPattern, self).setUp()
         self.collection.register(AllowedPattern())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/allowed_pattern.yaml'
+        ]
 
         # Load the specfile to validate all the regexes specified
         filename = '../../../../src/cfnlint/data/CloudSpecs/us-east-1.json'
@@ -42,13 +45,9 @@ class TestAllowedPattern(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
-    def test_file_negative_sg_description(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_description.yaml', 1)
-
     def test_file_negative_sg_ingress(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_ingress.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_ingress.yaml', 2)
 
     def test_valid_regex(self):
         """Test Resource Type Value Regex"""

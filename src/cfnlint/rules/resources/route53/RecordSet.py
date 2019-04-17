@@ -159,6 +159,34 @@ class RecordSet(CloudFormationLintRule):
 
         return matches
 
+    def check_ns_record(self, path, recordset):
+        """Check NS record Configuration"""
+        matches = []
+
+        resource_records = recordset.get('ResourceRecords')
+
+        for index, record in enumerate(resource_records):
+            if not isinstance(record, dict):
+                tree = path[:] + ['ResourceRecords', index]
+                if not re.match(self.REGEX_DOMAINNAME, record):
+                    message = 'NS record ({}) does not contain a valid domain name'
+                    matches.append(RuleMatch(tree, message.format(record)))
+        return matches
+
+    def check_ptr_record(self, path, recordset):
+        """Check PTR record Configuration"""
+        matches = []
+
+        resource_records = recordset.get('ResourceRecords')
+
+        for index, record in enumerate(resource_records):
+            if not isinstance(record, dict):
+                tree = path[:] + ['ResourceRecords', index]
+                if not re.match(self.REGEX_DOMAINNAME, record):
+                    message = 'PTR record ({}) does not contain a valid domain name'
+                    matches.append(RuleMatch(tree, message.format(record)))
+        return matches
+
     def check_txt_record(self, path, recordset):
         """Check TXT record Configuration"""
         matches = []
@@ -205,6 +233,10 @@ class RecordSet(CloudFormationLintRule):
                     matches.extend(self.check_cname_record(path, recordset))
                 elif recordset_type == 'MX':
                     matches.extend(self.check_mx_record(path, recordset))
+                elif recordset_type == 'NS':
+                    matches.extend(self.check_ns_record(path, recordset))
+                elif recordset_type == 'PTR':
+                    matches.extend(self.check_ptr_record(path, recordset))
                 elif recordset_type == 'TXT':
                     matches.extend(self.check_txt_record(path, recordset))
 

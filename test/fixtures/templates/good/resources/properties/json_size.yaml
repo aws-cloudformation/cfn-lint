@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Test bad ManagedPolicyArns setup
+Parameters:
+  UserName:
+    Type: String
+Conditions:
+  cPrimaryRegion: !Equals ['us-east-1', !Ref 'AWS::Region']
+  IsLimitAdminUse: !Equals ['us-east-1', !Ref 'AWS::Region']
+Resources:
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AdministratorAccess
+      - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonElastiCacheReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonKinesisReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonRDSReadOnlyAccess
+      - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+      - arn:aws:iam::aws:policy/AutoScalingConsoleReadOnlyAccess
+      - arn:aws:iam::aws:policy/AWSCloudFormationReadOnlyAccess
+      - arn:aws:iam::aws:policy/AWSCodeBuildReadOnlyAccess
+      - !If [cPrimaryRegion, 'arn:aws:iam::aws:policy/IAMReadOnlyAccess', !Ref 'AWS::NoValue']
+  IamGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns:
+        Fn::If:
+        - cPrimaryRegion
+        - - arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess
+        - - arn:aws:iam::aws:policy/AdministratorAccess
+  ExampleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+      - PolicyName: testFunctionRolePolicy0
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+      - PolicyName: testFunctionRolePolicy1
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+      - PolicyName: testFunctionRolePolicy2
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+      - PolicyName: testFunctionRolePolicy3
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+      - PolicyName: testFunctionRolePolicy4
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+      - PolicyName: testFunctionRolePolicy5
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:CreateBackup
+            - dynamodb:DescribeContinuousBackups
+            Resource: 'arn:'
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteBackup
+            - dynamodb:DescribeBackup
+            - dynamodb:ListBackups
+            Resource: arn:/backup/*
+  AdminRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Condition:
+              Bool:
+                aws:MultiFactorAuthPresent: 'true'
+            Effect: Allow
+            Principal:
+              AWS: !If
+                - IsLimitAdminUse
+                # Too many characters but filtered down to ok because the Subs are replaces
+                - - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                  - !Sub
+                    - arn:aws:iam::${Account}:user/${User}
+                    - Account: !Ref AWS::AccountId
+                      User: !Ref UserName
+                - !Sub
+                  - arn:aws:iam::${Account}:root
+                  - Account: !Ref AWS::AccountId
+            Sid: ''
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Path: /

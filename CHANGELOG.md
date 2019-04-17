@@ -1,17 +1,62 @@
-### Roadmap
-- Be able to test transforms (include)
-- Add tests around common resource types
-  - AutoScaling
-  - Ec2 Instances
-  - Load Balancers
-  - RDS
-- Create a framework to test ARNs
-- Test Ref resources to IAM Roles have good assume role documents.  Example: Lambda Function Ref refers to an IAM Role that can be assume by Lambda.
-- More Warnings around hard coded values (Regions, AccountIds) to help with the practice of reusability
+### 0.18.1
+###### CloudFormation Specifications
+- Update CloudFormation Specs to 2.30.0
+- Fix IAM Regex Path to support more character types
+- Update AWS::Batch::ComputeEnvironment.ComputeResources InstanceRole to reference an
+InstanceProfile or GetAtt the InstanceProfile Arn
+- Allow VPC IDs to Ref a Parameter of type String
+###### Fixes
+- Fix [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502) to check the size of the property instead of the parent object
+
+### 0.18.0
+###### Features
+- New rule [E3032](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3032) to check the size of lists
+- New rule [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502) to check JSON Object Size using definitions in the spec file
+- New rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3033) to test the minimum and maximum length of a string
+- New rule [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3034) to validate the min and max of a number
+- Remove Ebs Iops check from [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) and use rule [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3034) instead
+- Remove rule [E2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2509) and use rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3033) instead
+- Remove rule [E2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2508) as it replaced by [E3032](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3032) and [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502)
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to check that there are at least two 2 Subnets or SubnetMappings for ALBs
+- SAM requirement upped to minimal version of 1.10.0
+###### CloudFormation Specifications
+- Extend specs to include:
+  - `ListMin` and `ListMax` for the minimum and maximum size of a list
+  - `JsonMax` to check the max size of a JSON Object
+  - `StringMin` and `StringMax` to check the minimum and maximum length of a String
+  - `NumberMin` and `NumberMax` to check the minimum and maximum value of a Number, Float, Long
+- Update State and ExecutionRoleArn to be required on AWS::DLM::LifecyclePolicy
+- Add AllowedValues for PerformanceInsightsRetentionPeriod for AWS::RDS::Instance
+- Add AllowedValues for the AWS::GuardDuty Resources
+- Add AllowedValues for AWS::EC2 VPC and VPN Resources
+- Switch IAM Instance Profiles for certain resources to the type that only takes the name
+- Add regex pattern for IAM Instance Profile when a name (not Arn) is used
+- Add regex pattern for IAM Paths
+- Add Regex pattern for IAM Role Arn
+- Update OnlyOne spec to require require at least one of Subnets or SubnetMappings with ELB v2
+###### Fixes
+- Fix serverless transform to use DefinitionBody when Auth is in the API definition
+- Fix rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030) to not error when checking SSM or List Parameters
+
+### 0.17.1
+###### Features
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to make sure NLBs don't have a Security Group configured
+###### CloudFormation Specifications
+- Add all the allowed values of the `AWS::Glue` Resources
+- Update OnlyOne check for `AWS::CloudWatch::Alarm` to only `MetricName` or `Metrics`
+- Update Exclusive check for `AWS::CloudWatch::Alarm` for properties mixed with `Metrics` and `Statistic`
+- Update CloudFormation specs to 2.29.0
+- Fix type with MariaDB in the AllowedValues
+- Update pricing information for data available on 2018.3.29
+###### Fixes
+- Fix rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to not look for a sub is needed when looking for iot strings in policies
+- Fix rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to allow for ActionId Versions of length 1-9 and meets regex `[0-9A-Za-z_-]+`
+- Fix rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow for `Parameters` inside a `Pass` action
+- Fix an issue when getting the location of an error in which numbers are causing an attribute error
 
 ### 0.17.0
 ###### Features
-- Add new rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037) to validate Redis cluster settings including AutomaticFailoverEnabled and NumCacheClusters.  Status: Released
+- Add new rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3026) to validate Redis cluster settings including AutomaticFailoverEnabled and NumCacheClusters.  Status: Released
 - Add new rule [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037) to validate IAM resource policies.  Status: Experimental
 - Add new parameter `-e/--include-experimental` to allow for new rules in that aren't ready to be fully released
 ###### CloudFormation Specifications

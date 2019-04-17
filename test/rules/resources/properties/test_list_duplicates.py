@@ -14,16 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.ectwo.SecurityGroupDescription import SecurityGroupDescription  # pylint: disable=E0401
+from cfnlint.rules.resources.properties.ListDuplicates import ListDuplicates  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestPropertySgDescription(BaseRuleTestCase):
-    """Test Ec2 Security Group Ingress Rules"""
+class TestListDuplicates(BaseRuleTestCase):
+    """Test Allowed Value Property Configuration"""
     def setUp(self):
         """Setup"""
-        super(TestPropertySgDescription, self).setUp()
-        self.collection.register(SecurityGroupDescription())
+        super(TestListDuplicates, self).setUp()
+        self.collection.register(ListDuplicates())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/list_duplicates.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +34,4 @@ class TestPropertySgDescription(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_description.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/list_duplicates.yaml', 4)

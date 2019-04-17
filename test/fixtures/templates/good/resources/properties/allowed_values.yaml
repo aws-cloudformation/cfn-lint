@@ -17,6 +17,10 @@ Parameters:
       - "standard"
   ImageId:
     Type: "AWS::EC2::Image::Id"
+  SsmInstanceType:
+    Default: /Demo/DemoInstanceType # Recommend t3.nano
+    Description: EC2 instance type to use to create the collector host
+    Type: AWS::SSM::Parameter::Value<String>
 Resources:
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
@@ -250,6 +254,7 @@ Resources:
     Properties:
       ComparisonOperator: "GreaterThanOrEqualToThreshold" # Valid AllowedValue
       EvaluationPeriods: 1
+      MetricName: "my-metric"
       Statistic: "SampleCount" # Valid AllowedValue
       Threshold: 0.0
       TreatMissingData: "notBreaching" # Valid AllowedValue
@@ -269,6 +274,11 @@ Resources:
         Value: "o-1234567890"
       Principal: "*"
       StatementId: "x"
+  CloudWatchLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      LogGroupName: "cloudtrail"
+      RetentionInDays: 365 # Valid AllowedValue
   CodeBuildProject:
     Type: "AWS::CodeBuild::Project"
     Properties:
@@ -287,7 +297,7 @@ Resources:
           Status: "ENABLED" # Valid AllowedValue
         S3Logs:
           Status: "DISABLED" # Valid AllowedValue
-      ServiceRole: ""
+      ServiceRole: "arn:aws:iam::123456789012:role/CodeBuild-service-role"
       Source:
         Type: "GITHUB_ENTERPRISE" # Valid AllowedValue
   CodeCommitRepository:
@@ -473,6 +483,7 @@ Resources:
   DLMPolicy:
     Type: "AWS::DLM::LifecyclePolicy"
     Properties:
+      ExecutionRoleArn: ""
       PolicyDetails:
         ResourceTypes:
           - "VOLUME" # Valid AllowedValue
@@ -523,6 +534,11 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "gp2" # Valid AllowedValue
+  EC2Instance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: !Ref SsmInstanceType
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
@@ -531,10 +547,10 @@ Resources:
         ConnectionProperties: "{}"
         ConnectionType: "SFTP" # Valid AllowedValue
   GlueCrawler:
-    Type: AWS::Glue::Crawler
+    Type: "AWS::Glue::Crawler"
     Properties:
       DatabaseName: "database"
-      Role: "role"
+      Role: "arn:aws:iam::123456789012:role/MyRole"
       SchemaChangePolicy:
         UpdateBehavior: "LOG" # Valid AllowedValue
         DeleteBehavior: "DELETE_FROM_DATABASE" # Valid AllowedValue
@@ -558,10 +574,63 @@ Resources:
         Conditions:
           - LogicalOperator: "EQUALS" # Valid AllowedValue
             State: "SUCCEEDED" # Valid AllowedValue
+  GuardDutyDetector:
+    Type: "AWS::GuardDuty::Detector"
+    Properties:
+      Enable: True
+      FindingPublishingFrequency: "FIFTEEN_MINUTES" # Valid AllowedValue
+  GuardDutyFilter:
+    Type: "AWS::GuardDuty::Filter"
+    Properties:
+      Action: "NOOP" # Valid AllowedValue
+      Description: "A mandatory Description"
+      DetectorId: "-1"
+      FindingCriteria:
+        Criterion: {}
+      Rank: 1
+  GuardDutyIPSet:
+    Type: "AWS::GuardDuty::IPSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "STIX" # Valid AllowedValue
+      Location: "http://localhost"
+  GuardDutyMember:
+    Type: AWS::GuardDuty::Member
+    Properties:
+      Email: "info@example.com"
+      MemberId: !Ref "AWS::AccountId"
+      DetectorId: "-1"
+      Status: "Resigned" # Valid AllowedValue
+  GuardDutyThreadIntelSet:
+    Type: "AWS::GuardDuty::ThreatIntelSet"
+    Properties:
+      Activate: False
+      DetectorId: "-1"
+      Format: "ALIEN_VAULT" # Valid AllowedValue
+      Location: "http://localhost"
   NeptuneInstance:
     Type: "AWS::Neptune::DBInstance"
     Properties:
       DBInstanceClass: "db.r4.8xlarge" # Valid AllowedValue
+  NetworkAclEntry:
+    Type: "AWS::EC2::NetworkAclEntry"
+    Properties:
+      CidrBlock: "127.0.0.1/32"
+      NetworkAclId: "-1"
+      Protocol: -1
+      RuleAction: "allow" # Valid AllowedValue
+      RuleNumber: 1
+  NetworkInterfacePermission:
+    Type: "AWS::EC2::NetworkInterfacePermission"
+    Properties:
+      AwsAccountId: !Ref "AWS::AccountId"
+      NetworkInterfaceId: "-1"
+      Permission: "EIP-ASSOCIATE" # Valid AllowedValue
+  PlacementGroup:
+    Type: "AWS::EC2::PlacementGroup"
+    Properties:
+      Strategy: "cluster" # Valid AllowedValue
   RedshiftCluster:
     Type: "AWS::Redshift::Cluster"
     Properties:
@@ -648,7 +717,7 @@ Resources:
       DnsConfig:
         DnsRecords:
           - Type: "A" # Valid AllowedValue
-            TTL: "60"
+            TTL: 60
   SesReceiptRule:
     Type: "AWS::SES::ReceiptRule"
     Properties:
@@ -660,11 +729,63 @@ Resources:
     Properties:
       Protocol: "http" # Valid AllowedValue
       TopicArn: "TopicArn"
+  SpotFleet:
+    Type: "AWS::EC2::SpotFleet"
+    Properties:
+      SpotFleetRequestConfigData:
+        AllocationStrategy: "lowestPrice" # Valid AllowedValue
+        ExcessCapacityTerminationPolicy: "default" # Valid AllowedValue
+        IamFleetRole: "arn:aws:iam::123456789012:role/MyRole"
+        InstanceInterruptionBehavior: "terminate" # Valid AllowedValue
+        LaunchSpecifications:
+          - BlockDeviceMappings:
+              - DeviceName: /dev/sdm
+                Ebs:
+                  VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Valid AllowedValue
+            ImageId: !Ref "ImageId"
+            InstanceType: "t2.small" # Valid AllowedValue
+        TargetCapacity: 1
+        Type: "instant" # Valid AllowedValue
+  TransitGateway:
+    Type: "AWS::EC2::TransitGateway"
+    Properties:
+      AutoAcceptSharedAttachments: "disable" # Valid AllowedValue
+      DefaultRouteTableAssociation: "enable" # Valid AllowedValue
+      DefaultRouteTablePropagation: "enable" # Valid AllowedValue
+      DnsSupport: "enable" # Valid AllowedValue
+      VpnEcmpSupport: "disable" # Valid AllowedValue
+  Volume:
+    Type: "AWS::EC2::Volume"
+    Properties:
+      AvailabilityZone: "eu-west-1a"
+      VolumeType: "standard" # Valid AllowedValue
   Vpc:
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: "10.0.0.0/16"
       InstanceTenancy: "default" # Valid AllowedValue
+  VpcEndpoint:
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcId: !Ref "Vpc"
+      ServiceName: "com.amazonaws.vpce.us-east-1.vpce-svc-03d5ebb7d9579a2b3"
+      VpcEndpointType: "Gateway" # Valid AllowedValue
+  VpcEndpointConnectionNotification:
+    Type: "AWS::EC2::VPCEndpointConnectionNotification"
+    Properties:
+      ConnectionEvents:
+        - "Accept" # Valid Allowed alue
+      ConnectionNotificationArn: "TopicArn"
+  VPNConnection:
+    Type: "AWS::EC2::VPNConnection"
+    Properties:
+      CustomerGatewayId: "1"
+      Type: "ipsec.1" # Valid AllowedValue
+      VpnGatewayId: !Ref VPNGateway
+  VPNGateway:
+    Type: "AWS::EC2::VPNGateway"
+    Properties:
+      Type: "ipsec.1" # Valid AllowedValue
   WAFRule:
     Type: "AWS::WAFRegional::Rule"
     Properties:

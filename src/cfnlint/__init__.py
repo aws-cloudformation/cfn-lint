@@ -408,7 +408,7 @@ class Match(object):  # pylint: disable=R0902
             ))
 
 
-class Template(object):
+class Template(object):  # pylint: disable=R0904
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
@@ -824,7 +824,10 @@ class Template(object):
             # If the last item of the path is an integer, and the vaue is an array,
             # Get the location of the item in the array
             if isinstance(text, list) and isinstance(path[0], int):
-                result = self._loc(text[path[0]])
+                try:
+                    result = self._loc(text[path[0]])
+                except AttributeError as err:
+                    LOGGER.debug(err)
             else:
                 try:
                     for key in text:
@@ -956,6 +959,64 @@ class Template(object):
         # if resource condition isn't available then the resource is available
         return results
 
+    def get_object_without_nested_conditions(self, obj, path):
+        """
+            Get a list of object values without conditions included.
+            Evaluates deep into the object removing any nested conditions as well
+        """
+        results = []
+        scenarios = self.get_condition_scenarios_below_path(path)
+        if not isinstance(obj, (dict, list)):
+            return results
+
+        if not scenarios:
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get('Ref') == 'AWS::NoValue':
+                        return results
+            return [{
+                'Scenario': None,
+                'Object': obj
+            }]
+
+        def get_value(value, scenario):  # pylint: disable=R0911
+            """ Get the value based on the scenario resolving nesting """
+            if isinstance(value, dict):
+                if len(value) == 1:
+                    if 'Fn::If' in value:
+                        if_values = value.get('Fn::If')
+                        if len(if_values) == 3:
+                            if_path = scenario.get(if_values[0], None)
+                            if if_path is not None:
+                                if if_path:
+                                    return get_value(if_values[1], scenario)
+                                return get_value(if_values[2], scenario)
+                    elif value.get('Ref') == 'AWS::NoValue':
+                        return None
+
+                new_object = {}
+                for k, v in value.items():
+                    new_object[k] = get_value(v, scenario)
+                return new_object
+            if isinstance(value, list):
+                new_list = []
+                for item in value:
+                    new_value = get_value(item, scenario)
+                    if new_value is not None:
+                        new_list.append(get_value(item, scenario))
+
+                return new_list
+
+            return value
+
+        for scenario in scenarios:
+            results.append({
+                'Scenario': scenario,
+                'Object': get_value(obj, scenario)
+            })
+
+        return results
+
     def get_value_from_scenario(self, obj, scenario):
         """
             Get object values from a provided scenario
@@ -1069,6 +1130,25 @@ class Template(object):
 
         return results
 
+    def get_condition_scenarios_below_path(self, path, include_if_in_function=False):
+        """
+            get Condition Scenarios from below path
+        """
+        fn_ifs = self.search_deep_keys('Fn::If')
+        results = {}
+        for fn_if in fn_ifs:
+            if len(fn_if) >= len(path):
+                if path == fn_if[0:len(path)]:
+                    # This needs to handle items only below the Path
+                    result = self.get_conditions_from_path(self.template, fn_if[0:-1], False, include_if_in_function)
+                    for condition_name, condition_values in result.items():
+                        if condition_name in results:
+                            results[condition_name].union(condition_values)
+                        else:
+                            results[condition_name] = condition_values
+
+        return self.conditions.get_scenarios(results.keys())
+
     def get_conditions_scenarios_from_object(self, objs):
         """
             Get condition from objects
@@ -1111,7 +1191,7 @@ class Template(object):
 
         return self.conditions.get_scenarios(list(con))
 
-    def get_conditions_from_path(self, text, path):
+    def get_conditions_from_path(self, text, path, include_resource_conditions=True, include_if_in_function=True, only_last=False):
         """
             Parent function to handle resources with conditions.
             Input:
@@ -1123,18 +1203,19 @@ class Template(object):
                     {'condition': {True}}
         """
 
-        results = self._get_conditions_from_path(text, path)
-        if len(path) >= 2:
-            if path[0] in ['Resources', 'Outputs']:
-                condition = text.get(path[0], {}).get(path[1], {}).get('Condition')
-                if condition:
-                    if not results.get(condition):
-                        results[condition] = set()
-                    results[condition].add(True)
+        results = self._get_conditions_from_path(text, path, include_if_in_function, only_last)
+        if include_resource_conditions:
+            if len(path) >= 2:
+                if path[0] in ['Resources', 'Outputs']:
+                    condition = text.get(path[0], {}).get(path[1], {}).get('Condition')
+                    if condition:
+                        if not results.get(condition):
+                            results[condition] = set()
+                        results[condition].add(True)
 
         return results
 
-    def _get_conditions_from_path(self, text, path):
+    def _get_conditions_from_path(self, text, path, include_if_in_function=True, only_last=False):
         """
             Get the conditions and their True/False value for the path provided
             Input:
@@ -1167,7 +1248,7 @@ class Template(object):
 
         try:
             # Found a condition at the root of the Path
-            if path[0] == 'Fn::If':
+            if path[0] == 'Fn::If' and ((len(path) == 1 and only_last) or not only_last):
                 condition = text.get('Fn::If')
                 if len(path) > 1:
                     if path[1] in [1, 2]:
@@ -1176,7 +1257,9 @@ class Template(object):
                     get_condition_name(condition)
             # Iterate if the Path has more than one value
             if len(path) > 1:
-                child_results = self._get_conditions_from_path(text[path[0]], path[1:])
+                if (path[0] in cfnlint.helpers.FUNCTIONS and path[0] != 'Fn::If') and not include_if_in_function:
+                    return results
+                child_results = self._get_conditions_from_path(text[path[0]], path[1:], include_if_in_function, only_last)
                 for c_r_k, c_r_v in child_results.items():
                     if not results.get(c_r_k):
                         results[c_r_k] = set()

@@ -1516,7 +1516,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile.NameOrArn"
           }
         },
         "InstanceTypes": {
@@ -1670,6 +1670,13 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "ResourceRequirements": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties.html#cfn-batch-jobdefinition-containerproperties-resourcerequirements",
+          "ItemType": "ResourceRequirement",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "Ulimits": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties.html#cfn-batch-jobdefinition-containerproperties-ulimits",
           "ItemType": "Ulimit",
@@ -1775,6 +1782,23 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-noderangeproperty.html#cfn-batch-jobdefinition-noderangeproperty-targetnodes",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Batch::JobDefinition.ResourceRequirement": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-resourcerequirement.html",
+      "Properties": {
+        "Type": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-resourcerequirement.html#cfn-batch-jobdefinition-resourcerequirement-type",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Value": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-resourcerequirement.html#cfn-batch-jobdefinition-resourcerequirement-value",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -2001,7 +2025,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-notification.html#cfn-budgets-budget-notification-threshold",
           "PrimitiveType": "Double",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "BudgetNotificationThreshold"
+          }
         },
         "ThresholdType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-notification.html#cfn-budgets-budget-notification-thresholdtype",
@@ -5181,7 +5208,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html#cfn-ec2-blockdev-template-iops",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsIops"
+          }
         },
         "SnapshotId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html#cfn-ec2-blockdev-template-snapshotid",
@@ -5588,7 +5618,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         }
       }
@@ -6530,7 +6560,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications.html#cfn-ec2-spotfleet-spotfleetlaunchspecification-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "Ec2InstanceType"
+          }
         },
         "KernelId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications.html#cfn-ec2-spotfleet-spotfleetlaunchspecification-kernelid",
@@ -6630,13 +6663,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-allocationstrategy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SpotFleetAllocationStrategy"
+          }
         },
         "ExcessCapacityTerminationPolicy": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-excesscapacityterminationpolicy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "SpotFleetExcessCapacityTerminationPolicy"
+          }
         },
         "IamFleetRole": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-iamfleetrole",
@@ -6651,7 +6690,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-instanceinterruptionbehavior",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SpotFleetInstanceInterruptionBehavior"
+          }
         },
         "LaunchSpecifications": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications",
@@ -6703,7 +6745,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-type",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "SpotFleetType"
+          }
         },
         "ValidFrom": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-validfrom",
@@ -14474,7 +14519,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "2.28.0",
+  "ResourceSpecificationVersion": "2.30.0",
   "ResourceTypes": {
     "AWS::ApiGateway::Account": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
@@ -16086,7 +16131,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -17038,7 +17083,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "IamRole.NameOrArn"
           }
         },
         "Source": {
@@ -17516,7 +17561,7 @@
         "ExecutionRoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dlm-lifecyclepolicy.html#cfn-dlm-lifecyclepolicy-executionrolearn",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         },
         "PolicyDetails": {
@@ -17528,7 +17573,7 @@
         "State": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dlm-lifecyclepolicy.html#cfn-dlm-lifecyclepolicy-state",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "DefaultEnabledState"
@@ -18604,7 +18649,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "ImageId": {
@@ -18878,7 +18923,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-cidrblock",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "CidrIp"
+          }
         },
         "Egress": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-egress",
@@ -18920,13 +18968,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-ruleaction",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "NetworkAclRuleAction"
+          }
         },
         "RuleNumber": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-network-acl-entry.html#cfn-ec2-networkaclentry-rulenumber",
           "PrimitiveType": "Integer",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "NetworkAclRuleNumber"
+          }
         }
       }
     },
@@ -19064,7 +19118,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterfacepermission.html#cfn-ec2-networkinterfacepermission-permission",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "NetworkInterfacePermission"
+          }
         }
       }
     },
@@ -19075,7 +19132,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "PlacementGroupStrategy"
+          }
         }
       }
     },
@@ -19696,7 +19756,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpcEndpointType"
+          }
         },
         "VpcId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcid",
@@ -19826,7 +19889,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection.html#cfn-ec2-vpnconnection-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpnType"
+          }
         },
         "VpnGatewayId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection.html#cfn-ec2-vpnconnection-vpngatewayid",
@@ -19882,7 +19948,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gateway.html#cfn-ec2-vpngateway-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "VpnType"
+          }
         }
       }
     },
@@ -19962,7 +20031,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ebs-volume.html#cfn-ec2-ebs-volume-volumetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "EbsVolumeType"
+          }
         }
       }
     },
@@ -20113,7 +20185,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "IamRole.NameOrArn"
           }
         },
         "SchedulingStrategy": {
@@ -20362,7 +20434,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "IamInstanceProfile"
           }
         },
         "KerberosAttributes": {
@@ -21621,7 +21693,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthchecktimeoutseconds",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "TargetGroupHealthCheckTimeoutSeconds"
+          }
         },
         "HealthyThresholdCount": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthythresholdcount",
@@ -22009,7 +22084,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-findingpublishingfrequency",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "GuardDutyDetectorFrequency"
+          }
         }
       }
     },
@@ -22020,7 +22098,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-filter.html#cfn-guardduty-filter-action",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "GuardDutyFilterAction"
+          }
         },
         "Description": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-filter.html#cfn-guardduty-filter-description",
@@ -22073,7 +22154,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-ipset.html#cfn-guardduty-ipset-format",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "GuardDutyIPSetFormat"
+          }
         },
         "Location": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-ipset.html#cfn-guardduty-ipset-location",
@@ -22149,7 +22233,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-member.html#cfn-guardduty-member-status",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "GuardDutyMemberStatus"
+          }
         }
       }
     },
@@ -22172,7 +22259,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-threatintelset.html#cfn-guardduty-threatintelset-format",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "GuardDutyThreadIntelSetFormat"
+          }
         },
         "Location": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-threatintelset.html#cfn-guardduty-threatintelset-location",
@@ -22236,13 +22326,19 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "Policies": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-group.html#cfn-iam-group-policies",
@@ -22272,7 +22368,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "Roles": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles",
@@ -22280,7 +22379,10 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamInstanceProfileRole"
+          }
         }
       }
     },
@@ -22311,13 +22413,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html#cfn-ec2-dhcpoptions-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PolicyDocument": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html#cfn-iam-managedpolicy-policydocument",
           "PrimitiveType": "Json",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicyDocument"
+          }
         },
         "Roles": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html#cfn-iam-managedpolicy-roles",
@@ -22393,7 +22501,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-assumerolepolicydocument",
           "PrimitiveType": "Json",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamAssumeRoleDocument"
+          }
         },
         "ManagedPolicyArns": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-managepolicyarns",
@@ -22401,7 +22512,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "MaxSessionDuration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-maxsessionduration",
@@ -22413,7 +22527,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PermissionsBoundary": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-permissionsboundary",
@@ -22474,7 +22591,10 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamGroup"
+          }
         },
         "LoginProfile": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-loginprofile",
@@ -22488,13 +22608,19 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamManagedPolicy.Arn"
+          }
         },
         "Path": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-path",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "IamPath"
+          }
         },
         "PermissionsBoundary": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iam-user.html#cfn-iam-user-permissionsboundary",
@@ -23228,13 +23354,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-loggroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "CloudWatchLogGroupName"
+          }
         },
         "RetentionInDays": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#cfn-cwl-loggroup-retentionindays",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "CloudWatchLogGroupRetention"
+          }
         }
       }
     },
@@ -27013,6 +27145,10 @@
         "FORECASTED"
       ]
     },
+    "BudgetNotificationThreshold": {
+      "NumberMax": 1000000000,
+      "NumberMin": 0.1
+    },
     "BudgetNotificationThresholdType": {
       "AllowedValues": [
         "ABSOLUTE_VALUE",
@@ -27044,31 +27180,31 @@
     },
     "CloudFrontCustomErrorResponsesErrorCode": {
       "AllowedValues": [
-        400,
-        403,
-        404,
-        405,
-        414,
-        500,
-        501,
-        502,
-        503,
-        504
+        "400",
+        "403",
+        "404",
+        "405",
+        "414",
+        "500",
+        "501",
+        "502",
+        "503",
+        "504"
       ]
     },
     "CloudFrontCustomErrorResponsesResponseCode": {
       "AllowedValues": [
-        200,
-        400,
-        403,
-        404,
-        405,
-        414,
-        500,
-        501,
-        502,
-        503,
-        504
+        "200",
+        "400",
+        "403",
+        "404",
+        "405",
+        "414",
+        "500",
+        "501",
+        "502",
+        "503",
+        "504"
       ]
     },
     "CloudFrontGeoRestrictionType": {
@@ -27213,6 +27349,31 @@
         "StringEquals"
       ]
     },
+    "CloudWatchLogGroupName": {
+      "StringMax": 512,
+      "StringMin": 1
+    },
+    "CloudWatchLogGroupRetention": {
+      "AllowedValues": [
+        "1",
+        "3",
+        "5",
+        "7",
+        "14",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "365",
+        "400",
+        "545",
+        "731",
+        "1827",
+        "3653"
+      ]
+    },
     "CodeBuildArtifactPackaging": {
       "AllowedValues": [
         "NONE",
@@ -27270,6 +27431,11 @@
         "deleteReference",
         "updateReference"
       ]
+    },
+    "CodeCommitRepositoryName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9._-]+(?<!\\.git)$",
+      "StringMax": 100,
+      "StringMin": 1
     },
     "CodeDeployApplicationPlatform": {
       "AllowedValues": [
@@ -27784,7 +27950,7 @@
         "azuredb",
         "db2",
         "dynamodb",
-        "mariad",
+        "mariadb",
         "mongodb",
         "mysql",
         "oracle",
@@ -27862,6 +28028,10 @@
         "ASGAverageNetworkIn",
         "ASGAverageNetworkOut"
       ]
+    },
+    "EbsIops": {
+      "NumberMax": 20000,
+      "NumberMin": 100
     },
     "EbsVolumeType": {
       "AllowedValues": [
@@ -28013,13 +28183,74 @@
         "SCHEDULED"
       ]
     },
+    "GuardDutyDetectorFrequency": {
+      "AllowedValues": [
+        "FIFTEEN_MINUTES",
+        "ONE_HOUR",
+        "SIX_HOURS"
+      ]
+    },
+    "GuardDutyFilterAction": {
+      "AllowedValues": [
+        "ARCHIVE",
+        "NOOP"
+      ]
+    },
+    "GuardDutyIPSetFormat": {
+      "AllowedValues": [
+        "OTX_CSV",
+        "STIX",
+        "TXT"
+      ]
+    },
+    "GuardDutyMemberStatus": {
+      "AllowedValues": [
+        "Created",
+        "Disabled",
+        "Enabled",
+        "Invited",
+        "Removed",
+        "Resigned"
+      ]
+    },
+    "GuardDutyThreadIntelSetFormat": {
+      "AllowedValues": [
+        "ALIEN_VAULT",
+        "FIRE_EYE",
+        "OTX_CSV",
+        "PROOF_POINT",
+        "STIX",
+        "TXT"
+      ]
+    },
     "HttpProtocol": {
       "AllowedValues": [
         "http",
         "https"
       ]
     },
+    "IamAssumeRoleDocument": {
+      "JsonMax": 2048,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "IamGroup": {
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Group"
+        ]
+      }
+    },
     "IamInstanceProfile": {
+      "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
       "GetAtt": {},
       "Ref": {
         "Parameters": [
@@ -28037,9 +28268,62 @@
       "Ref": {
         "Parameters": [
           "String"
+        ]
+      }
+    },
+    "IamInstanceProfile.NameOrArn": {
+      "GetAtt": {
+        "AWS::IAM::InstanceProfile": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
         ],
         "Resources": [
           "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "IamInstanceProfileRole": {
+      "GetAtt": {},
+      "ListMax": 1,
+      "ListMin": 1,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "IamManagedPolicy.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+      "GetAtt": {},
+      "ListMax": 10,
+      "ListMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::ManagedPolicy"
+        ]
+      }
+    },
+    "IamManagedPolicyDocument": {
+      "JsonMax": 6144,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "IamPath": {
+      "AllowedPatternRegex": "^/(.+/)*$",
+      "Ref": {
+        "Parameters": [
+          "String"
         ]
       }
     },
@@ -28055,6 +28339,7 @@
       }
     },
     "IamRole.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
       "GetAtt": {
         "AWS::IAM::Role": "Arn"
       },
@@ -28212,6 +28497,28 @@
         ]
       }
     },
+    "NetworkAclRuleAction": {
+      "AllowedValues": [
+        "allow",
+        "deny"
+      ]
+    },
+    "NetworkAclRuleNumber": {
+      "NumberMax": 32766,
+      "NumberMin": 1
+    },
+    "NetworkInterfacePermission": {
+      "AllowedValues": [
+        "EIP-ASSOCIATE",
+        "INSTANCE-ATTACH"
+      ]
+    },
+    "PerformanceInsightsRetentionPeriod": {
+      "AllowedValues": [
+        "7",
+        "731"
+      ]
+    },
     "PlacementGroup": {
       "GetAtt": {},
       "Ref": {
@@ -28222,6 +28529,13 @@
           "AWS::EC2::PlacementGroup"
         ]
       }
+    },
+    "PlacementGroupStrategy": {
+      "AllowedValues": [
+        "cluster",
+        "partition",
+        "spread"
+      ]
     },
     "PlacementTenancy": {
       "AllowedValues": [
@@ -28254,6 +28568,17 @@
           "String"
         ]
       }
+    },
+    "RdsInstanceMonitoringInterval": {
+      "AllowedValues": [
+        "0",
+        "1",
+        "5",
+        "10",
+        "15",
+        "30",
+        "60"
+      ]
     },
     "RdsInstanceType": {
       "AllowedValues": [
@@ -28541,7 +28866,9 @@
       }
     },
     "SecurityGroupDescription": {
-      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$"
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
     },
     "SecurityGroupId": {
       "GetAtt": {
@@ -28619,6 +28946,32 @@
         "sqs"
       ]
     },
+    "SpotFleetAllocationStrategy": {
+      "AllowedValues": [
+        "diversified",
+        "lowestPrice"
+      ]
+    },
+    "SpotFleetExcessCapacityTerminationPolicy": {
+      "AllowedValues": [
+        "default",
+        "noTermination"
+      ]
+    },
+    "SpotFleetInstanceInterruptionBehavior": {
+      "AllowedValues": [
+        "hibernate",
+        "stop",
+        "terminate"
+      ]
+    },
+    "SpotFleetType": {
+      "AllowedValues": [
+        "instant",
+        "maintain",
+        "request"
+      ]
+    },
     "SsmDocumentName": {
       "GetAtt": {},
       "Ref": {
@@ -28678,6 +29031,30 @@
         ]
       }
     },
+    "TargetGroupHealthCheckTimeoutSeconds": {
+      "NumberMax": 60,
+      "NumberMin": 2
+    },
+    "TransitGatewayEnabled": {
+      "AllowedValues": [
+        "disable",
+        "enable"
+      ]
+    },
+    "VpcEndpointConnectionEvents": {
+      "AllowedValues": [
+        "Accept",
+        "Connect",
+        "Delete",
+        "Reject"
+      ]
+    },
+    "VpcEndpointType": {
+      "AllowedValues": [
+        "Gateway",
+        "Interface"
+      ]
+    },
     "VpcId": {
       "GetAtt": {
         "AWS::EC2::SecurityGroup": "VpcId",
@@ -28685,12 +29062,18 @@
       },
       "Ref": {
         "Parameters": [
-          "VpcId"
+          "VpcId",
+          "String"
         ],
         "Resources": [
           "AWS::EC2::VPC"
         ]
       }
+    },
+    "VpnType": {
+      "AllowedValues": [
+        "ipsec.1"
+      ]
     },
     "WorkspacePropertyComputeType": {
       "AllowedValues": [

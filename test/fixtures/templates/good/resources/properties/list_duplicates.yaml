@@ -1,0 +1,46 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  IamPolicy1:
+    Type: String
+  IamPolicy2:
+    Type: String
+  PrimaryRegion:
+    Type: String
+Conditions:
+  isPrimaryRegion: !Equals [!Ref PrimaryRegion, 'us-east-1']
+Resources:
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AdministratorPolicy
+      - arn:aws:iam::aws:policy/EC2FullAdmin
+      - !Ref IamPolicy1
+      - !Ref IamPolicy2
+  IamRoleWithConditions:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      ManagedPolicyArns:
+        Fn::If:
+        - isPrimaryRegion
+        - - arn:aws:iam::aws:policy/AdministratorPolicy
+          - arn:aws:iam::aws:policy/EC2FullAdmin
+          - !Ref IamPolicy1
+          - !Ref IamPolicy2
+        - !Ref AWS::NoValue
+  IamRoleWithNestedConditions:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      ManagedPolicyArns:
+        - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/AdministratorPolicy', !Ref 'AWS::NoValue']
+        - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/EC2FullAdmin', !Ref 'AWS::NoValue']
+  InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:  # Duplicates are allowed even though the list only takes 1 value
+      - !Ref IamRole
+      - !Ref IamRole
