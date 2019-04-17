@@ -1,3 +1,25 @@
+### 0.19.0
+###### Features
+- Add NS and PTR Route53 record checking to rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020)
+- New rule [E3050](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3050) to check if a Ref to IAM Role has a Role path of '/'
+- New rule [E3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3037) to look for duplicates in a list that doesn't support duplicates
+- New rule [I3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3037) to look for duplicates in a list when duplicates are allowed
+###### CloudFormation Specifications
+- Add Min/Max values to AWS::ElasticLoadBalancingV2::TargetGroup HealthCheckTimeoutSeconds
+- Add Max JSON size to AWS::IAM::ManagedPolicy PolicyDocument
+- Add allowed values for AWS::EC2 SpotFleet, TransitGateway, NetworkAcl
+NetworkInterface, PlacementGroup, and Volume
+- Add Min/max values to AWS::Budgets::Budget.Notification Threshold
+- Update RDS Instance types by database engine and license definitions using the pricing API
+- Update AWS::CodeBuild::Project ServiceRole to support Role Name or ARN
+- Update AWS::ECS::Service Role to support Role Name or ARN
+###### Fixes
+- Update [E3025](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3025) to support the new structure of data in the RDS instance type json
+- Update [E2540](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2540) to remove all nested conditions from the object
+- Update [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2540) to not do strict type checking
+- Update [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to support conditions nested in the record sets
+- Update [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) to better handle CloudFormation sub stacks with different GetAtt formats
+
 ### 0.18.1
 ###### CloudFormation Specifications
 - Update CloudFormation Specs to 2.30.0
