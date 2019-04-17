@@ -1,0 +1,35 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  IamPolicy:
+    Type: String
+  PrimaryRegion:
+    Type: String
+Conditions:
+  isPrimaryRegion: !Equals [!Ref PrimaryRegion, 'us-east-1']
+Resources:
+  IamGroup:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AdministratorPolicy
+      - arn:aws:iam::aws:policy/AdministratorPolicy
+      - !Ref IamPolicy
+      - !Ref IamPolicy
+  IamGroupWithConditions:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns:
+        Fn::If:
+        - isPrimaryRegion
+        - - arn:aws:iam::aws:policy/AdministratorPolicy
+          - arn:aws:iam::aws:policy/AdministratorPolicy
+          - !Ref IamPolicy
+          - !Ref IamPolicy
+        - !Ref AWS::NoValue
+  IamGroupWithNestedConditions:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns:
+        - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/AdministratorPolicy', !Ref 'AWS::NoValue']
+        - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/AdministratorPolicy', !Ref 'AWS::NoValue']
