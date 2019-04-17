@@ -120,7 +120,10 @@ class ValueRefGetAtt(CloudFormationLintRule):
         # You can sometimes get a list or a string with . in it
         if isinstance(value, list):
             resource_name = value[0]
-            resource_attribute = value[1:]
+            if len(value[1:]) == 1:
+                resource_attribute = value[1].split('.')
+            else:
+                resource_attribute = value[1:]
         elif isinstance(value, six.string_types):
             resource_name = value.split('.')[0]
             resource_attribute = value.split('.')[1:]
