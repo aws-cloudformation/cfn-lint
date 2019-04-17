@@ -128,4 +128,8 @@ Resources:
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
+      Protocol:
+        Fn::GetAtt:
+        - SubStack
+        - Outputs.Protocol
       LoadBalancerArn: !GetAtt SubStack.Outputs.LoadBalancerArn
