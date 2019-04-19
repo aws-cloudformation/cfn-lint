@@ -84,6 +84,22 @@ class TestCondition(BaseTestCase):
         self.assertTrue(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-1'}))
         self.assertFalse(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-2'}))
 
+    def test_direct_condition(self):
+        """ Test direction condition"""
+        template = {
+            'Conditions': {
+                'condition1': {
+                    'Fn::Equals': [{'Ref': 'AWS::Region'}, 'us-east-1']
+                },
+                'directcondition': {'Condition': 'condition1'}
+            }
+        }
+        result = conditions.Condition(template, 'directcondition')
+        self.assertTrue(
+            result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1'}))
+        self.assertFalse(
+            result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-west-1'}))
+
     def test_and_condition(self):
         """ Test getting a condition setup """
         template = {
