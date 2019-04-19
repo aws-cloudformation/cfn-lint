@@ -164,6 +164,12 @@ class Condition(object):
                         equal = Equals(func_value)
                         self.process_influenced_equal(equal)
                         self.Equals = equal
+                    elif func_name == 'Condition':
+                        value = template.get('Conditions', {}).get(func_value, {})
+                        try:
+                            self.process_condition(template, value)
+                        except ConditionParseError:
+                            LOGGER.debug('Error parsing condition: %s', func_value)
             else:
                 LOGGER.debug('Length of the object must be 1')
                 raise ConditionParseError
