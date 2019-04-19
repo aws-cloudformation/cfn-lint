@@ -21,7 +21,19 @@ Parameters:
     Default: /Demo/DemoInstanceType # Recommend t3.nano
     Description: EC2 instance type to use to create the collector host
     Type: AWS::SSM::Parameter::Value<String>
+  LogsRetentionLength:
+    AllowedValues:
+      - 1
+      - 3
+    Default: 1
+    Description: The retention length of the logs.
+    Type: Number
 Resources:
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: !Ref LogsRetentionLength
+      LogGroupName: '/name'
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
     Properties:
