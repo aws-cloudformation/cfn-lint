@@ -1,3 +1,8 @@
+### 0.19.1
+###### Fixes
+- Fix core Condition processing to support direct Condition in another Condition
+- Fix the W2030 to check numbers against string allowed values
+
 ### 0.19.0
 ###### Features
 - Add NS and PTR Route53 record checking to rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020)
