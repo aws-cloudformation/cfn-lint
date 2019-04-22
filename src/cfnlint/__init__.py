@@ -73,7 +73,7 @@ class CloudFormationLintRule(object):
             for key, value in configs.items():
                 if key in self.config_definition:
                     if self.config_definition[key]['type'] == 'boolean':
-                        self.config[key] = bool(value)
+                        self.config[key] = cfnlint.helpers.bool_compare(value, True)
                     elif self.config_definition[key]['type'] == 'string':
                         self.config[key] = str(value)
                     elif self.config_definition[key]['type'] == 'integer':

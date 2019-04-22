@@ -61,16 +61,26 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 if item_type in ['String']:
                     str(value)
                 elif item_type in ['Boolean']:
-                    bool(value)
-                elif item_type in ['Integer']:
-                    int(value)
-                elif item_type in ['Long']:
-                    if sys.version_info < (3,):
-                        long(value)  # pylint: disable=undefined-variable
-                    else:
+                    if value not in ['True', 'true', 'False', 'false']:
+                        message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                        matches.append(RuleMatch(path, message, **extra_args))
+                elif item_type in ['Integer', 'Long', 'Double']:
+                    if isinstance(value, bool):
+                        message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                        matches.append(RuleMatch(path, message, **extra_args))
+                    elif item_type in ['Integer']:
                         int(value)
-                elif item_type in ['Double']:
-                    float(value)
+                    elif item_type in ['Long']:
+                        # Some times python will strip the decimals when doing a conversion
+                        if isinstance(value, float):
+                            message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                            matches.append(RuleMatch(path, message, **extra_args))
+                        if sys.version_info < (3,):
+                            long(value)  # pylint: disable=undefined-variable
+                        else:
+                            int(value)
+                    else:  # has to be a Double
+                        float(value)
             except Exception:  # pylint: disable=W0703
                 message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
                 matches.append(RuleMatch(path, message, **extra_args))
