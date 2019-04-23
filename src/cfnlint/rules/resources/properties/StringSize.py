@@ -62,8 +62,13 @@ class StringSize(CloudFormationLintRule):
                 if prop in specs:
                     value_type = specs.get(prop).get('Value', {}).get('ValueType', '')
                     if value_type:
-                        property_type = specs.get(prop).get('PrimitiveType')
+                        if specs.get(prop).get('Type') == 'List':
+                            property_type = specs.get(prop).get('PrimitiveItemType')
+                        else:
+                            property_type = specs.get(prop).get('PrimitiveType')
+
                         value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
+
                         if value_specs.get('StringMax') and value_specs.get('StringMin'):
                             if property_type == 'String':
                                 matches.extend(
