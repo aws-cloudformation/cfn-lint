@@ -522,6 +522,25 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
+  EC2LaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        BlockDeviceMappings:
+          - DeviceName: /dev/sdm
+            Ebs:
+              VolumeType: "disk" # Invalid AllowedValue
+        CreditSpecification:
+          CpuCredits: "unlimit" # Invalid AllowedValue
+        InstanceInitiatedShutdownBehavior: "hibernate" # Invalid AllowedValue
+        InstanceMarketOptions:
+          MarketType: "sport" # Invalid AllowedValue
+          SpotOptions:
+            InstanceInterruptionBehavior: "remove" # Invalid AllowedValue
+            SpotInstanceType: "onetime" # Invalid AllowedValue
+        InstanceType: "t4.small" # Invalid AllowedValue
+        Placement:
+          Tenancy: "instance" # Invalid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
