@@ -20,7 +20,7 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 
 class NumberSize(CloudFormationLintRule):
-    """Check if a String has a length within the limit"""
+    """Check if a Number has a length within the limit"""
     id = 'E3034'
     shortdesc = 'Check if a number is between min and max'
     description = 'Check numbers (integers and floats) for its value being between the minimum and maximum'

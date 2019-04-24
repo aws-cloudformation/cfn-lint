@@ -551,6 +551,25 @@ Resources:
     Properties:
       ImageId: "ami-2f726546"
       InstanceType: !Ref SsmInstanceType
+  EC2LaunchTemplate:
+    Type: "AWS::EC2::LaunchTemplate"
+    Properties:
+      LaunchTemplateData:
+        BlockDeviceMappings:
+          - DeviceName: /dev/sdm
+            Ebs:
+              VolumeType: !Ref "AutoScalingLaunchConfigurationVolume" # Valid AllowedValue
+        CreditSpecification:
+          CpuCredits: "unlimited" # Valid AllowedValue
+        InstanceInitiatedShutdownBehavior: "terminate" # Valid AllowedValue
+        InstanceMarketOptions:
+          MarketType: "spot" # Valid AllowedValue
+          SpotOptions:
+            InstanceInterruptionBehavior: "hibernate" # Valid AllowedValue
+            SpotInstanceType: "one-time" # Valid AllowedValue
+        InstanceType: "t3.small" # Valid AllowedValue
+        Placement:
+          Tenancy: "host" # Valid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
