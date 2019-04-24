@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  subscription-filter-failed-template
+
+  Sample SAM Template for subscription-filter-failed-template
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+      Timeout: 30
+
+
+Resources:
+
+  FunctionA:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello_world/build/
+      Handler: app.lambda_handler
+      Runtime: python3.6
+  FunctionALogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FunctionA}
+      RetentionInDays: 3
+
+  FunctionB:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello_world/build/
+      Handler: app.lambda_handler
+      Runtime: python3.6
+  FunctionBLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FunctionB}
+      RetentionInDays: 3
+  FunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello_world/build/
+      Handler: app.lambda_handler
+      Runtime: python3.6
+  FunctionCLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${FunctionC}
+      RetentionInDays: 3
+
+  LogSubscriptionFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: subscription_function/build/
+      Handler: app.lambda_handler
+      Runtime: python3.6
+      Events:
+        FunctionALogGroup:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName: !Ref FunctionALogGroup
+            FilterPattern: ""
+        FunctionBLogGroup:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName: !Ref FunctionBLogGroup
+            FilterPattern: ""
+        FunctionCLogGroup:
+          Type: CloudWatchLogs
+          Properties:
+            LogGroupName: !Ref FunctionCLogGroup
+            FilterPattern: ""
+  LogSubscriptionFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/${LogSubscriptionFunction}
+      RetentionInDays: 3
