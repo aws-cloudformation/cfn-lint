@@ -539,6 +539,9 @@ Resources:
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
+      Affinity: "default" # Valid AllowedValue
+      CreditSpecification:
+        CPUCredits: "standard" # Valid AllowedValue
       ImageId: "ami-2f726546"
       InstanceType: "t1.micro" # Valid AllowedValue
       KeyName: ""
@@ -546,6 +549,9 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "gp2" # Valid AllowedValue
+      ElasticInferenceAccelerators:
+        - Type: "eia1.medium" # Valid AllowedValue
+      Tenancy: "dedicated" # Valid AllowedValue
   EC2Instance2:
     Type: AWS::EC2::Instance
     Properties:

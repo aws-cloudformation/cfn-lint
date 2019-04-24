@@ -3004,7 +3004,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-creditspecification.html#cfn-ec2-instance-creditspecification-cpucredits",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "Ec2CpuCredits"
+          }
         }
       }
     },
@@ -3073,7 +3076,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-elasticinferenceaccelerator.html#cfn-ec2-instance-elasticinferenceaccelerator-type",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "ElasticInferenceAccelerator"
+          }
         }
       }
     },
@@ -13939,7 +13945,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-affinity",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ValueType": "Affinity"
+          }
         },
         "AvailabilityZone": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-availabilityzone",
@@ -14165,7 +14174,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-tenancy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ValueType": "Ec2Tenancy"
+          }
         },
         "UserData": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-userdata",
@@ -21036,6 +21048,12 @@
     }
   },
   "ValueTypes": {
+    "Affinity": {
+      "AllowedValues": [
+        "default",
+        "host"
+      ]
+    },
     "AllocationId": {
       "GetAtt": {
         "AWS::EC2::EIP": "AllocationId"
@@ -22124,13 +22142,6 @@
         "terminate"
       ]
     },
-    "EC2LaunchConfigurationPlacementTenancy": {
-      "AllowedValues": [
-        "dedicated",
-        "default",
-        "host"
-      ]
-    },
     "EC2MarketType": {
       "AllowedValues": [
         "spot"
@@ -22232,6 +22243,20 @@
           "String"
         ]
       }
+    },
+    "Ec2Tenancy": {
+      "AllowedValues": [
+        "dedicated",
+        "default",
+        "host"
+      ]
+    },
+    "ElasticInferenceAccelerator": {
+      "AllowedValues": [
+        "eia1.large",
+        "eia1.medium",
+        "eia1.xlarge"
+      ]
     },
     "GlueConnectionInputType": {
       "AllowedValues": [
