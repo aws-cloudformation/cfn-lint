@@ -44,21 +44,62 @@ HTTPS has certificate HTTP has no certificate'
 
         return matches
 
-    def check_alb_subnets(self, props, path):
+    def is_application_loadbalancer(self, properties):
+        """ Check if type is application """
+        elb_type = properties.get('Type')
+        if not elb_type or elb_type == 'application':
+            return True
+        return False
+
+    def check_alb_subnets(self, properties, path):
         """ Validate at least two subnets with ALBs"""
         matches = []
-        elb_type = props.get('Type')
-        if elb_type == 'application':
-            subnets = props.get('Subnets')
+        if self.is_application_loadbalancer(properties):
+            subnets = properties.get('Subnets')
             if isinstance(subnets, list):
                 if len(subnets) < 2:
                     path = path + ['Subnets']
                     matches.append(RuleMatch(path, 'You must specify at least two Subnets for load balancers with type "application"'))
-            subnet_mappings = props.get('SubnetMappings')
+            subnet_mappings = properties.get('SubnetMappings')
             if isinstance(subnet_mappings, list):
                 if len(subnet_mappings) < 2:
                     path = path + ['SubnetMappings']
                     matches.append(RuleMatch(path, 'You must specify at least two SubnetMappings for load balancers with type "application"'))
+
+        return matches
+
+    def check_loadbalancer_allowed_attributes(self, properties, path):
+        """ Validate loadbalancer attributes per loadbalancer type"""
+        matches = []
+
+        allowed_attributes = {
+            'all': [
+                'access_logs.s3.enabled',
+                'access_logs.s3.bucket',
+                'access_logs.s3.prefix',
+                'deletion_protection.enabled'
+            ],
+            'application': [
+                'idle_timeout.timeout_seconds',
+                'routing.http2.enabled'
+            ],
+            'network': [
+                'load_balancing.cross_zone.enabled'
+            ]
+        }
+
+        loadbalancer_attributes = properties.get('LoadBalancerAttributes')
+        if isinstance(loadbalancer_attributes, list):
+            for item in loadbalancer_attributes:
+                key = item.get('Key')
+                value = item.get('Value')
+                if isinstance(key, six.string_types) and isinstance(value, (six.string_types, bool, int)):
+                    loadbalancer = 'network'
+                    if self.is_application_loadbalancer(properties):
+                        loadbalancer = 'application'
+                    if key not in allowed_attributes['all'] and key not in allowed_attributes[loadbalancer]:
+                        message = 'Attribute "{0}" not allowed for load balancers with type "{1}"'
+                        matches.append(RuleMatch(path, message.format(key, loadbalancer)))
 
         return matches
 
@@ -92,12 +133,12 @@ HTTPS has certificate HTTP has no certificate'
         results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::LoadBalancer'])
         for result in results:
             properties = result['Value']
-            elb_type = properties.get('Type')
-            if elb_type == 'network':
+            if not self.is_application_loadbalancer(properties):
                 if 'SecurityGroups' in properties:
                     path = result['Path'] + ['SecurityGroups']
                     matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
 
             matches.extend(self.check_alb_subnets(properties, result['Path']))
+            matches.extend(self.check_loadbalancer_allowed_attributes(properties, result['Path']))
 
         return matches
