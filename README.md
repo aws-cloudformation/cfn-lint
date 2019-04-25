@@ -128,6 +128,7 @@ To maintain backwards compatibility `info` rules are not included by default.  T
 
 ### Metadata
 
+#### Template Based Metadata
 Inside the root level Metadata key you can configure cfn-lint using the supported parameters.
 
 ```yaml
@@ -139,6 +140,23 @@ Metadata:
       - us-east-2
       ignore_checks:
       - E2530
+```
+
+#### Resource Based Metadata
+Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs.
+
+```yaml
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+          - E3030
+    Properties:
+      InstanceType: nt.x4superlarge
+      ImageId: ami-abc1234
 ```
 
 ### Precedence
