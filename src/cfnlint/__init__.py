@@ -565,6 +565,22 @@ class Template(object):  # pylint: disable=R0904
 
         return results
 
+    def get_directives(self):
+        """ Get Directives"""
+        results = {}
+        for _, resource_values in self.template.get('Resources', {}).items():
+            ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
+            for ignore_rule_id in ignore_rule_ids:
+                if ignore_rule_id not in results:
+                    results[ignore_rule_id] = []
+                location = self._loc(resource_values)
+                results[ignore_rule_id].append({
+                    'start': location[0],
+                    'end': location[2]
+                })
+
+        return results
+
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
         LOGGER.debug('Get Sub Resource Properties from %s', keys)
@@ -1310,11 +1326,20 @@ class Runner(object):
                 self.rules.run(
                     self.filename, self.cfn))
 
-        # uniq the list of incidents
+        # uniq the list of incidents and filter out exceptions from the template
+        directives = self.cfn.get_directives()
         return_matches = []
-        for _, match in enumerate(matches):
+        for match in matches:
             if not any(match == u for u in return_matches):
-                return_matches.append(match)
+                if match.rule.id not in directives:
+                    return_matches.append(match)
+                else:
+                    exception = False
+                    for directive in directives.get(match.rule.id):
+                        if directive.get('start') <= match.linenumber <= directive.get('end'):
+                            exception = True
+                    if not exception:
+                        return_matches.append(match)
         return return_matches
 
 
