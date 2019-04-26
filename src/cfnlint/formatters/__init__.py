@@ -78,7 +78,8 @@ class JsonFormatter(BaseFormatter):
                         'End': {
                             'ColumnNumber': o.columnnumberend,
                             'LineNumber': o.linenumberend,
-                        }
+                        },
+                        'Path': getattr(o, 'path', None),
                     },
                     'Level': level,
                     'Message': o.message,
