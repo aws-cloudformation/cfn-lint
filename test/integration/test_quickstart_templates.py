@@ -106,8 +106,14 @@ class TestQuickStartTemplates(BaseTestCase):
                     for match in matches:
                         if c['Location']['Start']['LineNumber'] == match.linenumber and \
                                 c['Location']['Start']['ColumnNumber'] == match.columnnumber and \
+                                c['Location']['Path'] == getattr(match, "path", None) and \
                                 c['Rule']['Id'] == match.rule.id:
                             matched = True
-                    assert matched is True, 'Expected error {} at line {}, column {} in matches for {}'.format(c['Rule']['Id'], c['Location']['Start']['LineNumber'], c['Location']['Start']['ColumnNumber'], filename)
+                    assert matched is True, 'Expected error {} at line {}, column {}, path {} in matches for {}'.format(
+                            c['Rule']['Id'],
+                            c['Location']['Start']['LineNumber'],
+                            c['Location']['Start']['ColumnNumber'],
+                            "/".join(map(str, c['Location']['Path'])) if c['Location']['Path'] else "null",
+                            filename)
             else:
                 assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)

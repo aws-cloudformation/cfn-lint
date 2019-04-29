@@ -49,6 +49,9 @@ class Properties(CloudFormationLintRule):
         """
 
         matches = []
+        if isinstance(value, list) or value == {'Ref': 'AWS::NotificationARNs'}:
+            message = 'Property should be of type %s not List at %s' % (primtype, '/'.join(map(str, proppath)))
+            matches.append(RuleMatch(proppath, message))
         if isinstance(value, dict) and primtype == 'Json':
             return matches
         if isinstance(value, dict):
@@ -71,9 +74,6 @@ class Properties(CloudFormationLintRule):
             else:
                 message = 'Property is an object instead of %s at %s' % (primtype, '/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
-        elif isinstance(value, list):
-            message = 'Property should be of type %s not List at %s' % (primtype, '/'.join(map(str, proppath)))
-            matches.append(RuleMatch(proppath, message))
 
         return matches
 
@@ -275,6 +275,8 @@ class Properties(CloudFormationLintRule):
                             elif isinstance(text[prop], dict):
                                 if 'Ref' in text[prop]:
                                     ref = text[prop]['Ref']
+                                    if ref == 'AWS::NotificationARNs':
+                                        continue
                                     if ref in parameternames:
                                         param_type = self.cfn.template['Parameters'][ref]['Type']
                                         if param_type:
