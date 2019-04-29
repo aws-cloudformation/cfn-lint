@@ -679,6 +679,13 @@ Resources:
         Fn::ImportValue: "MyServiceToken"
       String: "envvar1=1, envvar2=2"
 
+  ### Test AWS::NotificationARNs Psuedo Parameter
+  SubStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://example.com
+      NotificationARNs: !Ref AWS::NotificationARNs
+
   ProjectBuild:
     Type: AWS::CodeBuild::Project
     Properties:
