@@ -31,6 +31,7 @@ def update_resource_specs():
     """ Update Resource Specs """
 
     regions = {
+        'ap-east-1': 'https://s3.ap-east-1.amazonaws.com/cfn-resource-specifications-ap-east-1-prod/latest/CloudFormationResourceSpecification.json',
         'ap-northeast-1': 'https://d33vqc0rt9ld30.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
         'ap-northeast-3': 'https://d2zq80gdmjim8k.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
