@@ -35,6 +35,7 @@ region_map = {
     'US East (Ohio)': 'us-east-2',
     'US West (Oregon)': 'us-west-2',
     'AWS GovCloud (US-East)': 'us-gov-east-1',
+    'Asia Pacific (Hong Kong)': 'ap-east-1',
     'Asia Pacific (Tokyo)': 'ap-northeast-1',
     'EU (Stockholm)': 'eu-north-1',
     'Asia Pacific (Singapore)': 'ap-southeast-1',
