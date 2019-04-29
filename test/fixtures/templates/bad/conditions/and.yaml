@@ -1,0 +1,21 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  TestAndString: !And 'And'
+  TestAndToLittle: !And [{'Condition': 'TestAndToMany'}]
+  TestAndToMany:
+    Fn::And:
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+    - {'Condition': 'TestAndToLittle'}
+  TestAndBadCondition: !And [{'Condition': 'TestAndToMany', 'Extra': 'ThisIsBad'}, {'Bad': 'TestAndToMany'}]
+  TestAndBadArray: !And ['Test', 'Test2']
+Resources: {}
