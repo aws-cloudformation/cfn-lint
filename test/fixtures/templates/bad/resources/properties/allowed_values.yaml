@@ -512,9 +512,18 @@ Resources:
           KeyType: "hash" # Invalid AllowedValue
       StreamSpecification:
         StreamViewType: "NEW_AND_OLD" # Invalid AllowedValue
+  EC2Host:
+    Type: "AWS::EC2::Host"
+    Properties:
+      AutoPlacement: "On" # Invalid allowed Value
+      AvailabilityZone: "eu-west-1a"
+      InstanceType: "t3.medium"
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
+      Affinity: "dedicated" # Invalid AllowedValue
+      CreditSpecification:
+        CPUCredits: "default" # Invalid AllowedValue
       ImageId: "ami-2f726546"
       InstanceType: "t1.small" # Invalid AllowedValue
       KeyName: ""
@@ -522,6 +531,9 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
+      ElasticInferenceAccelerators:
+        - Type: "t2.medium" # Invalid AllowedValue
+      Tenancy: "instance" # Invalid AllowedValue
   EC2LaunchTemplate:
     Type: "AWS::EC2::LaunchTemplate"
     Properties:

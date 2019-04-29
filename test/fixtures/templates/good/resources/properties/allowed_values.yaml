@@ -536,9 +536,18 @@ Resources:
           KeyType: "HASH" # Valid AllowedValue
       StreamSpecification:
         StreamViewType: "NEW_AND_OLD_IMAGES" # Valid AllowedValue
+  EC2Host:
+    Type: "AWS::EC2::Host"
+    Properties:
+      AutoPlacement: "on" # Valid allowed Value
+      AvailabilityZone: "eu-west-1a"
+      InstanceType: "m3.medium"
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
+      Affinity: "default" # Valid AllowedValue
+      CreditSpecification:
+        CPUCredits: "standard" # Valid AllowedValue
       ImageId: "ami-2f726546"
       InstanceType: "t1.micro" # Valid AllowedValue
       KeyName: ""
@@ -546,6 +555,9 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "gp2" # Valid AllowedValue
+      ElasticInferenceAccelerators:
+        - Type: "eia1.medium" # Valid AllowedValue
+      Tenancy: "dedicated" # Valid AllowedValue
   EC2Instance2:
     Type: AWS::EC2::Instance
     Properties:
