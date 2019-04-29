@@ -33,6 +33,7 @@ class AvailabilityZone(CloudFormationLintRule):
             'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',
             'AWS::RDS::DBCluster',
+            'AWS::EC2::Volume',
             'AWS::ElasticLoadBalancing::LoadBalancer',
             'AWS::OpsWorks::Instance',
             'AWS::RDS::DBInstance',
