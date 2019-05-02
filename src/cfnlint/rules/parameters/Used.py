@@ -48,11 +48,11 @@ class Used(CloudFormationLintRule):
 
         matches = []
 
-        reftrees = cfn.search_deep_keys('Ref')
+        reftrees = cfn.transform_pre.get('Ref')
+        subtrees = cfn.transform_pre.get('Fn::Sub')
         refs = []
         for reftree in reftrees:
             refs.append(reftree[-1])
-        subtrees = cfn.search_deep_keys('Fn::Sub')
         subs = []
         for subtree in subtrees:
             if isinstance(subtree[-1], list):
