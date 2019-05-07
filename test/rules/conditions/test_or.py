@@ -14,20 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.parameters.Used import Used  # pylint: disable=E0401
+from cfnlint.rules.conditions.Or import Or  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestParameterUsed(BaseRuleTestCase):
-    """Test template parameter configurations"""
+class TestOr(BaseRuleTestCase):
+    """Test template mapping configurations"""
     def setUp(self):
         """Setup"""
-        super(TestParameterUsed, self).setUp()
-        self.collection.register(Used())
-        self.success_templates = [
-            'test/fixtures/templates/good/parameters/used_transforms.yaml',
-            'test/fixtures/templates/good/parameters/used_transform_removed.yaml'
-        ]
+        super(TestOr, self).setUp()
+        self.collection.register(Or())
+
+    success_templates = [
+    ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -35,8 +34,4 @@ class TestParameterUsed(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/parameters.yaml', 3)
-
-    def test_file_negative_removed(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/parameters/used_transform_removed.yaml', 1)
+        self.helper_file_negative('test/fixtures/templates/bad/conditions/or.yaml', 7)

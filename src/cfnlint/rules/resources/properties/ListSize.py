@@ -59,7 +59,7 @@ class ListSize(CloudFormationLintRule):
                             )
                         else:
                             scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
-                            message = '{0} has to have between {1} and {2} items specified when {0}'
+                            message = '{0} has to have between {1} and {2} items specified when {3}'
                             matches.append(
                                 RuleMatch(
                                     path + [property_name],
