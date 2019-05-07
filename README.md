@@ -32,6 +32,10 @@ Python 2.7+ and 3.4+ are supported.
 `pip install cfn-lint`. If pip is not available, run
 `python setup.py clean --all` then `python setup.py install`.
 
+### Homebrew (macOS)
+
+`brew install cfn-lint`
+
 ### Editor Plugins
 
 There are IDE plugins available to get direct linter feedback from you favorite editor:
