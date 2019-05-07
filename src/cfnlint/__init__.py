@@ -48,6 +48,8 @@ class CloudFormationLintRule(object):
     def __init__(self):
         self.resource_property_types = []
         self.resource_sub_property_types = []
+        self.config = {}  # `-X E3012:strict=false`... Show more
+        self.config_definition = {}
 
     def __repr__(self):
         return '%s: %s' % (self.id, self.shortdesc)
@@ -58,6 +60,24 @@ class CloudFormationLintRule(object):
 
     def initialize(self, cfn):
         """Initialize the rule"""
+
+    def configure(self, configs=None):
+        """ Set the configuration """
+
+        # set defaults
+        if isinstance(self.config_definition, dict):
+            for config_name, config_values in self.config_definition.items():
+                self.config[config_name] = config_values['default']
+
+        if isinstance(configs, dict):
+            for key, value in configs.items():
+                if key in self.config_definition:
+                    if self.config_definition[key]['type'] == 'boolean':
+                        self.config[key] = cfnlint.helpers.bool_compare(value, True)
+                    elif self.config_definition[key]['type'] == 'string':
+                        self.config[key] = str(value)
+                    elif self.config_definition[key]['type'] == 'integer':
+                        self.config[key] = int(value)
 
     match = None
     match_resource_properties = None
@@ -134,7 +154,7 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None, include_rules=None, include_experimental=False):
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False):
         self.rules = []
 
         # Whether "experimental" rules should be added
@@ -143,7 +163,7 @@ class RulesCollection(object):
         # Make Ignore Rules not required
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
-
+        self.configure_rules = configure_rules or []
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         self.include_rules.extend(['W', 'E'])
@@ -152,6 +172,8 @@ class RulesCollection(object):
         """Register rules"""
         if self.is_rule_enabled(rule.id, rule.experimental):
             self.rules.append(rule)
+            if rule.id in self.configure_rules:
+                rule.configure(self.configure_rules[rule.id])
 
     def __iter__(self):
         return iter(self.rules)
@@ -164,6 +186,8 @@ class RulesCollection(object):
         for rule in more:
             if self.is_rule_enabled(rule.id, rule.experimental):
                 self.rules.append(rule)
+                if rule.id in self.configure_rules:
+                    rule.configure(self.configure_rules[rule.id])
 
     def __repr__(self):
         return '\n'.join([rule.verbose()
@@ -342,14 +366,17 @@ class RulesCollection(object):
 
         return matches
 
-    @classmethod
-    def create_from_directory(cls, rulesdir):
+    def create_from_directory(self, rulesdir):
         """Create rules from directory"""
-        result = cls([])
+        result = []
         if rulesdir != '':
-            result.rules = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
+            result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
 
-        return result
+        for rule in result:
+            if rule.id in self.configure_rules:
+                rule.configure(self.configure_rules[rule.id])
+
+        self.extend(result)
 
 
 class RuleMatch(object):

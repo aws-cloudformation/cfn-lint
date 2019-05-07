@@ -14,19 +14,3 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import cfnlint.core
-import cfnlint.helpers  # pylint: disable=E0401
-from testlib.testcase import BaseTestCase
-
-
-class TestGetRules(BaseTestCase):
-    """Test Run Checks """
-
-    def test_invalid_rule(self):
-        """test invalid rules"""
-        err = None
-        try:
-            cfnlint.core.get_rules(["invalid"], [], [], [])
-        except cfnlint.core.UnexpectedRuleException as e:
-            err = e
-        assert (type(err) == cfnlint.core.UnexpectedRuleException)

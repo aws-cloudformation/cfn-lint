@@ -104,26 +104,26 @@ def update_documentation(rules):
 
         # Add the rules
         new_file.write('The following **{}** rules are applied by this linter:\n\n'.format(len(sorted_rules)))
-        new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
-        new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
+        new_file.write('| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n')
+        new_file.write('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n')
 
-        rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | [Source]({3}) | {4} |\n'
+        rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
 
         # Add system Errors (hardcoded)
         parseerror = cfnlint.ParseError()
         tags = ','.join('`{0}`'.format(tag) for tag in parseerror.tags)
         new_file.write(rule_output.format(
-            parseerror.id, parseerror.shortdesc, parseerror.description, '', tags))
+            parseerror.id, parseerror.shortdesc, parseerror.description, '', '', tags))
 
         transformerror = cfnlint.TransformError()
         tags = ','.join('`{0}`'.format(tag) for tag in transformerror.tags)
         new_file.write(rule_output.format(
-            transformerror.id, transformerror.shortdesc, transformerror.description, '', tags))
+            transformerror.id, transformerror.shortdesc, transformerror.description, '', '', tags))
 
         ruleerror = cfnlint.RuleError()
         tags = ','.join('`{0}`'.format(tag) for tag in ruleerror.tags)
         new_file.write(
-            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', tags))
+            rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', '', tags))
 
         # Seprate the experimental rules
         experimental_rules = []
@@ -135,7 +135,8 @@ def update_documentation(rules):
                 continue
 
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
+            config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default')) for key, values in rule.config_definition.items())
+            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, config, rule.source_url, tags))
 
         # Output the experimental rules (if any)
         if experimental_rules:
@@ -145,7 +146,8 @@ def update_documentation(rules):
 
             for rule in experimental_rules:
                 tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-                new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, rule.source_url, tags))
+                config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default')) for key, values in rule.config_definition.items())
+                new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, config, rule.source_url, tags))
 
 def patch_spec(content, region):
     """Patch the spec file"""

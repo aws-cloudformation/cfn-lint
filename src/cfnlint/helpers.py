@@ -208,10 +208,10 @@ def bool_compare(first, second):
     """ Compare strings to boolean values """
 
     if isinstance(first, six.string_types):
-        first = bool(first.lower() == 'true')
+        first = bool(first.lower() in ['true', 'True'])
 
     if isinstance(second, six.string_types):
-        second = bool(second.lower() == 'true')
+        second = bool(second.lower() in ['true', 'True'])
 
     return first is second
 

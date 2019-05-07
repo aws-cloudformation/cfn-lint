@@ -20,6 +20,7 @@ import logging
 import glob
 import json
 import os
+import copy
 import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
@@ -221,6 +222,59 @@ def comma_separated_arg(string):
     return string.split(',')
 
 
+def _ensure_value(namespace, name, value):
+    if getattr(namespace, name, None) is None:
+        setattr(namespace, name, value)
+    return getattr(namespace, name)
+
+
+class RuleConfigurationAction(argparse.Action):
+    """ Override the default Action """
+    def __init__(self, option_strings, dest, nargs=None, const=None, default=None,
+                 type=None, choices=None, required=False, help=None, metavar=None):  # pylint: disable=W0622
+        super(RuleConfigurationAction, self).__init__(
+            option_strings=option_strings,
+            dest=dest,
+            nargs=nargs,
+            const=const,
+            default=default,
+            type=type,
+            choices=choices,
+            required=required,
+            help=help,
+            metavar=metavar)
+
+    def _parse_rule_configuration(self, string):
+        """ Parse the config rule structure """
+        configs = comma_separated_arg(string)
+        results = {}
+        for config in configs:
+            rule_id = config.split(':')[0]
+            config_name = config.split(':')[1].split('=')[0]
+            config_value = config.split(':')[1].split('=')[1]
+            if rule_id not in results:
+                results[rule_id] = {}
+            results[rule_id][config_name] = config_value
+
+        return results
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        items = copy.copy(_ensure_value(namespace, self.dest, {}))
+        try:
+            for value in values:
+                new_value = self._parse_rule_configuration(value)
+                for v_k, v_vs in new_value.items():
+                    if v_k in items:
+                        for s_k, s_v in v_vs.items():
+                            items[v_k][s_k] = s_v
+                    else:
+                        items[v_k] = v_vs
+            setattr(namespace, self.dest, items)
+        except Exception:  # pylint: disable=W0703
+            parser.print_help()
+            parser.exit()
+
+
 class CliArgs(object):
     """ Base Args class"""
     cli_args = {}
@@ -305,6 +359,12 @@ class CliArgs(object):
             '-e', '--include-experimental', help='Include experimental rules', action='store_true'
         )
 
+        standard.add_argument(
+            '-x', '--configure-rule', dest='configure_rules', nargs='+', default={},
+            action=RuleConfigurationAction,
+            help='Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false'
+        )
+
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
             help='A CloudFormation Spec override file that allows customization'
@@ -365,6 +425,9 @@ class TemplateArgs(object):
                     if config_name == 'include_checks':
                         if isinstance(config_value, list):
                             defaults['include_checks'] = config_value
+                    if config_name == 'configure_rules':
+                        if isinstance(config_value, dict):
+                            defaults['configure_rules'] = config_value
 
         self._template_args = defaults
 
@@ -529,3 +592,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def listrules(self):
         """ listrules """
         return self._get_argument_value('listrules', False, False)
+
+    @property
+    def configure_rules(self):
+        """ Configure rules """
+        return self._get_argument_value('configure_rules', True, True)
