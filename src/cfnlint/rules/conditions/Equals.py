@@ -35,6 +35,8 @@ class Equals(CloudFormationLintRule):
         # Build the list of functions
         equal_trees = cfn.search_deep_keys('Fn::Equals')
 
+        allowed_functions = ['Ref', 'Fn::FindInMap', 'Fn::Sub', 'Fn::Join', 'Fn::Select', 'Fn::Split']
+
         for equal_tree in equal_trees:
             equal = equal_tree[-1]
             if not isinstance(equal, list):
@@ -54,7 +56,7 @@ class Equals(CloudFormationLintRule):
                     if isinstance(element, dict):
                         if len(element) == 1:
                             for element_key in element.keys():
-                                if element_key not in ['Ref', 'Fn::FindInMap']:
+                                if element_key not in allowed_functions:
                                     message = 'Fn::Equals element must be a string, Ref, or a Fn::FindInMap'
                                     matches.append(RuleMatch(
                                         equal_tree[:-1] + [index, element_key],
