@@ -57,22 +57,22 @@ class Equals(CloudFormationLintRule):
                         if len(element) == 1:
                             for element_key in element.keys():
                                 if element_key not in allowed_functions:
-                                    message = 'Fn::Equals element must be a string, Ref, or a Fn::FindInMap'
+                                    message = 'Fn::Equals element must be a supported function ({0})'
                                     matches.append(RuleMatch(
                                         equal_tree[:-1] + [index, element_key],
-                                        message.format()
+                                        message.format(', '.join(allowed_functions))
                                     ))
                         else:
-                            message = 'Fn::Equals element must be a string, Ref, or a Fn::FindInMap'
+                            message = 'Fn::Equals element must be a supported function ({0})'
                             matches.append(RuleMatch(
                                 equal_tree[:-1] + [index],
-                                message.format()
+                                message.format(', '.join(allowed_functions))
                             ))
                     elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
-                        message = 'Fn::Equals element must be a string, Ref, or a Fn::FindInMap'
+                        message = 'Fn::Equals element must be a String, Boolean, Number, or supported function ({0})'
                         matches.append(RuleMatch(
                             equal_tree[:-1] + [index],
-                            message.format()
+                            message.format(', '.join(allowed_functions))
                         ))
 
         return matches
