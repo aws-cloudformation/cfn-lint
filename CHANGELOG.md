@@ -1,3 +1,33 @@
+### 0.20.0
+###### Features
+- Allow a rule's exception to be defined in a [resource's metadata](https://github.com/kddejong/cfn-python-lint/tree/Release/v0.20.0#resource-based-metadata)
+- Add rule [configuration capabilities](https://github.com/kddejong/cfn-python-lint/tree/Release/v0.20.0#configure-rules)
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3012) to allow for non strict property checking
+- Add rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to test Fn::Equals structure and syntax
+- Add rule [E8004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8004) to test Fn::And structure and syntax
+- Add rule [E8005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8005) to test Fn::Not structure and syntax
+- Add rule [E8006](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8006) to test Fn::Or structure and syntax
+- Include Path to error in the JSON output
+- Update documentation to describe how to install cfn-lint from brew
+###### CloudFormation Specifications
+- Update CloudFormation specs to version 3.0.0
+- Add new region ap-east-1
+- Add list min/max and string min/max for CloudWatch Alarm Actions
+- Add allowed values for EC2::LaunchTemplate
+- Add allowed values for EC2::Host
+- Update allowed values for Amazon MQ to include 5.15.9
+- Add AWS::Greengrass::ResourceDefinition to GreenGrass supported regions
+- Add AWS::EC2::VPCEndpointService to all regions
+- Update AWS::ECS::TaskDefinition ExecutionRoleArn to be a IAM Role ARN
+- Patch spec files for SSM MaintenanceWindow to look for Target and not Targets
+- Update ManagedPolicyArns list size to be 20 which is the hard limit.  10 is the soft limit.
+###### Fixes
+- Fix rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3033) to check the string size when the string is inside a list
+- Fix an issue in which AWS::NotificationARNs was not a list
+- Add AWS::EC2::Volume to rule [W3010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3010)
+- Fix an issue with [W2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2001) where SAM translate would remove the Ref to a parameter causing this error to falsely trigger
+- Fix rule [W3010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3010) to not error when the availability zone is 'all'
+
 ### 0.19.1
 ###### Fixes
 - Fix core Condition processing to support direct Condition in another Condition
