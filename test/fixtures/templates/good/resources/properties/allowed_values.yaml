@@ -5,6 +5,9 @@ Description: >
   Minimal configuration for each resource to be "valid". Properties that are part
   of the AllowedValues check are marked for transparancy
 Parameters:
+  AvailabilityZone:
+    Type: "AWS::EC2::AvailabilityZone::Name"
+    Default: "eu-west-1a"
   Password:
     Type: String
     NoEcho: True
@@ -536,11 +539,18 @@ Resources:
           KeyType: "HASH" # Valid AllowedValue
       StreamSpecification:
         StreamViewType: "NEW_AND_OLD_IMAGES" # Valid AllowedValue
+  EC2FlowLog:
+    Type: "AWS::EC2::FlowLog"
+    Properties:
+      LogDestinationType: "cloud-watch-logs" # Valid AllowedValue
+      ResourceId: !Ref "Vpc"
+      ResourceType: "VPC" # Valid AllowedValue
+      TrafficType: "ALL" # Valid AllowedValue
   EC2Host:
     Type: "AWS::EC2::Host"
     Properties:
       AutoPlacement: "on" # Valid allowed Value
-      AvailabilityZone: "eu-west-1a"
+      AvailabilityZone: !Ref "AvailabilityZone"
       InstanceType: "m3.medium"
   EC2Instance:
     Type: "AWS::EC2::Instance"
@@ -800,7 +810,7 @@ Resources:
   Volume:
     Type: "AWS::EC2::Volume"
     Properties:
-      AvailabilityZone: "eu-west-1a"
+      AvailabilityZone: !Ref "AvailabilityZone"
       VolumeType: "standard" # Valid AllowedValue
   Vpc:
     Type: "AWS::EC2::VPC"
