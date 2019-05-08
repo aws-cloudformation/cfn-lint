@@ -66,7 +66,7 @@ class Equals(CloudFormationLintRule):
                                 equal_tree[:-1] + [index],
                                 message.format()
                             ))
-                    elif not isinstance(element, six.string_types):
+                    elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
                         message = 'Fn::Equals element must be a string, Ref, or a Fn::FindInMap'
                         matches.append(RuleMatch(
                             equal_tree[:-1] + [index],
