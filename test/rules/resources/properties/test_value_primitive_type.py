@@ -28,7 +28,7 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
     success_templates = [
         'test/fixtures/templates/good/generic.yaml',
         'test/fixtures/templates/good/resource_properties.yaml',
-        'test/fixtures/templates/good/resources/properties/primitive_type.yaml',
+        'test/fixtures/templates/good/resources/properties/primitive_types.yaml',
     ]
 
     def test_file_positive(self):
