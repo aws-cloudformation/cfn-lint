@@ -37,3 +37,24 @@ Resources:
       NotificationsWithSubscribers:
         - Notification:
             Threshold: 0.09
+  MyLoadBalancer:
+    Type: AWS::ElasticLoadBalancing::LoadBalancer
+    Properties:
+      AvailabilityZones:
+      - "us-east-1a"
+      Instances:
+      - i-123456
+      - i-abcdef
+      Listeners:
+      - LoadBalancerPort: '0'
+        InstancePort: '65536'
+        Protocol: HTTP
+      - LoadBalancerPort: '1'
+        InstancePort: 'one'
+        Protocol: TCP
+      HealthCheck:
+        Target: HTTP:80/
+        HealthyThreshold: '3'
+        UnhealthyThreshold: '5'
+        Interval: '30'
+        Timeout: '5'
