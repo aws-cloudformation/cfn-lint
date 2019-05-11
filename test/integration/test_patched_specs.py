@@ -170,7 +170,7 @@ class TestPatchedSpecs(BaseTestCase):
             'AWS::EC2::Volume::Id', 'AWS::EC2::VPC::Id', 'AWS::Route53::HostedZone::Id'
         ]
         valid_types = [
-            'String', 'Number', 'List<Number>', 'CommaDelimitedList',
+            'String', 'Number', 'List<Number>', 'CommaDelimitedList', 'List<String>',
             'AWS::SSM::Parameter::Name', 'AWS::SSM::Parameter::Value<String>',
             'AWS::SSM::Parameter::Value<List<String>>', 'AWS::SSM::Parameter::Value<CommaDelimitedList>',
         ]
