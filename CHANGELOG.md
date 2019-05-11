@@ -1,3 +1,7 @@
+### 0.20.1
+###### Fixes
+- Update rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to support more functions inside a Fn::Equals
+
 ### 0.20.0
 ###### Features
 - Allow a rule's exception to be defined in a [resource's metadata](https://github.com/kddejong/cfn-python-lint/tree/Release/v0.20.0#resource-based-metadata)
