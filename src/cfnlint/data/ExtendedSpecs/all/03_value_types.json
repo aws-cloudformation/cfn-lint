@@ -217,15 +217,15 @@
           "LESS_THAN"
         ]
       },
-      "BudgetNotificationThreshold": {
-        "NumberMax": 1000000000,
-        "NumberMin": 0.1
-      },
       "BudgetNotificationNotificationType": {
         "AllowedValues": [
           "ACTUAL",
           "FORECASTED"
         ]
+      },
+      "BudgetNotificationThreshold": {
+        "NumberMax": 1000000000,
+        "NumberMin": 0.1
       },
       "BudgetNotificationThresholdType": {
         "AllowedValues": [
@@ -357,12 +357,12 @@
         ]
       },
       "CloudWatchAlarmAction": {
-        "StringMin": 1,
-        "StringMax": 1024
+        "StringMax": 1024,
+        "StringMin": 1
       },
       "CloudWatchAlarmActions": {
-        "ListMin": 0,
-        "ListMax": 5
+        "ListMax": 5,
+        "ListMin": 0
       },
       "CloudWatchAlarmComparisonOperator": {
         "AllowedValues": [
@@ -1040,20 +1040,6 @@
           "terminate"
         ]
       },
-      "EC2SpotInstanceInitiatedShutdownBehavior": {
-        "AllowedValues": [
-          "hibernate",
-          "stop",
-          "terminate"
-        ]
-      },
-      "Ec2Tenancy": {
-        "AllowedValues": [
-          "dedicated",
-          "default",
-          "host"
-        ]
-      },
       "EC2MarketType": {
         "AllowedValues": [
           "spot"
@@ -1065,6 +1051,19 @@
           "ASGAverageCPUUtilization",
           "ASGAverageNetworkIn",
           "ASGAverageNetworkOut"
+        ]
+      },
+      "EC2SpotInstanceInitiatedShutdownBehavior": {
+        "AllowedValues": [
+          "hibernate",
+          "stop",
+          "terminate"
+        ]
+      },
+      "EC2SpotInstanceType": {
+        "AllowedValues": [
+          "one-time",
+          "persistent"
         ]
       },
       "EbsIops": {
@@ -1125,10 +1124,11 @@
           ]
         }
       },
-      "EC2SpotInstanceType": {
+      "Ec2Tenancy": {
         "AllowedValues": [
-          "one-time",
-          "persistent"
+          "dedicated",
+          "default",
+          "host"
         ]
       },
       "ElasticInferenceAccelerator": {
@@ -1239,10 +1239,6 @@
           ]
         }
       },
-      "IamGroups": {
-        "ListMax": 10,
-        "ListMin": 0
-      },
       "IamGroup": {
         "Ref": {
           "Parameters": [
@@ -1252,6 +1248,10 @@
             "AWS::IAM::Group"
           ]
         }
+      },
+      "IamGroups": {
+        "ListMax": 10,
+        "ListMin": 0
       },
       "IamInstanceProfile": {
         "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
@@ -1289,10 +1289,6 @@
           ]
         }
       },
-      "IamInstanceProfileRoles": {
-        "ListMax": 1,
-        "ListMin": 1
-      },
       "IamInstanceProfileRole": {
         "GetAtt": {
         },
@@ -1305,9 +1301,9 @@
           ]
         }
       },
-      "IamManagedPolicy.Arns": {
-        "ListMax": 20,
-        "ListMin": 0
+      "IamInstanceProfileRoles": {
+        "ListMax": 1,
+        "ListMin": 1
       },
       "IamManagedPolicy.Arn": {
         "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
@@ -1321,6 +1317,10 @@
             "AWS::IAM::ManagedPolicy"
           ]
         }
+      },
+      "IamManagedPolicy.Arns": {
+        "ListMax": 20,
+        "ListMin": 0
       },
       "IamManagedPolicyDocument": {
         "JsonMax": 6144,
