@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  myFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs6.10
+      Handler: index.handler
+      Timeout: 180
+      CodeUri: 's3://testBucket/mySourceCode.zip'
+      AutoPublishAlias: live
+      DeploymentPreference:
+        Type: Linear10PercentEvery10Minutes
+      Events:
+        ThumbnailApi:
+          Type: Api
+          Properties:
+            Path: /thumbnail
+            Method: GET

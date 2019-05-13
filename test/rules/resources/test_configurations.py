@@ -32,3 +32,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 2)
+
+    def test_file_negative_missing_transform(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/transform_serverless_missing.yaml', 1)
