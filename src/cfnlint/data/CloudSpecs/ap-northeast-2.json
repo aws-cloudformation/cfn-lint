@@ -16,6 +16,14 @@
       "AWS::EC2::KeyPair::KeyName",
       "AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>"
     ],
+    "Number": [
+      "Number",
+      "AWS::SSM::Parameter::Value<Number>"
+    ],
+    "Numbers": [
+      "List<Number>",
+      "List<AWS::SSM::Parameter::Value<Number>>"
+    ],
     "SecurityGroupId": [
       "AWS::EC2::SecurityGroup::Id",
       "AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>"
@@ -10983,7 +10991,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html#cfn-ec2-elb-listener-instanceport",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "LoadBalancerPort"
+          }
         },
         "InstanceProtocol": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html#cfn-ec2-elb-listener-instanceprotocol",
@@ -10995,7 +11006,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html#cfn-ec2-elb-listener-loadbalancerport",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "LoadBalancerPort"
+          }
         },
         "PolicyNames": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html#cfn-ec2-elb-listener-policynames",
@@ -25900,7 +25914,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-port",
           "PrimitiveType": "Integer",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "LoadBalancerPort"
+          }
         },
         "Protocol": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-listener.html#cfn-elasticloadbalancingv2-listener-protocol",
@@ -33767,6 +33784,16 @@
       "Ref": {
         "Parameters": [
           "Strings"
+        ]
+      }
+    },
+    "LoadBalancerPort": {
+      "NumberMax": 65535,
+      "NumberMin": 1,
+      "Ref": {
+        "Parameters": [
+          "String",
+          "Number"
         ]
       }
     },
