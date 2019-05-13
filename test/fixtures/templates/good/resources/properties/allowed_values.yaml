@@ -543,6 +543,22 @@ Resources:
     Type: "AWS::EC2::EIP"
     Properties:
       Domain: "vpc" # Valid AllowedValue
+  EC2Fleet:
+    Type: "AWS::EC2::EC2Fleet"
+    Properties:
+      ExcessCapacityTerminationPolicy: "termination" # Valid AllowedValue
+      LaunchTemplateConfigs:
+        - Overrides:
+            - InstanceType: "t2.large" # Valid AllowedValue
+      OnDemandOptions:
+        AllocationStrategy: "prioritized" # Valid AllowedValue
+      SpotOptions:
+        AllocationStrategy: "diversified" # Valid AllowedValue
+        InstanceInterruptionBehavior: "hibernate" # Valid AllowedValue
+      TargetCapacitySpecification:
+        DefaultTargetCapacityType: "on-demand" # Valid AllowedValue
+        TotalTargetCapacity: 1
+      Type: "maintain" # Valid AllowedValue
   EC2FlowLog:
     Type: "AWS::EC2::FlowLog"
     Properties:

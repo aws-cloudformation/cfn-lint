@@ -516,6 +516,22 @@ Resources:
     Type: "AWS::EC2::EIP"
     Properties:
       Domain: "VPC" # Invalid AllowedValue
+  EC2Fleet:
+    Type: "AWS::EC2::EC2Fleet"
+    Properties:
+      ExcessCapacityTerminationPolicy: "terminator" # Invalid AllowedValue
+      LaunchTemplateConfigs:
+        - Overrides:
+            - InstanceType: "t1.large" # Invalid AllowedValue
+      OnDemandOptions:
+        AllocationStrategy: "Prioritized" # Invalid AllowedValue
+      SpotOptions:
+        AllocationStrategy: "special" # Invalid AllowedValue
+        InstanceInterruptionBehavior: "reboot" # Invalid AllowedValue
+      TargetCapacitySpecification:
+        DefaultTargetCapacityType: "ondemand" # Invalid AllowedValue
+        TotalTargetCapacity: 1
+      Type: "maintainain" # Invalid AllowedValue
   EC2FlowLog:
     Type: "AWS::EC2::FlowLog"
     Properties:
