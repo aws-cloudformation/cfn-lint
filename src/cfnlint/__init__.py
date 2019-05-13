@@ -128,7 +128,7 @@ class Template(object):  # pylint: disable=R0904
             LOGGER.error(
                 'Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules.')
 
-    def get_resources(self, resource_type=[]):
+    def get_resources(self, resource_type=[], resource_prefix=[]):
         """
             Get Resources
             Filter on type when specified
@@ -139,12 +139,19 @@ class Template(object):  # pylint: disable=R0904
             return {}
         if isinstance(resource_type, six.string_types):
             resource_type = [resource_type]
+        if isinstance(resource_prefix, six.string_types):
+            resource_prefix = [resource_prefix]
 
         results = {}
         for k, v in resources.items():
             if isinstance(v, dict):
-                if (v.get('Type', None) in resource_type) or (not resource_type and v.get('Type') is not None):
-                    results[k] = v
+                r_type = v.get('Type')
+                if r_type:
+                    if (r_type in resource_type) or (not resource_type):
+                        results[k] = v
+                    for each_prefix in resource_prefix:
+                        if r_type.startswith(each_prefix):
+                            results[k] = v
 
         return results
 

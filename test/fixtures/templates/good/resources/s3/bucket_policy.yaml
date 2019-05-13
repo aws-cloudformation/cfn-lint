@@ -1,0 +1,92 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  myParameter:
+    Type: String
+Conditions:
+  myCondition: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Resources:
+  myBucket:
+    Type: AWS::S3::Bucket
+  BpGoodActionWithBucketResource:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}"
+            Principal: "*"
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+            Principal: "*"
+          - Action:
+            - s3:GetObject
+            - s3:GetBucketLocation
+            Effect: "Allow"
+            Resource:
+            - !Sub "arn:aws:s3:::${myBucket}/*"
+            - !Sub "arn:aws:s3:::${myBucket}"
+            Principal: "*"
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource:
+              Fn::Sub:
+              - "arn:aws:s3:::${testParam}"
+              - testParam: !Ref myBucket
+            Principal: "*"
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+            Principal: "*"
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource:
+            - !GetAtt myBucket.Arn
+            Principal: "*"
+          # Don't fail on Parameter for resource or action
+          - Action: !Ref myParameter
+            Effect: "Allow"
+            Resource:
+            - !GetAtt myBucket.Arn
+            Principal: "*"
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource: !Ref myParameter
+            Principal: "*"
+  BpGoodActionWithConditionStatement:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Statement:
+          Fn::If:  # Doesn't fail with condition at Statement Level
+          - myCondition
+          - - Action: s3:GetBucketLocation
+              Effect: "Allow"
+              Resource: !Sub "arn:aws:s3:::${myBucket}"
+              Principal: "*"
+            - Action: s3:GetObject
+              Effect: "Allow"
+              Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+              Principal: "*"
+          - !Ref 'AWS::NoValue'
+  BpGoodActionWithConditionForStatement:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Statement:
+          - Fn::If:  # Doesn't fail when a Condition is at the statement level
+            - myCondition
+            - Action: s3:GetBucketLocation
+              Effect: "Allow"
+              Resource: !Sub "arn:aws:s3:::${myBucket}"
+              Principal: "*"
+            - !Ref 'AWS::NoValue'
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+            Principal: "*"
