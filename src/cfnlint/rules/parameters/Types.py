@@ -31,6 +31,7 @@ class Types(CloudFormationLintRule):
         'Number',
         'List<Number>',
         'CommaDelimitedList',
+        'List<String>',
         'AWS::EC2::AvailabilityZone::Name',
         'AWS::EC2::Image::Id',
         'AWS::EC2::Instance::Id',
