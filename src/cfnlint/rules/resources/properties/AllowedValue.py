@@ -42,10 +42,14 @@ class AllowedValue(CloudFormationLintRule):
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
 
         if allowed_value_specs:
-            # Always compare the allowed value as a string, strict typing is not of concern for this rule
-            if str(value) not in allowed_value_specs:
-                message = 'You must specify a valid value for {0} ({1}).\nValid values are {2}'
-                matches.append(RuleMatch(path, message.format(property_name, value, allowed_value_specs)))
+
+            # Ignore values with dynamic references. Simple check to prevent false-positives
+            # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
+            if '{{resolve:' not in str(value):
+                # Always compare the allowed value as a string, strict typing is not of concern for this rule
+                if str(value) not in allowed_value_specs:
+                    message = 'You must specify a valid value for {0} ({1}).\nValid values are {2}'
+                    matches.append(RuleMatch(path, message.format(property_name, value, allowed_value_specs)))
 
         return matches
 
