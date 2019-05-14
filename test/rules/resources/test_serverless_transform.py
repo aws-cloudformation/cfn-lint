@@ -14,16 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
+from cfnlint.rules.resources.ServerlessTransform import ServerlessTransform  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
-class TestResourceConfiguration(BaseRuleTestCase):
+class TestServerlessTransform(BaseRuleTestCase):
     """Test base template"""
     def setUp(self):
         """Setup"""
-        super(TestResourceConfiguration, self).setUp()
-        self.collection.register(Configuration())
+        super(TestServerlessTransform, self).setUp()
+        self.collection.register(ServerlessTransform())
 
     def test_file_positive(self):
         """Test Positive"""
@@ -31,4 +31,4 @@ class TestResourceConfiguration(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 2)
+        self.helper_file_negative('test/fixtures/templates/bad/transform_serverless_missing.yaml', 1)

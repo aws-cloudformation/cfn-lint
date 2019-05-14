@@ -54,13 +54,6 @@ class Configuration(CloudFormationLintRule):
             'Type',
         ]
 
-        transforms = cfn.template.get('Transform', [])
-        if not isinstance(transforms, list):
-            transforms = [transforms]
-        has_serverless_transform = any(
-            transform == 'AWS::Serverless-2016-10-31' for transform in transforms
-        )
-
         resources = cfn.template.get('Resources', {})
         if not isinstance(resources, dict):
             message = 'Resource not properly configured'
@@ -101,13 +94,7 @@ class Configuration(CloudFormationLintRule):
                     for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                         if region in cfn.regions:
                             if resource_type not in specs['ResourceTypes']:
-                                if resource_type.startswith('AWS::Serverless::') and not has_serverless_transform:
-                                    message = 'Serverless Transform required for Type {0} for resource {1} in {2}'
-                                    matches.append(RuleMatch(
-                                        ['Resources', resource_name, 'Type'],
-                                        message.format(resource_type, resource_name, region)
-                                    ))
-                                elif not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
+                                if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
                                     message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                                     matches.append(RuleMatch(
                                         ['Resources', resource_name, 'Type'],
