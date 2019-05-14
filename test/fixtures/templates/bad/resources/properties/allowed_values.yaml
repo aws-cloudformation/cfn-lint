@@ -442,12 +442,22 @@ Resources:
       ConfigSnapshotDeliveryProperties:
         DeliveryFrequency: "Minute" # Invalid AllowedValue
       S3BucketName: !Ref "S3Bucket"
+  CustomerGateway:
+    Type: "AWS::EC2::CustomerGateway"
+    Properties:
+      BgpAsn: 65000
+      IpAddress: "127.0.0.1"
+      Type: "ipsec.1 " # Invalid AllowedValue
   DAXCluster:
     Type: "AWS::DAX::Cluster"
     Properties:
       IAMRoleARN: "iam"
       NodeType: "t2.small" # Invalid AllowedValue
       ReplicationFactor: 1
+  DHCPOptions:
+    Type: "AWS::EC2::DHCPOptions"
+    Properties:
+      NetbiosNodeType: 5 # Invalid AllowedValue
   DirectoryServiceMicrosoftAD:
     Type: "AWS::DirectoryService::MicrosoftAD"
     Properties:
@@ -516,6 +526,22 @@ Resources:
     Type: "AWS::EC2::EIP"
     Properties:
       Domain: "VPC" # Invalid AllowedValue
+  EC2Fleet:
+    Type: "AWS::EC2::EC2Fleet"
+    Properties:
+      ExcessCapacityTerminationPolicy: "terminator" # Invalid AllowedValue
+      LaunchTemplateConfigs:
+        - Overrides:
+            - InstanceType: "t1.large" # Invalid AllowedValue
+      OnDemandOptions:
+        AllocationStrategy: "Prioritized" # Invalid AllowedValue
+      SpotOptions:
+        AllocationStrategy: "special" # Invalid AllowedValue
+        InstanceInterruptionBehavior: "reboot" # Invalid AllowedValue
+      TargetCapacitySpecification:
+        DefaultTargetCapacityType: "ondemand" # Invalid AllowedValue
+        TotalTargetCapacity: 1
+      Type: "maintainain" # Invalid AllowedValue
   EC2FlowLog:
     Type: "AWS::EC2::FlowLog"
     Properties:
