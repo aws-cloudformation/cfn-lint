@@ -469,12 +469,22 @@ Resources:
       ConfigSnapshotDeliveryProperties:
         DeliveryFrequency: "Six_Hours" # Valid AllowedValue
       S3BucketName: !Ref "S3Bucket"
+  CustomerGateway:
+    Type: "AWS::EC2::CustomerGateway"
+    Properties:
+      BgpAsn: 65000
+      IpAddress: "127.0.0.1"
+      Type: "ipsec.1" # Valid AllowedValue
   DAXCluster:
     Type: "AWS::DAX::Cluster"
     Properties:
       IAMRoleARN: "iam"
       NodeType: "dax.t2.small" # Valid AllowedValue
       ReplicationFactor: 1
+  DHCPOptions:
+    Type: "AWS::EC2::DHCPOptions"
+    Properties:
+      NetbiosNodeType: 4 # Valid AllowedValue
   DirectoryServiceMicrosoftAD:
     Type: "AWS::DirectoryService::MicrosoftAD"
     Properties:
@@ -543,6 +553,22 @@ Resources:
     Type: "AWS::EC2::EIP"
     Properties:
       Domain: "vpc" # Valid AllowedValue
+  EC2Fleet:
+    Type: "AWS::EC2::EC2Fleet"
+    Properties:
+      ExcessCapacityTerminationPolicy: "termination" # Valid AllowedValue
+      LaunchTemplateConfigs:
+        - Overrides:
+            - InstanceType: "t2.large" # Valid AllowedValue
+      OnDemandOptions:
+        AllocationStrategy: "prioritized" # Valid AllowedValue
+      SpotOptions:
+        AllocationStrategy: "diversified" # Valid AllowedValue
+        InstanceInterruptionBehavior: "hibernate" # Valid AllowedValue
+      TargetCapacitySpecification:
+        DefaultTargetCapacityType: "on-demand" # Valid AllowedValue
+        TotalTargetCapacity: 1
+      Type: "maintain" # Valid AllowedValue
   EC2FlowLog:
     Type: "AWS::EC2::FlowLog"
     Properties:
