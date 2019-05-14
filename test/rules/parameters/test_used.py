@@ -25,7 +25,8 @@ class TestParameterUsed(BaseRuleTestCase):
         super(TestParameterUsed, self).setUp()
         self.collection.register(Used())
         self.success_templates = [
-            'test/fixtures/templates/good/parameters/used_transforms.yaml'
+            'test/fixtures/templates/good/parameters/used_transforms.yaml',
+            'test/fixtures/templates/good/parameters/used_transform_removed.yaml'
         ]
 
     def test_file_positive(self):
@@ -35,3 +36,7 @@ class TestParameterUsed(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/parameters.yaml', 3)
+
+    def test_file_negative_removed(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/parameters/used_transform_removed.yaml', 1)

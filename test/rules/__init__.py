@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import cfnlint.config
 from cfnlint import Runner, RulesCollection
 from testlib.testcase import BaseTestCase
 
@@ -35,6 +36,16 @@ class BaseRuleTestCase(BaseTestCase):
             good_runner.transform()
             failures = good_runner.run()
             assert [] == failures, 'Got failures {} on {}'.format(failures, filename)
+
+    def helper_file_rule_config(self, filename, config, err_count):
+        """Success test with rule config included"""
+        template = self.load_template(filename)
+        self.collection.rules[0].configure(config)
+        good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
+        good_runner.transform()
+        failures = good_runner.run()
+        self.assertEqual(err_count, len(failures), 'Expected {} failures but got {} on {}'.format(err_count, failures, filename))
+        self.collection.rules[0].configure(config)
 
     def helper_file_positive_template(self, filename):
         """Success test with template parameter"""

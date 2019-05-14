@@ -33,6 +33,7 @@ class AvailabilityZone(CloudFormationLintRule):
             'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',
             'AWS::RDS::DBCluster',
+            'AWS::EC2::Volume',
             'AWS::ElasticLoadBalancing::LoadBalancer',
             'AWS::OpsWorks::Instance',
             'AWS::RDS::DBInstance',
@@ -62,9 +63,11 @@ class AvailabilityZone(CloudFormationLintRule):
         """Check ref for VPC"""
         matches = []
 
-        if path[-1] != 'Fn::GetAZs':
-            message = 'Don\'t hardcode {0} for AvailabilityZones'
-            matches.append(RuleMatch(path, message.format(value)))
+        # value of `all` is a valide exception in AWS::ElasticLoadBalancingV2::TargetGroup
+        if value not in ['all']:
+            if path[-1] != ['Fn::GetAZs']:
+                message = 'Don\'t hardcode {0} for AvailabilityZones'
+                matches.append(RuleMatch(path, message.format(value)))
 
         return matches
 

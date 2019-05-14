@@ -29,8 +29,7 @@ class TestNulls(BaseTestCase):
         self.rules = RulesCollection()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
-            self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+            self.rules.create_from_directory(rulesdir)
 
     def test_success_run(self):
         """Test success run"""

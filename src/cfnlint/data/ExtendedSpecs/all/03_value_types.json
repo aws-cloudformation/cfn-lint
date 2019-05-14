@@ -3,6 +3,12 @@
     "op": "add",
     "path": "/ValueTypes",
     "value": {
+      "Affinity": {
+        "AllowedValues": [
+          "default",
+          "host"
+        ]
+      },
       "AllocationId": {
         "GetAtt": {
           "AWS::EC2::EIP": "AllocationId"
@@ -28,7 +34,8 @@
         "AllowedValues": [
           "5.15.0",
           "5.15.6",
-          "5.15.8"
+          "5.15.8",
+          "5.15.9"
         ]
       },
       "AmazonMQHostInstanceType": {
@@ -678,6 +685,11 @@
           "CUSTOM_LAMBDA"
         ]
       },
+      "CustomerGatewayType": {
+        "AllowedValues": [
+          "ipsec.1"
+        ]
+      },
       "DAXInstanceType": {
         "Ref": {
           "Parameters": [
@@ -949,6 +961,14 @@
           "ENABLED"
         ]
       },
+      "DHCPOptionsNetbiosNodeType": {
+        "AllowedValues": [
+          "1",
+          "2",
+          "4",
+          "8"
+        ]
+      },
       "DmsEndpointEngineName": {
         "AllowedValues": [
           "aurora-postgresql",
@@ -1040,7 +1060,7 @@
           "terminate"
         ]
       },
-      "EC2LaunchConfigurationPlacementTenancy": {
+      "Ec2Tenancy": {
         "AllowedValues": [
           "dedicated",
           "default",
@@ -1079,6 +1099,76 @@
           "unlimited"
         ]
       },
+      "Ec2ElasticIpDomain": {
+        "AllowedValues": [
+          "standard",
+          "vpc"
+        ]
+      },
+      "Ec2FleetExcessCapacityTerminationPolicy": {
+        "AllowedValues": [
+          "no-termination",
+          "termination"
+        ]
+      },
+      "Ec2FleetType": {
+        "AllowedValues": [
+          "instant",
+          "maintain",
+          "request"
+        ]
+      },
+      "Ec2FleetOnDemandAllocationStrategy": {
+        "AllowedValues": [
+          "lowest-price",
+          "prioritized"
+        ]
+      },
+      "Ec2FleetSpotAllocationStrategy": {
+        "AllowedValues": [
+          "diversified",
+          "lowest-price"
+        ]
+      },
+      "Ec2FleetSpotInterruptionBehavior": {
+        "AllowedValues": [
+          "hibernate",
+          "stop",
+          "terminate"
+        ]
+      },
+      "Ec2FleetDefaultTargetCapacityType": {
+        "AllowedValues": [
+          "on-demand",
+          "spot"
+        ]
+      },
+      "Ec2FlowLogDestinationType": {
+        "AllowedValues": [
+          "cloud-watch-logs",
+          "s3"
+        ]
+      },
+      "Ec2FlowLogResourceType": {
+        "AllowedValues": [
+          "NetworkInterface",
+          "Subnet",
+          "VPC"
+        ]
+      },
+      "Ec2FlowLogTrafficType": {
+        "AllowedValues": [
+          "ACCEPT",
+          "ALL",
+          "REJECT"
+        ]
+      },
+      "Ec2HostAutoPlacement": {
+        "AllowedValues": [
+          "off",
+          "on"
+        ]
+      },
       "Ec2InstanceType": {
         "Ref": {
           "Parameters": [
@@ -1090,6 +1180,13 @@
         "AllowedValues": [
           "one-time",
           "persistent"
+        ]
+      },
+      "ElasticInferenceAccelerator": {
+        "AllowedValues": [
+          "eia1.large",
+          "eia1.medium",
+          "eia1.xlarge"
         ]
       },
       "GlueConnectionInputType": {
@@ -1260,7 +1357,7 @@
         }
       },
       "IamManagedPolicy.Arns": {
-        "ListMax": 10,
+        "ListMax": 20,
         "ListMin": 0
       },
       "IamManagedPolicy.Arn": {
@@ -1405,6 +1502,7 @@
           "nodejs4.3",
           "nodejs6.10",
           "nodejs8.10",
+          "nodejs10.x",
           "provided",
           "python2.7",
           "python3.6",
@@ -1421,6 +1519,16 @@
           ],
           "Resources": [
             "AWS::AutoScaling::LaunchConfiguration"
+          ]
+        }
+      },
+      "LoadBalancerPort": {
+        "NumberMax": 65535,
+        "NumberMin": 1,
+        "Ref": {
+          "Parameters": [
+            "String",
+            "Number"
           ]
         }
       },

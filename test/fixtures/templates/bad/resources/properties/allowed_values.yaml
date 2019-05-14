@@ -442,12 +442,22 @@ Resources:
       ConfigSnapshotDeliveryProperties:
         DeliveryFrequency: "Minute" # Invalid AllowedValue
       S3BucketName: !Ref "S3Bucket"
+  CustomerGateway:
+    Type: "AWS::EC2::CustomerGateway"
+    Properties:
+      BgpAsn: 65000
+      IpAddress: "127.0.0.1"
+      Type: "ipsec.1 " # Invalid AllowedValue
   DAXCluster:
     Type: "AWS::DAX::Cluster"
     Properties:
       IAMRoleARN: "iam"
       NodeType: "t2.small" # Invalid AllowedValue
       ReplicationFactor: 1
+  DHCPOptions:
+    Type: "AWS::EC2::DHCPOptions"
+    Properties:
+      NetbiosNodeType: 5 # Invalid AllowedValue
   DirectoryServiceMicrosoftAD:
     Type: "AWS::DirectoryService::MicrosoftAD"
     Properties:
@@ -512,9 +522,45 @@ Resources:
           KeyType: "hash" # Invalid AllowedValue
       StreamSpecification:
         StreamViewType: "NEW_AND_OLD" # Invalid AllowedValue
+  EC2ElasticIp:
+    Type: "AWS::EC2::EIP"
+    Properties:
+      Domain: "VPC" # Invalid AllowedValue
+  EC2Fleet:
+    Type: "AWS::EC2::EC2Fleet"
+    Properties:
+      ExcessCapacityTerminationPolicy: "terminator" # Invalid AllowedValue
+      LaunchTemplateConfigs:
+        - Overrides:
+            - InstanceType: "t1.large" # Invalid AllowedValue
+      OnDemandOptions:
+        AllocationStrategy: "Prioritized" # Invalid AllowedValue
+      SpotOptions:
+        AllocationStrategy: "special" # Invalid AllowedValue
+        InstanceInterruptionBehavior: "reboot" # Invalid AllowedValue
+      TargetCapacitySpecification:
+        DefaultTargetCapacityType: "ondemand" # Invalid AllowedValue
+        TotalTargetCapacity: 1
+      Type: "maintainain" # Invalid AllowedValue
+  EC2FlowLog:
+    Type: "AWS::EC2::FlowLog"
+    Properties:
+      LogDestinationType: "cloudwatch-logs" # Invalid AllowedValue
+      ResourceId: !Ref "Vpc"
+      ResourceType: "vpc" # Invalid AllowedValue
+      TrafficType: "All" # Invalid AllowedValue
+  EC2Host:
+    Type: "AWS::EC2::Host"
+    Properties:
+      AutoPlacement: "On" # Invalid allowed Value
+      AvailabilityZone: "eu-west-1a"
+      InstanceType: "t3.medium"
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
+      Affinity: "dedicated" # Invalid AllowedValue
+      CreditSpecification:
+        CPUCredits: "default" # Invalid AllowedValue
       ImageId: "ami-2f726546"
       InstanceType: "t1.small" # Invalid AllowedValue
       KeyName: ""
@@ -522,6 +568,9 @@ Resources:
         - DeviceName: "/dev/sdm"
           Ebs:
             VolumeType: "magnetic" # Invalid AllowedValue
+      ElasticInferenceAccelerators:
+        - Type: "t2.medium" # Invalid AllowedValue
+      Tenancy: "instance" # Invalid AllowedValue
   EC2LaunchTemplate:
     Type: "AWS::EC2::LaunchTemplate"
     Properties:

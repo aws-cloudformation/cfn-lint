@@ -32,4 +32,4 @@ class TestNumberSize(BaseRuleTestCase):
 
     def test_file_negative_string_size(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/number_size.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/properties/number_size.yaml', 7)

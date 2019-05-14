@@ -29,8 +29,7 @@ class TestYamlParse(BaseTestCase):
         self.rules = RulesCollection()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
-            self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+            self.rules.create_from_directory(rulesdir)
 
         self.filenames = {
             "config_rule": {

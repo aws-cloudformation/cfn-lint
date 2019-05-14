@@ -30,8 +30,7 @@ class TestCfnJson(BaseTestCase):
         self.rules = RulesCollection(include_experimental=True)
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
-            self.rules.extend(
-                RulesCollection.create_from_directory(rulesdir))
+            self.rules.create_from_directory(rulesdir)
 
         self.filenames = {
             "config_rule": {

@@ -82,3 +82,20 @@ class TestConfigFileArgs(BaseTestCase):
 
         with self.assertRaises(jsonschema.exceptions.ValidationError):
             cfnlint.config.ConfigFileArgs()
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_parser_fail_on_config_rules(self, yaml_mock):
+        """ test the read call to the config parser is parsing configure rules correctly"""
+
+        yaml_mock.side_effect = [
+            {
+                'configure_rules': {
+                    'E3012': {
+                        'strict': False
+                    }
+                }
+            }, {}
+        ]
+
+        results = cfnlint.config.ConfigFileArgs()
+        self.assertEqual(results.file_args, {'configure_rules': {'E3012': {'strict': False}}})

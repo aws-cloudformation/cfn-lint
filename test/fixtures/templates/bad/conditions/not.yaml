@@ -1,0 +1,8 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  TestNotString: !Not 'Not'
+  TestNotToMany: !Not [{'Condition': 'TestNotToMany'}, {'Condition': 'TestNotToMany'}]
+  TestNotBadCondition: !Not [{'Condition': 'TestOrToMany', 'Extra': 'ThisIsBad'}]
+  TestNotBadArray: !Not ['Test']
+Resources: {}

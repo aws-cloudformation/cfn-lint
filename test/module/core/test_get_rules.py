@@ -26,7 +26,7 @@ class TestGetRules(BaseTestCase):
         """test invalid rules"""
         err = None
         try:
-            cfnlint.core.get_rules(["invalid"], [], [])
+            cfnlint.core.get_rules(["invalid"], [], [], [])
         except cfnlint.core.UnexpectedRuleException as e:
             err = e
         assert (type(err) == cfnlint.core.UnexpectedRuleException)
