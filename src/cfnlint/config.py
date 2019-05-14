@@ -24,6 +24,7 @@ import copy
 import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
+import cfnlint.helpers
 from cfnlint.version import __version__
 try:  # pragma: no cover
     from pathlib import Path
@@ -121,23 +122,21 @@ class ConfigFileArgs(object):
             CFLINTRC configuration
         """
 
-        LOGGER.debug('Looking for CFLINTRC before attempting to load')
         user_config, project_config = self._find_config()
 
         user_config = self._read_config(user_config)
-        LOGGER.debug('Validating User CFNLINTRC')
         self.validate_config(user_config, self.schema)
 
         project_config = self._read_config(project_config)
-        LOGGER.debug('Validating Project CFNLINTRC')
         self.validate_config(project_config, self.schema)
 
-        LOGGER.debug('User configuration loaded as')
-        LOGGER.debug('%s', user_config)
-        LOGGER.debug('Project configuration loaded as')
-        LOGGER.debug('%s', project_config)
+        if user_config:
+            LOGGER.debug('User configuration loaded as')
+            LOGGER.debug('%s', user_config)
+        if user_config:
+            LOGGER.debug('Project configuration loaded as')
+            LOGGER.debug('%s', project_config)
 
-        LOGGER.debug('Merging configurations...')
         self.file_args = self.merge_config(user_config, project_config)
 
     def validate_config(self, config, schema):
@@ -153,12 +152,13 @@ class ConfigFileArgs(object):
         jsonschema.exceptions.ValidationError
             Returned when cfnlintrc doesn't match schema provided
         """
-        LOGGER.debug('Validating CFNLINTRC config with given JSONSchema')
-        LOGGER.debug('Schema used: %s', schema)
-        LOGGER.debug('Config used: %s', config)
+        if config:
+            LOGGER.debug('Validating CFNLINTRC config with given JSONSchema')
+            LOGGER.debug('Schema used: %s', schema)
+            LOGGER.debug('Config used: %s', config)
 
         jsonschema.validate(config, schema)
-        LOGGER.debug('CFNLINTRC looks valid!')
+
 
     def merge_config(self, user_config, project_config):
         """Merge project and user configuration into a single dictionary

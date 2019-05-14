@@ -77,7 +77,6 @@ class UpdateReplacePolicy(CloudFormationLintRule):
             if updatereplace_policies:
                 path = ['Resources', resource_name, 'UpdateReplacePolicy']
                 res_type = resource_values.get('Type')
-                self.logger.debug('Validating UpdateReplacePolicy for %s base configuration', resource_name)
                 if isinstance(updatereplace_policies, list):
                     message = 'Only one UpdateReplacePolicy allowed per resource at {0}'
                     matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))

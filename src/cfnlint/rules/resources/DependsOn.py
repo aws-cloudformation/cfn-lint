@@ -52,7 +52,6 @@ class DependsOn(CloudFormationLintRule):
             depends_ons = resource_values.get('DependsOn')
             if depends_ons:
                 path = ['Resources', resource_name, 'DependsOn']
-                self.logger.debug('Validating DependsOn for %s base configuration', resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
                         matches.extend(self.check_value(depends_on, path[:] + [index], resources))

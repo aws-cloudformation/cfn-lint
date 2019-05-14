@@ -76,7 +76,6 @@ class DependsOnObsolete(CloudFormationLintRule):
             depends_ons = resource_values.get('DependsOn')
             if depends_ons:
                 path = ['Resources', resource_name, 'DependsOn']
-                self.logger.debug('Validating unneeded DependsOn for %s', resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
                         matches.extend(self.check_depends_on(cfn, resource_name, depends_on, path[:] + [index]))

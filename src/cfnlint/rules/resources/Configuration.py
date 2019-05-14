@@ -60,7 +60,6 @@ class Configuration(CloudFormationLintRule):
             matches.append(RuleMatch(['Resources'], message))
         else:
             for resource_name, resource_values in cfn.template.get('Resources', {}).items():
-                self.logger.debug('Validating resource %s base configuration', resource_name)
                 if not isinstance(resource_values, dict):
                     message = 'Resource not properly configured at {0}'
                     matches.append(RuleMatch(
@@ -90,7 +89,6 @@ class Configuration(CloudFormationLintRule):
                         message.format(resource_name)
                     ))
                 else:
-                    self.logger.debug('Check resource types by region...')
                     for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                         if region in cfn.regions:
                             if resource_type not in specs['ResourceTypes']:

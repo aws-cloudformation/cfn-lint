@@ -77,7 +77,6 @@ class DeletionPolicy(CloudFormationLintRule):
             if deletion_policies:
                 path = ['Resources', resource_name, 'DeletionPolicy']
                 res_type = resource_values.get('Type')
-                self.logger.debug('Validating DeletionPolicy for %s base configuration', resource_name)
                 if isinstance(deletion_policies, list):
                     message = 'Only one DeletionPolicy allowed per resource at {0}'
                     matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))

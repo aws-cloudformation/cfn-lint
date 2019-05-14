@@ -93,13 +93,8 @@ class CloudFormationLintRule(object):
             matches = []
 
             start = datetime.now()
-            LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
             # pylint: disable=E1102
             results = match_function(self, filename, cfn, *args, **kwargs)
-            LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
-                         self.id, datetime.now(), datetime.now() - start)
-            LOGGER.debug('Results from rule %s are %s: ', self.id, results)
-
             if results:
                 for result in results:
                     linenumbers = cfn.get_location_yaml(cfn.template, result.path)
@@ -474,7 +469,6 @@ class Template(object):  # pylint: disable=R0904
             Get Resources
             Filter on type when specified
         """
-        LOGGER.debug('Get resources from template...')
         resources = self.template.get('Resources', {})
         if not isinstance(resources, dict):
             return {}
@@ -491,7 +485,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_parameters(self):
         """Get Resources"""
-        LOGGER.debug('Get parameters from template...')
         parameters = self.template.get('Parameters', {})
         if not parameters:
             return {}
@@ -500,7 +493,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_mappings(self):
         """Get Resources"""
-        LOGGER.debug('Get mapping from template...')
         mappings = self.template.get('Mappings', {})
         if not mappings:
             return {}
@@ -509,7 +501,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_resource_names(self):
         """Get all the Resource Names"""
-        LOGGER.debug('Get the names of all resources from template...')
         results = []
         resources = self.template.get('Resources', {})
         if isinstance(resources, dict):
@@ -520,7 +511,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_parameter_names(self):
         """Get all Parameter Names"""
-        LOGGER.debug('Get names of all parameters from template...')
         results = []
         parameters = self.template.get('Parameters', {})
         if isinstance(parameters, dict):
@@ -531,7 +521,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_valid_refs(self):
         """Get all valid Refs"""
-        LOGGER.debug('Get all valid REFs from template...')
         results = {}
         parameters = self.template.get('Parameters', {})
         if parameters:
@@ -569,7 +558,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_valid_getatts(self):
         """Get all valid GetAtts"""
-        LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         resources = self.template.get('Resources', {})
@@ -582,7 +570,6 @@ class Template(object):  # pylint: disable=R0904
             if 'Type' in value:
                 valtype = value['Type']
                 if valtype.startswith(astrik_types):
-                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
                     results[name] = {'*': {'PrimitiveItemType': 'String'}}
                 else:
                     if value['Type'] in resourcetypes:
@@ -613,7 +600,6 @@ class Template(object):  # pylint: disable=R0904
 
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
-        LOGGER.debug('Get Sub Resource Properties from %s', keys)
         if not keys:
             result = {}
             result['Path'] = path
@@ -658,7 +644,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_resource_properties(self, keys):
         """Filter keys of template"""
-        LOGGER.debug('Get Properties from a resource: %s', keys)
         matches = []
         resourcetype = keys.pop(0)
         for resource_name, resource_value in self.get_resources(resourcetype).items():
@@ -703,7 +688,6 @@ class Template(object):  # pylint: disable=R0904
         """
             Search for keys in all parts of the templates
         """
-        LOGGER.debug('Search for key %s as far down as the template goes', searchText)
         results = []
         results.extend(self._search_deep_keys(searchText, self.template, []))
         # Globals are removed during a transform.  They need to be checked manually
@@ -712,7 +696,6 @@ class Template(object):  # pylint: disable=R0904
 
     def get_condition_values(self, template, path=[]):
         """Evaluates conditions and brings back the values"""
-        LOGGER.debug('Get condition values...')
         matches = []
         if not isinstance(template, list):
             return matches
@@ -762,7 +745,6 @@ class Template(object):  # pylint: disable=R0904
             Returns the value if its just a string, int, boolean, etc.
 
         """
-        LOGGER.debug('Get the value for key %s in %s', key, obj)
         matches = []
 
         if not isinstance(obj, dict):
@@ -834,7 +816,6 @@ class Template(object):  # pylint: disable=R0904
 
     def _loc(self, obj):
         """Return location of object"""
-        LOGGER.debug('Get location of object...')
         return (obj.start_mark.line, obj.start_mark.column, obj.end_mark.line, obj.end_mark.column)
 
     def get_sub_parameters(self, sub_string):
@@ -852,7 +833,6 @@ class Template(object):  # pylint: disable=R0904
         """
         Get the location information
         """
-        LOGGER.debug('Get location of path %s', path)
         result = None
         if len(path) > 1:
             try:
@@ -889,7 +869,6 @@ class Template(object):  # pylint: disable=R0904
                                 check_find_in_map=None, check_split=None,
                                 check_join=None, check_sub=None, **kwargs):
         """ Check Resource Properties """
-        LOGGER.debug('Check property %s for %s', resource_property, resource_type)
         matches = []
         resources = self.get_resources(resource_type=resource_type)
         for resource_name, resource_object in resources.items():
@@ -915,7 +894,6 @@ class Template(object):  # pylint: disable=R0904
         """
             Check the value
         """
-        LOGGER.debug('Check value %s for %s', key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
@@ -1272,7 +1250,6 @@ class Template(object):  # pylint: disable=R0904
                     if its in the True or False part of the path.
                     {'condition': {True}}
         """
-        LOGGER.debug('Get conditions for path %s', path)
         results = {}
 
         def get_condition_name(value, num=None):
@@ -1330,8 +1307,6 @@ class Runner(object):
 
     def transform(self):
         """Transform logic"""
-        LOGGER.debug('Transform templates if needed')
-
         matches = []
         transform_type = self.cfn.template.get('Transform')
 
