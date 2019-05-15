@@ -47,6 +47,15 @@ Resources:
       -
         IpProtocol: 1
         SourceSecurityGroupId: vpc-1234567
+        CidrIp: '10.0.0.0/8'
+  SecurityGroupRuleSSM:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !Ref mySecurityGroupVpc
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      CidrIp: '{{resolve:ssm:mysubnet}}'
   mySecurityGroupIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
