@@ -27834,8 +27834,8 @@
           "Type": "List",
           "UpdateType": "Conditional",
           "Value": {
-            "ListValueType": "SecurityGroupIds",
-            "ValueType": "SecurityGroupId"
+            "ListValueType": "SecurityGroupNameOrIds",
+            "ValueType": "SecurityGroupNameOrId"
           }
         },
         "SecurityGroups": {
@@ -30898,8 +30898,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupIds",
-            "ValueType": "SecurityGroupId"
+            "ListValueType": "SecurityGroupNameOrIds",
+            "ValueType": "SecurityGroupNameOrId"
           }
         },
         "SubnetMappings": {
@@ -41269,13 +41269,36 @@
         "Parameters": [
           "String",
           "SecurityGroupId"
+        ]
+      }
+    },
+    "SecurityGroupIds": {
+      "GetAtt": {
+        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+      },
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "SecurityGroupNameOrId": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId",
+        "AWS::EC2::VPC": "DefaultSecurityGroup"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
         ],
         "Resources": [
           "AWS::EC2::SecurityGroup"
         ]
       }
     },
-    "SecurityGroupIds": {
+    "SecurityGroupNameOrIds": {
       "GetAtt": {
         "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
       },
@@ -41292,9 +41315,6 @@
         "Parameters": [
           "Strings",
           "SecurityGroupIds"
-        ],
-        "Resources": [
-          "AWS::EC2::SecurityGroup"
         ]
       }
     },
