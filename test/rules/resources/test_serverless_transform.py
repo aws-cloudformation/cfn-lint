@@ -24,6 +24,10 @@ class TestServerlessTransform(BaseRuleTestCase):
         """Setup"""
         super(TestServerlessTransform, self).setUp()
         self.collection.register(ServerlessTransform())
+        self.success_templates = [
+            'test/fixtures/templates/good/generic.yaml',
+            'test/fixtures/templates/good/transform_serverless_function.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
