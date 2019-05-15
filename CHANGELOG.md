@@ -1,3 +1,19 @@
+### 0.20.2
+###### Features
+- Add support for List<String> Parameter types
+###### CloudFormation Specifications
+- Add allowed values for AWS::EC2 EIP, FlowLog, CustomerGateway, DHCPOptions, EC2Fleet
+- Create new property type for Security Group IDs or Names
+- Add new Lambda runtime environment for NodeJs 10.x
+- Move AWS::ServiceDiscovery::Service Health checks from Only One to Exclusive
+- Update Glue Crawler Role to take an ARN or a name
+- Remove PrimitiveType from MaintenanceWindowTarget Targets
+- Add Min/Max values for Load Balancer Ports to be between 1-65535
+###### Fixes
+- Include License file in the pypi package to help with downstream projects
+- Filter out dynamic references from rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) and [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030)
+- Convert Python linting and Code Coverage from Python 3.6 to 3.7
+
 ### 0.20.1
 ###### Fixes
 - Update rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to support more functions inside a Fn::Equals
