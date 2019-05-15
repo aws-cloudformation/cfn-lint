@@ -33,7 +33,7 @@ Parameters:
     Type: Number
 Resources:
   LogGroup:
-    Type: AWS::Logs::LogGroup
+    Type: "AWS::Logs::LogGroup"
     Properties:
       RetentionInDays: !Ref LogsRetentionLength
       LogGroupName: '/name'
@@ -60,6 +60,11 @@ Resources:
       EngineType: "ACTIVEMQ" # Valid AllowedValue
       EngineVersion: "5.15.8" # Valid AllowedValue
       Name: "Configuration"
+  ApiGatewayAuthorizerSSM:
+    Type: "AWS::ApiGateway::Authorizer"
+    Properties:
+      RestApiId: !Ref "ApiGatewayRestAPI"
+      Type: "{{resolve:ssm:myparam:1}} xyz" # Excluded AllowedValue
   ApiGatewayAuthorizer:
     Type: "AWS::ApiGateway::Authorizer"
     Properties:
