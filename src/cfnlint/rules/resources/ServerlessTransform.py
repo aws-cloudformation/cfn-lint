@@ -43,15 +43,9 @@ class ServerlessTransform(CloudFormationLintRule):
         if has_serverless_transform:
             return matches
 
-        resources = cfn.template.get('Resources', {})
-        if not isinstance(resources, dict):
-            return matches
-
-        for resource_name, resource_values in resources.items():
-            if not isinstance(resource_values, dict):
-                continue
-            resource_type = resource_values.get('Type', '')
-            if isinstance(resource_type, str) and resource_type.startswith('AWS::Serverless::'):
+        for resource_name, resource_values in cfn.get_resources().items():
+            resource_type = resource_values['Type']
+            if resource_type.startswith('AWS::Serverless::'):
                 message = 'Serverless Transform required for Type {0} for resource {1}'
                 matches.append(
                     RuleMatch(['Transform'], message.format(resource_type, resource_name))
