@@ -48,11 +48,15 @@ class AllowedPattern(CloudFormationLintRule):
 
         if value_pattern_regex:
             regex = re.compile(value_pattern_regex)
-            if not regex.match(value):
-                full_path = ('/'.join(str(x) for x in path))
 
-                message = '{} contains invalid characters (Pattern: {}) at {}'
-                matches.append(RuleMatch(path, message.format(property_name, value_pattern, full_path)))
+            # Ignore values with dynamic references. Simple check to prevent false-positives
+            # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
+            if '{{resolve:' not in value:
+                if not regex.match(value):
+                    full_path = ('/'.join(str(x) for x in path))
+
+                    message = '{} contains invalid characters (Pattern: {}) at {}'
+                    matches.append(RuleMatch(path, message.format(property_name, value_pattern, full_path)))
 
         return matches
 
