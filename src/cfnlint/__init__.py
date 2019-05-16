@@ -84,71 +84,67 @@ class CloudFormationLintRule(object):
     match_resource_sub_properties = None
 
     # pylint: disable=E0213
-    def matching(match_function):
-        """
-            Does Logging for match functions
-        """
-        def wrapper(self, filename, cfn, *args, **kwargs):
-            """Wrapper"""
-            matches = []
+    def matching(match_type):
+        """ Does Logging for match functions """
+        def decorator(match_function):
+            """ The Actual Decorator """
+            def wrapper(self, filename, cfn, *args, **kwargs):
+                """Wrapper"""
+                matches = []
 
-            start = datetime.now()
-            LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
-            # pylint: disable=E1102
-            results = match_function(self, filename, cfn, *args, **kwargs)
-            LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
-                         self.id, datetime.now(), datetime.now() - start)
-            LOGGER.debug('Results from rule %s are %s: ', self.id, results)
+                if not getattr(self, match_type):
+                    return []
 
-            if results:
-                for result in results:
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                    if linenumbers:
-                        matches.append(Match(
-                            linenumbers[0] + 1, linenumbers[1] + 1,
-                            linenumbers[2] + 1, linenumbers[3] + 1,
-                            filename, self, result.message, result))
-                    else:
-                        matches.append(Match(
-                            1, 1,
-                            1, 1,
-                            filename, self, result.message, result))
+                if match_type == 'resource_property_types':
+                    if args[1] not in self.resource_property_types:
+                        return []
+                elif match_type == 'match_resource_sub_properties':
+                    if args[1] not in self.resource_sub_property_types:
+                        return []
 
-            return matches
-        return wrapper
+                start = datetime.now()
+                LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
+                # pylint: disable=E1102
+                results = match_function(self, filename, cfn, *args, **kwargs)
+                LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
+                             self.id, datetime.now(), datetime.now() - start)
+                LOGGER.debug('Results from rule %s are %s: ', self.id, results)
 
-    @matching
+                if results:
+                    for result in results:
+                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                        if linenumbers:
+                            matches.append(Match(
+                                linenumbers[0] + 1, linenumbers[1] + 1,
+                                linenumbers[2] + 1, linenumbers[3] + 1,
+                                filename, self, result.message, result))
+                        else:
+                            matches.append(Match(
+                                1, 1,
+                                1, 1,
+                                filename, self, result.message, result))
+
+                return matches
+            return wrapper
+        return decorator
+
+    @matching('match')
     # pylint: disable=W0613
     def matchall(self, filename, cfn):
         """Match the entire file"""
-        if not self.match:
-            return []
-
         return self.match(cfn)  # pylint: disable=E1102
 
-    @matching
+    @matching('match_resource_properties')
     # pylint: disable=W0613
     def matchall_resource_properties(self, filename, cfn, resource_properties, property_type, path):
         """ Check for resource properties type """
-        if not self.match_resource_properties:
-            return []
+        return self.match_resource_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
-        if property_type in self.resource_property_types:
-            return self.match_resource_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
-
-        return []
-
-    @matching
+    @matching('match_resource_sub_properties')
     # pylint: disable=W0613
     def matchall_resource_sub_properties(self, filename, cfn, resource_properties, property_type, path):
         """ Check for resource properties type """
-        if not self.match_resource_sub_properties:
-            return []
-
-        if property_type in self.resource_sub_property_types:
-            return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
-
-        return []
+        return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
 
 class RulesCollection(object):
