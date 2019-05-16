@@ -32,7 +32,7 @@ class DeprecatedRuntime(CloudFormationLintRule):
         super(DeprecatedRuntime, self).__init__()
         self.config_definition = {
             'check_eol_date': {
-                'default': True,
+                'default': False,
                 'type': 'boolean'
             }
         }
