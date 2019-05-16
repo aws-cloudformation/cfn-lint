@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **118** rules are applied by this linter:
+The following **120** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
 | -------- | ----- | ----------- | ---------- | ------ | ---- |
@@ -123,6 +123,7 @@ The following **118** rules are applied by this linter:
 | E3035<a name="E3035"></a> | Check DeletionPolicy values for Resources | Check that the DeletionPolicy values are valid |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`deletionpolicy` |
 | E3036<a name="E3036"></a> | Check UpdateReplacePolicy values for Resources | Check that the UpdateReplacePolicy values are valid |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html) | `resources`,`updatereplacepolicy` |
 | E3037<a name="E3037"></a> | Check if a list has duplicate values | Certain lists don't support duplicate items. Check when duplicates are provided but not supported. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`list` |
+| E3038<a name="E3038"></a> | Check if Serverless Resources have Serverless Transform | Check that a template with Serverless Resources also includes the Serverless Transform |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `resources`,`transform` |
 | E3050<a name="E3050"></a> | Check if REFing to a IAM resource with path set | Some resources don't support looking up the IAM resource by name. This check validates when a REF is being used and the Path is not '/' |  | [Source](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html) | `properties`,`iam` |
 | E3502<a name="E3502"></a> | Check if a JSON Object is within size limits | Validate properties that are JSON values so that their length is within the limits |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `resources`,`limits`,`json` |
 | E4001<a name="E4001"></a> | Metadata Interface have appropriate properties | Metadata Interface properties are properly configured |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
@@ -161,6 +162,7 @@ The following **118** rules are applied by this linter:
 | W2509<a name="W2509"></a> | CIDR Parameters have allowed values | Check if a parameter is being used as a CIDR. If it is make sure it has allowed values regex comparisons |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`availabilityzone` |
 | W2510<a name="W2510"></a> | Parameter Memory Size attributes should have max and min | Check if a parameter that is used for Lambda memory size  should have a min and max size that matches Lambda constraints |  | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize) | `parameters`,`lambda` |
 | W2511<a name="W2511"></a> | Check IAM Resource Policies syntax | See if the elements inside an IAM Resource policy are configured correctly. |  | [Source](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html) | `properties`,`iam` |
+| W2530<a name="W2530"></a> | Check if EOL Lambda Function Runtimes are used | Check if an EOL Lambda Runtime is specified and give a warning if used.  | check_eol_date:boolean:False | [Source](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) | `resources`,`lambda`,`runtime` |
 | W3002<a name="W3002"></a> | Warn when properties are configured to only work with the package command | Some properties can be configured to only work with the CloudFormationpackage command. Warn when this is the case so user is aware. |  | [Source](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) | `resources` |
 | W3005<a name="W3005"></a> | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. |  | [Source](https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/) | `resources`,`dependson` |
 | W3010<a name="W3010"></a> | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `parameters`,`availabilityzone` |
