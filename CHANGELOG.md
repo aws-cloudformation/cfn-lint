@@ -1,3 +1,11 @@
+### 0.20.3
+###### CloudFormation Specifications
+- Update instance types from pricing API as of 2019.05.16
+###### Fixes
+- Update [E7001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E7001) to allow float/doubles for mapping values
+- Update [W1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1020) to check pre-transformed Fn::Sub(s) to determine if a Sub is needed
+- Pin requests to be below or equal to 2.21.0 to prevent issues with botocore
+
 ### 0.20.2
 ###### Features
 - Add support for List<String> Parameter types
