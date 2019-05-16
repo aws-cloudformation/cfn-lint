@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: SampleTemplate
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - Dev
+      - Qa
+      - Staging
+      - Mirror
+      - Prod
+    ConstraintDescription: You must specify a valid EnvironmentValue
+    Default: Dev
+    Description: Environment for to Deploy to
+Resources:
+  APICommonCodeLayer:
+    Type: 'AWS::Serverless::LayerVersion'
+    Properties:
+      Description: API common libraries
+      LayerName:
+        Fn::Sub: 'api-common-code-layer-${Environment}'
+      ContentUri: api/common
+      CompatibleRuntimes:
+        - nodejs8.10
+      RetentionPolicy: Retain

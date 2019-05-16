@@ -45,7 +45,7 @@ class SubUnneeded(CloudFormationLintRule):
 
         matches = []
 
-        sub_objs = cfn.search_deep_keys('Fn::Sub')
+        sub_objs = cfn.transform_pre.get('Fn::Sub')
 
         for sub_obj in sub_objs:
             sub_value_obj = sub_obj[-1]
