@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **114** rules are applied by this linter:
+The following **118** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
 | -------- | ----- | ----------- | ---------- | ------ | ---- |
@@ -142,6 +142,10 @@ The following **114** rules are applied by this linter:
 | E7012<a name="E7012"></a> | Mapping attribute limit not exceeded | Check if the amount of Mapping attributes in the template is less than the upper limit |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) | `mappings`,`limits` |
 | E8001<a name="E8001"></a> | Conditions have appropriate properties | Check if Conditions are properly configured |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
 | E8002<a name="E8002"></a> | Check if the referenced Conditions are defined | Making sure the used conditions are actually defined in the Conditions section |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) | `conditions` |
+| E8003<a name="E8003"></a> | Check Fn::Equals structure for validity | Check Fn::Equals is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-equals) | `functions`,`equals` |
+| E8004<a name="E8004"></a> | Check Fn::And structure for validity | Check Fn::And is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-and) | `functions`,`and` |
+| E8005<a name="E8005"></a> | Check Fn::Not structure for validity | Check Fn::Not is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-not) | `functions`,`not` |
+| E8006<a name="E8006"></a> | Check Fn::Or structure for validity | Check Fn::Or is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-or) | `functions`,`or` |
 | I3011<a name="I3011"></a> | Check DynamoDB tables have a set DeletionPolicy | The default action when removing a DynamoDB Table is to delete it. This check requires you to specifically set a DeletionPolicy and you know the risks |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`dynamodb` |
 | I3037<a name="I3037"></a> | Check if a list that allows duplicates has any duplicates | Certain lists support duplicate items.Provide an alert when list of strings or numbers have repeats. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#rules-1) | `resources`,`property`,`list` |
 | W1001<a name="W1001"></a> | Ref/GetAtt to resource that is available when conditions are applied | Check the Conditions that affect a Ref/GetAtt to make sure the resource being related to is available when there is a resource condition. |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `resources`,`relationships` |
