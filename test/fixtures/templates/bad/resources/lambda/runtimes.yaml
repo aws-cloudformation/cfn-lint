@@ -10,6 +10,7 @@ Parameters:
     AllowedValues:
       - nodejs10.x
       - nodejs
+      - nodejs6.10
 Resources:
   myLambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -42,6 +43,17 @@ Resources:
         S3Bucket: "lambda-functions"
         S3Key: "amilookup.zip"
       Runtime: "nodejs4.3"
+      Timeout: 25
+      MemorySize: 1536
+  myLambdaNodeFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: "index.handler"
+      Role: !GetAtt myLambdaExecutionRole.Arn
+      Code:
+        S3Bucket: "lambda-functions"
+        S3Key: "amilookup.zip"
+      Runtime: "nodejs6.10"
       Timeout: 25
       MemorySize: 1536
   myLambdaTwo:

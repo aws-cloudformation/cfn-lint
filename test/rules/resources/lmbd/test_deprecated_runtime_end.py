@@ -14,16 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint.rules.resources.lmbd.DeprecatedRuntime import DeprecatedRuntime  # pylint: disable=E0401
+from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEnd import DeprecatedRuntimeEnd  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
-class TestDeprecatedRuntime(BaseRuleTestCase):
+class TestDeprecatedRuntimeEnd(BaseRuleTestCase):
     """Test Lambda Deprecated Runtime usage"""
     def setUp(self):
         """Setup"""
-        super(TestDeprecatedRuntime, self).setUp()
-        self.collection.register(DeprecatedRuntime())
+        super(TestDeprecatedRuntimeEnd, self).setUp()
+        self.collection.register(DeprecatedRuntimeEnd())
 
     def test_file_positive(self):
         """Test Positive"""

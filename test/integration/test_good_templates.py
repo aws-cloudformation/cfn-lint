@@ -64,7 +64,7 @@ class TestQuickStartTemplates(BaseTestCase):
             },
             'transform_serverless_globals': {
                 'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
-                'failures': 0
+                'failures': 1
             }
         }
 

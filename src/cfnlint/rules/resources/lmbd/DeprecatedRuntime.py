@@ -15,83 +15,25 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from datetime import datetime
+from cfnlint.helpers import load_resources
 from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
 
 
 class DeprecatedRuntime(CloudFormationLintRule):
     """Check if EOL Lambda Function Runtimes are used"""
-    id = 'W2530'
-    shortdesc = 'Check if EOL Lambda Function Runtimes are used'
-    description = 'Check if an EOL Lambda Runtime is specified and give a warning if used. '
-    source_url = 'https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html'
-    tags = ['resources', 'lambda', 'runtime']
 
     def __init__(self):
         """Init"""
         super(DeprecatedRuntime, self).__init__()
-        self.config_definition = {
-            'check_eol_date': {
-                'default': False,
-                'type': 'boolean'
-            }
-        }
-        self.configure()
+        self.resource_property_types.append('AWS::Lambda::Function')
+        self.deprecated_runtimes = load_resources('data/AdditionalSpecs/LmbdRuntimeLifecycle.json')
 
     current_date = datetime.today()
 
-    deprecated_runtimes = {
-        'dotnetcore2.0': {
-            'eol': '2019-04-30',
-            'deprecated': '2019-05-30',
-            'successor': 'dotnetcore2.0'
-        },
-        'nodejs': {
-            'eol': '2016-10-31',
-            'deprecated': '2016-10-31',
-            'successor': 'nodejs10.x'
-        },
-        'nodejs4.3': {
-            'eol': '2018-04-30',
-            'deprecated': '2019-04-30',
-            'successor': 'nodejs10.x'
-        },
-        'nodejs6.10': {
-            'eol': '2019-04-30',
-            'deprecated': '2019-06-30',
-            'successor': 'nodejs10.x'
-        }
-    }
-
     def check_runtime(self, runtime_value, path):
         """ Check if the given runtime is valid"""
-        matches = []
-
-        runtime = self.deprecated_runtimes.get(runtime_value)
-        if runtime:
-            if datetime.strptime(runtime['deprecated'], '%Y-%m-%d') < self.current_date:
-                message = 'Deprecated runtime ({0}) specified. Updating disabled since {1}, please consider to update to {2}'
-                matches.append(
-                    RuleMatch(
-                        path,
-                        message.format(
-                            runtime_value,
-                            runtime['deprecated'],
-                            runtime['successor'])))
-
-            elif self.config['check_eol_date']:
-                if datetime.strptime(runtime['eol'], '%Y-%m-%d') < self.current_date:
-                    message = 'EOL runtime ({0}) specified. Runtime is EOL since {1} and updating will be disabled at {2}, please consider to update to {3}'
-                    matches.append(
-                        RuleMatch(
-                            path,
-                            message.format(
-                                runtime_value,
-                                runtime['eol'],
-                                runtime['deprecated'],
-                                runtime['successor'])))
-        return matches
-
+        self.logger.debug(runtime_value, path)
+        return []
 
     def check_value(self, value, path):
         """Check Lambda Runtime value """
@@ -99,9 +41,8 @@ class DeprecatedRuntime(CloudFormationLintRule):
         matches.extend(self.check_runtime(value, path))
         return matches
 
-    def check_ref(self, value, path, parameters, resources): # pylint: disable=W0613
+    def check_ref(self, value, path, parameters, resources):  # pylint: disable=W0613
         """Check Lambda Runtime Ref value """
-
         matches = []
         if value in parameters:
             parameter = parameters.get(value, {})
@@ -120,16 +61,16 @@ class DeprecatedRuntime(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
-        """Check if EOL Lambda Function Runtimes are used"""
-
+    def match_resource_properties(self, properties, _, path, cfn):
+        """Check CloudFormation Properties"""
         matches = []
+
         matches.extend(
-            cfn.check_resource_property(
-                'AWS::Lambda::Function', 'Runtime',
+            cfn.check_value(
+                obj=properties, key='Runtime',
+                path=path[:],
                 check_value=self.check_value,
-                check_ref=self.check_ref,
-            )
-        )
+                check_ref=self.check_ref
+            ))
 
         return matches

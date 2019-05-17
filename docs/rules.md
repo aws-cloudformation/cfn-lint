@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **120** rules are applied by this linter:
+The following **121** rules are applied by this linter:
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
 | -------- | ----- | ----------- | ---------- | ------ | ---- |
@@ -93,6 +93,7 @@ The following **120** rules are applied by this linter:
 | E2523<a name="E2523"></a> | Check Properties that need only one of a list of properties | Making sure CloudFormation properties that require only one property from a list. One has to be specified. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `resources` |
 | E2529<a name="E2529"></a> | Check for duplicate Lambda events | Check if there are any duplicate log groups in the Lambda event trigger element. |  | [Source](https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#user-content-cloudwatchlogs) | `resources`,`lambda` |
 | E2530<a name="E2530"></a> | Check Lambda Memory Size Properties | See if Lambda Memory Size is valid |  | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize) | `resources`,`lambda` |
+| E2531<a name="E2531"></a> | Check if EOL Lambda Function Runtimes are used | Check if an EOL Lambda Runtime is specified and give a warning if used.  |  | [Source](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) | `resources`,`lambda`,`runtime` |
 | E2532<a name="E2532"></a> | Check State Machine Definition for proper syntax | Check the State Machine String Definition to make sure its JSON. Validate basic syntax of the file to determine validity. |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html) | `resources`,`stepfunctions` |
 | E2540<a name="E2540"></a> | CodePipeline Stages | See if CodePipeline stages are set correctly |  | [Source](https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#pipeline-requirements) | `properties`,`codepipeline` |
 | E2541<a name="E2541"></a> | CodePipeline Stage Actions | See if CodePipeline stage actions are set correctly |  | [Source](https://docs.aws.amazon.com/codepipeline/latest/userguide/reference-pipeline-structure.html#pipeline-requirements) | `resources`,`codepipeline` |
@@ -162,7 +163,7 @@ The following **120** rules are applied by this linter:
 | W2509<a name="W2509"></a> | CIDR Parameters have allowed values | Check if a parameter is being used as a CIDR. If it is make sure it has allowed values regex comparisons |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html) | `parameters`,`availabilityzone` |
 | W2510<a name="W2510"></a> | Parameter Memory Size attributes should have max and min | Check if a parameter that is used for Lambda memory size  should have a min and max size that matches Lambda constraints |  | [Source](https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize) | `parameters`,`lambda` |
 | W2511<a name="W2511"></a> | Check IAM Resource Policies syntax | See if the elements inside an IAM Resource policy are configured correctly. |  | [Source](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html) | `properties`,`iam` |
-| W2530<a name="W2530"></a> | Check if EOL Lambda Function Runtimes are used | Check if an EOL Lambda Runtime is specified and give a warning if used.  | check_eol_date:boolean:False | [Source](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) | `resources`,`lambda`,`runtime` |
+| W2531<a name="W2531"></a> | Check if EOL Lambda Function Runtimes are used | Check if an EOL Lambda Runtime is specified and give a warning if used.  |  | [Source](https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html) | `resources`,`lambda`,`runtime` |
 | W3002<a name="W3002"></a> | Warn when properties are configured to only work with the package command | Some properties can be configured to only work with the CloudFormationpackage command. Warn when this is the case so user is aware. |  | [Source](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) | `resources` |
 | W3005<a name="W3005"></a> | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. |  | [Source](https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/) | `resources`,`dependson` |
 | W3010<a name="W3010"></a> | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `parameters`,`availabilityzone` |
