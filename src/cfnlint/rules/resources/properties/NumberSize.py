@@ -13,6 +13,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import sys
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 
@@ -46,6 +47,18 @@ class NumberSize(CloudFormationLintRule):
         else:
             number_types = (float, int,)
 
+        if isinstance(value, six.string_types):
+            try:
+                value = float(value)
+            except ValueError:
+                message = 'Value has to be between {0} and {1} at {2}'
+                matches.append(
+                    RuleMatch(
+                        path,
+                        message.format(number_min, number_max, '/'.join(map(str, path))),
+                    )
+                )
+
         if isinstance(value, number_types):
             if not (number_min <= value <= number_max):
                 message = 'Value has to be between {0} and {1} at {2}'
@@ -69,7 +82,7 @@ class NumberSize(CloudFormationLintRule):
                         property_type = specs.get(prop).get('PrimitiveType')
                         value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
                         if value_specs.get('NumberMax') and value_specs.get('NumberMin'):
-                            if property_type in ['Integer', 'Double', 'Long']:
+                            if property_type in ['Integer', 'Double', 'Long', 'String']:
                                 matches.extend(
                                     cfn.check_value(
                                         properties, prop, p_path,

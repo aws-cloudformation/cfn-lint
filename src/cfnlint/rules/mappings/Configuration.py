@@ -32,6 +32,8 @@ class Configuration(CloudFormationLintRule):
 
         matches = []
 
+        valid_map_types = (six.string_types, list, six.integer_types, float)
+
         mappings = cfn.template.get('Mappings', {})
         if mappings:
             for mapname, mapobj in mappings.items():
@@ -53,8 +55,7 @@ class Configuration(CloudFormationLintRule):
                         else:
                             for secondkey in firstkeyobj:
                                 if not isinstance(
-                                        firstkeyobj[secondkey],
-                                        (six.string_types, list, six.integer_types)):
+                                        firstkeyobj[secondkey], valid_map_types):
                                     message = 'Mapping {0} has invalid property at {1}'
                                     matches.append(RuleMatch(
                                         ['Mappings', mapname, firstkey, secondkey],
