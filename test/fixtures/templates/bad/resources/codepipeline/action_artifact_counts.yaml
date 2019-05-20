@@ -25,6 +25,16 @@ Resources:
                 PollForSourceChanges: true
                 Branch: master
                 OAuthToken: 'secret-token'
+            - Name: ECR
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Provider: ECR
+                Version: "1"
+              OutputArtifacts:
+                - Name: MyOutput1
+              Configuration:
+                RepositoryName: MyECRRepo
         - Name: Build
           Actions:
             - Name: CodeBuild
@@ -41,6 +51,26 @@ Resources:
               OutputArtifacts:
               - Name: MyOutput1
               - Name: MyOutput2  # No Longer an error
+            - Name: JenkinsBuild
+              ActionTypeId:
+                Category: Build
+                Owner: Custom
+                Version: "1"
+                Provider: MyJenkinsProviderName
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+                - Name: MyInput1
+                - Name: MyInput2
+                - Name: MyInput3
+                - Name: MyInput4
+                - Name: MyInput5
+              OutputArtifacts:
+                - Name: MyOutput1
+                - Name: MyOutput2
+                - Name: MyOutput3
+                - Name: MyOutput4
+                - Name: MyOutput5
         - Name: Test
           Actions:
             - Name: Validate
@@ -65,6 +95,85 @@ Resources:
                 - Name: MyOutput4
                 - Name: MyOutput5
                 - Name: MyOutput6 # Error
+            - Name: ValidateDeviceFarm
+              ActionTypeId:
+                Category: Test
+                Owner: AWS
+                Provider: DeviceFarm
+                Version: "1"
+              Configuration:
+                RecordAppPerformanceData: true
+                AppType: Android
+                ProjectId: 5e3e21c3-4444-1234-a799-6fe64bac9517
+                App: app-release.apk
+                Test: BUILTIN_FUZZ
+                DevicePoolArn: arn:aws:devicefarm:us-west-2::devicepool:082d10e5-9999-4444-6666-b33d66efa1f5
+                TestType: BUILTIN_FUZZ
+                AppiumVersion: 1.9.1
+              InputArtifacts:
+                - Name: MyOutput1
+              OutputArtifacts:
+                - Name: MyOutput1
+            - Name: ValidateJenkins
+              ActionTypeId:
+                Category: Test
+                Owner: Custom
+                Version: "1"
+                Provider: MyJenkinsProviderName
+              Configuration:
+                ProjectName: cfn-python-lint
+              InputArtifacts:
+                - Name: MyInput1
+                - Name: MyInput2
+                - Name: MyInput3
+                - Name: MyInput4
+                - Name: MyInput5
+              OutputArtifacts:
+                - Name: MyOutput1
+                - Name: MyOutput2
+                - Name: MyOutput3
+                - Name: MyOutput4
+                - Name: MyOutput5
+        - Name: Deploy
+          Actions:
+            - Name: MyDeploy
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: S3
+              Configuration:
+                BucketName: my-bucket
+                Extract: true
+              InputArtifacts:
+                - Name: MyOutput1
+            - Name: MyDeployServiceCataglog
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: ServiceCatalog
+              Configuration:
+                TemplateFilePath: /S3_template.json
+                ProductVersionName: devops S3 v2
+                ProductType: CLOUD_FORMATION_TEMPLATE
+                ProductId: port-99slboidonpew
+              InputArtifacts:
+                - Name: MyInput1
+            - Name: MyDeployAlexaSkillsKit
+              ActionTypeId:
+                Category: Deploy
+                Owner: ThirdParty
+                Version: "1"
+                Provider: AlexaSkillsKit
+              Configuration:
+                ClientId: amzn1.application-oa2-client.aadEXAMPLE
+                ClientSecret: 1234
+                RefreshToken: 1234
+                SkillId: amzn1.ask.skill.22649d8f-0451-4b4b-9ed9-bfb6cEXAMPLE
+              InputArtifacts:
+                - Name: MyInput1
+                - Name: MyInput2
         - Name: MyApprovalStage
           Actions:
             - Name: MyApprovalAction
