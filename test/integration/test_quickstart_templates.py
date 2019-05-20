@@ -32,8 +32,8 @@ class TestQuickStartTemplates(BaseTestCase):
 
         self.filenames = {
             'config_rule': {
-                "filename": 'test/fixtures/templates/public/lambda-poller.yaml',
-                "failures": 0
+                'filename': 'test/fixtures/templates/public/lambda-poller.yaml',
+                'results_filename': 'test/fixtures/results/public/lambda-poller.json'
             },
             'watchmaker': {
                 "filename": 'test/fixtures/templates/public/watchmaker.json',
