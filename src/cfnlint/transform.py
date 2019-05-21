@@ -91,7 +91,7 @@ class Transform(object):
 
         try:
             # Output the SAM Translator version in debug mode
-            LOGGER.debug('SAM Translator: %s', samtranslator.__version__)
+            LOGGER.info('SAM Translator: %s', samtranslator.__version__)
 
             sam_translator = Translator(managed_policy_map=self._managed_policy_map,
                                         sam_parser=self._sam_parser)
@@ -100,13 +100,13 @@ class Transform(object):
 
             # Tell SAM to use the region we're linting in, this has to be controlled using the default AWS mechanisms, see also:
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
-            LOGGER.debug('Setting AWS_DEFAULT_REGION to %s', self._region)
+            LOGGER.info('Setting AWS_DEFAULT_REGION to %s', self._region)
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
             self._template = cfnlint.helpers.convert_dict(
                 sam_translator.translate(sam_template=self._template, parameter_values={}))
 
-            LOGGER.debug('Transformed template: %s', self._template)
+            LOGGER.info('Transformed template: \n%s', cfnlint.helpers.format_json_string(self._template))
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'
             for cause in e.causes:

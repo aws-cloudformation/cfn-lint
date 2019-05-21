@@ -1,3 +1,24 @@
+### 0.21.0
+###### Features
+- New rule [E3038](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3038) to check if a Serverless resource includes the appropriate Transform
+- New rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2531) to validate a Lambda's runtime against the deprecated dates
+- New rule [W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2531) to validate a Lambda's runtime against the EOL dates
+- Update rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to include updates to Code Pipeline capabilities
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include checking of values for load balancer attributes
+###### CloudFormation Specifications
+- Update CloudFormation specs to 3.2.0
+- Update instance types from pricing API as of 2019.05.20
+###### Fixes
+- Include setuptools in setup.py requires
+
+### 0.20.3
+###### CloudFormation Specifications
+- Update instance types from pricing API as of 2019.05.16
+###### Fixes
+- Update [E7001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E7001) to allow float/doubles for mapping values
+- Update [W1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1020) to check pre-transformed Fn::Sub(s) to determine if a Sub is needed
+- Pin requests to be below or equal to 2.21.0 to prevent issues with botocore
+
 ### 0.20.2
 ###### Features
 - Add support for List<String> Parameter types

@@ -1,12 +1,12 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
 Resources:
   myFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Runtime: nodejs6.10
       Handler: index.handler
-      Runtime: nodejs10.x
+      Timeout: 180
       CodeUri: 's3://testBucket/mySourceCode.zip'
       AutoPublishAlias: live
       DeploymentPreference:
@@ -17,9 +17,3 @@ Resources:
           Properties:
             Path: /thumbnail
             Method: GET
-            RestApiId: !Ref myApi
-  myApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      DefinitionUri: s3://bucket/swagger.json
-      StageName: dev

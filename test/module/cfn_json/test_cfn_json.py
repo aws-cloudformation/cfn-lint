@@ -35,7 +35,7 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": 'test/fixtures/templates/quickstart/config-rules.json',
-                "failures": 4
+                "failures": 6
             },
             "iam": {
                 "filename": 'test/fixtures/templates/quickstart/iam.json',
@@ -55,7 +55,7 @@ class TestCfnJson(BaseTestCase):
             },
             "poller": {
                 "filename": 'test/fixtures/templates/public/lambda-poller.json',
-                "failures": 0
+                "failures": 1
             }
         }
 
@@ -97,7 +97,7 @@ class TestCfnJson(BaseTestCase):
 
                 matches = []
                 matches.extend(self.rules.run(filename, cfn))
-                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), values.get('filename'))
 
     def test_fail_run(self):
         """Test failure run"""

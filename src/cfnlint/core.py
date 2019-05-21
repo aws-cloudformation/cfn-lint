@@ -100,8 +100,8 @@ def get_rules(rulesdir, ignore_rules, include_rules, configure_rules=None, inclu
 
 def configure_logging(debug_logging):
     """ Backwards compatibility for integrators """
-    LOGGER.debug('Update your integrations to use "cfnlint.config.configure_logging" instead')
-    cfnlint.config.configure_logging(debug_logging)
+    LOGGER.info('Update your integrations to use "cfnlint.config.configure_logging" instead')
+    cfnlint.config.configure_logging(debug_logging, False)
 
 
 def get_args_filenames(cli_args):

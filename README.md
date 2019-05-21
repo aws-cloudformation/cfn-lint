@@ -122,8 +122,8 @@ Optional parameters:
 | -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false                    
-  -v, --version         Version of cfn-lint
-| -d, --debug |  |  | Specify to enable debug logging |
+| -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
+| -I, --info |  |  | Specify to enable information logging. Information logging outputs informational information about the template processing. |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
 | -v, --version | | | Version of cfn-lint |
@@ -208,7 +208,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.20.2  # The version of cfn-lint to use
+    rev: v0.21.0  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

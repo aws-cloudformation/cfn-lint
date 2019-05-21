@@ -34,7 +34,7 @@ class TestPropertyElb(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_elb.yaml', 6)
+        self.helper_file_negative('test/fixtures/templates/bad/properties_elb.yaml', 7)
 
     def test_alb_subnets(self):
         """ Test ALB Subnet Logic"""
@@ -42,7 +42,6 @@ class TestPropertyElb(BaseRuleTestCase):
 
         # Failure when 1 subnet defined
         props = {
-            "Type": "application",
             "Subnets": [
                 "subnet-123456"
             ]
@@ -98,3 +97,56 @@ class TestPropertyElb(BaseRuleTestCase):
 
         matches = rule.check_alb_subnets(props, ['Resources', 'NLB', 'Properties'])
         self.assertEqual(len(matches), 0)
+
+    def test_loadbalancer_attributes(self):
+        """ Test LoadBalancer Attributes logic """
+        rule = Elb()
+
+        props = {
+            "Type": "network",
+            "LoadBalancerAttributes": [
+                {
+                    "Key": "load_balancing.cross_zone.enabled",
+                    "Value": "true"
+                }
+            ]
+        }
+
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'NLB', 'Properties'])
+        self.assertEqual(len(matches), 0)
+
+        props = {
+            "LoadBalancerAttributes": [
+                {
+                    "Key": "idle_timeout.timeout_seconds",
+                    "Value": 60
+                },
+                {
+                    "Key": "routing.http2.enabled",
+                    "Value": "true"
+                }
+            ]
+        }
+
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'ALB', 'Properties'])
+        self.assertEqual(len(matches), 0)
+
+        props = {
+            "Type": "network",
+            "LoadBalancerAttributes": [
+                {
+                    "Key": "idle_timeout.timeout_seconds",
+                    "Value": 60
+                },
+                {
+                    "Key": "routing.http2.enabled",
+                    "Value": "true"
+                }
+            ]
+        }
+
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'NLB', 'Properties'])
+        self.assertEqual(len(matches), 2)
+
+
+

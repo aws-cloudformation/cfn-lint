@@ -38,12 +38,20 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 'CodeCommit': {
                     'InputArtifactRange': 0,
                     'OutputArtifactRange': 1,
+                },
+                'ECR': {
+                    'InputArtifactRange': 0,
+                    'OutputArtifactRange': 1,
                 }
             },
             'Test': {
                 'CodeBuild': {
                     'InputArtifactRange': (1, 5),
                     'OutputArtifactRange': (0, 5),
+                },
+                'DeviceFarm': {
+                    'InputArtifactRange': 1,
+                    'OutputArtifactRange': 0,
                 }
             },
             'Build': {
@@ -59,6 +67,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 }
             },
             'Deploy': {
+                'S3': {
+                    'InputArtifactRange': 1,
+                    'OutputArtifactRange': 0,
+                },
                 'CloudFormation': {
                     'InputArtifactRange': (0, 10),
                     'OutputArtifactRange': (0, 1),
@@ -79,6 +91,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     'InputArtifactRange': 1,
                     'OutputArtifactRange': 0,
                 },
+                'ServiceCatalog': {
+                    'InputArtifactRange': 1,
+                    'OutputArtifactRange': 0,
+                },
             },
             'Invoke': {
                 'Lambda': {
@@ -93,6 +109,26 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     'InputArtifactRange': 0,
                     'OutputArtifactRange': 1,
                 }
+            },
+            'Deploy': {
+                'AlexaSkillsKit': {
+                    'InputArtifactRange': (0, 2),
+                    'OutputArtifactRange': 0,
+                },
+            },
+        },
+        'Custom': {
+            'Build': {
+                'Jenkins': {
+                    'InputArtifactRange': (0, 5),
+                    'OutputArtifactRange': (0, 5),
+                },
+            },
+            'Test': {
+                'Jenkins': {
+                    'InputArtifactRange': (0, 5),
+                    'OutputArtifactRange': (0, 5),
+                },
             },
         },
     }
