@@ -4,7 +4,7 @@
 - New rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2531) to validate a Lambda's runtime against the deprecated dates
 - New rule [W2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2531) to validate a Lambda's runtime against the EOL dates
 - Update rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to include updates to Code Pipeline capabilities
-- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include checking of the values for a load balancer attributes
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include checking of values for load balancer attributes
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 3.2.0
 - Update instance types from pricing API as of 2019.05.20
