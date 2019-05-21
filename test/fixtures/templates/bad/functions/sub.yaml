@@ -56,6 +56,26 @@ Resources:
         Fn::Sub:
         - "${myCidr}"
         - myCidr: !Ref CidrBlock
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-123456
+      InstanceType: t2.micro
+      UserData:
+        'Fn::Base64':
+          'Fn::Sub':
+            'Fn::Transform':  # Doesn't support an object of two items
+              Name: DynamicUserData
+            'Fn::GetAtt': myVPc2.CidrBlock
+  LaunchConfiguration2:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: ami-123456
+      InstanceType: t2.micro
+      UserData:
+        'Fn::Base64':
+          'Fn::Sub':
+            'Fn::GetAtt': myVPc.CidrBlock
 Outputs:
   myOutput:
     Value: !Sub "${myInstance3.PrivateDnsName1}"
