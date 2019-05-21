@@ -25,7 +25,7 @@ class TestPropertyElb(BaseRuleTestCase):
         super(TestPropertyElb, self).setUp()
         self.collection.register(Elb())
         self.success_templates = [
-            'test/fixtures/templates/good/properties_elb.yaml'
+            'test/fixtures/templates/good/resources/elb/properties.yaml'
         ]
 
     def test_file_positive(self):
@@ -34,7 +34,7 @@ class TestPropertyElb(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_elb.yaml', 7)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/elb/properties.yaml', 10)
 
     def test_alb_subnets(self):
         """ Test ALB Subnet Logic"""
@@ -47,7 +47,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'], {})
         self.assertEqual(len(matches), 1)
 
         # No Failure when 2 subnets defined
@@ -59,7 +59,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'], {})
         self.assertEqual(len(matches), 0)
 
         # Failure when 1 SubnetMapping defined
@@ -72,7 +72,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'], {})
         self.assertEqual(len(matches), 1)
 
         # No Failure when 2 SubnetMapping defined
@@ -84,7 +84,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'])
+        matches = rule.check_alb_subnets(props, ['Resources', 'ALB', 'Properties'], {})
         self.assertEqual(len(matches), 0)
 
         # No Failure when 1 Subnet and NLB
@@ -95,7 +95,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_alb_subnets(props, ['Resources', 'NLB', 'Properties'])
+        matches = rule.check_alb_subnets(props, ['Resources', 'NLB', 'Properties'], {})
         self.assertEqual(len(matches), 0)
 
     def test_loadbalancer_attributes(self):
@@ -112,7 +112,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'NLB', 'Properties'])
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'NLB', 'Properties'], {})
         self.assertEqual(len(matches), 0)
 
         props = {
@@ -128,7 +128,7 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'ALB', 'Properties'])
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'ALB', 'Properties'], {})
         self.assertEqual(len(matches), 0)
 
         props = {
@@ -145,8 +145,36 @@ class TestPropertyElb(BaseRuleTestCase):
             ]
         }
 
-        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'NLB', 'Properties'])
+        matches = rule.check_loadbalancer_allowed_attributes(props, ['Resources', 'LB', 'Properties'], {})
         self.assertEqual(len(matches), 2)
+
+        props = {
+            "Type": "network"
+        }
+
+        elb_type = rule.get_loadbalancer_type(props)
+        self.assertEqual(elb_type, 'network')
+
+        props = {
+            "Type": "application"
+        }
+
+        elb_type = rule.get_loadbalancer_type(props)
+        self.assertEqual(elb_type, 'application')
+
+        props = {}
+
+        elb_type = rule.get_loadbalancer_type(props)
+        self.assertEqual(elb_type, 'application')
+
+        props = {
+            "Type": {
+                "Ref": "LoadBalancerType"
+            }
+        }
+
+        elb_type = rule.get_loadbalancer_type(props)
+        self.assertEqual(elb_type, None)
 
 
 

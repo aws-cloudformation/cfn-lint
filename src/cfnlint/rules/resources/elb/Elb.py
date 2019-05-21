@@ -28,6 +28,11 @@ HTTPS has certificate HTTP has no certificate'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html'
     tags = ['properties', 'elb']
 
+    def __init__(self):
+        """ Init """
+        super(Elb, self).__init__()
+        self.resource_property_types = ['AWS::ElasticLoadBalancingV2::LoadBalancer']
+
     def check_protocol_value(self, value, path, **kwargs):
         """
             Check Protocol Value
@@ -44,31 +49,41 @@ HTTPS has certificate HTTP has no certificate'
 
         return matches
 
-    def is_application_loadbalancer(self, properties):
+    def get_loadbalancer_type(self, properties):
         """ Check if type is application """
-        elb_type = properties.get('Type')
-        if not elb_type or elb_type == 'application':
-            return True
-        return False
+        elb_type = properties.get('Type', 'application')
+        if isinstance(elb_type, six.string_types):
+            if elb_type == 'application':
+                return 'application'
+            return 'network'
+        return None
 
-    def check_alb_subnets(self, properties, path):
+    def check_alb_subnets(self, properties, path, scenario):
         """ Validate at least two subnets with ALBs"""
         matches = []
-        if self.is_application_loadbalancer(properties):
+        if self.get_loadbalancer_type(properties) == 'application':
             subnets = properties.get('Subnets')
             if isinstance(subnets, list):
                 if len(subnets) < 2:
-                    path = path + ['Subnets']
-                    matches.append(RuleMatch(path, 'You must specify at least two Subnets for load balancers with type "application"'))
+                    if scenario:
+                        message = 'You must specify at least two Subnets for load balancers with type "application" {0}'
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        matches.append(RuleMatch(path, message.format(scenario_text)))
+                    else:
+                        matches.append(RuleMatch(path[:] + ['Subnets'], 'You must specify at least two Subnets for load balancers with type "application"'))
             subnet_mappings = properties.get('SubnetMappings')
             if isinstance(subnet_mappings, list):
                 if len(subnet_mappings) < 2:
-                    path = path + ['SubnetMappings']
-                    matches.append(RuleMatch(path, 'You must specify at least two SubnetMappings for load balancers with type "application"'))
+                    if scenario:
+                        message = 'You must specify at least two SubnetMappings for load balancers with type "application" {0}'
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        matches.append(RuleMatch(path, message.format(scenario_text)))
+                    else:
+                        matches.append(RuleMatch(path[:] + ['SubnetMappings'], 'You must specify at least two SubnetMappings for load balancers with type "application"'))
 
         return matches
 
-    def check_loadbalancer_allowed_attributes(self, properties, path):
+    def check_loadbalancer_allowed_attributes(self, properties, path, scenario):
         """ Validate loadbalancer attributes per loadbalancer type"""
         matches = []
 
@@ -93,13 +108,17 @@ HTTPS has certificate HTTP has no certificate'
             for item in loadbalancer_attributes:
                 key = item.get('Key')
                 value = item.get('Value')
-                if isinstance(key, six.string_types) and isinstance(value, (six.string_types, bool, int)):
-                    loadbalancer = 'network'
-                    if self.is_application_loadbalancer(properties):
-                        loadbalancer = 'application'
-                    if key not in allowed_attributes['all'] and key not in allowed_attributes[loadbalancer]:
-                        message = 'Attribute "{0}" not allowed for load balancers with type "{1}"'
-                        matches.append(RuleMatch(path, message.format(key, loadbalancer)))
+                if isinstance(key, six.string_types) and isinstance(value, (six.string_types, bool, six.integer_types)):
+                    loadbalancer = self.get_loadbalancer_type(properties)
+                    if loadbalancer:
+                        if key not in allowed_attributes['all'] and key not in allowed_attributes[loadbalancer]:
+                            if scenario:
+                                scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                                message = 'Attribute "{0}" not allowed for load balancers with type "{1}" {2}'
+                                matches.append(RuleMatch(path, message.format(key, loadbalancer, scenario_text)))
+                            else:
+                                message = 'Attribute "{0}" not allowed for load balancers with type "{1}"'
+                                matches.append(RuleMatch(path, message.format(key, loadbalancer)))
 
         return matches
 
@@ -130,15 +149,27 @@ HTTPS has certificate HTTP has no certificate'
                             certificate_protocols=['HTTPS', 'SSL'],
                             certificates=listener.get('SSLCertificateId')))
 
-        results = cfn.get_resource_properties(['AWS::ElasticLoadBalancingV2::LoadBalancer'])
-        for result in results:
-            properties = result['Value']
-            if not self.is_application_loadbalancer(properties):
-                if 'SecurityGroups' in properties:
-                    path = result['Path'] + ['SecurityGroups']
-                    matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
+        return matches
 
-            matches.extend(self.check_alb_subnets(properties, result['Path']))
-            matches.extend(self.check_loadbalancer_allowed_attributes(properties, result['Path']))
+    def match_resource_properties(self, resource_properties, _, path, cfn):
+        """ Check Load Balancers """
+        matches = []
+
+        # Play out conditions to determine the relationship between property values
+        scenarios = cfn.get_object_without_nested_conditions(resource_properties, path)
+        for scenario in scenarios:
+            properties = scenario.get('Object')
+            if self.get_loadbalancer_type(properties) == 'network':
+                if properties.get('SecurityGroups'):
+                    if scenario.get('Scenario'):
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.get('Scenario').items()])
+                        message = 'Security groups are not supported for load balancers with type "network" {0}'
+                        matches.append(RuleMatch(path, message.format(scenario_text)))
+                    else:
+                        path = path + ['SecurityGroups']
+                        matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
+
+            matches.extend(self.check_alb_subnets(properties, path, scenario.get('Scenario')))
+            matches.extend(self.check_loadbalancer_allowed_attributes(properties, path, scenario.get('Scenario')))
 
         return matches
