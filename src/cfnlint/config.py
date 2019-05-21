@@ -33,15 +33,17 @@ except ImportError:  # pragma: no cover
 LOGGER = logging.getLogger('cfnlint')
 
 
-def configure_logging(debug_logging):
+def configure_logging(debug_logging, info_logging):
     """Setup Logging"""
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
 
     if debug_logging:
         LOGGER.setLevel(logging.DEBUG)
-    else:
+    elif info_logging:
         LOGGER.setLevel(logging.INFO)
+    else:
+        LOGGER.setLevel(logging.NOTSET)
     log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     ch.setFormatter(log_formatter)
 
@@ -324,7 +326,10 @@ class CliArgs(object):
             help='Ignore templates', nargs='+', default=[], action='extend'
         )
         advanced.add_argument(
-            '-d', '--debug', help='Enable debug logging', action='store_true'
+            '-D', '--debug', help='Enable debug logging', action='store_true'
+        )
+        advanced.add_argument(
+            '-I', '--info', help='Enable information logging', action='store_true'
         )
         standard.add_argument(
             '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
@@ -440,7 +445,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def __init__(self, cli_args):
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
-        configure_logging(self.cli_args.debug)
+        configure_logging(self.cli_args.debug, self.cli_args.info)
         ConfigFileArgs.__init__(self)
         TemplateArgs.__init__(self, {})
 
