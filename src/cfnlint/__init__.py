@@ -1349,7 +1349,7 @@ class Runner(object):
 
     def run(self):
         """Run rules"""
-        LOGGER.debug('Run scan of template...')
+        LOGGER.info('Run scan of template %s', self.filename)
         matches = []
         if self.cfn.template is not None:
             matches.extend(
