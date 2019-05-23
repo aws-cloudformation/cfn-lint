@@ -188,6 +188,17 @@ class Sub(CloudFormationLintRule):
                     message = 'Sub should be an array of 2 for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree)))))
+            elif isinstance(sub_value_obj, dict):
+                if len(sub_value_obj) == 1:
+                    for key, _ in sub_value_obj.items():
+                        if not key == 'Fn::Transform':
+                            message = 'Sub should be a string or array of 2 items for {0}'
+                            matches.append(RuleMatch(
+                                tree, message.format('/'.join(map(str, tree)))))
+                else:
+                    message = 'Sub should be a string or array of 2 items for {0}'
+                    matches.append(RuleMatch(
+                        tree, message.format('/'.join(map(str, tree)))))
             else:
                 message = 'Sub should be a string or array of 2 items for {0}'
                 matches.append(RuleMatch(
