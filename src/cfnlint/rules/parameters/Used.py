@@ -57,7 +57,7 @@ class Used(CloudFormationLintRule):
         for subtree in subtrees:
             if isinstance(subtree[-1], list):
                 subs.extend(cfn.get_sub_parameters(subtree[-1][0]))
-            else:
+            elif isinstance(subtree[-1], six.string_types):
                 subs.extend(cfn.get_sub_parameters(subtree[-1]))
 
         for paramname, _ in cfn.get_parameters().items():
