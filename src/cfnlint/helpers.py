@@ -225,6 +225,10 @@ def initialize_specs():
 initialize_specs()
 
 
+def format_json_string(json_string):
+    """ Format the given JSON string"""
+    return json.dumps(json_string, indent=2, sort_keys=True, separators=(',', ': '))
+
 def load_plugins(directory):
     """Load plugins"""
     result = []

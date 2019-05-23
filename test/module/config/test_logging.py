@@ -31,13 +31,20 @@ class TestLogging(BaseTestCase):
     def test_logging_info(self):
         """Test success run"""
 
-        cfnlint.config.configure_logging(False)
+        cfnlint.config.configure_logging(False, True)
         self.assertEqual(logging.INFO, LOGGER.level)
         self.assertEqual(len(LOGGER.handlers), 1)
 
     def test_logging_debug(self):
         """Test debug level"""
 
-        cfnlint.config.configure_logging(True)
+        cfnlint.config.configure_logging(True, False)
         self.assertEqual(logging.DEBUG, LOGGER.level)
+        self.assertEqual(len(LOGGER.handlers), 1)
+
+    def test_no_logging(self):
+        """Test no logging level"""
+
+        cfnlint.config.configure_logging(False, False)
+        self.assertEqual(logging.NOTSET, LOGGER.level)
         self.assertEqual(len(LOGGER.handlers), 1)
