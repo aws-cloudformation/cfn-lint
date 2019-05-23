@@ -1,3 +1,12 @@
+### 0.21.1
+###### Features
+- Add `Info` logging capability and set the default logging to `NotSet`
+###### Fixes
+- Only do rule logging (start/stop/time) when the rule is going to be called
+- Update rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) to allow `Fn::Transform` inside a `Fn::Sub`
+- Update rule [W2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2001) to not break when `Fn::Transform` inside a `Fn::Sub`
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to allow conditions to be used and to not default to `network` load balancer when an object is used for the Load Balancer type
+
 ### 0.21.0
 ###### Features
 - New rule [E3038](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3038) to check if a Serverless resource includes the appropriate Transform
