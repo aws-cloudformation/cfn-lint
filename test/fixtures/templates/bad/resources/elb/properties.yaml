@@ -20,8 +20,18 @@ Parameters:
   TestParam:
     Type: String
     Default: TCP
+  Type:
+    Type: String
+    AllowedValues: ['application', 'network']
+    Default: application
+    Description: ALB type
+  SecurityGroups:
+    Type: CommaDelimitedList
+    Description: Security group(s) for ALB
+    Default: ''
 Conditions:
   TestCond: !Equals ['a', 'a']
+  IsTypeNetwork: !Equals [!Ref Type, 'network']
 Resources:
   LoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
@@ -192,6 +202,23 @@ Resources:
           Value: 'true'
         InstancePorts:
         - '80'
+  ElasticLoadBalancerConditions:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Scheme: internet-facing
+      SecurityGroups: !If
+        - IsTypeNetwork
+        - !Ref SecurityGroups
+        - !Ref 'AWS::NoValue'
+      Subnets:
+      - subnet-123456
+      Type: !If
+        - IsTypeNetwork
+        - network
+        - application
+      LoadBalancerAttributes:
+      - Key: load_balancing.cross_zone.enabled
+        Value: 'true'
 Outputs:
   Arn:
     Value: !Ref LoadBalancer
