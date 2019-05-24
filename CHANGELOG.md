@@ -1,3 +1,7 @@
+### 0.21.3
+###### Fixes
+- Support dumping strings for datetime objects when doing a Transform
+
 ### 0.21.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 3.3.0
