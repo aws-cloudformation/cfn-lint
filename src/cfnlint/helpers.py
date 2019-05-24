@@ -19,6 +19,7 @@ import fnmatch
 import json
 import os
 import imp
+import datetime
 import logging
 import re
 import inspect
@@ -227,7 +228,11 @@ initialize_specs()
 
 def format_json_string(json_string):
     """ Format the given JSON string"""
-    return json.dumps(json_string, indent=2, sort_keys=True, separators=(',', ': '))
+    def converter(o):  # pylint: disable=R1710
+        """ Help convert date/time into strings """
+        if isinstance(o, datetime.datetime):
+            return o.__str__()
+    return json.dumps(json_string, indent=2, sort_keys=True, separators=(',', ': '), default=converter)
 
 def load_plugins(directory):
     """Load plugins"""
