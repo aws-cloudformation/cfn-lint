@@ -1,3 +1,8 @@
+### 0.21.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to 3.3.0
+- Update instance types from pricing API as of 2019.05.23
+
 ### 0.21.1
 ###### Features
 - Add `Info` logging capability and set the default logging to `NotSet`
