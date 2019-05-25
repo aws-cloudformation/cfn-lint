@@ -1,0 +1,33 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Stage:
+    Description: Environment stage (deployment phase)
+    Type: String
+    AllowedValues:
+      - beta
+      - prod
+
+Resources:
+  SkillFunctionExtraItems:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: '.'
+      Handler: main.handler
+      Runtime: python3.7
+      Timeout: 30
+      MemorySize: 128
+      AutoPublishAlias:
+        Ref: Stage
+        Extra: Bad
+  SkillFunctionNotRef:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: '.'
+      Handler: main.handler
+      Runtime: python3.7
+      Timeout: 30
+      MemorySize: 128
+      AutoPublishAlias: !GetAtt SkillFunctionExtraItems.Arn
