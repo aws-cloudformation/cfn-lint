@@ -383,8 +383,20 @@ class Conditions(object):
             return results
 
         if not matched_conditions:
-            for condition in conditions:
-                results = self.multiply_conditions(results, condition, [True, False])
+            # fail safe to not create a lot of unrelated scenarios. Just test if they are true/false
+            # At this point this value is completely arbitrary and not configurable
+            if len(conditions) > 4:
+                LOGGER.info('Found %s conditions.  Limiting results to protect against heavy cpu time', len(conditions))
+                true_results = []
+                false_results = []
+                for condition in conditions:
+                    true_results = self.multiply_conditions(true_results, condition, [True])
+                    false_results = self.multiply_conditions(false_results, condition, [False])
+                results.extend(true_results)
+                results.extend(false_results)
+            else:
+                for condition in conditions:
+                    results = self.multiply_conditions(results, condition, [True, False])
 
             return results
 
