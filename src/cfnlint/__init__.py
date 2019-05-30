@@ -95,7 +95,7 @@ class CloudFormationLintRule(object):
                 if not getattr(self, match_type):
                     return []
 
-                if match_type == 'resource_property_types':
+                if match_type == 'match_resource_properties':
                     if args[1] not in self.resource_property_types:
                         return []
                 elif match_type == 'match_resource_sub_properties':
