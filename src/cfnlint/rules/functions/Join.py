@@ -17,6 +17,7 @@
 import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
+from cfnlint.helpers import RESOURCE_SPECS
 
 
 class Join(CloudFormationLintRule):
@@ -26,6 +27,17 @@ class Join(CloudFormationLintRule):
     description = 'Making sure the join function is properly configured'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html'
     tags = ['functions', 'join']
+
+    def __init__(self):
+        """Initialize the rule"""
+        super(Join, self).__init__()
+        self.list_supported_functions = []
+        self.singular_supported_functions = []
+        for intrinsic_type, intrinsic_value in RESOURCE_SPECS.get('us-east-1').get('IntrinsicTypes').items():
+            if 'List' in intrinsic_value.get('ReturnTypes', []):
+                self.list_supported_functions.append(intrinsic_type)
+            if 'Singular' in intrinsic_value.get('ReturnTypes', []):
+                self.singular_supported_functions.append(intrinsic_type)
 
     def _get_parameters(self, cfn):
         """Get all Parameter Names"""
@@ -84,36 +96,13 @@ class Join(CloudFormationLintRule):
 
         matches = []
 
-        list_supported_functions = [
-            'Fn::FindInMap',  # could be a list or singular
-            'Fn::GetAtt',  # could be a list or singular
-            'Fn::GetAZs',  # always a list
-            'Fn::If',  # can't easily tell if its a list or string.  Ignore
-            'Fn::Select',  # select can go to find in map so hard to tell
-            'Fn::Split',  # split should at least return a list.
-            'Ref',  # could be a list or singular
-        ]
-
-        singular_supported_functions = [
-            'Fn::Base64',
-            'Fn::ImportValue',
-            'Fn::Join',
-            'Fn::Sub',
-            'Fn::FindInMap',
-            'Fn::GetAtt',
-            'Fn::If',
-            'Fn::Select',
-            'Fn::Split',
-            'Ref',
-        ]
-
         template_parameters = self._get_parameters(cfn)
         get_atts = cfn.get_valid_getatts()
 
         if isinstance(join_string_objs, dict):
             if len(join_string_objs) == 1:
                 for key, value in join_string_objs.items():
-                    if key not in list_supported_functions:
+                    if key not in self.list_supported_functions:
                         message = 'Fn::Join unsupported function for {0}'
                         matches.append(RuleMatch(
                             path, message.format('/'.join(map(str, path)))))
@@ -140,7 +129,7 @@ class Join(CloudFormationLintRule):
                 if isinstance(string_obj, dict):
                     if len(string_obj) == 1:
                         for key, value in string_obj.items():
-                            if key not in singular_supported_functions:
+                            if key not in self.singular_supported_functions:
                                 message = 'Join unsupported function for {0}'
                                 matches.append(RuleMatch(
                                     path, message.format('/'.join(map(str, path)))))
