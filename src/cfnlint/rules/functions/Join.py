@@ -111,29 +111,24 @@ class Join(CloudFormationLintRule):
         get_atts = cfn.get_valid_getatts()
 
         if isinstance(join_string_objs, dict):
-            if isinstance(join_string_objs, dict):
-                if len(join_string_objs) == 1:
-                    for key, value in join_string_objs.items():
-                        if key not in list_supported_functions:
-                            message = 'Fn::Join unsupported function for {0}'
+            if len(join_string_objs) == 1:
+                for key, value in join_string_objs.items():
+                    if key not in list_supported_functions:
+                        message = 'Fn::Join unsupported function for {0}'
+                        matches.append(RuleMatch(
+                            path, message.format('/'.join(map(str, path)))))
+                    elif key in ['Ref']:
+                        if not self._is_ref_a_list(value, template_parameters):
+                            message = 'Fn::Join must use a list at {0}'
                             matches.append(RuleMatch(
                                 path, message.format('/'.join(map(str, path)))))
-                        elif key in ['Ref']:
-                            if not self._is_ref_a_list(value, template_parameters):
-                                message = 'Fn::Join must use a list at {0}'
-                                matches.append(RuleMatch(
-                                    path, message.format('/'.join(map(str, path)))))
-                        elif key in ['Fn::GetAtt']:
-                            if not self._is_getatt_a_list(self._normalize_getatt(value), get_atts):
-                                message = 'Fn::Join must use a list at {0}'
-                                matches.append(RuleMatch(
-                                    path, message.format('/'.join(map(str, path)))))
-                else:
-                    message = 'Join list of values should be singular for {0}'
-                    matches.append(RuleMatch(
-                        path, message.format('/'.join(map(str, path)))))
-            elif not isinstance(join_string_objs, six.string_types):
-                message = 'Join list of singular function or string for {0}'
+                    elif key in ['Fn::GetAtt']:
+                        if not self._is_getatt_a_list(self._normalize_getatt(value), get_atts):
+                            message = 'Fn::Join must use a list at {0}'
+                            matches.append(RuleMatch(
+                                path, message.format('/'.join(map(str, path)))))
+            else:
+                message = 'Join list of values should be singular for {0}'
                 matches.append(RuleMatch(
                     path, message.format('/'.join(map(str, path)))))
         elif not isinstance(join_string_objs, list):
