@@ -305,7 +305,16 @@ class CliArgs(object):
                         items.append(value)
                 setattr(namespace, self.dest, items)
 
-        parser = ArgumentParser(description='CloudFormation Linter')
+        usage = (
+            '\nBasic: cfn-lint test.yaml\n'
+            'Ignore a rule: cfn-lint -I E3012 -- test.yaml\n'
+            'Configure a rule: cfn-lint -x E3012:strict=false -t test.yaml\n'
+            'Lint all yaml files in a folder: cfn-lint dir/**/*.yaml'
+        )
+
+        parser = ArgumentParser(
+            description='CloudFormation Linter',
+            usage=usage)
         parser.register('action', 'extend', ExtendAction)
 
         standard = parser.add_argument_group('Standard')
