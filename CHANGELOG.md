@@ -1,3 +1,13 @@
+### 0.21.4
+###### Features
+- Include more resource types in [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3037)
+###### CloudFormation Specifications
+- Add Resource Type `AWS::CDK::Metadata`
+###### Fixes
+- Uncap requests dependency in setup.py
+- Pass a parameter value for AutoPublishAlias when doing a Transform
+- Show usage examples when displaying the help
+
 ### 0.21.3
 ###### Fixes
 - Support dumping strings for datetime objects when doing a Transform
