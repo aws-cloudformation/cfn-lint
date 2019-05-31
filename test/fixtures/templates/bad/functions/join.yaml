@@ -1,0 +1,76 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test Join Functions
+Parameters:
+  Partition:
+    Type: String
+  Partitions:
+    Type: List<String>
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-1234
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+          - ''
+          - 'Test function'
+          - 'another item'
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-1234
+      UserData:
+        Fn::Base64:
+          Fn::Join: !Ref myInstance
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      InstanceTenancy: dedicated
+  RolePolicies: 
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties: 
+      ManagedPolicyName: "root"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Effect: "Allow"
+            Action: "*"
+            Resource: 
+            - Fn::Join:
+                - ''
+                - !Sub "${AWS::AccountId}-test"  # Sub is singular and should be a list
+            - Fn::Join:
+                - ''
+                - - !GetAZs 'us-east-1'  # Get AZs returns a list and this should be singular
+            - Fn::Join:
+                - ''
+                - - !GetAtt myVPC.CidrBlockAssociations  # Is a list and should be singular
+            - Fn::Join:
+                - ''
+                - !GetAtt myVPC.CidrBlock  # Singular value and should be a list
+            - Fn::Join:
+                - ''
+                - - 'arn:'
+                  - !Ref Partitions  # Can't use a list here
+                  - ':s3:::elasticbeanstalk-*-'
+                  - !Ref 'AWS::AccountId'
+            - Fn::Join:
+              - ''
+              - Ref: Partition  # has to be a list here
+            - Fn::Join:
+              - ''
+              - Ref: Partition  # More than one item in the object
+                Fn::GetAtt: myVPC.CidrBlockAssociations
+            - Fn::Join:
+              - ''
+              - - Ref: Partition  # More than one item in the object
+                  Fn::GetAtt: myVPC.CidrBlockAssociations
+            - Fn::Join:
+              - ''
+              - String  # Can't be a string
+  

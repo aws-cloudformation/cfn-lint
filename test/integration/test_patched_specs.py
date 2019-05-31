@@ -109,6 +109,15 @@ class TestPatchedSpecs(BaseTestCase):
                     for p_name, p_values in v_value_properties.items():
                         self._test_sub_properties(resource_name, p_name, p_values)
 
+    def test_intrinsic_value_types(self):
+        """ Test Intrinsic Types """
+
+        for _, i_value in self.spec.get('IntrinsicTypes').items():
+            self.assertIn('Documentation', i_value)
+            self.assertIn('ReturnTypes', i_value)
+            for return_type in i_value.get('ReturnTypes'):
+                self.assertIn(return_type, ['Singular', 'List'])
+
     def test_property_value_types(self):
         """Test Property Value Types"""
         for v_name, v_values in self.spec.get('ValueTypes').items():
