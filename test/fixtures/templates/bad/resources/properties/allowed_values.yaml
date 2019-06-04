@@ -5,6 +5,9 @@ Description: >
   Minimal configuration for each resource to be "valid", apart from the properties
   that are part of the AllowedValues check.
 Parameters:
+  AvailabilityZone:
+    Type: "AWS::EC2::AvailabilityZone::Name"
+    Default: "eu-west-1a"
   Password:
     Type: String
     NoEcho: True
@@ -522,6 +525,16 @@ Resources:
           KeyType: "hash" # Invalid AllowedValue
       StreamSpecification:
         StreamViewType: "NEW_AND_OLD" # Invalid AllowedValue
+  EC2CapacityReservation:
+    Type: "AWS::EC2::CapacityReservation"
+    Properties:
+      AvailabilityZone: !Ref "AvailabilityZone"
+      EndDateType: "asap" # Invalid AllowedValue
+      InstanceCount: 1
+      InstanceMatchCriteria: "Targeted" # Invalid AllowedValue
+      InstancePlatform: "Linux" # Invalid AllowedValue
+      InstanceType: "t.medium" # Invalid AllowedValue
+      Tenancy: "Default" # Invalid AllowedValue
   EC2ElasticIp:
     Type: "AWS::EC2::EIP"
     Properties:
@@ -553,7 +566,7 @@ Resources:
     Type: "AWS::EC2::Host"
     Properties:
       AutoPlacement: "On" # Invalid allowed Value
-      AvailabilityZone: "eu-west-1a"
+      AvailabilityZone: !Ref "AvailabilityZone"
       InstanceType: "t3.medium"
   EC2Instance:
     Type: "AWS::EC2::Instance"
@@ -809,7 +822,7 @@ Resources:
   Volume:
     Type: "AWS::EC2::Volume"
     Properties:
-      AvailabilityZone: "eu-west-1a"
+      AvailabilityZone: !Ref "AvailabilityZone"
       VolumeType: "sssd" # Invalid AllowedValue
   Vpc:
     Type: "AWS::EC2::VPC"
