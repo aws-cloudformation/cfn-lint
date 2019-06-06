@@ -45,6 +45,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 ## Rules
 The following **121** rules are applied by this linter:
+(_This documentation is generated from the Rules, do not alter this manually_)
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
 | -------- | ----- | ----------- | ---------- | ------ | ---- |

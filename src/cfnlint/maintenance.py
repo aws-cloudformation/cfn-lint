@@ -103,7 +103,8 @@ def update_documentation(rules):
             new_file.write(line)
 
         # Add the rules
-        new_file.write('The following **{}** rules are applied by this linter:\n\n'.format(len(sorted_rules)))
+        new_file.write('The following **{}** rules are applied by this linter:\n'.format(len(sorted_rules)))
+        new_file.write('(_This documentation is generated from the Rules, do not alter this manually_)\n\n')
         new_file.write('| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n')
 
