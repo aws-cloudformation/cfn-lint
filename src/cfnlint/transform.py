@@ -114,9 +114,6 @@ class Transform(object):
             self._template = cfnlint.helpers.convert_dict(
                 sam_translator.translate(sam_template=self._template, parameter_values=self._parameters))
 
-            for p_name in self._parameters:
-                del self._template['Parameters'][p_name]
-
             LOGGER.info('Transformed template: \n%s', cfnlint.helpers.format_json_string(self._template))
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'

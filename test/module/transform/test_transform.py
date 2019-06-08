@@ -29,7 +29,7 @@ class TestTransform(BaseTestCase):
         template = cfn_yaml.load(filename)
         transformed_template = Transform(filename, template, region)
         transformed_template.transform_template()
-        self.assertDictEqual(transformed_template._parameters, {'Stage': 'Alias'})
+        self.assertDictEqual(transformed_template._parameters, {'Stage1': 'Alias', 'Stage2': 'Alias'})
         self.assertDictEqual(
           transformed_template._template.get('Resources').get('SkillFunctionAliasAlias').get('Properties'),
           {
