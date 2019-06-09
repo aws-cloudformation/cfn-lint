@@ -140,11 +140,12 @@ class Policy(CloudFormationLintRule):
             matches.append(
                 RuleMatch(branch[:], message))
         else:
-            effect = statement.get('Effect')
-            if effect not in ['Allow', 'Deny']:
-                message = 'IAM Policy Effect should be Allow or Deny'
-                matches.append(
-                    RuleMatch(branch[:] + ['Effect'], message))
+            for effect, effect_path in statement.get_safe('Effect'):
+                if isinstance(effect, six.string_types):
+                    if effect not in ['Allow', 'Deny']:
+                        message = 'IAM Policy Effect should be Allow or Deny'
+                        matches.append(
+                            RuleMatch(branch[:] + effect_path, message))
         if 'Action' not in statement and 'NotAction' not in statement:
             message = 'IAM Policy statement missing Action or NotAction'
             matches.append(
