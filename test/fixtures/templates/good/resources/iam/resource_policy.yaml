@@ -3,6 +3,10 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   myExampleBucket:
     Type: String
+  BucketEffect:
+    Type: String
+Conditions:
+  IsUsEast1: !Equals ['us-east-1', !Ref 'AWS::Region']
 Resources:
   WebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
@@ -46,15 +50,26 @@ Resources:
           -
             Action:
               - "s3:GetObject"
-            Effect: "Allow"
-            Resource:
-              Fn::Join:
-                - ""
-                -
-                  - "arn:aws:s3:::"
-                  -
-                    Ref: "myExampleBucket"
-                  - "/*"
+            Effect: !If [ IsUsEast1, 'Allow', 'Deny' ]
+            Resource: !Sub "arn:aws:s3:::${myExampleBucket}/*"
+            Principal: "*"
+            Condition:
+              StringLike:
+                aws:Referer:
+                  - "http://www.example.com/*"
+                  - "http://example.com/*"
+  SampleBucketPolicy2:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: "myExampleBucket"
+      PolicyDocument:
+        Statement:
+          -
+            Action:
+              - "s3:GetObject"
+            Effect: !Ref BucketEffect
+            Resource: !Sub "arn:aws:s3:::${myExampleBucket}/*"
             Principal: "*"
             Condition:
               StringLike:
