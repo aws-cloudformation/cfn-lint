@@ -451,8 +451,8 @@ class Template(object):  # pylint: disable=R0904
             'Outputs',
             'Rules'
         ]
-        self.transform_globals = {}
         self.transform_pre = {}
+        self.transform_pre['Globals'] = {}
         self.transform_pre['Ref'] = self.search_deep_keys('Ref')
         self.transform_pre['Fn::Sub'] = self.search_deep_keys('Fn::Sub')
         self.conditions = cfnlint.conditions.Conditions(self)
@@ -703,7 +703,7 @@ class Template(object):  # pylint: disable=R0904
         results = []
         results.extend(self._search_deep_keys(searchText, self.template, []))
         # Globals are removed during a transform.  They need to be checked manually
-        results.extend(self._search_deep_keys(searchText, self.transform_globals, []))
+        results.extend(self._search_deep_keys(searchText, self.transform_pre.get('Globals'), []))
         return results
 
     def get_condition_values(self, template, path=[]):
@@ -1336,7 +1336,7 @@ class Runner(object):
         # Currently locked in to SAM specific
         if transform_type == 'AWS::Serverless-2016-10-31':
             # Save the Globals section so its available for rule processing
-            self.cfn.transform_globals = self.cfn.template.get('Globals', {})
+            self.cfn.transform_pre['Globals'] = self.cfn.template.get('Globals', {})
             transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
             matches = transform.transform_template()
             self.cfn.template = transform.template()
