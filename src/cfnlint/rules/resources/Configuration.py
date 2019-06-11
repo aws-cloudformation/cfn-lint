@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import six
 from cfnlint import CloudFormationLintRule
 from cfnlint import RuleMatch
 import cfnlint.helpers
@@ -81,6 +82,15 @@ class Configuration(CloudFormationLintRule):
                         matches.append(RuleMatch(
                             ['Resources', resource_name, property_key],
                             message.format(property_key, resource_name)))
+
+                # validate condition is a string
+                condition = resource_values.get('Condition', '')
+                if not isinstance(condition, six.string_types):
+                    message = 'Condition for resource {0} should be a string'
+                    matches.append(RuleMatch(
+                        ['Resources', resource_name, 'Condition'],
+                        message.format(resource_name)
+                    ))
 
                 resource_type = resource_values.get('Type', '')
                 if not resource_type:

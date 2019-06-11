@@ -46,9 +46,10 @@ class Exists(CloudFormationLintRule):
 
         # Get resource's Conditions
         for resource_name, resource_values in cfn.get_resources().items():
-            if 'Condition' in resource_values:
+            condition = resource_values.get('Condition')
+            if isinstance(condition, six.string_types):  # make sure its a string
                 path = ['Resources', resource_name, 'Condition']
-                ref_conditions[resource_values['Condition']] = path
+                ref_conditions[condition] = path
 
         # Get conditions used by another condition
         condtrees = cfn.search_deep_keys('Condition')
