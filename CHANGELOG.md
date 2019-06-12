@@ -1,3 +1,14 @@
+### 0.21.5
+###### Features
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to validate that a Resource Condition is a string
+###### CloudFormation Specifications
+- Add all the allowed values of the AWS::EC2 CapacityReservation Resources
+- Update Launch Configuration IamInstanceProfile to support Ref or GetAtt to an IAM Instance Profile
+###### Fixes
+- Fix `lessthan` type in a bunch of rules
+- Update rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) to handle intrinsics when testing the values for `Effect`
+- Fix rule [E8002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8002) to not error when the Condition isn't a string
+
 ### 0.21.4
 ###### Features
 - Include more resource types in [W3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W30307)
