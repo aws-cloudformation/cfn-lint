@@ -54,19 +54,19 @@ class Not(CloudFormationLintRule):
                         if len(element) == 1:
                             for element_key in element.keys():
                                 if element_key not in ['Fn::And', 'Fn::Or', 'Fn::Not', 'Condition', 'Fn::Equals']:
-                                    message = 'Fn::Or list must be another valid condition'
+                                    message = 'Fn::Not list must be another valid condition'
                                     matches.append(RuleMatch(
                                         not_tree[:-1] + [index, element_key],
                                         message.format()
                                     ))
                         else:
-                            message = 'Fn::Or list must be another valid condition'
+                            message = 'Fn::Not list must be another valid condition'
                             matches.append(RuleMatch(
                                 not_tree[:-1] + [index],
                                 message.format()
                             ))
                     else:
-                        message = 'Fn::Or list must be another valid condition'
+                        message = 'Fn::Not list must be another valid condition'
                         matches.append(RuleMatch(
                             not_tree[:-1] + [index],
                             message.format()
