@@ -28,64 +28,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html'
     tags = ['resources', 'securitygroup']
 
-    def check_sgid_value(self, value, path):
-        """Check VPC Values"""
-        matches = []
-        if not value.startswith('sg-'):
-            message = 'Security Group Id must have a valid Identifier {0}'
-            matches.append(
-                RuleMatch(path, message.format('/'.join(map(str, path)))))
-        return matches
-
-    def check_sgid_ref(self, value, path, parameters, resources):
-        """Check ref for VPC"""
-        matches = []
-
-        allowed_types = [
-            'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
-            'AWS::EC2::SecurityGroup::Id',
-            'String'
-        ]
-        if value in parameters:
-            parameter_properties = parameters.get(value)
-            parameter_type = parameter_properties.get('Type')
-            if parameter_type not in allowed_types:
-                path_error = ['Parameters', value, 'Type']
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
-                matches.append(
-                    RuleMatch(
-                        path_error,
-                        message.format(
-                            ', '.join(map(str, allowed_types)),
-                            '/'.join(map(str, path_error)))))
-        if value in resources:
-            resource = resources.get(value, {})
-            resource_type = resource.get('Type', '')
-            if resource_type != 'AWS::EC2::SecurityGroup':
-                message = 'Security Group Id resources should be of type AWS::EC2::SecurityGroup for {0}'
-                matches.append(
-                    RuleMatch(path, message.format('/'.join(map(str, path)))))
-            else:
-                resource_properties = resource.get('Properties', {})
-                vpc_property = resource_properties.get('VpcId', None)
-                if not vpc_property:
-                    message = 'Security Group Id should reference a VPC based AWS::EC2::SecurityGroup for {0}'
-                    matches.append(
-                        RuleMatch(path, message.format('/'.join(map(str, path)))))
-
-        return matches
-
-    # pylint: disable=W0613
-    def check_sgid_fail(self, value, path, **kwargs):
-        """Automatic failure for certain functions"""
-
-        matches = []
-        message = 'Use Ref, FindInMap, or string values for {0}'
-        matches.append(
-            RuleMatch(path, message.format('/'.join(map(str, path)))))
-        return matches
-
-    def check_ingress_rule(self, vpc_id, properties, path, cfn):
+    def check_ingress_rule(self, vpc_id, properties, path):
         """Check ingress rule"""
 
         matches = []
@@ -98,16 +41,6 @@ class SecurityGroupIngress(CloudFormationLintRule):
                           'Vpc Security Group at {0}'
                 matches.append(
                     RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
-
-            matches.extend(
-                cfn.check_value(
-                    obj=properties, key='SourceSecurityGroupId',
-                    path=path[:],
-                    check_value=self.check_sgid_value, check_ref=self.check_sgid_ref,
-                    check_find_in_map=None, check_split=self.check_sgid_fail,
-                    check_join=self.check_sgid_fail
-                )
-            )
 
         else:
 
@@ -141,8 +74,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
                             self.check_ingress_rule(
                                 vpc_id=vpc_id,
                                 properties=ingress_rule,
-                                path=path,
-                                cfn=cfn
+                                path=path
                             )
                         )
 
@@ -163,8 +95,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
                     self.check_ingress_rule(
                         vpc_id=vpc_id,
                         properties=properties,
-                        path=path,
-                        cfn=cfn
+                        path=path
                     )
                 )
         return matches
