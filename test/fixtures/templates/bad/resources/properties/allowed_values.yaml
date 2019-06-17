@@ -610,6 +610,19 @@ Resources:
       ConnectionInput:
         ConnectionProperties: "{}"
         ConnectionType: "FTP" # Invalid AllowedValue
+  ECSService:
+    Type: "AWS::ECS::Service"
+    Properties:
+      LaunchType: "fargate" # Invalid AllowedValue
+      SchedulingStrategy: "DEAMON" # Invalid AllowedValue
+      TaskDefinition: !Ref "ECSTaskDefinition"
+  ECSTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      NetworkMode: "enabled" # Invalid AllowedValue
+      ProxyConfiguration:
+        ContainerName: "my-container"
+        Type: "Appmesh" # Invalid AllowedValue
   GlueCrawler:
     Type: "AWS::Glue::Crawler"
     Properties:
