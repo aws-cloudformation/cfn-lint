@@ -36,9 +36,13 @@ class AllowedValue(CloudFormationLintRule):
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
             self.resource_sub_property_types.append(property_type_spec)
 
-    def check_value_ref(self, value, **kwargs):
+    def check_value_ref(self, value, path, **kwargs):
         """Check Ref"""
         matches = []
+
+        if 'Fn::If' in path:
+            self.logger.debug('Not able to guarentee that the default value hasn\'t been conditioned out')
+            return matches
 
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
         cfn = kwargs.get('cfn')
