@@ -44,3 +44,7 @@ class TestValueRefGetAtt(BaseRuleTestCase):
     def test_file_negative_vpc_id_value(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/properties_vpcid.yaml', 1)
+
+    def test_file_negative_az(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/parameters/az.yaml', 3)

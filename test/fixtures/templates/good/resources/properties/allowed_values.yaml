@@ -31,12 +31,25 @@ Parameters:
     Default: 1
     Description: The retention length of the logs.
     Type: Number
+  Retention:
+    Type: Number
+    Description: Retention in days for the log group (-1 for no retention)
+    Default: -1
+Conditions:
+  IsRetention:
+    !Not [!Equals [!Ref 'Retention', '-1']]
 Resources:
   LogGroup:
     Type: "AWS::Logs::LogGroup"
     Properties:
       RetentionInDays: !Ref LogsRetentionLength
       LogGroupName: '/name'
+  LogGroupWithCondition:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: 'some-log-group'
+      # Don't error when Retention is used inside a condition
+      RetentionInDays: !If [IsRetention, !Ref Retention, !Ref 'AWS::NoValue']
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
     Properties:

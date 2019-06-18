@@ -35,11 +35,13 @@ class SubNeeded(CloudFormationLintRule):
     # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html
     # https://docs.aws.amazon.com/iot/latest/developerguide/basic-policy-variables.html
     # https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html
+    # https://docs.aws.amazon.com/transfer/latest/userguide/users.html#users-policies-scope-down
     resource_excludes = ['${aws:CurrentTime}', '${aws:EpochTime}', '${aws:TokenIssueTime}', '${aws:principaltype}',
                          '${aws:SecureTransport}', '${aws:SourceIp}', '${aws:UserAgent}', '${aws:userid}',
                          '${aws:username}', '${ec2:SourceInstanceARN}',
                          '${iot:Connection.Thing.ThingName}', '${iot:Connection.Thing.ThingTypeName}',
-                         '${iot:Connection.Thing.IsAttached}', '${iot:ClientId}']
+                         '${iot:Connection.Thing.IsAttached}', '${iot:ClientId}', '${transfer:HomeBucket}',
+                         '${transfer:HomeDirectory}', '${transfer:HomeFolder}', '${transfer:UserName}']
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
