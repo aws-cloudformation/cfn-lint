@@ -650,6 +650,19 @@ Resources:
         InstanceType: "t3.small" # Valid AllowedValue
         Placement:
           Tenancy: "host" # Valid AllowedValue
+  ECSService:
+    Type: "AWS::ECS::Service"
+    Properties:
+      LaunchType: "FARGATE" # Valid AllowedValue
+      SchedulingStrategy: "REPLICA" # Valid AllowedValue
+      TaskDefinition: !Ref "ECSTaskDefinition"
+  ECSTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      NetworkMode: "none" # Valid AllowedValue
+      ProxyConfiguration:
+        ContainerName: "my-container"
+        Type: "APPMESH" # Valid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
