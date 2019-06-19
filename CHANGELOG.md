@@ -1,3 +1,17 @@
+### 0.21.6
+###### Features
+- Remove rule [W2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2507) and use rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) instead
+- Remove rule [W2508](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2508) and use rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) instead
+###### CloudFormation Specifications
+- Update specs to 3.4.0
+- Add all the allowed values of the AWS::ECS Resources.
+- Update CloudFormation Spec to include the Backup Resources
+- Add Cognito RefreshTokenValidity number limits
+###### Fixes
+- Fix copy-paste typo in Not function check
+- Don't fail when conditions are used with parameters and allowed values
+- More IAM Resource exceptions for Sub Needed check
+
 ### 0.21.5
 ###### Features
 - Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to validate that a Resource Condition is a string
