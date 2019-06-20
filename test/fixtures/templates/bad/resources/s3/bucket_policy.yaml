@@ -77,3 +77,38 @@ Resources:
             Effect: "Allow"
             Resource: !Sub "arn:aws:s3:::${myBucket}/*"
             Principal: "*"
+  BpGoodActionWithBadResource:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource:
+              Test: CustomResource.ResourceArn
+              Test2: CustomResource.ResourceArn
+            Principal: "*"
+  ByBadJson:  # no extra failure with bad jsons
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument: |
+        {
+          "Statement": [
+            {
+              "Action":["s3:GetObject"],
+              "Effect":"Allow",
+              "Resource": "arn:aws:s3:::myBucket/*",
+              "Principal":"*"
+                "Condition":{
+                  "StringLike":{
+                    "aws:Referer":[
+                      "http://www.example.com/*",
+                      "http://example.com/*"
+                  ]
+                }
+              }
+            }
+          ]
+        }

@@ -34,4 +34,4 @@ class TestRulesBucketPolicy(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/s3/bucket_policy.yaml', 9)
+        self.helper_file_negative('test/fixtures/templates/bad/resources/s3/bucket_policy.yaml', 10)

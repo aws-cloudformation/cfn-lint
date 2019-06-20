@@ -17,9 +17,9 @@
 import re
 import json
 import six
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
-from cfnlint.helpers import convert_dict
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.data import AdditionalSpecs
+from cfnlint.helpers import convert_dict, load_resource
 
 
 class BucketPolicy(CloudFormationLintRule):
@@ -34,6 +34,13 @@ class BucketPolicy(CloudFormationLintRule):
         """Init"""
         super(BucketPolicy, self).__init__()
         self.resource_property_types = ['AWS::S3::BucketPolicy']
+        self.s3_actions = load_resource(
+            AdditionalSpecs, 'Policies.json').get('serviceMap').get('Amazon S3').get('Actions')
+        self.s3_object_actions = [
+            'AbortMultipartUpload',
+            'ListMultipartUploadParts',
+            'BypassGovernanceRetention'
+        ]
 
     # pylint: disable=W0613
     def check_value(self, value, path, start_mark, end_mark, bucket_resources, custom_resources):
@@ -81,7 +88,8 @@ class BucketPolicy(CloudFormationLintRule):
         if isinstance(resources, (six.string_types, dict)):
             resources = [resources]
 
-        found_object_actions, found_bucket_actions, actions_results_conclusive = self._get_statement_actions(actions)
+        found_object_actions, found_bucket_actions, actions_results_conclusive = self._get_statement_actions(
+            actions)
         found_object_resources, found_bucket_resources, bucket_results_conclusive = self._get_statement_resources(
             resources, bucket_resources, custom_resources)
         if not actions_results_conclusive or not bucket_results_conclusive:
@@ -98,74 +106,13 @@ class BucketPolicy(CloudFormationLintRule):
 
     def _get_statement_actions(self, actions):
         """ Breaks down the actions in a statement to each category """
-        object_actions = [
-            's3:AbortMultipartUpload',
-            's3:DeleteObject',
-            's3:DeleteObjectTagging',
-            's3:DeleteObjectVersion',
-            's3:DeleteObjectVersionTagging',
-            's3:GetObject',
-            's3:GetObjectAcl',
-            's3:GetObjectTagging',
-            's3:GetObjectTorrent',
-            's3:GetObjectVersion',
-            's3:GetObjectVersionAcl',
-            's3:GetObjectVersionTagging',
-            's3:GetObjectVersionTorrent',
-            's3:ListMultipartUploadParts',
-            's3:PutObject',
-            's3:PutObjectAcl',
-            's3:PutObjectTagging',
-            's3:PutObjectVersionAcl',
-            's3:PutObjectVersionTagging',
-            's3:RestoreObject',
-            's3:GetObjectRetention',
-            's3:GetObjectLegalHold',
-            's3:PutObjectRetention',
-            's3:PutObjectLegalHold',
-            's3:BypassGovernanceRetention',
-        ]
+        # print(self.s3_actions)
+        object_actions = list(filter(re.compile('.*Object.*').match, self.s3_actions))
+        object_actions.extend(self.s3_object_actions)
 
         bucket_actions = [
-            's3:DeleteBucketPolicy',
-            's3:DeleteBucketWebsite',
-            's3:GetAccelerateConfiguration',
-            's3:GetAnalyticsConfiguration',
-            's3:GetBucketAcl',
-            's3:GetBucketCORS',
-            's3:GetBucketLocation',
-            's3:GetBucketLogging',
-            's3:GetBucketNotification',
-            's3:GetBucketPolicy',
-            's3:GetBucketPolicyStatus',
-            's3:GetBucketPublicAccessBlock',
-            's3:GetBucketRequestPayment',
-            's3:GetBucketTagging',
-            's3:GetBucketVersioning',
-            's3:GetBucketWebsite',
-            's3:GetEncryptionConfiguration',
-            's3:GetInventoryConfiguration',
-            's3:GetLifecycleConfiguration',
-            's3:GetMetricsConfiguration',
-            's3:GetReplicationConfiguration',
-            's3:PutAccelerateConfiguration',
-            's3:PutAnalyticsConfiguration',
-            's3:PutBucketAcl',
-            's3:PutBucketCORS',
-            's3:PutBucketLogging',
-            's3:PutBucketNotification',
-            's3:PutBucketPolicy',
-            's3:PutBucketPublicAccessBlock',
-            's3:PutBucketRequestPayment',
-            's3:PutBucketTagging',
-            's3:PutBucketVersioning',
-            's3:PutBucketWebsite',
-            's3:PutEncryptionConfiguration',
-            's3:PutInventoryConfiguration',
-            's3:PutLifecycleConfiguration',
-            's3:PutMetricsConfiguration',
-            's3:PutReplicationConfiguration'
-        ]
+            's3:' + action for action in list(set(self.s3_actions) - set(object_actions))]
+        object_actions = ['s3:' + action for action in object_actions]
 
         found_object_actions = []
         found_bucket_actions = []
@@ -207,7 +154,7 @@ class BucketPolicy(CloudFormationLintRule):
                             # Too many options or just invalid items
                             return None, None, False
             elif isinstance(resource, six.string_types):
-                if re.match('.+/.+', func_value):  # pylint: disable=R1703
+                if re.match('.+/.+', resource):  # pylint: disable=R1703
                     found_object_resources = True
                 else:
                     found_bucket_resources = True

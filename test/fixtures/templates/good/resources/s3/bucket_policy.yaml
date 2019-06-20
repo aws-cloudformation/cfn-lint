@@ -18,9 +18,25 @@ Resources:
             Effect: "Allow"
             Resource: !Sub "arn:aws:s3:::${myBucket}"
             Principal: "*"
+          - Action: s3:Get*
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}"
+            Principal: "*"
+          - Action: s3:Get*
+            Effect: "Allow"
+            Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+            Principal: "*"
           - Action: s3:GetObject
             Effect: "Allow"
             Resource: !Sub "arn:aws:s3:::${myBucket}/*"
+            Principal: "*"
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: "arn:aws:s3:::myBucket/*"
+            Principal: "*"
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource: "arn:aws:s3:::myBucket"
             Principal: "*"
           - Action:
             - s3:GetObject
@@ -90,3 +106,62 @@ Resources:
             Effect: "Allow"
             Resource: !Sub "arn:aws:s3:::${myBucket}/*"
             Principal: "*"
+  CustomResource:
+    Type: AWS::CloudFormation::CustomResource
+    Properties:
+      ServiceToken: AFunction
+  BpGoodActionWithCustomResource:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource: !GetAtt CustomResource.ResourceArn
+            Principal: "*"
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: !GetAtt CustomResource.ResourceArn
+            Principal: "*"
+  SubStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://test
+  BpGoodActionWithSubStack:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !GetAtt SubStack.Outputs.BucketName
+      PolicyDocument:
+        Statement:
+          - Action: s3:GetBucketLocation
+            Effect: "Allow"
+            Resource: !GetAtt SubStack.Outputs.BucketArn
+            Principal: "*"
+          - Action: s3:GetObject
+            Effect: "Allow"
+            Resource: !Sub "${SubStack.Outputs.BucketPath}"
+            Principal: "*"
+  ByGoodJson:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref myBucket
+      PolicyDocument: |
+        {
+          "Statement": [
+            {
+              "Action":["s3:GetObject"],
+              "Effect":"Allow",
+              "Resource": "arn:aws:s3:::myBucket/*",
+              "Principal":"*",
+                "Condition":{
+                  "StringLike":{
+                    "aws:Referer":[
+                      "http://www.example.com/*",
+                      "http://example.com/*"
+                  ]
+                }
+              }
+            }
+          ]
+        }
