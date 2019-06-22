@@ -1,5 +1,5 @@
 # Integration
-Besides using cfn-lint through the command line, cfn-lint is build as a standalone Python module, allowing it to be integrated in your own (existing) codebase. In this way you can extend your own toolkit or CI/CD solution with cfn-lint feedback.
+Besides using cfn-lint through the command line, cfn-lint is built as a standalone Python module, allowing it to be integrated in your own (existing) codebase. In this way you can extend your own toolkit or CI/CD solution with cfn-lint feedback.
 
 ## Getting Started
 Following displays a basic implementation of cfn-lint to check a specific CloudFormation template:
