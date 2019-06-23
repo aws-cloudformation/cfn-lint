@@ -545,7 +545,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
                     if add_filename not in ignore_templates:
                         all_filenames.append(add_filename)
 
-        return all_filenames
+        return sorted(all_filenames)
 
     def _ignore_templates(self):
         """ templates """
