@@ -81,6 +81,16 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - "hostname.example.com"
+  MyCNAMERecordSpecialCharactersSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "A valid CNAME Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "*test.&.example.com-"
+      Type: "CNAME"
+      TTL: "300"
+      ResourceRecords:
+        - "hostname.example.com"
   MyCNAME2RecordSet:
     Type: "AWS::Route53::RecordSet"
     Properties:
