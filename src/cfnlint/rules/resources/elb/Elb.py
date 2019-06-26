@@ -133,7 +133,7 @@ HTTPS has certificate HTTP has no certificate'
                 cfn.check_value(
                     result['Value'], 'Protocol', result['Path'],
                     check_value=self.check_protocol_value,
-                    accepted_protocols=['HTTP', 'HTTPS', 'TCP', 'TLS'],
+                    accepted_protocols=['HTTP', 'HTTPS', 'TCP', 'TCP_UDP', 'TLS', 'UDP'],
                     certificate_protocols=['HTTPS', 'TLS'],
                     certificates=result['Value'].get('Certificates')))
 
