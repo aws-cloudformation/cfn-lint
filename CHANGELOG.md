@@ -1,3 +1,18 @@
+### 0.22.0
+###### CloudFormation Specifications
+- Update specs to 4.1.0
+- Added LaunchTemplateId/LaunchTemplateName of the AutoScalingGroup to the OnlyOne
+- Patch resource AWS::EC2::LaunchTemplate property TagSpecifications
+- Add AWS::EC2::LaunchTemplate property to LaunchTemplateName min/max/pattern
+- Add AWS::EC2::LaunchTemplate allowed values for the ResourceType property
+- Remove/Add services to region tables based on SSM endpoints
+###### Fixes
+- Update JsonSchem to 3.0 to support the new version 1.12.0 of aws-sam-translator
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to allow NLBs to use UDP
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to include many special characters for DNS records
+- Sort filenames when getting a bunch of templates from a folder
+- Fix typos in the integration documentation
+
 ### 0.21.6
 ###### Features
 - Remove rule [W2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2507) and use rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) instead
