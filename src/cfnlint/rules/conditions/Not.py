@@ -35,41 +35,43 @@ class Not(CloudFormationLintRule):
         not_trees = cfn.search_deep_keys('Fn::Not')
 
         for not_tree in not_trees:
-            not_value = not_tree[-1]
-            if not isinstance(not_value, list):
-                message = 'Fn::Not must be a list of exactly 1 condition'
-                matches.append(RuleMatch(
-                    not_tree[:-1],
-                    message.format()
-                ))
-            elif not len(not_value) == 1:
-                message = 'Fn::Not must be a list of exactly 1 condition'
-                matches.append(RuleMatch(
-                    not_tree[:-1],
-                    message.format()
-                ))
-            else:
-                for index, element in enumerate(not_value):
-                    if isinstance(element, dict):
-                        if len(element) == 1:
-                            for element_key in element.keys():
-                                if element_key not in ['Fn::And', 'Fn::Or', 'Fn::Not', 'Condition', 'Fn::Equals']:
-                                    message = 'Fn::Not list must be another valid condition'
-                                    matches.append(RuleMatch(
-                                        not_tree[:-1] + [index, element_key],
-                                        message.format()
-                                    ))
+            # Test when in Conditions
+            if not_tree[0] == 'Conditions':
+                not_value = not_tree[-1]
+                if not isinstance(not_value, list):
+                    message = 'Fn::Not must be a list of exactly 1 condition'
+                    matches.append(RuleMatch(
+                        not_tree[:-1],
+                        message.format()
+                    ))
+                elif not len(not_value) == 1:
+                    message = 'Fn::Not must be a list of exactly 1 condition'
+                    matches.append(RuleMatch(
+                        not_tree[:-1],
+                        message.format()
+                    ))
+                else:
+                    for index, element in enumerate(not_value):
+                        if isinstance(element, dict):
+                            if len(element) == 1:
+                                for element_key in element.keys():
+                                    if element_key not in ['Fn::And', 'Fn::Or', 'Fn::Not', 'Condition', 'Fn::Equals']:
+                                        message = 'Fn::Not list must be another valid condition'
+                                        matches.append(RuleMatch(
+                                            not_tree[:-1] + [index, element_key],
+                                            message.format()
+                                        ))
+                            else:
+                                message = 'Fn::Not list must be another valid condition'
+                                matches.append(RuleMatch(
+                                    not_tree[:-1] + [index],
+                                    message.format()
+                                ))
                         else:
                             message = 'Fn::Not list must be another valid condition'
                             matches.append(RuleMatch(
                                 not_tree[:-1] + [index],
                                 message.format()
                             ))
-                    else:
-                        message = 'Fn::Not list must be another valid condition'
-                        matches.append(RuleMatch(
-                            not_tree[:-1] + [index],
-                            message.format()
-                        ))
 
         return matches

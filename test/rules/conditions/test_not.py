@@ -26,6 +26,7 @@ class TestNot(BaseRuleTestCase):
         self.collection.register(Not())
 
     success_templates = [
+        'test/fixtures/templates/good/conditions/not.yaml'
     ]
 
     def test_file_positive(self):
