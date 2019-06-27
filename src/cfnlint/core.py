@@ -119,15 +119,8 @@ def get_args_filenames(cli_args):
         cfnlint.maintenance.update_resource_specs()
         exit(0)
 
-    rules = cfnlint.core.get_rules(
-        config.append_rules,
-        config.ignore_checks,
-        config.include_checks,
-        config.configure_rules
-    )
-
     if config.update_documentation:
-        # Get ALL rules (ignore the CLI))
+        # Get ALL rules (ignore the CLI settings))
         documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}, True)
         cfnlint.maintenance.update_documentation(documentation_rules)
         exit(0)
@@ -137,6 +130,12 @@ def get_args_filenames(cli_args):
         exit(0)
 
     if config.listrules:
+        rules = cfnlint.core.get_rules(
+            config.append_rules,
+            config.ignore_checks,
+            config.include_checks,
+            config.configure_rules
+        )
         print(rules)
         exit(0)
 
