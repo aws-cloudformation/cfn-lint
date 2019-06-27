@@ -663,6 +663,13 @@ Resources:
       ProxyConfiguration:
         ContainerName: "my-container"
         Type: "APPMESH" # Valid AllowedValue
+  EFSFileSystem:
+    Type: "AWS::EFS::FileSystem"
+    Properties:
+      LifecyclePolicies:
+        - TransitionToIA: "AFTER_30_DAYS" # Valid AllowedValue
+      PerformanceMode: "generalPurpose" # Valid AllowedValue
+      ThroughputMode: "bursting" # Valid AllowedValue
   GlueConnection:
     Type: "AWS::Glue::Connection"
     Properties:
