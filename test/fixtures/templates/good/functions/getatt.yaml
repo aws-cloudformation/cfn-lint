@@ -45,7 +45,23 @@ Resources:
         # Shouldn't raise an error when using a Ref for the attribute
         RdsMasterUsername: !If [ UseSSM, "Fn::GetAtt": [ RDSCredentials, !Ref SSMMasterDBUsernameKeyFullName ], !Ref PGMasterUser ]
         RdsMasterPassword: !If [ UseSSM, "Fn::GetAtt": [ RDSCredentials, !Ref SSMMasterDBPasswordKeyFullName ], !Ref PGMasterPassword ]
+  myCluster:
+    Type: "AWS::Redshift::Cluster"
+    Properties:
+      DBName: "mydb"
+      MasterUsername: "master"
+      MasterUserPassword:
+        Ref: "PGMasterPassword"
+      NodeType: "ds2.xlarge"
+      ClusterType: "single-node"
+      Tags:
+        - Key: foo
+          Value: bar
 Outputs:
   ElasticSearchHostname:
     Value:
       Fn::GetAtt: myElasticSearch.DomainEndpoint
+  RedshiftClusterEndpointAddress:
+    Description: Endpoint address for Redshift cluster.
+    Value:
+      Fn::GetAtt: myCluster.Endpoint.Address
