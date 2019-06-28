@@ -38,41 +38,43 @@ class Equals(CloudFormationLintRule):
         allowed_functions = ['Ref', 'Fn::FindInMap', 'Fn::Sub', 'Fn::Join', 'Fn::Select', 'Fn::Split']
 
         for equal_tree in equal_trees:
-            equal = equal_tree[-1]
-            if not isinstance(equal, list):
-                message = 'Fn::Equals must be a list of two elements'
-                matches.append(RuleMatch(
-                    equal_tree[:-1],
-                    message.format()
-                ))
-            elif len(equal) != 2:
-                message = 'Fn::Equals must be a list of two elements'
-                matches.append(RuleMatch(
-                    equal_tree[:-1],
-                    message.format()
-                ))
-            else:
-                for index, element in enumerate(equal):
-                    if isinstance(element, dict):
-                        if len(element) == 1:
-                            for element_key in element.keys():
-                                if element_key not in allowed_functions:
-                                    message = 'Fn::Equals element must be a supported function ({0})'
-                                    matches.append(RuleMatch(
-                                        equal_tree[:-1] + [index, element_key],
-                                        message.format(', '.join(allowed_functions))
-                                    ))
-                        else:
-                            message = 'Fn::Equals element must be a supported function ({0})'
+            # Test when in Conditions
+            if equal_tree[0] == 'Conditions':
+                equal = equal_tree[-1]
+                if not isinstance(equal, list):
+                    message = 'Fn::Equals must be a list of two elements'
+                    matches.append(RuleMatch(
+                        equal_tree[:-1],
+                        message.format()
+                    ))
+                elif len(equal) != 2:
+                    message = 'Fn::Equals must be a list of two elements'
+                    matches.append(RuleMatch(
+                        equal_tree[:-1],
+                        message.format()
+                    ))
+                else:
+                    for index, element in enumerate(equal):
+                        if isinstance(element, dict):
+                            if len(element) == 1:
+                                for element_key in element.keys():
+                                    if element_key not in allowed_functions:
+                                        message = 'Fn::Equals element must be a supported function ({0})'
+                                        matches.append(RuleMatch(
+                                            equal_tree[:-1] + [index, element_key],
+                                            message.format(', '.join(allowed_functions))
+                                        ))
+                            else:
+                                message = 'Fn::Equals element must be a supported function ({0})'
+                                matches.append(RuleMatch(
+                                    equal_tree[:-1] + [index],
+                                    message.format(', '.join(allowed_functions))
+                                ))
+                        elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
+                            message = 'Fn::Equals element must be a String, Boolean, Number, or supported function ({0})'
                             matches.append(RuleMatch(
                                 equal_tree[:-1] + [index],
                                 message.format(', '.join(allowed_functions))
                             ))
-                    elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
-                        message = 'Fn::Equals element must be a String, Boolean, Number, or supported function ({0})'
-                        matches.append(RuleMatch(
-                            equal_tree[:-1] + [index],
-                            message.format(', '.join(allowed_functions))
-                        ))
 
         return matches

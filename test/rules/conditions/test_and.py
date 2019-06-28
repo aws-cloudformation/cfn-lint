@@ -26,6 +26,7 @@ class TestAnd(BaseRuleTestCase):
         self.collection.register(And())
 
     success_templates = [
+        'test/fixtures/templates/good/conditions/and.yaml'
     ]
 
     def test_file_positive(self):

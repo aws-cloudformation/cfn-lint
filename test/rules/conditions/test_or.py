@@ -26,6 +26,7 @@ class TestOr(BaseRuleTestCase):
         self.collection.register(Or())
 
     success_templates = [
+        'test/fixtures/templates/good/conditions/or.yaml'
     ]
 
     def test_file_positive(self):

@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Users:
+    Type: CommaDelimitedList
+Rules:
+  AtLeastOneUserSpecified:
+    Assertions:
+      - Assert: !And [!Contains [!Ref Users, ""], !Contains [!Ref Users, "another"]]
+        AssertDescription: Must specify at least one user
+Resources:
+  Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      Tags:
+        - Key: BucketUsers
+          Value: !Join [":", !Ref Users]
