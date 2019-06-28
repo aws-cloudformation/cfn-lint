@@ -55,7 +55,7 @@ class GetAtt(CloudFormationLintRule):
                 matches.append(RuleMatch(getatt, message.format('/'.join(map(str, getatt[:-1])))))
                 continue
             if isinstance(getatt[-1], six.string_types):
-                resname, restype = getatt[-1].split('.')
+                resname, restype = getatt[-1].split('.', 1)
             else:
                 resname = None
                 restype = None
