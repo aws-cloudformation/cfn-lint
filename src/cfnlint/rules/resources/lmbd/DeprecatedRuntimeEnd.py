@@ -23,7 +23,7 @@ class DeprecatedRuntimeEnd(DeprecatedRuntime):
     """Check if EOL Lambda Function Runtimes are used"""
     id = 'E2531'
     shortdesc = 'Check if EOL Lambda Function Runtimes are used'
-    description = 'Check if an EOL Lambda Runtime is specified and give a warning if used. '
+    description = 'Check if an EOL Lambda Runtime is specified and give an error if used. '
     source_url = 'https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html'
     tags = ['resources', 'lambda', 'runtime']
 

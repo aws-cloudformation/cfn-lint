@@ -14,16 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+from datetime import datetime
 from cfnlint.rules.resources.lmbd.DeprecatedRuntimeEol import DeprecatedRuntimeEol  # pylint: disable=E0401
 from ... import BaseRuleTestCase
 
 
 class TestDeprecatedRuntimeEol(BaseRuleTestCase):
     """Test Lambda Deprecated Runtime usage"""
+
     def setUp(self):
         """Setup"""
         super(TestDeprecatedRuntimeEol, self).setUp()
         self.collection.register(DeprecatedRuntimeEol())
+        self.collection.rules[0].current_date = datetime(2019, 6, 29)
 
     def test_file_positive(self):
         """Test Positive"""
