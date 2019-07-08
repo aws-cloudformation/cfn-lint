@@ -1,3 +1,15 @@
+### 0.22.1
+###### CloudFormation Specifications
+- Add `INSTANCE` to `DLMPolicyResourceType` allowed values (pull #[995](https://github.com/aws-cloudformation/cfn-python-lint/pull/995))
+- Update specs from weird 4.1.0 release (pull #[994](https://github.com/aws-cloudformation/cfn-python-lint/pull/994))
+- Update instance types and patches from SSM to date 2019.07.04 (pull #[1001](https://github.com/aws-cloudformation/cfn-python-lint/pull/1001))
+- Add all the allowed values of the AWS::EFS Resources (pull #[990](https://github.com/aws-cloudformation/cfn-python-lint/pull/990))
+###### Fixes
+- Fix an issue where rules were being loaded twice (pull #[980](https://github.com/aws-cloudformation/cfn-python-lint/pull/980))
+- Fix an issue with rule [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) to split GetAtt strings into two values (issue #[986](https://github.com/aws-cloudformation/cfn-python-lint/issues/986))
+- Update rules [E8004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010), [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003), [E8005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8005), and [E8006](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8006) to not flag functions used in Service Catalog rules section (issue #[979](https://github.com/aws-cloudformation/cfn-python-lint/issues/979))
+- Patched testing for Lambda Runtime EOL and end dates to test as if a specific date (pull #[999](https://github.com/aws-cloudformation/cfn-python-lint/pull/999))
+
 ### 0.22.0
 ###### CloudFormation Specifications
 - Update specs to 4.1.0
