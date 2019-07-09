@@ -99,7 +99,7 @@ def get_ec2_pricing():
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') == 'Compute Instance':
+                if product.get('productFamily') in ['Compute Instance', 'Compute Instance (bare metal)']:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(
