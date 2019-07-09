@@ -56,7 +56,7 @@ class Permissions(CloudFormationLintRule):
         """
         Convert policies.json into a simpler version for more efficient key lookup.
         """
-        service_map = cfnlint.helpers.load_resources('/data/AdditionalSpecs/Policies.json')['serviceMap']
+        service_map = cfnlint.helpers.load_resources('data/AdditionalSpecs/Policies.json')['serviceMap']
 
         policy_service_map = {}
 
