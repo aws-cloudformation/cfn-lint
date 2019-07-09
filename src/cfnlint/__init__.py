@@ -596,7 +596,8 @@ class Template(object):  # pylint: disable=R0904
         results = {}
         for _, resource_values in self.template.get('Resources', {}).items():
             ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
-            for ignore_rule_id in ignore_rule_ids:
+            mandatory_rule_ids = cfnlint.config.mandatory_checks
+            for ignore_rule_id in (ignore_rule_id - mandatory_rule_ids):
                 if ignore_rule_id not in results:
                     results[ignore_rule_id] = []
                 location = self._loc(resource_values)

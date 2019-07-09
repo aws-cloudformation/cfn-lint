@@ -366,6 +366,11 @@ class CliArgs(object):
             help='only check rules whose id do not match these values'
         )
         standard.add_argument(
+            '-m', '--mandatory-check', dest='mandatory_checks', nargs='+', default=[],
+            type=comma_separated_arg, action='extend',
+            help='Always check these rules regardless of template exclusions'
+        )
+        standard.add_argument(
             '-c', '--include-checks', dest='include_checks', nargs='+', default=[],
             type=comma_separated_arg, action='extend',
             help='include rules whose id match these values'
@@ -476,6 +481,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def ignore_checks(self):
         """ ignore_checks """
         return self._get_argument_value('ignore_checks', True, True)
+
+    @property
+    def mandatory_checks(self):
+        """ mandatory_checks """
+        return self._get_argument_value('mandatory_checks', True, True)
 
     @property
     def include_checks(self):
