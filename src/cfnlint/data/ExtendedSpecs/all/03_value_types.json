@@ -675,14 +675,6 @@
           "OPTIONAL"
         ]
       },
-      "CognitoSchemaAttributeDataType": {
-        "AllowedValues": [
-          "Boolean",
-          "DateTime",
-          "Number",
-          "String"
-        ]
-      },
       "CognitoRefreshTokenValidity": {
         "NumberMax": 3650,
         "NumberMin": 0,
@@ -692,6 +684,14 @@
             "Number"
           ]
         }
+      },
+      "CognitoSchemaAttributeDataType": {
+        "AllowedValues": [
+          "Boolean",
+          "DateTime",
+          "Number",
+          "String"
+        ]
       },
       "ConfigFrequency": {
         "AllowedValues": [
@@ -732,6 +732,14 @@
             "String"
           ]
         }
+      },
+      "DHCPOptionsNetbiosNodeType": {
+        "AllowedValues": [
+          "1",
+          "2",
+          "4",
+          "8"
+        ]
       },
       "DLMPolicyResourceType": {
         "AllowedValues": [
@@ -998,14 +1006,6 @@
           "ENABLED"
         ]
       },
-      "DHCPOptionsNetbiosNodeType": {
-        "AllowedValues": [
-          "1",
-          "2",
-          "4",
-          "8"
-        ]
-      },
       "DmsEndpointEngineName": {
         "AllowedValues": [
           "aurora-postgresql",
@@ -1084,6 +1084,30 @@
           "OLD_IMAGE"
         ]
       },
+      "EC2CapacityReservationEndDateType": {
+        "AllowedValues": [
+          "limited",
+          "unlimited"
+        ]
+      },
+      "EC2CapacityReservationInstanceMatchCriteria": {
+        "AllowedValues": [
+          "open",
+          "targeted"
+        ]
+      },
+      "EC2CapacityReservationInstancePlatform": {
+        "AllowedValues": [
+          "Linux/UNIX",
+          "Red Hat Enterprise Linux",
+          "SUSE Linux",
+          "Windows with SQL Server Enterprise",
+          "Windows with SQL Server Standard",
+          "Windows with SQL Server Web",
+          "Windows with SQL Server",
+          "Windows"
+        ]
+      },
       "EC2InstanceInitiatedShutdownBehavior": {
         "AllowedValues": [
           "stop",
@@ -1116,6 +1140,23 @@
           "persistent"
         ]
       },
+      "EFSFileSystemLifecyclePolicy": {
+        "AllowedValues": [
+          "AFTER_30_DAYS"
+        ]
+      },
+      "EFSFileSystemPerformanceMode": {
+        "AllowedValues": [
+          "generalPurpose",
+          "maxIO"
+        ]
+      },
+      "EFSFileSystemThroughputMode": {
+        "AllowedValues": [
+          "bursting",
+          "provisioned"
+        ]
+      },
       "EbsIops": {
         "NumberMax": 20000,
         "NumberMin": 100
@@ -1127,30 +1168,6 @@
           "sc1",
           "st1",
           "standard"
-        ]
-      },
-      "EC2CapacityReservationEndDateType": {
-        "AllowedValues": [
-          "limited",
-          "unlimited"
-        ]
-      },
-      "EC2CapacityReservationInstanceMatchCriteria": {
-        "AllowedValues": [
-          "open",
-          "targeted"
-        ]
-      },
-      "EC2CapacityReservationInstancePlatform": {
-        "AllowedValues": [
-          "Linux/UNIX",
-          "Red Hat Enterprise Linux",
-          "SUSE Linux",
-          "Windows with SQL Server Enterprise",
-          "Windows with SQL Server Standard",
-          "Windows with SQL Server Web",
-          "Windows with SQL Server",
-          "Windows"
         ]
       },
       "Ec2CpuCredits": {
@@ -1165,17 +1182,16 @@
           "vpc"
         ]
       },
+      "Ec2FleetDefaultTargetCapacityType": {
+        "AllowedValues": [
+          "on-demand",
+          "spot"
+        ]
+      },
       "Ec2FleetExcessCapacityTerminationPolicy": {
         "AllowedValues": [
           "no-termination",
           "termination"
-        ]
-      },
-      "Ec2FleetType": {
-        "AllowedValues": [
-          "instant",
-          "maintain",
-          "request"
         ]
       },
       "Ec2FleetOnDemandAllocationStrategy": {
@@ -1197,10 +1213,11 @@
           "terminate"
         ]
       },
-      "Ec2FleetDefaultTargetCapacityType": {
+      "Ec2FleetType": {
         "AllowedValues": [
-          "on-demand",
-          "spot"
+          "instant",
+          "maintain",
+          "request"
         ]
       },
       "Ec2FlowLogDestinationType": {
@@ -1249,12 +1266,6 @@
           "FARGATE"
         ]
       },
-      "EcsSchedulingStrategy": {
-        "AllowedValues": [
-          "DAEMON",
-          "REPLICA"
-        ]
-      },
       "EcsNetworkMode": {
         "AllowedValues": [
           "awsvpc",
@@ -1263,26 +1274,15 @@
           "none"
         ]
       },
+      "EcsSchedulingStrategy": {
+        "AllowedValues": [
+          "DAEMON",
+          "REPLICA"
+        ]
+      },
       "EcsTaskDefinitionProxyType": {
         "AllowedValues": [
           "APPMESH"
-        ]
-      },
-      "EFSFileSystemLifecyclePolicy": {
-        "AllowedValues": [
-          "AFTER_30_DAYS"
-        ]
-      },
-      "EFSFileSystemPerformanceMode": {
-        "AllowedValues": [
-          "generalPurpose",
-          "maxIO"
-        ]
-      },
-      "EFSFileSystemThroughputMode": {
-        "AllowedValues": [
-          "bursting",
-          "provisioned"
         ]
       },
       "ElasticInferenceAccelerator": {
@@ -1492,6 +1492,16 @@
           ]
         }
       },
+      "IamPolicyName": {
+        "AllowedPatternRegex": "^[a-zA-Z0-9+=,.@\\-_]+$",
+        "Ref": {
+          "Parameters": [
+            "String"
+          ]
+        },
+        "StringMax": 128,
+        "StringMin": 1
+      },
       "IamRole": {
         "GetAtt": {
         },
@@ -1637,16 +1647,6 @@
           "volume"
         ]
       },
-      "LoadBalancerPort": {
-        "NumberMax": 65535,
-        "NumberMin": 1,
-        "Ref": {
-          "Parameters": [
-            "String",
-            "Number"
-          ]
-        }
-      },
       "LoadBalancerName": {
         "GetAtt": {
         },
@@ -1665,6 +1665,16 @@
         "Ref": {
           "Parameters": [
             "Strings"
+          ]
+        }
+      },
+      "LoadBalancerPort": {
+        "NumberMax": 65535,
+        "NumberMin": 1,
+        "Ref": {
+          "Parameters": [
+            "String",
+            "Number"
           ]
         }
       },
