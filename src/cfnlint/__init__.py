@@ -595,9 +595,13 @@ class Template(object):  # pylint: disable=R0904
         """ Get Directives"""
         results = {}
         for _, resource_values in self.template.get('Resources', {}).items():
-            ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
-            mandatory_rule_ids = cfnlint.config.mandatory_checks
-            for ignore_rule_id in (ignore_rule_id - mandatory_rule_ids):
+            ignore_rule_ids = set(resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', []))
+            mandatory_rule_ids = set([])
+            try:
+                mandatory_rule_ids = set(cfnlint.config.ConfigMixIn.mandatory_checks)
+            except:
+                pass
+            for ignore_rule_id in (ignore_rule_ids - mandatory_rule_ids):
                 if ignore_rule_id not in results:
                     results[ignore_rule_id] = []
                 location = self._loc(resource_values)
