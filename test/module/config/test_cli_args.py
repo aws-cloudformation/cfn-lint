@@ -60,9 +60,10 @@ class TestArgsParser(BaseTestCase):
     def test_create_parser_config_file(self):
         """Test success run"""
 
-        config = cfnlint.config.CliArgs(['--regions', 'us-west-1', '--include-checks', 'I1234', '--', 'template1.yaml'])
+        config = cfnlint.config.CliArgs(['--regions', 'us-west-1', '--include-checks', 'I1234', '--mandatory-checks', 'E2002,E3001', '--', 'template1.yaml'])
         self.assertEqual(config.cli_args.templates, ['template1.yaml'])
         self.assertEqual(config.cli_args.include_checks, ['I1234'])
+        self.assertEqual(config.cli_args.mandatory_checks, ['E2002', 'E3001'])
         self.assertEqual(config.cli_args.regions, ['us-west-1'])
 
     def test_create_parser_rule_configuration(self):

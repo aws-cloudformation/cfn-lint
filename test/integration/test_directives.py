@@ -41,3 +41,14 @@ class TestDirectives(BaseTestCase):
         if not matches:
             matches.extend(runner.run())
         assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+
+    def test_templates_with_override(self):
+        """Test strict rule enforcement"""
+        filename = 'test/fixtures/templates/bad/core/directives.yaml'
+        failures = 6
+
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename, '--mandatory-checks', 'E2001,E3001'])
+        (template, rules, _) = cfnlint.core.get_template_rules(filenames[0], args)
+        matches = cfnlint.core.run_checks(filenames[0], template, rules, ['us-east-1'])
+
+        assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)

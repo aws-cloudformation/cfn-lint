@@ -365,7 +365,7 @@ class CliArgs(object):
             help='only check rules whose id do not match these values'
         )
         standard.add_argument(
-            '-m', '--mandatory-check', dest='mandatory_checks', nargs='+', default=[],
+            '-m', '--mandatory-checks', dest='mandatory_checks', nargs='+', default=[],
             type=comma_separated_arg, action='extend',
             help='Always check these rules regardless of template exclusions'
         )
