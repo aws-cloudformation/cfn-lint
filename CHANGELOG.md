@@ -2,12 +2,12 @@
 ###### CloudFormation Specifications
 - Patch in `AWS::Cognito::UserPool` resource information for `ap-south-1` and `ap-southeast-1` (issue #[1002](https://github.com/aws-cloudformation/cfn-python-lint/issues/1002))
 - Remove manual patching for `AWS::Backup::BackupPlan` resource information and fix a few spec issues (pull #[1006](https://github.com/aws-cloudformation/cfn-python-lint/pull/1006))
-- Fix a few spec regex patterns that were missing escapes of `-` inside `[]` (issue #[997](https://github.com/aws-cloudformation/cfn-python-lint/issue/997))
+- Fix a few spec regex patterns that were missing escapes of `-` inside `[]` (issue #[997](https://github.com/aws-cloudformation/cfn-python-lint/issues/997))
 - Update pricing script to include bare metal instance types (issue #[998](https://github.com/aws-cloudformation/cfn-python-lint/issue/998))
-- Create a regex pattern for IAM Policy Names (issue #[996](https://github.com/aws-cloudformation/cfn-python-lint/issue/996))
+- Create a regex pattern for IAM Policy Names (issue #[996](https://github.com/aws-cloudformation/cfn-python-lint/issues/996))
 - Patch CloudFormation specs from SSM data on 2019.07.10
 ###### Fixes
-- Fix a warning when loading resources using a `\` in the prefix (issue #[1009](https://github.com/aws-cloudformation/cfn-python-lint/issue/1009))
+- Fix a warning when loading resources using a `\` in the prefix (issue #[1009](https://github.com/aws-cloudformation/cfn-python-lint/issues/1009))
 
 
 ### 0.22.1
