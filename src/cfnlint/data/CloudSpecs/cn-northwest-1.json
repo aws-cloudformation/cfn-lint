@@ -985,7 +985,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApplicationAutoScalingPredefinedMetricSpecificationType"
+            "ValueType": "AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -1200,7 +1200,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleHookResult"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.DefaultResult"
           }
         },
         "HeartbeatTimeout": {
@@ -1221,7 +1221,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleTransition"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.LifecycleTransition"
           }
         },
         "NotificationMetadata": {
@@ -11368,7 +11368,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApiGatewayAuthorizerType"
+            "ValueType": "AWS::ApiGateway::Authorizer.Type"
           }
         }
       }
@@ -11574,7 +11574,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "ApiGatewayResponeType"
+            "ValueType": "AWS::ApiGateway::GatewayResponse.ResponeType"
           }
         },
         "RestApiId": {
@@ -11798,7 +11798,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApiGatewatRestApiKeySourceType"
+            "ValueType": "AWS::ApiGateway::RestApi.ApiKeySourceType"
           }
         },
         "BinaryMediaTypes": {
@@ -12023,7 +12023,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "ApiGatewayUsagePlanKeyType"
+            "ValueType": "AWS::ApiGateway::UsagePlanKey.KeyType"
           }
         },
         "UsagePlanId": {
@@ -12159,7 +12159,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApplicationAutoScalingPolicyType"
+            "ValueType": "AWS::ApplicationAutoScaling::ScalingPolicy.PolicyType"
           }
         },
         "ResourceId": {
@@ -12245,7 +12245,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingGroupHealthCheckType"
+            "ValueType": "AWS::AutoScaling::AutoScalingGroup.HealthCheckType"
           }
         },
         "InstanceId": {
@@ -12530,7 +12530,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleHookResult"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.DefaultResult"
           }
         },
         "HeartbeatTimeout": {
@@ -12551,7 +12551,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleTransition"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.LifecycleTransition"
           }
         },
         "NotificationMetadata": {
@@ -12583,7 +12583,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyAdjustmentType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.AdjustmentType"
           }
         },
         "AutoScalingGroupName": {
@@ -12610,7 +12610,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyMetricAggregationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.MetricAggregationType"
           }
         },
         "MinAdjustmentMagnitude": {
@@ -12625,7 +12625,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PolicyType"
           }
         },
         "ScalingAdjustment": {
@@ -14380,7 +14380,7 @@
           "Required": false,
           "UpdateType": "Conditional",
           "Value": {
-            "ValueType": "AllocationId"
+            "ValueType": "AWS::EC2::EIP.AllocationId"
           }
         },
         "EIP": {
@@ -14546,7 +14546,7 @@
           "Required": false,
           "UpdateType": "Conditional",
           "Value": {
-            "ValueType": "Affinity"
+            "ValueType": "AWS::EC2::Instance.Affinity"
           }
         },
         "AvailabilityZone": {
@@ -20830,34 +20830,18 @@
     }
   },
   "ValueTypes": {
-    "Affinity": {
-      "AllowedValues": [
-        "default",
-        "host"
-      ]
-    },
-    "AllocationId": {
-      "GetAtt": {
-        "AWS::EC2::EIP": "AllocationId"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "AmazonMQDeploymentMode": {
+    "AWS::AmazonMQ::Broker.DeploymentMode": {
       "AllowedValues": [
         "ACTIVE_STANDBY_MULTI_AZ",
         "SINGLE_INSTANCE"
       ]
     },
-    "AmazonMQEngineType": {
+    "AWS::AmazonMQ::Broker.EngineType": {
       "AllowedValues": [
         "ACTIVEMQ"
       ]
     },
-    "AmazonMQEngineVersion": {
+    "AWS::AmazonMQ::Broker.EngineVersion": {
       "AllowedValues": [
         "5.15.0",
         "5.15.6",
@@ -20865,27 +20849,21 @@
         "5.15.9"
       ]
     },
-    "AmazonMQHostInstanceType": {
+    "AWS::AmazonMQ::Broker.HostInstanceType": {
       "Ref": {
         "Parameters": [
           "String"
         ]
       }
     },
-    "ApiGatewatRestApiKeySourceType": {
-      "AllowedValues": [
-        "AUTHORIZER",
-        "HEADER"
-      ]
-    },
-    "ApiGatewayAuthorizerType": {
+    "AWS::ApiGateway::Authorizer.Type": {
       "AllowedValues": [
         "COGNITO_USER_POOLS",
         "REQUEST",
         "TOKEN"
       ]
     },
-    "ApiGatewayResponeType": {
+    "AWS::ApiGateway::GatewayResponse.ResponeType": {
       "AllowedValues": [
         "ACCESS_DENIED",
         "API_CONFIGURATION_ERROR",
@@ -20909,12 +20887,18 @@
         "UNSUPPORTED_MEDIA_TYPE"
       ]
     },
-    "ApiGatewayUsagePlanKeyType": {
+    "AWS::ApiGateway::RestApi.ApiKeySourceType": {
+      "AllowedValues": [
+        "AUTHORIZER",
+        "HEADER"
+      ]
+    },
+    "AWS::ApiGateway::UsagePlanKey.KeyType": {
       "AllowedValues": [
         "API_KEY"
       ]
     },
-    "AppSyncDataSourceType": {
+    "AWS::AppSync::DataSource.Type": {
       "AllowedValues": [
         "AMAZON_DYNAMODB",
         "AMAZON_ELASTICSEARCH",
@@ -20924,7 +20908,7 @@
         "RELATIONAL_DATABASE"
       ]
     },
-    "AppSyncGraphQLApiAuthType": {
+    "AWS::AppSync::GraphQLApi.AuthType": {
       "AllowedValues": [
         "AMAZON_COGNITO_USER_POOLS",
         "API_KEY",
@@ -20932,19 +20916,19 @@
         "OPENID_CONNECT"
       ]
     },
-    "AppSyncResolverKind": {
+    "AWS::AppSync::Resolver.Kind": {
       "AllowedValues": [
         "PIPELINE",
         "UNIT"
       ]
     },
-    "ApplicationAutoScalingPolicyType": {
+    "AWS::ApplicationAutoScaling::ScalingPolicy.PolicyType": {
       "AllowedValues": [
         "StepScaling",
         "TargetTrackingScaling"
       ]
     },
-    "ApplicationAutoScalingPredefinedMetricSpecificationType": {
+    "AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType": {
       "AllowedValues": [
         "ALBRequestCountPerTarget",
         "DynamoDBReadCapacityUtilization",
@@ -20959,43 +20943,85 @@
         "SageMakerVariantInvocationsPerInstance"
       ]
     },
-    "AutoScalingGroupHealthCheckType": {
+    "AWS::AutoScaling::AutoScalingGroup.HealthCheckType": {
       "AllowedValues": [
         "EC2",
         "ELB"
       ]
     },
-    "AutoScalingLifecycleHookResult": {
+    "AWS::AutoScaling::LifecycleHook.DefaultResult": {
       "AllowedValues": [
         "ABANDON",
         "CONTINUE"
       ]
     },
-    "AutoScalingLifecycleTransition": {
+    "AWS::AutoScaling::LifecycleHook.LifecycleTransition": {
       "AllowedValues": [
         "autoscaling:EC2_INSTANCE_LAUNCHING",
         "autoscaling:EC2_INSTANCE_TERMINATING"
       ]
     },
-    "AutoScalingPolicyAdjustmentType": {
+    "AWS::AutoScaling::ScalingPolicy.AdjustmentType": {
       "AllowedValues": [
         "ChangeInCapacity",
         "ExactCapacity",
         "PercentChangeInCapacity"
       ]
     },
-    "AutoScalingPolicyMetricAggregationType": {
+    "AWS::AutoScaling::ScalingPolicy.MetricAggregationType": {
       "AllowedValues": [
         "Average",
         "Maximum",
         "Minimum"
       ]
     },
-    "AutoScalingPolicyType": {
+    "AWS::AutoScaling::ScalingPolicy.PolicyType": {
       "AllowedValues": [
         "SimpleScaling",
         "StepScaling",
         "TargetTrackingScaling"
+      ]
+    },
+    "AWS::Backup::BackupPlan.Id": {
+      "GetAtt": {
+        "AWS::Backup::BackupPlan": "BackupPlanId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::Backup::BackupPlan"
+        ]
+      }
+    },
+    "AWS::Backup::BackupVault.BackupVaultName": {
+      "GetAtt": {
+        "AWS::Backup::BackupVault": "BackupVaultName"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::Backup::BackupVault"
+        ]
+      }
+    },
+    "AWS::EC2::EIP.AllocationId": {
+      "GetAtt": {
+        "AWS::EC2::EIP": "AllocationId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::EC2::Instance.Affinity": {
+      "AllowedValues": [
+        "default",
+        "host"
       ]
     },
     "AvailabilityZone": {
@@ -21017,32 +21043,6 @@
         "Parameters": [
           "Strings",
           "AvailabilityZones"
-        ]
-      }
-    },
-    "BackupPlanId": {
-      "GetAtt": {
-        "AWS::Backup::BackupPlan": "BackupPlanId"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::Backup::BackupPlan"
-        ]
-      }
-    },
-    "BackupVaultName": {
-      "GetAtt": {
-        "AWS::Backup::BackupVault": "BackupVaultName"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::Backup::BackupVault"
         ]
       }
     },

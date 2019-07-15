@@ -1983,7 +1983,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApplicationAutoScalingPredefinedMetricSpecificationType"
+            "ValueType": "AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -2198,7 +2198,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleHookResult"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.DefaultResult"
           }
         },
         "HeartbeatTimeout": {
@@ -2219,7 +2219,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleTransition"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.LifecycleTransition"
           }
         },
         "NotificationMetadata": {
@@ -22079,7 +22079,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ApplicationAutoScalingPolicyType"
+            "ValueType": "AWS::ApplicationAutoScaling::ScalingPolicy.PolicyType"
           }
         },
         "ResourceId": {
@@ -22194,7 +22194,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingGroupHealthCheckType"
+            "ValueType": "AWS::AutoScaling::AutoScalingGroup.HealthCheckType"
           }
         },
         "InstanceId": {
@@ -22479,7 +22479,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleHookResult"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.DefaultResult"
           }
         },
         "HeartbeatTimeout": {
@@ -22500,7 +22500,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingLifecycleTransition"
+            "ValueType": "AWS::AutoScaling::LifecycleHook.LifecycleTransition"
           }
         },
         "NotificationMetadata": {
@@ -22532,7 +22532,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyAdjustmentType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.AdjustmentType"
           }
         },
         "AutoScalingGroupName": {
@@ -22559,7 +22559,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyMetricAggregationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.MetricAggregationType"
           }
         },
         "MinAdjustmentMagnitude": {
@@ -22574,7 +22574,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AutoScalingPolicyType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PolicyType"
           }
         },
         "ScalingAdjustment": {
@@ -37679,29 +37679,13 @@
         "UNIT"
       ]
     },
-    "AWS::EC2::EIP.AllocationId": {
-      "GetAtt": {
-        "AWS::EC2::EIP": "AllocationId"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "AWS::EC2::Instance.Affinity": {
-      "AllowedValues": [
-        "default",
-        "host"
-      ]
-    },
-    "ApplicationAutoScalingPolicyType": {
+    "AWS::ApplicationAutoScaling::ScalingPolicy.PolicyType": {
       "AllowedValues": [
         "StepScaling",
         "TargetTrackingScaling"
       ]
     },
-    "ApplicationAutoScalingPredefinedMetricSpecificationType": {
+    "AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType": {
       "AllowedValues": [
         "ALBRequestCountPerTarget",
         "DynamoDBReadCapacityUtilization",
@@ -37716,43 +37700,85 @@
         "SageMakerVariantInvocationsPerInstance"
       ]
     },
-    "AutoScalingGroupHealthCheckType": {
+    "AWS::AutoScaling::AutoScalingGroup.HealthCheckType": {
       "AllowedValues": [
         "EC2",
         "ELB"
       ]
     },
-    "AutoScalingLifecycleHookResult": {
+    "AWS::AutoScaling::LifecycleHook.DefaultResult": {
       "AllowedValues": [
         "ABANDON",
         "CONTINUE"
       ]
     },
-    "AutoScalingLifecycleTransition": {
+    "AWS::AutoScaling::LifecycleHook.LifecycleTransition": {
       "AllowedValues": [
         "autoscaling:EC2_INSTANCE_LAUNCHING",
         "autoscaling:EC2_INSTANCE_TERMINATING"
       ]
     },
-    "AutoScalingPolicyAdjustmentType": {
+    "AWS::AutoScaling::ScalingPolicy.AdjustmentType": {
       "AllowedValues": [
         "ChangeInCapacity",
         "ExactCapacity",
         "PercentChangeInCapacity"
       ]
     },
-    "AutoScalingPolicyMetricAggregationType": {
+    "AWS::AutoScaling::ScalingPolicy.MetricAggregationType": {
       "AllowedValues": [
         "Average",
         "Maximum",
         "Minimum"
       ]
     },
-    "AutoScalingPolicyType": {
+    "AWS::AutoScaling::ScalingPolicy.PolicyType": {
       "AllowedValues": [
         "SimpleScaling",
         "StepScaling",
         "TargetTrackingScaling"
+      ]
+    },
+    "AWS::Backup::BackupPlan.Id": {
+      "GetAtt": {
+        "AWS::Backup::BackupPlan": "BackupPlanId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::Backup::BackupPlan"
+        ]
+      }
+    },
+    "AWS::Backup::BackupVault.BackupVaultName": {
+      "GetAtt": {
+        "AWS::Backup::BackupVault": "BackupVaultName"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::Backup::BackupVault"
+        ]
+      }
+    },
+    "AWS::EC2::EIP.AllocationId": {
+      "GetAtt": {
+        "AWS::EC2::EIP": "AllocationId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::EC2::Instance.Affinity": {
+      "AllowedValues": [
+        "default",
+        "host"
       ]
     },
     "AvailabilityZone": {
@@ -37774,32 +37800,6 @@
         "Parameters": [
           "Strings",
           "AvailabilityZones"
-        ]
-      }
-    },
-    "BackupPlanId": {
-      "GetAtt": {
-        "AWS::Backup::BackupPlan": "BackupPlanId"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::Backup::BackupPlan"
-        ]
-      }
-    },
-    "BackupVaultName": {
-      "GetAtt": {
-        "AWS::Backup::BackupVault": "BackupVaultName"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::Backup::BackupVault"
         ]
       }
     },

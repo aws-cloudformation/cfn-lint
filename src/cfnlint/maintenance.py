@@ -161,7 +161,7 @@ def patch_spec(content, region):
     for dirpath, _, filenames in os.walk(append_dir):
         filenames.sort()
         for filename in fnmatch.filter(filenames, '*.json'):
-            file_path = os.path.join(dirpath, filename).replace(append_dir, "")
+            file_path = os.path.join(dirpath, filename).replace(append_dir, '')
             LOGGER.info('Processing %s%s', region, file_path)
             all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources('data/ExtendedSpecs/{}{}'.format(region, file_path)))
 
