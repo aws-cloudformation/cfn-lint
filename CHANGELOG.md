@@ -1,3 +1,12 @@
+### 0.22.3
+###### CloudFormation Specifications
+- Patch in `AWS::SageMaker::CodeRepository` to the CloudFormation spec (issue #[1005](https://github.com/aws-cloudformation/cfn-python-lint/issues/1005))
+- Patch in Tags into IAM Roles and Users (issue #[1015](https://github.com/aws-cloudformation/cfn-python-lint/issues/1015))
+- Update CloudFormation spec to version 4.2.0 (pull #[1023](https://github.com/aws-cloudformation/cfn-python-lint/pull/1023))
+- Update specs from pricing and SSM data as of 2019.07.13
+###### Fixes
+- Add more Availability Zones (pull #[1021](https://github.com/aws-cloudformation/cfn-python-lint/pull/1021))
+
 ### 0.22.2
 ###### CloudFormation Specifications
 - Patch in `AWS::Cognito::UserPool` resource information for `ap-south-1` and `ap-southeast-1` (issue #[1002](https://github.com/aws-cloudformation/cfn-python-lint/issues/1002))
