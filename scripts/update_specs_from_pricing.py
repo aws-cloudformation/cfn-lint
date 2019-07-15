@@ -313,7 +313,7 @@ def main():
         outputs[region] = []
 
     outputs = update_outputs('Ec2InstanceType', get_ec2_pricing(), outputs)
-    outputs = update_outputs('AmazonMQHostInstanceType', get_mq_pricing(), outputs)
+    outputs = update_outputs('AWS::AmazonMQ::Broker.HostInstanceType', get_mq_pricing(), outputs)
     outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
     outputs = update_outputs('RedshiftInstanceType', get_redshift_pricing(), outputs)
     outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
