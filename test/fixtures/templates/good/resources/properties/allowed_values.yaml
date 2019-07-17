@@ -50,6 +50,11 @@ Resources:
       LogGroupName: 'some-log-group'
       # Don't error when Retention is used inside a condition
       RetentionInDays: !If [IsRetention, !Ref Retention, !Ref 'AWS::NoValue']
+  AccessKey:
+    Type: "AWS::IAM::AccessKey"
+    Properties:
+      Status: "Active" # Valid AllowedValue
+      UserName: "my-user"
   AmazonMQBroker:
     Type: "AWS::AmazonMQ::Broker"
     Properties:
