@@ -17,6 +17,7 @@
 import logging
 from mock import patch, mock_open
 import cfnlint.config  # pylint: disable=E0401
+from cfnlint.helpers import REGIONS
 from testlib.testcase import BaseTestCase
 
 
@@ -80,6 +81,19 @@ class TestConfigMixIn(BaseTestCase):
 
         # test defaults
         self.assertEqual(config.regions, ['us-east-1'])
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_all_regions(self, yaml_mock):
+        """ Test precedence in """
+
+        yaml_mock.side_effect = [
+            {'regions': ['ALL_REGIONS']},
+            {}
+        ]
+        config= cfnlint.config.ConfigMixIn([])
+
+        # test defaults
+        self.assertEqual(config.regions, REGIONS)
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_expand_paths(self, yaml_mock):
