@@ -70,7 +70,7 @@ class Cidr(CloudFormationLintRule):
                     param_path = ['Parameters', value]
                     full_param_path = '/'.join(param_path)
                     message = 'AllowedPattern and/or AllowedValues for Parameter should be specified at {1}. ' \
-                              'Example for AllowedPattern: "{0}"'
+                              'Example for AllowedPattern: \'{0}\''
                     matches.append(RuleMatch(param_path, message.format(REGEX_CIDR.pattern, full_param_path)))
 
         return matches
