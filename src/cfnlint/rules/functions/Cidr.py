@@ -21,6 +21,7 @@ from cfnlint import RuleMatch
 
 from cfnlint.helpers import REGEX_CIDR
 
+
 class Cidr(CloudFormationLintRule):
     """Check if Cidr values are correct"""
     id = 'E1024'
@@ -89,6 +90,7 @@ class Cidr(CloudFormationLintRule):
         cidr_objs = cfn.search_deep_keys('Fn::Cidr')
 
         supported_functions = [
+            'Fn::FindInMap',
             'Fn::Select',
             'Ref',
             'Fn::GetAtt',

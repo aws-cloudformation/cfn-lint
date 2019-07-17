@@ -20,6 +20,7 @@ from .. import BaseRuleTestCase
 
 class TestRulesCidr(BaseRuleTestCase):
     """Test Cidr Get Att """
+
     def setUp(self):
         """Setup"""
         super(TestRulesCidr, self).setUp()
@@ -38,4 +39,4 @@ class TestRulesCidr(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions_cidr.yaml', 10)
+        self.helper_file_negative('test/fixtures/templates/bad/functions_cidr.yaml', 9)
