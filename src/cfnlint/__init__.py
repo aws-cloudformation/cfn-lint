@@ -591,17 +591,26 @@ class Template(object):  # pylint: disable=R0904
 
         return results
 
+    def _rule_enforcement_filter(self, ignore_rules, enforce_rules):
+        result = []
+        for ignore_rule in ignore_rules:
+            # Checking enforce_rule starts with ignore_rule since enforcement uses explicit rules without prefixes
+            match = [enforce_rule for enforce_rule in enforce_rules if enforce_rule.startswith(ignore_rule)]
+            if len(match) == 0:
+                result.append(ignore_rule)
+        return result
+
     def get_directives(self):
         """ Get Directives"""
         results = {}
         for _, resource_values in self.template.get('Resources', {}).items():
-            ignore_rule_ids = set(resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', []))
-            mandatory_rule_ids = set([])
+            ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
             try:
-                mandatory_rule_ids = set(cfnlint.config.ConfigMixIn.mandatory_checks)
-            except:
+                mandatory_rule_ids = cfnlint.config.ConfigMixIn.mandatory_checks
+                ignore_rule_ids = self._rule_enforcement_filter(ignore_rule_ids, mandatory_rule_ids)
+            except:  # pylint: disable=W0702
                 pass
-            for ignore_rule_id in (ignore_rule_ids - mandatory_rule_ids):
+            for ignore_rule_id in ignore_rule_ids:
                 if ignore_rule_id not in results:
                     results[ignore_rule_id] = []
                 location = self._loc(resource_values)
