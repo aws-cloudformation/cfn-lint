@@ -42,7 +42,8 @@ class Subnet(CloudFormationLintRule):
         matches = []
         allowed_types = [
             'AWS::EC2::AvailabilityZone::Name',
-            'String'
+            'String',
+            'AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>'
         ]
         if value in resources:
             message = 'AvailabilityZone can\'t use a Ref to a resource for {0}'
