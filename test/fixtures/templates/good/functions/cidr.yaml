@@ -11,9 +11,20 @@ Parameters:
     Type: Number
     MinValue: 1
     MaxValue: 6
+  Size:
+    Type: String
+Mappings:
+  CidrBitsMap:
+    "2":
+      AZCidrBits: 16
 Resources:
   Subnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
       CidrBlock: !Select [!Ref SubnetIndex, !Cidr [{'Fn::ImportValue': 'vpc-CidrBlock'}, !Ref SubnetCount, 12]]
       VpcId: 'vpc-123456'
+  SubnetWihtMap:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: 'vpc-123456'
+      CidrBlock: !Select [ 2, !Cidr [ {'Fn::ImportValue': 'vpc-CidrBlock'}, 4, !FindInMap [CidrBitsMap, !Ref Size, AZCidrBits] ]]

@@ -25,6 +25,7 @@ import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
+from cfnlint.helpers import REGIONS
 try:  # pragma: no cover
     from pathlib import Path
 except ImportError:  # pragma: no cover
@@ -502,6 +503,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         results = self._get_argument_value('regions', True, True)
         if not results:
             return ['us-east-1']
+        if 'ALL_REGIONS' in results:
+            return REGIONS
         return results
 
     @property
