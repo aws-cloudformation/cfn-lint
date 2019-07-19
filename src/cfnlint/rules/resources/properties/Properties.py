@@ -150,7 +150,7 @@ class Properties(CloudFormationLintRule):
                                 if not (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')):
                                     message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
                                     matches.append(RuleMatch(path, message))
-                        else:
+                        elif not (sub_key == 'Ref' and sub_value == 'AWS::NoValue'):
                             message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
                             matches.append(RuleMatch(path, message))
                     else:
