@@ -166,6 +166,28 @@ def create_dict_node_class(cls):
                 if isinstance(self, type_t) or not type_t:
                     yield self, path[:]
 
+        def keys_safe(self, path=None):
+            """Get keys while handling IFs"""
+
+            def get_keys(items):
+                """ Check Keys for Ref NoValue """
+                keys = set()
+                for k, v in items.items():
+                    if isinstance(v, dict):
+                        if len(v) == 1:
+                            for v_k, v_v in v.items():
+                                if not (v_k == 'Ref' and v_v == 'AWS::NoValue'):
+                                    keys.add(k)
+                        else:
+                            keys.add(k)
+                    else:
+                        keys.add(k)
+
+                return keys
+
+            for items, items_path in self.items_safe(path):
+                yield get_keys(items), items_path[:]
+
         def __getattr__(self, name):
             raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
 
