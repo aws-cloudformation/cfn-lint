@@ -64,16 +64,17 @@ class Ebs(CloudFormationLintRule):
         results.extend(cfn.get_resource_properties(['AWS::AutoScaling::LaunchConfiguration', 'BlockDeviceMappings']))
         for result in results:
             path = result['Path']
-            for index, properties in enumerate(result['Value']):
-                virtual_name = properties.get('VirtualName')
-                ebs = properties.get('Ebs')
-                if virtual_name:
-                    # switch to regex
-                    if not re.match(r'^ephemeral[0-9]$', virtual_name):
-                        pathmessage = path[:] + [index, 'VirtualName']
-                        message = 'Property VirtualName should be of type ephemeral(n) for {0}'
-                        matches.append(
-                            RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                elif ebs:
-                    matches.extend(self._checkEbs(cfn, ebs, path[:] + [index, 'Ebs']))
+            if isinstance(result['Value'], list):
+                for index, properties in enumerate(result['Value']):
+                    virtual_name = properties.get('VirtualName')
+                    ebs = properties.get('Ebs')
+                    if virtual_name:
+                        # switch to regex
+                        if not re.match(r'^ephemeral[0-9]$', virtual_name):
+                            pathmessage = path[:] + [index, 'VirtualName']
+                            message = 'Property VirtualName should be of type ephemeral(n) for {0}'
+                            matches.append(
+                                RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
+                    elif ebs:
+                        matches.extend(self._checkEbs(cfn, ebs, path[:] + [index, 'Ebs']))
         return matches
