@@ -140,7 +140,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         else:
             # some properties support primitive types and objects
             # skip in the case it could be an object and the value is a object
-            if item_type and isinstance(value, dict):
+            if (item_type or primitive_type) and isinstance(value, dict):
                 return matches
             matches.extend(self.check_primitive_type(value, primitive_type, path))
 

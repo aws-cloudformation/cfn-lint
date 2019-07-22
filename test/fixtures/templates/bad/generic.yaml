@@ -200,6 +200,24 @@ Resources:
       GroupDescription: test
       SecurityGroupIngress:
       - Fn::FindInMap: [ runtime, !Ref 'AWS::Region', production ]
+  PermitAllInbound:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      Icmp: !Ref AWS::NoValue
+      NetworkAclId: '1'
+      RuleNumber: 1
+      Protocol: 1
+      RuleAction: allow
+  MyEc2BlockDevice:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: "ami-2f726546"
+      InstanceType: t1.micro
+      KeyName: testkey
+      BlockDeviceMappings: !Ref 'AWS::NoValue'
+      NetworkInterfaces:
+        - DeviceIndex: "1"
 Outputs:
   myOutput:
     Value: !GetAtt ElasticLoadBalancer.CanonicalHostedZoneName
