@@ -239,6 +239,8 @@ class Properties(CloudFormationLintRule):
                             proppath + cond_value['Path'], root))
                 elif text.is_function_returning_object():
                     self.logger.debug('Ran into function "%s".  Skipping remaining checks', prop)
+                elif len(text) == 1 and prop in 'Ref' and text.get(prop) == 'AWS::NoValue':
+                    pass
                 elif not supports_additional_properties:
                     message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
                     matches.append(RuleMatch(proppath, message))
