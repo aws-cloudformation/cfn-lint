@@ -1,24 +1,24 @@
----
 AWSTemplateFormatVersion: '2010-09-09'
-Transform:
+Transform: 
+  - UnsupportedTransform
   - AWS::Serverless-2016-10-31
-  - TestTransform
-
-Parameters:
-  Stage1:
-    Description: Environment stage (deployment phase)
-    Type: String
-    AllowedValues:
-      - beta
-      - prod
+Globals:
+  Function:
+    Timeout: 3
+    Runtime: nodejs8.10
+    Environment:
+      Variables:
+        VARIABLE: VALUE
 
 Resources:
-  SkillFunction:
+  Function:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: '.'
-      Handler: main.handler
-      Runtime: python3.7
-      Timeout: 30
-      MemorySize: 128
-      AutoPublishAlias: !Ref Stage1
+      CodeUri: src/
+      Handler: index.handler
+      Events:
+        API:
+          Type: Api
+          Properties:
+            Path: /
+            Method: GET
