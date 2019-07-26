@@ -225,6 +225,17 @@ def comma_separated_arg(string):
     return string.split(',')
 
 
+def comma_separated_rule_names(string):
+    """ Split a comma separated list and check it contains fully qualified rule names """
+    nargs = string.split(',')
+    rule_ids = [rule.id for rule in cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}).rules]
+    for arg in nargs:
+        if arg not in rule_ids:
+            raise ValueError('Rule {} is not a valid rule name. Rules provided must be fully qualified names ie. E3001.'.format(arg))
+
+    return nargs
+
+
 def _ensure_value(namespace, name, value):
     if getattr(namespace, name, None) is None:
         setattr(namespace, name, value)
@@ -367,8 +378,8 @@ class CliArgs(object):
         )
         standard.add_argument(
             '-m', '--mandatory-checks', dest='mandatory_checks', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-            help='Always check these rules regardless of template exclusions'
+            type=comma_separated_rule_names, action='extend',
+            help='Always check these rules regardless of template exclusions. Must be fully qualified rule names ie. E3001.'
         )
         standard.add_argument(
             '-c', '--include-checks', dest='include_checks', nargs='+', default=[],
@@ -485,7 +496,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def mandatory_checks(self):
         """ mandatory_checks """
-        return self._get_argument_value('mandatory_checks', True, True)
+        return self._get_argument_value('mandatory_checks', False, True)
 
     @property
     def include_checks(self):

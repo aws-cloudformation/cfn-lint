@@ -46,13 +46,13 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec):
+def run_cli(filename, template, rules, regions, override_spec, mandatory_rules=None):
     """Process args and run"""
-
+    mandatory_rules = mandatory_rules or []
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
-    return run_checks(filename, template, rules, regions)
+    return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
@@ -86,9 +86,10 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir, ignore_rules, include_rules, configure_rules=None, include_experimental=False):
+def get_rules(rulesdir, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
     """Get rules"""
-    rules = RulesCollection(ignore_rules, include_rules, configure_rules, include_experimental)
+    mandatory_rules = mandatory_rules or []
+    rules = RulesCollection(ignore_rules, include_rules, configure_rules, include_experimental, mandatory_rules)
     rules_dirs = [DEFAULT_RULESDIR] + rulesdir
     try:
         for rules_dir in rules_dirs:
@@ -134,7 +135,9 @@ def get_args_filenames(cli_args):
             config.append_rules,
             config.ignore_checks,
             config.include_checks,
-            config.configure_rules
+            config.configure_rules,
+            config.include_experimental,
+            config.mandatory_checks
         )
         print(rules)
         exit(0)
@@ -163,13 +166,15 @@ def get_template_rules(filename, args):
         args.include_checks,
         args.configure_rules,
         args.include_experimental,
+        args.mandatory_checks,
     )
 
     return(template, rules, [])
 
 
-def run_checks(filename, template, rules, regions):
+def run_checks(filename, template, rules, regions, mandatory_rules=None):
     """Run Checks against the template"""
+    mandatory_rules = mandatory_rules or []
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
@@ -178,7 +183,7 @@ def run_checks(filename, template, rules, regions):
 
     matches = []
 
-    runner = cfnlint.Runner(rules, filename, template, regions)
+    runner = cfnlint.Runner(rules, filename, template, regions, 0, mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:

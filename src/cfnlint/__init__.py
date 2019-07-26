@@ -150,7 +150,7 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False):
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
         self.rules = []
 
         # Whether "experimental" rules should be added
@@ -158,6 +158,7 @@ class RulesCollection(object):
 
         # Make Ignore Rules not required
         self.ignore_rules = ignore_rules or []
+        self.mandatory_rules = mandatory_rules or []
         self.include_rules = include_rules or []
         self.configure_rules = configure_rules or []
         # by default include 'W' and 'E'
@@ -204,7 +205,7 @@ class RulesCollection(object):
             return False
         # Allowing ignoring of rules based on prefix to ignore checks
         for ignore_rule in self.ignore_rules:
-            if rule_id.startswith(ignore_rule) and ignore_rule:
+            if rule_id.startswith(ignore_rule) and ignore_rule and rule_id not in self.mandatory_rules:
                 return False
 
         return True
@@ -591,17 +592,13 @@ class Template(object):  # pylint: disable=R0904
 
         return results
 
+
     def get_directives(self):
         """ Get Directives"""
         results = {}
         for _, resource_values in self.template.get('Resources', {}).items():
-            ignore_rule_ids = set(resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', []))
-            mandatory_rule_ids = set([])
-            try:
-                mandatory_rule_ids = set(cfnlint.config.ConfigMixIn.mandatory_checks)
-            except:
-                pass
-            for ignore_rule_id in (ignore_rule_ids - mandatory_rule_ids):
+            ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
+            for ignore_rule_id in ignore_rule_ids:
                 if ignore_rule_id not in results:
                     results[ignore_rule_id] = []
                 location = self._loc(resource_values)
@@ -1322,11 +1319,12 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, regions, verbosity=0):
+            self, rules, filename, template, regions, verbosity=0, mandatory_rules=None):
 
         self.rules = rules
         self.filename = filename
         self.verbosity = verbosity
+        self.mandatory_rules = mandatory_rules or []
         self.cfn = Template(filename, template, regions)
 
     def transform(self):
@@ -1362,7 +1360,7 @@ class Runner(object):
         return_matches = []
         for match in matches:
             if not any(match == u for u in return_matches):
-                if match.rule.id not in directives:
+                if match.rule.id not in directives or match.rule.id in self.mandatory_rules:
                     return_matches.append(match)
                 else:
                     exception = False
