@@ -21,13 +21,12 @@ from cfnlint.helpers import REGEX_CIDR
 
 
 class Cidr(CloudFormationLintRule):
-    """Check Availability Zone parameter checks """
     id = 'W2509'
     shortdesc = 'CIDR Parameters have allowed values'
     description = 'Check if a parameter is being used as a CIDR. ' \
                   'If it is make sure it has allowed values regex comparisons'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
-    tags = ['parameters', 'availabilityzone']
+    tags = ['parameters', 'cidr']
 
     def __init__(self):
         """Init"""
@@ -41,6 +40,7 @@ class Cidr(CloudFormationLintRule):
             'AWS::EC2::SecurityGroupEgress',
             'AWS::Redshift::ClusterSecurityGroupIngress',
             'AWS::EC2::VPCCidrBlock',
+            'AWS::EC2::VPNConnectionRoute',
         ]
 
         property_type_specs = [
@@ -79,34 +79,23 @@ class Cidr(CloudFormationLintRule):
         """Check itself"""
         matches = []
 
-        matches.extend(
-            cfn.check_value(
-                properties, 'CIDRIP', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+        for cidrString in [
+            'CIDRIP',
+            'Cidr',
+            'CidrBlock',
+            'CidrIp',
+            'ClientCidrBlock',
+            'DestinationCidrBlock',
+            'TargetNetworkCidr',
+            'TunnelInsideCidr',
+        ]:
+            matches.extend(
+                cfn.check_value(
+                    properties, cidrString, path,
+                    check_value=None, check_ref=self.check_cidr_ref,
+                    check_find_in_map=None, check_split=None, check_join=None
+                )
             )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'Cidr', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'CidrBlock', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'CidrIp', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
 
         return matches
 
