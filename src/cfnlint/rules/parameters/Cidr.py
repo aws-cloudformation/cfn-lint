@@ -86,14 +86,14 @@ class Cidr(CloudFormationLintRule):
         matches = []
 
         for cidrString in [
-            'CIDRIP',
-            'Cidr',
-            'CidrBlock',
-            'CidrIp',
-            'ClientCidrBlock',
-            'DestinationCidrBlock',
-            'TargetNetworkCidr',
-            'TunnelInsideCidr',
+                'CIDRIP',
+                'Cidr',
+                'CidrBlock',
+                'CidrIp',
+                'ClientCidrBlock',
+                'DestinationCidrBlock',
+                'TargetNetworkCidr',
+                'TunnelInsideCidr',
         ]:
             matches.extend(
                 cfn.check_value(
