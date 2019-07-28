@@ -33,10 +33,15 @@ class CidrAllowedValues(CloudFormationLintRule):
         """Init"""
         super(CidrAllowedValues, self).__init__()
         resource_type_specs = [
+            'AWS::EC2::ClientVpnAuthorizationRule',
+            'AWS::EC2::ClientVpnEndpoint',
+            'AWS::EC2::ClientVpnRoute',
             'AWS::EC2::NetworkAclEntry',
+            'AWS::EC2::Route',
             'AWS::EC2::SecurityGroupEgress',
             'AWS::EC2::SecurityGroupIngress',
             'AWS::EC2::Subnet',
+            'AWS::EC2::TransitGatewayRoute',
             'AWS::EC2::VPC',
             'AWS::EC2::VPCCidrBlock',
             'AWS::EC2::VPNConnectionRoute',
