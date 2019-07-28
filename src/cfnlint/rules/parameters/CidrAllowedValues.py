@@ -54,6 +54,7 @@ class CidrAllowedValues(CloudFormationLintRule):
             'AWS::EC2::SecurityGroup.Egress',
             'AWS::EC2::SecurityGroup.Ingress',
             'AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification',
+            'AWS::MediaLive::InputSecurityGroup.InputWhitelistRuleCidr',
             'AWS::RDS::DBSecurityGroup.Ingress',
             'AWS::SES::ReceiptFilter.IpFilter',
         ]
