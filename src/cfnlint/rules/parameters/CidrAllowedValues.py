@@ -22,6 +22,7 @@ from cfnlint.helpers import REGEX_CIDR
 
 
 class CidrAllowedValues(CloudFormationLintRule):
+    """CIDR checks"""
     id = 'E2004'
     shortdesc = 'CIDR Allowed Values should be a Cidr Range'
     description = 'Check if a parameter is being used as a CIDR. ' \
