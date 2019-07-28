@@ -1334,7 +1334,15 @@ class Runner(object):
         # Don't call transformation if Transform is not specified to prevent
         # useless execution of the transformation.
         # Currently locked in to SAM specific
-        if transform_type == 'AWS::Serverless-2016-10-31':
+        if transform_type:
+            if isinstance(transform_type, list):
+                if len(transform_type) != 1:
+                    return matches
+                if transform_type[0] != 'AWS::Serverless-2016-10-31':
+                    return matches
+            if transform_type != 'AWS::Serverless-2016-10-31':
+                return matches
+
             # Save the Globals section so its available for rule processing
             self.cfn.transform_pre['Globals'] = self.cfn.template.get('Globals', {})
             transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
