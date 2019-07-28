@@ -44,11 +44,11 @@ class Cidr(CloudFormationLintRule):
         ]
 
         property_type_specs = [
-            'AWS::RDS::DBSecurityGroup.Ingress',
             'AWS::EC2::SecurityGroup.Egress',
-            'AWS::SES::ReceiptFilter.IpFilter',
             'AWS::EC2::SecurityGroup.Ingress',
             'AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification',
+            'AWS::RDS::DBSecurityGroup.Ingress',
+            'AWS::SES::ReceiptFilter.IpFilter',
         ]
 
         for resource_type_spec in resource_type_specs:
