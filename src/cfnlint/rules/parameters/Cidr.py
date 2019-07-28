@@ -32,15 +32,15 @@ class Cidr(CloudFormationLintRule):
         """Init"""
         super(Cidr, self).__init__()
         resource_type_specs = [
+            'AWS::EC2::NetworkAclEntry',
+            'AWS::EC2::SecurityGroupEgress',
+            'AWS::EC2::SecurityGroupIngress',
             'AWS::EC2::Subnet',
             'AWS::EC2::VPC',
-            'AWS::RDS::DBSecurityGroupIngress',
-            'AWS::EC2::NetworkAclEntry',
-            'AWS::EC2::SecurityGroupIngress',
-            'AWS::EC2::SecurityGroupEgress',
-            'AWS::Redshift::ClusterSecurityGroupIngress',
             'AWS::EC2::VPCCidrBlock',
             'AWS::EC2::VPNConnectionRoute',
+            'AWS::RDS::DBSecurityGroupIngress',
+            'AWS::Redshift::ClusterSecurityGroupIngress',
         ]
 
         property_type_specs = [
