@@ -65,6 +65,18 @@ class TestQuickStartTemplates(BaseTestCase):
             'transform_serverless_globals': {
                 'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
                 'failures': 1
+            },
+            'transform_list': {
+                'filename': 'test/fixtures/templates/good/transform/list_transform.yaml',
+                'failures': 0
+            },
+            'transform_list_many': {
+                'filename': 'test/fixtures/templates/good/transform/list_transform_many.yaml',
+                'failures': 0
+            },
+            'transform_list_not_sam': {
+                'filename': 'test/fixtures/templates/good/transform/list_transform_not_sam.yaml',
+                'failures': 0
             }
         }
 

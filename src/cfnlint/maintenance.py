@@ -36,6 +36,8 @@ SPEC_REGIONS = {
     'ap-southeast-1': 'https://doigdx0kgq9el.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-southeast-2': 'https://d2stg8d246z9di.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'ca-central-1': 'https://d2s8ygphhesbe7.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+    'cn-north-1': 'https://s3.cn-north-1.amazonaws.com.cn/cfn-resource-specifications-cn-north-1-prod/latest/CloudFormationResourceSpecification.json',
+    'cn-northwest-1': 'https://s3.cn-northwest-1.amazonaws.com.cn/cfn-resource-specifications-cn-northwest-1-prod/latest/CloudFormationResourceSpecification.json',
     'eu-central-1': 'https://d1mta8qj7i28i2.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-north-1': 'https://diy8iv58sj6ba.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-1': 'https://d3teyb21fexa9r.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',

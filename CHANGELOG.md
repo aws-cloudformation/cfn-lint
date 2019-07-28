@@ -1,3 +1,20 @@
+### 0.22.4
+###### Features
+- Add ALL_REGIONS option for -r flag (pull #[1026](https://github.com/aws-cloudformation/cfn-python-lint/pull/1026))
+###### CloudFormation Specifications
+- Add SSM parameter type values to [E2510](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2510) (pull #[1036](https://github.com/aws-cloudformation/cfn-python-lint/pull/1036))
+- Add allowed values for AWS::IAM Resources (pull #[1027](https://github.com/aws-cloudformation/cfn-python-lint/pull/1027))
+- Update CloudFormation spec to version 4.3.0 (pull #[1048](https://github.com/aws-cloudformation/cfn-python-lint/pull/1048))
+- Update specs from pricing and SSM data as of 2019.07.25
+###### Fixes
+- Removed duplicate from list of Availability Zones (pull #[1035](https://github.com/aws-cloudformation/cfn-python-lint/pull/1035))
+- Fixed example regex in CIDR rule (pull #[1029](https://github.com/aws-cloudformation/cfn-python-lint/pull/1029))
+- Support for Serverless transform when it's in a list of one Transforms (pull #[1042](https://github.com/aws-cloudformation/cfn-python-lint/pull/1042))
+- Don't fail rules that include a Transform (pull #[1041](https://github.com/aws-cloudformation/cfn-python-lint/pull/1041))
+- Don't fail when AWS::NoValue used when we're looking for a list (pull #[1039](https://github.com/aws-cloudformation/cfn-python-lint/pull/1039))
+- Fixed [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to support AWS::NoValue (pull #[1038](https://github.com/aws-cloudformation/cfn-python-lint/pull/1038))
+- Added FindInMap as valid function within Fn::Cidr (pull #[1034](https://github.com/aws-cloudformation/cfn-python-lint/pull/1034))
+
 ### 0.22.3
 ###### CloudFormation Specifications
 - Patch in `AWS::SageMaker::CodeRepository` to the CloudFormation spec (issue #[1005](https://github.com/aws-cloudformation/cfn-python-lint/issues/1005))
@@ -28,7 +45,7 @@
 ###### Fixes
 - Fix an issue where rules were being loaded twice (pull #[980](https://github.com/aws-cloudformation/cfn-python-lint/pull/980))
 - Fix an issue with rule [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) to split GetAtt strings into two values (issue #[986](https://github.com/aws-cloudformation/cfn-python-lint/issues/986))
-- Update rules [E8004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010), [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003), [E8005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8005), and [E8006](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8006) to not flag functions used in Service Catalog rules section (issue #[979](https://github.com/aws-cloudformation/cfn-python-lint/issues/979))
+- Update rules [E8004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8004), [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003), [E8005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8005), and [E8006](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8006) to not flag functions used in Service Catalog rules section (issue #[979](https://github.com/aws-cloudformation/cfn-python-lint/issues/979))
 - Patched testing for Lambda Runtime EOL and end dates to test as if a specific date (pull #[999](https://github.com/aws-cloudformation/cfn-python-lint/pull/999))
 
 ### 0.22.0
