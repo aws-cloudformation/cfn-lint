@@ -49,6 +49,7 @@ class CidrAllowedValues(CloudFormationLintRule):
             'AWS::EC2::SecurityGroup.Egress',
             'AWS::SES::ReceiptFilter.IpFilter',
             'AWS::EC2::SecurityGroup.Ingress',
+            'AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification',
         ]
 
         for resource_type_spec in resource_type_specs:
