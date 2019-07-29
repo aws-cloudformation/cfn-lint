@@ -68,6 +68,8 @@ setup(
         'data/ExtendedSpecs/us-gov-west-1/*.json',
         'data/ExtendedSpecs/us-west-1/*.json',
         'data/ExtendedSpecs/us-west-2/*.json',
+        'data/ExtendedSpecs/cn-north-1/*.json',
+        'data/ExtendedSpecs/cn-northwest-1/*.json',
         'data/CfnLintCli/config/schema.json'
     ]},
     packages=find_packages('src'),
@@ -76,7 +78,7 @@ setup(
         'pyyaml',
         'six~=1.11',
         'requests>=2.15.0',
-        'aws-sam-translator>=1.12.0',
+        'aws-sam-translator>=1.13.0',
         'jsonpatch',
         'jsonschema~=3.0',
         'pathlib2>=2.3.0;python_version<"3.4"',
