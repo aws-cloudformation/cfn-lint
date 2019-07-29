@@ -1,0 +1,31 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  MyScheduledRule1:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "daily" # has to be cron() or rate()
+  MyScheduledRule2:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron()" # Empty cron
+  MyScheduledRule3:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate()" # Empty rate
+  MyScheduledRule4:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(5)" # Not enough values
+  MyScheduledRule5:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(5 minutes daily)" # Too many values
+  MyScheduledRule6:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "rate(five minutes)" # Value has to be a digit
+  MyScheduledRule7:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 */1 * * WED)" # Not enough values
