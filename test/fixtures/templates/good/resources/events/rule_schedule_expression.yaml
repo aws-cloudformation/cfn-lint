@@ -1,0 +1,42 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Valid scheduled expression accordig to the examples in the documentation
+  (https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html)
+Resources:
+  MyCronRule1:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(15 10 * * ? *)" # 10:15 AM (UTC) every day
+  MyCronRule2:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 18 ? * MON-FRI *)" # 6:00 PM Monday through Friday
+  MyCronRule3:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 8 1 * ? *)" # 8:00 AM on the first day of the month
+  MyCronRule4:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0/10 * ? * MON-FRI *)" # Every 10 min on weekdays
+  MyCronRule5:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0/5 8-17 ? * MON-FRI *)" # Every 5 minutes between 8:00 AM and 5:55 PM weekdays
+  MyCronRule6:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: "cron(0 9 ? * 2#1 *)" # 9:00 AM on the first Monday of each month
+  MyRateRule1:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(5 minutes) # Every 5 minutes
+  MyRateRule2:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(1 hour) # Every hour
+  MyRateRule3:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(7 days) # Every seven days
