@@ -49,11 +49,11 @@ region_map = {
     'Asia Pacific (Seoul)': 'ap-northeast-2',
     'AWS GovCloud (US)': 'us-gov-west-1',
     'US West (N. California)': 'us-west-1',
+    'China (Beijing)': 'cn-north-1',
+    'China (Ningxia)': 'cn-northwest-1',
 }
 
 exclude_regions = {
-    'China (Beijing)': 'cn-north-1',
-    'China (Ningxia)': 'cn-northwest-1',
     'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
 }
 
