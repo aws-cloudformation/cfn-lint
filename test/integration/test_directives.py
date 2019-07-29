@@ -49,6 +49,6 @@ class TestDirectives(BaseTestCase):
 
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename, '--mandatory-checks', 'E2001,E3001'])
         (template, rules, _) = cfnlint.core.get_template_rules(filenames[0], args)
-        matches = cfnlint.core.run_checks(filenames[0], template, rules, ['us-east-1'])
+        matches = cfnlint.core.run_checks(filenames[0], template, rules, ['us-east-1'], args.mandatory_checks)
 
         assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)

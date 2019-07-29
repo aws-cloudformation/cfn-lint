@@ -226,12 +226,14 @@ def comma_separated_arg(string):
 
 
 def comma_separated_rule_names(string):
-    """ Split a comma separated list and check it contains fully qualified rule names """
+    """ Split a comma separated list and check it aligns with valid rulenames """
     nargs = string.split(',')
-    rule_ids = [rule.id for rule in cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}).rules]
+    rules_trie = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}).rules_trie
+
     for arg in nargs:
-        if arg not in rule_ids:
-            raise ValueError("Rule {} is not a valid rule name. Rules provided must be fully qualified names ie. E3001.".format(arg))
+        # Trie with no matches on prefix returns []
+        if not rules_trie.values(arg):
+            raise ValueError("Rule {} is not a valid rule name. Rules must represent prefixes or fully qualified names. ie. E3001 or E3.".format(arg))
 
     return nargs
 
