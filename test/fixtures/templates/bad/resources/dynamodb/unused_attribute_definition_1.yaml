@@ -1,0 +1,21 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  dynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: "Album"
+          AttributeType: "S"
+        - AttributeName: "Artist"
+          AttributeType: "S"
+        - AttributeName: "Sales"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "Album"
+          KeyType: "HASH"
+        - AttributeName: "Artist"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
