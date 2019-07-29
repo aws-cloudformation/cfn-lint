@@ -40,7 +40,7 @@ class TestParameterCidr(BaseRuleTestCase):
 
     def test_file_negative_nist_mgmt(self):
         """Failure test"""
-        self.helper_file_negative('test/fixtures/templates/quickstart/nist_vpc_management.yaml', 6)
+        self.helper_file_negative('test/fixtures/templates/quickstart/nist_vpc_management.yaml', 7)
 
     def test_file_negative_nist_prod(self):
         """Failure test"""

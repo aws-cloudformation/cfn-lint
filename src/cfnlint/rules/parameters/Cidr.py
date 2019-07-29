@@ -21,33 +21,41 @@ from cfnlint.helpers import REGEX_CIDR
 
 
 class Cidr(CloudFormationLintRule):
-    """Check Availability Zone parameter checks """
+    """CIDR checks"""
     id = 'W2509'
     shortdesc = 'CIDR Parameters have allowed values'
     description = 'Check if a parameter is being used as a CIDR. ' \
                   'If it is make sure it has allowed values regex comparisons'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
-    tags = ['parameters', 'availabilityzone']
+    tags = ['parameters', 'cidr']
 
     def __init__(self):
         """Init"""
         super(Cidr, self).__init__()
         resource_type_specs = [
-            'AWS::EC2::Subnet',
-            'AWS::EC2::VPC',
-            'AWS::RDS::DBSecurityGroupIngress',
+            'AWS::EC2::ClientVpnAuthorizationRule',
+            'AWS::EC2::ClientVpnEndpoint',
+            'AWS::EC2::ClientVpnRoute',
             'AWS::EC2::NetworkAclEntry',
-            'AWS::EC2::SecurityGroupIngress',
+            'AWS::EC2::Route',
             'AWS::EC2::SecurityGroupEgress',
-            'AWS::Redshift::ClusterSecurityGroupIngress',
+            'AWS::EC2::SecurityGroupIngress',
+            'AWS::EC2::Subnet',
+            'AWS::EC2::TransitGatewayRoute',
+            'AWS::EC2::VPC',
             'AWS::EC2::VPCCidrBlock',
+            'AWS::EC2::VPNConnectionRoute',
+            'AWS::RDS::DBSecurityGroupIngress',
+            'AWS::Redshift::ClusterSecurityGroupIngress',
         ]
 
         property_type_specs = [
-            'AWS::RDS::DBSecurityGroup.Ingress',
             'AWS::EC2::SecurityGroup.Egress',
-            'AWS::SES::ReceiptFilter.IpFilter',
             'AWS::EC2::SecurityGroup.Ingress',
+            'AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification',
+            'AWS::MediaLive::InputSecurityGroup.InputWhitelistRuleCidr',
+            'AWS::RDS::DBSecurityGroup.Ingress',
+            'AWS::SES::ReceiptFilter.IpFilter',
         ]
 
         for resource_type_spec in resource_type_specs:
@@ -79,34 +87,23 @@ class Cidr(CloudFormationLintRule):
         """Check itself"""
         matches = []
 
-        matches.extend(
-            cfn.check_value(
-                properties, 'CIDRIP', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
+        for cidrString in [
+                'CIDRIP',
+                'Cidr',
+                'CidrBlock',
+                'CidrIp',
+                'ClientCidrBlock',
+                'DestinationCidrBlock',
+                'TargetNetworkCidr',
+                'TunnelInsideCidr',
+        ]:
+            matches.extend(
+                cfn.check_value(
+                    properties, cidrString, path,
+                    check_value=None, check_ref=self.check_cidr_ref,
+                    check_find_in_map=None, check_split=None, check_join=None
+                )
             )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'Cidr', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'CidrBlock', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
-        matches.extend(
-            cfn.check_value(
-                properties, 'CidrIp', path,
-                check_value=None, check_ref=self.check_cidr_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
-        )
 
         return matches
 
