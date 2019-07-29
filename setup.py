@@ -68,6 +68,8 @@ setup(
         'data/ExtendedSpecs/us-gov-west-1/*.json',
         'data/ExtendedSpecs/us-west-1/*.json',
         'data/ExtendedSpecs/us-west-2/*.json',
+        'data/ExtendedSpecs/cn-north-1/*.json',
+        'data/ExtendedSpecs/cn-northwest-1/*.json',
         'data/CfnLintCli/config/schema.json'
     ]},
     packages=find_packages('src'),
