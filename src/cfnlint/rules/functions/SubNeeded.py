@@ -28,7 +28,7 @@ class SubNeeded(CloudFormationLintRule):
 
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
-    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init', 'CloudWatchAlarmDefinition']
+    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init', 'CloudWatchAlarmDefinition', 'TopicRulePayload']
     api_excludes = ['Uri', 'Body']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
