@@ -139,11 +139,7 @@ Resources:
         Protocol: HTTP
       HealthCheck:
         Target:
-          Fn::Join:
-          - ''
-          - - 'HTTP:'
-            - Ref: WebServerPort
-            - "/"
+          Fn::Sub: 'HTTP:${WebServerPort}/'
         HealthyThreshold: '3'
         UnhealthyThreshold: '5'
         Interval: '30'
