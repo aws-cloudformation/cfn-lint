@@ -30,13 +30,13 @@ class RefExist(CloudFormationLintRule):
 
     pseudoparams = [
         'AWS::AccountId',
-        'AWS::NotificationARNs',
         'AWS::NoValue',
+        'AWS::NotificationARNs',
         'AWS::Partition',
         'AWS::Region',
         'AWS::StackId',
         'AWS::StackName',
-        'AWS::URLSuffix'
+        'AWS::URLSuffix',
     ]
 
     def searchstring(self, string):

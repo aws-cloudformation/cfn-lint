@@ -33,16 +33,16 @@ class Permissions(CloudFormationLintRule):
     experimental = True
 
     IAM_PERMISSION_RESOURCE_TYPES = {
-        'AWS::SNS::TopicPolicy': 'PolicyDocument',
-        'AWS::S3::BucketPolicy': 'PolicyDocument',
-        'AWS::KMS::Key': 'KeyPolicy',
-        'AWS::SQS::QueuePolicy': 'PolicyDocument',
         'AWS::Elasticsearch::Domain': 'AccessPolicies',
         'AWS::IAM::Group': 'Policies',
         'AWS::IAM::ManagedPolicy': 'PolicyDocument',
         'AWS::IAM::Policy': 'PolicyDocument',
         'AWS::IAM::Role': 'Policies',
         'AWS::IAM::User': 'Policies',
+        'AWS::KMS::Key': 'KeyPolicy',
+        'AWS::S3::BucketPolicy': 'PolicyDocument',
+        'AWS::SNS::TopicPolicy': 'PolicyDocument',
+        'AWS::SQS::QueuePolicy': 'PolicyDocument',
     }
 
     def __init__(self):
