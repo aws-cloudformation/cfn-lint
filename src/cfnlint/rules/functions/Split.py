@@ -37,14 +37,14 @@ class Split(CloudFormationLintRule):
         supported_functions = [
             'Fn::Base64',
             'Fn::FindInMap',
-            'Fn::GetAtt',
             'Fn::GetAZs',
-            'Fn::ImportValue',
+            'Fn::GetAtt',
             'Fn::If',
+            'Fn::ImportValue',
             'Fn::Join',
             'Fn::Select',
             'Fn::Sub',
-            'Ref'
+            'Ref',
         ]
 
         for split_obj in split_objs:

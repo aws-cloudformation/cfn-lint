@@ -35,24 +35,24 @@ class Configuration(CloudFormationLintRule):
         matches = []
 
         valid_attributes = [
+            'Condition',
             'CreationPolicy',
             'DeletionPolicy',
             'DependsOn',
             'Metadata',
-            'UpdatePolicy',
-            'UpdateReplacePolicy',
             'Properties',
             'Type',
-            'Condition'
+            'UpdatePolicy',
+            'UpdateReplacePolicy',
         ]
 
         valid_custom_attributes = [
-            'Version',
-            'Properties',
+            'Condition',
             'DependsOn',
             'Metadata',
-            'Condition',
+            'Properties',
             'Type',
+            'Version',
         ]
 
         resources = cfn.template.get('Resources', {})

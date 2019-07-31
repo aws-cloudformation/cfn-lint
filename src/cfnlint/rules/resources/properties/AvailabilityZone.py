@@ -30,27 +30,27 @@ class AvailabilityZone(CloudFormationLintRule):
         """Init"""
         super(AvailabilityZone, self).__init__()
         resource_type_specs = [
-            'AWS::DAX::Cluster',
             'AWS::AutoScaling::AutoScalingGroup',
-            'AWS::RDS::DBCluster',
+            'AWS::DAX::Cluster',
+            'AWS::DMS::ReplicationInstance',
+            'AWS::EC2::Host',
+            'AWS::EC2::Instance',
+            'AWS::EC2::Subnet',
             'AWS::EC2::Volume',
             'AWS::ElasticLoadBalancing::LoadBalancer',
             'AWS::OpsWorks::Instance',
+            'AWS::RDS::DBCluster',
             'AWS::RDS::DBInstance',
-            'AWS::EC2::Host',
-            'AWS::EC2::Subnet',
-            'AWS::DMS::ReplicationInstance',
-            'AWS::EC2::Instance'
         ]
 
         property_type_specs = [
             # Singular
             'AWS::EC2::LaunchTemplate.Placement',
+            'AWS::EC2::SpotFleet.LaunchTemplateOverrides',
             'AWS::EC2::SpotFleet.SpotPlacement',
             'AWS::EMR::Cluster.PlacementType',
-            'AWS::Glue::Connection.PhysicalConnectionRequirements',
             'AWS::ElasticLoadBalancingV2::TargetGroup.TargetDescription',
-            'AWS::EC2::SpotFleet.LaunchTemplateOverrides',
+            'AWS::Glue::Connection.PhysicalConnectionRequirements',
         ]
 
         for resource_type_spec in resource_type_specs:
