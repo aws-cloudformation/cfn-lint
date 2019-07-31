@@ -27,11 +27,6 @@ class Types(CloudFormationLintRule):
     tags = ['parameters']
 
     valid_types = [
-        'String',
-        'Number',
-        'List<Number>',
-        'CommaDelimitedList',
-        'List<String>',
         'AWS::EC2::AvailabilityZone::Name',
         'AWS::EC2::Image::Id',
         'AWS::EC2::Instance::Id',
@@ -39,19 +34,24 @@ class Types(CloudFormationLintRule):
         'AWS::EC2::SecurityGroup::GroupName',
         'AWS::EC2::SecurityGroup::Id',
         'AWS::EC2::Subnet::Id',
-        'AWS::EC2::Volume::Id',
         'AWS::EC2::VPC::Id',
+        'AWS::EC2::Volume::Id',
         'AWS::Route53::HostedZone::Id',
+        'AWS::SSM::Parameter::Name',
+        'CommaDelimitedList',
         'List<AWS::EC2::AvailabilityZone::Name>',
         'List<AWS::EC2::Image::Id>',
         'List<AWS::EC2::Instance::Id>',
         'List<AWS::EC2::SecurityGroup::GroupName>',
         'List<AWS::EC2::SecurityGroup::Id>',
         'List<AWS::EC2::Subnet::Id>',
-        'List<AWS::EC2::Volume::Id>',
         'List<AWS::EC2::VPC::Id>',
+        'List<AWS::EC2::Volume::Id>',
         'List<AWS::Route53::HostedZone::Id>',
-        'AWS::SSM::Parameter::Name'
+        'List<Number>',
+        'List<String>',
+        'Number',
+        'String',
     ]
 
     def match(self, cfn):

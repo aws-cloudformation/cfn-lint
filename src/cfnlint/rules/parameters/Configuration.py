@@ -37,7 +37,7 @@ class Configuration(CloudFormationLintRule):
         'MinLength',
         'MinValue',
         'NoEcho',
-        'Type'
+        'Type',
     ]
 
     def match(self, cfn):

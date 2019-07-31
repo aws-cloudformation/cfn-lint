@@ -44,11 +44,11 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
             'AWS::IAM::User.LoginProfile': 'Password',
             'AWS::KinesisFirehose::DeliveryStream.RedshiftDestinationConfiguration': 'Password',
             'AWS::OpsWorks::App.Source': 'Password',
-            'AWS::OpsWorks::Stack.Source': 'Password',
             'AWS::OpsWorks::Stack.RdsDbInstance': 'DbPassword',
+            'AWS::OpsWorks::Stack.Source': 'Password',
             'AWS::RDS::DBCluster': 'MasterUserPassword',
             'AWS::RDS::DBInstance': 'MasterUserPassword',
-            'AWS::Redshift::Cluster': 'MasterUserPassword'
+            'AWS::Redshift::Cluster': 'MasterUserPassword',
         }
 
     def initialize(self, cfn):

@@ -38,12 +38,12 @@ class Policy(CloudFormationLintRule):
             'AWS::ECR::Repository': 'RepositoryPolicyText',
         }
         self.resources_and_keys = {
-            'AWS::SNS::TopicPolicy': 'PolicyDocument',
-            'AWS::S3::BucketPolicy': 'PolicyDocument',
-            'AWS::KMS::Key': 'KeyPolicy',
-            'AWS::SQS::QueuePolicy': 'PolicyDocument',
             'AWS::ECR::Repository': 'RepositoryPolicyText',
             'AWS::Elasticsearch::Domain': 'AccessPolicies',
+            'AWS::KMS::Key': 'KeyPolicy',
+            'AWS::S3::BucketPolicy': 'PolicyDocument',
+            'AWS::SNS::TopicPolicy': 'PolicyDocument',
+            'AWS::SQS::QueuePolicy': 'PolicyDocument',
         }
         self.idp_and_keys = {
             'AWS::IAM::Group': 'Policies',
@@ -119,14 +119,14 @@ class Policy(CloudFormationLintRule):
         """Check statements"""
         matches = []
         statement_valid_keys = [
-            'Effect',
-            'Principal',
-            'NotPrincipal',
             'Action',
-            'NotAction',
-            'Resource',
-            'NotResource',
             'Condition',
+            'Effect',
+            'NotAction',
+            'NotPrincipal',
+            'NotResource',
+            'Principal',
+            'Resource',
             'Sid',
         ]
 
