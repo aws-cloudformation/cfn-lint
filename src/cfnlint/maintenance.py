@@ -158,11 +158,12 @@ def patch_spec(content, region):
     LOGGER.info('Patching spec file for region "%s"', region)
 
     append_dir = os.path.join(os.path.dirname(__file__), 'data', 'ExtendedSpecs', region)
-    for _, _, filenames in os.walk(append_dir):
+    for dirpath, _, filenames in os.walk(append_dir):
         filenames.sort()
         for filename in fnmatch.filter(filenames, '*.json'):
-            LOGGER.info('Processing %s (%s)', filename, region)
-            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources('data/ExtendedSpecs/{}/{}'.format(region, filename)))
+            file_path = os.path.join(dirpath, filename).replace(append_dir, '')
+            LOGGER.info('Processing %s%s', region, file_path)
+            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources('data/ExtendedSpecs/{}{}'.format(region, file_path)))
 
             # Process the generic patches 1 by 1 so we can "ignore" failed ones
             for all_patch in all_patches:
