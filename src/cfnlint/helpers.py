@@ -70,7 +70,8 @@ AVAILABILITY_ZONES = [
     'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
     'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
     'eu-north-1a', 'eu-north-1b', 'eu-north-1c',
-    'ap-east-1a', 'ap-east-1b', 'ap-east-1c'
+    'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
+    'me-south-1a', 'me-south-1b', 'me-south-1c'
 ]
 
 FUNCTIONS = [
