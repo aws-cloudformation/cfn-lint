@@ -44,7 +44,7 @@ class UpdateReplacePolicy(CloudFormationLintRule):
             'AWS::Neptune::DBCluster',
             'AWS::RDS::DBCluster',
             'AWS::RDS::DBInstance',
-            'AWS::Redshift::Cluster'
+            'AWS::Redshift::Cluster',
         ]
         if not isinstance(key, (six.text_type, six.string_types)):
             message = 'UpdateReplacePolicy values should be of string at {0}'
