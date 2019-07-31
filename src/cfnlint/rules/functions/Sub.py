@@ -57,14 +57,14 @@ class Sub(CloudFormationLintRule):
         supported_functions = [
             'Fn::Base64',
             'Fn::FindInMap',
-            'Fn::GetAtt',
             'Fn::GetAZs',
-            'Fn::ImportValue',
+            'Fn::GetAtt',
             'Fn::If',
+            'Fn::ImportValue',
             'Fn::Join',
             'Fn::Select',
             'Fn::Sub',
-            'Ref'
+            'Ref',
         ]
 
         matches = []
@@ -102,14 +102,13 @@ class Sub(CloudFormationLintRule):
         get_atts = cfn.get_valid_getatts()
 
         valid_pseudo_params = [
+            'AWS::AccountId',
+            'AWS::NotificationARNs',
+            'AWS::Partition',
             'AWS::Region',
+            'AWS::StackId',
             'AWS::StackName',
             'AWS::URLSuffix',
-            'AWS::StackId',
-            'AWS::Region',
-            'AWS::Partition',
-            'AWS::NotificationARNs',
-            'AWS::AccountId'
         ]
 
         odd_list_params = [

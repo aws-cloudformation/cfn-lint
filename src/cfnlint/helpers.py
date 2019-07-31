@@ -33,11 +33,30 @@ TAG_MAP = 'tag:yaml.org,2002:map'
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
 CONDITION_FUNCTIONS = ['Fn::If']
-REGIONS = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'ca-central-1',
-           'eu-central-1', 'eu-west-1', 'eu-west-2', 'ap-northeast-1',
-           'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2', 'ap-south-1',
-           'sa-east-1', 'eu-west-3', 'ap-northeast-3', 'us-gov-west-1',
-           'us-gov-east-1', 'eu-north-1', 'ap-east-1', 'cn-north-1', 'cn-northwest-1']
+REGIONS = [
+    'ap-east-1',
+    'ap-northeast-1',
+    'ap-northeast-2',
+    'ap-northeast-3',
+    'ap-south-1',
+    'ap-southeast-1',
+    'ap-southeast-2',
+    'ca-central-1',
+    'cn-north-1',
+    'cn-northwest-1',
+    'eu-central-1',
+    'eu-north-1',
+    'eu-west-1',
+    'eu-west-2',
+    'eu-west-3',
+    'sa-east-1',
+    'us-east-1',
+    'us-east-2',
+    'us-gov-east-1',
+    'us-gov-west-1',
+    'us-west-1',
+    'us-west-2',
+]
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
@@ -49,30 +68,29 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 
 AVAILABILITY_ZONES = [
-    'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
-    'us-east-2a', 'us-east-2b', 'us-east-2c',
-    'us-west-1a', 'us-west-1b', 'us-west-1c',
-    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d',
-    'ca-central-1a', 'ca-central-1b',
-    'sa-east-1a', 'sa-east-1b', 'sa-east-1c',
-    'eu-west-1a', 'eu-west-1b', 'eu-west-1c',
-    'eu-west-2a', 'eu-west-2b', 'eu-west-2c',
-    'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
-    'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
-    'eu-central-2a', 'eu-central-2b', 'eu-central-2c',
+    'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
     'ap-northeast-1a', 'ap-northeast-1b', 'ap-northeast-1c', 'ap-northeast-1d',
     'ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c',
     'ap-northeast-3a',
+    'ap-south-1a', 'ap-south-1b', 'ap-south-1c',
     'ap-southeast-1a', 'ap-southeast-1b', 'ap-southeast-1c',
     'ap-southeast-2a', 'ap-southeast-2b', 'ap-southeast-2c',
-    'ap-south-1a', 'ap-south-1b', 'ap-south-1c',
+    'ca-central-1a', 'ca-central-1b',
     'cn-north-1a', 'cn-north-1b',
     'cn-northwest-1a', 'cn-northwest-1b', 'cn-northwest-1c',
-    'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
-    'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
-    'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
+    'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
     'eu-north-1a', 'eu-north-1b', 'eu-north-1c',
-    'ap-east-1a', 'ap-east-1b', 'ap-east-1c'
+    'eu-west-1a', 'eu-west-1b', 'eu-west-1c',
+    'eu-west-2a', 'eu-west-2b', 'eu-west-2c',
+    'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
+    'me-south-1a', 'me-south-1b', 'me-south-1c',
+    'sa-east-1a', 'sa-east-1b', 'sa-east-1c',
+    'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
+    'us-east-2a', 'us-east-2b', 'us-east-2c',
+    'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
+    'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
+    'us-west-1a', 'us-west-1b', 'us-west-1c',
+    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d',
 ]
 
 FUNCTIONS = [
