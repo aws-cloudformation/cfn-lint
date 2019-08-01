@@ -82,8 +82,9 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should have a length above or equal to MinLength'
 
+        value = allowed_value if isinstance(allowed_value, six.string_types) else str(allowed_value)
         if isinstance(min_length, six.integer_types):
-            if len(allowed_value) < min_length:
+            if len(value) < min_length:
                 return([RuleMatch(path, message)])
 
         return []
@@ -94,8 +95,9 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should have a length below or equal to MaxLength'
 
+        value = allowed_value if isinstance(allowed_value, six.string_types) else str(allowed_value)
         if isinstance(max_length, six.integer_types):
-            if len(allowed_value) > max_length:
+            if len(value) > max_length:
                 return([RuleMatch(path, message)])
 
         return []
