@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import logging
+from six import StringIO
 import cfnlint.core  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 from mock import patch, mock_open
@@ -80,6 +81,16 @@ class TestCli(BaseTestCase):
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
         self.assertEqual(len(matches), 1)
+
+    def test_template_via_stdin(self):
+        """Test getting the template from stdin doesn't crash"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        with open(filename, 'r') as fp:
+            file_content = fp.read()
+
+        with patch('sys.stdin', StringIO(file_content)):
+            (_, filenames, _) = cfnlint.core.get_args_filenames([])
+            assert filenames == [None]
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_template_config(self, yaml_mock):

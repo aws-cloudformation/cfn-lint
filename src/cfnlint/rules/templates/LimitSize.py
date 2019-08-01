@@ -41,10 +41,11 @@ class LimitSize(CloudFormationLintRule):
         filename = cfn.filename
 
         # Only check if the file exists. The template could be passed in using stdIn
-        if Path(filename).is_file():
-            statinfo = os.stat(filename)
-            if statinfo.st_size > LIMITS['template']['body']:
-                message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
-                matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
+        if filename:
+            if Path(filename).is_file():
+                statinfo = os.stat(filename)
+                if statinfo.st_size > LIMITS['template']['body']:
+                    message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
+                    matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
 
         return matches
