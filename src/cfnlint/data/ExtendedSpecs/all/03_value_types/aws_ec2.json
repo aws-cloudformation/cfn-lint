@@ -41,5 +41,77 @@
         ]
       }
     }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::EC2::SecurityGroup.NameOrGroupId",
+    "value": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId",
+        "AWS::EC2::VPC": "DefaultSecurityGroup"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::EC2::SecurityGroup.NamesOrGroupIds",
+    "value": {
+      "GetAtt": {
+        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+      },
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::EC2::SecurityGroup.GroupId",
+    "value": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::EC2::SecurityGroup.GroupIds",
+    "value": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::EC2::SecurityGroup.Description",
+    "value": {
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
+    }
   }
 ]

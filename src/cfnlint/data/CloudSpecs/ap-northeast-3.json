@@ -3791,8 +3791,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SecurityGroups": {
@@ -4222,7 +4222,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "SecurityGroupNameOrId"
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SourceSecurityGroupName": {
@@ -8349,8 +8349,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetIds": {
@@ -10099,8 +10099,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetIds": {
@@ -13810,8 +13810,8 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "SpotPrice": {
@@ -15661,8 +15661,8 @@
           "Type": "List",
           "UpdateType": "Conditional",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SecurityGroups": {
@@ -15673,8 +15673,8 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "SourceDestCheck": {
@@ -16148,7 +16148,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SecurityGroupDescription"
+            "ValueType": "AWS::EC2::SecurityGroup.Description"
           }
         },
         "GroupName": {
@@ -16314,7 +16314,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SecurityGroupNameOrId"
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SourceSecurityGroupName": {
@@ -18042,8 +18042,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SnapshotArns": {
@@ -18450,8 +18450,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "Subnets": {
@@ -18634,8 +18634,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetMappings": {
@@ -22945,6 +22945,58 @@
         "host"
       ]
     },
+    "AWS::EC2::SecurityGroup.Description": {
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
+    },
+    "AWS::EC2::SecurityGroup.GroupId": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.GroupIds": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.NameOrGroupId": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId",
+        "AWS::EC2::VPC": "DefaultSecurityGroup"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.NamesOrGroupIds": {
+      "GetAtt": {
+        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+      },
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
     "AWS::EC2::VPC.Id": {
       "GetAtt": {
         "AWS::EC2::SecurityGroup": "VpcId",
@@ -24960,81 +25012,6 @@
         "AWS::RDS::DBCluster",
         "AWS::RDS::DBInstance"
       ]
-    },
-    "SecurityGroup": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ],
-        "Resources": [
-          "AWS::EC2::SecurityGroup"
-        ]
-      }
-    },
-    "SecurityGroupDescription": {
-      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
-      "StringMax": "255",
-      "StringMin": ""
-    },
-    "SecurityGroupId": {
-      "GetAtt": {
-        "AWS::EC2::SecurityGroup": "GroupId",
-        "AWS::EC2::VPC": "DefaultSecurityGroup"
-      },
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ]
-      }
-    },
-    "SecurityGroupIds": {
-      "GetAtt": {
-        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
-      },
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
-    },
-    "SecurityGroupNameOrId": {
-      "GetAtt": {
-        "AWS::EC2::SecurityGroup": "GroupId",
-        "AWS::EC2::VPC": "DefaultSecurityGroup"
-      },
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ],
-        "Resources": [
-          "AWS::EC2::SecurityGroup"
-        ]
-      }
-    },
-    "SecurityGroupNameOrIds": {
-      "GetAtt": {
-        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
-      },
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
-    },
-    "SecurityGroups": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
     },
     "ServiceDiscoveryDnsType": {
       "AllowedValues": [
