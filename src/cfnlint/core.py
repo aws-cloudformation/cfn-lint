@@ -16,6 +16,7 @@
 """
 import logging
 import os
+import sys
 from jsonschema.exceptions import ValidationError
 from cfnlint import RulesCollection
 import cfnlint.config
@@ -138,6 +139,9 @@ def get_args_filenames(cli_args):
         )
         print(rules)
         exit(0)
+
+    if not sys.stdin.isatty():
+        return(config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
