@@ -55,6 +55,7 @@ region_map = {
 
 exclude_regions = {
     'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
+    'Middle East (Bahrain)': 'me-south-1',
 }
 
 service_map = {
