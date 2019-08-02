@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import warnings
 import sys
 import json
 import subprocess
@@ -63,7 +64,31 @@ class BaseCliTestCase(BaseTestCase):
                     self.assertItemsEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
                         len(expected_results), len(matches), filename))
 
-    def run_module_integration_scenarios(self, rules):
+    def run_module_integration_scenarios(self, config):
+        """ Run integration tests """
+
+        for scenario in self.scenarios:
+            filename = scenario.get('filename')
+            results_filename = scenario.get('results_filename')
+            expected_results = scenario.get('results', [])
+
+            linter = cfnlint.Linter()
+            linter.config = config
+            linter.config.templates = [filename]
+
+            if results_filename and not expected_results:
+                with open(results_filename) as json_data:
+                    expected_results = json.load(json_data)
+
+            linter.lint()
+            matches = linter.matches
+
+            if len(expected_results) != len(matches):
+                print(matches)
+            self.assertEqual(len(expected_results), len(matches), 'Expected {} failures, got {} on {}'.format(
+                len(expected_results), len(matches), filename))
+
+    def run_module_legacy_integration_scenarios(self, rules):
         """ Test using cfnlint as a module integrated into another package"""
 
         cfnlint.core.configure_logging(None)
@@ -85,6 +110,9 @@ class BaseCliTestCase(BaseTestCase):
                 rules,
                 regions
             )
+
+            if len(expected_results) != len(matches):
+                print(matches)
 
             # Only check that the error count matches as the formats are different
             self.assertEqual(len(expected_results), len(matches), 'Expected {} failures, got {} on {}'.format(

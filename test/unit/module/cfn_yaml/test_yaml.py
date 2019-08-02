@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from six import StringIO
 from mock import patch
-from cfnlint import Template  # pylint: disable=E0401
+from cfnlint.template import Template  # pylint: disable=E0401
 from cfnlint.rules import RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
@@ -48,7 +48,7 @@ class TestYamlParse(BaseTestCase):
     def test_success_parse_stdin(self):
         """Test Successful YAML Parsing through stdin"""
         for _, values in self.filenames.items():
-            filename = '-'
+            filename = None
             failures = values.get('failures')
             with open(values.get('filename'), 'r') as fp:
                 file_content = fp.read()

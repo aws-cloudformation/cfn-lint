@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import warnings
 from test.integration import BaseCliTestCase
 import cfnlint.core
 
@@ -47,78 +48,103 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
                         "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
                     }
+                },
+                {
+                    "Filename": "test/fixtures/templates/good/transform.yaml",
+                    "Level": "Informational",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 18
+                        },
+                        "Path": [
+                            "Resources",
+                            "AppName"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 3,
+                            "LineNumber": 18
+                        }
+                    },
+                    "Message": "The default action when replacing/removing a resource is to delete it. Set explicit values for UpdateReplacePolicy / DeletionPolicy on potentially stateful resource: Resources/AppName",
+                    "Rule": {
+                        "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+                        "Id": "I3011",
+                        "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
                 }
             ],
-            'exit_code': 4,
+            'exit_code': 12,
         },
         {
             'filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
             'results': [
                 {
-                    'Filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
-                    'Location': {
-                        'Start': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
+                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
                         },
-                        'End': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
-                        },
-                        'Path': None
+                        "Path": None,
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
+                        }
                     },
-                    'Rule': {
-                        'Id': 'E0001',
-                        'Description': 'Errors found when performing transformation on the template',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint',
-                        'ShortDescription': 'Error found when transforming the template'
-                    },
-                    'Level': 'Error',
-                    'Message': 'Error transforming template: Resource with id [AppName] is invalid. Resource is missing the required [Location] property.'
+                    "Message": "Error transforming template: Resource with id [AppName] is invalid. Resource is missing the required [Location] property.",
+                    "Rule": {
+                        "Description": "Errors found when performing transformation on the template",
+                        "Id": "E0001",
+                        "ShortDescription": "Error found when transforming the template",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint"
+                    }
                 },
                 {
-                    'Filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
-                    'Location': {
-                        'Start': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
+                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
                         },
-                        'End': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
-                        },
-                        'Path': None
+                        "Path": None,
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
+                        }
                     },
-                    'Rule': {
-                        'Id': 'E0001',
-                        'Description': 'Errors found when performing transformation on the template',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint',
-                        'ShortDescription': 'Error found when transforming the template'
-                    },
-                    'Level': 'Error',
-                    'Message': "Error transforming template: Resource with id [ExampleLayer] is invalid. Missing required property 'ContentUri'."
+                    "Message": "Error transforming template: Resource with id [ExampleLayer] is invalid. Missing required property 'ContentUri'.",
+                    "Rule": {
+                        "Description": "Errors found when performing transformation on the template",
+                        "Id": "E0001",
+                        "ShortDescription": "Error found when transforming the template",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint"
+                    }
                 },
                 {
-                    'Filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
-                    'Location': {
-                        'Start': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
+                    "Filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
                         },
-                        'End': {
-                            'ColumnNumber': 1,
-                            'LineNumber': 1
-                        },
-                        'Path': None
+                        "Path": None,
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 1
+                        }
                     },
-                    'Rule': {
-                        'Id': 'E0001',
-                        'Description': 'Errors found when performing transformation on the template',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint',
-                        'ShortDescription': 'Error found when transforming the template'
-                    },
-                    'Level': 'Error',
-                    'Message': "Error transforming template: Resource with id [myFunctionMyTimer] is invalid. Missing required property 'Schedule'."
+                    "Message": "Error transforming template: Resource with id [myFunctionMyTimer] is invalid. Missing required property 'Schedule'.",
+                    "Rule": {
+                        "Description": "Errors found when performing transformation on the template",
+                        "Id": "E0001",
+                        "ShortDescription": "Error found when transforming the template",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint"
+                    }
                 }
             ],
             'exit_code': 2,
@@ -298,10 +324,20 @@ class TestQuickStartTemplates(BaseCliTestCase):
 
     def test_templates(self):
         """Test Successful JSON Parsing"""
-        self.run_scenarios()
+        self.run_scenarios(['-c', 'I'])
 
     def test_module_integration(self):
         """ Test same templates using integration approach"""
-        rules = cfnlint.core.get_rules(
-            [], [], ['E', 'W'], {}, False)
-        self.run_module_integration_scenarios(rules)
+
+        config = cfnlint.config.ConfigMixIn()
+        config.include_checks = ['I']
+        self.run_module_integration_scenarios(config)
+
+    def test_module_integration_legacy(self):
+        """ Test same templates using integration approach"""
+
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            rules = cfnlint.core.get_rules(
+                [], [], ['E', 'I', 'W'], {}, False)
+            self.run_module_legacy_integration_scenarios(rules)

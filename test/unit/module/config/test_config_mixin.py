@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 from test.testlib.testcase import BaseTestCase
+import jsonschema
 from mock import patch
 import cfnlint.config  # pylint: disable=E0401
 from cfnlint.helpers import REGIONS
@@ -30,17 +31,20 @@ class TestConfigMixIn(BaseTestCase):
 
         config = cfnlint.config.ConfigMixIn(['--regions', 'us-west-1'])
         self.assertEqual(config.regions, ['us-west-1'])
-        self.assertEqual(config.include_checks, ['I', 'I1111'])
+        self.assertEqual(config.include_checks, ['E', 'W', 'I', 'I1111'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_precedence(self, yaml_mock):
         """ Test precedence in  """
 
         yaml_mock.side_effect = [
-            {"include_checks": ["I"], "ignore_checks": ["E3001"], "regions": ["us-west-2"]},
+            {"include_checks": ["I"],
+             "ignore_checks": ["E3001"],
+             "regions": ["us-west-2"]},
             {}
         ]
-        config = cfnlint.config.ConfigMixIn(['--include-checks', 'I1234', 'I4321'])
+        config = cfnlint.config.ConfigMixIn(
+            ['--include-checks', 'I1234', 'I4321'])
         config.template_args = {
             'Metadata': {
                 'cfn-lint': {
@@ -54,7 +58,7 @@ class TestConfigMixIn(BaseTestCase):
         # config files wins
         self.assertEqual(config.regions, ['us-west-2'])
         # CLI should win
-        self.assertEqual(config.include_checks, ['I1234', 'I4321'])
+        self.assertEqual(config.include_checks, ['E', 'W', 'I1234', 'I4321'])
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ['W3001'])
 
@@ -110,7 +114,9 @@ class TestConfigMixIn(BaseTestCase):
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
-        self.assertEqual(config.templates, ['test/fixtures/templates/badpath/*.yaml'])
+        self.assertEqual(
+            config.templates,
+            ['test/fixtures/templates/badpath/*.yaml'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_expand_ignore_templates(self, yaml_mock):
@@ -118,13 +124,115 @@ class TestConfigMixIn(BaseTestCase):
 
         yaml_mock.side_effect = [
             {
-                'templates': ['test/fixtures/templates/bad/resources/iam/*.yaml'],
-                'ignore_templates': ['test/fixtures/templates/bad/resources/iam/resource_*.yaml']},
+                'templates': [
+                    'test/fixtures/templates/bad/resources/iam/*.yaml'],
+                'ignore_templates': [
+                    'test/fixtures/templates/bad/resources/iam/resource_*.yaml'
+                ]},
             {}
         ]
         config = cfnlint.config.ConfigMixIn([])
 
         # test defaults
         self.assertNotIn(
-            'test/fixtures/templates/bad/resources/iam/resource_policy.yaml', config.templates)
+            'test/fixtures/templates/bad/resources/iam/resource_policy.yaml',
+            config.templates)
         self.assertEqual(len(config.templates), 4)
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_set_regions(self, yaml_mock):
+        """ Test regions is returned correctly when manually configured """
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
+        config = cfnlint.config.ConfigMixIn([])
+        config.regions = ['us-west-2']
+
+        self.assertEqual(config.regions, ['us-west-2'])
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_get_regions_manual_config(self, yaml_mock):
+        """ Test that manual configuration overrides .cfnlintrc """
+
+        yaml_mock.side_effect = [
+            {'regions': ['ca-central-1']},
+            {}
+        ]
+
+        config = cfnlint.config.ConfigMixIn([])
+        config.regions = ['us-west-2']
+
+        self.assertEqual(config.regions, ['us-west-2'])
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_set_regions_fails(self, yaml_mock):
+        """ Test that manual configuration failes with invalid data """
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
+        config = cfnlint.config.ConfigMixIn([])
+        try:
+            config.regions = 'us-west-2'
+            self.assertEqual(1, 0, 'No error was thrown')
+        except jsonschema.exceptions.ValidationError:
+            pass
+        except:  # pylint: disable=bare-except
+            self.assertEqual(1, 0,
+                             'Inappropriate error was returned from config')
+
+        self.assertEqual(config.regions, ['us-east-1'])
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_set_properties(self, yaml_mock):
+        """ Test that manual configuration of all properties """
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
+        config = cfnlint.config.ConfigMixIn([])
+        try:
+            config.regions = ['us-west-2']
+            config.configure_rules = {'x': {'value': 'key'}}
+            config.templates = ['test.yaml']
+            config.include_experimental = True
+            config.include_checks = ['rules']
+            config.ignore_checks = ['1']
+            config.override_spec = 'override.json'
+
+            self.assertEqual(config.regions, ['us-west-2'])
+            self.assertEqual(config.configure_rules, {'x': {'value': 'key'}})
+            self.assertEqual(config.templates, ['test.yaml'])
+            self.assertTrue(config.include_experimental)
+            self.assertEqual(config.include_checks, ['E', 'W', 'rules'])
+            self.assertEqual(config.ignore_checks, ['1'])
+            self.assertEqual(config.override_spec, 'override.json')
+        except Exception as err:  # pylint: disable=broad-except
+            self.assertEqual(1, 0,
+                             'Inappropriate error was returned '
+                             'from config: %s' % err)
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_get_properties_error(self, yaml_mock):
+        """ Test that manual configuration of all properties """
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+
+        config = cfnlint.config.ConfigMixIn([])
+        try:
+            _ = config.bad_property
+        except AttributeError:
+            pass
+        except:  # pylint: disable=bare-except
+            self.assertEqual(1, 0,
+                             'Inappropriate error was returned from config')

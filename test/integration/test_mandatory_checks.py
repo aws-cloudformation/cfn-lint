@@ -137,8 +137,8 @@ class TestDirectives(BaseCliTestCase):
                         'Id': 'E3002',
                         'ShortDescription': 'Resource properties are valid',
                         'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
-                        }
-                    },
+                    }
+                },
                 {
                     'Filename': 'test/fixtures/templates/bad/core/mandatory_checks.yaml',
                     'Level': 'Error',

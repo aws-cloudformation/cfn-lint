@@ -12,6 +12,7 @@ class TestDescription(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestDescription, self).setUp()
+        self.linter.config.mandatory_checks = ['E1004']
         self.collection.register(Description())
         self.success_templates = [
             'test/fixtures/templates/good/templates/description.yaml'

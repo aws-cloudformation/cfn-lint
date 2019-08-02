@@ -26,9 +26,9 @@ class TestConfigFileArgs(BaseTestCase):
 
     def test_config_parser_read_config(self):
         """ Testing one file successful """
-        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
         config = cfnlint.config.ConfigFileArgs()
         config_file = Path('test/fixtures/configs/cfnlintrc_read.yaml')
+        # pylint: disable=protected-access
         config_template = config._read_config(config_file)
         self.assertEqual(
             config_template,
@@ -41,7 +41,6 @@ class TestConfigFileArgs(BaseTestCase):
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_parser_read(self, yaml_mock):
         """ Testing one file successful """
-        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
         yaml_mock.side_effect = [
             {"regions": ["us-west-1"]},
             {}
@@ -74,7 +73,9 @@ class TestConfigFileArgs(BaseTestCase):
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_parser_fail_on_config_rules(self, yaml_mock):
-        """ test the read call to the config parser is parsing configure rules correctly"""
+        """ test the read call to the config parser is
+            parsing configure rules correctly
+        """
 
         yaml_mock.side_effect = [
             {
@@ -87,4 +88,6 @@ class TestConfigFileArgs(BaseTestCase):
         ]
 
         results = cfnlint.config.ConfigFileArgs()
-        self.assertEqual(results.file_args, {'configure_rules': {'E3012': {'strict': False}}})
+        self.assertEqual(
+            results.file_args,
+            {'configure_rules': {'E3012': {'strict': False}}})

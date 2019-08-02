@@ -8,7 +8,7 @@ import logging
 import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
-import cfnlint
+import cfnlint.rules
 from cfnlint.decode.node import str_node, dict_node, list_node
 
 
@@ -177,11 +177,13 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             if object_pairs_hook is not None:
                 try:
-                    beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1)
+                    beg_mark, end_mark = get_beg_end_mark(
+                        s, orginal_end, end + 1)
                     result = object_pairs_hook(pairs, beg_mark, end_mark)
                     return result, end + 1
                 except DuplicateError as err:
-                    raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+                    raise JSONDecodeError(
+                        'Duplicate found {}'.format(err), s, end)
                 except NullError as err:
                     raise JSONDecodeError('Null Error {}'.format(err), s, end)
             pairs = {}
@@ -191,7 +193,8 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
             return pairs, end + 1
 
         if nextchar != '"':
-            raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
+            raise JSONDecodeError(
+                'Expecting property name enclosed in double quotes', s, end)
     end += 1
     while True:
         begin = end - 1
@@ -240,13 +243,15 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         end += 1
         if nextchar != '"':
             raise JSONDecodeError(
-                'Expecting property name enclosed in double quotes', s, end - 1)
+                'Expecting property name enclosed in double quotes',
+                s, end - 1)
     if object_pairs_hook is not None:
         try:
             beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end)
             result = object_pairs_hook(pairs, beg_mark, end_mark)
         except DuplicateError as err:
-            raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
+            raise JSONDecodeError(
+                'Duplicate found {}'.format(err), s, begin, key)
         except NullError as err:
             raise JSONDecodeError('Null Error {}'.format(err), s, begin, key)
         return result, end
@@ -345,8 +350,8 @@ def load(filename):
 
     content = ''
 
-    if not sys.stdin.isatty():
-        for line in fileinput.input(files=filename):
+    if not filename:
+        for line in fileinput.input(files='-'):
             content = content + line
     else:
         with open(filename) as fp:

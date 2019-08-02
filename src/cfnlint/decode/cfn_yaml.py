@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 import fileinput
 import logging
-import sys
 import six
 from yaml.composer import Composer
 from yaml.reader import Reader
@@ -15,7 +14,7 @@ from yaml import SequenceNode
 from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
-import cfnlint
+import cfnlint.rules
 from cfnlint.decode.node import str_node, dict_node, list_node
 
 try:
@@ -201,8 +200,8 @@ def load(filename):
 
     content = ''
 
-    if not sys.stdin.isatty():
-        for line in fileinput.input(files=filename):
+    if not filename:
+        for line in fileinput.input(files='-'):
             content = content + line
     else:
         with open(filename) as fp:

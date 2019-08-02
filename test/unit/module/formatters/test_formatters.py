@@ -15,27 +15,22 @@ class TestFormatters(BaseTestCase):
 
         # Run a broken template
         filename = 'test/fixtures/templates/bad/formatters.yaml'
-        (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'json', '--include-checks', 'I'])
+        linter = cfnlint.CliLinter(['--template', filename, '--format',
+                                    'json', '--include-checks', 'I'])
 
-        results = []
-        for filename in filenames:
-            (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-            results.extend(
-                cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+        linter.lint()
 
         # Validate Formatter class initiated
-        self.assertEqual('JsonFormatter', formatter.__class__.__name__)
+        self.assertEqual('JsonFormatter', linter.formatter.__class__.__name__)
         # We need 3 errors (Information, Warning, Error)
-        self.assertEqual(len(results), 3)
+        self.assertEqual(len(linter.matches), 3)
         # Check the errors
-        self.assertEqual(results[0].rule.id, 'I3011')
-        self.assertEqual(results[1].rule.id, 'W1020')
-        self.assertEqual(results[2].rule.id, 'E3012')
+        self.assertEqual(linter.matches[0].rule.id, 'I3011')
+        self.assertEqual(linter.matches[1].rule.id, 'W1020')
+        self.assertEqual(linter.matches[2].rule.id, 'E3012')
 
         # Get the JSON output
-        json_results = json.loads(formatter.print_matches(results))
+        json_results = json.loads(linter.formatter.print_matches(linter.matches))
 
         # Check the 3 errors again
         self.assertEqual(len(json_results), 3)

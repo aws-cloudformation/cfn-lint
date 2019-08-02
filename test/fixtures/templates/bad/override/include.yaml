@@ -6,7 +6,7 @@ Resources:
   myVpc1:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: "127.0.0.1/32"
+      CidrBlock: "127.0.0.1/28"
       InstanceTenancy: default
   myS3Bucket:
     Type: AWS::S3::Bucket
@@ -17,12 +17,13 @@ Resources:
       Bucket:
         Ref: myS3Bucket
       PolicyDocument:
-        Version: '2008-10-17'
+        Version: "2012-10-17"
         Statement:
-        - Action:
-          - s3:PutObject
-          Effect: Allow
-          Resource:
-            - '*'
+          - Action:
+              - s3:PutObject
+            Effect: Allow
+            Principal: "arn"
+            Resource:
+              - "*"
   mySnsTopic:
     Type: AWS::SNS::Topic

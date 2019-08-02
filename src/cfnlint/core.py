@@ -2,9 +2,10 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import logging
 import os
+import logging
 import sys
+import warnings
 from jsonschema.exceptions import ValidationError
 from cfnlint.rules import RulesCollection
 import cfnlint.config
@@ -12,33 +13,34 @@ import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.helpers import REGIONS
-
+from cfnlint import CfnLintExitException as _CfnLintExitException
+from cfnlint import InvalidRegionException as _InvalidRegionException
+from cfnlint import UnexpectedRuleException as _UnexpectedRuleException
+from cfnlint import refactored
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
+LINTER = None
 
 
-class CfnLintExitException(Exception):
-    """Generic exception used when the cli should exit"""
-
-    def __init__(self, msg=None, exit_code=1):
-        if msg is None:
-            msg = 'process failed with exit code %s' % exit_code
-        super(CfnLintExitException, self).__init__(msg)
-        self.exit_code = exit_code
+@refactored('CfnLintExitException is refactored and deprecated. Please use cfnlint.CfnLintExitException')
+class CfnLintExitException(_CfnLintExitException):
+    """ Refactored class RuleMatch """
 
 
-class InvalidRegionException(CfnLintExitException):
-    """When an unsupported/invalid region is supplied"""
+@refactored('InvalidRegionException is refactored and deprecated. Please use cfnlint.InvalidRegionException')
+class InvalidRegionException(_InvalidRegionException):
+    """ Refactored class RuleMatch """
 
 
-class UnexpectedRuleException(CfnLintExitException):
-    """When processing a rule fails in an unexpected way"""
+@refactored('UnexpectedRuleException is refactored and deprecated. Please use cfnlint.UnexpectedRuleException')
+class UnexpectedRuleException(_UnexpectedRuleException):
+    """ Refactored class RuleMatch """
 
 
 def run_cli(filename, template, rules, regions, override_spec, mandatory_rules=None):
     """Process args and run"""
-
+    warnings.warn('get_exit_code is refactored and deprecated. Please use cfnlint.Linter')
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
@@ -47,6 +49,7 @@ def run_cli(filename, template, rules, regions, override_spec, mandatory_rules=N
 
 def get_exit_code(matches):
     """ Determine exit code """
+    warnings.warn('get_exit_code is refactored and deprecated. Please use cfnlint.Linter')
     exit_code = 0
     for match in matches:
         if match.rule.id[0] == 'I':
@@ -61,6 +64,7 @@ def get_exit_code(matches):
 
 def get_formatter(fmt):
     """ Get Formatter"""
+    warnings.warn('get_formatter is refactored and deprecated. Please use cfnlint.Linter')
     formatter = {}
     if fmt:
         if fmt == 'quiet':
@@ -78,6 +82,7 @@ def get_formatter(fmt):
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
     """Get rules"""
+    warnings.warn('get_rules is refactored and deprecated. Please use cfnlint.Linter')
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -94,12 +99,14 @@ def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, i
 
 def configure_logging(debug_logging):
     """ Backwards compatibility for integrators """
+    warnings.warn('configure_logging is refactored and deprecated. Please use cfnlint.Linter')
     LOGGER.info('Update your integrations to use "cfnlint.config.configure_logging" instead')
     cfnlint.config.configure_logging(debug_logging, False)
 
 
 def get_args_filenames(cli_args):
     """ Get Template Configuration items and set them as default values"""
+    warnings.warn('get_args_filenames is refactored and deprecated. Please use cfnlint.Linter')
     try:
         config = cfnlint.config.ConfigMixIn(cli_args)
     except ValidationError as e:
@@ -147,7 +154,7 @@ def get_args_filenames(cli_args):
 
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
-
+    warnings.warn('get_template_rules is refactored and deprecated. Please use cfnlint.Linter')
     (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
 
     if matches:
@@ -169,12 +176,13 @@ def get_template_rules(filename, args):
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
     """Run Checks against the template"""
+    warnings.warn('run_checks is refactored and deprecated. Please use cfnlint.Linter')
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
             msg = 'Regions %s are unsupported. Supported regions are %s' % (
                 unsupported_regions, REGIONS)
-            raise InvalidRegionException(msg, 32)
+            raise _InvalidRegionException(msg, 32)
 
     matches = []
 
@@ -185,7 +193,8 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
         try:
             matches.extend(runner.run())
         except Exception as err:  # pylint: disable=W0703
-            msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
+            msg = 'Tried to process rules on file %s but got an error: %s' % (
+                filename, str(err))
             UnexpectedRuleException(msg, 1)
     matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 

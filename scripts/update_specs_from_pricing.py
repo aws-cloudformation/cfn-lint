@@ -1,14 +1,11 @@
 #!/usr/bin/env python
 """
+Updates our dynamic patches from the pricing API
+This script requires Boto3 and Credentials to call the Pricing API
+
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-
-"""
-    Updates our dynamic patches from the pricing API
-    This script requires Boto3 and Credentials to call the Pricing API
-"""
-
 
 import boto3
 import json

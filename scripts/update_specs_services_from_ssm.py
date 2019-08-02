@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """
+Updates our dynamic patches from SSM data
+This script requires Boto3 and Credentials to call the SSM API
+
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
@@ -8,11 +11,6 @@ import json
 import boto3
 from cfnlint.helpers import get_url_content
 from cfnlint.maintenance import SPEC_REGIONS
-
-"""
-    Updates our dynamic patches from SSM data
-    This script requires Boto3 and Credentials to call the SSM API
-"""
 
 LOGGER = logging.getLogger('cfnlint')
 

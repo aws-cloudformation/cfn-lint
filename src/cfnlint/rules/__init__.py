@@ -130,8 +130,14 @@ class CloudFormationLintRule(object):
 
 class RulesCollection(object):
     """Collection of rules"""
+    rules = None
+    configure_rules = None
+    include_rules = None
+    ignore_rules = None
+    mandatory_rules = None
 
-    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None,
+                 include_experimental=False, mandatory_rules=None):
         self.rules = []
 
         # Whether "experimental" rules should be added
@@ -170,6 +176,45 @@ class RulesCollection(object):
     def __repr__(self):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
+
+    def get_enabled_rules(self, ignore_rules=None, include_rules=None, configure_rules=None,
+                          include_experimental=False, mandatory_rules=None):
+        """ Return all enabled rules """
+        rules = []
+
+        def is_rule_enabled(rule_id, experimental):
+            """ Checks if an individual rule is valid """
+            # Evaluate experimental rules
+            if experimental and not include_experimental:
+                return False
+
+            # Evaluate includes first:
+            include_filter = False
+            for include_rule in include_rules:
+                if rule_id.startswith(include_rule):
+                    include_filter = True
+            if not include_filter:
+                return False
+
+            # Enable mandatory rules without checking for if they are ignored
+            for mandatory_rule in mandatory_rules:
+                if rule_id.startswith(mandatory_rule):
+                    return True
+
+            # Allowing ignoring of rules based on prefix to ignore checks
+            for ignore_rule in ignore_rules:
+                if rule_id.startswith(ignore_rule) and ignore_rule:
+                    return False
+
+            return True
+
+        for rule in self.rules:
+            if is_rule_enabled(rule.id, rule.experimental):
+                if rule.id in configure_rules:
+                    rule.configure(configure_rules[rule.id])
+                rules.append(rule)
+
+        return rules
 
     def is_rule_enabled(self, rule_id, experimental):
         """ Checks if an individual rule is valid """

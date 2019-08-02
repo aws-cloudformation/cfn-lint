@@ -40,20 +40,20 @@ class TestResourceProperties(BaseRuleTestCase):
     def test_E3012_in_bad_template(self):
         """Test E3012 in known-bad template"""
         filename = 'test/fixtures/templates/bad/resource_properties.yaml'
-        (args, _, _) = cfnlint.core.get_args_filenames(['--template', filename])
-        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
-        matched_rule_ids = [r.rule.id for r in results]
+        linter = cfnlint.Linter()
+        linter.config.templates = [filename]
+        linter.lint()
+        matched_rule_ids = [r.rule.id for r in linter.matches]
         self.assertIn('E3012', matched_rule_ids)
 
     def test_E3012_match_has_extra_attributes(self):
         """Test E3012 in has custom attributes"""
         filename = 'test/fixtures/templates/bad/resource_properties.yaml'
-        (args, _, _) = cfnlint.core.get_args_filenames(['--template', filename])
-        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
+        linter = cfnlint.Linter()
+        linter.config.templates = [filename]
+        linter.lint()
         custom_attrs = ['actual_type', 'expected_type']
-        for r in results:
+        for r in linter.matches:
             if r.rule.id == 'E3012':
                 for ca in custom_attrs:
                     assert hasattr(r, ca), "Attribute {} was not found".format(ca)

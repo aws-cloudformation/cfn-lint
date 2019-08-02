@@ -12,19 +12,21 @@ class BaseRuleTestCase(BaseTestCase):
     """Used for Testing Rules"""
     success_templates = [
     ]
+    linter = None
 
     def setUp(self):
         """Setup"""
         self.collection = RulesCollection(include_rules=['I'], include_experimental=True)
+        self.linter = cfnlint.Linter()
+        self.linter.config.ignore_checks = ['I', 'W', 'E']
 
     def helper_file_positive(self):
         """Success test"""
         for filename in self.success_templates:
-            template = self.load_template(filename)
-            good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
-            good_runner.transform()
-            failures = good_runner.run()
-            assert [] == failures, 'Got failures {} on {}'.format(failures, filename)
+            self.linter.config.templates = [filename]
+            self.linter.lint()
+            self.assertListEqual([], self.linter.matches,
+                                 'Got failures {} on {}'.format(self.linter.matches, filename))
 
     def helper_file_rule_config(self, filename, config, err_count):
         """Success test with rule config included"""

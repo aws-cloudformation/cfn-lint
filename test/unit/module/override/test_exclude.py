@@ -13,11 +13,6 @@ import cfnlint.helpers
 class TestExclude(BaseTestCase):
     """Used for Testing Rules"""
 
-    def setUp(self):
-        """Setup"""
-        self.collection = RulesCollection()
-        self.collection.register(Configuration())
-
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
@@ -25,25 +20,20 @@ class TestExclude(BaseTestCase):
 
     def test_success_run(self):
         """Success test"""
-        filename = 'test/fixtures/templates/good/generic.yaml'
-        template = self.load_template(filename)
-        with open('test/fixtures/templates/override_spec/exclude.json') as fp:
-            custom_spec = json.load(fp)
+        filename = 'test/fixtures/templates/good/override/exclude.yaml'
 
-        cfnlint.helpers.set_specs(custom_spec)
-
-        good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
-        self.assertEqual([], good_runner.run())
+        linter = cfnlint.Linter()
+        linter.config.override_spec = 'test/fixtures/templates/override_spec/exclude.json'
+        linter.config.templates = [filename]
+        linter.lint()
+        self.assertEqual(0, len(linter.matches))
 
     def test_fail_run(self):
         """Failure test required"""
         filename = 'test/fixtures/templates/bad/override/exclude.yaml'
-        template = self.load_template(filename)
 
-        with open('test/fixtures/templates/override_spec/exclude.json') as fp:
-            custom_spec = json.load(fp)
-        cfnlint.helpers.set_specs(custom_spec)
-
-        bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
-        errs = bad_runner.run()
-        self.assertEqual(2, len(errs))
+        linter = cfnlint.Linter()
+        linter.config.override_spec = 'test/fixtures/templates/override_spec/exclude.json'
+        linter.config.templates = [filename]
+        linter.lint()
+        self.assertEqual(2, len(linter.matches))

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import json
 from test.testlib.testcase import BaseTestCase
 import cfnlint.helpers
-from cfnlint import Template  # pylint: disable=E0401
+from cfnlint.template import Template  # pylint: disable=E0401
 
 
 class TestTemplate(BaseTestCase):
@@ -175,7 +175,7 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.is_resource_available(
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
-                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             []
@@ -228,7 +228,7 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.is_resource_available(
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
-                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             [{'isPrimary': False}]
@@ -245,7 +245,7 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.is_resource_available(
                 ['Resources', 'AMIIDLookup', 'Properties', 'BadProperty',
-                    'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             [{'isPrimary': False}]
@@ -293,7 +293,7 @@ class TestTemplate(BaseTestCase):
             template.get_conditions_from_path(
                 template.template,
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
-                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+                 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
             ),
             {'isPrimary': {True}}
         )
@@ -356,7 +356,7 @@ class TestTemplate(BaseTestCase):
             template.get_conditions_from_path(
                 template.template,
                 ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
-                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+                 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
             ),
             {}
         )
