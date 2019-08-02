@@ -140,7 +140,7 @@ def get_args_filenames(cli_args):
         print(rules)
         exit(0)
 
-    if not sys.stdin.isatty():
+    if not sys.stdin.isatty() and not config.templates:
         return(config, [None], formatter)
 
     if not config.templates:
