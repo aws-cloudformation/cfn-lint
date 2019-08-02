@@ -1,6 +1,6 @@
 ### 0.23.1
 ###### Fixes
-- Fix an issue where anythign piped into ccfn-lint would result in ignoring the templates parameter (pull #[1081](https://github.com/aws-cloudformation/cfn-python-lint/pull/1081))
+- Fix an issue where anything piped into cfn-lint would result in ignoring the templates parameter (pull #[1081](https://github.com/aws-cloudformation/cfn-python-lint/pull/1081))
 
 ### 0.23.0
 ###### Features
