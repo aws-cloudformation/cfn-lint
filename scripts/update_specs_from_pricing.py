@@ -52,6 +52,7 @@ region_map = {
     'US West (N. California)': 'us-west-1',
     'China (Beijing)': 'cn-north-1',
     'China (Ningxia)': 'cn-northwest-1',
+    'Middle East (Bahrain)': 'me-south-1',
 }
 
 session = boto3.session.Session()
