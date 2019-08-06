@@ -16,7 +16,7 @@
 """
 from datetime import datetime
 from cfnlint.rules.resources.lmbd.DeprecatedRuntime import DeprecatedRuntime
-from cfnlint import RuleMatch
+from cfnlint.rules import RuleMatch
 
 
 class DeprecatedRuntimeEol(DeprecatedRuntime):

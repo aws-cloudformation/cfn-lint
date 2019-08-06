@@ -16,7 +16,7 @@
 """
 from datetime import datetime
 from cfnlint.helpers import load_resources
-from cfnlint import CloudFormationLintRule
+from cfnlint.rules import CloudFormationLintRule
 
 
 class DeprecatedRuntime(CloudFormationLintRule):

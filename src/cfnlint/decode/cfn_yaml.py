@@ -47,6 +47,7 @@ class CfnParseError(ConstructorError):
     """
     Error thrown when the template contains Cfn Error
     """
+
     def __init__(self, filename, message, line_number, column_number, key=' '):
 
         # Call the base class constructor with the parameters it needs
@@ -57,9 +58,9 @@ class CfnParseError(ConstructorError):
         self.line_number = line_number
         self.column_number = column_number
         self.message = message
-        self.match = cfnlint.Match(
+        self.match = cfnlint.rules.Match(
             line_number + 1, column_number + 1, line_number + 1,
-            column_number + 1 + len(key), filename, cfnlint.ParseError(), message=message)
+            column_number + 1 + len(key), filename, cfnlint.rules.ParseError(), message=message)
 
 
 class NodeConstructor(SafeConstructor):
@@ -91,7 +92,8 @@ class NodeConstructor(SafeConstructor):
             if key in mapping:
                 raise CfnParseError(
                     self.filename,
-                    'Duplicate resource found "{}" (line {})'.format(key, key_node.start_mark.line + 1),
+                    'Duplicate resource found "{}" (line {})'.format(
+                        key, key_node.start_mark.line + 1),
                     key_node.start_mark.line, key_node.start_mark.column, key)
             mapping[key] = value
 
@@ -112,7 +114,8 @@ class NodeConstructor(SafeConstructor):
         """Throw a null error"""
         raise CfnParseError(
             self.filename,
-            'Null value at line {0} column {1}'.format(node.start_mark.line + 1, node.start_mark.column + 1),
+            'Null value at line {0} column {1}'.format(
+                node.start_mark.line + 1, node.start_mark.column + 1),
             node.start_mark.line, node.start_mark.column, ' ')
 
 
@@ -138,6 +141,7 @@ class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver)
     Class for marked loading YAML
     """
     # pylint: disable=non-parent-init-called,super-init-not-called
+
     def __init__(self, stream, filename):
         Reader.__init__(self, stream)
         Scanner.__init__(self)

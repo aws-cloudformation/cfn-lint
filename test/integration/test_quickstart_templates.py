@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Template, RulesCollection, Runner  # pylint: disable=E0401
+from cfnlint import Template, Runner  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -23,6 +24,7 @@ from testlib.testcase import BaseTestCase
 
 class TestQuickStartTemplates(BaseTestCase):
     """Test QuickStart Templates Parsing """
+
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection(include_rules=['I'], include_experimental=True)
@@ -99,7 +101,8 @@ class TestQuickStartTemplates(BaseTestCase):
                 with open(results_filename) as json_data:
                     correct = json.load(json_data)
 
-                assert len(matches) == len(correct), 'Expected {} failures, got {} on {}'.format(len(correct), len(matches), filename)
+                assert len(matches) == len(correct), 'Expected {} failures, got {} on {}'.format(
+                    len(correct), len(matches), filename)
                 for c in correct:
                     matched = False
                     for match in matches:
@@ -109,10 +112,12 @@ class TestQuickStartTemplates(BaseTestCase):
                                 c['Rule']['Id'] == match.rule.id:
                             matched = True
                     assert matched is True, 'Expected error {} at line {}, column {}, path {} in matches for {}'.format(
-                            c['Rule']['Id'],
-                            c['Location']['Start']['LineNumber'],
-                            c['Location']['Start']['ColumnNumber'],
-                            "/".join(map(str, c['Location']['Path'])) if c['Location']['Path'] else "null",
-                            filename)
+                        c['Rule']['Id'],
+                        c['Location']['Start']['LineNumber'],
+                        c['Location']['Start']['ColumnNumber'],
+                        "/".join(map(str, c['Location']['Path'])
+                                 ) if c['Location']['Path'] else "null",
+                        filename)
             else:
-                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(
+                    failures, len(matches), filename)

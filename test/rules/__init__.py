@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import cfnlint.config
-from cfnlint import Runner, RulesCollection
+from cfnlint import Runner
+from cfnlint.rules import RulesCollection
 from testlib.testcase import BaseTestCase
 
 
@@ -44,7 +45,8 @@ class BaseRuleTestCase(BaseTestCase):
         good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         good_runner.transform()
         failures = good_runner.run()
-        self.assertEqual(err_count, len(failures), 'Expected {} failures but got {} on {}'.format(err_count, failures, filename))
+        self.assertEqual(err_count, len(failures), 'Expected {} failures but got {} on {}'.format(
+            err_count, failures, filename))
         self.collection.rules[0].configure(config)
 
     def helper_file_positive_template(self, filename):
