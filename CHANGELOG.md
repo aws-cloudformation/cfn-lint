@@ -1,3 +1,8 @@
+### 0.23.2
+###### CloudFormation Specifications
+- Update CloudFormation spec to version 5.0.0 (pull #[1087](https://github.com/aws-cloudformation/cfn-python-lint/pull/1087))
+- Remove Ref check from IAM Policy Name (pull #[1087](https://github.com/aws-cloudformation/cfn-python-lint/pull/1087))
+
 ### 0.23.1
 ###### Fixes
 - Fix an issue where anything piped into cfn-lint would result in ignoring the templates parameter (pull #[1081](https://github.com/aws-cloudformation/cfn-python-lint/pull/1081))
