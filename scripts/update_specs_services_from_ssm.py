@@ -20,12 +20,12 @@
     Updates our dynamic patches from SSM data
     This script requires Boto3 and Credentials to call the SSM API
 """
-import requests
+
 import boto3
 import json
 import logging
 from cfnlint.maintenance import SPEC_REGIONS
-
+from cfnlint.helpers import get_spec_from_url
 LOGGER = logging.getLogger('cfnlint')
 
 region_map = {
@@ -192,9 +192,7 @@ def get_regions_for_service(service):
 def add_spec_patch(region, services):
     """ Go through spec and determine patching """
     LOGGER.info('Create 06_ssm_service_removal patch for region %s', region)
-    req = requests.get(SPEC_REGIONS.get(region))
-
-    spec = json.loads(req.content.decode('utf-8'))
+    spec = get_spec_from_url(SPEC_REGIONS.get(region))
 
     patches = []
 
