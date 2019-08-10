@@ -22,7 +22,7 @@ import pkg_resources
 import jsonpointer
 import jsonpatch
 import cfnlint
-from cfnlint.helpers import get_spec_from_url
+from cfnlint.helpers import get_url_content
 
 
 LOGGER = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ def update_resource_specs():
             '/data/CloudSpecs/%s.json' % region,
         )
         LOGGER.debug('Downloading template %s into %s', url, filename)
-        spec = get_spec_from_url(url)
+        spec = json.loads(get_url_content(url))
 
         # Patch the files
         spec = patch_spec(spec, 'all')
@@ -199,9 +199,7 @@ def update_iam_policies():
     )
     LOGGER.debug('Downloading policies %s into %s', url, filename)
 
-    req = requests.get(url)
-
-    content = req.content.decode('utf-8')
+    content = get_url_content(url)
 
     content = content.split('app.PolicyEditorConfig=')[1]
     content = json.loads(content)

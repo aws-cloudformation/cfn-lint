@@ -151,7 +151,7 @@ LIMITS = {
 }
 
 
-def get_spec_from_url(url):
+def get_url_content(url):
     """Get the contents of a spec file"""
     res = urlopen(url)
     if res.info().get('Content-Encoding') == 'gzip':
@@ -161,7 +161,7 @@ def get_spec_from_url(url):
     else:
         content = res.read().decode('utf-8')
 
-    return json.loads(content)
+    return content
 
 
 def load_resources(filename='data/CloudSpecs/us-east-1.json'):

@@ -192,7 +192,7 @@ def get_regions_for_service(service):
 def add_spec_patch(region, services):
     """ Go through spec and determine patching """
     LOGGER.info('Create 06_ssm_service_removal patch for region %s', region)
-    spec = get_spec_from_url(SPEC_REGIONS.get(region))
+    spec = json.loads(get_spec_from_url(SPEC_REGIONS.get(region)))
 
     patches = []
 
