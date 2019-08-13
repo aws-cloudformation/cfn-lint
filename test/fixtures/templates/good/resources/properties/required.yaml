@@ -1,0 +1,21 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deploy resources for the SFTP managed service'
+
+Parameters:
+  SSHPublicKey:
+    Type: String
+    Description: 'SSH public key of the SFTP transfer user'
+
+Resources:
+  SFTPDTRFUser:
+    Type: AWS::Transfer::User
+    Properties:
+      UserName: test
+      ServerId: s-123456
+      Role: arn:aws:iam:etc
+      SshPublicKeys:
+        - !Ref SSHPublicKey  # Don't fail when using a dict on a non standard spec resource
+      Tags:
+        - Key: Issue
+          Value: https://github.com/aws-cloudformation/cfn-python-lint/issues/1088
