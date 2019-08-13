@@ -15,16 +15,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import logging
+import json
+import boto3
+from cfnlint.helpers import get_url_content
+from cfnlint.maintenance import SPEC_REGIONS
 
 """
     Updates our dynamic patches from SSM data
     This script requires Boto3 and Credentials to call the SSM API
 """
-import requests
-import boto3
-import json
-import logging
-from cfnlint.maintenance import SPEC_REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 
@@ -51,11 +51,11 @@ region_map = {
     'US West (N. California)': 'us-west-1',
     'China (Beijing)': 'cn-north-1',
     'China (Ningxia)': 'cn-northwest-1',
+    'Middle East (Bahrain)': 'me-south-1',
 }
 
 exclude_regions = {
     'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
-    'Middle East (Bahrain)': 'me-south-1',
 }
 
 service_map = {
@@ -192,9 +192,7 @@ def get_regions_for_service(service):
 def add_spec_patch(region, services):
     """ Go through spec and determine patching """
     LOGGER.info('Create 06_ssm_service_removal patch for region %s', region)
-    req = requests.get(SPEC_REGIONS.get(region))
-
-    spec = json.loads(req.content.decode('utf-8'))
+    spec = json.loads(get_url_content(SPEC_REGIONS.get(region)))
 
     patches = []
 
@@ -217,11 +215,11 @@ def add_spec_patch(region, services):
 def add_spec_missing_services_patch(region, services):
     """ Go through spec and determine patching """
     LOGGER.info('Create 07_ssm_service_addition patch for region %s', region)
-    req = requests.get(SPEC_REGIONS.get(region))
-    req_standard = requests.get(SPEC_REGIONS.get('us-east-1'))
+    spec_string = get_url_content(SPEC_REGIONS.get(region))
+    spec_string_standard = get_url_content(SPEC_REGIONS.get('us-east-1'))
 
-    spec = json.loads(req.content.decode('utf-8'))
-    spec_standard = json.loads(req_standard.content.decode('utf-8'))
+    spec = json.loads(spec_string)
+    spec_standard = json.loads(spec_string_standard)
 
     patches = []
 
