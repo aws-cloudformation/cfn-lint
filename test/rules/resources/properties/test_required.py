@@ -22,10 +22,14 @@ from ... import BaseRuleTestCase
 
 class TestResourceConfiguration(BaseRuleTestCase):
     """Test Resource Properties"""
+
     def setUp(self):
         """Setup"""
         super(TestResourceConfiguration, self).setUp()
         self.collection.register(Required())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/required.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -42,6 +46,7 @@ class TestResourceConfiguration(BaseRuleTestCase):
 
 class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
     """Test Custom Resource Required Properties when override spec is provided"""
+
     def setUp(self):
         """Setup"""
         super(TestSpecifiedCustomResourceRequiredProperties, self).setUp()

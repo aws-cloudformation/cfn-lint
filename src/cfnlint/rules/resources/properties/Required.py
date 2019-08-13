@@ -71,6 +71,10 @@ class Required(CloudFormationLintRule):
                             self.propertycheck(
                                 item, property_type, parenttype, resourcename,
                                 tree[:] + [index], root))
+            else:
+                # this isn't a standard type in the CloudFormation spec so we
+                # can't check required so skip
+                return matches
 
         if not isinstance(text, dict):
             # Covered with Properties not with Required
@@ -116,7 +120,8 @@ class Required(CloudFormationLintRule):
                 if resourcespec[prop]['Required']:
                     if prop not in value:
                         message = 'Property {0} missing at {1}'
-                        matches.append(RuleMatch(path, message.format(prop, '/'.join(map(str, path)))))
+                        matches.append(RuleMatch(path, message.format(
+                            prop, '/'.join(map(str, path)))))
 
             # For all specified properties, check all nested properties
             for prop in value:
