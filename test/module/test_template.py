@@ -14,6 +14,7 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import json
 import cfnlint.helpers
 from cfnlint import Template  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -21,6 +22,7 @@ from testlib.testcase import BaseTestCase
 
 class TestTemplate(BaseTestCase):
     """Test Template Class in cfnlint """
+
     def setUp(self):
         """ SetUp template object"""
         filename = 'test/fixtures/templates/good/generic.yaml'
@@ -47,7 +49,8 @@ class TestTemplate(BaseTestCase):
         """Test Success on Get Resources"""
         valid_resource_count = 11
         resources = self.template.get_resources()
-        assert len(resources) == valid_resource_count, 'Expected {} resources, got {}'.format(valid_resource_count, len(resources))
+        assert len(resources) == valid_resource_count, 'Expected {} resources, got {}'.format(
+            valid_resource_count, len(resources))
 
     def test_get_resources_bad(self):
         """Don't get resources that aren't properly configured"""
@@ -72,7 +75,8 @@ class TestTemplate(BaseTestCase):
         """ Test Get Parameters"""
         valid_parameter_count = 7
         parameters = self.template.get_parameters()
-        assert len(parameters) == valid_parameter_count, 'Expected {} parameters, got {}'.format(valid_parameter_count, len(parameters))
+        assert len(parameters) == valid_parameter_count, 'Expected {} parameters, got {}'.format(
+            valid_parameter_count, len(parameters))
 
     def test_get_parameter_names(self):
         """Test Get Parameter Names"""
@@ -83,7 +87,8 @@ class TestTemplate(BaseTestCase):
         """ Get Valid REFs"""
         valid_ref_count = 26
         refs = self.template.get_valid_refs()
-        assert len(refs) == valid_ref_count, 'Expected {} refs, got {}'.format(valid_ref_count, len(refs))
+        assert len(refs) == valid_ref_count, 'Expected {} refs, got {}'.format(
+            valid_ref_count, len(refs))
 
     def test_conditions_return_object_success(self):
         """Test condition object response and nested IFs"""
@@ -181,7 +186,8 @@ class TestTemplate(BaseTestCase):
         # Doesn't fail with a Fn::If based condition
         self.assertEqual(
             template.is_resource_available(
-                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
+                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             []
@@ -233,7 +239,8 @@ class TestTemplate(BaseTestCase):
         template = Template('test.yaml', temp_obj)
         self.assertEqual(
             template.is_resource_available(
-                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
+                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             [{'isPrimary': False}]
@@ -249,7 +256,8 @@ class TestTemplate(BaseTestCase):
         # are no conditions in the path that is workable
         self.assertEqual(
             template.is_resource_available(
-                ['Resources', 'AMIIDLookup', 'Properties', 'BadProperty', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
+                ['Resources', 'AMIIDLookup', 'Properties', 'BadProperty',
+                    'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']],
                 'LambdaExecutionRole'
             ),
             [{'isPrimary': False}]
@@ -296,7 +304,8 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.get_conditions_from_path(
                 template.template,
-                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
+                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
             ),
             {'isPrimary': {True}}
         )
@@ -358,7 +367,8 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(
             template.get_conditions_from_path(
                 template.template,
-                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If', 1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
+                ['Resources', 'AMIIDLookup', 'Properties', 'Role', 'Fn::If',
+                    1, 'Fn::GetAtt', ['LambdaExecutionRole', 'Arn']]
             ),
             {}
         )
@@ -529,13 +539,15 @@ class TestTemplate(BaseTestCase):
         template = Template('test.yaml', template)
 
         results = template.get_object_without_conditions(
-            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')[1].get('Fn::If')[2]
+            template.template.get('Resources').get('myInstance').get(
+                'Properties').get('BlockDeviceMappings')[1].get('Fn::If')[2]
         )
 
         self.assertEqual(results, [])
 
         results = template.get_object_without_conditions(
-            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+            template.template.get('Resources').get('myInstance').get(
+                'Properties').get('BlockDeviceMappings')
         )
         # when item is a list return empty list
         self.assertEqual(results, [])
@@ -586,7 +598,8 @@ class TestTemplate(BaseTestCase):
         template = Template('test.yaml', template)
 
         results = template.get_object_without_conditions(
-            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+            template.template.get('Resources').get('myInstance').get(
+                'Properties').get('BlockDeviceMappings')
         )
         # handles IFs for a list
         self.assertEqual(
@@ -640,7 +653,8 @@ class TestTemplate(BaseTestCase):
         template = Template('test.yaml', template)
 
         results = template.get_object_without_conditions(
-            template.template.get('Resources').get('myInstance').get('Properties').get('BlockDeviceMappings')
+            template.template.get('Resources').get('myInstance').get(
+                'Properties').get('BlockDeviceMappings')
         )
         # There is no False here but it still passes the 1st item back
         self.assertEqual(
@@ -654,7 +668,8 @@ class TestTemplate(BaseTestCase):
         )
 
         results = template.get_object_without_conditions(
-            template.template.get('Resources').get('myInstance1').get('Properties').get('BlockDeviceMappings')
+            template.template.get('Resources').get('myInstance1').get(
+                'Properties').get('BlockDeviceMappings')
         )
         # There is no False here but it still passes the 1st item back
         self.assertEqual(
@@ -765,7 +780,8 @@ class TestTemplate(BaseTestCase):
         template = Template('test.yaml', template)
 
         results = template.get_object_without_nested_conditions(
-            template.template.get('Resources', {}).get('Role', {}).get('Properties', {}).get('AssumeRolePolicyDocument', {}),
+            template.template.get('Resources', {}).get('Role', {}).get(
+                'Properties', {}).get('AssumeRolePolicyDocument', {}),
             ['Resources', 'Role', 'Properties', 'AssumeRolePolicyDocument']
         )
 
@@ -922,3 +938,70 @@ class TestTemplate(BaseTestCase):
                 {'isPrimaryRegion': True, 'isProduction': True},
             ]
         )
+
+    def test_get_directives(self):
+        """ Test getting directives from a template """
+        template_yaml = {
+            'Resources': {
+                'Type': 'AWS::S3::Bucket',
+                'myBucket': {
+                    'Properties': {
+                        'BucketName': "bucket_test"
+                    },
+                    'Type': 'AWS::S3::Bucket'
+                },
+                'myBucket1': {
+                    'Metadata': {
+                        'cfn-lint': {
+                            'config': {
+                                'ignore_checks': [
+                                    'E3012',
+                                    'I1001'
+                                ]
+                            }
+                        }
+                    },
+                    'Properties': {},
+                    'Type': 'AWS::S3::Bucket'
+                },
+                'myBucket2': {
+                    'Metadata': {
+                        'cfn-lint': {
+                            'config': {
+                                'ignore_checks': [
+                                    'E3012',
+                                ]
+                            }
+                        }
+                    },
+                    'Properties': {},
+                    'Type': 'AWS::S3::Bucket'
+                }
+            }
+        }
+
+        template = Template(
+            'test.yaml',
+            cfnlint.decode.cfn_yaml.loads(
+                json.dumps(
+                    template_yaml,
+                    sort_keys=True,
+                    indent=4, separators=(',', ': ')
+                )
+            )
+        )
+        directives = template.get_directives()
+        expected_result = {
+            'E3012': [
+                {'end': 22, 'start': 9},
+                {'end': 35, 'start': 23}
+            ],
+            'I1001': [
+                {'end': 22, 'start': 9}
+            ]
+        }
+        self.assertEqual(len(expected_result), len(directives))
+        for key, items in directives.items():
+            self.assertIn(key, expected_result)
+            if key in expected_result:
+                self.assertEqualListOfDicts(items, expected_result.get(key))
