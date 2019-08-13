@@ -1,3 +1,12 @@
+### 0.23.3
+###### CloudFormation Specifications
+- Add me-east-1 CloudFormation spec (pull #[1095](https://github.com/aws-cloudformation/cfn-python-lint/pull/1095))
+- Update CloudFormatin specs to 5.1.0 (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+- Update spec patching from SSM and pricing to 2019.08.13 (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+###### Fixes
+- Remove requests and switch to urllib(2) (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+- Fix rule [E3003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003) to not fail when running into a basic property in the CloudFormation spec (pull #[1096](https://github.com/aws-cloudformation/cfn-python-lint/pull/1096))
+
 ### 0.23.2
 ###### CloudFormation Specifications
 - Update CloudFormation spec to version 5.0.0 (pull #[1087](https://github.com/aws-cloudformation/cfn-python-lint/pull/1087))
