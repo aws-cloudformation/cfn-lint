@@ -2104,7 +2104,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2580,7 +2580,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2617,7 +2617,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "EC2ScalingPolicyPredifinedMetricSpecificationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -2762,7 +2762,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2816,7 +2816,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "EC2ScalingPolicyPredifinedMetricSpecificationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -2866,7 +2866,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionPredictiveScalingMaxCapacityBehavior"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMaxCapacityBehavior"
           }
         },
         "PredictiveScalingMaxCapacityBuffer": {
@@ -2881,7 +2881,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionPredictiveScalingMode"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMode"
           }
         },
         "ResourceId": {
@@ -2896,7 +2896,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionScalableDimension"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ScalableDimension"
           }
         },
         "ScalingPolicyUpdateBehavior": {
@@ -2917,7 +2917,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionServiceNamespace"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ServiceNamespace"
           }
         },
         "TargetTrackingConfigurations": {
@@ -41284,6 +41284,15 @@
         "PercentChangeInCapacity"
       ]
     },
+    "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic": {
+      "AllowedValues": [
+        "Average",
+        "Minimum",
+        "Maximum",
+        "SampleCount",
+        "Sum"
+      ]
+    },
     "AWS::AutoScaling::ScalingPolicy.MetricAggregationType": {
       "AllowedValues": [
         "Average",
@@ -41296,6 +41305,48 @@
         "SimpleScaling",
         "StepScaling",
         "TargetTrackingScaling"
+      ]
+    },
+    "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType": {
+      "AllowedValues": [
+        "ALBRequestCountPerTarget",
+        "ASGAverageCPUUtilization",
+        "ASGAverageNetworkIn",
+        "ASGAverageNetworkOut"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMaxCapacityBehavior": {
+      "AllowedValues": [
+        "SetForecastCapacityToMaxCapacity",
+        "SetMaxCapacityToForecastCapacity",
+        "SetMaxCapacityAboveForecastCapacity"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMode": {
+      "AllowedValues": [
+        "ForecastAndScale",
+        "ForecastOnly"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ScalableDimension": {
+      "AllowedValues": [
+        "autoscaling:autoScalingGroup:DesiredCapacity",
+        "ecs:service:DesiredCount",
+        "ec2:spot-fleet-request:TargetCapacity",
+        "dynamodb:table:ReadCapacityUnits",
+        "dynamodb:table:WriteCapacityUnits",
+        "dynamodb:index:ReadCapacityUnits",
+        "dynamodb:index:WriteCapacityUnits",
+        "rds:cluster:ReadReplicaCount"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ServiceNamespace": {
+      "AllowedValues": [
+        "autoscaling",
+        "dynamodb",
+        "ecs",
+        "ec2",
+        "rds"
       ]
     },
     "AWS::Backup::BackupPlan.Id": {
@@ -42665,14 +42716,6 @@
         "spot"
       ]
     },
-    "EC2ScalingPolicyPredifinedMetricSpecificationType": {
-      "AllowedValues": [
-        "ALBRequestCountPerTarget",
-        "ASGAverageCPUUtilization",
-        "ASGAverageNetworkIn",
-        "ASGAverageNetworkOut"
-      ]
-    },
     "EC2SpotInstanceInitiatedShutdownBehavior": {
       "AllowedValues": [
         "hibernate",
@@ -43491,49 +43534,6 @@
       "AllowedValues": [
         "Enabled",
         "Suspended"
-      ]
-    },
-    "ScalingInstructionPredictiveScalingMaxCapacityBehavior": {
-      "AllowedValues": [
-        "SetForecastCapacityToMaxCapacity",
-        "SetMaxCapacityToForecastCapacity",
-        "SetMaxCapacityAboveForecastCapacity"
-      ]
-    },
-    "ScalingInstructionPredictiveScalingMode": {
-      "AllowedValues": [
-        "ForecastAndScale",
-        "ForecastOnly"
-      ]
-    },
-    "ScalingInstructionScalableDimension": {
-      "AllowedValues": [
-        "autoscaling:autoScalingGroup:DesiredCapacity",
-        "ecs:service:DesiredCount",
-        "ec2:spot-fleet-request:TargetCapacity",
-        "dynamodb:table:ReadCapacityUnits",
-        "dynamodb:table:WriteCapacityUnits",
-        "dynamodb:index:ReadCapacityUnits",
-        "dynamodb:index:WriteCapacityUnits",
-        "rds:cluster:ReadReplicaCount"
-      ]
-    },
-    "ScalingInstructionServiceNamespace": {
-      "AllowedValues": [
-        "autoscaling",
-        "dynamodb",
-        "ecs",
-        "ec2",
-        "rds"
-      ]
-    },
-    "ScalingPolicyCustomizedMetricSpecificationStatistic": {
-      "AllowedValues": [
-        "Average",
-        "Minimum",
-        "Maximum",
-        "SampleCount",
-        "Sum"
       ]
     },
     "SecretsManagerTargetType": {
