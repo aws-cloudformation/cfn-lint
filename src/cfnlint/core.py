@@ -82,7 +82,10 @@ def get_formatter(fmt):
         elif fmt == 'json':
             formatter = cfnlint.formatters.JsonFormatter()
     else:
-        formatter = cfnlint.formatters.Formatter()
+        if sys.stdout.isatty():
+            formatter = cfnlint.formatters.PrettyFormatter()
+        else:
+            formatter = cfnlint.formatters.Formatter()
 
     return formatter
 

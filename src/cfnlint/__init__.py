@@ -36,6 +36,11 @@ LOGGER = logging.getLogger(__name__)
 class CloudFormationLintRule(object):
     """CloudFormation linter rules"""
 
+    ERROR = 40
+    INFO = 10
+    NOTSET = 0
+    WARNING = 30
+
     id = ''
     shortdesc = ''
     description = ''
@@ -53,6 +58,16 @@ class CloudFormationLintRule(object):
 
     def __repr__(self):
         return '%s: %s' % (self.id, self.shortdesc)
+
+    @property
+    def severity(self):
+        """Severity level"""
+        levels = {
+            'I': self.INFO,
+            'E': self.ERROR,
+            'W': self.WARNING
+        }
+        return levels.get(self.id[0].upper(), self.NOTSET)
 
     def verbose(self):
         """Verbose output"""

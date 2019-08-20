@@ -14,8 +14,17 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
+import itertools
 import json
-from cfnlint import Match
+import operator
+import sys
+
+from termcolor import colored
+from cfnlint import CloudFormationLintRule, Match
+
+if sys.platform == 'win32':
+    import colorama  # pylint: disable=import-error
+    colorama.init()
 
 class BaseFormatter(object):
     """Base Formatter class"""
@@ -120,3 +129,43 @@ class ParseableFormatter(BaseFormatter):
             match.rule.id,
             match.message
         )
+
+
+class PrettyFormatter(BaseFormatter):
+    """Generic Formatter"""
+    SEVERITY_COLOR = {
+        CloudFormationLintRule.ERROR: 'red',
+        CloudFormationLintRule.WARNING: 'yellow',
+        CloudFormationLintRule.INFO: 'white',
+        CloudFormationLintRule.NOTSET: 'grey',
+    }
+
+    def _format(self, match):
+        """Format output"""
+        formatstr = '{0}:{1}:\t\t{2}\t{3}'
+        return formatstr.format(
+            colored(match.linenumber, 'green'),
+            colored(match.columnnumber, 'green'),
+            colored(match.rule.id, self.SEVERITY_COLOR[match.rule.severity]),
+            match.message,
+        )
+
+    def print_matches(self, matches):
+        if not matches:
+            return []
+        return '\n'.join(self._format_matches(matches))
+
+    def _format_matches(self, matches):
+        """Output all the matches"""
+        output = []
+        # This better be sorted
+        for filename, file_matches in itertools.groupby(
+                matches,
+                key=operator.attrgetter('filename')
+            ):
+            output.append(colored(filename, 'green', attrs=['bold']))
+            for match in file_matches:
+                output.extend([self._format(match)])
+            output.append('')  # Newline after each group
+
+        return output
