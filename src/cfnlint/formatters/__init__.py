@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import itertools
 import json
 from junit_xml import TestSuite, TestCase, to_xml_report_string
 from cfnlint.rules import Match
@@ -172,3 +173,43 @@ class ParseableFormatter(BaseFormatter):
             match.rule.id,
             match.message
         )
+
+
+class PrettyFormatter(BaseFormatter):
+    """Generic Formatter"""
+    SEVERITY_COLOR = {
+        CloudFormationLintRule.ERROR: 'red',
+        CloudFormationLintRule.WARNING: 'yellow',
+        CloudFormationLintRule.INFO: 'white',
+        CloudFormationLintRule.NOTSET: 'grey',
+    }
+
+    def _format(self, match):
+        """Format output"""
+        formatstr = '{0}:{1}:\t\t{2}\t{3}'
+        return formatstr.format(
+            colored(match.linenumber, 'green'),
+            colored(match.columnnumber, 'green'),
+            colored(match.rule.id, self.SEVERITY_COLOR[match.rule.severity]),
+            match.message,
+        )
+
+    def print_matches(self, matches):
+        if not matches:
+            return []
+        return '\n'.join(self._format_matches(matches))
+
+    def _format_matches(self, matches):
+        """Output all the matches"""
+        output = []
+        # This better be sorted
+        for filename, file_matches in itertools.groupby(
+                matches,
+                key=operator.attrgetter('filename')
+            ):
+            output.append(colored(filename, 'green', attrs=['bold']))
+            for match in file_matches:
+                output.extend([self._format(match)])
+            output.append('')  # Newline after each group
+
+        return output
