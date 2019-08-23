@@ -595,16 +595,16 @@ class Template(object):  # pylint: disable=R0904
         """ Get Directives"""
         results = {}
         for _, resource_values in self.template.get('Resources', {}).items():
-            ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
-            for ignore_rule_id in ignore_rule_ids:
-                if ignore_rule_id not in results:
-                    results[ignore_rule_id] = []
-                location = self._loc(resource_values)
-                results[ignore_rule_id].append({
-                    'start': location[0],
-                    'end': location[2]
-                })
-
+            if isinstance(resource_values, dict):
+                ignore_rule_ids = resource_values.get('Metadata', {}).get('cfn-lint', {}).get('config', {}).get('ignore_checks', [])
+                for ignore_rule_id in ignore_rule_ids:
+                    if ignore_rule_id not in results:
+                        results[ignore_rule_id] = []
+                    location = self._loc(resource_values)
+                    results[ignore_rule_id].append({
+                        'start': location[0],
+                        'end': location[2]
+                    })
         return results
 
     def _get_sub_resource_properties(self, keys, properties, path):
