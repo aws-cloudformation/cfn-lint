@@ -1,3 +1,12 @@
+### 0.23.4
+###### CloudFormation Specifications
+- Update CloudFormatin specs to 5.3.0 (pull #[1108](https://github.com/aws-cloudformation/cfn-python-lint/pull/1108))
+- Update CloudFormatin specs from pricing and SSM data on 2019.08.22 (pull #[1104](https://github.com/aws-cloudformation/cfn-python-lint/pull/1104))
+- Add 416 to the CloudFront Error Codes (pull #[1100](https://github.com/aws-cloudformation/cfn-python-lint/pull/1100))
+- Move a lot of types into separate files (pull #[1074](https://github.com/aws-cloudformation/cfn-python-lint/pull/1074))
+###### Fixes
+- Don't fail getting directives when resources are malformed (pull #[1099](https://github.com/aws-cloudformation/cfn-python-lint/pull/1099))
+
 ### 0.23.3
 ###### CloudFormation Specifications
 - Add me-east-1 CloudFormation spec (pull #[1095](https://github.com/aws-cloudformation/cfn-python-lint/pull/1095))
