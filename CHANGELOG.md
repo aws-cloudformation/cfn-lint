@@ -1,3 +1,39 @@
+### 0.23.3
+###### CloudFormation Specifications
+- Add me-east-1 CloudFormation spec (pull #[1095](https://github.com/aws-cloudformation/cfn-python-lint/pull/1095))
+- Update CloudFormatin specs to 5.1.0 (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+- Update spec patching from SSM and pricing to 2019.08.13 (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+###### Fixes
+- Remove requests and switch to urllib(2) (pull #[1093](https://github.com/aws-cloudformation/cfn-python-lint/pull/1093))
+- Fix rule [E3003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3003) to not fail when running into a basic property in the CloudFormation spec (pull #[1096](https://github.com/aws-cloudformation/cfn-python-lint/pull/1096))
+
+### 0.23.2
+###### CloudFormation Specifications
+- Update CloudFormation spec to version 5.0.0 (pull #[1087](https://github.com/aws-cloudformation/cfn-python-lint/pull/1087))
+- Remove Ref check from IAM Policy Name (pull #[1087](https://github.com/aws-cloudformation/cfn-python-lint/pull/1087))
+
+### 0.23.1
+###### Fixes
+- Fix an issue where anything piped into cfn-lint would result in ignoring the templates parameter (pull #[1081](https://github.com/aws-cloudformation/cfn-python-lint/pull/1081))
+
+### 0.23.0
+###### Features
+- Add support for regions cn-north-1 and cn-northwest-1 (pull #[1051](https://github.com/aws-cloudformation/cfn-python-lint/pull/1051))
+- Add rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3027) to validate the format of AWS Event ScheduleExpression (pull #[1028](https://github.com/aws-cloudformation/cfn-python-lint/pull/1028))
+- Update SAM Translator support to release 1.13.0 (pull #[1054](https://github.com/aws-cloudformation/cfn-python-lint/pull/1054))
+- Extend rule [W2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2509) and [E2004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2004) to check for more types of CIDR properties (pull #[1058](https://github.com/aws-cloudformation/cfn-python-lint/pull/1058))
+- Add Availability Zones for me-south-1 region (pull #[1070](https://github.com/aws-cloudformation/cfn-python-lint/pull/1070))
+- Update README to document using cfn-lint with github actions (pull #[1072](https://github.com/aws-cloudformation/cfn-python-lint/pull/1072))
+###### CloudFormation Specifications
+- Restructure some of the patching to make organization easier (pull #[1030](https://github.com/aws-cloudformation/cfn-python-lint/pull/1030))
+- Update specs from pricing and SSM data as of 2019.08.01 (pull #[1078](https://github.com/aws-cloudformation/cfn-python-lint/pull/1078))
+- Remove IAM::User Tags and move IAM::Role Tag support to regions where it works (pull #[1077](https://github.com/aws-cloudformation/cfn-python-lint/pull/1077))
+###### Fixes
+- Apply SAM Transform when template Transforms are a list (pull #[1056](https://github.com/aws-cloudformation/cfn-python-lint/pull/1056))
+- Fix an issue where templates provided via stdin where not getting linted (pull #[1060](https://github.com/aws-cloudformation/cfn-python-lint/pull/1060))
+- Fix rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2015) to convert integers to string when testing min/max length (pull #[1063](https://github.com/aws-cloudformation/cfn-python-lint/pull/1063))
+- Update excludes for [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include TopicRulePayload (pull #[1066](https://github.com/aws-cloudformation/cfn-python-lint/pull/1066))
+
 ### 0.22.4
 ###### Features
 - Add ALL_REGIONS option for -r flag (pull #[1026](https://github.com/aws-cloudformation/cfn-python-lint/pull/1026))

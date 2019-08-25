@@ -156,6 +156,23 @@
         }
       }
     },
+    "AWS::AmazonMQ::Broker.EncryptionOptions": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-amazonmq-broker-encryptionoptions.html",
+      "Properties": {
+        "KmsKeyId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-amazonmq-broker-encryptionoptions.html#cfn-amazonmq-broker-encryptionoptions-kmskeyid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "UseAwsOwnedKey": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-amazonmq-broker-encryptionoptions.html#cfn-amazonmq-broker-encryptionoptions-useawsownedkey",
+          "PrimitiveType": "Boolean",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::AmazonMQ::Broker.LogList": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-amazonmq-broker-loglist.html",
       "Properties": {
@@ -1276,6 +1293,41 @@
         }
       }
     },
+    "AWS::AppMesh::Route.HeaderMatchMethod": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html",
+      "Properties": {
+        "Exact": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html#cfn-appmesh-route-headermatchmethod-exact",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Prefix": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html#cfn-appmesh-route-headermatchmethod-prefix",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Range": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html#cfn-appmesh-route-headermatchmethod-range",
+          "Required": false,
+          "Type": "MatchRange",
+          "UpdateType": "Mutable"
+        },
+        "Regex": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html#cfn-appmesh-route-headermatchmethod-regex",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Suffix": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-headermatchmethod.html#cfn-appmesh-route-headermatchmethod-suffix",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::AppMesh::Route.HttpRoute": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproute.html",
       "Properties": {
@@ -1305,12 +1357,71 @@
         }
       }
     },
+    "AWS::AppMesh::Route.HttpRouteHeader": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httprouteheader.html",
+      "Properties": {
+        "Invert": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httprouteheader.html#cfn-appmesh-route-httprouteheader-invert",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Match": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httprouteheader.html#cfn-appmesh-route-httprouteheader-match",
+          "Required": false,
+          "Type": "HeaderMatchMethod",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httprouteheader.html#cfn-appmesh-route-httprouteheader-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::AppMesh::Route.HttpRouteMatch": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproutematch.html",
       "Properties": {
+        "Headers": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproutematch.html#cfn-appmesh-route-httproutematch-headers",
+          "ItemType": "HttpRouteHeader",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "Method": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproutematch.html#cfn-appmesh-route-httproutematch-method",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Prefix": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproutematch.html#cfn-appmesh-route-httproutematch-prefix",
           "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Scheme": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-httproutematch.html#cfn-appmesh-route-httproutematch-scheme",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppMesh::Route.MatchRange": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-matchrange.html",
+      "Properties": {
+        "End": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-matchrange.html#cfn-appmesh-route-matchrange-end",
+          "PrimitiveType": "Integer",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Start": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-matchrange.html#cfn-appmesh-route-matchrange-start",
+          "PrimitiveType": "Integer",
           "Required": true,
           "UpdateType": "Mutable"
         }
@@ -1323,6 +1434,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-routespec.html#cfn-appmesh-route-routespec-httproute",
           "Required": false,
           "Type": "HttpRoute",
+          "UpdateType": "Mutable"
+        },
+        "Priority": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appmesh-route-routespec.html#cfn-appmesh-route-routespec-priority",
+          "PrimitiveType": "Integer",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "TcpRoute": {
@@ -2011,6 +2128,147 @@
         }
       }
     },
+    "AWS::AppSync::GraphQLApi.AdditionalAuthenticationProvider": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html",
+      "Properties": {
+        "AuthenticationType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-authenticationtype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "OpenIDConnectConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-openidconnectconfig",
+          "Required": false,
+          "Type": "OpenIDConnectConfig",
+          "UpdateType": "Mutable"
+        },
+        "UserPoolConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-userpoolconfig",
+          "Required": false,
+          "Type": "CognitoUserPoolConfig",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppSync::GraphQLApi.AdditionalAuthenticationProviders": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationproviders.html",
+      "ItemType": "AdditionalAuthenticationProvider",
+      "Required": false,
+      "Type": "List",
+      "UpdateType": "Mutable"
+    },
+    "AWS::AppSync::GraphQLApi.CognitoUserPoolConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-cognitouserpoolconfig.html",
+      "Properties": {
+        "AppIdClientRegex": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-cognitouserpoolconfig.html#cfn-appsync-graphqlapi-cognitouserpoolconfig-appidclientregex",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "AwsRegion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-cognitouserpoolconfig.html#cfn-appsync-graphqlapi-cognitouserpoolconfig-awsregion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "UserPoolId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-cognitouserpoolconfig.html#cfn-appsync-graphqlapi-cognitouserpoolconfig-userpoolid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppSync::GraphQLApi.LogConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-logconfig.html",
+      "Properties": {
+        "CloudWatchLogsRoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-logconfig.html#cfn-appsync-graphqlapi-logconfig-cloudwatchlogsrolearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExcludeVerboseContent": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-logconfig.html#cfn-appsync-graphqlapi-logconfig-excludeverbosecontent",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "FieldLogLevel": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-logconfig.html#cfn-appsync-graphqlapi-logconfig-fieldloglevel",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppSync::GraphQLApi.OpenIDConnectConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-openidconnectconfig.html",
+      "Properties": {
+        "AuthTTL": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-openidconnectconfig.html#cfn-appsync-graphqlapi-openidconnectconfig-authttl",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ClientId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-openidconnectconfig.html#cfn-appsync-graphqlapi-openidconnectconfig-clientid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "IatTTL": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-openidconnectconfig.html#cfn-appsync-graphqlapi-openidconnectconfig-iatttl",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Issuer": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-openidconnectconfig.html#cfn-appsync-graphqlapi-openidconnectconfig-issuer",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppSync::GraphQLApi.Tags": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-tags.html",
+      "ItemType": "Tag",
+      "Required": false,
+      "Type": "List",
+      "UpdateType": "Mutable"
+    },
+    "AWS::AppSync::GraphQLApi.UserPoolConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-userpoolconfig.html",
+      "Properties": {
+        "AppIdClientRegex": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-userpoolconfig.html#cfn-appsync-graphqlapi-userpoolconfig-appidclientregex",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "AwsRegion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-userpoolconfig.html#cfn-appsync-graphqlapi-userpoolconfig-awsregion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DefaultAction": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-userpoolconfig.html#cfn-appsync-graphqlapi-userpoolconfig-defaultaction",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "UserPoolId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-userpoolconfig.html#cfn-appsync-graphqlapi-userpoolconfig-userpoolid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::AppSync::Resolver.PipelineConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-pipelineconfig.html",
       "Properties": {
@@ -2104,7 +2362,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2580,7 +2838,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2617,7 +2875,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "EC2ScalingPolicyPredifinedMetricSpecificationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -2762,7 +3020,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingPolicyCustomizedMetricSpecificationStatistic"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic"
           }
         },
         "Unit": {
@@ -2816,7 +3074,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "EC2ScalingPolicyPredifinedMetricSpecificationType"
+            "ValueType": "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType"
           }
         },
         "ResourceLabel": {
@@ -2866,7 +3124,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionPredictiveScalingMaxCapacityBehavior"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMaxCapacityBehavior"
           }
         },
         "PredictiveScalingMaxCapacityBuffer": {
@@ -2881,7 +3139,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionPredictiveScalingMode"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMode"
           }
         },
         "ResourceId": {
@@ -2896,7 +3154,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionScalableDimension"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ScalableDimension"
           }
         },
         "ScalingPolicyUpdateBehavior": {
@@ -2917,7 +3175,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ScalingInstructionServiceNamespace"
+            "ValueType": "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ServiceNamespace"
           }
         },
         "TargetTrackingConfigurations": {
@@ -3088,7 +3346,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "ListOfTags": {
@@ -3187,7 +3445,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.NameOrArn"
+            "ValueType": "AWS::IAM::InstanceProfile.NameOrArn"
           }
         },
         "InstanceTypes": {
@@ -3224,12 +3482,12 @@
         "SecurityGroupIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-securitygroupids",
           "PrimitiveItemType": "String",
-          "Required": true,
+          "Required": false,
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SpotIamFleetRole": {
@@ -3238,7 +3496,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Name"
           }
         },
         "Subnets": {
@@ -3320,6 +3578,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "LinuxParameters": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties.html#cfn-batch-jobdefinition-containerproperties-linuxparameters",
+          "Required": false,
+          "Type": "LinuxParameters",
+          "UpdateType": "Mutable"
+        },
         "Memory": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties.html#cfn-batch-jobdefinition-containerproperties-memory",
           "PrimitiveType": "Integer",
@@ -3380,6 +3644,30 @@
         }
       }
     },
+    "AWS::Batch::JobDefinition.Device": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-device.html",
+      "Properties": {
+        "ContainerPath": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-device.html#cfn-batch-jobdefinition-device-containerpath",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HostPath": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-device.html#cfn-batch-jobdefinition-device-hostpath",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Permissions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-device.html#cfn-batch-jobdefinition-device-permissions",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Batch::JobDefinition.Environment": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-environment.html",
       "Properties": {
@@ -3393,6 +3681,18 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-environment.html#cfn-batch-jobdefinition-environment-value",
           "PrimitiveType": "String",
           "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Batch::JobDefinition.LinuxParameters": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties-linuxparameters.html",
+      "Properties": {
+        "Devices": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-jobdefinition-containerproperties-linuxparameters.html#cfn-batch-jobdefinition-containerproperties-linuxparameters-devices",
+          "ItemType": "Device",
+          "Required": false,
+          "Type": "List",
           "UpdateType": "Mutable"
         }
       }
@@ -3572,7 +3872,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetDataBudgetType"
+            "ValueType": "AWS::Budgets::Budget.BudgetType"
           }
         },
         "CostFilters": {
@@ -3599,7 +3899,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetDataTimeUnit"
+            "ValueType": "AWS::Budgets::Budget.TimeUnit"
           }
         }
       }
@@ -3684,7 +3984,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetNotificationComparisonOperator"
+            "ValueType": "AWS::Budgets::Budget.ComparisonOperator"
           }
         },
         "NotificationType": {
@@ -3693,7 +3993,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetNotificationNotificationType"
+            "ValueType": "AWS::Budgets::Budget.NotificationType"
           }
         },
         "Threshold": {
@@ -3702,7 +4002,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetNotificationThreshold"
+            "ValueType": "AWS::Budgets::Budget.Threshold"
           }
         },
         "ThresholdType": {
@@ -3711,7 +4011,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetNotificationThresholdType"
+            "ValueType": "AWS::Budgets::Budget.ThresholdType"
           }
         }
       }
@@ -3766,7 +4066,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "BudgetSubscriptionType"
+            "ValueType": "AWS::Budgets::Budget.SubscriptionType"
           }
         }
       }
@@ -3907,7 +4207,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontCacheBehaviourViewerProtocolPolicy"
+            "ValueType": "AWS::CloudFront::Distribution.ViewerProtocolPolicy"
           }
         }
       }
@@ -3945,7 +4245,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontCustomErrorResponsesErrorCode"
+            "ValueType": "AWS::CloudFront::Distribution.ErrorCode"
           }
         },
         "ResponseCode": {
@@ -3954,7 +4254,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontCustomErrorResponsesResponseCode"
+            "ValueType": "AWS::CloudFront::Distribution.ResponseCode"
           }
         },
         "ResponsePagePath": {
@@ -3992,7 +4292,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontOriginProtocolPolicy"
+            "ValueType": "AWS::CloudFront::Distribution.OriginProtocolPolicy"
           }
         },
         "OriginReadTimeout": {
@@ -4008,7 +4308,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontOriginSSLProtocols"
+            "ValueType": "AWS::CloudFront::Distribution.OriginSSLProtocols"
           }
         }
       }
@@ -4098,7 +4398,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontCacheBehaviourViewerProtocolPolicy"
+            "ValueType": "AWS::CloudFront::Distribution.ViewerProtocolPolicy"
           }
         }
       }
@@ -4157,7 +4457,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontHttpVersion"
+            "ValueType": "AWS::CloudFront::Distribution.HttpVersion"
           }
         },
         "IPV6Enabled": {
@@ -4185,7 +4485,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontPriceClass"
+            "ValueType": "AWS::CloudFront::Distribution.PriceClass"
           }
         },
         "Restrictions": {
@@ -4249,7 +4549,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultCountryCodeAlpha2"
+            "ValueType": "AWS::CloudFront::Distribution.Locations"
           }
         },
         "RestrictionType": {
@@ -4258,7 +4558,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontGeoRestrictionType"
+            "ValueType": "AWS::CloudFront::Distribution.RestrictionType"
           }
         }
       }
@@ -4272,7 +4572,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontLambdaFunctionAssociationsEventType"
+            "ValueType": "AWS::CloudFront::Distribution.EventType"
           }
         },
         "LambdaFunctionARN": {
@@ -4414,7 +4714,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontViewerCertificateMinimumProtocolVersion"
+            "ValueType": "AWS::CloudFront::Distribution.MinimumProtocolVersion"
           }
         },
         "SslSupportMethod": {
@@ -4423,7 +4723,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontViewerCertificateSSLSupportMethod"
+            "ValueType": "AWS::CloudFront::Distribution.SslSupportMethod"
           }
         }
       }
@@ -4502,7 +4802,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudFrontPriceClass"
+            "ValueType": "AWS::CloudFront::Distribution.PriceClass"
           }
         },
         "S3Origin": {
@@ -4546,7 +4846,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudTrailEventSelectorDataResourceType"
+            "ValueType": "AWS::CloudTrail::Trail.DataResourceType"
           }
         },
         "Values": {
@@ -4582,7 +4882,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudTrailEventSelectorReadWriteType"
+            "ValueType": "AWS::CloudTrail::Trail.EventReadWriteType"
           }
         }
       }
@@ -4789,7 +5089,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildArtifactPackaging"
+            "ValueType": "AWS::CodeBuild::Project.Artifacts.Packaging"
           }
         },
         "Path": {
@@ -4804,7 +5104,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildArtifactType"
+            "ValueType": "AWS::CodeBuild::Project.Artifacts.Type"
           }
         }
       }
@@ -4824,7 +5124,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultEnabledState"
+            "ValueType": "AWS::Default::Default.EnabledState"
           }
         },
         "StreamName": {
@@ -4850,7 +5150,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildEnvironmentComputeType"
+            "ValueType": "AWS::CodeBuild::Project.Environment.ComputeType"
           }
         },
         "EnvironmentVariables": {
@@ -4872,7 +5172,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildEnvironmentCredentialsType"
+            "ValueType": "AWS::CodeBuild::Project.Environment.ImagePullCredentialsType"
           }
         },
         "PrivilegedMode": {
@@ -4893,7 +5193,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildEnvironmentType"
+            "ValueType": "AWS::CodeBuild::Project.Environment.Type"
           }
         }
       }
@@ -4978,7 +5278,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildCacheType"
+            "ValueType": "AWS::CodeBuild::Project.ProjectCache.Type"
           }
         }
       }
@@ -5056,7 +5356,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultEnabledState"
+            "ValueType": "AWS::Default::Default.EnabledState"
           }
         }
       }
@@ -5118,7 +5418,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeBuildSourceType"
+            "ValueType": "AWS::CodeBuild::Project.Source.Type"
           }
         }
       }
@@ -5150,8 +5450,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "Subnets": {
@@ -5167,7 +5467,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -5204,7 +5504,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeDeployConfigMinimumHealthyHostsType"
+            "ValueType": "AWS::CodeDeploy::DeploymentConfig.MinimumHealthyHosts.Type"
           }
         },
         "Value": {
@@ -5268,7 +5568,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeDeployAutoRollbackConfigurationEvents"
+            "ValueType": "AWS::CodeDeploy::DeploymentGroup.AutoRollbackConfiguration.Events"
           }
         }
       }
@@ -5305,7 +5605,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeDeployDeploymentStyleOption"
+            "ValueType": "AWS::CodeDeploy::DeploymentGroup.DeploymentStyle.DeploymentOption"
           }
         },
         "DeploymentType": {
@@ -5314,7 +5614,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeDeployDeploymentStyleType"
+            "ValueType": "AWS::CodeDeploy::DeploymentGroup.DeploymentStyle.DeploymentType"
           }
         }
       }
@@ -5546,7 +5846,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodeDeployTriggerConfigEvent"
+            "ValueType": "WS::CodeDeploy::DeploymentGroup.TriggerConfig.TriggerEvents"
           }
         },
         "TriggerName": {
@@ -5625,7 +5925,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodePipelineConfigurationPropertiesType"
+            "ValueType": "AWS::CodePipeline::CustomActionType.ConfigurationProperties.Type"
           }
         }
       }
@@ -5725,7 +6025,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodePipelineActionTypeCategory"
+            "ValueType": "AWS::CodePipeline::Pipeline.ActionTypeId.Category"
           }
         },
         "Owner": {
@@ -5734,7 +6034,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodePipelineActionTypeOwner"
+            "ValueType": "AWS::CodePipeline::Pipeline.ActionTypeId.Owner"
           }
         },
         "Provider": {
@@ -5772,7 +6072,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodePipelineArtifactStoreType"
+            "ValueType": "AWS::CodePipeline::Pipeline.ArtifactStore.Type"
           }
         }
       }
@@ -5809,7 +6109,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CodePipelineBlockerType"
+            "ValueType": "AWS::CodePipeline::Pipeline.BlockerDeclaration.Type"
           }
         }
       }
@@ -5931,6 +6231,40 @@
         }
       }
     },
+    "AWS::CodeStar::GitHubRepository.Code": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-code.html",
+      "Properties": {
+        "S3": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-code.html#cfn-codestar-githubrepository-code-s3",
+          "Required": true,
+          "Type": "S3",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::CodeStar::GitHubRepository.S3": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-s3.html",
+      "Properties": {
+        "Bucket": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-s3.html#cfn-codestar-githubrepository-s3-bucket",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Key": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-s3.html#cfn-codestar-githubrepository-s3-key",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "ObjectVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-codestar-githubrepository-s3.html#cfn-codestar-githubrepository-s3-objectversion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Cognito::IdentityPool.CognitoIdentityProvider": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-identitypool-cognitoidentityprovider.html",
       "Properties": {
@@ -5975,7 +6309,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultEnabledState"
+            "ValueType": "AWS::Default::Default.EnabledState"
           }
         }
       }
@@ -6193,6 +6527,18 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "PreTokenGeneration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-lambdaconfig.html#cfn-cognito-userpool-lambdaconfig-pretokengeneration",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "UserMigration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-lambdaconfig.html#cfn-cognito-userpool-lambdaconfig-usermigration",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "VerifyAuthChallengeResponse": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-lambdaconfig.html#cfn-cognito-userpool-lambdaconfig-verifyauthchallengeresponse",
           "PrimitiveType": "String",
@@ -6279,7 +6625,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CognitoSchemaAttributeDataType"
+            "ValueType": "AWS::Cognito::UserPool.SchemaAttribute.AttributeDataType"
           }
         },
         "DeveloperOnlyAttribute": {
@@ -6354,6 +6700,87 @@
         }
       }
     },
+    "AWS::Cognito::UserPool.UserPoolAddOns": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-userpooladdons.html",
+      "Properties": {
+        "AdvancedSecurityMode": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-userpooladdons.html#cfn-cognito-userpool-userpooladdons-advancedsecuritymode",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Cognito::UserPool.VerificationMessageTemplate": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html",
+      "Properties": {
+        "DefaultEmailOption": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-defaultemailoption",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EmailMessage": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-emailmessage",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EmailMessageByLink": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-emailmessagebylink",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EmailSubject": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-emailsubject",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EmailSubjectByLink": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-emailsubjectbylink",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "SmsMessage": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpool-verificationmessagetemplate.html#cfn-cognito-userpool-verificationmessagetemplate-smsmessage",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Cognito::UserPoolClient.AnalyticsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html",
+      "Properties": {
+        "ApplicationId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-applicationid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExternalId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-externalid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-rolearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "UserDataShared": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpoolclient-analyticsconfiguration.html#cfn-cognito-userpoolclient-analyticsconfiguration-userdatashared",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Cognito::UserPoolUser.AttributeType": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cognito-userpooluser-attributetype.html",
       "Properties": {
@@ -6388,7 +6815,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigResourceType"
+            "ValueType": "AWS::Config::ConfigurationRecorder.ResourceTypes"
           }
         },
         "TagKey": {
@@ -6414,7 +6841,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigRuleSourceOwner"
+            "ValueType": "AWS::Config::ConfigRule.Source.Owner"
           }
         },
         "SourceDetails": {
@@ -6442,7 +6869,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigRuleEventSource"
+            "ValueType": "AWS::Config::ConfigRule.SourceDetail.EventSource"
           }
         },
         "MaximumExecutionFrequency": {
@@ -6451,7 +6878,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigFrequency"
+            "ValueType": "AWS::Config::ConfigRule.MaximumExecutionFrequency"
           }
         },
         "MessageType": {
@@ -6460,7 +6887,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigRuleMessageType"
+            "ValueType": "AWS::Config::ConfigRule.SourceDetail.MessageType"
           }
         }
       }
@@ -6488,7 +6915,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigResourceType"
+            "ValueType": "AWS::Config::ConfigurationRecorder.ResourceTypes"
           }
         }
       }
@@ -6502,7 +6929,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigFrequency"
+            "ValueType": "AWS::Config::ConfigRule.MaximumExecutionFrequency"
           }
         }
       }
@@ -6875,7 +7302,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -6897,7 +7324,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -6917,7 +7344,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DynamoDBAttributeType"
+            "ValueType": "AWS::DynamoDB::Table.AttributeDefinition.AttributeType"
           }
         }
       }
@@ -6968,7 +7395,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DynamoDBKeyType"
+            "ValueType": "AWS::DynamoDB::Table.KeySchema.KeyType"
           }
         }
       }
@@ -7026,7 +7453,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DynamoDBProjectionType"
+            "ValueType": "AWS::DynamoDB::Table.Projection.ProjectionType"
           }
         }
       }
@@ -7068,7 +7495,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DynamoDBStreamViewType"
+            "ValueType": "AWS::DynamoDB::Table.StreamSpecification.StreamViewType"
           }
         }
       }
@@ -7794,7 +8221,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "AWS::IAM::InstanceProfile.NameOrArn"
           }
         },
         "Name": {
@@ -7803,7 +8230,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile"
+            "ValueType": "AWS::IAM::InstanceProfile.Name"
           }
         }
       }
@@ -7986,8 +8413,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SecurityGroups": {
@@ -8417,7 +8844,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "SecurityGroupNameOrId"
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SourceSecurityGroupName": {
@@ -8580,7 +9007,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.Arn"
+            "ValueType": "AWS::IAM::InstanceProfile.Arn"
           }
         }
       }
@@ -8920,7 +9347,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "InstanceInterruptionBehavior": {
@@ -11294,7 +11721,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "VersionLifecycleConfig": {
@@ -12563,8 +12990,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetIds": {
@@ -12586,7 +13013,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchEventBusPolicyConditionKey"
+            "ValueType": "AWS::Events::EventBusPolicy.Condition.Key"
           }
         },
         "Type": {
@@ -12595,7 +13022,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchEventBusPolicyConditionType"
+            "ValueType": "AWS::Events::EventBusPolicy.Condition.Type"
           }
         },
         "Value": {
@@ -12968,7 +13395,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueConnectionInputType"
+            "ValueType": "AWS::Glue::Connection.ConnectionInput.ConnectionType"
           }
         },
         "Description": {
@@ -13087,7 +13514,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueCrawlerDeleteBehavior"
+            "ValueType": "AWS::Glue::Crawler.SchemaChangePolicy.DeleteBehavior"
           }
         },
         "UpdateBehavior": {
@@ -13096,7 +13523,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueCrawlerUpdateBehavior"
+            "ValueType": "AWS::Glue::Crawler.SchemaChangePolicy.UpdateBehavior"
           }
         }
       }
@@ -13228,6 +13655,12 @@
       "Properties": {
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html#cfn-glue-job-jobcommand-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PythonVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html#cfn-glue-job-jobcommand-pythonversion",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -13733,7 +14166,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueTableType"
+            "ValueType": "AWS::Glue::Table.TableInput.TableType"
           }
         },
         "ViewExpandedText": {
@@ -13788,7 +14221,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueTriggerPredicateLogicalOperator"
+            "ValueType": "AWS::Glue::Trigger.Condition.LogicalOperator"
           }
         },
         "State": {
@@ -13797,7 +14230,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueTriggerPredicateState"
+            "ValueType": "AWS::Glue::Trigger.Condition.State"
           }
         }
       }
@@ -13818,7 +14251,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueTriggerPredicateLogical"
+            "ValueType": "AWS::Glue::Trigger.Predicate.Logical"
           }
         }
       }
@@ -13892,7 +14325,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPolicyName"
+            "ValueType": "AWS::IAM::Policy.PolicyName"
           }
         }
       }
@@ -13912,7 +14345,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPolicyName"
+            "ValueType": "AWS::IAM::Policy.PolicyName"
           }
         }
       }
@@ -13949,7 +14382,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPolicyName"
+            "ValueType": "AWS::IAM::Policy.PolicyName"
           }
         }
       }
@@ -16556,8 +16989,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetIds": {
@@ -16619,6 +17052,150 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.BrokerNodeGroupInfo": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html",
+      "Properties": {
+        "BrokerAZDistribution": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-brokerazdistribution",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "ClientSubnets": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-clientsubnets",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "InstanceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-instancetype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "SecurityGroups": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-securitygroups",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "StorageInfo": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-storageinfo",
+          "Required": false,
+          "Type": "StorageInfo",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.ClientAuthentication": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-clientauthentication.html",
+      "Properties": {
+        "Tls": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-clientauthentication.html#cfn-msk-cluster-clientauthentication-tls",
+          "Required": false,
+          "Type": "Tls",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.ConfigurationInfo": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-configurationinfo.html",
+      "Properties": {
+        "Arn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-configurationinfo.html#cfn-msk-cluster-configurationinfo-arn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "Revision": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-configurationinfo.html#cfn-msk-cluster-configurationinfo-revision",
+          "PrimitiveType": "Integer",
+          "Required": true,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.EBSStorageInfo": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-ebsstorageinfo.html",
+      "Properties": {
+        "VolumeSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-ebsstorageinfo.html#cfn-msk-cluster-ebsstorageinfo-volumesize",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.EncryptionAtRest": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptionatrest.html",
+      "Properties": {
+        "DataVolumeKMSKeyId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptionatrest.html#cfn-msk-cluster-encryptionatrest-datavolumekmskeyid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.EncryptionInTransit": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptionintransit.html",
+      "Properties": {
+        "ClientBroker": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptionintransit.html#cfn-msk-cluster-encryptionintransit-clientbroker",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "InCluster": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptionintransit.html#cfn-msk-cluster-encryptionintransit-incluster",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.EncryptionInfo": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptioninfo.html",
+      "Properties": {
+        "EncryptionAtRest": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptioninfo.html#cfn-msk-cluster-encryptioninfo-encryptionatrest",
+          "Required": false,
+          "Type": "EncryptionAtRest",
+          "UpdateType": "Immutable"
+        },
+        "EncryptionInTransit": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-encryptioninfo.html#cfn-msk-cluster-encryptioninfo-encryptionintransit",
+          "Required": false,
+          "Type": "EncryptionInTransit",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.StorageInfo": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-storageinfo.html",
+      "Properties": {
+        "EBSStorageInfo": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-storageinfo.html#cfn-msk-cluster-storageinfo-ebsstorageinfo",
+          "Required": false,
+          "Type": "EBSStorageInfo",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.Tls": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-tls.html",
+      "Properties": {
+        "CertificateAuthorityArnList": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-tls.html#cfn-msk-cluster-tls-certificateauthorityarnlist",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -18131,7 +18708,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         },
         "VPCRegion": {
@@ -18910,7 +19487,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "Rules": {
@@ -20587,7 +21164,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "WorkspacePropertyComputeType"
+            "ValueType": "AWS::WorkSpaces::Workspace.ComputeTypeName"
           }
         },
         "RootVolumeSizeGib": {
@@ -20602,7 +21179,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "WorkspacePropertyRunningMode"
+            "ValueType": "AWS::WorkSpaces::Workspace.RunningMode"
           }
         },
         "RunningModeAutoStopTimeoutInMinutes": {
@@ -20689,24 +21266,24 @@
       }
     },
     "Tag": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dms-replicationinstance-tag.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html",
       "Properties": {
         "Key": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dms-replicationinstance-tag.html#cfn-dms-replicationinstance-tag-key",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html#cfn-resource-tags-key",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         },
         "Value": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dms-replicationinstance-tag.html#cfn-dms-replicationinstance-tag-value",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html#cfn-resource-tags-value",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         }
       }
     }
   },
-  "ResourceSpecificationVersion": "4.3.0",
+  "ResourceSpecificationVersion": "5.3.0",
   "ResourceTypes": {
     "AWS::AmazonMQ::Broker": {
       "Attributes": {
@@ -20772,6 +21349,12 @@
           "Value": {
             "ValueType": "AWS::AmazonMQ::Broker.DeploymentMode"
           }
+        },
+        "EncryptionOptions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amazonmq-broker.html#cfn-amazonmq-broker-encryptionoptions",
+          "Required": false,
+          "Type": "EncryptionOptions",
+          "UpdateType": "Immutable"
         },
         "EngineType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amazonmq-broker.html#cfn-amazonmq-broker-enginetype",
@@ -23208,6 +23791,67 @@
         }
       }
     },
+    "AWS::AppSync::GraphQLApi": {
+      "Attributes": {
+        "ApiId": {
+          "PrimitiveType": "String"
+        },
+        "Arn": {
+          "PrimitiveType": "String"
+        },
+        "GraphQLUrl": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html",
+      "Properties": {
+        "AdditionalAuthenticationProviders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-additionalauthenticationproviders",
+          "Required": false,
+          "Type": "AdditionalAuthenticationProviders",
+          "UpdateType": "Mutable"
+        },
+        "AuthenticationType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-authenticationtype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::AppSync::GraphQLApi.AuthType"
+          }
+        },
+        "LogConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-logconfig",
+          "Required": false,
+          "Type": "LogConfig",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "OpenIDConnectConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-openidconnectconfig",
+          "Required": false,
+          "Type": "OpenIDConnectConfig",
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-tags",
+          "Required": false,
+          "Type": "Tags",
+          "UpdateType": "Mutable"
+        },
+        "UserPoolConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-userpoolconfig",
+          "Required": false,
+          "Type": "UserPoolConfig",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::AppSync::Resolver": {
       "Attributes": {
         "FieldName": {
@@ -23641,7 +24285,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile.NameOrArn"
+            "ValueType": "AWS::IAM::InstanceProfile.NameOrArn"
           }
         },
         "ImageId": {
@@ -23718,8 +24362,8 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "SpotPrice": {
@@ -24067,7 +24711,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "State": {
@@ -24502,8 +25146,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "CloudWatchAlarmActions",
-            "ValueType": "CloudWatchAlarmAction"
+            "ListValueType": "AWS::CloudWatch::Alarm.AlarmActions",
+            "ValueType": "AWS::CloudWatch::Alarm.AlarmAction"
           }
         },
         "AlarmDescription": {
@@ -24524,7 +25168,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchAlarmComparisonOperator"
+            "ValueType": "AWS::CloudWatch::Alarm.ComparisonOperator"
           }
         },
         "DatapointsToAlarm": {
@@ -24607,7 +25251,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchAlarmStatistic"
+            "ValueType": "AWS::CloudWatch::Alarm.Statistic"
           }
         },
         "Threshold": {
@@ -24622,7 +25266,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchAlarmTreatMissingData"
+            "ValueType": "AWS::CloudWatch::Alarm.TreatMissingData"
           }
         },
         "Unit": {
@@ -24631,7 +25275,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchAlarmUnit"
+            "ValueType": "AWS::CloudWatch::Alarm.Unit"
           }
         }
       }
@@ -24778,7 +25422,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.NameOrArn"
+            "ValueType": "AWS::IAM::Role.NameOrArn"
           }
         },
         "Source": {
@@ -24820,6 +25464,35 @@
         }
       }
     },
+    "AWS::CodeBuild::SourceCredential": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html",
+      "Properties": {
+        "AuthType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-authtype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "ServerType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-servertype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "Token": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-token",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Username": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-username",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::CodeCommit::Repository": {
       "Attributes": {
         "Arn": {
@@ -24855,6 +25528,13 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codecommit-repository.html#cfn-codecommit-repository-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "Triggers": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codecommit-repository.html#cfn-codecommit-repository-triggers",
           "ItemType": "RepositoryTrigger",
@@ -24879,7 +25559,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CodeDeployApplicationPlatform"
+            "ValueType": "AWS::CodeDeploy::Application.ComputePlatform"
           }
         }
       }
@@ -25013,7 +25693,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CodePipelineActionTypeCategory"
+            "ValueType": "AWS::CodePipeline::Pipeline.ActionTypeId.Category"
           }
         },
         "ConfigurationProperties": {
@@ -25176,6 +25856,53 @@
         }
       }
     },
+    "AWS::CodeStar::GitHubRepository": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html",
+      "Properties": {
+        "Code": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-code",
+          "Required": false,
+          "Type": "Code",
+          "UpdateType": "Mutable"
+        },
+        "EnableIssues": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-enableissues",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "IsPrivate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-isprivate",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RepositoryAccessToken": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-repositoryaccesstoken",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "RepositoryDescription": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-repositorydescription",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RepositoryName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-repositoryname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "RepositoryOwner": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestar-githubrepository.html#cfn-codestar-githubrepository-repositoryowner",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Cognito::IdentityPool": {
       "Attributes": {
         "Name": {
@@ -25299,7 +26026,7 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CognitoAliasAttributes"
+            "ValueType": "AWS::Cognito::UserPool.AliasAttributes"
           }
         },
         "AutoVerifiedAttributes": {
@@ -25309,7 +26036,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CognitoAttributes"
+            "ValueType": "AWS::Cognito::UserPool.UsernameAttributes"
           }
         },
         "DeviceConfiguration": {
@@ -25348,7 +26075,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CognitoMfaConfiguration"
+            "ValueType": "AWS::Cognito::UserPool.MfaConfiguration"
           }
         },
         "Policies": {
@@ -25382,6 +26109,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "UserPoolAddOns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpool.html#cfn-cognito-userpool-userpooladdons",
+          "Required": false,
+          "Type": "UserPoolAddOns",
+          "UpdateType": "Mutable"
+        },
         "UserPoolName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpool.html#cfn-cognito-userpool-userpoolname",
           "PrimitiveType": "String",
@@ -25401,8 +26134,14 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CognitoAttributes"
+            "ValueType": "AWS::Cognito::UserPool.UsernameAttributes"
           }
+        },
+        "VerificationMessageTemplate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpool.html#cfn-cognito-userpool-verificationmessagetemplate",
+          "Required": false,
+          "Type": "VerificationMessageTemplate",
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -25417,8 +26156,47 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html",
       "Properties": {
+        "AllowedOAuthFlows": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthflows",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "AllowedOAuthFlowsUserPoolClient": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthflowsuserpoolclient",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "AllowedOAuthScopes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-allowedoauthscopes",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "AnalyticsConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-analyticsconfiguration",
+          "Required": false,
+          "Type": "AnalyticsConfiguration",
+          "UpdateType": "Mutable"
+        },
+        "CallbackURLs": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-callbackurls",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "ClientName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-clientname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DefaultRedirectURI": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-defaultredirecturi",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -25430,7 +26208,7 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CognitoExplicitAuthFlows"
+            "ValueType": "AWS::Cognito::UserPoolClient.ExplicitAuthFlows"
           }
         },
         "GenerateSecret": {
@@ -25438,6 +26216,13 @@
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Immutable"
+        },
+        "LogoutURLs": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-logouturls",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
         },
         "ReadAttributes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-readattributes",
@@ -25452,8 +26237,15 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CognitoRefreshTokenValidity"
+            "ValueType": "AWS::Cognito::UserPoolClient.RefreshTokenValidity"
           }
+        },
+        "SupportedIdentityProviders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-supportedidentityproviders",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
         },
         "UserPoolId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpoolclient.html#cfn-cognito-userpoolclient-userpoolid",
@@ -25515,7 +26307,7 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CognitoDesiredDeliveryMediums"
+            "ValueType": "AWS::Cognito::UserPoolUser.DesiredDeliveryMediums"
           }
         },
         "ForceAliasCreation": {
@@ -25530,7 +26322,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CognitoMessageAction"
+            "ValueType": "AWS::Cognito::UserPoolUser.MessageAction"
           }
         },
         "UserAttributes": {
@@ -25622,7 +26414,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "ConfigFrequency"
+            "ValueType": "AWS::Config::ConfigRule.MaximumExecutionFrequency"
           }
         },
         "Scope": {
@@ -25770,7 +26562,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultEnabledState"
+            "ValueType": "AWS::Default::Default.EnabledState"
           }
         }
       }
@@ -26111,9 +26903,21 @@
     "AWS::DMS::ReplicationTask": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationtask.html",
       "Properties": {
+        "CdcStartPosition": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationtask.html#cfn-dms-replicationtask-cdcstartposition",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "CdcStartTime": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationtask.html#cfn-dms-replicationtask-cdcstarttime",
           "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "CdcStopPosition": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationtask.html#cfn-dms-replicationtask-cdcstopposition",
+          "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -26564,7 +27368,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DynamoDBBillingMode"
+            "ValueType": "AWS::DynamoDB::Table.BillingMode"
           }
         },
         "GlobalSecondaryIndexes": {
@@ -26984,7 +27788,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -27178,7 +27982,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamInstanceProfile"
+            "ValueType": "AWS::IAM::InstanceProfile.Name"
           }
         },
         "ImageId": {
@@ -27291,8 +28095,8 @@
           "Type": "List",
           "UpdateType": "Conditional",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SecurityGroups": {
@@ -27303,8 +28107,8 @@
           "Type": "List",
           "UpdateType": "Immutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "SourceDestCheck": {
@@ -27446,7 +28250,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -27756,7 +28560,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -27778,7 +28582,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SecurityGroupDescription"
+            "ValueType": "AWS::EC2::SecurityGroup.Description"
           }
         },
         "GroupName": {
@@ -27817,7 +28621,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -27944,7 +28748,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SecurityGroupNameOrId"
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SourceSecurityGroupName": {
@@ -28040,7 +28844,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28202,7 +29006,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28368,7 +29172,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28388,7 +29192,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28466,7 +29270,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28522,7 +29326,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         },
         "VpnGatewayId": {
@@ -28574,7 +29378,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -28939,7 +29743,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole.NameOrArn"
+            "ValueType": "AWS::IAM::Role.NameOrArn"
           }
         },
         "SchedulingStrategy": {
@@ -29004,7 +29808,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "Family": {
@@ -29235,7 +30039,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole"
+            "ValueType": "AWS::IAM::Role.Name"
           }
         },
         "BootstrapActions": {
@@ -29278,7 +30082,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamInstanceProfile"
+            "ValueType": "AWS::IAM::InstanceProfile.Name"
           }
         },
         "KerberosAttributes": {
@@ -29323,7 +30127,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamRole"
+            "ValueType": "AWS::IAM::Role.Name"
           }
         },
         "Steps": {
@@ -29863,8 +30667,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SnapshotArns": {
@@ -30271,8 +31075,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroups",
-            "ValueType": "SecurityGroup"
+            "ListValueType": "AWS::EC2::SecurityGroup.GroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.GroupId"
           }
         },
         "Subnets": {
@@ -30455,8 +31259,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetMappings": {
@@ -30624,7 +31428,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -30724,7 +31528,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchEventBusPolicyAction"
+            "ValueType": "AWS::Events::EventBusPolicy.Action"
           }
         },
         "Condition": {
@@ -30791,7 +31595,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "DefaultEnabledState"
+            "ValueType": "AWS::Default::Default.EnabledState"
           }
         },
         "Targets": {
@@ -31017,7 +31821,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.NameOrArn"
+            "ValueType": "AWS::IAM::InstanceProfile.NameOrArn"
           }
         },
         "Schedule": {
@@ -31138,8 +31942,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "SecurityGroupNameOrIds",
-            "ValueType": "SecurityGroupNameOrId"
+            "ListValueType": "AWS::EC2::SecurityGroup.NamesOrGroupIds",
+            "ValueType": "AWS::EC2::SecurityGroup.NameOrGroupId"
           }
         },
         "SubnetId": {
@@ -31195,9 +31999,21 @@
           "Type": "ExecutionProperty",
           "UpdateType": "Mutable"
         },
+        "GlueVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-glueversion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "LogUri": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-loguri",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "MaxCapacity": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-maxcapacity",
+          "PrimitiveType": "Double",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -31213,13 +32029,19 @@
           "Required": false,
           "UpdateType": "Immutable"
         },
+        "NumberOfWorkers": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-numberofworkers",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Role": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-role",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.NameOrArn"
+            "ValueType": "AWS::IAM::InstanceProfile.NameOrArn"
           }
         },
         "SecurityConfiguration": {
@@ -31231,6 +32053,12 @@
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-tags",
           "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "WorkerType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-glue-job.html#cfn-glue-job-workertype",
+          "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
         }
@@ -31351,7 +32179,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GlueTriggerType"
+            "ValueType": "AWS::Glue::Trigger.Type"
           }
         }
       }
@@ -31383,6 +32211,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-connectordefinition.html#cfn-greengrass-connectordefinition-name",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-connectordefinition.html#cfn-greengrass-connectordefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -31433,6 +32267,12 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-coredefinition.html#cfn-greengrass-coredefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -31482,6 +32322,12 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-devicedefinition.html#cfn-greengrass-devicedefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -31530,6 +32376,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-functiondefinition.html#cfn-greengrass-functiondefinition-name",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-functiondefinition.html#cfn-greengrass-functiondefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -31596,6 +32448,12 @@
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-group.html#cfn-greengrass-group-rolearn",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-group.html#cfn-greengrass-group-tags",
+          "PrimitiveType": "Json",
           "Required": false,
           "UpdateType": "Mutable"
         }
@@ -31682,6 +32540,12 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-loggerdefinition.html#cfn-greengrass-loggerdefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -31730,6 +32594,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-resourcedefinition.html#cfn-greengrass-resourcedefinition-name",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-resourcedefinition.html#cfn-greengrass-resourcedefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -31780,6 +32650,12 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-greengrass-subscriptiondefinition.html#cfn-greengrass-subscriptiondefinition-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -31816,7 +32692,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GuardDutyDetectorFrequency"
+            "ValueType": "AWS::GuardDuty::Detector.FindingPublishingFrequency"
           }
         }
       }
@@ -31830,7 +32706,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GuardDutyFilterAction"
+            "ValueType": "AWS::GuardDuty::Filter.Action"
           }
         },
         "Description": {
@@ -31886,7 +32762,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "GuardDutyIPSetFormat"
+            "ValueType": "AWS::GuardDuty::IPSet.Format"
           }
         },
         "Location": {
@@ -31965,7 +32841,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "GuardDutyMemberStatus"
+            "ValueType": "AWS::GuardDuty::Member.Status"
           }
         }
       }
@@ -31991,7 +32867,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "GuardDutyThreadIntelSetFormat"
+            "ValueType": "AWS::GuardDuty::ThreatIntelSet.Format"
           }
         },
         "Location": {
@@ -32028,7 +32904,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamAccessKeyActive"
+            "ValueType": "AWS::IAM::AccessKey.Active"
           }
         },
         "UserName": {
@@ -32061,8 +32937,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "IamManagedPolicy.Arns",
-            "ValueType": "IamManagedPolicy.Arn"
+            "ListValueType": "AWS::IAM::ManagedPolicy.Arns",
+            "ValueType": "AWS::IAM::ManagedPolicy.Arn"
           }
         },
         "Path": {
@@ -32071,7 +32947,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPath"
+            "ValueType": "AWS::IAM::Path.Path"
           }
         },
         "Policies": {
@@ -32104,7 +32980,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamPath"
+            "ValueType": "AWS::IAM::Path.Path"
           }
         },
         "Roles": {
@@ -32115,8 +32991,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "IamInstanceProfileRoles",
-            "ValueType": "IamInstanceProfileRole"
+            "ListValueType": "AWS::IAM::InstanceProfile.Roles",
+            "ValueType": "AWS::IAM::InstanceProfile.Role"
           }
         }
       }
@@ -32150,7 +33026,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamPath"
+            "ValueType": "AWS::IAM::Path.Path"
           }
         },
         "PolicyDocument": {
@@ -32159,7 +33035,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamManagedPolicyDocument"
+            "ValueType": "AWS::IAM::ManagedPolicy.PolicyDocument"
           }
         },
         "Roles": {
@@ -32203,7 +33079,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPolicyName"
+            "ValueType": "AWS::IAM::Policy.PolicyName"
           }
         },
         "Roles": {
@@ -32241,7 +33117,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamAssumeRoleDocument"
+            "ValueType": "AWS::IAM::AssumeRole.Document"
           }
         },
         "ManagedPolicyArns": {
@@ -32252,8 +33128,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "IamManagedPolicy.Arns",
-            "ValueType": "IamManagedPolicy.Arn"
+            "ListValueType": "AWS::IAM::ManagedPolicy.Arns",
+            "ValueType": "AWS::IAM::ManagedPolicy.Arn"
           }
         },
         "MaxSessionDuration": {
@@ -32268,7 +33144,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamPath"
+            "ValueType": "AWS::IAM::Path.Path"
           }
         },
         "PermissionsBoundary": {
@@ -32340,8 +33216,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "IamGroups",
-            "ValueType": "IamGroup"
+            "ListValueType": "AWS::IAM::Group.Names",
+            "ValueType": "AWS::IAM::Group.Name"
           }
         },
         "LoginProfile": {
@@ -32358,8 +33234,8 @@
           "Type": "List",
           "UpdateType": "Mutable",
           "Value": {
-            "ListValueType": "IamManagedPolicy.Arns",
-            "ValueType": "IamManagedPolicy.Arn"
+            "ListValueType": "AWS::IAM::ManagedPolicy.Arns",
+            "ValueType": "AWS::IAM::ManagedPolicy.Arn"
           }
         },
         "Path": {
@@ -32368,7 +33244,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamPath"
+            "ValueType": "AWS::IAM::Path.Path"
           }
         },
         "PermissionsBoundary": {
@@ -33114,7 +33990,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "IamRole.Arn"
+            "ValueType": "AWS::IAM::Role.Arn"
           }
         },
         "Runtime": {
@@ -33336,7 +34212,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "CloudWatchLogGroupName"
+            "ValueType": "AWS::Logs::LogGroup.LogGroupName"
           }
         },
         "RetentionInDays": {
@@ -33345,7 +34221,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "CloudWatchLogGroupRetention"
+            "ValueType": "AWS::Logs::LogGroup.Retention"
           }
         }
       }
@@ -33416,6 +34292,65 @@
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html",
+      "Properties": {
+        "BrokerNodeGroupInfo": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-brokernodegroupinfo",
+          "Required": true,
+          "Type": "BrokerNodeGroupInfo",
+          "UpdateType": "Immutable"
+        },
+        "ClientAuthentication": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-clientauthentication",
+          "Required": false,
+          "Type": "ClientAuthentication",
+          "UpdateType": "Immutable"
+        },
+        "ClusterName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-clustername",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "ConfigurationInfo": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-configurationinfo",
+          "Required": false,
+          "Type": "ConfigurationInfo",
+          "UpdateType": "Immutable"
+        },
+        "EncryptionInfo": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-encryptioninfo",
+          "Required": false,
+          "Type": "EncryptionInfo",
+          "UpdateType": "Immutable"
+        },
+        "EnhancedMonitoring": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-enhancedmonitoring",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "KafkaVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-kafkaversion",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "NumberOfBrokerNodes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-numberofbrokernodes",
+          "PrimitiveType": "Integer",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-tags",
+          "PrimitiveType": "Json",
           "Required": false,
           "UpdateType": "Immutable"
         }
@@ -34473,7 +35408,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "VpcId"
+            "ValueType": "AWS::EC2::VPC.Id"
           }
         }
       }
@@ -34498,7 +35433,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "IamUser.Arn"
+            "ValueType": "AWS::IAM::User.Arn"
           }
         },
         "SshPublicKey": {
@@ -38593,6 +39528,15 @@
         "PercentChangeInCapacity"
       ]
     },
+    "AWS::AutoScaling::ScalingPolicy.CustomizedMetricSpecification.Statistic": {
+      "AllowedValues": [
+        "Average",
+        "Minimum",
+        "Maximum",
+        "SampleCount",
+        "Sum"
+      ]
+    },
     "AWS::AutoScaling::ScalingPolicy.MetricAggregationType": {
       "AllowedValues": [
         "Average",
@@ -38605,6 +39549,48 @@
         "SimpleScaling",
         "StepScaling",
         "TargetTrackingScaling"
+      ]
+    },
+    "AWS::AutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType": {
+      "AllowedValues": [
+        "ALBRequestCountPerTarget",
+        "ASGAverageCPUUtilization",
+        "ASGAverageNetworkIn",
+        "ASGAverageNetworkOut"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMaxCapacityBehavior": {
+      "AllowedValues": [
+        "SetForecastCapacityToMaxCapacity",
+        "SetMaxCapacityToForecastCapacity",
+        "SetMaxCapacityAboveForecastCapacity"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.PredictiveScalingMode": {
+      "AllowedValues": [
+        "ForecastAndScale",
+        "ForecastOnly"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ScalableDimension": {
+      "AllowedValues": [
+        "autoscaling:autoScalingGroup:DesiredCapacity",
+        "ecs:service:DesiredCount",
+        "ec2:spot-fleet-request:TargetCapacity",
+        "dynamodb:table:ReadCapacityUnits",
+        "dynamodb:table:WriteCapacityUnits",
+        "dynamodb:index:ReadCapacityUnits",
+        "dynamodb:index:WriteCapacityUnits",
+        "rds:cluster:ReadReplicaCount"
+      ]
+    },
+    "AWS::AutoScalingPlans::ScalingPlan.ScalingInstruction.ServiceNamespace": {
+      "AllowedValues": [
+        "autoscaling",
+        "dynamodb",
+        "ecs",
+        "ec2",
+        "rds"
       ]
     },
     "AWS::Backup::BackupPlan.Id": {
@@ -38633,45 +39619,7 @@
         ]
       }
     },
-    "AWS::EC2::EIP.AllocationId": {
-      "GetAtt": {
-        "AWS::EC2::EIP": "AllocationId"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "AWS::EC2::Instance.Affinity": {
-      "AllowedValues": [
-        "default",
-        "host"
-      ]
-    },
-    "AvailabilityZone": {
-      "GetAtt": {
-        "AWS::EC2::Instance": "AvailabilityZone",
-        "AWS::EC2::Subnet": "AvailabilityZone",
-        "AWS::OpsWorks::Instance": "AvailabilityZone"
-      },
-      "Ref": {
-        "Parameters": [
-          "String",
-          "AvailabilityZone"
-        ]
-      }
-    },
-    "AvailabilityZones": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "AvailabilityZones"
-        ]
-      }
-    },
-    "BudgetDataBudgetType": {
+    "AWS::Budgets::Budget.BudgetType": {
       "AllowedValues": [
         "COST",
         "RI_COVERAGE",
@@ -38679,7 +39627,36 @@
         "USAGE"
       ]
     },
-    "BudgetDataTimeUnit": {
+    "AWS::Budgets::Budget.ComparisonOperator": {
+      "AllowedValues": [
+        "EQUAL_TO",
+        "GREATER_THAN",
+        "LESS_THAN"
+      ]
+    },
+    "AWS::Budgets::Budget.NotificationType": {
+      "AllowedValues": [
+        "ACTUAL",
+        "FORECASTED"
+      ]
+    },
+    "AWS::Budgets::Budget.SubscriptionType": {
+      "AllowedValues": [
+        "EMAIL",
+        "SNS"
+      ]
+    },
+    "AWS::Budgets::Budget.Threshold": {
+      "NumberMax": 1000000000,
+      "NumberMin": 0.1
+    },
+    "AWS::Budgets::Budget.ThresholdType": {
+      "AllowedValues": [
+        "ABSOLUTE_VALUE",
+        "PERCENTAGE"
+      ]
+    },
+    "AWS::Budgets::Budget.TimeUnit": {
       "AllowedValues": [
         "ANNUALLY",
         "DAILY",
@@ -38687,59 +39664,14 @@
         "QUARTERLY"
       ]
     },
-    "BudgetNotificationComparisonOperator": {
-      "AllowedValues": [
-        "EQUAL_TO",
-        "GREATER_THAN",
-        "LESS_THAN"
-      ]
-    },
-    "BudgetNotificationNotificationType": {
-      "AllowedValues": [
-        "ACTUAL",
-        "FORECASTED"
-      ]
-    },
-    "BudgetNotificationThreshold": {
-      "NumberMax": 1000000000,
-      "NumberMin": 0.1
-    },
-    "BudgetNotificationThresholdType": {
-      "AllowedValues": [
-        "ABSOLUTE_VALUE",
-        "PERCENTAGE"
-      ]
-    },
-    "BudgetSubscriptionType": {
-      "AllowedValues": [
-        "EMAIL",
-        "SNS"
-      ]
-    },
-    "CertificateValidationMethod": {
-      "AllowedValues": [
-        "DNS",
-        "EMAIL"
-      ]
-    },
-    "CidrIp": {
-      "AllowedPattern": "x.x.x.x/y",
-      "AllowedPatternRegex": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))$"
-    },
-    "CloudFrontCacheBehaviourViewerProtocolPolicy": {
-      "AllowedValues": [
-        "allow-all",
-        "https-only",
-        "redirect-to-https"
-      ]
-    },
-    "CloudFrontCustomErrorResponsesErrorCode": {
+    "AWS::CloudFront::Distribution.ErrorCode": {
       "AllowedValues": [
         "400",
         "403",
         "404",
         "405",
         "414",
+        "416",
         "500",
         "501",
         "502",
@@ -38747,35 +39679,7 @@
         "504"
       ]
     },
-    "CloudFrontCustomErrorResponsesResponseCode": {
-      "AllowedValues": [
-        "200",
-        "400",
-        "403",
-        "404",
-        "405",
-        "414",
-        "500",
-        "501",
-        "502",
-        "503",
-        "504"
-      ]
-    },
-    "CloudFrontGeoRestrictionType": {
-      "AllowedValues": [
-        "blacklist",
-        "none",
-        "whitelist"
-      ]
-    },
-    "CloudFrontHttpVersion": {
-      "AllowedValues": [
-        "http1.1",
-        "http2"
-      ]
-    },
-    "CloudFrontLambdaFunctionAssociationsEventType": {
+    "AWS::CloudFront::Distribution.EventType": {
       "AllowedValues": [
         "origin-request",
         "origin-response",
@@ -38783,480 +39687,13 @@
         "viewer-response"
       ]
     },
-    "CloudFrontOriginProtocolPolicy": {
+    "AWS::CloudFront::Distribution.HttpVersion": {
       "AllowedValues": [
-        "http-only",
-        "https-only",
-        "match-viewer"
+        "http1.1",
+        "http2"
       ]
     },
-    "CloudFrontOriginSSLProtocols": {
-      "AllowedValues": [
-        "SSLv3",
-        "TLSv1.1",
-        "TLSv1.2",
-        "TLSv1"
-      ]
-    },
-    "CloudFrontPriceClass": {
-      "AllowedValues": [
-        "PriceClass_100",
-        "PriceClass_200",
-        "PriceClass_All"
-      ]
-    },
-    "CloudFrontViewerCertificateMinimumProtocolVersion": {
-      "AllowedValues": [
-        "SSLv3",
-        "TLSv1",
-        "TLSv1_2016",
-        "TLSv1.1_2016",
-        "TLSv1.2_2018"
-      ]
-    },
-    "CloudFrontViewerCertificateSSLSupportMethod": {
-      "AllowedValues": [
-        "sni-only",
-        "vip"
-      ]
-    },
-    "CloudTrailEventSelectorDataResourceType": {
-      "AllowedValues": [
-        "AWS::Lambda::Function",
-        "AWS::S3::Object"
-      ]
-    },
-    "CloudTrailEventSelectorReadWriteType": {
-      "AllowedValues": [
-        "All",
-        "ReadOnly",
-        "WriteOnly"
-      ]
-    },
-    "CloudWatchAlarmAction": {
-      "StringMax": 1024,
-      "StringMin": 1
-    },
-    "CloudWatchAlarmActions": {
-      "ListMax": 5,
-      "ListMin": 0
-    },
-    "CloudWatchAlarmComparisonOperator": {
-      "AllowedValues": [
-        "GreaterThanOrEqualToThreshold",
-        "GreaterThanThreshold",
-        "LessThanOrEqualToThreshold",
-        "LessThanThreshold"
-      ]
-    },
-    "CloudWatchAlarmStatistic": {
-      "AllowedValues": [
-        "Average",
-        "Maximum",
-        "Minimum",
-        "SampleCount",
-        "Sum"
-      ]
-    },
-    "CloudWatchAlarmTreatMissingData": {
-      "AllowedValues": [
-        "breaching",
-        "ignore",
-        "missing",
-        "notBreaching"
-      ]
-    },
-    "CloudWatchAlarmUnit": {
-      "AllowedValues": [
-        "Bits",
-        "Bits/Second",
-        "Bytes",
-        "Bytes/Second",
-        "Count",
-        "Count/Second",
-        "Gigabits",
-        "Gigabits/Second",
-        "Gigabytes",
-        "Gigabytes/Second",
-        "Kilobits",
-        "Kilobits/Second",
-        "Kilobytes",
-        "Kilobytes/Second",
-        "Megabits",
-        "Megabits/Second",
-        "Megabytes",
-        "Megabytes/Second",
-        "Microseconds",
-        "Milliseconds",
-        "None",
-        "Percent",
-        "Seconds",
-        "Terabits",
-        "Terabits/Second",
-        "Terabytes",
-        "Terabytes/Second"
-      ]
-    },
-    "CloudWatchEventBusPolicyAction": {
-      "AllowedValues": [
-        "events:PutEvents"
-      ]
-    },
-    "CloudWatchEventBusPolicyConditionKey": {
-      "AllowedValues": [
-        "aws:PrincipalOrgID"
-      ]
-    },
-    "CloudWatchEventBusPolicyConditionType": {
-      "AllowedValues": [
-        "StringEquals"
-      ]
-    },
-    "CloudWatchLogGroupName": {
-      "StringMax": 512,
-      "StringMin": 1
-    },
-    "CloudWatchLogGroupRetention": {
-      "AllowedValues": [
-        "1",
-        "3",
-        "5",
-        "7",
-        "14",
-        "30",
-        "60",
-        "90",
-        "120",
-        "150",
-        "180",
-        "365",
-        "400",
-        "545",
-        "731",
-        "1827",
-        "3653"
-      ]
-    },
-    "CodeBuildArtifactPackaging": {
-      "AllowedValues": [
-        "NONE",
-        "ZIP"
-      ]
-    },
-    "CodeBuildArtifactType": {
-      "AllowedValues": [
-        "CODEPIPELINE",
-        "NO_ARTIFACTS",
-        "S3"
-      ]
-    },
-    "CodeBuildCacheType": {
-      "AllowedValues": [
-        "LOCAL",
-        "NO_CACHE",
-        "S3"
-      ]
-    },
-    "CodeBuildEnvironmentComputeType": {
-      "AllowedValues": [
-        "BUILD_GENERAL1_LARGE",
-        "BUILD_GENERAL1_MEDIUM",
-        "BUILD_GENERAL1_SMALL"
-      ]
-    },
-    "CodeBuildEnvironmentCredentialsType": {
-      "AllowedValues": [
-        "CODEBUILD",
-        "SERVICE_ROLE"
-      ]
-    },
-    "CodeBuildEnvironmentType": {
-      "AllowedValues": [
-        "LINUX_CONTAINER",
-        "WINDOWS_CONTAINER"
-      ]
-    },
-    "CodeBuildSourceType": {
-      "AllowedValues": [
-        "BITBUCKET",
-        "CODECOMMIT",
-        "CODEPIPELINE",
-        "GITHUB",
-        "GITHUB_ENTERPRISE",
-        "NO_SOURCE",
-        "S3"
-      ]
-    },
-    "CodeCommitEvent": {
-      "AllowedValues": [
-        "all",
-        "createReference",
-        "deleteReference",
-        "updateReference"
-      ]
-    },
-    "CodeCommitRepositoryName": {
-      "AllowedPatternRegex": "^[a-zA-Z0-9._\\-]+(?<!\\.git)$",
-      "StringMax": 100,
-      "StringMin": 1
-    },
-    "CodeDeployApplicationPlatform": {
-      "AllowedValues": [
-        "ECS",
-        "Lambda",
-        "Server"
-      ]
-    },
-    "CodeDeployAutoRollbackConfigurationEvents": {
-      "AllowedValues": [
-        "DEPLOYMENT_FAILURE",
-        "DEPLOYMENT_STOP_ON_ALARM",
-        "DEPLOYMENT_STOP_ON_REQUEST"
-      ]
-    },
-    "CodeDeployConfigMinimumHealthyHostsType": {
-      "AllowedValues": [
-        "FLEET_PERCENT",
-        "HOST_COUNT"
-      ]
-    },
-    "CodeDeployDeploymentStyleOption": {
-      "AllowedValues": [
-        "WITH_TRAFFIC_CONTROL",
-        "WITHOUT_TRAFFIC_CONTROL"
-      ]
-    },
-    "CodeDeployDeploymentStyleType": {
-      "AllowedValues": [
-        "BLUE_GREEN",
-        "IN_PLACE"
-      ]
-    },
-    "CodeDeployTriggerConfigEvent": {
-      "AllowedValues": [
-        "DeploymentFailure",
-        "DeploymentReady",
-        "DeploymentRollback",
-        "DeploymentStart",
-        "DeploymentStop",
-        "DeploymentSuccess",
-        "InstanceFailure",
-        "InstanceReady",
-        "InstanceStart",
-        "InstanceSuccess"
-      ]
-    },
-    "CodePipelineActionTypeCategory": {
-      "AllowedValues": [
-        "Approval",
-        "Build",
-        "Deploy",
-        "Invoke",
-        "Source",
-        "Test"
-      ]
-    },
-    "CodePipelineActionTypeOwner": {
-      "AllowedValues": [
-        "AWS",
-        "Custom",
-        "ThirdParty"
-      ]
-    },
-    "CodePipelineArtifactStoreType": {
-      "AllowedValues": [
-        "S3"
-      ]
-    },
-    "CodePipelineBlockerType": {
-      "AllowedValues": [
-        "Schedule"
-      ]
-    },
-    "CodePipelineConfigurationPropertiesType": {
-      "AllowedValues": [
-        "Boolean",
-        "Number",
-        "String"
-      ]
-    },
-    "CodePipelineWehbookAuthentication": {
-      "AllowedValues": [
-        "GITHUB_HMAC",
-        "IP",
-        "UNAUTHENTICATED"
-      ]
-    },
-    "CognitoAliasAttributes": {
-      "AllowedValues": [
-        "email",
-        "phone_number",
-        "preferred_username"
-      ]
-    },
-    "CognitoAttributes": {
-      "AllowedValues": [
-        "email",
-        "phone_number"
-      ]
-    },
-    "CognitoDesiredDeliveryMediums": {
-      "AllowedValues": [
-        "EMAIL",
-        "SMS"
-      ]
-    },
-    "CognitoExplicitAuthFlows": {
-      "AllowedValues": [
-        "ADMIN_NO_SRP_AUTH",
-        "CUSTOM_AUTH_FLOW_ONLY",
-        "USER_PASSWORD_AUTH"
-      ]
-    },
-    "CognitoMessageAction": {
-      "AllowedValues": [
-        "RESEND",
-        "SUPPRESS"
-      ]
-    },
-    "CognitoMfaConfiguration": {
-      "AllowedValues": [
-        "OFF",
-        "ON",
-        "OPTIONAL"
-      ]
-    },
-    "CognitoRefreshTokenValidity": {
-      "NumberMax": 3650,
-      "NumberMin": 0,
-      "Ref": {
-        "Parameters": [
-          "String",
-          "Number"
-        ]
-      }
-    },
-    "CognitoSchemaAttributeDataType": {
-      "AllowedValues": [
-        "Boolean",
-        "DateTime",
-        "Number",
-        "String"
-      ]
-    },
-    "ConfigFrequency": {
-      "AllowedValues": [
-        "One_Hour",
-        "Six_Hours",
-        "Three_Hours",
-        "Twelve_Hours",
-        "TwentyFour_Hours"
-      ]
-    },
-    "ConfigResourceType": {
-      "AllowedValues": [
-        "AWS::ACM::Certificate",
-        "AWS::AutoScaling::AutoScalingGroup",
-        "AWS::AutoScaling::LaunchConfiguration",
-        "AWS::AutoScaling::ScalingPolicy",
-        "AWS::AutoScaling::ScheduledAction",
-        "AWS::CloudFormation::Stack",
-        "AWS::CloudTrail::Trail",
-        "AWS::CloudWatch::Alarm",
-        "AWS::CodeBuild::Project",
-        "AWS::CodePipeline::Pipeline",
-        "AWS::DynamoDB::Table",
-        "AWS::EC2::CustomerGateway",
-        "AWS::EC2::EIP",
-        "AWS::EC2::Host",
-        "AWS::EC2::Instance",
-        "AWS::EC2::InternetGateway",
-        "AWS::EC2::NetworkAcl",
-        "AWS::EC2::NetworkInterface",
-        "AWS::EC2::RouteTable",
-        "AWS::EC2::SecurityGroup",
-        "AWS::EC2::Subnet",
-        "AWS::EC2::Volume",
-        "AWS::EC2::VPC",
-        "AWS::EC2::VPNConnection",
-        "AWS::EC2::VPNGateway",
-        "AWS::ElasticBeanstalk::Application",
-        "AWS::ElasticBeanstalk::ApplicationVersion",
-        "AWS::ElasticBeanstalk::Environment",
-        "AWS::ElasticLoadBalancing::LoadBalancer",
-        "AWS::ElasticLoadBalancingV2::LoadBalancer",
-        "AWS::IAM::Group",
-        "AWS::IAM::Policy",
-        "AWS::IAM::Role",
-        "AWS::IAM::User",
-        "AWS::Lambda::Function",
-        "AWS::RDS::DBInstance",
-        "AWS::RDS::DBSecurityGroup",
-        "AWS::RDS::DBSnapshot",
-        "AWS::RDS::DBSubnetGroup",
-        "AWS::RDS::EventSubscription",
-        "AWS::Redshift::Cluster",
-        "AWS::Redshift::ClusterParameterGroup",
-        "AWS::Redshift::ClusterSecurityGroup",
-        "AWS::Redshift::ClusterSnapshot",
-        "AWS::Redshift::ClusterSubnetGroup",
-        "AWS::Redshift::EventSubscription",
-        "AWS::S3::Bucket",
-        "AWS::ServiceCatalog::CloudFormationProduct",
-        "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
-        "AWS::ServiceCatalog::Portfolio",
-        "AWS::SSM::AssociationCompliance",
-        "AWS::SSM::ManagedInstanceInventory",
-        "AWS::SSM::PatchCompliance",
-        "AWS::XRay::EncryptionConfig"
-      ]
-    },
-    "ConfigRuleEventSource": {
-      "AllowedValues": [
-        "aws.config"
-      ]
-    },
-    "ConfigRuleMessageType": {
-      "AllowedValues": [
-        "ConfigurationItemChangeNotification",
-        "ConfigurationSnapshotDeliveryCompleted",
-        "OversizedConfigurationItemChangeNotification",
-        "ScheduledNotification"
-      ]
-    },
-    "ConfigRuleSourceOwner": {
-      "AllowedValues": [
-        "AWS",
-        "CUSTOM_LAMBDA"
-      ]
-    },
-    "CustomerGatewayType": {
-      "AllowedValues": [
-        "ipsec.1"
-      ]
-    },
-    "DAXInstanceType": {
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "DHCPOptionsNetbiosNodeType": {
-      "AllowedValues": [
-        "1",
-        "2",
-        "4",
-        "8"
-      ]
-    },
-    "DLMPolicyResourceType": {
-      "AllowedValues": [
-        "INSTANCE",
-        "VOLUME"
-      ]
-    },
-    "DefaultCountryCodeAlpha2": {
+    "AWS::CloudFront::Distribution.Locations": {
       "AllowedValues": [
         "AD",
         "AE",
@@ -39509,10 +39946,980 @@
         "ZW"
       ]
     },
-    "DefaultEnabledState": {
+    "AWS::CloudFront::Distribution.MinimumProtocolVersion": {
+      "AllowedValues": [
+        "SSLv3",
+        "TLSv1",
+        "TLSv1_2016",
+        "TLSv1.1_2016",
+        "TLSv1.2_2018"
+      ]
+    },
+    "AWS::CloudFront::Distribution.OriginProtocolPolicy": {
+      "AllowedValues": [
+        "http-only",
+        "https-only",
+        "match-viewer"
+      ]
+    },
+    "AWS::CloudFront::Distribution.OriginSSLProtocols": {
+      "AllowedValues": [
+        "SSLv3",
+        "TLSv1.1",
+        "TLSv1.2",
+        "TLSv1"
+      ]
+    },
+    "AWS::CloudFront::Distribution.PriceClass": {
+      "AllowedValues": [
+        "PriceClass_100",
+        "PriceClass_200",
+        "PriceClass_All"
+      ]
+    },
+    "AWS::CloudFront::Distribution.ResponseCode": {
+      "AllowedValues": [
+        "200",
+        "400",
+        "403",
+        "404",
+        "405",
+        "414",
+        "416",
+        "500",
+        "501",
+        "502",
+        "503",
+        "504"
+      ]
+    },
+    "AWS::CloudFront::Distribution.RestrictionType": {
+      "AllowedValues": [
+        "blacklist",
+        "none",
+        "whitelist"
+      ]
+    },
+    "AWS::CloudFront::Distribution.SslSupportMethod": {
+      "AllowedValues": [
+        "sni-only",
+        "vip"
+      ]
+    },
+    "AWS::CloudFront::Distribution.ViewerProtocolPolicy": {
+      "AllowedValues": [
+        "allow-all",
+        "https-only",
+        "redirect-to-https"
+      ]
+    },
+    "AWS::CloudTrail::Trail.DataResourceType": {
+      "AllowedValues": [
+        "AWS::Lambda::Function",
+        "AWS::S3::Object"
+      ]
+    },
+    "AWS::CloudTrail::Trail.EventReadWriteType": {
+      "AllowedValues": [
+        "All",
+        "ReadOnly",
+        "WriteOnly"
+      ]
+    },
+    "AWS::CloudWatch::Alarm.AlarmAction": {
+      "StringMax": 1024,
+      "StringMin": 1
+    },
+    "AWS::CloudWatch::Alarm.AlarmActions": {
+      "ListMax": 5,
+      "ListMin": 0
+    },
+    "AWS::CloudWatch::Alarm.ComparisonOperator": {
+      "AllowedValues": [
+        "GreaterThanOrEqualToThreshold",
+        "GreaterThanThreshold",
+        "LessThanOrEqualToThreshold",
+        "LessThanThreshold"
+      ]
+    },
+    "AWS::CloudWatch::Alarm.Statistic": {
+      "AllowedValues": [
+        "Average",
+        "Maximum",
+        "Minimum",
+        "SampleCount",
+        "Sum"
+      ]
+    },
+    "AWS::CloudWatch::Alarm.TreatMissingData": {
+      "AllowedValues": [
+        "breaching",
+        "ignore",
+        "missing",
+        "notBreaching"
+      ]
+    },
+    "AWS::CloudWatch::Alarm.Unit": {
+      "AllowedValues": [
+        "Bits",
+        "Bits/Second",
+        "Bytes",
+        "Bytes/Second",
+        "Count",
+        "Count/Second",
+        "Gigabits",
+        "Gigabits/Second",
+        "Gigabytes",
+        "Gigabytes/Second",
+        "Kilobits",
+        "Kilobits/Second",
+        "Kilobytes",
+        "Kilobytes/Second",
+        "Megabits",
+        "Megabits/Second",
+        "Megabytes",
+        "Megabytes/Second",
+        "Microseconds",
+        "Milliseconds",
+        "None",
+        "Percent",
+        "Seconds",
+        "Terabits",
+        "Terabits/Second",
+        "Terabytes",
+        "Terabytes/Second"
+      ]
+    },
+    "AWS::CodeBuild::Project.Artifacts.Packaging": {
+      "AllowedValues": [
+        "NONE",
+        "ZIP"
+      ]
+    },
+    "AWS::CodeBuild::Project.Artifacts.Type": {
+      "AllowedValues": [
+        "CODEPIPELINE",
+        "NO_ARTIFACTS",
+        "S3"
+      ]
+    },
+    "AWS::CodeBuild::Project.Environment.ComputeType": {
+      "AllowedValues": [
+        "BUILD_GENERAL1_LARGE",
+        "BUILD_GENERAL1_MEDIUM",
+        "BUILD_GENERAL1_SMALL"
+      ]
+    },
+    "AWS::CodeBuild::Project.Environment.ImagePullCredentialsType": {
+      "AllowedValues": [
+        "CODEBUILD",
+        "SERVICE_ROLE"
+      ]
+    },
+    "AWS::CodeBuild::Project.Environment.Type": {
+      "AllowedValues": [
+        "LINUX_CONTAINER",
+        "WINDOWS_CONTAINER"
+      ]
+    },
+    "AWS::CodeBuild::Project.ProjectCache.Type": {
+      "AllowedValues": [
+        "LOCAL",
+        "NO_CACHE",
+        "S3"
+      ]
+    },
+    "AWS::CodeBuild::Project.Source.Type": {
+      "AllowedValues": [
+        "BITBUCKET",
+        "CODECOMMIT",
+        "CODEPIPELINE",
+        "GITHUB",
+        "GITHUB_ENTERPRISE",
+        "NO_SOURCE",
+        "S3"
+      ]
+    },
+    "AWS::CodeCommit::Repository.RepositoryName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9._\\-]+(?<!\\.git)$",
+      "StringMax": 100,
+      "StringMin": 1
+    },
+    "AWS::CodeCommit::Repository.RepositoryTrigger.Events": {
+      "AllowedValues": [
+        "all",
+        "createReference",
+        "deleteReference",
+        "updateReference"
+      ]
+    },
+    "AWS::CodeDeploy::Application.ComputePlatform": {
+      "AllowedValues": [
+        "ECS",
+        "Lambda",
+        "Server"
+      ]
+    },
+    "AWS::CodeDeploy::DeploymentConfig.MinimumHealthyHosts.Type": {
+      "AllowedValues": [
+        "FLEET_PERCENT",
+        "HOST_COUNT"
+      ]
+    },
+    "AWS::CodeDeploy::DeploymentGroup.AutoRollbackConfiguration.Events": {
+      "AllowedValues": [
+        "DEPLOYMENT_FAILURE",
+        "DEPLOYMENT_STOP_ON_ALARM",
+        "DEPLOYMENT_STOP_ON_REQUEST"
+      ]
+    },
+    "AWS::CodeDeploy::DeploymentGroup.DeploymentStyle.DeploymentOption": {
+      "AllowedValues": [
+        "WITH_TRAFFIC_CONTROL",
+        "WITHOUT_TRAFFIC_CONTROL"
+      ]
+    },
+    "AWS::CodeDeploy::DeploymentGroup.DeploymentStyle.DeploymentType": {
+      "AllowedValues": [
+        "BLUE_GREEN",
+        "IN_PLACE"
+      ]
+    },
+    "AWS::CodePipeline::CustomActionType.ConfigurationProperties.Type": {
+      "AllowedValues": [
+        "Boolean",
+        "Number",
+        "String"
+      ]
+    },
+    "AWS::CodePipeline::Pipeline.ActionTypeId.Category": {
+      "AllowedValues": [
+        "Approval",
+        "Build",
+        "Deploy",
+        "Invoke",
+        "Source",
+        "Test"
+      ]
+    },
+    "AWS::CodePipeline::Pipeline.ActionTypeId.Owner": {
+      "AllowedValues": [
+        "AWS",
+        "Custom",
+        "ThirdParty"
+      ]
+    },
+    "AWS::CodePipeline::Pipeline.ArtifactStore.Type": {
+      "AllowedValues": [
+        "S3"
+      ]
+    },
+    "AWS::CodePipeline::Pipeline.BlockerDeclaration.Type": {
+      "AllowedValues": [
+        "Schedule"
+      ]
+    },
+    "AWS::Cognito::UserPool.AliasAttributes": {
+      "AllowedValues": [
+        "email",
+        "phone_number",
+        "preferred_username"
+      ]
+    },
+    "AWS::Cognito::UserPool.MfaConfiguration": {
+      "AllowedValues": [
+        "OFF",
+        "ON",
+        "OPTIONAL"
+      ]
+    },
+    "AWS::Cognito::UserPool.SchemaAttribute.AttributeDataType": {
+      "AllowedValues": [
+        "Boolean",
+        "DateTime",
+        "Number",
+        "String"
+      ]
+    },
+    "AWS::Cognito::UserPool.UsernameAttributes": {
+      "AllowedValues": [
+        "email",
+        "phone_number"
+      ]
+    },
+    "AWS::Cognito::UserPoolClient.ExplicitAuthFlows": {
+      "AllowedValues": [
+        "ADMIN_NO_SRP_AUTH",
+        "CUSTOM_AUTH_FLOW_ONLY",
+        "USER_PASSWORD_AUTH"
+      ]
+    },
+    "AWS::Cognito::UserPoolClient.RefreshTokenValidity": {
+      "NumberMax": 3650,
+      "NumberMin": 0,
+      "Ref": {
+        "Parameters": [
+          "String",
+          "Number"
+        ]
+      }
+    },
+    "AWS::Cognito::UserPoolUser.DesiredDeliveryMediums": {
+      "AllowedValues": [
+        "EMAIL",
+        "SMS"
+      ]
+    },
+    "AWS::Cognito::UserPoolUser.MessageAction": {
+      "AllowedValues": [
+        "RESEND",
+        "SUPPRESS"
+      ]
+    },
+    "AWS::Config::ConfigRule.MaximumExecutionFrequency": {
+      "AllowedValues": [
+        "One_Hour",
+        "Six_Hours",
+        "Three_Hours",
+        "Twelve_Hours",
+        "TwentyFour_Hours"
+      ]
+    },
+    "AWS::Config::ConfigRule.Source.Owner": {
+      "AllowedValues": [
+        "AWS",
+        "CUSTOM_LAMBDA"
+      ]
+    },
+    "AWS::Config::ConfigRule.SourceDetail.EventSource": {
+      "AllowedValues": [
+        "aws.config"
+      ]
+    },
+    "AWS::Config::ConfigRule.SourceDetail.MessageType": {
+      "AllowedValues": [
+        "ConfigurationItemChangeNotification",
+        "ConfigurationSnapshotDeliveryCompleted",
+        "OversizedConfigurationItemChangeNotification",
+        "ScheduledNotification"
+      ]
+    },
+    "AWS::Config::ConfigurationRecorder.ResourceTypes": {
+      "AllowedValues": [
+        "AWS::ACM::Certificate",
+        "AWS::AutoScaling::AutoScalingGroup",
+        "AWS::AutoScaling::LaunchConfiguration",
+        "AWS::AutoScaling::ScalingPolicy",
+        "AWS::AutoScaling::ScheduledAction",
+        "AWS::CloudFormation::Stack",
+        "AWS::CloudFront::Distribution",
+        "AWS::CloudFront::StreamingDistribution",
+        "AWS::CloudTrail::Trail",
+        "AWS::CloudWatch::Alarm",
+        "AWS::CodeBuild::Project",
+        "AWS::CodePipeline::Pipeline",
+        "AWS::DynamoDB::Table",
+        "AWS::EC2::CustomerGateway",
+        "AWS::EC2::EIP",
+        "AWS::EC2::Host",
+        "AWS::EC2::Instance",
+        "AWS::EC2::InternetGateway",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::NetworkInterface",
+        "AWS::EC2::RouteTable",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::Volume",
+        "AWS::EC2::VPC",
+        "AWS::EC2::VPNConnection",
+        "AWS::EC2::VPNGateway",
+        "AWS::ElasticBeanstalk::Application",
+        "AWS::ElasticBeanstalk::ApplicationVersion",
+        "AWS::ElasticBeanstalk::Environment",
+        "AWS::ElasticLoadBalancing::LoadBalancer",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::IAM::Group",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::Lambda::Function",
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBSecurityGroup",
+        "AWS::RDS::DBSnapshot",
+        "AWS::RDS::DBSubnetGroup",
+        "AWS::RDS::EventSubscription",
+        "AWS::Redshift::Cluster",
+        "AWS::Redshift::ClusterParameterGroup",
+        "AWS::Redshift::ClusterSecurityGroup",
+        "AWS::Redshift::ClusterSnapshot",
+        "AWS::Redshift::ClusterSubnetGroup",
+        "AWS::Redshift::EventSubscription",
+        "AWS::S3::Bucket",
+        "AWS::ServiceCatalog::CloudFormationProduct",
+        "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
+        "AWS::ServiceCatalog::Portfolio",
+        "AWS::Shield::Protection",
+        "AWS::ShieldRegional::Protection",
+        "AWS::SSM::AssociationCompliance",
+        "AWS::SSM::ManagedInstanceInventory",
+        "AWS::SSM::PatchCompliance",
+        "AWS::WAF::RateBasedRule",
+        "AWS::WAF::Rule",
+        "AWS::WAF::RuleGroup",
+        "AWS::WAF::WebACL",
+        "AWS::WAFRegional::RateBasedRule",
+        "AWS::WAFRegional::Rule",
+        "AWS::WAFRegional::RuleGroup",
+        "AWS::WAFRegional::WebACL",
+        "AWS::XRay::EncryptionConfig"
+      ]
+    },
+    "AWS::Default::Default.EnabledState": {
       "AllowedValues": [
         "DISABLED",
         "ENABLED"
+      ]
+    },
+    "AWS::DynamoDB::Table.AttributeDefinition.AttributeType": {
+      "AllowedValues": [
+        "B",
+        "N",
+        "S"
+      ]
+    },
+    "AWS::DynamoDB::Table.BillingMode": {
+      "AllowedValues": [
+        "PAY_PER_REQUEST",
+        "PROVISIONED"
+      ]
+    },
+    "AWS::DynamoDB::Table.KeySchema.KeyType": {
+      "AllowedValues": [
+        "HASH",
+        "RANGE"
+      ]
+    },
+    "AWS::DynamoDB::Table.Projection.ProjectionType": {
+      "AllowedValues": [
+        "ALL",
+        "INCLUDE",
+        "KEYS_ONLY"
+      ]
+    },
+    "AWS::DynamoDB::Table.StreamSpecification.StreamViewType": {
+      "AllowedValues": [
+        "KEYS_ONLY",
+        "NEW_AND_OLD_IMAGES",
+        "NEW_IMAGE",
+        "OLD_IMAGE"
+      ]
+    },
+    "AWS::EC2::EIP.AllocationId": {
+      "GetAtt": {
+        "AWS::EC2::EIP": "AllocationId"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::EC2::Instance.Affinity": {
+      "AllowedValues": [
+        "default",
+        "host"
+      ]
+    },
+    "AWS::EC2::SecurityGroup.Description": {
+      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
+      "StringMax": "255",
+      "StringMin": ""
+    },
+    "AWS::EC2::SecurityGroup.GroupId": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.GroupIds": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.NameOrGroupId": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "GroupId",
+        "AWS::EC2::VPC": "DefaultSecurityGroup"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "SecurityGroupId"
+        ],
+        "Resources": [
+          "AWS::EC2::SecurityGroup"
+        ]
+      }
+    },
+    "AWS::EC2::SecurityGroup.NamesOrGroupIds": {
+      "GetAtt": {
+        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
+      },
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "SecurityGroupIds"
+        ]
+      }
+    },
+    "AWS::EC2::VPC.Id": {
+      "GetAtt": {
+        "AWS::EC2::SecurityGroup": "VpcId",
+        "AWS::EC2::Subnet": "VpcId"
+      },
+      "Ref": {
+        "Parameters": [
+          "VpcId",
+          "String"
+        ],
+        "Resources": [
+          "AWS::EC2::VPC"
+        ]
+      }
+    },
+    "AWS::Events::EventBusPolicy.Action": {
+      "AllowedValues": [
+        "events:PutEvents"
+      ]
+    },
+    "AWS::Events::EventBusPolicy.Condition.Key": {
+      "AllowedValues": [
+        "aws:PrincipalOrgID"
+      ]
+    },
+    "AWS::Events::EventBusPolicy.Condition.Type": {
+      "AllowedValues": [
+        "StringEquals"
+      ]
+    },
+    "AWS::Glue::Connection.ConnectionInput.ConnectionType": {
+      "AllowedValues": [
+        "JDBC",
+        "SFTP"
+      ]
+    },
+    "AWS::Glue::Crawler.SchemaChangePolicy.DeleteBehavior": {
+      "AllowedValues": [
+        "DELETE_FROM_DATABASE",
+        "DEPRECATE_IN_DATABASE",
+        "LOG"
+      ]
+    },
+    "AWS::Glue::Crawler.SchemaChangePolicy.UpdateBehavior": {
+      "AllowedValues": [
+        "LOG",
+        "UPDATE_IN_DATABASE"
+      ]
+    },
+    "AWS::Glue::Table.TableInput.TableType": {
+      "AllowedValues": [
+        "EXTERNAL_TABLE",
+        "VIRTUAL_VIEW"
+      ]
+    },
+    "AWS::Glue::Trigger.Condition.LogicalOperator": {
+      "AllowedValues": [
+        "EQUALS"
+      ]
+    },
+    "AWS::Glue::Trigger.Condition.State": {
+      "AllowedValues": [
+        "SUCCEEDED"
+      ]
+    },
+    "AWS::Glue::Trigger.Predicate.Logical": {
+      "AllowedValues": [
+        "AND"
+      ]
+    },
+    "AWS::Glue::Trigger.Type": {
+      "AllowedValues": [
+        "CONDITIONAL",
+        "ON_DEMAND",
+        "SCHEDULED"
+      ]
+    },
+    "AWS::GuardDuty::Detector.FindingPublishingFrequency": {
+      "AllowedValues": [
+        "FIFTEEN_MINUTES",
+        "ONE_HOUR",
+        "SIX_HOURS"
+      ]
+    },
+    "AWS::GuardDuty::Filter.Action": {
+      "AllowedValues": [
+        "ARCHIVE",
+        "NOOP"
+      ]
+    },
+    "AWS::GuardDuty::IPSet.Format": {
+      "AllowedValues": [
+        "OTX_CSV",
+        "STIX",
+        "TXT"
+      ]
+    },
+    "AWS::GuardDuty::Member.Status": {
+      "AllowedValues": [
+        "Created",
+        "Disabled",
+        "Enabled",
+        "Invited",
+        "Removed",
+        "Resigned"
+      ]
+    },
+    "AWS::GuardDuty::ThreatIntelSet.Format": {
+      "AllowedValues": [
+        "ALIEN_VAULT",
+        "FIRE_EYE",
+        "OTX_CSV",
+        "PROOF_POINT",
+        "STIX",
+        "TXT"
+      ]
+    },
+    "AWS::IAM::AccessKey.Active": {
+      "AllowedValues": [
+        "Active",
+        "Inactive"
+      ]
+    },
+    "AWS::IAM::AssumeRole.Document": {
+      "JsonMax": 2048,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::IAM::Group.Name": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Group"
+        ]
+      }
+    },
+    "AWS::IAM::Group.Names": {
+      "ListMax": 10,
+      "ListMin": 0
+    },
+    "AWS::IAM::InstanceProfile.Arn": {
+      "GetAtt": {
+        "AWS::IAM::InstanceProfile": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::IAM::InstanceProfile.Name": {
+      "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "AWS::IAM::InstanceProfile.NameOrArn": {
+      "GetAtt": {
+        "AWS::IAM::InstanceProfile": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::InstanceProfile"
+        ]
+      }
+    },
+    "AWS::IAM::InstanceProfile.Role": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "AWS::IAM::InstanceProfile.Roles": {
+      "ListMax": 1,
+      "ListMin": 1
+    },
+    "AWS::IAM::ManagedPolicy.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::ManagedPolicy"
+        ]
+      }
+    },
+    "AWS::IAM::ManagedPolicy.Arns": {
+      "ListMax": 20,
+      "ListMin": 0
+    },
+    "AWS::IAM::ManagedPolicy.PolicyDocument": {
+      "JsonMax": 6144,
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::IAM::Path.Path": {
+      "AllowedPatternRegex": "^/(.+/)*$",
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::IAM::Policy.PolicyName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9+=,.@\\-_]+$",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IAM::Role.Arn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
+      "GetAtt": {
+        "AWS::IAM::Role": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::IAM::Role.Name": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "AWS::IAM::Role.NameOrArn": {
+      "GetAtt": {
+        "AWS::IAM::Role": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      }
+    },
+    "AWS::IAM::User.Arn": {
+      "GetAtt": {
+        "AWS::IAM::User": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "AWS::Logs::LogGroup.LogGroupName": {
+      "StringMax": 512,
+      "StringMin": 1
+    },
+    "AWS::Logs::LogGroup.Retention": {
+      "AllowedValues": [
+        "1",
+        "3",
+        "5",
+        "7",
+        "14",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "365",
+        "400",
+        "545",
+        "731",
+        "1827",
+        "3653"
+      ]
+    },
+    "AWS::WorkSpaces::Workspace.ComputeTypeName": {
+      "AllowedValues": [
+        "GRAPHICS",
+        "PERFORMANCE",
+        "POWER",
+        "STANDARD",
+        "VALUE"
+      ]
+    },
+    "AWS::WorkSpaces::Workspace.RunningMode": {
+      "AllowedValues": [
+        "ALWAYS_ON",
+        "AUTO_STOP"
+      ]
+    },
+    "AvailabilityZone": {
+      "GetAtt": {
+        "AWS::EC2::Instance": "AvailabilityZone",
+        "AWS::EC2::Subnet": "AvailabilityZone",
+        "AWS::OpsWorks::Instance": "AvailabilityZone"
+      },
+      "Ref": {
+        "Parameters": [
+          "String",
+          "AvailabilityZone"
+        ]
+      }
+    },
+    "AvailabilityZones": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "Strings",
+          "AvailabilityZones"
+        ]
+      }
+    },
+    "CertificateValidationMethod": {
+      "AllowedValues": [
+        "DNS",
+        "EMAIL"
+      ]
+    },
+    "CidrIp": {
+      "AllowedPattern": "x.x.x.x/y",
+      "AllowedPatternRegex": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(/([0-9]|[1-2][0-9]|3[0-2]))$"
+    },
+    "CodePipelineWehbookAuthentication": {
+      "AllowedValues": [
+        "GITHUB_HMAC",
+        "IP",
+        "UNAUTHENTICATED"
+      ]
+    },
+    "ConfigResourceType": {
+      "AllowedValues": [
+        "AWS::ACM::Certificate",
+        "AWS::AutoScaling::AutoScalingGroup",
+        "AWS::AutoScaling::LaunchConfiguration",
+        "AWS::AutoScaling::ScalingPolicy",
+        "AWS::AutoScaling::ScheduledAction",
+        "AWS::CloudFormation::Stack",
+        "AWS::CloudTrail::Trail",
+        "AWS::CloudWatch::Alarm",
+        "AWS::CodeBuild::Project",
+        "AWS::CodePipeline::Pipeline",
+        "AWS::DynamoDB::Table",
+        "AWS::EC2::CustomerGateway",
+        "AWS::EC2::EIP",
+        "AWS::EC2::Host",
+        "AWS::EC2::Instance",
+        "AWS::EC2::InternetGateway",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::NetworkInterface",
+        "AWS::EC2::RouteTable",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::Volume",
+        "AWS::EC2::VPC",
+        "AWS::EC2::VPNConnection",
+        "AWS::EC2::VPNGateway",
+        "AWS::ElasticBeanstalk::Application",
+        "AWS::ElasticBeanstalk::ApplicationVersion",
+        "AWS::ElasticBeanstalk::Environment",
+        "AWS::ElasticLoadBalancing::LoadBalancer",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::IAM::Group",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::Lambda::Function",
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBSecurityGroup",
+        "AWS::RDS::DBSnapshot",
+        "AWS::RDS::DBSubnetGroup",
+        "AWS::RDS::EventSubscription",
+        "AWS::Redshift::Cluster",
+        "AWS::Redshift::ClusterParameterGroup",
+        "AWS::Redshift::ClusterSecurityGroup",
+        "AWS::Redshift::ClusterSnapshot",
+        "AWS::Redshift::ClusterSubnetGroup",
+        "AWS::Redshift::EventSubscription",
+        "AWS::S3::Bucket",
+        "AWS::ServiceCatalog::CloudFormationProduct",
+        "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
+        "AWS::ServiceCatalog::Portfolio",
+        "AWS::SSM::AssociationCompliance",
+        "AWS::SSM::ManagedInstanceInventory",
+        "AWS::SSM::PatchCompliance",
+        "AWS::XRay::EncryptionConfig"
+      ]
+    },
+    "CustomerGatewayType": {
+      "AllowedValues": [
+        "ipsec.1"
+      ]
+    },
+    "DAXInstanceType": {
+      "Ref": {
+        "Parameters": [
+          "String"
+        ]
+      }
+    },
+    "DHCPOptionsNetbiosNodeType": {
+      "AllowedValues": [
+        "1",
+        "2",
+        "4",
+        "8"
+      ]
+    },
+    "DLMPolicyResourceType": {
+      "AllowedValues": [
+        "INSTANCE",
+        "VOLUME"
       ]
     },
     "DmsEndpointEngineName": {
@@ -39567,40 +40974,6 @@
         ]
       }
     },
-    "DynamoDBAttributeType": {
-      "AllowedValues": [
-        "B",
-        "N",
-        "S"
-      ]
-    },
-    "DynamoDBBillingMode": {
-      "AllowedValues": [
-        "PAY_PER_REQUEST",
-        "PROVISIONED"
-      ]
-    },
-    "DynamoDBKeyType": {
-      "AllowedValues": [
-        "HASH",
-        "RANGE"
-      ]
-    },
-    "DynamoDBProjectionType": {
-      "AllowedValues": [
-        "ALL",
-        "INCLUDE",
-        "KEYS_ONLY"
-      ]
-    },
-    "DynamoDBStreamViewType": {
-      "AllowedValues": [
-        "KEYS_ONLY",
-        "NEW_AND_OLD_IMAGES",
-        "NEW_IMAGE",
-        "OLD_IMAGE"
-      ]
-    },
     "EC2CapacityReservationEndDateType": {
       "AllowedValues": [
         "limited",
@@ -39634,14 +41007,6 @@
     "EC2MarketType": {
       "AllowedValues": [
         "spot"
-      ]
-    },
-    "EC2ScalingPolicyPredifinedMetricSpecificationType": {
-      "AllowedValues": [
-        "ALBRequestCountPerTarget",
-        "ASGAverageCPUUtilization",
-        "ASGAverageNetworkIn",
-        "ASGAverageNetworkOut"
       ]
     },
     "EC2SpotInstanceInitiatedShutdownBehavior": {
@@ -39792,6 +41157,7 @@
         "c5n.4xlarge",
         "c5n.9xlarge",
         "c5n.large",
+        "c5n.metal",
         "c5n.xlarge",
         "d2.2xlarge",
         "d2.4xlarge",
@@ -39819,6 +41185,7 @@
         "i3en.3xlarge",
         "i3en.6xlarge",
         "i3en.large",
+        "i3en.metal",
         "i3en.xlarge",
         "m3.2xlarge",
         "m3.large",
@@ -39958,263 +41325,11 @@
         "eia1.xlarge"
       ]
     },
-    "GlueConnectionInputType": {
-      "AllowedValues": [
-        "JDBC",
-        "SFTP"
-      ]
-    },
-    "GlueCrawlerDeleteBehavior": {
-      "AllowedValues": [
-        "DELETE_FROM_DATABASE",
-        "DEPRECATE_IN_DATABASE",
-        "LOG"
-      ]
-    },
-    "GlueCrawlerUpdateBehavior": {
-      "AllowedValues": [
-        "LOG",
-        "UPDATE_IN_DATABASE"
-      ]
-    },
-    "GlueTableType": {
-      "AllowedValues": [
-        "EXTERNAL_TABLE",
-        "VIRTUAL_VIEW"
-      ]
-    },
-    "GlueTriggerPredicateLogical": {
-      "AllowedValues": [
-        "AND"
-      ]
-    },
-    "GlueTriggerPredicateLogicalOperator": {
-      "AllowedValues": [
-        "EQUALS"
-      ]
-    },
-    "GlueTriggerPredicateState": {
-      "AllowedValues": [
-        "SUCCEEDED"
-      ]
-    },
-    "GlueTriggerType": {
-      "AllowedValues": [
-        "CONDITIONAL",
-        "ON_DEMAND",
-        "SCHEDULED"
-      ]
-    },
-    "GuardDutyDetectorFrequency": {
-      "AllowedValues": [
-        "FIFTEEN_MINUTES",
-        "ONE_HOUR",
-        "SIX_HOURS"
-      ]
-    },
-    "GuardDutyFilterAction": {
-      "AllowedValues": [
-        "ARCHIVE",
-        "NOOP"
-      ]
-    },
-    "GuardDutyIPSetFormat": {
-      "AllowedValues": [
-        "OTX_CSV",
-        "STIX",
-        "TXT"
-      ]
-    },
-    "GuardDutyMemberStatus": {
-      "AllowedValues": [
-        "Created",
-        "Disabled",
-        "Enabled",
-        "Invited",
-        "Removed",
-        "Resigned"
-      ]
-    },
-    "GuardDutyThreadIntelSetFormat": {
-      "AllowedValues": [
-        "ALIEN_VAULT",
-        "FIRE_EYE",
-        "OTX_CSV",
-        "PROOF_POINT",
-        "STIX",
-        "TXT"
-      ]
-    },
     "HttpProtocol": {
       "AllowedValues": [
         "http",
         "https"
       ]
-    },
-    "IamAccessKeyActive": {
-      "AllowedValues": [
-        "Active",
-        "Inactive"
-      ]
-    },
-    "IamAssumeRoleDocument": {
-      "JsonMax": 2048,
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "IamGroup": {
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::Group"
-        ]
-      }
-    },
-    "IamGroups": {
-      "ListMax": 10,
-      "ListMin": 0
-    },
-    "IamInstanceProfile": {
-      "AllowedPatternRegex": "[a-zA-Z0-9+=,.@\\-_]+",
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::InstanceProfile"
-        ]
-      }
-    },
-    "IamInstanceProfile.Arn": {
-      "GetAtt": {
-        "AWS::IAM::InstanceProfile": "Arn"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "IamInstanceProfile.NameOrArn": {
-      "GetAtt": {
-        "AWS::IAM::InstanceProfile": "Arn"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::InstanceProfile"
-        ]
-      }
-    },
-    "IamInstanceProfileRole": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::Role"
-        ]
-      }
-    },
-    "IamInstanceProfileRoles": {
-      "ListMax": 1,
-      "ListMin": 1
-    },
-    "IamManagedPolicy.Arn": {
-      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::ManagedPolicy"
-        ]
-      }
-    },
-    "IamManagedPolicy.Arns": {
-      "ListMax": 20,
-      "ListMin": 0
-    },
-    "IamManagedPolicyDocument": {
-      "JsonMax": 6144,
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "IamPath": {
-      "AllowedPatternRegex": "^/(.+/)*$",
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "IamPolicyName": {
-      "AllowedPatternRegex": "^[a-zA-Z0-9+=,.@\\-_]+$",
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      },
-      "StringMax": 128,
-      "StringMin": 1
-    },
-    "IamRole": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::Role"
-        ]
-      }
-    },
-    "IamRole.Arn": {
-      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/[a-zA-Z_0-9+=,.@\\-_/]+",
-      "GetAtt": {
-        "AWS::IAM::Role": "Arn"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
-    },
-    "IamRole.NameOrArn": {
-      "GetAtt": {
-        "AWS::IAM::Role": "Arn"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ],
-        "Resources": [
-          "AWS::IAM::Role"
-        ]
-      }
-    },
-    "IamUser.Arn": {
-      "GetAtt": {
-        "AWS::IAM::User": "Arn"
-      },
-      "Ref": {
-        "Parameters": [
-          "String"
-        ]
-      }
     },
     "ImageId": {
       "GetAtt": {},
@@ -40468,9 +41583,11 @@
         "db.m4.large",
         "db.m4.xlarge",
         "db.m5.12xlarge",
+        "db.m5.16xlarge",
         "db.m5.24xlarge",
         "db.m5.2xlarge",
         "db.m5.4xlarge",
+        "db.m5.8xlarge",
         "db.m5.large",
         "db.m5.xlarge",
         "db.r3.2xlarge",
@@ -40485,9 +41602,11 @@
         "db.r4.large",
         "db.r4.xlarge",
         "db.r5.12xlarge",
+        "db.r5.16xlarge",
         "db.r5.24xlarge",
         "db.r5.2xlarge",
         "db.r5.4xlarge",
+        "db.r5.8xlarge",
         "db.r5.large",
         "db.r5.xlarge",
         "db.t2.2xlarge",
@@ -40680,129 +41799,11 @@
         "Suspended"
       ]
     },
-    "ScalingInstructionPredictiveScalingMaxCapacityBehavior": {
-      "AllowedValues": [
-        "SetForecastCapacityToMaxCapacity",
-        "SetMaxCapacityToForecastCapacity",
-        "SetMaxCapacityAboveForecastCapacity"
-      ]
-    },
-    "ScalingInstructionPredictiveScalingMode": {
-      "AllowedValues": [
-        "ForecastAndScale",
-        "ForecastOnly"
-      ]
-    },
-    "ScalingInstructionScalableDimension": {
-      "AllowedValues": [
-        "autoscaling:autoScalingGroup:DesiredCapacity",
-        "ecs:service:DesiredCount",
-        "ec2:spot-fleet-request:TargetCapacity",
-        "dynamodb:table:ReadCapacityUnits",
-        "dynamodb:table:WriteCapacityUnits",
-        "dynamodb:index:ReadCapacityUnits",
-        "dynamodb:index:WriteCapacityUnits",
-        "rds:cluster:ReadReplicaCount"
-      ]
-    },
-    "ScalingInstructionServiceNamespace": {
-      "AllowedValues": [
-        "autoscaling",
-        "dynamodb",
-        "ecs",
-        "ec2",
-        "rds"
-      ]
-    },
-    "ScalingPolicyCustomizedMetricSpecificationStatistic": {
-      "AllowedValues": [
-        "Average",
-        "Minimum",
-        "Maximum",
-        "SampleCount",
-        "Sum"
-      ]
-    },
     "SecretsManagerTargetType": {
       "AllowedValues": [
         "AWS::RDS::DBCluster",
         "AWS::RDS::DBInstance"
       ]
-    },
-    "SecurityGroup": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ],
-        "Resources": [
-          "AWS::EC2::SecurityGroup"
-        ]
-      }
-    },
-    "SecurityGroupDescription": {
-      "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
-      "StringMax": "255",
-      "StringMin": ""
-    },
-    "SecurityGroupId": {
-      "GetAtt": {
-        "AWS::EC2::SecurityGroup": "GroupId",
-        "AWS::EC2::VPC": "DefaultSecurityGroup"
-      },
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ]
-      }
-    },
-    "SecurityGroupIds": {
-      "GetAtt": {
-        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
-      },
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
-    },
-    "SecurityGroupNameOrId": {
-      "GetAtt": {
-        "AWS::EC2::SecurityGroup": "GroupId",
-        "AWS::EC2::VPC": "DefaultSecurityGroup"
-      },
-      "Ref": {
-        "Parameters": [
-          "String",
-          "SecurityGroupId"
-        ],
-        "Resources": [
-          "AWS::EC2::SecurityGroup"
-        ]
-      }
-    },
-    "SecurityGroupNameOrIds": {
-      "GetAtt": {
-        "AWS::ElasticLoadBalancingV2::LoadBalancer": "SecurityGroups"
-      },
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
-    },
-    "SecurityGroups": {
-      "GetAtt": {},
-      "Ref": {
-        "Parameters": [
-          "Strings",
-          "SecurityGroupIds"
-        ]
-      }
     },
     "ServiceDiscoveryDnsType": {
       "AllowedValues": [
@@ -40955,39 +41956,23 @@
         "Interface"
       ]
     },
-    "VpcId": {
-      "GetAtt": {
-        "AWS::EC2::SecurityGroup": "VpcId",
-        "AWS::EC2::Subnet": "VpcId"
-      },
-      "Ref": {
-        "Parameters": [
-          "VpcId",
-          "String"
-        ],
-        "Resources": [
-          "AWS::EC2::VPC"
-        ]
-      }
-    },
     "VpnType": {
       "AllowedValues": [
         "ipsec.1"
       ]
     },
-    "WorkspacePropertyComputeType": {
+    "WS::CodeDeploy::DeploymentGroup.TriggerConfig.TriggerEvents": {
       "AllowedValues": [
-        "GRAPHICS",
-        "PERFORMANCE",
-        "POWER",
-        "STANDARD",
-        "VALUE"
-      ]
-    },
-    "WorkspacePropertyRunningMode": {
-      "AllowedValues": [
-        "ALWAYS_ON",
-        "AUTO_STOP"
+        "DeploymentFailure",
+        "DeploymentReady",
+        "DeploymentRollback",
+        "DeploymentStart",
+        "DeploymentStop",
+        "DeploymentSuccess",
+        "InstanceFailure",
+        "InstanceReady",
+        "InstanceStart",
+        "InstanceSuccess"
       ]
     }
   }

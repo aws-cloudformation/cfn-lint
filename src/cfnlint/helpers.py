@@ -23,6 +23,12 @@ import datetime
 import logging
 import re
 import inspect
+import gzip
+from io import BytesIO
+try:
+    from urllib.request import urlopen
+except ImportError:
+    from urllib2 import urlopen
 import pkg_resources
 import six
 from cfnlint.decode.node import dict_node, list_node, str_node
@@ -59,9 +65,12 @@ REGIONS = [
 ]
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
-REGEX_CIDR = re.compile(r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
-REGEX_IPV4 = re.compile(r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$')
-REGEX_IPV6 = re.compile(r'^(((?=.*(::))(?!.*\3.+\3))\3?|[\dA-F]{1,4}:)([\dA-F]{1,4}(\3|:\b)|\2){5}(([\dA-F]{1,4}(\3|:\b|$)|\2){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})\Z', re.I | re.S)
+REGEX_CIDR = re.compile(
+    r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
+REGEX_IPV4 = re.compile(
+    r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$')
+REGEX_IPV6 = re.compile(
+    r'^(((?=.*(::))(?!.*\3.+\3))\3?|[\dA-F]{1,4}:)([\dA-F]{1,4}(\3|:\b)|\2){5}(([\dA-F]{1,4}(\3|:\b|$)|\2){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})\Z', re.I | re.S)
 REGEX_DYN_REF = re.compile(r'^.*{{resolve:.+}}.*$')
 REGEX_DYN_REF_SSM = re.compile(r'^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
 REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
@@ -140,6 +149,19 @@ LIMITS = {
         'description': 1024  # in bytes
     }
 }
+
+
+def get_url_content(url):
+    """Get the contents of a spec file"""
+    res = urlopen(url)
+    if res.info().get('Content-Encoding') == 'gzip':
+        buf = BytesIO(res.read())
+        f = gzip.GzipFile(fileobj=buf)
+        content = f.read().decode('utf-8')
+    else:
+        content = res.read().decode('utf-8')
+
+    return content
 
 
 def load_resources(filename='data/CloudSpecs/us-east-1.json'):
@@ -251,6 +273,7 @@ def format_json_string(json_string):
         if isinstance(o, datetime.datetime):
             return o.__str__()
     return json.dumps(json_string, indent=2, sort_keys=True, separators=(',', ': '), default=converter)
+
 
 def load_plugins(directory):
     """Load plugins"""

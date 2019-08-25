@@ -18,11 +18,12 @@ import fnmatch
 import json
 import logging
 import os
-import requests
 import pkg_resources
 import jsonpointer
 import jsonpatch
 import cfnlint
+from cfnlint.helpers import get_url_content
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -43,6 +44,7 @@ SPEC_REGIONS = {
     'eu-west-1': 'https://d3teyb21fexa9r.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-2': 'https://d1742qcu2c1ncx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-3': 'https://d2d0mfegowb3wk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+    'me-south-1': 'https://s3.me-south-1.amazonaws.com/cfn-resource-specifications-me-south-1-prod/latest/CloudFormationResourceSpecification.json',
     'sa-east-1': 'https://d3c9jyj3w509b0.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'us-east-1': 'https://d1uauaxba7bl26.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'us-east-2': 'https://dnwj8swjjbsbt.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -62,16 +64,14 @@ def update_resource_specs():
             '/data/CloudSpecs/%s.json' % region,
         )
         LOGGER.debug('Downloading template %s into %s', url, filename)
-        req = requests.get(url)
-
-        content = json.loads(req.content.decode('utf-8'))
+        spec = json.loads(get_url_content(url))
 
         # Patch the files
-        content = patch_spec(content, 'all')
-        content = patch_spec(content, region)
+        spec = patch_spec(spec, 'all')
+        spec = patch_spec(spec, region)
 
         with open(filename, 'w') as f:
-            json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
+            json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 
 def update_documentation(rules):
@@ -106,9 +106,12 @@ def update_documentation(rules):
             new_file.write(line)
 
         # Add the rules
-        new_file.write('The following **{}** rules are applied by this linter:\n'.format(len(sorted_rules)))
-        new_file.write('(_This documentation is generated from the Rules, do not alter this manually_)\n\n')
-        new_file.write('| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n')
+        new_file.write(
+            'The following **{}** rules are applied by this linter:\n'.format(len(sorted_rules)))
+        new_file.write(
+            '(_This documentation is generated from the Rules, do not alter this manually_)\n\n')
+        new_file.write(
+            '| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n')
 
         rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
@@ -139,8 +142,10 @@ def update_documentation(rules):
                 continue
 
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-            config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default')) for key, values in rule.config_definition.items())
-            new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, config, rule.source_url, tags))
+            config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
+                                   for key, values in rule.config_definition.items())
+            new_file.write(rule_output.format(rule.id, rule.shortdesc,
+                                              rule.description, config, rule.source_url, tags))
 
         # Output the experimental rules (if any)
         if experimental_rules:
@@ -150,8 +155,11 @@ def update_documentation(rules):
 
             for rule in experimental_rules:
                 tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-                config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default')) for key, values in rule.config_definition.items())
-                new_file.write(rule_output.format(rule.id, rule.shortdesc, rule.description, config, rule.source_url, tags))
+                config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
+                                       for key, values in rule.config_definition.items())
+                new_file.write(rule_output.format(rule.id, rule.shortdesc,
+                                                  rule.description, config, rule.source_url, tags))
+
 
 def patch_spec(content, region):
     """Patch the spec file"""
@@ -163,7 +171,8 @@ def patch_spec(content, region):
         for filename in fnmatch.filter(filenames, '*.json'):
             file_path = os.path.join(dirpath, filename).replace(append_dir, '')
             LOGGER.info('Processing %s%s', region, file_path)
-            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources('data/ExtendedSpecs/{}{}'.format(region, file_path)))
+            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources(
+                'data/ExtendedSpecs/{}{}'.format(region, file_path)))
 
             # Process the generic patches 1 by 1 so we can "ignore" failed ones
             for all_patch in all_patches:
@@ -173,9 +182,11 @@ def patch_spec(content, region):
                     LOGGER.debug('Patch (%s) not applied in region %s', all_patch, region)
                 except jsonpointer.JsonPointerException:
                     # Debug as the parent element isn't supported in the region
-                    LOGGER.debug('Parent element not found for patch (%s) in region %s', all_patch, region)
+                    LOGGER.debug('Parent element not found for patch (%s) in region %s',
+                                 all_patch, region)
 
     return content
+
 
 def update_iam_policies():
     """update iam policies file"""
@@ -188,14 +199,16 @@ def update_iam_policies():
     )
     LOGGER.debug('Downloading policies %s into %s', url, filename)
 
-    req = requests.get(url)
-
-    content = req.content.decode('utf-8')
+    content = get_url_content(url)
 
     content = content.split('app.PolicyEditorConfig=')[1]
     content = json.loads(content)
-    content['serviceMap']['Manage Amazon API Gateway']['Actions'].extend(['HEAD', 'OPTIONS'])
-    content['serviceMap']['Amazon Kinesis Video Streams']['Actions'].append('StartStreamEncryption')
+    content['serviceMap']['Manage Amazon API Gateway']['Actions'].extend(
+        ['HEAD', 'OPTIONS']
+    )
+    content['serviceMap']['Amazon Kinesis Video Streams']['Actions'].append(
+        'StartStreamEncryption'
+    )
 
     with open(filename, 'w') as f:
         json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))

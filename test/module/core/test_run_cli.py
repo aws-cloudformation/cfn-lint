@@ -92,6 +92,10 @@ class TestCli(BaseTestCase):
             (_, filenames, _) = cfnlint.core.get_args_filenames([])
             assert filenames == [None]
 
+        with patch('sys.stdin', StringIO(file_content)):
+            (_, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+            assert filenames == [filename]
+
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_template_config(self, yaml_mock):
         """Test template config"""
