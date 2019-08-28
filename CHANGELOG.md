@@ -1,3 +1,7 @@
+### 0.23.5
+###### CloudFormation Specifications
+- Switch AWS Batch SpotIamFleetRole to Role Arn (pull #[1111](https://github.com/aws-cloudformation/cfn-python-lint/pull/1111))
+
 ### 0.23.4
 ###### CloudFormation Specifications
 - Update CloudFormatin specs to 5.3.0 (pull #[1108](https://github.com/aws-cloudformation/cfn-python-lint/pull/1108))
