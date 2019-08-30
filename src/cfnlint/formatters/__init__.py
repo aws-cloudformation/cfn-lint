@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import Match
+from cfnlint.rules import Match
+
 
 class BaseFormatter(object):
     """Base Formatter class"""

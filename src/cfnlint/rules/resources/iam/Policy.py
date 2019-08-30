@@ -18,8 +18,8 @@ import json
 from datetime import date
 import six
 from cfnlint.helpers import convert_dict
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules import RuleMatch
 
 
 class Policy(CloudFormationLintRule):

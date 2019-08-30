@@ -14,13 +14,15 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection  # pylint: disable=E0401
+from cfnlint import Runner  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection
 from cfnlint.rules.templates.Base import Base  # pylint: disable=E0401
 from .. import BaseRuleTestCase
 
 
 class TestBaseTemplate(BaseRuleTestCase):
     """Test base template"""
+
     def setUp(self):
         """Setup"""
         self.collection = RulesCollection()

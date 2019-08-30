@@ -15,8 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import six
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS
 import cfnlint.helpers
 

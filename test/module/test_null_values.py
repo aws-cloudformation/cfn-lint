@@ -15,7 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import json
-from cfnlint import RulesCollection  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
@@ -24,6 +24,7 @@ from testlib.testcase import BaseTestCase
 
 class TestNulls(BaseTestCase):
     """Test Null Value Parsing """
+
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection()

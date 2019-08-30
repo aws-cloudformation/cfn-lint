@@ -18,7 +18,7 @@ import sys
 import logging
 from mock import patch, mock_open, call
 import cfnlint.maintenance
-from cfnlint import CloudFormationLintRule, RulesCollection
+from cfnlint.rules import CloudFormationLintRule, RulesCollection
 from testlib.testcase import BaseTestCase
 
 LOGGER = logging.getLogger('cfnlint.maintenance')

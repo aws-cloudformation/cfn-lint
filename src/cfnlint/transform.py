@@ -22,12 +22,15 @@ from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 
-import cfnlint.helpers
+from cfnlint.helpers import load_resources, convert_dict, format_json_string
+from cfnlint.rules import Match, TransformError
 LOGGER = logging.getLogger('cfnlint')
+
 
 class Transform(object):
     """
-    Application Serverless Module tranform Wrappor. Based on code from AWS SAM CLI:
+    Application Serverless Module tranform Wrappor.
+    Based on code from AWS SAM CLI:
     https://github.com/awslabs/aws-sam-cli/blob/develop/samcli/commands/validate/lib/sam_template_validator.py
     """
 
@@ -52,13 +55,15 @@ class Transform(object):
         Load the ManagedPolicies locally, based on the AWS-CLI:
         https://github.com/awslabs/aws-sam-cli/blob/develop/samcli/lib/samlib/default_managed_policies.json
         """
-        return cfnlint.helpers.load_resources('data/Serverless/ManagedPolicies.json')
+        return load_resources('data/Serverless/ManagedPolicies.json')
 
     def _replace_local_codeuri(self):
         """
-        Replaces the CodeUri in AWS::Serverless::Function and DefinitionUri in AWS::Serverless::Api to a fake
-        S3 Uri. This is to support running the SAM Translator with valid values for these fields. If this in not done,
-        the template is invalid in the eyes of SAM Translator (the translator does not support local paths)
+        Replaces the CodeUri in AWS::Serverless::Function and DefinitionUri in
+        AWS::Serverless::Api to a fake S3 Uri. This is to support running the
+        SAM Translator with valid values for these fields. If this in not done,
+        the template is invalid in the eyes of SAM Translator (the translator
+        does not support local paths)
         """
 
         all_resources = self._template.get('Resources', {})
@@ -86,7 +91,8 @@ class Transform(object):
                     resource_dict['Location'] = ''
                     Transform._update_to_s3_uri('Location', resource_dict)
             if resource_type == 'AWS::Serverless::Api':
-                if 'DefinitionBody' not in resource_dict and 'Auth' not in resource_dict:
+                if ('DefinitionBody' not in resource_dict and
+                        'Auth' not in resource_dict):
                     Transform._update_to_s3_uri('DefinitionUri', resource_dict)
                 else:
                     resource_dict['DefinitionBody'] = ''
@@ -101,35 +107,41 @@ class Transform(object):
             # Output the SAM Translator version in debug mode
             LOGGER.info('SAM Translator: %s', samtranslator.__version__)
 
-            sam_translator = Translator(managed_policy_map=self._managed_policy_map,
-                                        sam_parser=self._sam_parser)
+            sam_translator = Translator(
+                managed_policy_map=self._managed_policy_map,
+                sam_parser=self._sam_parser)
 
             self._replace_local_codeuri()
 
-            # Tell SAM to use the region we're linting in, this has to be controlled using the default AWS mechanisms, see also:
+            # Tell SAM to use the region we're linting in, this has to be
+            # controlled using the default AWS mechanisms, see also:
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
             LOGGER.info('Setting AWS_DEFAULT_REGION to %s', self._region)
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
-            self._template = cfnlint.helpers.convert_dict(
-                sam_translator.translate(sam_template=self._template, parameter_values=self._parameters))
+            self._template = convert_dict(
+                sam_translator.translate(sam_template=self._template,
+                                         parameter_values=self._parameters))
 
-            LOGGER.info('Transformed template: \n%s', cfnlint.helpers.format_json_string(self._template))
+            LOGGER.info('Transformed template: \n%s',
+                        format_json_string(self._template))
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'
             for cause in e.causes:
-                matches.append(cfnlint.Match(
+                matches.append(Match(
                     1, 1,
                     1, 1,
-                    self._filename, cfnlint.TransformError(), message.format(cause.message)))
+                    self._filename,
+                    TransformError(), message.format(cause.message)))
         except Exception as e:  # pylint: disable=W0703
             LOGGER.debug('Error transforming template: %s', str(e))
             LOGGER.debug('Stack trace: %s', e, exc_info=True)
             message = 'Error transforming template: {0}'
-            matches.append(cfnlint.Match(
+            matches.append(Match(
                 1, 1,
                 1, 1,
-                self._filename, cfnlint.TransformError(), message.format(str(e))))
+                self._filename,
+                TransformError(), message.format(str(e))))
 
         return matches
 
@@ -149,11 +161,14 @@ class Transform(object):
         return isinstance(uri, six.string_types) and uri.startswith('s3://')
 
     @staticmethod
-    def _update_to_s3_uri(property_key, resource_property_dict, s3_uri_value='s3://bucket/value'):
+    def _update_to_s3_uri(
+            property_key, resource_property_dict,
+            s3_uri_value='s3://bucket/value'):
         """
-        Updates the 'property_key' in the 'resource_property_dict' to the value of 's3_uri_value'
-        Note: The function will mutate the resource_property_dict that is pass in
-        Parameters
+        Updates the 'property_key' in the 'resource_property_dict' to the
+        value of 's3_uri_value'
+        Note: The function will mutate the resource_property_dict that is pass
+        in Parameters
         ----------
         property_key str, required
             Key in the resource_property_dict

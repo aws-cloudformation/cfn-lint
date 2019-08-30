@@ -15,8 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from cfnlint.helpers import bool_compare
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules import RuleMatch
 
 
 class CacheClusterFailover(CloudFormationLintRule):

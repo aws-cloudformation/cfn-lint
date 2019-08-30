@@ -117,17 +117,17 @@ def update_documentation(rules):
         rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
 
         # Add system Errors (hardcoded)
-        parseerror = cfnlint.ParseError()
+        parseerror = cfnlint.rules.ParseError()
         tags = ','.join('`{0}`'.format(tag) for tag in parseerror.tags)
         new_file.write(rule_output.format(
             parseerror.id, parseerror.shortdesc, parseerror.description, '', '', tags))
 
-        transformerror = cfnlint.TransformError()
+        transformerror = cfnlint.rules.TransformError()
         tags = ','.join('`{0}`'.format(tag) for tag in transformerror.tags)
         new_file.write(rule_output.format(
             transformerror.id, transformerror.shortdesc, transformerror.description, '', '', tags))
 
-        ruleerror = cfnlint.RuleError()
+        ruleerror = cfnlint.rules.RuleError()
         tags = ','.join('`{0}`'.format(tag) for tag in ruleerror.tags)
         new_file.write(
             rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', '', tags))
