@@ -14,11 +14,13 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Runner, RulesCollection
+from cfnlint import Runner
+from cfnlint.rules import RulesCollection
 from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
 import cfnlint.helpers
 import json
+
 
 class TestExclude(BaseTestCase):
     """Used for Testing Rules"""

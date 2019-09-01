@@ -18,7 +18,7 @@ import logging
 import os
 import sys
 from jsonschema.exceptions import ValidationError
-from cfnlint import RulesCollection
+from cfnlint.rules import RulesCollection
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode

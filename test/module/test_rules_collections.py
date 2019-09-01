@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import RulesCollection, Template, CloudFormationLintRule
+from cfnlint import Template
+from cfnlint.rules import CloudFormationLintRule, RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -22,6 +23,7 @@ from testlib.testcase import BaseTestCase
 
 class TestTemplate(BaseTestCase):
     """Test Template RulesCollection in cfnlint """
+
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection()
@@ -61,7 +63,8 @@ class TestTemplate(BaseTestCase):
         expected_err_count = 35
         matches = []
         matches.extend(self.rules.run(filename, cfn))
-        assert len(matches) == expected_err_count, 'Expected {} failures, got {}'.format(expected_err_count, len(matches))
+        assert len(matches) == expected_err_count, 'Expected {} failures, got {}'.format(
+            expected_err_count, len(matches))
 
     def test_fail_sub_properties_run(self):
         """Test failure run"""

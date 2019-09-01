@@ -14,7 +14,8 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from cfnlint import Template, RulesCollection, Runner  # pylint: disable=E0401
+from cfnlint import Template, Runner  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from testlib.testcase import BaseTestCase
@@ -22,6 +23,7 @@ from testlib.testcase import BaseTestCase
 
 class TestDirectives(BaseTestCase):
     """Test Directives """
+
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection(include_rules=['I'])
@@ -40,4 +42,5 @@ class TestDirectives(BaseTestCase):
         matches.extend(runner.transform())
         if not matches:
             matches.extend(runner.run())
-        assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(failures, len(matches), filename)
+        assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(
+            failures, len(matches), filename)
