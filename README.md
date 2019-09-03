@@ -42,6 +42,7 @@ Python 2.7+ and 3.4+ are supported.
 There are IDE plugins available to get direct linter feedback from you favorite editor:
 
 * [Atom](https://atom.io/packages/atom-cfn-lint)
+* [Emacs](https://www.emacswiki.org/emacs/CfnLint)
 * NeoVim 0.2.0+/Vim 8
   * [ALE](https://github.com/w0rp/ale#supported-languages)
   * [Syntastic](https://github.com/speshak/vim-cfn)
