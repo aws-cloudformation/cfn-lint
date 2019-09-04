@@ -1,3 +1,7 @@
+### 0.24.1
+###### Fixes
+- Update AWS::SQS::Queue.ReceiveMessageWaitTimeSeconds to allow 0 value (pull #[1123](https://github.com/aws-cloudformation/cfn-python-lint/pull/1123))
+
 ### 0.24.0
 ###### Features
 - Move rule classes from cfnlint into cfnlint.rules (pull #[1098](https://github.com/aws-cloudformation/cfn-python-lint/pull/1098))
