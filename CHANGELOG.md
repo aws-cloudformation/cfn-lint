@@ -1,3 +1,11 @@
+### 0.24.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 6.0.0 (pull #[1126](https://github.com/aws-cloudformation/cfn-python-lint/pull/1126))
+###### Fixes
+- Update AWS::SQS::Queue.ReceiveMessageWaitTimeSeconds to allow 0 value (pull #[1123](https://github.com/aws-cloudformation/cfn-python-lint/pull/1123))
+- AWS::EC2::SecurityGroup.Description StringMin and StringMax should be integers (pull #[1125](https://github.com/aws-cloudformation/cfn-python-lint/pull/1125))
+- AWS::ApiGateway::GatewayResponse.ResponseType typo (pull #[1126](https://github.com/aws-cloudformation/cfn-python-lint/pull/1126))
+
 ### 0.24.0
 ###### Features
 - Move rule classes from cfnlint into cfnlint.rules (pull #[1098](https://github.com/aws-cloudformation/cfn-python-lint/pull/1098))
