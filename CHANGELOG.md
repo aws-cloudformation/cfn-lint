@@ -10,8 +10,8 @@
 ###### Features
 - Move rule classes from cfnlint into cfnlint.rules (pull #[1098](https://github.com/aws-cloudformation/cfn-python-lint/pull/1098))
 ###### CloudFormation Specifications
-- Update IAM policies as of 2019.09.03 (pull #[]())
-- Update CloudFormation specs from pricing and SSM data as of 2019.09.03 (pull #[]())
+- Update IAM policies as of 2019.09.03 (pull #[1120](https://github.com/aws-cloudformation/cfn-python-lint/pull/1120))
+- Update CloudFormation specs from pricing and SSM data as of 2019.09.03 (pull #[1120](https://github.com/aws-cloudformation/cfn-python-lint/pull/1120))
 - Add a lot of min/max values to the specs (pull #[1110](https://github.com/aws-cloudformation/cfn-python-lint/pull/1110) and pull #[1116](https://github.com/aws-cloudformation/cfn-python-lint/pull/1116))
 ###### Fixes
 - Add me-south-1 to supported regions (pull #[1113](https://github.com/aws-cloudformation/cfn-python-lint/pull/1113))
