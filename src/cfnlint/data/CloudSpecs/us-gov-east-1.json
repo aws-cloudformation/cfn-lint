@@ -2800,6 +2800,17 @@
         }
       }
     },
+    "AWS::Config::RemediationConfiguration.ExecutionControls": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-executioncontrols.html",
+      "Properties": {
+        "SsmControls": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-executioncontrols.html#cfn-config-remediationconfiguration-executioncontrols-ssmcontrols",
+          "Required": false,
+          "Type": "SsmControls",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Config::RemediationConfiguration.RemediationParameterValue": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-remediationparametervalue.html",
       "Properties": {
@@ -2823,6 +2834,23 @@
         "Value": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-resourcevalue.html#cfn-config-remediationconfiguration-resourcevalue-value",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Config::RemediationConfiguration.SsmControls": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-ssmcontrols.html",
+      "Properties": {
+        "ConcurrentExecutionRatePercentage": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-ssmcontrols.html#cfn-config-remediationconfiguration-ssmcontrols-concurrentexecutionratepercentage",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ErrorPercentage": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-remediationconfiguration-ssmcontrols.html#cfn-config-remediationconfiguration-ssmcontrols-errorpercentage",
+          "PrimitiveType": "Integer",
           "Required": false,
           "UpdateType": "Mutable"
         }
@@ -11169,7 +11197,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "6.0.0",
+  "ResourceSpecificationVersion": "6.1.0",
   "ResourceTypes": {
     "AWS::ApiGateway::Account": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
@@ -13692,7 +13720,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-queuedtimeoutinminutes",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CodeBuild::Project.QueuedTimeoutInMinutes"
+          }
         },
         "SecondaryArtifacts": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-secondaryartifacts",
@@ -13719,7 +13750,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-servicerole",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IAM::Role.NameOrArn"
+          }
         },
         "Source": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-source",
@@ -13744,7 +13778,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-timeoutinminutes",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CodeBuild::Project.TimeoutInMinutes"
+          }
         },
         "Triggers": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-triggers",
@@ -13756,35 +13793,6 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-project.html#cfn-codebuild-project-vpcconfig",
           "Required": false,
           "Type": "VpcConfig",
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::CodeBuild::SourceCredential": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html",
-      "Properties": {
-        "AuthType": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-authtype",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        },
-        "ServerType": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-servertype",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
-        },
-        "Token": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-token",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        },
-        "Username": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codebuild-sourcecredential.html#cfn-codebuild-sourcecredential-username",
-          "PrimitiveType": "String",
-          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -14096,11 +14104,29 @@
     "AWS::Config::RemediationConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html",
       "Properties": {
+        "Automatic": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-automatic",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "ConfigRuleName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-configrulename",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable"
+        },
+        "ExecutionControls": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-executioncontrols",
+          "Required": false,
+          "Type": "ExecutionControls",
+          "UpdateType": "Mutable"
+        },
+        "MaximumAutomaticAttempts": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-maximumautomaticattempts",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "Parameters": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-parameters",
@@ -14111,6 +14137,12 @@
         "ResourceType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-resourcetype",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RetryAttemptSeconds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-remediationconfiguration.html#cfn-config-remediationconfiguration-retryattemptseconds",
+          "PrimitiveType": "Integer",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -24316,6 +24348,14 @@
         "i3.large",
         "i3.metal",
         "i3.xlarge",
+        "i3en.12xlarge",
+        "i3en.24xlarge",
+        "i3en.2xlarge",
+        "i3en.3xlarge",
+        "i3en.6xlarge",
+        "i3en.large",
+        "i3en.metal",
+        "i3en.xlarge",
         "m5.12xlarge",
         "m5.16xlarge",
         "m5.24xlarge",
@@ -24342,6 +24382,7 @@
         "m5d.large",
         "m5d.metal",
         "m5d.xlarge",
+        "p3dn.24xlarge",
         "r5.12xlarge",
         "r5.16xlarge",
         "r5.24xlarge",
