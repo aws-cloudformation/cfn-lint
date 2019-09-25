@@ -32,6 +32,7 @@ DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
 
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
+
     def __init__(self, msg=None, exit_code=1):
         if msg is None:
             msg = 'process failed with exit code %s' % exit_code
@@ -111,24 +112,24 @@ def get_args_filenames(cli_args):
         config = cfnlint.config.ConfigMixIn(cli_args)
     except ValidationError as e:
         LOGGER.error('Error parsing config file: %s', str(e))
-        exit(1)
+        sys.exit(1)
 
     fmt = config.format
     formatter = get_formatter(fmt)
 
     if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
-        exit(0)
+        sys.exit(0)
 
     if config.update_documentation:
         # Get ALL rules (ignore the CLI settings))
         documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}, True)
         cfnlint.maintenance.update_documentation(documentation_rules)
-        exit(0)
+        sys.exit(0)
 
     if config.update_iam_policies:
         cfnlint.maintenance.update_iam_policies()
-        exit(0)
+        sys.exit(0)
 
     if config.listrules:
         rules = cfnlint.core.get_rules(
@@ -138,7 +139,7 @@ def get_args_filenames(cli_args):
             config.configure_rules
         )
         print(rules)
-        exit(0)
+        sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
         return(config, [None], formatter)
@@ -146,7 +147,7 @@ def get_args_filenames(cli_args):
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
-        exit(1)
+        sys.exit(1)
 
     return(config, config.templates, formatter)
 
@@ -177,7 +178,8 @@ def run_checks(filename, template, rules, regions):
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
-            msg = 'Regions %s are unsupported. Supported regions are %s' % (unsupported_regions, REGIONS)
+            msg = 'Regions %s are unsupported. Supported regions are %s' % (
+                unsupported_regions, REGIONS)
             raise InvalidRegionException(msg, 32)
 
     matches = []

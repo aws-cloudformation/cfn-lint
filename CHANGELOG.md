@@ -1,3 +1,13 @@
+### 0.24.2
+###### CloudFormation Specifications
+- Add missing values for LifecyclePolicy API (pull #[1128](https://github.com/aws-cloudformation/cfn-python-lint/pull/1128))
+- Update CloudFormation specs to 6.1.0 (pull #[1134])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1134)
+- Update Pricing and SSM data to 2019.09.20 (pull #[1134])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1134)
+###### Fixes
+- Update [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029)
+to include cognito-identity keys to list of excluded resourse when checking if Fn sub is needed (pull #[1136])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1136)
+
+
 ### 0.24.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 6.0.0 (pull #[1126](https://github.com/aws-cloudformation/cfn-python-lint/pull/1126))
