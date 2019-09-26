@@ -50,6 +50,11 @@ Resources:
       LogGroupName: 'some-log-group'
       # Don't error when Retention is used inside a condition
       RetentionInDays: !If [IsRetention, !Ref Retention, !Ref 'AWS::NoValue']
+  LogGroupWithResourceCondition:
+    Type: AWS::Logs::LogGroup
+    Condition: IsRetention
+    Properties:
+      RetentionInDays: !Ref Retention
   AccessKey:
     Type: "AWS::IAM::AccessKey"
     Properties:

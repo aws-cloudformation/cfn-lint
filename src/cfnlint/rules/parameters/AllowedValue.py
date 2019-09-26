@@ -40,12 +40,19 @@ class AllowedValue(CloudFormationLintRule):
         """Check Ref"""
         matches = []
 
+        cfn = kwargs.get('cfn')
         if 'Fn::If' in path:
-            self.logger.debug('Not able to guarentee that the default value hasn\'t been conditioned out')
+            self.logger.debug(
+                'Not able to guarentee that the default value hasn\'t been conditioned out')
+            return matches
+        if path[0] == 'Resources' and 'Condition' in cfn.template.get(
+                path[0], {}).get(path[1]):
+            self.logger.debug(
+                'Not able to guarentee that the default value '
+                'hasn\'t been conditioned out')
             return matches
 
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
-        cfn = kwargs.get('cfn')
 
         if allowed_value_specs:
             if value in cfn.template.get('Parameters', {}):
@@ -63,13 +70,15 @@ class AllowedValue(CloudFormationLintRule):
                                 if str(allowed_value) not in allowed_value_specs:
                                     param_path = ['Parameters', value, 'AllowedValues', index]
                                     message = 'You must specify a valid allowed value for {0} ({1}).\nValid values are {2}'
-                                    matches.append(RuleMatch(param_path, message.format(value, allowed_value, allowed_value_specs)))
+                                    matches.append(RuleMatch(param_path, message.format(
+                                        value, allowed_value, allowed_value_specs)))
                         if default_value:
                             # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
                             if str(default_value) not in allowed_value_specs:
                                 param_path = ['Parameters', value, 'Default']
                                 message = 'You must specify a valid Default value for {0} ({1}).\nValid values are {2}'
-                                matches.append(RuleMatch(param_path, message.format(value, default_value, allowed_value_specs)))
+                                matches.append(RuleMatch(param_path, message.format(
+                                    value, default_value, allowed_value_specs)))
 
         return matches
 
@@ -87,7 +96,8 @@ class AllowedValue(CloudFormationLintRule):
                             cfn.check_value(
                                 p_value, prop, p_path,
                                 check_ref=self.check_value_ref,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
+                                    'ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -98,7 +108,8 @@ class AllowedValue(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
@@ -108,7 +119,8 @@ class AllowedValue(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
