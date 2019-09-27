@@ -48,10 +48,12 @@ class Configuration(CloudFormationLintRule):
 
         valid_custom_attributes = [
             'Condition',
+            'DeletionPolicy',
             'DependsOn',
             'Metadata',
             'Properties',
             'Type',
+            'UpdateReplacePolicy',
             'Version',
         ]
 
