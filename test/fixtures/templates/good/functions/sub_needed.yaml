@@ -18,6 +18,60 @@ Resources:
           Action:
             - "iam:UploadSSHPublicKey"
           Resource: "arn:aws:iam::*:user/${aws:username}"
+  myPolicy2:
+    Type: AWS::IAM::Policy
+    Properties:
+      Roles:
+      - testRole
+      PolicyName: test2
+      PolicyDocument:
+        {
+          "Version": "2012-10-17",
+            "Statement": [
+              {
+              "Sid": "GetClusterCredsStatement",
+                "Effect": "Allow",
+                "Action": [
+                  "redshift:GetClusterCredentials"
+                ],
+                "Resource": [
+                  "arn:aws:redshift:us-west-2:123456789012:dbuser:examplecluster/${redshift:DbUser}",
+                  "arn:aws:redshift:us-west-2:123456789012:dbname:examplecluster/testdb",
+                  "arn:aws:redshift:us-west-2:123456789012:dbgroup:examplecluster/common_group"
+                ],
+                  "Condition": {
+                      "StringEquals": {
+                    "aws:userid":"AIDIODR4TAW7CSEXAMPLE:${redshift:DbUser}@yourdomain.com"
+                                      }
+                                }
+              },
+              {
+                "Sid": "CreateClusterUserStatement",
+                "Effect": "Allow",
+                "Action": [
+                  "redshift:CreateClusterUser"
+                ],
+                "Resource": [
+                  "arn:aws:redshift:us-west-2:123456789012:dbuser:examplecluster/${redshift:DbUser}"
+                ],
+                "Condition": {
+                  "StringEquals": {
+                    "aws:userid":"AIDIODR4TAW7CSEXAMPLE:${redshift:DbUser}@yourdomain.com"
+                  }
+                }
+              },
+              {
+                "Sid": "RedshiftJoinGroupStatement",
+                "Effect": "Allow",
+                "Action": [
+                  "redshift:JoinGroup"
+                ],
+                "Resource": [
+                  "arn:aws:redshift:us-west-2:123456789012:dbgroup:examplecluster/common_group"
+                ]
+              }
+            ]
+          }
   Key:
     Type: AWS::ApiGateway::ApiKey
     Properties:
