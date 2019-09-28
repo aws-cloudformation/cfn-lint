@@ -83,3 +83,83 @@ Resources:
           }
         - TestParam: !Ref timeout
       RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole-us-east-1
+  MyStateMachineNewTypes:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: HelloWorld-StateMachine
+      DefinitionString: |-
+        {
+          "StartAt": "ValidatePayment",
+          "States": {
+            "ValidatePayment": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-west-2:123456789012:function:validatePayment",
+              "Next": "CheckPayment"
+            },
+            "CheckPayment": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Not": {
+                    "Variable": "$.payment",
+                    "StringEquals": "Ok"
+                  },
+                  "Next": "PaymentFailed"
+                }
+              ],
+              "Default": "ProcessAllItems"
+            },
+            "PaymentFailed": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:us-west-2:123456789012:function:paymentFailed",
+              "End": true
+            },
+            "ProcessAllItems": {
+              "Type": "Map",
+              "InputPath": "$.detail",
+              "ItemsPath": "$.items",
+              "MaxConcurrency": 3,
+              "Iterator": {
+                "StartAt": "CheckAvailability",
+                "States": {
+                  "CheckAvailability": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-west-2:123456789012:function:checkAvailability",
+                    "Retry": [
+                      {
+                        "ErrorEquals": [
+                          "TimeOut"
+                        ],
+                        "IntervalSeconds": 1,
+                        "BackoffRate": 2,
+                        "MaxAttempts": 3
+                      }
+                    ],
+                    "Next": "PrepareForDelivery"
+                  },
+                  "PrepareForDelivery": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-west-2:123456789012:function:prepareForDelivery",
+                    "Next": "StartDelivery"
+                  },
+                  "StartDelivery": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-west-2:123456789012:function:startDelivery",
+                    "End": true
+                  }
+                }
+              },
+              "ResultPath": "$.detail.processedItems",
+              "Next": "SendOrderSummary"
+            },
+            "SendOrderSummary": {
+              "Type": "Task",
+              "InputPath": "$.detail.processedItems",
+              "Resource": "arn:aws:lambda:us-west-2:123456789012:function:sendOrderSummary",
+              "ResultPath": "$.detail.summary",
+              "End": true
+            }
+          }
+        }
+      RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole-us-east-1
+  
