@@ -59,7 +59,7 @@ class SubParametersUsed(CloudFormationLintRule):
                         continue
                     if not isinstance(parameters, dict):
                         continue
-                    else:
-                        matches.extend(self._test_parameters(cfn, sub_string, parameters, tree + [1]))
+
+                    matches.extend(self._test_parameters(cfn, sub_string, parameters, tree + [1]))
 
         return matches
