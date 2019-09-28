@@ -18,6 +18,7 @@ import re
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
+
 class SubNeeded(CloudFormationLintRule):
     """Check if a substitution string exists without a substitution function"""
     id = 'E1029'
@@ -28,7 +29,8 @@ class SubNeeded(CloudFormationLintRule):
 
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
-    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init', 'CloudWatchAlarmDefinition', 'TopicRulePayload']
+    excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
+                'CloudWatchAlarmDefinition', 'TopicRulePayload']
     api_excludes = ['Uri', 'Body']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
@@ -37,13 +39,25 @@ class SubNeeded(CloudFormationLintRule):
     # https://docs.aws.amazon.com/iot/latest/developerguide/thing-policy-variables.html
     # https://docs.aws.amazon.com/transfer/latest/userguide/users.html#users-policies-scope-down
     # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_iam-condition-keys.html
-    resource_excludes = ['${aws:CurrentTime}', '${aws:EpochTime}', '${aws:TokenIssueTime}', '${aws:principaltype}',
-                         '${aws:SecureTransport}', '${aws:SourceIp}', '${aws:UserAgent}', '${aws:userid}',
+    resource_excludes = ['${aws:CurrentTime}', '${aws:EpochTime}',
+                         '${aws:TokenIssueTime}', '${aws:principaltype}',
+                         '${aws:SecureTransport}', '${aws:SourceIp}',
+                         '${aws:UserAgent}', '${aws:userid}',
                          '${aws:username}', '${ec2:SourceInstanceARN}',
-                         '${iot:Connection.Thing.ThingName}', '${iot:Connection.Thing.ThingTypeName}',
-                         '${iot:Connection.Thing.IsAttached}', '${iot:ClientId}', '${transfer:HomeBucket}',
-                         '${transfer:HomeDirectory}', '${transfer:HomeFolder}', '${transfer:UserName}',
-                         '${cognito-identity.amazonaws.com:aud}', '${cognito-identity.amazonaws.com:sub}', '${cognito-identity.amazonaws.com:amr}']
+                         '${iot:Connection.Thing.ThingName}',
+                         '${iot:Connection.Thing.ThingTypeName}',
+                         '${iot:Connection.Thing.IsAttached}',
+                         '${iot:ClientId}', '${transfer:HomeBucket}',
+                         '${transfer:HomeDirectory}', '${transfer:HomeFolder}',
+                         '${transfer:UserName}', '${redshift:DbUser}',
+                         '${cognito-identity.amazonaws.com:aud}',
+                         '${cognito-identity.amazonaws.com:sub}',
+                         '${cognito-identity.amazonaws.com:amr}']
+
+    # https://docs.aws.amazon.com/redshift/latest/mgmt/redshift-iam-access-control-identity-based.html
+    condition_excludes = [
+        '${redshift:DbUser}',
+    ]
 
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
@@ -96,12 +110,14 @@ class SubNeeded(CloudFormationLintRule):
 
         # We want to search all of the paths to check if each one contains an 'Fn::Sub'
         for parameter_string_path in parameter_string_paths:
-
             # Exxclude the special IAM variables
             variable = parameter_string_path[-1]
 
             if 'Resource' in parameter_string_path:
                 if variable in self.resource_excludes:
+                    continue
+            if 'Condition' in parameter_string_path:
+                if variable in self.condition_excludes:
                     continue
 
             # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
@@ -121,7 +137,8 @@ class SubNeeded(CloudFormationLintRule):
             if not found_sub:
                 # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                 path = parameter_string_path[:-1]
-                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format('/'.join(map(str, path)))
+                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format(
+                    '/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
 
         return matches
