@@ -16,8 +16,8 @@
 """
 import hashlib
 import json
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules import RuleMatch
 
 from cfnlint.helpers import RESOURCE_SPECS
 

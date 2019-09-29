@@ -15,8 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import six
-from cfnlint import CloudFormationLintRule
-from cfnlint import RuleMatch
+from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules import RuleMatch
 
 
 class SubParametersUsed(CloudFormationLintRule):
@@ -59,7 +59,7 @@ class SubParametersUsed(CloudFormationLintRule):
                         continue
                     if not isinstance(parameters, dict):
                         continue
-                    else:
-                        matches.extend(self._test_parameters(cfn, sub_string, parameters, tree + [1]))
+
+                    matches.extend(self._test_parameters(cfn, sub_string, parameters, tree + [1]))
 
         return matches

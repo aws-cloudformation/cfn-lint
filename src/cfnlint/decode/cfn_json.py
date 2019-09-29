@@ -64,6 +64,7 @@ class JSONDecodeError(ValueError):
     colno: The column corresponding to pos
     """
     # Note that this exception is used from _json
+
     def __init__(self, msg, doc, pos, key=' '):
         lineno = doc.count('\n', 0, pos) + 1
         colno = pos - doc.rfind('\n', 0, pos)
@@ -74,9 +75,9 @@ class JSONDecodeError(ValueError):
         self.pos = pos
         self.lineno = lineno
         self.colno = colno
-        self.match = cfnlint.Match(
+        self.match = cfnlint.rules.Match(
             lineno, colno + 1, lineno,
-            colno + 1 + len(key), '', cfnlint.ParseError(), message=msg)
+            colno + 1 + len(key), '', cfnlint.rules.ParseError(), message=msg)
 
     def __reduce__(self):
         return self.__class__, (self.msg, self.doc, self.pos)
@@ -119,7 +120,7 @@ def py_scanstring(s, end, strict=True,
         # or a backslash denoting that an escape sequence follows
         if terminator == '"':
             break
-        elif terminator != '\\':
+        if terminator != '\\':
             if strict:
                 msg = 'Invalid control character {0!r} at'.format(terminator)
                 raise JSONDecodeError(msg, s, end)
@@ -244,7 +245,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
 
         if nextchar == '}':
             break
-        elif nextchar != ',':
+        if nextchar != ',':
             raise JSONDecodeError('Expecting \',\' delimiter', s, end - 1)
         end = _w(s, end).end()
         nextchar = s[end:end + 1]
@@ -348,6 +349,7 @@ def get_beg_end_mark(s, start, end):
 
     return beg_mark, end_mark
 
+
 def load(filename):
     """
     Load the given JSON file
@@ -364,11 +366,13 @@ def load(filename):
 
     return json.loads(content, cls=CfnJSONDecoder)
 
+
 class CfnJSONDecoder(json.JSONDecoder):
     """
     Converts a json string, where datetime and timedelta objects were converted
     into strings using the DateTimeAwareJSONEncoder, into a python object.
     """
+
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, *args, **kwargs)
         self.parse_object = CfnJSONObject

@@ -42,12 +42,13 @@ Python 2.7+ and 3.4+ are supported.
 There are IDE plugins available to get direct linter feedback from you favorite editor:
 
 * [Atom](https://atom.io/packages/atom-cfn-lint)
+* [Emacs](https://www.emacswiki.org/emacs/CfnLint)
 * NeoVim 0.2.0+/Vim 8
   * [ALE](https://github.com/w0rp/ale#supported-languages)
   * [Syntastic](https://github.com/speshak/vim-cfn)
 * [Sublime](https://packagecontrol.io/packages/SublimeLinter-contrib-cloudformation)
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
-* [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint/update/48247)
+* [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint)
 
 ### GitHub Actions
 
@@ -215,7 +216,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.23.3  # The version of cfn-lint to use
+    rev: v0.24.2  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$
