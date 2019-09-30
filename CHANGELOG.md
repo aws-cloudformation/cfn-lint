@@ -1,11 +1,25 @@
+### 0.24.3
+###### Features
+- Add link to updated IntelliJ integration (pull #[1138](https://github.com/aws-cloudformation/cfn-python-lint/pull/1138))
+- Add link to emacs integration (pull #[1118](https://github.com/aws-cloudformation/cfn-python-lint/pull/1118))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 6.2.0 (pull #[1145](https://github.com/aws-cloudformation/cfn-python-lint/pull/1145))
+- Update Pricing and SSM data to 2019.09.28 (pull #[1145](https://github.com/aws-cloudformation/cfn-python-lint/pull/1145))
+- Remove manual patches that are no longer needed (pull #[1146](https://github.com/aws-cloudformation/cfn-python-lint/pull/1146))
+- Update CloudFormation spec links for a few regions that using old links (pull #[1148](https://github.com/aws-cloudformation/cfn-python-lint/pull/1148))
+###### Fixes
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to allow `DeletionPolicy` and `UpdateReplacePolciy` to be allowed on all resources (pull #[1139](https://github.com/aws-cloudformation/cfn-python-lint/pull/1139))
+- Update rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030) to not check Paramter default values when using a Resource Condition (pull #[1140](https://github.com/aws-cloudformation/cfn-python-lint/pull/1140))
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow new types in Step Functions (pull #[1143](https://github.com/aws-cloudformation/cfn-python-lint/pull/1143))
+
 ### 0.24.2
 ###### CloudFormation Specifications
 - Add missing values for LifecyclePolicy API (pull #[1128](https://github.com/aws-cloudformation/cfn-python-lint/pull/1128))
-- Update CloudFormation specs to 6.1.0 (pull #[1134])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1134)
-- Update Pricing and SSM data to 2019.09.20 (pull #[1134])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1134)
+- Update CloudFormation specs to 6.1.0 (pull #[1134](https://github.com/aws-cloudformation/cfn-python-lint/pull/1134))
+- Update Pricing and SSM data to 2019.09.20 (pull #[1134](https://github.com/aws-cloudformation/cfn-python-lint/pull/1134))
 ###### Fixes
 - Update [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029)
-to include cognito-identity keys to list of excluded resourse when checking if Fn sub is needed (pull #[1136])(https://github.com/aws-cloudformation/cfn-python-lint/pull/1136)
+to include cognito-identity keys to list of excluded resourse when checking if Fn sub is needed (pull #[1136](https://github.com/aws-cloudformation/cfn-python-lint/pull/1136))
 
 
 ### 0.24.1
