@@ -78,18 +78,22 @@ class Join(CloudFormationLintRule):
             return True
         return False
 
-
     def _is_getatt_a_list(self, parameter, get_atts):
         """ Is a GetAtt a List """
 
         for resource, attributes in get_atts.items():
             for attribute_name, attribute_values in attributes.items():
-                if resource == parameter[0] and attribute_name in ['*', parameter[1]]:
+                if resource == parameter[0] and attribute_name == '*':
+                    if attribute_values.get('PrimitiveItemType'):
+                        return 'FALSE'
                     if attribute_values.get('Type') == 'List':
-                        return True
+                        return 'TRUE'
+                    return 'UNKNOWN'
+                if resource == parameter[0] and attribute_name == parameter[1]:
+                    if attribute_values.get('Type') == 'List':
+                        return 'TRUE'
 
-        return False
-
+        return 'FALSE'
 
     def _match_string_objs(self, join_string_objs, cfn, path):
         """ Check join list """
@@ -112,7 +116,7 @@ class Join(CloudFormationLintRule):
                             matches.append(RuleMatch(
                                 path, message.format('/'.join(map(str, path)))))
                     elif key in ['Fn::GetAtt']:
-                        if not self._is_getatt_a_list(self._normalize_getatt(value), get_atts):
+                        if self._is_getatt_a_list(self._normalize_getatt(value), get_atts) == 'FALSE':
                             message = 'Fn::Join must use a list at {0}'
                             matches.append(RuleMatch(
                                 path, message.format('/'.join(map(str, path)))))
@@ -139,7 +143,7 @@ class Join(CloudFormationLintRule):
                                     matches.append(RuleMatch(
                                         path, message.format('/'.join(map(str, path)))))
                             elif key in ['Fn::GetAtt']:
-                                if self._is_getatt_a_list(self._normalize_getatt(value), get_atts):
+                                if self._is_getatt_a_list(self._normalize_getatt(value), get_atts) == 'TRUE':
                                     message = 'Fn::Join must not be a list at {0}'
                                     matches.append(RuleMatch(
                                         path, message.format('/'.join(map(str, path)))))
