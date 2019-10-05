@@ -1,3 +1,12 @@
+### 0.24.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to 6.3.0 (pull #[1155](https://github.com/aws-cloudformation/cfn-python-lint/pull/1155))
+- Update Pricing and SSM data to 2019.10.05 (pull #[1155](https://github.com/aws-cloudformation/cfn-python-lint/pull/1155))
+- Update Update CloudWatch alarm comparison operators (pull #[1154](https://github.com/aws-cloudformation/cfn-python-lint/pull/1154))
+###### Fixes
+- Update rule [E1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1022) to allow lists in custom resources (pull #[1151](https://github.com/aws-cloudformation/cfn-python-lint/pull/1151))
+
+
 ### 0.24.3
 ###### Features
 - Add link to updated IntelliJ integration (pull #[1138](https://github.com/aws-cloudformation/cfn-python-lint/pull/1138))
@@ -11,6 +20,7 @@
 - Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to allow `DeletionPolicy` and `UpdateReplacePolciy` to be allowed on all resources (pull #[1139](https://github.com/aws-cloudformation/cfn-python-lint/pull/1139))
 - Update rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030) to not check Paramter default values when using a Resource Condition (pull #[1140](https://github.com/aws-cloudformation/cfn-python-lint/pull/1140))
 - Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow new types in Step Functions (pull #[1143](https://github.com/aws-cloudformation/cfn-python-lint/pull/1143))
+
 
 ### 0.24.2
 ###### CloudFormation Specifications
