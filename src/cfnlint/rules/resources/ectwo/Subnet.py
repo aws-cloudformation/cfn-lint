@@ -76,7 +76,8 @@ class Subnet(CloudFormationLintRule):
         matches = []
 
         allowed_types = [
-            'String'
+            'String',
+            'AWS::SSM::Parameter::Value<String>'
         ]
 
         if value in resources:
@@ -91,7 +92,7 @@ class Subnet(CloudFormationLintRule):
             parameter_type = parameter.get('Type', None)
             if parameter_type not in allowed_types:
                 param_path = ['Parameters', value]
-                message = 'Security Group Id Parameter should be of type [{0}] for {1}'
+                message = 'CidrBlock Parameter should be of type [{0}] for {1}'
                 matches.append(
                     RuleMatch(
                         param_path,
