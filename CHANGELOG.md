@@ -1,3 +1,12 @@
+### 0.24.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to 7.1.0 (pull #[1163](https://github.com/aws-cloudformation/cfn-python-lint/pull/1163))
+- Update Pricing and SSM data to 2019.10.21 (pull #[1163](https://github.com/aws-cloudformation/cfn-python-lint/pull/1163))
+###### Fixes
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to support parameters inside a map type (pull #[1164](https://github.com/aws-cloudformation/cfn-python-lint/pull/1164))
+- Update rule [E2510](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2510) to allow SSM parameter types for CIDR blocks (pull #[1162](https://github.com/aws-cloudformation/cfn-python-lint/pull/1162))
+
+
 ### 0.24.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 6.3.0 (pull #[1155](https://github.com/aws-cloudformation/cfn-python-lint/pull/1155))
