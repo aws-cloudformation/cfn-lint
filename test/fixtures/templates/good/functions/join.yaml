@@ -45,4 +45,26 @@ Resources:
             - Fn::Join:
               - ''
               - !Ref AWS::NotificationARNs
+  CustomResourceFn:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: index.handler
+      Runtime: python3.7
+      InlineCode: |
+        import cfnresponse
+        def handler(event, context):
+          outputs = {'ListOutput': ['joe', 'jill', 'jane', 'jim']}
+          return cfnresponse.send(event, context, "SUCCESS", outputs)
+
+  CustomResource:
+    Type: "Custom::Resource"
+    Properties:
+      ServiceToken: !GetAtt CustomResourceFn.Arn
+
+  Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      Tags:
+        - Key: BucketUsers
+          Value: !Join [":", !GetAtt CustomResource.ListOutput]
 
