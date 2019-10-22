@@ -55,7 +55,7 @@ class StateMachine(CloudFormationLintRule):
             'Task': ['Resource', 'ResultPath', 'Retry', 'Catch',
                      'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
             'Map': ['MaxConcurrency', 'Iterator', 'ItemsPath', 'ResultPath',
-                    'Retry', 'Catch'],
+                    'Retry', 'Catch', 'Parameters'],
             'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],
