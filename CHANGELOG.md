@@ -1,3 +1,7 @@
+### 0.24.6
+###### Features
+- Update SAM Translator to 1.15.1 (pull #[1166](https://github.com/aws-cloudformation/cfn-python-lint/pull/1166))
+
 ### 0.24.5
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 7.1.0 (pull #[1163](https://github.com/aws-cloudformation/cfn-python-lint/pull/1163))
