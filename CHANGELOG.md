@@ -1,3 +1,11 @@
+### 0.24.7
+###### CloudFormation Specifications
+- Patch in Tags for SNS Topics (pull #[1174](https://github.com/aws-cloudformation/cfn-python-lint/pull/1174))
+- Update Pricing and SSM data to 2019.10.31 (pull #[1175](https://github.com/aws-cloudformation/cfn-python-lint/pull/1175))
+###### Fixes
+- Consolidate PSEUDOPARAMS into cfnlint.helpers (pull #[1172](https://github.com/aws-cloudformation/cfn-python-lint/pull/1172))
+
+
 ### 0.24.6
 ###### Features
 - Update SAM Translator to 1.15.1 (pull #[1166](https://github.com/aws-cloudformation/cfn-python-lint/pull/1166))
