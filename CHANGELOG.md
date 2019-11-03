@@ -1,3 +1,9 @@
+### 0.24.8
+###### CloudFormation Specifications
+- Update CloudFormation specs to 7.2.0 (pull #[1177](https://github.com/aws-cloudformation/cfn-python-lint/pull/1177))
+- Update Pricing and SSM data to 2019.11.01 (pull #[1177](https://github.com/aws-cloudformation/cfn-python-lint/pull/1177))
+
+
 ### 0.24.7
 ###### CloudFormation Specifications
 - Patch in Tags for SNS Topics (pull #[1174](https://github.com/aws-cloudformation/cfn-python-lint/pull/1174))
