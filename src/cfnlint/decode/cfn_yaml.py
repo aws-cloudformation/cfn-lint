@@ -85,6 +85,7 @@ class NodeConstructor(SafeConstructor):
         # because a dict does not support this. It overwrites it with the last
         # occurance, which can give unexpected results
         mapping = {}
+        self.flatten_mapping(node)
         for key_node, value_node in node.value:
             key = self.construct_object(key_node, False)
             value = self.construct_object(value_node, False)
