@@ -15,6 +15,7 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 import six
+from cfnlint.helpers import PSEUDOPARAMS
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -101,22 +102,12 @@ class Sub(CloudFormationLintRule):
         matches = []
         get_atts = cfn.get_valid_getatts()
 
-        valid_pseudo_params = [
-            'AWS::AccountId',
-            'AWS::NotificationARNs',
-            'AWS::Partition',
-            'AWS::Region',
-            'AWS::StackId',
-            'AWS::StackName',
-            'AWS::URLSuffix',
-        ]
-
         odd_list_params = [
             'CommaDelimitedList',
             'AWS::SSM::Parameter::Value<CommaDelimitedList>',
         ]
 
-        valid_params = valid_pseudo_params
+        valid_params = list(PSEUDOPARAMS)
         valid_params.extend(cfn.get_resource_names())
         template_parameters = self._get_parameters(cfn)
 

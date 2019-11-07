@@ -28,17 +28,6 @@ class RefExist(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'
     tags = ['functions', 'ref']
 
-    pseudoparams = [
-        'AWS::AccountId',
-        'AWS::NoValue',
-        'AWS::NotificationARNs',
-        'AWS::Partition',
-        'AWS::Region',
-        'AWS::StackId',
-        'AWS::StackName',
-        'AWS::URLSuffix',
-    ]
-
     def searchstring(self, string):
         """Search string for tokenized fields"""
         regex = re.compile(r'\${([a-zA-Z0-9]*)}')

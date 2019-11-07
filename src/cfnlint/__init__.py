@@ -28,6 +28,7 @@ import cfnlint.helpers
 import cfnlint.conditions
 from cfnlint.transform import Transform
 from cfnlint.decode.node import TemplateAttributeError
+from cfnlint.helpers import PSEUDOPARAMS
 from cfnlint.rules import RuleMatch as _RuleMatch
 from cfnlint.rules import Match as _Match
 from cfnlint.rules import RulesCollection as _RulesCollection
@@ -205,17 +206,7 @@ class Template(object):  # pylint: disable=R0904
                     element['From'] = 'Resources'
                     results[name] = element
 
-        pseudoparams = [
-            'AWS::AccountId',
-            'AWS::NotificationARNs',
-            'AWS::NoValue',
-            'AWS::Partition',
-            'AWS::Region',
-            'AWS::StackId',
-            'AWS::StackName',
-            'AWS::URLSuffix'
-        ]
-        for pseudoparam in pseudoparams:
+        for pseudoparam in PSEUDOPARAMS:
             element = {}
             element['Type'] = 'Pseudo'
             element['From'] = 'Pseduo'
