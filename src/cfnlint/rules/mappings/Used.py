@@ -37,7 +37,7 @@ class Used(CloudFormationLintRule):
         if mappings:
 
             # Get all "FindInMaps" that reference a Mapping
-            maptrees = cfn.search_deep_keys('Fn::FindInMap')
+            maptrees = cfn.transform_pre['Fn::FindInMap']
             for maptree in maptrees:
 
                 if isinstance(maptree[-1], list):
