@@ -115,6 +115,7 @@ class Template(object):  # pylint: disable=R0904
         self.transform_pre['Globals'] = {}
         self.transform_pre['Ref'] = self.search_deep_keys('Ref')
         self.transform_pre['Fn::Sub'] = self.search_deep_keys('Fn::Sub')
+        self.transform_pre['Fn::FindInMap'] = self.search_deep_keys('Fn::FindInMap')
         self.conditions = cfnlint.conditions.Conditions(self)
 
     def __deepcopy__(self, memo):
