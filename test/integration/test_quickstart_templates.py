@@ -39,7 +39,7 @@ class TestQuickStartTemplates(BaseTestCase):
             },
             'watchmaker': {
                 "filename": 'test/fixtures/templates/public/watchmaker.json',
-                "failures": 0
+                "results_filename": 'test/fixtures/results/public/watchmaker.json'
             },
             'nist_high_master': {
                 'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',

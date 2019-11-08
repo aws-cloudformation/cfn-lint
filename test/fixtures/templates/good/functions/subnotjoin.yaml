@@ -1,0 +1,23 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test Sub Over Join
+Parameters:
+  myPackage:
+    Type: String
+    Default: httpd
+    Description: Web Package
+  myAppPackage:
+    Type: String
+    Default: java
+    Description: App Package
+Resources:
+  myInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      UserData:
+        Fn::Base64:
+          Fn::Sub: |
+            yum install ${myPackage}
+            yum install ${myAppPackage}

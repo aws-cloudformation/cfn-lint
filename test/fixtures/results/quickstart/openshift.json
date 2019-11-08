@@ -1,16 +1,8 @@
 [
     {
-        "Rule": {
-            "Id": "W7001",
-            "Description": "Making sure the mappings defined are used",
-            "ShortDescription": "Check if Mappings are Used",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
         "Location": {
-            "Start": {
-                "ColumnNumber": 3,
-                "LineNumber": 25
-            },
             "End": {
                 "ColumnNumber": 18,
                 "LineNumber": 25
@@ -18,24 +10,78 @@
             "Path": [
                 "Mappings",
                 "LinuxAMINameMap"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 25
+            }
         },
-        "Level": "Warning",
-        "Message": "Mapping LinuxAMINameMap not used",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Message": "Mapping 'LinuxAMINameMap' is defined but not used",
+        "Rule": {
+            "Description": "Making sure the mappings defined are used",
+            "Id": "W7001",
+            "ShortDescription": "Check if Mappings are Used",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint"
+        }
     },
     {
-        "Rule": {
-            "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
-            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 5,
-                "LineNumber": 283
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 126
             },
+            "Path": [
+                "Outputs",
+                "ContainerAccessELBName",
+                "Value",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 126
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 15,
+                "LineNumber": 135
+            },
+            "Path": [
+                "Outputs",
+                "OpenShiftUI",
+                "Value",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 135
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
+        "Location": {
             "End": {
                 "ColumnNumber": 14,
                 "LineNumber": 283
@@ -44,24 +90,24 @@
                 "Resources",
                 "AnsibleConfigServer",
                 "DependsOn"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 283
+            }
         },
-        "Level": "Warning",
         "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by a \"Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/43/Ref/OpenShiftNodeASG",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "W3005",
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
             "ShortDescription": "Check obsolete DependsOn configuration for Resources",
             "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
         "Location": {
-            "Start": {
-                "ColumnNumber": 5,
-                "LineNumber": 283
-            },
             "End": {
                 "ColumnNumber": 14,
                 "LineNumber": 283
@@ -70,24 +116,88 @@
                 "Resources",
                 "AnsibleConfigServer",
                 "DependsOn"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 283
+            }
         },
-        "Level": "Warning",
         "Message": "Obsolete DependsOn on resource (OpenShiftNodeASG), dependency already enforced by a \"Ref\" at Resources/AnsibleConfigServer/Properties/UserData/Fn::Base64/Fn::Join/1/88/Ref/OpenShiftNodeASG",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
     },
     {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 365
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 304
             },
+            "Path": [
+                "Resources",
+                "AnsibleConfigServer",
+                "Metadata",
+                "AWS::CloudFormation::Init",
+                "GetPublicKey",
+                "files",
+                "/root/.ssh/public.key",
+                "content",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 17,
+                "LineNumber": 304
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 327
+            },
+            "Path": [
+                "Resources",
+                "AnsibleConfigServer",
+                "Metadata",
+                "AWS::CloudFormation::Init",
+                "SetPrivateKey",
+                "files",
+                "/root/.ssh/id_rsa",
+                "content",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 17,
+                "LineNumber": 327
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 33,
                 "LineNumber": 365
@@ -99,24 +209,24 @@
                 "NetworkInterfaces",
                 0,
                 "AssociatePublicIpAddress"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/AnsibleConfigServer/Properties/NetworkInterfaces/0/AssociatePublicIpAddress should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 9,
-                "LineNumber": 366
-            },
+                "LineNumber": 365
+            }
+        },
+        "Message": "Property Resources/AnsibleConfigServer/Properties/NetworkInterfaces/0/AssociatePublicIpAddress should be of type Boolean",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 28,
                 "LineNumber": 366
@@ -128,51 +238,137 @@
                 "NetworkInterfaces",
                 0,
                 "DeleteOnTermination"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 366
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/AnsibleConfigServer/Properties/NetworkInterfaces/0/DeleteOnTermination should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
     },
     {
-        "Rule": {
-            "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
-            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 7,
-                "LineNumber": 775
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 377
             },
+            "Path": [
+                "Resources",
+                "AnsibleConfigServer",
+                "Properties",
+                "UserData",
+                "Fn::Base64",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 377
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
+        "Location": {
             "End": {
                 "ColumnNumber": 13,
-                "LineNumber": 75
+                "LineNumber": 775
             },
             "Path": [
                 "Resources",
                 "GetRSA",
                 "DependsOn",
                 0
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 775
+            }
         },
-        "Level": "Warning",
         "Message": "Obsolete DependsOn on resource (KeyGen), dependency already enforced by a \"Fn:GetAtt\" at Resources/GetRSA/Properties/ServiceToken/Fn::GetAtt/['KeyGen', 'Arn']",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
     },
     {
-        "Rule": {
-            "Id": "W1020",
-            "Description": "Checks sub strings to see if a variable is defined.",
-            "ShortDescription": "Sub isn't needed if it doesn't have a variable defined",
-            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 780
+            },
+            "Path": [
+                "Resources",
+                "GetRSA",
+                "Properties",
+                "ResourceProperties",
+                "RequestId",
+                "Fn::Join"
+            ],
             "Start": {
                 "ColumnNumber": 11,
-                "LineNumber": 804
+                "LineNumber": 780
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 17,
+                "LineNumber": 786
             },
+            "Path": [
+                "Resources",
+                "GetRSA",
+                "Properties",
+                "ResponseURL",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 786
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
+        "Location": {
             "End": {
                 "ColumnNumber": 18,
                 "LineNumber": 804
@@ -184,24 +380,24 @@
                 "Code",
                 "S3Key",
                 "Fn::Sub"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 804
+            }
         },
-        "Level": "Warning",
         "Message": "Fn::Sub isn't needed because there are no variables at Resources/KeyGen/Properties/Code/S3Key/Fn::Sub",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Checks sub strings to see if a variable is defined.",
+            "Id": "W1020",
+            "ShortDescription": "Sub isn't needed if it doesn't have a variable defined",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
     },
     {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 7,
-                "LineNumber": 811
-            },
             "End": {
                 "ColumnNumber": 14,
                 "LineNumber": 811
@@ -211,24 +407,24 @@
                 "KeyGen",
                 "Properties",
                 "Timeout"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 811
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/KeyGen/Properties/Timeout should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 853
-            },
             "End": {
                 "ColumnNumber": 26,
                 "LineNumber": 853
@@ -240,24 +436,56 @@
                 "Tags",
                 0,
                 "PropagateAtLaunch"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 853
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 11,
-                "LineNumber": 905
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 872
             },
+            "Path": [
+                "Resources",
+                "OpenShiftEtcdLaunchConfig",
+                "Metadata",
+                "AWS::CloudFormation::Init",
+                "GetPublicKey",
+                "files",
+                "/root/.ssh/public.key",
+                "content",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 17,
+                "LineNumber": 872
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 21,
                 "LineNumber": 905
@@ -270,24 +498,24 @@
                 0,
                 "Ebs",
                 "VolumeSize"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 905
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 7,
-                "LineNumber": 913
-            },
             "End": {
                 "ColumnNumber": 25,
                 "LineNumber": 913
@@ -297,24 +525,53 @@
                 "OpenShiftEtcdLaunchConfig",
                 "Properties",
                 "InstanceMonitoring"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 913
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftEtcdLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1077
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 922
             },
+            "Path": [
+                "Resources",
+                "OpenShiftEtcdLaunchConfig",
+                "Properties",
+                "UserData",
+                "Fn::Base64",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 922
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 26,
                 "LineNumber": 1077
@@ -326,24 +583,24 @@
                 "Tags",
                 0,
                 "PropagateAtLaunch"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1077
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
     },
     {
-        "Rule": {
-            "Id": "W3005",
-            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
-            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Warning",
         "Location": {
-            "Start": {
-                "ColumnNumber": 5,
-                "LineNumber": 1085
-            },
             "End": {
                 "ColumnNumber": 14,
                 "LineNumber": 1085
@@ -352,24 +609,56 @@
                 "Resources",
                 "OpenShiftMasterASLaunchConfig",
                 "DependsOn"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 1085
+            }
         },
-        "Level": "Warning",
         "Message": "Obsolete DependsOn on resource (GetRSA), dependency already enforced by a \"Fn:GetAtt\" at Resources/OpenShiftMasterASLaunchConfig/Metadata/AWS::CloudFormation::Init/GetPublicKey/files//root/.ssh/public.key/content/Fn::Join/1/1/Fn::GetAtt/['GetRSA', 'PUB']",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
     },
     {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 11,
-                "LineNumber": 1130
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 1097
             },
+            "Path": [
+                "Resources",
+                "OpenShiftMasterASLaunchConfig",
+                "Metadata",
+                "AWS::CloudFormation::Init",
+                "GetPublicKey",
+                "files",
+                "/root/.ssh/public.key",
+                "content",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 17,
+                "LineNumber": 1097
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 21,
                 "LineNumber": 1130
@@ -382,24 +671,24 @@
                 0,
                 "Ebs",
                 "VolumeSize"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 1130
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 7,
-                "LineNumber": 1138
-            },
             "End": {
                 "ColumnNumber": 25,
                 "LineNumber": 1138
@@ -409,24 +698,53 @@
                 "OpenShiftMasterASLaunchConfig",
                 "Properties",
                 "InstanceMonitoring"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 1138
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftMasterASLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1362
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 1147
             },
+            "Path": [
+                "Resources",
+                "OpenShiftMasterASLaunchConfig",
+                "Properties",
+                "UserData",
+                "Fn::Base64",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 1147
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 26,
                 "LineNumber": 1362
@@ -438,24 +756,24 @@
                 "Tags",
                 0,
                 "PropagateAtLaunch"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1362
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeASG/Properties/Tags/0/PropagateAtLaunch should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1403
-            },
             "End": {
                 "ColumnNumber": 17,
                 "LineNumber": 1403
@@ -467,24 +785,24 @@
                 "SecurityGroupIngress",
                 1,
                 "FromPort"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1403
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/1/FromPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1405
-            },
             "End": {
                 "ColumnNumber": 15,
                 "LineNumber": 1405
@@ -496,24 +814,24 @@
                 "SecurityGroupIngress",
                 1,
                 "ToPort"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 9,
-                "LineNumber": 1408
-            },
+                "LineNumber": 1405
+            }
+        },
+        "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 17,
                 "LineNumber": 1408
@@ -525,24 +843,24 @@
                 "SecurityGroupIngress",
                 2,
                 "FromPort"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 9,
-                "LineNumber": 1410
-            },
+                "LineNumber": 1408
+            }
+        },
+        "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 15,
                 "LineNumber": 1410
@@ -554,24 +872,56 @@
                 "SecurityGroupIngress",
                 2,
                 "ToPort"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1410
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftNodeSecurityGroup/Properties/SecurityGroupIngress/2/ToPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 11,
-                "LineNumber": 1459
+            "End": {
+                "ColumnNumber": 25,
+                "LineNumber": 1426
             },
+            "Path": [
+                "Resources",
+                "OpenShiftNodesLaunchConfig",
+                "Metadata",
+                "AWS::CloudFormation::Init",
+                "GetPublicKey",
+                "files",
+                "/root/.ssh/public.key",
+                "content",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 17,
+                "LineNumber": 1426
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 21,
                 "LineNumber": 1459
@@ -584,24 +934,24 @@
                 0,
                 "Ebs",
                 "VolumeSize"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 11,
-                "LineNumber": 1463
-            },
+                "LineNumber": 1459
+            }
+        },
+        "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/BlockDeviceMappings/0/Ebs/VolumeSize should be of type Integer",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 21,
                 "LineNumber": 1463
@@ -614,24 +964,24 @@
                 1,
                 "Ebs",
                 "VolumeSize"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 1463
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/BlockDeviceMappings/1/Ebs/VolumeSize should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 7,
-                "LineNumber": 1472
-            },
             "End": {
                 "ColumnNumber": 25,
                 "LineNumber": 1472
@@ -641,24 +991,53 @@
                 "OpenShiftNodesLaunchConfig",
                 "Properties",
                 "InstanceMonitoring"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 1472
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftNodesLaunchConfig/Properties/InstanceMonitoring should be of type Boolean",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Informational",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1645
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 1481
             },
+            "Path": [
+                "Resources",
+                "OpenShiftNodesLaunchConfig",
+                "Properties",
+                "UserData",
+                "Fn::Base64",
+                "Fn::Join"
+            ],
+            "Start": {
+                "ColumnNumber": 11,
+                "LineNumber": 1481
+            }
+        },
+        "Message": "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+        "Rule": {
+            "Description": "Prefer a sub instead of Join when using a join string that is empty",
+            "Id": "I1022",
+            "ShortDescription": "Use Sub instead of Join",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 17,
                 "LineNumber": 1645
@@ -670,24 +1049,24 @@
                 "SecurityGroupIngress",
                 1,
                 "FromPort"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1645
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/1/FromPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
         "Rule": {
-            "Id": "E3012",
             "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
             "ShortDescription": "Check resource properties values",
             "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
         "Location": {
-            "Start": {
-                "ColumnNumber": 9,
-                "LineNumber": 1647
-            },
             "End": {
                 "ColumnNumber": 15,
                 "LineNumber": 1647
@@ -699,24 +1078,24 @@
                 "SecurityGroupIngress",
                 1,
                 "ToPort"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 9,
-                "LineNumber": 1650
-            },
+                "LineNumber": 1647
+            }
+        },
+        "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/1/ToPort should be of type Integer",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 17,
                 "LineNumber": 1650
@@ -728,24 +1107,24 @@
                 "SecurityGroupIngress",
                 2,
                 "FromPort"
-            ]
-        },
-        "Level": "Error",
-        "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
-    },
-    {
-        "Rule": {
-            "Id": "E3012",
-            "Description": "Checks resource property values with Primitive Types for values that match those types.",
-            "ShortDescription": "Check resource properties values",
-            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
-        },
-        "Location": {
+            ],
             "Start": {
                 "ColumnNumber": 9,
-                "LineNumber": 1652
-            },
+                "LineNumber": 1650
+            }
+        },
+        "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/2/FromPort should be of type Integer",
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/openshift.yaml",
+        "Level": "Error",
+        "Location": {
             "End": {
                 "ColumnNumber": 15,
                 "LineNumber": 1652
@@ -757,10 +1136,18 @@
                 "SecurityGroupIngress",
                 2,
                 "ToPort"
-            ]
+            ],
+            "Start": {
+                "ColumnNumber": 9,
+                "LineNumber": 1652
+            }
         },
-        "Level": "Error",
         "Message": "Property Resources/OpenShiftSecurityGroup/Properties/SecurityGroupIngress/2/ToPort should be of type Integer",
-        "Filename": "test/fixtures/templates/quickstart/openshift.yaml"
+        "Rule": {
+            "Description": "Checks resource property values with Primitive Types for values that match those types.",
+            "Id": "E3012",
+            "ShortDescription": "Check resource properties values",
+            "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype"
+        }
     }
 ]
