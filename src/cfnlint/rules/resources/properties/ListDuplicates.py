@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import hashlib
 import json
@@ -45,15 +33,19 @@ class ListDuplicates(CloudFormationLintRule):
         list_items = []
         if isinstance(values, list):
             for index, value in enumerate(values):
-                value_hash = hashlib.sha1(json.dumps(value, sort_keys=True).encode('utf-8')).hexdigest()
+                value_hash = hashlib.sha1(json.dumps(
+                    value, sort_keys=True).encode('utf-8')).hexdigest()
                 if value_hash in list_items:
                     if not scenario:
                         message = 'List has a duplicate value at {0}'
-                        matches.append(RuleMatch(path + [index], message.format('/'.join(map(str, path + [index])))))
+                        matches.append(
+                            RuleMatch(path + [index], message.format('/'.join(map(str, path + [index])))))
                     else:
-                        scenario_text = ' and '.join(['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        scenario_text = ' and '.join(
+                            ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                         message = 'List has a duplicate value at {0} when {1}'
-                        matches.append(RuleMatch(path, message.format('/'.join(map(str, path)), scenario_text)))
+                        matches.append(RuleMatch(path, message.format(
+                            '/'.join(map(str, path)), scenario_text)))
 
                 list_items.append(value_hash)
 
@@ -68,7 +60,8 @@ class ListDuplicates(CloudFormationLintRule):
         elif isinstance(values, dict):
             props = cfn.get_object_without_conditions(values)
             for prop in props:
-                matches.extend(self._check_duplicates(prop.get('Object'), path, prop.get('Scenario')))
+                matches.extend(self._check_duplicates(
+                    prop.get('Object'), path, prop.get('Scenario')))
 
         return matches
 
@@ -93,7 +86,8 @@ class ListDuplicates(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -102,7 +96,8 @@ class ListDuplicates(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches

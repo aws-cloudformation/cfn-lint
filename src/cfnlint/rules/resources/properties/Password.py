@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import re
 import six
@@ -33,7 +21,8 @@ class Password(CloudFormationLintRule):
         """Check CloudFormation Password Parameters"""
 
         matches = []
-        password_properties = ['AccountPassword', 'AdminPassword', 'ADDomainJoinPassword', 'CrossRealmTrustPrincipalPassword', 'KdcAdminPassword', 'Password', 'DbPassword', 'MasterUserPassword', 'PasswordParam']
+        password_properties = ['AccountPassword', 'AdminPassword', 'ADDomainJoinPassword', 'CrossRealmTrustPrincipalPassword',
+                               'KdcAdminPassword', 'Password', 'DbPassword', 'MasterUserPassword', 'PasswordParam']
 
         parameters = cfn.get_parameter_names()
         fix_params = []
@@ -62,7 +51,8 @@ class Password(CloudFormationLintRule):
                                     param = cfn.template['Parameters'][value]
                                     if 'NoEcho' in param:
                                         if not param['NoEcho']:
-                                            fix_params.append({'Name': value, 'Use': password_property})
+                                            fix_params.append(
+                                                {'Name': value, 'Use': password_property})
                                     else:
                                         fix_params.append({'Name': value, 'Use': password_property})
                     else:
@@ -71,7 +61,8 @@ class Password(CloudFormationLintRule):
                         matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_params:
-            message = 'Parameter {} used as {}, therefore NoEcho should be True'.format(paramname['Name'], paramname['Use'])
+            message = 'Parameter {} used as {}, therefore NoEcho should be True'.format(
+                paramname['Name'], paramname['Use'])
             tree = ['Parameters', paramname['Name']]
             matches.append(RuleMatch(tree, message))
         return matches

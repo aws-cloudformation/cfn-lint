@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import six
 from cfnlint.rules import CloudFormationLintRule
@@ -41,7 +29,8 @@ HTTPS has certificate HTTP has no certificate'
         if isinstance(value, six.string_types):
             if value.upper() not in kwargs['accepted_protocols']:
                 message = 'Protocol must be {0} is invalid at {1}'
-                matches.append(RuleMatch(path, message.format((', '.join(kwargs['accepted_protocols'])), ('/'.join(map(str, path))))))
+                matches.append(RuleMatch(path, message.format(
+                    (', '.join(kwargs['accepted_protocols'])), ('/'.join(map(str, path))))))
             elif value.upper() in kwargs['certificate_protocols']:
                 if not kwargs['certificates']:
                     message = 'Certificates should be specified when using HTTPS for {0}'
@@ -67,19 +56,23 @@ HTTPS has certificate HTTP has no certificate'
                 if len(subnets) < 2:
                     if scenario:
                         message = 'You must specify at least two Subnets for load balancers with type "application" {0}'
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        scenario_text = ' and '.join(
+                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                         matches.append(RuleMatch(path, message.format(scenario_text)))
                     else:
-                        matches.append(RuleMatch(path[:] + ['Subnets'], 'You must specify at least two Subnets for load balancers with type "application"'))
+                        matches.append(RuleMatch(
+                            path[:] + ['Subnets'], 'You must specify at least two Subnets for load balancers with type "application"'))
             subnet_mappings = properties.get('SubnetMappings')
             if isinstance(subnet_mappings, list):
                 if len(subnet_mappings) < 2:
                     if scenario:
                         message = 'You must specify at least two SubnetMappings for load balancers with type "application" {0}'
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        scenario_text = ' and '.join(
+                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                         matches.append(RuleMatch(path, message.format(scenario_text)))
                     else:
-                        matches.append(RuleMatch(path[:] + ['SubnetMappings'], 'You must specify at least two SubnetMappings for load balancers with type "application"'))
+                        matches.append(RuleMatch(
+                            path[:] + ['SubnetMappings'], 'You must specify at least two SubnetMappings for load balancers with type "application"'))
 
         return matches
 
@@ -113,9 +106,11 @@ HTTPS has certificate HTTP has no certificate'
                     if loadbalancer:
                         if key not in allowed_attributes['all'] and key not in allowed_attributes[loadbalancer]:
                             if scenario:
-                                scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                                scenario_text = ' and '.join(
+                                    ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                                 message = 'Attribute "{0}" not allowed for load balancers with type "{1}" {2}'
-                                matches.append(RuleMatch(path, message.format(key, loadbalancer, scenario_text)))
+                                matches.append(RuleMatch(path, message.format(
+                                    key, loadbalancer, scenario_text)))
                             else:
                                 message = 'Attribute "{0}" not allowed for load balancers with type "{1}"'
                                 matches.append(RuleMatch(path, message.format(key, loadbalancer)))
@@ -137,7 +132,8 @@ HTTPS has certificate HTTP has no certificate'
                     certificate_protocols=['HTTPS', 'TLS'],
                     certificates=result['Value'].get('Certificates')))
 
-        results = cfn.get_resource_properties(['AWS::ElasticLoadBalancing::LoadBalancer', 'Listeners'])
+        results = cfn.get_resource_properties(
+            ['AWS::ElasticLoadBalancing::LoadBalancer', 'Listeners'])
         for result in results:
             if isinstance(result['Value'], list):
                 for index, listener in enumerate(result['Value']):
@@ -162,14 +158,17 @@ HTTPS has certificate HTTP has no certificate'
             if self.get_loadbalancer_type(properties) == 'network':
                 if properties.get('SecurityGroups'):
                     if scenario.get('Scenario'):
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.get('Scenario').items()])
+                        scenario_text = ' and '.join(['when condition "%s" is %s' % (
+                            k, v) for (k, v) in scenario.get('Scenario').items()])
                         message = 'Security groups are not supported for load balancers with type "network" {0}'
                         matches.append(RuleMatch(path, message.format(scenario_text)))
                     else:
                         path = path + ['SecurityGroups']
-                        matches.append(RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
+                        matches.append(
+                            RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
 
             matches.extend(self.check_alb_subnets(properties, path, scenario.get('Scenario')))
-            matches.extend(self.check_loadbalancer_allowed_attributes(properties, path, scenario.get('Scenario')))
+            matches.extend(self.check_loadbalancer_allowed_attributes(
+                properties, path, scenario.get('Scenario')))
 
         return matches

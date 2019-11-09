@@ -217,8 +217,9 @@ class Conditions(object):
                 if isinstance(parameter_values.get('AllowedValues'), list):
                     # Any parameter in a condition could be used but would have to be done by
                     # Ref so build a ref to match for getting an equivalent hash
-                    self.Parameters[get_hash({'Ref': parameter_name})
-                                    ] = parameter_values.get('AllowedValues')
+                    self.Parameters[
+                        get_hash({'Ref': parameter_name})
+                    ] = parameter_values.get('AllowedValues')
         except Exception as err:  # pylint: disable=W0703
             LOGGER.debug('While processing conditions got error: %s', err)
 

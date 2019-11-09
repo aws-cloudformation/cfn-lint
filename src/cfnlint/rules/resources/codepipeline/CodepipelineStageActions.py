@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import re
 import six
@@ -138,7 +126,6 @@ class CodepipelineStageActions(CloudFormationLintRule):
         'OutputArtifacts': 'OutputArtifactRange',
     }
 
-
     def check_artifact_counts(self, action, artifact_type, path):
         """Check that artifact counts are within valid ranges."""
         matches = []
@@ -245,7 +232,8 @@ class CodepipelineStageActions(CloudFormationLintRule):
             s_stages = properties.get_safe('Stages', path)
             for s_stage_v, s_stage_p in s_stages:
                 if not isinstance(s_stage_v, list):
-                    self.logger.debug('Stages not list. Should have been caught by generic linting.')
+                    self.logger.debug(
+                        'Stages not list. Should have been caught by generic linting.')
                     return matches
 
                 for l_i_stage, l_i_path in s_stage_v.items_safe(s_stage_p):
@@ -253,16 +241,20 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     s_actions = l_i_stage.get_safe('Actions', l_i_path)
                     for s_action_v, s_action_p in s_actions:
                         if not isinstance(s_action_v, list):
-                            self.logger.debug('Actions not list. Should have been caught by generic linting.')
+                            self.logger.debug(
+                                'Actions not list. Should have been caught by generic linting.')
                             return matches
 
                         for l_i_a_action, l_i_a_path in s_action_v.items_safe(s_action_p):
                             try:
                                 full_path = path + l_i_path + l_i_a_path
-                                matches.extend(self.check_names_unique(l_i_a_action, full_path, action_names))
+                                matches.extend(self.check_names_unique(
+                                    l_i_a_action, full_path, action_names))
                                 matches.extend(self.check_version(l_i_a_action, full_path))
-                                matches.extend(self.check_artifact_counts(l_i_a_action, 'InputArtifacts', full_path))
-                                matches.extend(self.check_artifact_counts(l_i_a_action, 'OutputArtifacts', full_path))
+                                matches.extend(self.check_artifact_counts(
+                                    l_i_a_action, 'InputArtifacts', full_path))
+                                matches.extend(self.check_artifact_counts(
+                                    l_i_a_action, 'OutputArtifacts', full_path))
                             except AttributeError as err:
                                 self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
                                                   'Ignoring the error here: %s', str(err))

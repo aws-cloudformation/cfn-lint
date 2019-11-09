@@ -1,18 +1,6 @@
 """
-  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 from cfnlint import conditions, Runner
 from testlib.testcase import BaseTestCase
@@ -20,6 +8,7 @@ from testlib.testcase import BaseTestCase
 
 class TestConditions(BaseTestCase):
     """Test Conditions Logic """
+
     def setUp(self):
         """ setup the cfn object """
         filename = 'test/fixtures/templates/good/core/conditions.yaml'
@@ -59,7 +48,8 @@ class TestConditions(BaseTestCase):
         """Test success run"""
         self.assertEqual(len(self.conditions.Conditions), 9)
         self.assertEqual(len(self.conditions.Parameters), 2)
-        self.assertListEqual(self.conditions.Parameters['55caa18684cddafa866bdb947fb31ea563b2ea73'], ['None', 'Single NAT', 'High Availability'])
+        self.assertListEqual(self.conditions.Parameters['55caa18684cddafa866bdb947fb31ea563b2ea73'], [
+                             'None', 'Single NAT', 'High Availability'])
 
     def test_success_is_production(self):
         """ test isProduction """
@@ -71,7 +61,8 @@ class TestConditions(BaseTestCase):
         self.assertEqual(condition.Equals.Left.Function, 'd60d12101638186a2c742b772ec8e69b3e2382b9')
         self.assertIsNone(condition.Equals.Left.String)  # Left operator in Equals is Not a String
         self.assertEqual(condition.Equals.Right.String, 'Prod')  # Right operator in Equals is Prod
-        self.assertIsNone(condition.Equals.Right.Function)  # Right operator in Equals is NOT a function
+        # Right operator in Equals is NOT a function
+        self.assertIsNone(condition.Equals.Right.Function)
         # Influenced Equals has the Equals hash sorted and the String operator for comparison
         self.assertEqual(
             condition.Influenced_Equals,
@@ -87,7 +78,8 @@ class TestConditions(BaseTestCase):
         self.assertEqual(condition.Or, [])  # Doesn't use Or
         self.assertEqual(condition.Not, [])  # Doesn't use Not
         # Hash representation of the FindInMap in sorted JSON
-        self.assertEqual(condition.Equals.Right.Function, '5b97e105d6d4fb8cf628bc6affb4e955cfee6d12')
+        self.assertEqual(condition.Equals.Right.Function,
+                         '5b97e105d6d4fb8cf628bc6affb4e955cfee6d12')
         self.assertIsNone(condition.Equals.Right.String)  # Right has no String
         self.assertEqual(condition.Equals.Left.String, 'True')  # Left has True string
         self.assertIsNone(condition.Equals.Left.Function)  # Left has no Function
@@ -109,14 +101,19 @@ class TestConditions(BaseTestCase):
 
         # For Condition 1
         # Left function sub condition representation of Equals.  Specifically {'Ref': 'myEnvironment'}
-        self.assertEqual(condition.And[0].Equals.Left.Function, 'd60d12101638186a2c742b772ec8e69b3e2382b9')
-        self.assertIsNone(condition.And[0].Equals.Left.String)  # No String on the Left of the sub condition
-        self.assertEqual(condition.And[0].Equals.Right.String, 'Prod')  # Prod string on the Right of sub condition
-        self.assertIsNone(condition.And[0].Equals.Right.Function)  # No Function on the right of the sub condition
+        self.assertEqual(condition.And[0].Equals.Left.Function,
+                         'd60d12101638186a2c742b772ec8e69b3e2382b9')
+        # No String on the Left of the sub condition
+        self.assertIsNone(condition.And[0].Equals.Left.String)
+        # Prod string on the Right of sub condition
+        self.assertEqual(condition.And[0].Equals.Right.String, 'Prod')
+        # No Function on the right of the sub condition
+        self.assertIsNone(condition.And[0].Equals.Right.Function)
 
         # For condition 2 - Evaluation of SubCondition is isPrimary
         # Hash representation of the FindInMap in sorted JSON
-        self.assertEqual(condition.And[1].Equals.Right.Function, '5b97e105d6d4fb8cf628bc6affb4e955cfee6d12')
+        self.assertEqual(condition.And[1].Equals.Right.Function,
+                         '5b97e105d6d4fb8cf628bc6affb4e955cfee6d12')
         self.assertIsNone(condition.And[1].Equals.Right.String)  # No string on Right side
         self.assertEqual(condition.And[1].Equals.Left.String, 'True')  # String on Left
         self.assertIsNone(condition.And[1].Equals.Left.Function)  # No Function on the Left
@@ -140,7 +137,8 @@ class TestConditions(BaseTestCase):
 
         # First condition in Or
         # Has representation of {'Ref': 'myEnvironment'}
-        self.assertEqual(condition.Or[0].Equals.Left.Function, 'd60d12101638186a2c742b772ec8e69b3e2382b9')
+        self.assertEqual(condition.Or[0].Equals.Left.Function,
+                         'd60d12101638186a2c742b772ec8e69b3e2382b9')
         self.assertIsNone(condition.Or[0].Equals.Left.String)  # No string on the Left
         self.assertEqual(condition.Or[0].Equals.Right.String, 'Prod')  # String on the right
         self.assertIsNone(condition.Or[0].Equals.Right.Function)  # No Function on the Right
@@ -169,7 +167,8 @@ class TestConditions(BaseTestCase):
 
         # Not only has 1
         # Hash representation of {'Ref': 'myEnvironment'}
-        self.assertEqual(condition.Not[0].Equals.Left.Function, 'd60d12101638186a2c742b772ec8e69b3e2382b9')
+        self.assertEqual(condition.Not[0].Equals.Left.Function,
+                         'd60d12101638186a2c742b772ec8e69b3e2382b9')
         self.assertIsNone(condition.Not[0].Equals.Left.String)  # no String on Left
         self.assertEqual(condition.Not[0].Equals.Right.String, 'Prod')  # String on Right
         self.assertIsNone(condition.Not[0].Equals.Right.Function)  # No function on right
@@ -188,7 +187,8 @@ class TestConditions(BaseTestCase):
         self.assertEqual(condition.Or, [])  # No Or
         self.assertEqual(condition.Not, [])  # No Not
         # Has representation of {'Ref': 'myEnvironment'}
-        self.assertEqual(condition.Equals.Right.Function, 'd60d12101638186a2c742b772ec8e69b3e2382b9')
+        self.assertEqual(condition.Equals.Right.Function,
+                         'd60d12101638186a2c742b772ec8e69b3e2382b9')
         self.assertIsNone(condition.Equals.Right.String)  # no String on Right
         self.assertEqual(condition.Equals.Left.String, 'Dev')  # String on Left
         self.assertIsNone(condition.Equals.Left.Function)  # no Function on Left
@@ -274,6 +274,7 @@ class TestConditions(BaseTestCase):
 
 class TestBadConditions(BaseTestCase):
     """Test Badly Formmated Conditions """
+
     def test_no_failure_on_list(self):
         """ setup the cfn object """
         template = {

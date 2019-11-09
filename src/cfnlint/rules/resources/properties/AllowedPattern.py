@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import re
 from cfnlint.rules import CloudFormationLintRule
@@ -56,7 +44,8 @@ class AllowedPattern(CloudFormationLintRule):
                     full_path = ('/'.join(str(x) for x in path))
 
                     message = '{} contains invalid characters (Pattern: {}) at {}'
-                    matches.append(RuleMatch(path, message.format(property_name, value_pattern, full_path)))
+                    matches.append(RuleMatch(path, message.format(
+                        property_name, value_pattern, full_path)))
 
         return matches
 
@@ -74,7 +63,8 @@ class AllowedPattern(CloudFormationLintRule):
                             cfn.check_value(
                                 p_value, prop, p_path,
                                 check_value=self.check_value,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
+                                    'ValueTypes').get(value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -84,7 +74,8 @@ class AllowedPattern(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
@@ -94,7 +85,8 @@ class AllowedPattern(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 

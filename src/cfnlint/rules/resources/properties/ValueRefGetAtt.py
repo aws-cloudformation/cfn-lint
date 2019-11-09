@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import six
 from cfnlint.rules import CloudFormationLintRule
@@ -81,7 +69,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
             if not specs.get('Parameters'):
                 message = 'Property "{0}" has no valid Refs to Parameters at {1}'
-                matches.append(RuleMatch(path, message.format(property_name, '/'.join(map(str, path)))))
+                matches.append(RuleMatch(path, message.format(
+                    property_name, '/'.join(map(str, path)))))
             elif parameter_type not in valid_parameter_types:
                 message = 'Property "{0}" can Ref to parameter of types [{1}] at {2}'
                 matches.append(
@@ -96,7 +85,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
             resource_type = resource.get('Type')
             if not specs.get('Resources'):
                 message = 'Property "{0}" has no valid Refs to Resources at {1}'
-                matches.append(RuleMatch(path, message.format(property_name, '/'.join(map(str, path)))))
+                matches.append(RuleMatch(path, message.format(
+                    property_name, '/'.join(map(str, path)))))
             elif resource_type not in specs.get('Resources'):
                 message = 'Property "{0}" can Ref to resources of types [{1}] at {2}'
                 matches.append(
@@ -195,8 +185,10 @@ class ValueRefGetAtt(CloudFormationLintRule):
                                 p_value, prop, p_path,
                                 check_ref=self.check_value_ref,
                                 check_get_att=self.check_value_getatt,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {}),
-                                list_value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(list_value_type, {}),
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
+                                    'ValueTypes').get(value_type, {}),
+                                list_value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
+                                    'ValueTypes').get(list_value_type, {}),
                                 cfn=cfn, property_type=property_type, property_name=prop
                             )
                         )
@@ -207,7 +199,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
@@ -217,7 +210,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 

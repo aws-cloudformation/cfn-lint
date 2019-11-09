@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 from cfnlint.helpers import bool_compare
 from cfnlint.rules import CloudFormationLintRule
@@ -64,7 +52,8 @@ class CacheClusterFailover(CloudFormationLintRule):
                         RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                 else:
                     message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster when {0} at {1}'
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    scenario_text = ' and '.join(
+                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                     results.append(
                         RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
             num_node_groups = c_props.get('NumNodeGroups')
@@ -79,7 +68,8 @@ class CacheClusterFailover(CloudFormationLintRule):
                             RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
                     else:
                         message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        scenario_text = ' and '.join(
+                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                         results.append(
                             RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
 
@@ -88,7 +78,8 @@ class CacheClusterFailover(CloudFormationLintRule):
     def test_cluster_settings(self, properties, path, pg_resource_name, pg_path, cfn):
         """ Test cluster settings for the parameter group and Replication Group """
         results = []
-        pg_properties = cfn.template.get('Resources', {}).get(pg_resource_name, {}).get('Properties', {}).get('Properties', {})
+        pg_properties = cfn.template.get('Resources', {}).get(
+            pg_resource_name, {}).get('Properties', {}).get('Properties', {})
         scenarios = cfn.get_conditions_scenarios_from_object([
             properties,
             pg_properties

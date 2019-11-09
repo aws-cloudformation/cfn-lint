@@ -1,18 +1,6 @@
 """
-  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 from cfnlint import conditions
 from testlib.testcase import BaseTestCase
@@ -20,6 +8,7 @@ from testlib.testcase import BaseTestCase
 
 class TestCondition(BaseTestCase):
     """ Test Good Condition """
+
     def test_basic_condition(self):
         """ Test getting a condition setup """
         template = {
@@ -138,7 +127,8 @@ class TestCondition(BaseTestCase):
         }
         result = conditions.Condition(template, 'myCondition')
         self.assertFalse(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': 'us-east-1'}))
-        self.assertTrue(result.test({'36305712594f5e76fbcbbe2f82cd3f850f6018e9': '36cf15035d5be0f36e03d67b66cddb6081f5855d'}))
+        self.assertTrue(result.test(
+            {'36305712594f5e76fbcbbe2f82cd3f850f6018e9': '36cf15035d5be0f36e03d67b66cddb6081f5855d'}))
 
     def test_empty_string_in_equals(self):
         """ Empty String in Condition """
@@ -153,11 +143,13 @@ class TestCondition(BaseTestCase):
         self.assertEqual(result.Or, [])  # No Or
         self.assertEqual(result.Not, [])  # No Not
         self.assertIsNotNone(result.Equals)
-        self.assertEqual(result.Influenced_Equals, {'d60d12101638186a2c742b772ec8e69b3e2382b9': {''}})
+        self.assertEqual(result.Influenced_Equals, {
+                         'd60d12101638186a2c742b772ec8e69b3e2382b9': {''}})
 
 
 class TestBadConditions(BaseTestCase):
     """Test Badly Formmated Condition """
+
     def test_bad_format_condition(self):
         """ Badly formmated Condition """
         template = {

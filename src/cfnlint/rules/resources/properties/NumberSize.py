@@ -1,16 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import sys
 import six
@@ -80,7 +70,8 @@ class NumberSize(CloudFormationLintRule):
                     value_type = specs.get(prop).get('Value', {}).get('ValueType', '')
                     if value_type:
                         property_type = specs.get(prop).get('PrimitiveType')
-                        value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
+                        value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+                            'ValueTypes').get(value_type, {})
                         if value_specs.get('NumberMax') is not None and value_specs.get('NumberMin') is not None:
                             if property_type in ['Integer', 'Double', 'Long', 'String']:
                                 matches.extend(
@@ -97,7 +88,8 @@ class NumberSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -106,7 +98,8 @@ class NumberSize(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
