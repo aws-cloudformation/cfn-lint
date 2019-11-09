@@ -18,11 +18,11 @@ import fnmatch
 import json
 import logging
 import os
-import pkg_resources
 import jsonpointer
 import jsonpatch
 import cfnlint
 from cfnlint.helpers import get_url_content
+import cfnlint.data.ExtendedSpecs
 
 
 LOGGER = logging.getLogger(__name__)
@@ -59,10 +59,8 @@ def update_resource_specs():
     """ Update Resource Specs """
 
     for region, url in SPEC_REGIONS.items():
-        filename = pkg_resources.resource_filename(
-            __name__,
-            '/data/CloudSpecs/%s.json' % region,
-        )
+        filename = os.path.join(os.path.dirname(cfnlint.__file__),
+                                'data/CloudSpecs/%s.json' % region)
         LOGGER.debug('Downloading template %s into %s', url, filename)
         spec = json.loads(get_url_content(url))
 
@@ -169,10 +167,11 @@ def patch_spec(content, region):
     for dirpath, _, filenames in os.walk(append_dir):
         filenames.sort()
         for filename in fnmatch.filter(filenames, '*.json'):
-            file_path = os.path.join(dirpath, filename).replace(append_dir, '')
-            LOGGER.info('Processing %s%s', region, file_path)
-            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resources(
-                'data/ExtendedSpecs/{}{}'.format(region, file_path)))
+            file_path = os.path.basename(filename)
+            module = dirpath.replace('%s' % append_dir, '%s' % region).replace('/', '.')
+            LOGGER.info('Processing %s/%s', module, file_path)
+            all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resource(
+                'cfnlint.data.ExtendedSpecs.{}'.format(module), file_path))
 
             # Process the generic patches 1 by 1 so we can "ignore" failed ones
             for all_patch in all_patches:
@@ -193,10 +192,9 @@ def update_iam_policies():
 
     url = 'https://awspolicygen.s3.amazonaws.com/js/policies.js'
 
-    filename = pkg_resources.resource_filename(
-        __name__,
-        '/data/AdditionalSpecs/Policies.json',
-    )
+    filename = os.path.join(
+        os.path.dirname(cfnlint.data.AdditionalSpecs.__file__),
+        'Policies.json')
     LOGGER.debug('Downloading policies %s into %s', url, filename)
 
     content = get_url_content(url)

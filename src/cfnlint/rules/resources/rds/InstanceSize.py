@@ -18,6 +18,7 @@ import six
 import cfnlint.helpers
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
+from cfnlint.data import AdditionalSpecs
 
 
 class InstanceSize(CloudFormationLintRule):
@@ -29,7 +30,7 @@ class InstanceSize(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html'
     tags = ['resources', 'rds']
 
-    valid_instance_types = cfnlint.helpers.load_resources('data/AdditionalSpecs/RdsProperties.json')
+    valid_instance_types = cfnlint.helpers.load_resource(AdditionalSpecs, 'RdsProperties.json')
 
     def _get_license_model(self, engine, license_model):
         """ Logic to get the correct license model"""
@@ -40,7 +41,8 @@ class InstanceSize(CloudFormationLintRule):
                 license_model = 'bring-your-own-license'
             else:
                 license_model = 'general-public-license'
-            self.logger.debug('Based on Engine: %s we determined the default license will be %s', engine, license_model)
+            self.logger.debug(
+                'Based on Engine: %s we determined the default license will be %s', engine, license_model)
 
         return license_model
 
@@ -70,9 +72,11 @@ class InstanceSize(CloudFormationLintRule):
                                 'LicenseModel': license_model
                             })
                     else:
-                        self.logger.debug('Skip evaluation based on [LicenseModel] not being a string.')
+                        self.logger.debug(
+                            'Skip evaluation based on [LicenseModel] not being a string.')
                 else:
-                    self.logger.debug('Skip evaluation based on [Engine] or [DBInstanceClass] not being strings.')
+                    self.logger.debug(
+                        'Skip evaluation based on [Engine] or [DBInstanceClass] not being strings.')
 
         return results
 

@@ -40,7 +40,6 @@ import cfnlint.rules
 
 LOGGER = logging.getLogger(__name__)
 
-
 # pylint: disable=too-many-lines
 def refactored(message):
     """ Decoreate for refactoring classes """

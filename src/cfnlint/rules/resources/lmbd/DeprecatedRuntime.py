@@ -15,7 +15,8 @@
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from datetime import datetime
-from cfnlint.helpers import load_resources
+from cfnlint.helpers import load_resource
+from cfnlint.data import AdditionalSpecs
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -26,7 +27,7 @@ class DeprecatedRuntime(CloudFormationLintRule):
         """Init"""
         super(DeprecatedRuntime, self).__init__()
         self.resource_property_types.append('AWS::Lambda::Function')
-        self.deprecated_runtimes = load_resources('data/AdditionalSpecs/LmbdRuntimeLifecycle.json')
+        self.deprecated_runtimes = load_resource(AdditionalSpecs, 'LmbdRuntimeLifecycle.json')
 
     current_date = datetime.today()
 
