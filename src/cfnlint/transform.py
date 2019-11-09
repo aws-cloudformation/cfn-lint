@@ -22,7 +22,8 @@ from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 
-from cfnlint.helpers import load_resources, convert_dict, format_json_string
+from cfnlint.helpers import load_resource, convert_dict, format_json_string
+from cfnlint.data import Serverless
 from cfnlint.rules import Match, TransformError
 LOGGER = logging.getLogger('cfnlint')
 
@@ -55,7 +56,7 @@ class Transform(object):
         Load the ManagedPolicies locally, based on the AWS-CLI:
         https://github.com/awslabs/aws-sam-cli/blob/develop/samcli/lib/samlib/default_managed_policies.json
         """
-        return load_resources('data/Serverless/ManagedPolicies.json')
+        return load_resource(Serverless, 'ManagedPolicies.json')
 
     def _replace_local_codeuri(self):
         """

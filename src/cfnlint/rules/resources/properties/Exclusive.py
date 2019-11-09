@@ -17,6 +17,7 @@
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
+from cfnlint.data import AdditionalSpecs
 
 
 class Exclusive(CloudFormationLintRule):
@@ -31,7 +32,7 @@ class Exclusive(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(Exclusive, self).__init__()
-        exclusivespec = cfnlint.helpers.load_resources('data/AdditionalSpecs/Exclusive.json')
+        exclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Exclusive.json')
         self.resource_types_specs = exclusivespec['ResourceTypes']
         self.property_types_specs = exclusivespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:
@@ -56,11 +57,13 @@ class Exclusive(CloudFormationLintRule):
                                     message.format(excl_property, prop, '/'.join(map(str, path)))
                                 ))
                             else:
-                                scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
+                                scenario_text = ' and '.join(['when condition "%s" is %s' % (
+                                    k, v) for (k, v) in property_set['Scenario'].items()])
                                 message = 'Property {0} should NOT exist with {1} {2} for {3}'
                                 matches.append(RuleMatch(
                                     path + [prop],
-                                    message.format(excl_property, prop, scenario_text, '/'.join(map(str, path)))
+                                    message.format(excl_property, prop, scenario_text,
+                                                   '/'.join(map(str, path)))
                                 ))
 
         return matches

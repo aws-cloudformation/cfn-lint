@@ -14,26 +14,19 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
 import six
-import pkg_resources
+from cfnlint.helpers import load_resource
+from cfnlint.data import CloudSpecs
 from testlib.testcase import BaseTestCase
 
 
 class TestPatchedSpecs(BaseTestCase):
     """Test Patched spec files """
+
     def setUp(self):
         """ SetUp template object"""
 
-        filename = '../../src/cfnlint/data/CloudSpecs/us-east-1.json'
-
-        filename = pkg_resources.resource_filename(
-            __name__,
-            filename
-        )
-
-        with open(filename) as fp:
-            self.spec = json.load(fp)
+        self.spec = load_resource(CloudSpecs, 'us-east-1.json')
 
     def test_resource_type_values(self):
         """Test Resource Type Value"""
@@ -41,24 +34,28 @@ class TestPatchedSpecs(BaseTestCase):
             for p_name, p_values in r_values.get('Properties').items():
                 p_value_type = p_values.get('Value', {}).get('ValueType')
                 if p_value_type:
-                    self.assertIn(p_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+                    self.assertIn(p_value_type, self.spec.get('ValueTypes'),
+                                  'ResourceType: %s, Property: %s' % (r_name, p_name))
                     # List Value if a singular value is set and the type is List
                     if p_values.get('Type') == 'List':
                         p_list_value_type = p_values.get('Value', {}).get('ListValueType')
                         if p_list_value_type:
-                            self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+                            self.assertIn(p_list_value_type, self.spec.get('ValueTypes'),
+                                          'ResourceType: %s, Property: %s' % (r_name, p_name))
 
     def test_property_type_values(self):
         """Test Property Type Values"""
         def _test_property_type_values(values, r_name, p_name):
             p_value_type = values.get('Value', {}).get('ValueType')
             if p_value_type:
-                self.assertIn(p_value_type, self.spec.get('ValueTypes'), 'PropertyType: %s, Property: %s' % (r_name, p_name))
+                self.assertIn(p_value_type, self.spec.get('ValueTypes'),
+                              'PropertyType: %s, Property: %s' % (r_name, p_name))
                 # List Value if a singular value is set and the type is List
                 if values.get('Type') == 'List':
                     p_list_value_type = values.get('Value', {}).get('ListValueType')
                     if p_list_value_type:
-                        self.assertIn(p_list_value_type, self.spec.get('ValueTypes'), 'ResourceType: %s, Property: %s' % (r_name, p_name))
+                        self.assertIn(p_list_value_type, self.spec.get('ValueTypes'),
+                                      'ResourceType: %s, Property: %s' % (r_name, p_name))
 
         for r_name, r_values in self.spec.get('PropertyTypes').items():
             if r_values.get('Properties') is None:
@@ -86,7 +83,8 @@ class TestPatchedSpecs(BaseTestCase):
                 # If the subproperty is not found, check if it exists with the resource in the property
                 property_exists = True
 
-            self.assertEqual(property_exists, True, 'Specified property type {} not found for property {}'.format(v_subproperty_type, v_propertyname))
+            self.assertEqual(property_exists, True, 'Specified property type {} not found for property {}'.format(
+                v_subproperty_type, v_propertyname))
 
     def test_sub_properties(self):
         """Test Resource sub-Property definitions"""
@@ -128,7 +126,8 @@ class TestPatchedSpecs(BaseTestCase):
             number_max = 0
             number_min = 0
             for p_name, p_values in v_values.items():
-                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'ListMin', 'ListMax', 'JsonMax', 'NumberMax', 'NumberMin', 'StringMax', 'StringMin'])
+                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex',
+                                       'ListMin', 'ListMax', 'JsonMax', 'NumberMax', 'NumberMin', 'StringMax', 'StringMin'])
 
                 if p_name == 'NumberMin':
                     number_min = p_values
@@ -141,34 +140,47 @@ class TestPatchedSpecs(BaseTestCase):
                 if p_name in ['StringMin', 'StringMax']:
                     string_count += 1
                 if p_name == 'Ref':
-                    self.assertIsInstance(p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
+                    self.assertIsInstance(
+                        p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for r_name, r_value in p_values.items():
-                        self.assertIn(r_name, ['Resources', 'Parameters'], 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
-                        self.assertIsInstance(r_value, list, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                        self.assertIn(r_name, ['Resources', 'Parameters'], 'ValueTypes: %s, Type: %s, Additional Type: %s' % (
+                            v_name, p_name, r_name))
+                        self.assertIsInstance(
+                            r_value, list, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
                         if r_name == 'Parameters':
                             for r_list_value in r_value:
-                                self.assertIsInstance(r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
-                                self.assertIn(r_list_value, self.spec.get('ParameterTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                self.assertIsInstance(
+                                    r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                self.assertIn(r_list_value, self.spec.get(
+                                    'ParameterTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
                         elif r_name == 'Resources':
                             for r_list_value in r_value:
-                                self.assertIsInstance(r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
-                                self.assertIn(r_list_value, self.spec.get('ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                self.assertIsInstance(
+                                    r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                self.assertIn(r_list_value, self.spec.get(
+                                    'ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
 
                 elif p_name == 'GetAtt':
-                    self.assertIsInstance(p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
+                    self.assertIsInstance(
+                        p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for g_name, g_value in p_values.items():
-                        self.assertIsInstance(g_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
-                        self.assertIn(g_name, self.spec.get('ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
-                        self.assertIn(g_value, self.spec.get('ResourceTypes', {}).get(g_name, {}).get('Attributes', {}), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                        self.assertIsInstance(
+                            g_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                        self.assertIn(g_name, self.spec.get(
+                            'ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                        self.assertIn(g_value, self.spec.get('ResourceTypes', {}).get(g_name, {}).get(
+                            'Attributes', {}), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
                 elif p_name == 'AllowedValues':
                     self.assertIsInstance(p_values, list)
                     for l_value in p_values:
-                        self.assertIsInstance(l_value, six.string_types, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
+                        self.assertIsInstance(l_value, six.string_types,
+                                              'ValueTypes: %s, Type: %s' % (v_name, p_name))
             self.assertIn(list_count, [0, 2], 'Both ListMin and ListMax must be specified')
             self.assertIn(number_count, [0, 2], 'Both NumberMin and NumberMax must be specified')
             self.assertIn(string_count, [0, 2], 'Both StringMin and StringMax must be specified')
             if number_count == 2:
-                self.assertTrue((number_max > number_min), 'NumberMax must be greater than NumberMin')
+                self.assertTrue((number_max > number_min),
+                                'NumberMax must be greater than NumberMin')
 
     def test_parameter_types(self):
         """Test Parameter Types"""

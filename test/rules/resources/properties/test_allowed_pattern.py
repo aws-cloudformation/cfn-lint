@@ -14,15 +14,18 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
-import pkg_resources
 import re
+import json
+
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern  # pylint: disable=E0401
+from cfnlint.helpers import load_resource
+from cfnlint.data import CloudSpecs
 from ... import BaseRuleTestCase
 
 
 class TestAllowedPattern(BaseRuleTestCase):
     """Test Allowed Value Property Configuration"""
+
     def setUp(self):
         """Setup"""
         super(TestAllowedPattern, self).setUp()
@@ -31,15 +34,7 @@ class TestAllowedPattern(BaseRuleTestCase):
             'test/fixtures/templates/good/resources/properties/allowed_pattern.yaml'
         ]
 
-        # Load the specfile to validate all the regexes specified
-        filename = '../../../../src/cfnlint/data/CloudSpecs/us-east-1.json'
-        filename = pkg_resources.resource_filename(
-            __name__,
-            filename
-        )
-
-        with open(filename) as fp:
-            self.spec = json.load(fp)
+        self.spec = load_resource(CloudSpecs, 'us-east-1.json')
 
     def test_file_positive(self):
         """Test Positive"""
@@ -57,4 +52,5 @@ class TestAllowedPattern(BaseRuleTestCase):
                 try:
                     re.compile(p_regex)
                 except re.error:
-                    self.fail("Invalid regex value %s specified for ValueType %s" % (p_regex, r_name))
+                    self.fail("Invalid regex value %s specified for ValueType %s" %
+                              (p_regex, r_name))

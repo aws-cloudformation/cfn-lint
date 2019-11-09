@@ -16,11 +16,10 @@
 """
 import json
 import six
-from cfnlint.helpers import convert_dict
+from cfnlint.helpers import convert_dict, load_resource
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
-
-import cfnlint.helpers
+from cfnlint.data import AdditionalSpecs
 
 
 class Permissions(CloudFormationLintRule):
@@ -56,7 +55,7 @@ class Permissions(CloudFormationLintRule):
         """
         Convert policies.json into a simpler version for more efficient key lookup.
         """
-        service_map = cfnlint.helpers.load_resources('data/AdditionalSpecs/Policies.json')['serviceMap']
+        service_map = load_resource(AdditionalSpecs, 'Policies.json')['serviceMap']
 
         policy_service_map = {}
 
@@ -105,7 +104,8 @@ class Permissions(CloudFormationLintRule):
                                 actions.extend(self.get_actions(effective_permission))
 
                         for action in actions:
-                            matches.extend(self.check_permissions(action, p_p + ['Statement', index]))
+                            matches.extend(self.check_permissions(
+                                action, p_p + ['Statement', index]))
 
         return matches
 

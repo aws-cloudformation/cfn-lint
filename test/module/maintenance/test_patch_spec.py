@@ -14,14 +14,16 @@
   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-import json
 import logging
-import pkg_resources
+import test.fixtures.specs
+from test.testlib.testcase import BaseTestCase
+import cfnlint.helpers
 from cfnlint.maintenance import patch_spec
-from testlib.testcase import BaseTestCase
+
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())
+
 
 class TestPatchJson(BaseTestCase):
     """Used for Testing Rules"""
@@ -29,12 +31,8 @@ class TestPatchJson(BaseTestCase):
     def setUp(self):
         """Setup"""
         region = 'us-east-1'
-        filename = pkg_resources.resource_filename(
-            __name__,
-            '../../fixtures/specs/%s.json' % region,
-        )
-        with open(filename, 'r') as f:
-            self.spec = json.loads(f.read())
+
+        self.spec = cfnlint.helpers.load_resource(test.fixtures.specs, '%s.json' % region)
 
     def test_success_rds_dbcluster(self):
         """Success test"""
@@ -43,9 +41,12 @@ class TestPatchJson(BaseTestCase):
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['DefaultCacheBehavior']['Required'])
         self.assertTrue(
             patched['PropertyTypes']['AWS::CloudFront::Distribution.DistributionConfig']['Properties']['Origins']['Required'])
-        self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']['Properties']['ExternalId']['Required'])
-        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['Type'], 'Map')
-        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']['Properties']['InstanceAttributes']['PrimitiveItemType'], 'String')
+        self.assertTrue(patched['PropertyTypes']['AWS::Cognito::UserPool.SmsConfiguration']
+                        ['Properties']['ExternalId']['Required'])
+        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']
+                         ['Properties']['InstanceAttributes']['Type'], 'Map')
+        self.assertEqual(patched['ResourceTypes']['AWS::ServiceDiscovery::Instance']
+                         ['Properties']['InstanceAttributes']['PrimitiveItemType'], 'String')
 
     def test_success_sbd_domain_removed(self):
         """Success removal of SBD Domain form unsupported regions"""
