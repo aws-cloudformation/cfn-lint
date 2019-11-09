@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import logging
 from mock import patch, mock_open
@@ -24,6 +12,7 @@ LOGGER = logging.getLogger('cfnlint')
 
 class TestArgsParser(BaseTestCase):
     """Test Parser Arguments """
+
     def tearDown(self):
         """Setup"""
         for handler in LOGGER.handlers:
@@ -60,7 +49,8 @@ class TestArgsParser(BaseTestCase):
     def test_create_parser_config_file(self):
         """Test success run"""
 
-        config = cfnlint.config.CliArgs(['--regions', 'us-west-1', '--include-checks', 'I1234', '--', 'template1.yaml'])
+        config = cfnlint.config.CliArgs(
+            ['--regions', 'us-west-1', '--include-checks', 'I1234', '--', 'template1.yaml'])
         self.assertEqual(config.cli_args.templates, ['template1.yaml'])
         self.assertEqual(config.cli_args.include_checks, ['I1234'])
         self.assertEqual(config.cli_args.regions, ['us-west-1'])
@@ -68,5 +58,7 @@ class TestArgsParser(BaseTestCase):
     def test_create_parser_rule_configuration(self):
         """Test success run"""
 
-        config = cfnlint.config.CliArgs(['-x', 'E3012:strict=true', '-x', 'E3012:key=value,E3001:key=value'])
-        self.assertEqual(config.cli_args.configure_rules, {'E3012': {'key': 'value', 'strict': 'true'}, 'E3001': {'key': 'value'}})
+        config = cfnlint.config.CliArgs(
+            ['-x', 'E3012:strict=true', '-x', 'E3012:key=value,E3001:key=value'])
+        self.assertEqual(config.cli_args.configure_rules, {
+                         'E3012': {'key': 'value', 'strict': 'true'}, 'E3001': {'key': 'value'}})

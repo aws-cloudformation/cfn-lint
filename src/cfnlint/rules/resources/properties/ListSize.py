@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -58,12 +46,14 @@ class ListSize(CloudFormationLintRule):
                                 )
                             )
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
+                                k, v) for (k, v) in property_set['Scenario'].items()])
                             message = '{0} has to have between {1} and {2} items specified when {3}'
                             matches.append(
                                 RuleMatch(
                                     path + [property_name],
-                                    message.format(property_name, list_min, list_max, scenario_text),
+                                    message.format(property_name, list_min,
+                                                   list_max, scenario_text),
                                 )
                             )
 
@@ -83,7 +73,8 @@ class ListSize(CloudFormationLintRule):
                             matches.extend(
                                 self.check_value(
                                     p_value, p_path, prop, cfn,
-                                    RESOURCE_SPECS.get(cfn.regions[0]).get('ValueTypes').get(value_type, {})
+                                    RESOURCE_SPECS.get(cfn.regions[0]).get(
+                                        'ValueTypes').get(value_type, {})
                                 )
                             )
         return matches
@@ -92,7 +83,8 @@ class ListSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes').get(property_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -101,7 +93,8 @@ class ListSize(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes').get(resource_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches

@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import re
 from cfnlint.rules import CloudFormationLintRule
@@ -29,7 +17,8 @@ class RecordSet(CloudFormationLintRule):
     tags = ['resources', 'route53', 'record_set']
 
     # Regex generated from https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DomainNameFormat.html
-    REGEX_DOMAINNAME = re.compile(r'^[a-zA-Z0-9\!\"\#\$\%\&\'\(\)\*\+\,-\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~\.]+$')
+    REGEX_DOMAINNAME = re.compile(
+        r'^[a-zA-Z0-9\!\"\#\$\%\&\'\(\)\*\+\,-\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~\.]+$')
     REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
     REGEX_CNAME_VALIDATIONS = re.compile(r'^.*\.acm-validations\.aws\.?$')
 
@@ -48,7 +37,8 @@ class RecordSet(CloudFormationLintRule):
                         RuleMatch(path, message.format('/'.join(map(str, message)))))
                 else:
                     message = 'A CNAME recordset can only contain 1 value {0} at {1}'
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    scenario_text = ' and '.join(
+                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                     matches.append(
                         RuleMatch(path, message.format(scenario_text, '/'.join(map(str, path)))))
 
@@ -281,7 +271,8 @@ class RecordSet(CloudFormationLintRule):
                 if props:
                     matches.extend(self.check_recordset(path, props, cfn))
 
-        recordsetgroups = cfn.get_resource_properties(['AWS::Route53::RecordSetGroup', 'RecordSets'])
+        recordsetgroups = cfn.get_resource_properties(
+            ['AWS::Route53::RecordSetGroup', 'RecordSets'])
 
         for recordsetgroup in recordsetgroups:
             path = recordsetgroup['Path']

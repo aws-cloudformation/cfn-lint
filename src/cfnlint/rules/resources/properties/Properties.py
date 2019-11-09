@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import six
 from cfnlint.rules import CloudFormationLintRule
@@ -50,7 +38,8 @@ class Properties(CloudFormationLintRule):
 
         matches = []
         if isinstance(value, list) or value == {'Ref': 'AWS::NotificationARNs'}:
-            message = 'Property should be of type %s not List at %s' % (primtype, '/'.join(map(str, proppath)))
+            message = 'Property should be of type %s not List at %s' % (
+                primtype, '/'.join(map(str, proppath)))
             matches.append(RuleMatch(proppath, message))
         if isinstance(value, dict) and primtype == 'Json':
             return matches
@@ -69,10 +58,12 @@ class Properties(CloudFormationLintRule):
                     elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
                                          'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
                                          'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr', 'Fn::Transform']:
-                        message = 'Property %s has an illegal function %s' % ('/'.join(map(str, proppath)), sub_key)
+                        message = 'Property %s has an illegal function %s' % (
+                            '/'.join(map(str, proppath)), sub_key)
                         matches.append(RuleMatch(proppath, message))
             else:
-                message = 'Property is an object instead of %s at %s' % (primtype, '/'.join(map(str, proppath)))
+                message = 'Property is an object instead of %s at %s' % (
+                    primtype, '/'.join(map(str, proppath)))
                 matches.append(RuleMatch(proppath, message))
 
         return matches
@@ -105,7 +96,8 @@ class Properties(CloudFormationLintRule):
                                                 elif isinstance(d_v, six.string_types):
                                                     resource_name = d_v.split('.')[0]
                                                 if resource_name:
-                                                    resource_type = self.cfn.template.get('Resources', {}).get(resource_name, {}).get('Type')
+                                                    resource_type = self.cfn.template.get(
+                                                        'Resources', {}).get(resource_name, {}).get('Type')
                                                     if not (resource_type.startswith('Custom::')):
                                                         message = 'Property {0} should be of type List for resource {1} at {2}'
                                                         matches.append(
@@ -132,7 +124,8 @@ class Properties(CloudFormationLintRule):
                                         message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
 
                     else:
-                        message = 'Invalid !If condition specified at %s' % ('/'.join(map(str, path)))
+                        message = 'Invalid !If condition specified at %s' % (
+                            '/'.join(map(str, path)))
                         matches.append(RuleMatch(path, message))
                 else:
                     # FindInMaps can be lists of objects so skip checking those
@@ -146,15 +139,19 @@ class Properties(CloudFormationLintRule):
                             elif isinstance(sub_value, six.string_types):
                                 resource_name = sub_value.split('.')[0]
                             if resource_name:
-                                resource_type = self.cfn.template.get('Resources', {}).get(resource_name, {}).get('Type')
+                                resource_type = self.cfn.template.get(
+                                    'Resources', {}).get(resource_name, {}).get('Type')
                                 if not (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')):
-                                    message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+                                    message = 'Property is an object instead of List at %s' % (
+                                        '/'.join(map(str, path)))
                                     matches.append(RuleMatch(path, message))
                         elif not (sub_key == 'Ref' and sub_value == 'AWS::NoValue'):
-                            message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+                            message = 'Property is an object instead of List at %s' % (
+                                '/'.join(map(str, path)))
                             matches.append(RuleMatch(path, message))
                     else:
-                        self.logger.debug('Too much logic to handle whats actually in the map "%s" so skipping any more validation.', sub_value)
+                        self.logger.debug(
+                            'Too much logic to handle whats actually in the map "%s" so skipping any more validation.', sub_value)
         else:
             message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
             matches.append(RuleMatch(path, message))
@@ -273,7 +270,8 @@ class Properties(CloudFormationLintRule):
                                 for index, item in enumerate(text[prop]):
                                     arrproppath = proppath[:]
                                     arrproppath.append(index)
-                                    matches.extend(self.primitivetypecheck(item, primtype, arrproppath))
+                                    matches.extend(self.primitivetypecheck(
+                                        item, primtype, arrproppath))
                             elif isinstance(text[prop], dict):
                                 if 'Ref' in text[prop]:
                                     ref = text[prop]['Ref']
