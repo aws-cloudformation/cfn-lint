@@ -1,18 +1,6 @@
 """
-  Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy of this
-  software and associated documentation files (the "Software"), to deal in the Software
-  without restriction, including without limitation the rights to use, copy, modify,
-  merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
-  permit persons to whom the Software is furnished to do so.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
-  PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
 """
 import sys
 import argparse
@@ -66,7 +54,8 @@ class ConfigFileArgs(object):
         self.__user_config_file = None
         self.__project_config_file = None
         self.file_args = {}
-        self.default_schema_file = Path(__file__).parent.joinpath('data/CfnLintCli/config/schema.json')
+        self.default_schema_file = Path(__file__).parent.joinpath(
+            'data/CfnLintCli/config/schema.json')
         with self.default_schema_file.open() as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
@@ -190,7 +179,8 @@ class ConfigFileArgs(object):
                     self.merge_config(user_config[key], project_config[key])
                 else:
                     user_config[key] = project_config[key]
-                    LOGGER.debug('Overriding User\'s key %s with Project\'s specific value %s.', key, project_config[key])
+                    LOGGER.debug(
+                        'Overriding User\'s key %s with Project\'s specific value %s.', key, project_config[key])
 
         # Project may have unique config we need to copy over too
         # so that we can have user+project config available as one
@@ -233,6 +223,7 @@ def _ensure_value(namespace, name, value):
 
 class RuleConfigurationAction(argparse.Action):
     """ Override the default Action """
+
     def __init__(self, option_strings, dest, nargs=None, const=None, default=None,
                  type=None, choices=None, required=False, help=None, metavar=None):  # pylint: disable=W0622
         super(RuleConfigurationAction, self).__init__(
@@ -290,12 +281,14 @@ class CliArgs(object):
         """Do first round of parsing parameters to set options"""
         class ArgumentParser(argparse.ArgumentParser):
             """ Override Argument Parser so we can control the exit code"""
+
             def error(self, message):
                 self.print_help(sys.stderr)
                 self.exit(32, '%s: error: %s\n' % (self.prog, message))
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can be specified multiple times."""
+
             def __call__(self, parser, namespace, values, option_string=None):
                 items = getattr(namespace, self.dest)
                 items = [] if items is None else items
@@ -407,6 +400,7 @@ class CliArgs(object):
 
 class TemplateArgs(object):
     """ Per Template Args """
+
     def __init__(self, template_args):
         self.set_template_args(template_args)
 
