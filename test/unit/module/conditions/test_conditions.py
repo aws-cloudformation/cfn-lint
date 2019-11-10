@@ -2,8 +2,8 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint import conditions, Runner
-from testlib.testcase import BaseTestCase
+from test.testlib.testcase import BaseTestCase
+from cfnlint import Runner
 
 
 class TestConditions(BaseTestCase):

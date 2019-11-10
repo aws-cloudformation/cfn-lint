@@ -2,10 +2,9 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
 import datetime
+from test.testlib.testcase import BaseTestCase
 from cfnlint.helpers import format_json_string
-from testlib.testcase import BaseTestCase
 
 
 class TestFormatJson(BaseTestCase):

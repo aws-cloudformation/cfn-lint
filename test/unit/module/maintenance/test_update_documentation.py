@@ -4,10 +4,10 @@ SPDX-License-Identifier: MIT-0
 """
 import sys
 import logging
+from test.testlib.testcase import BaseTestCase
 from mock import patch, mock_open, call
 import cfnlint.maintenance
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
-from testlib.testcase import BaseTestCase
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())

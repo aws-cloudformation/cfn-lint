@@ -3,10 +3,10 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from mock import patch, mock_open
+from test.testlib.testcase import BaseTestCase
+from mock import patch
 import cfnlint.config  # pylint: disable=E0401
 from cfnlint.helpers import REGIONS
-from testlib.testcase import BaseTestCase
 
 
 LOGGER = logging.getLogger('cfnlint')

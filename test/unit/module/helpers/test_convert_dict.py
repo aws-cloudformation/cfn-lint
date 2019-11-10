@@ -2,12 +2,9 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
+from test.testlib.testcase import BaseTestCase
 from cfnlint.helpers import convert_dict
 from cfnlint.decode.node import dict_node, list_node, str_node
-from cfnlint import Runner
-import cfnlint.decode.cfn_yaml
-from testlib.testcase import BaseTestCase
 
 
 class TestConvertDict(BaseTestCase):

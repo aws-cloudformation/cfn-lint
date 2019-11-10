@@ -2,110 +2,76 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
-from cfnlint import Template, Runner  # pylint: disable=E0401
-from cfnlint.rules import RulesCollection
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
-from testlib.testcase import BaseTestCase
+from test.integration import BaseCliTestCase
 
 
-class TestQuickStartTemplates(BaseTestCase):
+class TestQuickStartTemplates(BaseCliTestCase):
     """Test QuickStart Templates Parsing """
 
-    def setUp(self):
-        """ SetUp template object"""
-        self.rules = RulesCollection(include_rules=['I'], include_experimental=True)
-        rulesdirs = [DEFAULT_RULESDIR]
-        for rulesdir in rulesdirs:
-            self.rules.create_from_directory(rulesdir)
-
-        self.filenames = {
-            'config_rule': {
-                'filename': 'test/fixtures/templates/public/lambda-poller.yaml',
-                'results_filename': 'test/fixtures/results/public/lambda-poller.json'
-            },
-            'watchmaker': {
-                "filename": 'test/fixtures/templates/public/watchmaker.json',
-                "results_filename": 'test/fixtures/results/public/watchmaker.json'
-            },
-            'nist_high_master': {
-                'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_high_master.json'
-            },
-            'nist_application': {
-                'filename': 'test/fixtures/templates/quickstart/nist_application.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_application.json'
-            },
-            'nist_config_rules': {
-                'filename': 'test/fixtures/templates/quickstart/nist_config_rules.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_config_rules.json'
-            },
-            'nist_iam': {
-                'filename': 'test/fixtures/templates/quickstart/nist_iam.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_iam.json'
-            },
-            'nist_logging': {
-                'filename': 'test/fixtures/templates/quickstart/nist_logging.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_logging.json'
-            },
-            'nist_vpc_management': {
-                'filename': 'test/fixtures/templates/quickstart/nist_vpc_management.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_vpc_management.json'
-            },
-            'nist_vpc_production': {
-                'filename': 'test/fixtures/templates/quickstart/nist_vpc_production.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/nist_vpc_production.json'
-            },
-            'openshift_master': {
-                'filename': 'test/fixtures/templates/quickstart/openshift_master.yaml',
-                'failures': 0
-            },
-            'openshift': {
-                'filename': 'test/fixtures/templates/quickstart/openshift.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/openshift.json'
-            },
-            'cis_benchmark': {
-                'filename': 'test/fixtures/templates/quickstart/cis_benchmark.yaml',
-                'results_filename': 'test/fixtures/results/quickstart/cis_benchmark.json'
-            }
+    scenarios = [
+        {
+            'filename': 'test/fixtures/templates/public/lambda-poller.yaml',
+            'results_filename': 'test/fixtures/results/public/lambda-poller.json',
+            'exit_code': 2,
+        },
+        {
+            'filename': 'test/fixtures/templates/public/watchmaker.json',
+            'results_filename': 'test/fixtures/results/public/watchmaker.json',
+            'exit_code': 8,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_high_master.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_application.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_application.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_config_rules.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_config_rules.json',
+            'exit_code': 6,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_iam.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_iam.json',
+            'exit_code': 4,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_logging.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_logging.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_vpc_management.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_vpc_management.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/nist_vpc_production.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_vpc_production.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/openshift_master.yaml',
+            'results': [],
+            'exit_code': 0,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/openshift.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/openshift.json',
+            'exit_code': 14,
+        },
+        {
+            'filename': 'test/fixtures/templates/quickstart/cis_benchmark.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/cis_benchmark.json',
+            'exit_code': 6,
         }
+    ]
 
     def test_templates(self):
         """Test Successful JSON Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            failures = values.get('failures')
-            results_filename = values.get('results_filename')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-
-            runner = Runner(self.rules, filename, template, ['us-east-1'])
-            matches = []
-            matches.extend(runner.transform())
-            if not matches:
-                matches.extend(runner.run())
-
-            if results_filename:
-                with open(results_filename) as json_data:
-                    correct = json.load(json_data)
-
-                assert len(matches) == len(correct), 'Expected {} failures, got {} on {}'.format(
-                    len(correct), len(matches), filename)
-                for c in correct:
-                    matched = False
-                    for match in matches:
-                        if c['Location']['Start']['LineNumber'] == match.linenumber and \
-                                c['Location']['Start']['ColumnNumber'] == match.columnnumber and \
-                                c['Location']['Path'] == getattr(match, "path", None) and \
-                                c['Rule']['Id'] == match.rule.id:
-                            matched = True
-                    assert matched is True, 'Expected error {} at line {}, column {}, path {} in matches for {}'.format(
-                        c['Rule']['Id'],
-                        c['Location']['Start']['LineNumber'],
-                        c['Location']['Start']['ColumnNumber'],
-                        "/".join(map(str, c['Location']['Path'])
-                                 ) if c['Location']['Path'] else "null",
-                        filename)
-            else:
-                assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(
-                    failures, len(matches), filename)
+        self.maxDiff = None
+        self.run_scenarios(['--include-checks', 'I', '--include-expiremental'])

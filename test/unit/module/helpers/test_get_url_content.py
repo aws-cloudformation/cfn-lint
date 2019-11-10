@@ -8,9 +8,9 @@ try:
     import StringIO
 except:
     pass
+from test.testlib.testcase import BaseTestCase
 from mock import patch, MagicMock
 import cfnlint.helpers
-from testlib.testcase import BaseTestCase
 
 
 class TestGetUrlContent(BaseTestCase):

@@ -3,8 +3,8 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
+from test.testlib.testcase import BaseTestCase
 import cfnlint.formatters
-from testlib.testcase import BaseTestCase
 
 
 class TestFormatters(BaseTestCase):

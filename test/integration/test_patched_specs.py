@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import six
 from cfnlint.helpers import load_resource
 from cfnlint.data import CloudSpecs
-from testlib.testcase import BaseTestCase
+from test.testlib.testcase import BaseTestCase
 
 
 class TestPatchedSpecs(BaseTestCase):

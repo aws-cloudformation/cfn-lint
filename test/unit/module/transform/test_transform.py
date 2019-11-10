@@ -2,10 +2,9 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
+from test.testlib.testcase import BaseTestCase
 from cfnlint import Transform
 from cfnlint.decode import cfn_yaml
-from testlib.testcase import BaseTestCase
 
 
 class TestTransform(BaseTestCase):

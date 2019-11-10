@@ -3,10 +3,10 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from mock import patch, mock_open, Mock
+from test.testlib.testcase import BaseTestCase
 import jsonschema
+from mock import patch
 import cfnlint.config  # pylint: disable=E0401
-from testlib.testcase import BaseTestCase
 try:  # pragma: no cover
     from pathlib import Path
 except ImportError:  # pragma: no cover

@@ -2,9 +2,8 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
+from test.testlib.testcase import BaseTestCase
 import cfnlint.decode.node  # pylint: disable=E0401
-from testlib.testcase import BaseTestCase
 
 
 class TestNode(BaseTestCase):

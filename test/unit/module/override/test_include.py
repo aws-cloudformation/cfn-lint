@@ -2,12 +2,12 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
+from test.testlib.testcase import BaseTestCase
 from cfnlint import Runner
 from cfnlint.rules import RulesCollection
 from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
-from testlib.testcase import BaseTestCase
 import cfnlint.helpers
-import json
 
 
 class TestInclude(BaseTestCase):
