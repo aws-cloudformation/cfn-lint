@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -38,7 +39,7 @@ class AllowedValue(CloudFormationLintRule):
                 if str(value) not in allowed_value_specs:
                     message = 'You must specify a valid value for {0} ({1}).\nValid values are {2}'
                     matches.append(RuleMatch(path, message.format(
-                        property_name, value, allowed_value_specs)))
+                        property_name, value, json.dumps(allowed_value_specs))))
 
         return matches
 
