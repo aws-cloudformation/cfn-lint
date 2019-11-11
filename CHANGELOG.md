@@ -1,3 +1,18 @@
+### 0.25.0
+###### Features
+- Add rule [I1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I1022) to recommend Sub over Join when join is using empty delimiter (pull #[1067](https://github.com/aws-cloudformation/cfn-python-lint/pull/1067))
+- Remove setuptools requirement (pull #[1188](https://github.com/aws-cloudformation/cfn-python-lint/pull/1188))
+###### CloudFormation Specifications
+- Update Lambda runtime versions EOL date (pull #[1180](https://github.com/aws-cloudformation/cfn-python-lint/pull/1180))
+- Update CloudFormation specs to 8.0.0 (pull #[1187](https://github.com/aws-cloudformation/cfn-python-lint/pull/1187))
+- Update Pricing and SSM data to 2019.11.08 (pull #[1187](https://github.com/aws-cloudformation/cfn-python-lint/pull/1187))
+###### Fixes
+- Update rule [W2501](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2501) to include more properties to validate security of a parameter (pull #[1181](https://github.com/aws-cloudformation/cfn-python-lint/pull/1181))
+- Fix YAML parsing to not fail on merging and aliases (pull #[1182](https://github.com/aws-cloudformation/cfn-python-lint/pull/1182))
+- Fix an issue with SAM when CORS is present in pre-transformed template (pull #[1185](https://github.com/aws-cloudformation/cfn-python-lint/pull/1185))
+- Update rule [W7001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W7001) to look at pre-transformed FindInMaps (pull #[1186](https://github.com/aws-cloudformation/cfn-python-lint/pull/1186))
+
+
 ### 0.24.8
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 7.2.0 (pull #[1177](https://github.com/aws-cloudformation/cfn-python-lint/pull/1177))
