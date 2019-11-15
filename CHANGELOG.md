@@ -1,3 +1,8 @@
+### 0.25.1
+###### CloudFormation Specifications
+- Update allowed values for AWS Config types (pull #[1197](https://github.com/aws-cloudformation/cfn-python-lint/pull/1197))
+- Update CloudFormation specs to 8.1.0 (pull #[1197](https://github.com/aws-cloudformation/cfn-python-lint/pull/1197))
+
 ### 0.25.0
 ###### Features
 - Add rule [I1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I1022) to recommend Sub over Join when join is using empty delimiter (pull #[1067](https://github.com/aws-cloudformation/cfn-python-lint/pull/1067))
