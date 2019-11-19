@@ -1,3 +1,8 @@
+### 0.25.2
+###### CloudFormation Specifications
+- Add capacityOptimized to spot fleet allocation strategy (pull #[1200](https://github.com/aws-cloudformation/cfn-python-lint/pull/1200))
+- Update Lambda runtime options to be valid as of 2019.11.19 (pull #[1204](https://github.com/aws-cloudformation/cfn-python-lint/pull/1204))
+
 ### 0.25.1
 ###### CloudFormation Specifications
 - Update allowed values for AWS Config types (pull #[1197](https://github.com/aws-cloudformation/cfn-python-lint/pull/1197))
