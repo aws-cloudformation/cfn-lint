@@ -668,6 +668,12 @@ Resources:
           KeyType: HASH
         - AttributeName: !Ref SortKeyName
           KeyType: RANGE
-      - - AttributeName: !Ref PartitionKeyName
-          KeyType: HASH
-        - "String2"
+      - !If
+        - HasSortKey
+        - - AttributeName: !Ref PartitionKeyName
+            KeyType: HASH
+          - AttributeName: !Ref SortKeyName
+            KeyType: RANGE
+        - - AttributeName: !Ref PartitionKeyName
+            KeyType: HASH
+          - "String2"
