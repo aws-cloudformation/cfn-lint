@@ -346,11 +346,6 @@ class RulesCollection(object):
         result = []
         if rulesdir != '':
             result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
-
-        for rule in result:
-            if rule.id in self.configure_rules:
-                rule.configure(self.configure_rules[rule.id])
-
         self.extend(result)
 
 
