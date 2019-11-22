@@ -1,3 +1,11 @@
+### 0.25.3
+###### CloudFormation Specifications
+- Change DocDB allowed EngineVersion value to 3.6.0 (pull #[1213](https://github.com/aws-cloudformation/cfn-python-lint/pull/1213))
+###### Fixes
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to handle nested IFs when looking at lists (pull #[1212](https://github.com/aws-cloudformation/cfn-python-lint/pull/1212))
+- Update rule [W2501](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2501) to only look at a Resource Properties (pull #[1214](https://github.com/aws-cloudformation/cfn-python-lint/pull/1214))
+
+
 ### 0.25.2
 ###### CloudFormation Specifications
 - Add capacityOptimized to spot fleet allocation strategy (pull #[1200](https://github.com/aws-cloudformation/cfn-python-lint/pull/1200))
