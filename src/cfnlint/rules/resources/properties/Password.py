@@ -29,7 +29,11 @@ class Password(CloudFormationLintRule):
         for password_property in password_properties:
             # Build the list of refs
             refs = cfn.search_deep_keys(password_property)
-            trees = [tree for tree in refs if tree[0] == 'Resources']
+            trees = []
+            for tree in refs:
+                if len(tree) > 2:
+                    if tree[0] == 'Resources' and tree[2] == 'Properties':
+                        trees.append(tree)
 
             for tree in trees:
                 obj = tree[-1]
