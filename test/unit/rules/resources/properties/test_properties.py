@@ -18,6 +18,7 @@ class TestResourceProperties(BaseRuleTestCase):
         self.success_templates = [
             'test/fixtures/templates/good/resource_properties.yaml',
             'test/fixtures/templates/good/resources/properties/templated_code.yaml',
+            'test/fixtures/templates/good/resources/properties/properties_nested_if.yaml',
         ]
 
     def test_file_positive(self):

@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  R53ResolverInboundEndPoint:
+    Type: AWS::Route53Resolver::ResolverEndpoint
+    Condition: CreateR53Resolver
+    Properties:
+      Direction: INBOUND
+      IpAddresses: !If
+        - 3AZ
+        - - SubnetId: !Ref PrivateSubnet1
+          - SubnetId: !Ref PrivateSubnet2
+          - SubnetId: !Ref PrivateSubnet3
+        - !If
+          - 2AZ
+          - - SubnetId: !Ref PrivateSubnet1
+            - SubnetId: !Ref PrivateSubnet2
+          - - "AWS::NoValue"
+      Name: !Sub "vpc-${VpcName}-inbound-endpoint"
+      SecurityGroupIds:
+        - !Ref R53ResolverSecurityGroup
