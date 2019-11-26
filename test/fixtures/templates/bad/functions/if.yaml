@@ -8,10 +8,22 @@ Parameters:
     Type: String
     Default: isDevelopment
 Conditions:
-  isProduction: !Equals [!Ref myEnvironment, 'prd']
-  isDevelopment: !Equals [!Ref myEnvironment, 'dev']
+  isProduction: !Equals [!Ref myEnvironment, "prd"]
+  isDevelopment: !Equals [!Ref myEnvironment, "dev"]
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: !If [!Ref myCondition, 'ami-123456', 'ami-abcdef']
+      ImageId: !If [!Ref myCondition, "ami-123456", "ami-abcdef"]
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !If [myCondition, "ami-123456"]
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId:
+        Fn::If:
+          myCondition:
+            - "ami-123456"
+            - "ami-abcdef"
