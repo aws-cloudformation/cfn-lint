@@ -25,7 +25,7 @@ Resources:
       MinSize: '1'
     UpdatePolicy:
       AutoScalingScheduledAction:
-        IgnoreUnmodifiedGroupSizeProperties: 'true' # invalide type
+        IgnoreUnmodifiedGroupSizeProperties: 'true' # invalid type
       AutoScalingRollingUpdate:
         MinInstancesInService: '1' # invalide type
         MaxBatchSize: '2' # invalide type
@@ -130,3 +130,11 @@ Resources:
     Properties:
       MinSize: '1'
       MaxSize: '1'
+  ESD1:
+    Type: AWS::Elasticsearch::Domain
+    UpdatePolicy:
+      AutoScalingReplacingUpdate: true # wrong property name
+  ESD2:
+    Type: AWS::Elasticsearch::Domain
+    UpdatePolicy:
+      EnableVersionUpgrade: 'true' # invalid type

@@ -91,6 +91,12 @@ class Configuration(CloudFormationLintRule):
                     'AWS::Lambda::Alias'
                 ]
             },
+            'EnableVersionUpgrade': {
+                'PrimitiveType': 'Boolean',
+                'ResourceTypes': [
+                    'AWS::Elasticsearch::Domain'
+                ]
+            },
             'UseOnlineResharding': {
                 'PrimitiveType': 'Boolean',
                 'ResourceTypes': [
