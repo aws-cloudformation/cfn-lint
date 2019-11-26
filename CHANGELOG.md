@@ -1,3 +1,12 @@
+### 0.25.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to 9.1.0 (pull #[1224](https://github.com/aws-cloudformation/cfn-python-lint/pull/1224))
+- Add Allowed Pattern to Bucket Names (pull #[1208](https://github.com/aws-cloudformation/cfn-python-lint/pull/1208))
+###### Fixes
+- Update rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2001) to look for required properties (pull #[1227](https://github.com/aws-cloudformation/cfn-python-lint/pull/1227))
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to allow `routing.http.drop_invalid_header_fields.enabled` for application load balancers (pull #[1220](https://github.com/aws-cloudformation/cfn-python-lint/pull/1220))
+- Update rule [E1028](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1028) to check that Fn::If value is a list of length 3 (pull #[1226](https://github.com/aws-cloudformation/cfn-python-lint/pull/1226))
+
 ### 0.25.3
 ###### CloudFormation Specifications
 - Change DocDB allowed EngineVersion value to 3.6.0 (pull #[1213](https://github.com/aws-cloudformation/cfn-python-lint/pull/1213))
