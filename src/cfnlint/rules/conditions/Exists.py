@@ -28,9 +28,8 @@ class Exists(CloudFormationLintRule):
         iftrees = cfn.search_deep_keys('Fn::If')
         for iftree in iftrees:
             if isinstance(iftree[-1], list):
-                ref_conditions[iftree[-1][0]] = iftree
-            else:
-                ref_conditions[iftree[-1]] = iftree
+                if isinstance(iftree[-1][0], six.string_types):
+                    ref_conditions[iftree[-1][0]] = iftree
 
         # Get resource's Conditions
         for resource_name, resource_values in cfn.get_resources().items():

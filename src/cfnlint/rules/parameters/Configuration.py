@@ -28,6 +28,10 @@ class Configuration(CloudFormationLintRule):
         'Type',
     ]
 
+    required_keys = [
+        'Type'
+    ]
+
     def match(self, cfn):
         """Check CloudFormation Parameters"""
 
@@ -40,6 +44,13 @@ class Configuration(CloudFormationLintRule):
                     matches.append(RuleMatch(
                         ['Parameters', paramname, propname],
                         message.format(paramname, propname)
+                    ))
+            for reqname in self.required_keys:
+                if reqname not in paramvalue.keys():
+                    message = 'Parameter {0} is missing required property {1}'
+                    matches.append(RuleMatch(
+                        ['Parameters', paramname],
+                        message.format(paramname, reqname)
                     ))
 
         return matches
