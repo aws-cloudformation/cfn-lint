@@ -17,7 +17,7 @@ template = cfnlint.decode.cfn_yaml.load(filename)
 cfnlint.core.configure_logging(None)
 
 # Initialize the ruleset to be applied (no overrules, no excludes)
-rules = cfnlint.core.get_rules([], [], [])
+rules = cfnlint.core.get_rules([], [], [], [], False, [])
 
 # Use us-east-1 region (spec file) for validation
 regions = ['us-east-1']

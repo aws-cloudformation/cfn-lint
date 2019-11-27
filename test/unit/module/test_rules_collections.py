@@ -169,6 +169,52 @@ class TestTemplate(BaseTestCase):
         for rule in rules:
             self.assertIn(rule.id, ['E0000', 'E0010'])
 
+    def test_success_filtering_of_rules_exclude_mandatory(self):
+        """Test extend function"""
+        class rule_e0000(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0000'
+
+        class rule_w0000(CloudFormationLintRule):
+            """Warning Rule"""
+            id = 'W0000'
+
+        class rule_i0000(CloudFormationLintRule):
+            """Info Rule"""
+            id = 'I0000'
+
+        rules_to_add = [rule_e0000, rule_w0000, rule_i0000]
+        rules = RulesCollection(ignore_rules=['E'], mandatory_rules=['E'])
+        rules.extend(rules_to_add)
+        self.assertEqual(len(rules), 2)
+        for rule in rules:
+            self.assertIn(rule.id, ['E0000', 'W0000'])
+
+    def test_success_filtering_of_rules_exclude_mandatory_long(self):
+        """Test extend function"""
+        class rule_e0000(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0000'
+
+        class rule_e0010(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0010'
+
+        class rule_e0002(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0002'
+
+        class rule_w0000(CloudFormationLintRule):
+            """Warning Rule"""
+            id = 'W0000'
+
+        rules_to_add = [rule_e0000, rule_e0010, rule_e0002, rule_w0000]
+        rules = RulesCollection(ignore_rules=['E'], mandatory_rules=['E000'])
+        rules.extend(rules_to_add)
+        self.assertEqual(len(rules), 3)
+        for rule in rules:
+            self.assertIn(rule.id, ['E0000', 'E0002', 'W0000'])
+
 
 class TestCreateFromModule(BaseTestCase):
     """Test loading a rules collection from a module"""

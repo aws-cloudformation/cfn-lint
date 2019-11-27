@@ -364,6 +364,11 @@ class CliArgs(object):
             help='include rules whose id match these values'
         )
         standard.add_argument(
+            '-m', '--mandatory-checks', dest='mandatory_checks', nargs='+', default=[],
+            type=comma_separated_arg, action='extend',
+            help='always check rules whose id match these values, regardless of template exclusions'
+        )
+        standard.add_argument(
             '-e', '--include-experimental', help='Include experimental rules', action='store_true'
         )
 
@@ -475,6 +480,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def include_checks(self):
         """ include_checks """
         return self._get_argument_value('include_checks', True, True)
+
+    @property
+    def mandatory_checks(self):
+        """ mandatory_checks """
+        return self._get_argument_value('mandatory_checks', False, True)
 
     @property
     def include_experimental(self):
