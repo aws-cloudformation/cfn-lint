@@ -6,6 +6,7 @@ import sys
 import json
 import subprocess
 from test.testlib.testcase import BaseTestCase
+import cfnlint.core
 
 
 class BaseCliTestCase(BaseTestCase):
@@ -61,3 +62,30 @@ class BaseCliTestCase(BaseTestCase):
                 else:
                     self.assertItemsEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
                         len(expected_results), len(matches), filename))
+
+    def run_module_integration_scenarios(self, rules):
+        """ Test using cfnlint as a module integrated into another package"""
+
+        cfnlint.core.configure_logging(None)
+        regions = ['us-east-1']
+        for scenario in self.scenarios:
+            filename = scenario.get('filename')
+            results_filename = scenario.get('results_filename')
+            expected_results = scenario.get('results', [])
+
+            if results_filename and not expected_results:
+                with open(results_filename) as json_data:
+                    expected_results = json.load(json_data)
+
+            template = cfnlint.decode.cfn_yaml.load(filename)
+
+            matches = cfnlint.core.run_checks(
+                filename,
+                template,
+                rules,
+                regions
+            )
+
+            # Only check that the error count matches as the formats are different
+            self.assertEqual(len(expected_results), len(matches), 'Expected {} failures, got {} on {}'.format(
+                len(expected_results), len(matches), filename))

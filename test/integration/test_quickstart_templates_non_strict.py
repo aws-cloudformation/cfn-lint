@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
+import cfnlint.core
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
@@ -39,3 +40,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
             '--include-expiremental',
             '--configure-rule', 'E3012:strict=false',
         ])
+
+    def test_module_integration(self):
+        """ Test same templates using integration approach"""
+        rules = cfnlint.core.get_rules(
+            [], [], ['I', 'E', 'W'],
+            {
+                'E3012': {
+                    'strict': False,
+                }
+            }, True)
+        self.run_module_integration_scenarios(rules)
