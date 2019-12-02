@@ -17,9 +17,8 @@ class Configuration(CloudFormationLintRule):
     condition_keys = [
         'Fn::And',
         'Fn::Equals',
-        'Fn::If',
         'Fn::Not',
-        'Fn::Or'
+        'Fn::Or',
     ]
 
     def match(self, cfn):
@@ -43,5 +42,13 @@ class Configuration(CloudFormationLintRule):
                             ['Conditions', condname],
                             message.format(condname)
                         ))
+                    else:
+                        for k, _ in condobj.items():
+                            if k not in self.condition_keys:
+                                message = 'Condition {0} has invalid property {1}'
+                                matches.append(RuleMatch(
+                                    ['Conditions', condname] + [k],
+                                    message.format(condname, k)
+                                ))
 
         return matches
