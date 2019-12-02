@@ -2,6 +2,11 @@
 ###### CloudFormation Specifications
 - Update pricing and services from 2019.12.02 (pull #[1237](https://github.com/aws-cloudformation/cfn-python-lint/pull/1237))
 - Update to specs to 9.1.1 (pull #[1237](https://github.com/aws-cloudformation/cfn-python-lint/pull/1237))
+###### Fixes
+- `EnableVersionUpgrade` added to the recognized values for `UpdatePolicy` (pull #[1231](https://github.com/aws-cloudformation/cfn-python-lint/pull/1231))
+- Include `pathlib2` in python 3.4 requirements (pull #[1236](https://github.com/aws-cloudformation/cfn-python-lint/pull/1236))
+- Look at the top level Condition operator (pull #[1235](https://github.com/aws-cloudformation/cfn-python-lint/pull/1235))
+- Include more testing for using cfn-lint as a module (pull #[1234](https://github.com/aws-cloudformation/cfn-python-lint/pull/1234))
 
 ### 0.25.5
 ###### CloudFormation Specifications
