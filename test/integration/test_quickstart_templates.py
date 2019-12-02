@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
+import cfnlint.core
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
@@ -72,6 +73,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
     ]
 
     def test_templates(self):
-        """Test Successful JSON Parsing"""
-        self.maxDiff = None
-        self.run_scenarios(['--include-checks', 'I', '--include-expiremental'])
+        """ Test same templates using integration approach"""
+        rules = cfnlint.core.get_rules(
+            [], [], ['I', 'E', 'W'], {}, True)
+        self.run_module_integration_scenarios(rules)

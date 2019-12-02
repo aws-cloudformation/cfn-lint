@@ -68,7 +68,7 @@ setup(
         'aws-sam-translator>=1.15.1',
         'jsonpatch',
         'jsonschema~=3.0',
-        'pathlib2>=2.3.0;python_version<"3.4"',
+        'pathlib2>=2.3.0;python_version<="3.4"',
         'importlib_resources~=1.0.2;python_version<"3.7"',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',

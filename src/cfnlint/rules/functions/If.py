@@ -25,16 +25,23 @@ class If(CloudFormationLintRule):
 
         # Get the conditions used in the functions
         for iftree in iftrees:
-            if isinstance(iftree[-1], list):
-                if_condition = iftree[-1][0]
+            ifs = iftree[-1]
+            if isinstance(ifs, list):
+                if_condition = ifs[0]
+                if len(ifs) != 3:
+                    message = 'Fn::If must be a list of 3 elements.'
+                    matches.append(RuleMatch(
+                        iftree[:-1], message
+                    ))
+                if not isinstance(if_condition, six.string_types):
+                    message = 'Fn::If first element must be a condition and a string.'
+                    matches.append(RuleMatch(
+                        iftree[:-1] + [0], message
+                    ))
             else:
-                if_condition = iftree[-1]
-
-            if not isinstance(if_condition, six.string_types):
-                message = 'Fn::If first elements must be a condition and a string.'
+                message = 'Fn::If must be a list of 3 elements.'
                 matches.append(RuleMatch(
-                    iftree[:-1] + [0],
-                    message.format(if_condition)
+                    iftree[:-1], message
                 ))
 
         return matches

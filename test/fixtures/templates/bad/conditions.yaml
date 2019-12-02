@@ -37,47 +37,47 @@ Parameters:
   EnableGeoBlocking:
     Type: String
 Conditions:
-  CreateProdResources: !Equals [ !Ref EnvType, prod ]
+  CreateProdResources: !Equals [!Ref EnvType, prod]
   BadCondition: String
-  UnusedCondition: !Equals [ !Ref EnvType, prod ]
+  UnusedCondition: !Equals [!Ref EnvType, prod]
   TooManyConditions:
-    Fn::Equals: [ !Ref EnvType, prod ]
-    Fn::Not: !Equals [ !Ref EnvType, prod ]
-  EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
+    Fn::Equals: [!Ref EnvType, prod]
+    Fn::Not: !Equals [!Ref EnvType, prod]
+  EnableGeoBlocking: !Equals [!Ref EnableGeoBlocking, "true"]
+  HasParam:
+    "Fn::Of":
+      - !Not [!Equals [!Ref EnvType, ""]]
+      - !Not [!Equals [!Ref EnableGeoBlocking, ""]]
 Resources:
   EC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
       Tags:
-      -
-        Key: TestKey
-        Value: TestValue
-      - Fn::If:
-        - isProd
-        - Key: Environment1
-          Value: Prod
+        - Key: TestKey
+          Value: TestValue
         - Fn::If:
-          - isDev
-          - BadKey: Environment2
-            BadValue: Dev
-          - !Ref AWS::NoValue
+            - isProd
+            - Key: Environment1
+              Value: Prod
+            - Fn::If:
+                - isDev
+                - BadKey: Environment2
+                  BadValue: Dev
+                - !Ref AWS::NoValue
   MountPoint:
     Type: "AWS::EC2::VolumeAttachment"
     Condition: CreateProdResources
     Properties:
-      InstanceId:
-        !Ref EC2Instance
-      VolumeId:
-        !Ref NewVolume
+      InstanceId: !Ref EC2Instance
+      VolumeId: !Ref NewVolume
       Device: /dev/sdh
   NewVolume:
     Type: "AWS::EC2::Volume"
     Condition: CreateProdResources
     Properties:
       Size: 100
-      AvailabilityZone:
-        !GetAtt EC2Instance.AvailabilityZone
+      AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Condition: False
@@ -85,23 +85,18 @@ Resources:
       DistributionConfig:
         Enabled: true
         Restrictions:
-          GeoRestriction:
-            !If
-              - EnableGeoBlocking
-              -
-                RestrictionType:
-                  !If
-                    - EnableGeoBlocking
-                    -
-                      - whitelist
-                    - whitelist
-                BadLocations:
-                  - BE
-                  - LU
-                  - NL
-              - RestrictionType: none
+          GeoRestriction: !If
+            - EnableGeoBlocking
+            - RestrictionType: !If
+                - EnableGeoBlocking
+                - - whitelist
+                - whitelist
+              BadLocations:
+                - BE
+                - LU
+                - NL
+            - RestrictionType: none
 Outputs:
   VolumeId:
     Condition: CreateProdResources
-    Value:
-      !Ref NewVolume
+    Value: !Ref NewVolume

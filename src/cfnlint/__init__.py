@@ -799,6 +799,7 @@ class Template(object):  # pylint: disable=R0904
                 ]
         """
         results = []
+
         scenarios = self.get_conditions_scenarios_from_object([obj])
 
         if not isinstance(obj, dict):
@@ -856,9 +857,10 @@ class Template(object):  # pylint: disable=R0904
                     for k, v in value.items():
                         if k == 'Fn::If':
                             if isinstance(v, list) and len(v) == 3:
-                                results.add(v[0])
-                                results = results.union(get_conditions_from_property(v[1]))
-                                results = results.union(get_conditions_from_property(v[2]))
+                                if isinstance(v[0], six.string_types):
+                                    results.add(v[0])
+                                    results = results.union(get_conditions_from_property(v[1]))
+                                    results = results.union(get_conditions_from_property(v[2]))
             elif isinstance(value, list):
                 for v in value:
                     results = results.union(get_conditions_from_property(v))
