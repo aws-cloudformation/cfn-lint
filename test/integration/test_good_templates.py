@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.integration import BaseCliTestCase
+import cfnlint.core
 
 
 class TestQuickStartTemplates(BaseCliTestCase):
@@ -10,23 +11,23 @@ class TestQuickStartTemplates(BaseCliTestCase):
 
     scenarios = [
         {
-            "filename": 'test/fixtures/templates/good/generic.yaml',
-            "results": [],
-            "exit_code": 0,
+            'filename': 'test/fixtures/templates/good/generic.yaml',
+            'results': [],
+            'exit_code': 0,
         },
         {
-            "filename": 'test/fixtures/templates/good/minimal.yaml',
-            "results": [],
-            "exit_code": 0,
+            'filename': 'test/fixtures/templates/good/minimal.yaml',
+            'results': [],
+            'exit_code': 0,
         },
         {
-            "filename": 'test/fixtures/templates/good/transform.yaml',
-            "results": [],
-            "exit_code": 0,
+            'filename': 'test/fixtures/templates/good/transform.yaml',
+            'results': [],
+            'exit_code': 0,
         },
         {
-            "filename": 'test/fixtures/templates/bad/transform_serverless_template.yaml',
-            "results": [
+            'filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
+            'results': [
                 {
                     'Filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
                     'Location': {
@@ -94,31 +95,31 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     'Message': "Error transforming template: Resource with id [myFunctionMyTimer] is invalid. Missing required property 'Schedule'."
                 }
             ],
-            "exit_code": 2,
+            'exit_code': 2,
         },
         {
-            "filename": 'test/fixtures/templates/good/conditions.yaml',
-            "results": [],
-            "exit_code": 0,
+            'filename': 'test/fixtures/templates/good/conditions.yaml',
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/resources_codepipeline.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_api.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_function.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
-            "results": [
+            'results': [
                 {
                     'Level': 'Error',
                     'Message': 'Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12, please consider to update to nodejs10.x',
@@ -136,25 +137,31 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     }
                 }
             ],
-            "exit_code": 2,
+            'exit_code': 2,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform_many.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform_not_sam.yaml',
-            "results": [],
-            "exit_code": 0,
+            'results': [],
+            'exit_code': 0,
         }
     ]
 
     def test_templates(self):
         """Test Successful JSON Parsing"""
         self.run_scenarios()
+
+    def test_module_integration(self):
+        """ Test same templates using integration approach"""
+        rules = cfnlint.core.get_rules(
+            [], [], ['E', 'I', 'W'], {}, False)
+        self.run_module_integration_scenarios(rules)
