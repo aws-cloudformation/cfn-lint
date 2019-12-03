@@ -168,3 +168,13 @@ class TestTemplate(BaseTestCase):
         self.assertEqual(len(rules), 2)
         for rule in rules:
             self.assertIn(rule.id, ['E0000', 'E0010'])
+
+
+class TestCreateFromModule(BaseTestCase):
+    """Test loading a rules collection from a module"""
+
+    def test_create_from_module(self):
+        """Load rules from a module"""
+        rules = RulesCollection()
+        rules.create_from_module("cfnlint.rules.templates.Base")
+        self.assertIn('E1001', (r.id for r in rules))

@@ -76,14 +76,17 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(rulesdir, ignore_rules, include_rules, configure_rules=None, include_experimental=False):
+def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False):
     """Get rules"""
     rules = RulesCollection(ignore_rules, include_rules, configure_rules, include_experimental)
-    rules_dirs = [DEFAULT_RULESDIR] + rulesdir
+    rules_paths = [DEFAULT_RULESDIR] + append_rules
     try:
-        for rules_dir in rules_dirs:
-            rules.create_from_directory(rules_dir)
-    except OSError as e:
+        for rules_path in rules_paths:
+            if rules_path and os.path.isdir(os.path.expanduser(rules_path)):
+                rules.create_from_directory(rules_path)
+            else:
+                rules.create_from_module(rules_path)
+    except (OSError, ImportError) as e:
         raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
     return rules
 

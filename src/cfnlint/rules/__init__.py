@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import os
 import logging
 from datetime import datetime
+import importlib
 import traceback
 import cfnlint.helpers
 from cfnlint.decode.node import TemplateAttributeError
@@ -341,16 +342,16 @@ class RulesCollection(object):
 
         return matches
 
+    def create_from_module(self, modpath):
+        """Create rules from a module import path"""
+        mod = importlib.import_module(modpath)
+        self.extend(cfnlint.helpers.create_rules(mod))
+
     def create_from_directory(self, rulesdir):
         """Create rules from directory"""
         result = []
         if rulesdir != '':
             result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
-
-        for rule in result:
-            if rule.id in self.configure_rules:
-                rule.configure(self.configure_rules[rule.id])
-
         self.extend(result)
 
 
