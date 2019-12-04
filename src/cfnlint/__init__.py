@@ -973,11 +973,12 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, regions, verbosity=0):
+            self, rules, filename, template, regions, verbosity=0, mandatory_rules=None):
 
         self.rules = rules
         self.filename = filename
         self.verbosity = verbosity
+        self.mandatory_rules = mandatory_rules or []
         self.cfn = Template(filename, template, regions)
 
     def transform(self):
@@ -1017,12 +1018,16 @@ class Runner(object):
                 if match.rule.id not in directives:
                     return_matches.append(match)
                 else:
-                    exception = False
-                    for directive in directives.get(match.rule.id):
-                        if directive.get('start') <= match.linenumber <= directive.get('end'):
-                            exception = True
-                    if not exception:
-                        return_matches.append(match)
+                    for mandatory_rule in self.mandatory_rules:
+                        if match.rule.id.startswith(mandatory_rule):
+                            return_matches.append(match)
+                            break
+                    else:
+                        for directive in directives.get(match.rule.id):
+                            if directive.get('start') <= match.linenumber <= directive.get('end'):
+                                break
+                        else:
+                            return_matches.append(match)
         return return_matches
 
 

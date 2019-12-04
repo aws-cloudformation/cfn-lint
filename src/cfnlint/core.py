@@ -36,13 +36,13 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec):
+def run_cli(filename, template, rules, regions, override_spec, mandatory_rules=None):
     """Process args and run"""
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
-    return run_checks(filename, template, rules, regions)
+    return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
@@ -166,7 +166,7 @@ def get_template_rules(filename, args):
     return(template, rules, [])
 
 
-def run_checks(filename, template, rules, regions):
+def run_checks(filename, template, rules, regions, mandatory_rules=None):
     """Run Checks against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
@@ -177,7 +177,7 @@ def run_checks(filename, template, rules, regions):
 
     matches = []
 
-    runner = cfnlint.Runner(rules, filename, template, regions)
+    runner = cfnlint.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:
