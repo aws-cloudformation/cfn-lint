@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import os
 import logging
 from datetime import datetime
+import importlib
 import traceback
 import cfnlint.helpers
 from cfnlint.decode.node import TemplateAttributeError
@@ -130,7 +131,7 @@ class CloudFormationLintRule(object):
 class RulesCollection(object):
     """Collection of rules"""
 
-    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False):
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
         self.rules = []
 
         # Whether "experimental" rules should be added
@@ -139,6 +140,7 @@ class RulesCollection(object):
         # Make Ignore Rules not required
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
+        self.mandatory_rules = mandatory_rules or []
         self.configure_rules = configure_rules or []
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
@@ -170,7 +172,7 @@ class RulesCollection(object):
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
     def is_rule_enabled(self, rule_id, experimental):
-        """ Cheks if an individual rule is valid """
+        """ Checks if an individual rule is valid """
         # Evaluate experimental rules
         if experimental and not self.include_experimental:
             return False
@@ -182,6 +184,12 @@ class RulesCollection(object):
                 include_filter = True
         if not include_filter:
             return False
+
+        # Enable mandatory rules without checking for if they are ignored
+        for mandatory_rule in self.mandatory_rules:
+            if rule_id.startswith(mandatory_rule):
+                return True
+
         # Allowing ignoring of rules based on prefix to ignore checks
         for ignore_rule in self.ignore_rules:
             if rule_id.startswith(ignore_rule) and ignore_rule:
@@ -341,16 +349,16 @@ class RulesCollection(object):
 
         return matches
 
+    def create_from_module(self, modpath):
+        """Create rules from a module import path"""
+        mod = importlib.import_module(modpath)
+        self.extend(cfnlint.helpers.create_rules(mod))
+
     def create_from_directory(self, rulesdir):
         """Create rules from directory"""
         result = []
         if rulesdir != '':
             result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
-
-        for rule in result:
-            if rule.id in self.configure_rules:
-                rule.configure(self.configure_rules[rule.id])
-
         self.extend(result)
 
 

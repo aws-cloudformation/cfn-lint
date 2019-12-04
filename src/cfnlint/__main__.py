@@ -22,7 +22,7 @@ def main():
                 matches.extend(
                     cfnlint.core.run_cli(
                         filename, template, rules,
-                        args.regions, args.override_spec))
+                        args.regions, args.override_spec, args.mandatory_checks))
             else:
                 matches.extend(template_matches)
             LOGGER.debug('Completed linting of file: %s', str(filename))

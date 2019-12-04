@@ -95,7 +95,7 @@ AVAILABILITY_ZONES = [
     'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
     'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
     'us-west-1a', 'us-west-1b', 'us-west-1c',
-    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d',
+    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d', 'us-west-2-lax-1a',
 ]
 
 FUNCTIONS = [
@@ -267,6 +267,19 @@ def format_json_string(json_string):
     return json.dumps(json_string, indent=2, sort_keys=True, separators=(',', ': '), default=converter)
 
 
+def create_rules(mod):
+    """Create and return an instance of each CloudFormationLintRule subclass
+    from the given module."""
+    result = []
+    for _, clazz in inspect.getmembers(mod, inspect.isclass):
+        method_resolution = inspect.getmro(clazz)
+        if [clz for clz in method_resolution[1:] if clz.__module__ in ('cfnlint', 'cfnlint.rules') and clz.__name__ == 'CloudFormationLintRule']:
+            # create and instance of subclasses of CloudFormationLintRule
+            obj = clazz()
+            result.append(obj)
+    return result
+
+
 def load_plugins(directory):
     """Load plugins"""
     result = []
@@ -282,12 +295,7 @@ def load_plugins(directory):
             try:
                 fh, filename, desc = imp.find_module(pluginname, [root])
                 mod = imp.load_module(pluginname, fh, filename, desc)
-                for _, clazz in inspect.getmembers(mod, inspect.isclass):
-                    method_resolution = inspect.getmro(clazz)
-                    if [clz for clz in method_resolution[1:] if clz.__module__ in ('cfnlint', 'cfnlint.rules') and clz.__name__ == 'CloudFormationLintRule']:
-                        # create and instance of subclasses of CloudFormationLintRule
-                        obj = clazz()
-                        result.append(obj)
+                result.extend(create_rules(mod))
             finally:
                 if fh:
                     fh.close()
