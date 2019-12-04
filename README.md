@@ -84,7 +84,7 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 
 The template to be linted can also be passed using standard input:
 
-- `cat path/template.yaml | cfn-lint -`
+- `<path/template.yaml cfn-lint -`
 
 ##### Specifying the template with other parameters
 
