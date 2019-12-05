@@ -1,3 +1,13 @@
+### v0.26.0
+###### Features
+- Created a new `mandatory-checks` parameter to require rules to be reported on and not ignored (pull #[1243](https://github.com/aws-cloudformation/cfn-python-lint/pull/1243))
+- Allow using modules when doing `append-rules` (pull #[1216](https://github.com/aws-cloudformation/cfn-python-lint/pull/1216))
+- Add support for the new zone `us-west-2-lax-1a` (pull #[1241](https://github.com/aws-cloudformation/cfn-python-lint/pull/1241))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.0.0 (pull #[1247](https://github.com/aws-cloudformation/cfn-python-lint/pull/1247))
+###### Fixes
+- Update rule [E8001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8001) to allow for `Condition` (pull #[1246](https://github.com/aws-cloudformation/cfn-python-lint/pull/1246))
+
 ### v0.25.7
 ###### CloudFormation Specifications
 - Update pricing and services from 2019.12.02 (pull #[1237](https://github.com/aws-cloudformation/cfn-python-lint/pull/1237))
