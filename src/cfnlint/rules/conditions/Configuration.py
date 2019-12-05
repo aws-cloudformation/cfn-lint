@@ -15,6 +15,7 @@ class Configuration(CloudFormationLintRule):
     tags = ['conditions']
 
     condition_keys = [
+        'Condition',
         'Fn::And',
         'Fn::Equals',
         'Fn::Not',
@@ -37,7 +38,7 @@ class Configuration(CloudFormationLintRule):
                     ))
                 else:
                     if len(condobj) != 1:
-                        message = 'Condition {0} has to many intrinsic conditions'
+                        message = 'Condition {0} has too many intrinsic conditions'
                         matches.append(RuleMatch(
                             ['Conditions', condname],
                             message.format(condname)
