@@ -20,6 +20,7 @@ Conditions:
     - !Ref myEnvironment
     - "dev"
   EnableGeoBlocking: !Equals [ !Ref EnableGeoBlocking, "true" ]
+  EnableGeoBlockingAlias: !Condition EnableGeoBlocking
   PrimaryRegion:
     "Fn::Equals":
     - !Ref AWS::Region
@@ -70,7 +71,7 @@ Resources:
         Restrictions:
           GeoRestriction:
             !If
-              - EnableGeoBlocking
+              - EnableGeoBlockingAlias
               -
                 RestrictionType: whitelist
                 Locations:
