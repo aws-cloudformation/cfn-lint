@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  myBucketPass:
+    Type: AWS::S3::Bucket
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+          - E3002
+    Properties:
+      BucketName1: String
+  myBucketFail:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName1: String
+  myBucketFirstAndLastPass:
+    BadProperty: Test
+    Type: AWS::S3::Bucket
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+          - E3030
+          - E3001
+    Properties:
+      BadKey: Value  # other errors still show up
+      VersioningConfiguration:
+        Status: Enabled1
+  myBucketFirstAndLastFail:
+    BadProperty: Test
+    Type: AWS::S3::Bucket
+    Properties:
+      BadKey: Value  # other errors still show up
+      VersioningConfiguration:
+        Status: Enabled1
