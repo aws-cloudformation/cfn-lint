@@ -45,7 +45,7 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
             if r_values.get('Type') in likely_stateful_resource_types:
                 if not r_values.get('DeletionPolicy') or not r_values.get('UpdateReplacePolicy'):
                     path = ['Resources', r_name]
-                    message = 'The default action when replacing/removing a resource is to delete it. Set explicit policies'
+                    message = 'The default action when replacing/removing a resource is to delete it. Set explicit policies on stateful resources'
                     matches.append(RuleMatch(path, message))
 
         return matches
