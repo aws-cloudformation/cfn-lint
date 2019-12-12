@@ -26,7 +26,7 @@ Parameters:
     Type: Number
     Default: 25
 Conditions:
-  ProdVolumeSize: !Equals [!Ref pEnvironment, 'Prod']
+  ProdVolumeSize: !Equals [!Ref pEnvironment, "Prod"]
 Resources:
   RootRole:
     Type: "AWS::IAM::Role"
@@ -34,8 +34,7 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal:
               Service:
                 - "ec2.amazonaws.com"
@@ -43,13 +42,11 @@ Resources:
               - "sts:AssumeRole"
       Path: "/"
       Policies:
-        -
-          PolicyName: "root"
+        - PolicyName: "root"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: "*"
                 Resource: "*"
   RolePolicies:
@@ -59,20 +56,17 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Action: "*"
             Resource: "*"
       Roles:
-        -
-          Ref: "RootRole"
+        - Ref: "RootRole"
   RootInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
       Path: "/"
       Roles:
-        -
-          Ref: "RootRole"
+        - Ref: "RootRole"
   MyEC2Instance:
     Type: "AWS::EC2::Instance"
     Properties:
@@ -81,8 +75,7 @@ Resources:
       KeyName: testkey
       IamInstanceProfile: !Ref RootInstanceProfile
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
+        - DeviceName: /dev/sdm
           Ebs:
             VolumeType: io1
             Iops: !Ref pIops
@@ -101,26 +94,24 @@ Resources:
       InstanceType: t1.micro
       KeyName: testkey
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
+        - DeviceName: /dev/sdm
           Ebs:
             VolumeType: io1
             Iops: !Ref pIops
             DeleteOnTermination: false
-            VolumeSize: !If [ ProdVolumeSize, !Ref pProdVolumeSize, !Ref pDevVolumeSize ]
+            VolumeSize:
+              !If [ProdVolumeSize, !Ref pProdVolumeSize, !Ref pDevVolumeSize]
       NetworkInterfaces:
-      -
-        DeviceIndex: "1"
-        PrivateIpAddresses:
-        -
-          PrivateIpAddress: 1.1.1.1
-          Primary: true
-        - PrivateIpAddress: 1.1.1.2
-          Primary: false
+        - DeviceIndex: "1"
+          PrivateIpAddresses:
+            - PrivateIpAddress: 1.1.1.1
+              Primary: true
+            - PrivateIpAddress: 1.1.1.2
+              Primary: false
       UserData:
         Fn::Sub:
-        - "yum install ${myPackage}"
-        - myPackage: !Ref Package1
+          - "yum install ${myPackage}"
+          - myPackage: !Ref Package1
   ElasticIP:
     Type: "AWS::EC2::EIP"
     Properties:
@@ -129,33 +120,35 @@ Resources:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
       AvailabilityZones:
-        Fn::GetAZs: ''
+        Fn::GetAZs: ""
       Instances:
-      - Ref: MyEC2Instance
+        - Ref: MyEC2Instance
       Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort:
-          Ref: WebServerPort
-        Protocol: HTTP
+        - LoadBalancerPort: "80"
+          InstancePort:
+            Ref: WebServerPort
+          Protocol: HTTP
       HealthCheck:
         Target:
-          Fn::Sub: 'HTTP:${WebServerPort}/'
-        HealthyThreshold: '3'
-        UnhealthyThreshold: '5'
-        Interval: '30'
-        Timeout: '5'
+          Fn::Sub: "HTTP:${WebServerPort}/"
+        HealthyThreshold: "3"
+        UnhealthyThreshold: "5"
+        Interval: "30"
+        Timeout: "5"
   IamPipeline:
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Type: "AWS::CloudFormation::Stack"
     Properties:
-      TemplateURL: !Sub 'https://s3.${ AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml'
+      TemplateURL: !Sub "https://s3.${ AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml"
       Parameters:
         DeploymentName: iam-pipeline
-        Deploy: 'auto'
+        Deploy: "auto"
   CustomResource:
-      Type: Custom::Function
-      Version: "1.0"
-      Properties:
-        ServiceToken: anArn
+    Type: Custom::Function
+    Version: "1.0"
+    Properties:
+      ServiceToken: anArn
   WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
     CreationPolicy:

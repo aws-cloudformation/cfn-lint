@@ -1,11 +1,13 @@
 ---
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Resources:
   # Helps tests map resource types
   IamPipeline:
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Type: "AWS::CloudFormation::Stack"
     Properties:
-      TemplateURL: !Sub 'https://s3.${AWS::Region}.amazonaws.com/bucket-dne-${AWS::Region}/${AWS::AccountId}/pipeline.yaml'
+      TemplateURL: !Sub "https://s3.${AWS::Region}.amazonaws.com/bucket-dne-${AWS::Region}/${AWS::AccountId}/pipeline.yaml"
       Parameters:
         DeploymentName: iam-pipeline
-        Deploy: 'auto'
+        Deploy: "auto"

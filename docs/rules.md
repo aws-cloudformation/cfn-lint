@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **121** rules are applied by this linter:
+The following **122** rules are applied by this linter:
 (_This documentation is generated from the Rules, do not alter this manually_)
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
@@ -151,7 +151,7 @@ The following **121** rules are applied by this linter:
 | E8005<a name="E8005"></a> | Check Fn::Not structure for validity | Check Fn::Not is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-not) | `functions`,`not` |
 | E8006<a name="E8006"></a> | Check Fn::Or structure for validity | Check Fn::Or is a list of two elements |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-or) | `functions`,`or` |
 | I1022<a name="I1022"></a> | Use Sub instead of Join | Prefer a sub instead of Join when using a join delimiter that is empty |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html) | `functions`,`sub`,`join` |
-| I3011<a name="I3011"></a> | Check DynamoDB tables have a set DeletionPolicy | The default action when removing a DynamoDB Table is to delete it. This check requires you to specifically set a DeletionPolicy and you know the risks |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`dynamodb` |
+| I3011<a name="I3011"></a> | Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy | The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`updatereplacepolicy`,`deletionpolicy` |
 | I3037<a name="I3037"></a> | Check if a list that allows duplicates has any duplicates | Certain lists support duplicate items.Provide an alert when list of strings or numbers have repeats. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#rules-1) | `resources`,`property`,`list` |
 | W1001<a name="W1001"></a> | Ref/GetAtt to resource that is available when conditions are applied | Check the Conditions that affect a Ref/GetAtt to make sure the resource being related to is available when there is a resource condition. |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html) | `resources`,`relationships` |
 | W1011<a name="W1011"></a> | FindInMap keys exist in the map | Checks the keys in a FindInMap to make sure they exist. Check only if the Map Name is a string and if the key is a string. |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) | `functions`,`findinmap` |
@@ -168,6 +168,7 @@ The following **121** rules are applied by this linter:
 | W3002<a name="W3002"></a> | Warn when properties are configured to only work with the package command | Some properties can be configured to only work with the CloudFormationpackage command. Warn when this is the case so user is aware. |  | [Source](https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html) | `resources` |
 | W3005<a name="W3005"></a> | Check obsolete DependsOn configuration for Resources | Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency. |  | [Source](https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/) | `resources`,`dependson` |
 | W3010<a name="W3010"></a> | Availability Zone Parameters should not be hardcoded | Check if an Availability Zone property is hardcoded. |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `parameters`,`availabilityzone` |
+| W3011<a name="W3011"></a> | Check resources with UpdateReplacePolicy/DeletionPolicy have both | Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html) | `resources`,`updatereplacepolicy`,`deletionpolicy` |
 | W4001<a name="W4001"></a> | Metadata Interface parameters exist | Metadata Interface parameters actually exist |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-interface.html) | `metadata` |
 | W6001<a name="W6001"></a> | Check Outputs using ImportValue | Check if the Output value is set using ImportValue, so creating an Output of an Output |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `outputs`,`importvalue` |
 | W7001<a name="W7001"></a> | Check if Mappings are Used | Making sure the mappings defined are used |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `conditions` |
