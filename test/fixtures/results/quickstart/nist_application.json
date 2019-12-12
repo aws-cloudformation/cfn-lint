@@ -1541,6 +1541,31 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Informational",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 1002
+            },
+            "Path": [
+                "Resources",
+                "rRDSInstanceMySQL"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 1002
+            }
+        },
+        "Message": "The default action when replacing/removing a resource is to delete it. Set explicit policies",
+        "Rule": {
+            "Description": "The default action when replacing/removing a resource is to delete it. This check requires you to explicitly set policies",
+            "Id": "I3011",
+            "ShortDescription": "Check stateful resources have a set UpdateReplacePolicy/DeletionPolicy",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
         "Level": "Warning",
         "Location": {
             "End": {
@@ -1649,6 +1674,31 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 1025
+            },
+            "Path": [
+                "Resources",
+                "rS3AccessLogsPolicy"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 1025
+            }
+        },
+        "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+        "Rule": {
+            "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+            "Id": "W3011",
+            "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
         "Level": "Informational",
         "Location": {
             "End": {
@@ -1704,6 +1754,31 @@
             "Id": "W2511",
             "ShortDescription": "Check IAM Resource Policies syntax",
             "Source": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 19,
+                "LineNumber": 1059
+            },
+            "Path": [
+                "Resources",
+                "rS3ELBAccessLogs"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 1059
+            }
+        },
+        "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+        "Rule": {
+            "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+            "Id": "W3011",
+            "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
         }
     },
     {
@@ -2346,6 +2421,31 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 20,
+                "LineNumber": 1176
+            },
+            "Path": [
+                "Resources",
+                "rWebContentBucket"
+            ],
+            "Start": {
+                "ColumnNumber": 3,
+                "LineNumber": 1176
+            }
+        },
+        "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+        "Rule": {
+            "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+            "Id": "W3011",
+            "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
         "Level": "Error",
         "Location": {
             "End": {
@@ -2423,6 +2523,32 @@
                 "LineNumber": 1197
             }
         },
+        "Message": "Obsolete DependsOn on resource (rWebContentBucket), dependency already enforced by a \"Ref\" at Resources/rWebContentS3Policy/Properties/Bucket/Ref",
+        "Rule": {
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 14,
+                "LineNumber": 1197
+            },
+            "Path": [
+                "Resources",
+                "rWebContentS3Policy",
+                "DependsOn"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 1197
+            }
+        },
         "Message": "Obsolete DependsOn on resource (rWebContentBucket), dependency already enforced by a \"Ref\" at Resources/rWebContentS3Policy/Properties/PolicyDocument/Statement/0/Resource/Fn::Join/1/3/Ref",
         "Rule": {
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
@@ -2450,32 +2576,6 @@
             }
         },
         "Message": "Obsolete DependsOn on resource (rWebContentBucket), dependency already enforced by a \"Ref\" at Resources/rWebContentS3Policy/Properties/PolicyDocument/Statement/1/Resource/Fn::Join/1/3/Ref",
-        "Rule": {
-            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
-            "Id": "W3005",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
-            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
-        }
-    },
-    {
-        "Filename": "test/fixtures/templates/quickstart/nist_application.yaml",
-        "Level": "Warning",
-        "Location": {
-            "End": {
-                "ColumnNumber": 14,
-                "LineNumber": 1197
-            },
-            "Path": [
-                "Resources",
-                "rWebContentS3Policy",
-                "DependsOn"
-            ],
-            "Start": {
-                "ColumnNumber": 5,
-                "LineNumber": 1197
-            }
-        },
-        "Message": "Obsolete DependsOn on resource (rWebContentBucket), dependency already enforced by a \"Ref\" at Resources/rWebContentS3Policy/Properties/Bucket/Ref",
         "Rule": {
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
             "Id": "W3005",

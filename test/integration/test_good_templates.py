@@ -22,8 +22,34 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             'filename': 'test/fixtures/templates/good/transform.yaml',
-            'results': [],
-            'exit_code': 0,
+            'results': [
+                {
+                    "Filename": "test/fixtures/templates/good/transform.yaml",
+                    "Level": "Warning",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 4
+                        },
+                        "Path": [
+                            "Resources",
+                            "ExampleLayer29b0582575"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 4
+                        }
+                    },
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Rule": {
+                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                        "Id": "W3011",
+                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
+                }
+            ],
+            'exit_code': 4,
         },
         {
             'filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
@@ -109,40 +135,154 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_api.yaml',
-            'results': [],
-            'exit_code': 0,
+            'results': [
+                {
+                    "Filename": "test/fixtures/templates/good/transform_serverless_api.yaml",
+                    "Level": "Warning",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 4
+                        },
+                        "Path": [
+                            "Resources",
+                            "myFunctionVersionee13cf2679"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 4
+                        }
+                    },
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Rule": {
+                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                        "Id": "W3011",
+                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
+                }
+            ],
+            'exit_code': 4,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_function.yaml',
-            'results': [],
-            'exit_code': 0,
+            'results': [
+                {
+                    "Filename": "test/fixtures/templates/good/transform_serverless_function.yaml",
+                    "Level": "Warning",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 4
+                        },
+                        "Path": [
+                            "Resources",
+                            "myFunctionVersionee13cf2679"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 4
+                        }
+                    },
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Rule": {
+                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                        "Id": "W3011",
+                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
+                }
+            ],
+            'exit_code': 4,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
             'results': [
                 {
-                    'Level': 'Error',
-                    'Message': 'Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12, please consider to update to nodejs10.x',
-                    'Location': {
-                        'Path': ['Resources', 'myFunction', 'Properties', 'Runtime'],
-                        'Start': {'LineNumber': 10, 'ColumnNumber': 3},
-                        'End': {'LineNumber': 10, 'ColumnNumber': 13}
+                    "Filename": "test/fixtures/templates/good/transform_serverless_globals.yaml",
+                    "Level": "Warning",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 9
+                        },
+                        "Path": [
+                            "Resources",
+                            "myFunctionVersionee13cf2679"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 9
+                        }
                     },
-                    'Filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
-                    'Rule': {
-                        'ShortDescription': 'Check if EOL Lambda Function Runtimes are used',
-                        'Description': 'Check if an EOL Lambda Runtime is specified and give an error if used. ',
-                        'Source': 'https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html',
-                        'Id': 'E2531'
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Rule": {
+                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                        "Id": "W3011",
+                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
+                },
+                {
+                    "Filename": "test/fixtures/templates/good/transform_serverless_globals.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 13,
+                            "LineNumber": 10
+                        },
+                        "Path": [
+                            "Resources",
+                            "myFunction",
+                            "Properties",
+                            "Runtime"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 3,
+                            "LineNumber": 10
+                        }
+                    },
+                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12, please consider to update to nodejs10.x",
+                    "Rule": {
+                        "Description": "Check if an EOL Lambda Runtime is specified and give an error if used. ",
+                        "Id": "E2531",
+                        "ShortDescription": "Check if EOL Lambda Function Runtimes are used",
+                        "Source": "https://docs.aws.amazon.com/lambda/latest/dg/runtime-support-policy.html"
                     }
                 }
             ],
-            'exit_code': 2,
+            'exit_code': 6,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform.yaml',
-            'results': [],
-            'exit_code': 0,
+            'results': [
+                {
+                    "Filename": "test/fixtures/templates/good/transform/list_transform.yaml",
+                    "Level": "Warning",
+                    "Location": {
+                        "End": {
+                            "ColumnNumber": 10,
+                            "LineNumber": 14
+                        },
+                        "Path": [
+                            "Resources",
+                            "SkillFunctionVersionb3d38083f6"
+                        ],
+                        "Start": {
+                            "ColumnNumber": 1,
+                            "LineNumber": 14
+                        }
+                    },
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Rule": {
+                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                        "Id": "W3011",
+                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
+                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
+                    }
+                }
+            ],
+            'exit_code': 4,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform_many.yaml',
@@ -163,5 +303,5 @@ class TestQuickStartTemplates(BaseCliTestCase):
     def test_module_integration(self):
         """ Test same templates using integration approach"""
         rules = cfnlint.core.get_rules(
-            [], [], ['E', 'I', 'W'], {}, False)
+            [], [], ['E', 'W'], {}, False)
         self.run_module_integration_scenarios(rules)

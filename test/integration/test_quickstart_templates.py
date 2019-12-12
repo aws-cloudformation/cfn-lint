@@ -57,8 +57,8 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             'filename': 'test/fixtures/templates/quickstart/openshift_master.yaml',
-            'results': [],
-            'exit_code': 0,
+            'results_filename': 'test/fixtures/results/quickstart/openshift_master.json',
+            'exit_code': 8,
         },
         {
             'filename': 'test/fixtures/templates/quickstart/openshift.yaml',

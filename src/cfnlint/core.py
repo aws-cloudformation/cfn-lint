@@ -78,7 +78,8 @@ def get_formatter(fmt):
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
     """Get rules"""
-    rules = RulesCollection(ignore_rules, include_rules, configure_rules, include_experimental, mandatory_rules)
+    rules = RulesCollection(ignore_rules, include_rules, configure_rules,
+                            include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
     try:
         for rules_path in rules_paths:
