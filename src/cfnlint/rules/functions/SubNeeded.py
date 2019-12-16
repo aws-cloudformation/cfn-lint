@@ -98,6 +98,8 @@ class SubNeeded(CloudFormationLintRule):
 
         # We want to search all of the paths to check if each one contains an 'Fn::Sub'
         for parameter_string_path in parameter_string_paths:
+            if parameter_string_path[0] in ['Parameters']:
+                continue
             # Exxclude the special IAM variables
             variable = parameter_string_path[-1]
 
