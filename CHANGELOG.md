@@ -1,3 +1,15 @@
+### v0.26.1
+###### Features
+- New rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to check stateful resources have a set UpdateReplacePolicy/DeletionPolicy (pull #[1232](https://github.com/aws-cloudformation/cfn-python-lint/pull/1232))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.1.0 (pull #[1255](https://github.com/aws-cloudformation/cfn-python-lint/pull/1255))
+- Add `ALLOW_` values to `ExplicitAuthFlows` (pull #[1261](https://github.com/aws-cloudformation/cfn-python-lint/pull/12611))
+###### Fixes
+- Update rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) to ignore W3011 if explicit DeletionPolicy/UpdateReplacePolicy value is Delete (pull #[1253](https://github.com/aws-cloudformation/cfn-python-lint/pull/1253))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to not alert when looking at Parameters (pull #[1256](https://github.com/aws-cloudformation/cfn-python-lint/pull/1256))
+- Update rule [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) to allow for ephemeral(0-23) (pull #[1260](https://github.com/aws-cloudformation/cfn-python-lint/pull/1260))
+
+
 ### v0.26.0
 ###### Features
 - Created a new `mandatory-checks` parameter to require rules to be reported on and not ignored (pull #[1243](https://github.com/aws-cloudformation/cfn-python-lint/pull/1243))
