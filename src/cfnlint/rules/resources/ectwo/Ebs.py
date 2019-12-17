@@ -59,7 +59,7 @@ class Ebs(CloudFormationLintRule):
                     ebs = properties.get('Ebs')
                     if virtual_name:
                         # switch to regex
-                        if not re.match(r'^ephemeral[0-9]$', virtual_name):
+                        if not re.match(r'^ephemeral([0-9]|[1][0-9]|[2][0-3])$', virtual_name):
                             pathmessage = path[:] + [index, 'VirtualName']
                             message = 'Property VirtualName should be of type ephemeral(n) for {0}'
                             matches.append(
