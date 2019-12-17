@@ -1,10 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
-Parameters:
-  myIops:
-    Type: Number
-    Default: 1000
 Resources:
   ## Missing Properties
   MyEC2Instance:
@@ -14,11 +10,16 @@ Resources:
       InstanceType: t1.micro
       KeyName: 1
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
+        - DeviceName: /dev/sdm
           Ebs:
             VolumeType: io1
-            Iops: 1000
+            Iops: 0
+            DeleteOnTermination: false
+            VolumeSize: 20
+        - DeviceName: /dev/sdn
+          Ebs:
+            VolumeType: magnetic
+            Iops: 100
             DeleteOnTermination: false
             VolumeSize: 20
       NetworkInterfaces:
@@ -28,25 +29,29 @@ Resources:
     Properties:
       ImageId: "ami-2f726546"
       BlockDeviceMappings:
-      -
-        DeviceName: /dev/sdm
-        VirtualName: ephemeral0
+        - DeviceName: /dev/sdm
+          VirtualName: ephemeralA
+        - DeviceName: /dev/sdn
+          VirtualName: ephemeral0
+        - DeviceName: /dev/sdo
+          VirtualName: ephemeral24
+        - DeviceName: /dev/sdo
+          VirtualName: ephemeral100
   MyLaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
       ImageId: "ami-2f726546"
       InstanceType: t2.micro
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sdm
+        - DeviceName: /dev/sdm
           Ebs:
             VolumeType: io1
-            Iops: !Ref myIops
+            Iops: 10
             DeleteOnTermination: false
             VolumeSize: 20
-        -
-          DeviceName: /dev/sdn
+        - DeviceName: /dev/sdn
           Ebs:
             VolumeType: standard
+            Iops: 100
             DeleteOnTermination: false
             VolumeSize: 20
