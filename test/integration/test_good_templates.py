@@ -40,7 +40,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 4
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/ExampleLayer29b0582575 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
@@ -153,7 +153,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 4
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
@@ -184,7 +184,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 4
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
@@ -215,7 +215,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 9
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
@@ -273,7 +273,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 14
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/SkillFunctionVersionb3d38083f6 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
