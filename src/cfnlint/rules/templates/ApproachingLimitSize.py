@@ -15,9 +15,9 @@ except ImportError:  # pragma: no cover
 
 class LimitSize(CloudFormationLintRule):
     """Check Template Size"""
-    id = 'E1002'
+    id = 'I1002'
     shortdesc = 'Template size limit'
-    description = 'Check the size of the template is less than the upper limit'
+    description = 'Check the size of the template is approaching the upper limit'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['limits']
 
@@ -31,8 +31,8 @@ class LimitSize(CloudFormationLintRule):
         if filename:
             if Path(filename).is_file():
                 statinfo = os.stat(filename)
-                if statinfo.st_size > LIMITS['template']['body']:
-                    message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
+                if statinfo.st_size > 0.9 * LIMITS['template']['body'] and not statinfo.st_size > LIMITS['template']['body']:
+                    message = 'The template file size ({0} bytes) is approaching the limit ({1} bytes)'
                     matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
 
         return matches
