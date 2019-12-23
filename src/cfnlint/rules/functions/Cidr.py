@@ -129,8 +129,9 @@ class Cidr(CloudFormationLintRule):
                                     count_parameters.append(index_value)
                     elif not isinstance(count_obj, six.integer_types):
                         message = 'Cidr count should be a int for {0}'
+                        extra_args = {'actual_type': type(count_obj).__name__, 'expected_type': six.integer_types[0].__name__}
                         matches.append(RuleMatch(
-                            tree[:] + [1], message.format('/'.join(map(str, tree[:] + [1])))))
+                            tree[:] + [1], message.format('/'.join(map(str, tree[:] + [1]))), **extra_args))
 
                     if isinstance(size_mask_obj, dict):
                         if len(size_mask_obj) == 1:
@@ -143,8 +144,9 @@ class Cidr(CloudFormationLintRule):
                                     size_mask_parameters.append(index_value)
                     elif not isinstance(size_mask_obj, six.integer_types):
                         message = 'Cidr sizeMask should be a int for {0}'
+                        extra_args = {'actual_type': type(count_obj).__name__, 'expected_type': six.integer_types[0].__name__}
                         matches.append(RuleMatch(
-                            tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2])))))
+                            tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2]))), **extra_args))
 
                 else:
                     message = 'Cidr should be a list of 2 or 3 elements for {0}'
