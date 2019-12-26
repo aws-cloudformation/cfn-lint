@@ -65,7 +65,7 @@ setup(
     install_requires=[
         'pyyaml',
         'six~=1.11',
-        'aws-sam-translator>=1.15.1',
+        'aws-sam-translator>=1.19.1',
         'jsonpatch',
         'jsonschema~=3.0',
         'pathlib2>=2.3.0;python_version<="3.4"',
