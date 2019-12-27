@@ -1,3 +1,12 @@
+### v0.26.2
+###### Features
+- Update `aws-sam-translator` to `1.19.1` (pull #[1275](https://github.com/aws-cloudformation/cfn-python-lint/pull/1275))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.2.0 (pull #[1273](https://github.com/aws-cloudformation/cfn-python-lint/pull/1273))
+- Update EOL dates for Python 2.7 (pull #[1270](https://github.com/aws-cloudformation/cfn-python-lint/pull/1270))
+###### Fixes
+- Update rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) /[I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011)  to include resource path in message (pull #[1266](https://github.com/aws-cloudformation/cfn-python-lint/pull/1266))
+
 ### v0.26.1
 ###### Features
 - New rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to check stateful resources have a set UpdateReplacePolicy/DeletionPolicy (pull #[1232](https://github.com/aws-cloudformation/cfn-python-lint/pull/1232))
