@@ -37,7 +37,8 @@ class RuleScheduleExpression(CloudFormationLintRule):
                 # Check the Value
                 if not items[0].isdigit():
                     message = 'Rate Value ({}) should be of type Integer.'
-                    matches.append(RuleMatch(path, message.format(items[0])))
+                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
 
         return matches
 

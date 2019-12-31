@@ -82,7 +82,8 @@ class RecordSet(CloudFormationLintRule):
                 # Check the flag value
                 if not items[0].isdigit():
                     message = 'CAA record flag setting ({}) should be of type Integer.'
-                    matches.append(RuleMatch(path, message.format(items[0])))
+                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
                 else:
                     if int(items[0]) not in [0, 128]:
                         message = 'Invalid CAA record flag setting ({}) given, must be 0 or 128.'
@@ -130,7 +131,8 @@ class RecordSet(CloudFormationLintRule):
                 # Check the priority value
                 if not items[0].isdigit():
                     message = 'MX record priority setting ({}) should be of type Integer.'
-                    matches.append(RuleMatch(path, message.format(items[0], value)))
+                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    matches.append(RuleMatch(path, message.format(items[0], value), **extra_args))
                 else:
                     if not 0 <= int(items[0]) <= 65535:
                         message = 'Invalid MX record priority setting ({}) given, must be between 0 and 65535.'
