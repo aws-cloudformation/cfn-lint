@@ -24,7 +24,7 @@ class LimitName(CloudFormationLintRule):
 
         for resource_name in resources:
             path = ['Resources', resource_name]
-            if len(resource_name) > 0.9 * LIMITS['resources']['name'] and not len(resource_name) > LIMITS['resources']['name']:
+            if LIMITS['threshold'] * LIMITS['resources']['name'] < len(resource_name) <= LIMITS['resources']['name']:
                 message = 'The length of resource name ({0}) is approaching the limit ({1})'
                 matches.append(RuleMatch(path, message.format(len(resource_name), LIMITS['resources']['name'])))
 

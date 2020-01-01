@@ -22,7 +22,7 @@ class LimitNumber(CloudFormationLintRule):
 
         # Check number of parameters against the defined limit
         parameters = cfn.template.get('Parameters', {})
-        if len(parameters) > 0.9 * LIMITS['parameters']['number'] and not len(parameters) > LIMITS['parameters']['number']:
+        if LIMITS['threshold'] * LIMITS['parameters']['number'] < len(parameters) <= LIMITS['parameters']['number']:
             message = 'The number of parameters ({0}) is approaching the limit ({1})'
             matches.append(RuleMatch(['Parameters'], message.format(
                 len(parameters), LIMITS['parameters']['number'])))

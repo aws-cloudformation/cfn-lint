@@ -31,7 +31,7 @@ class LimitSize(CloudFormationLintRule):
         if filename:
             if Path(filename).is_file():
                 statinfo = os.stat(filename)
-                if statinfo.st_size > 0.9 * LIMITS['template']['body'] and not statinfo.st_size > LIMITS['template']['body']:
+                if LIMITS['threshold'] * LIMITS['template']['body'] < statinfo.st_size <= LIMITS['template']['body']:
                     message = 'The template file size ({0} bytes) is approaching the limit ({1} bytes)'
                     matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
 

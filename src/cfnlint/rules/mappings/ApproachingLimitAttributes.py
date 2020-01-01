@@ -26,7 +26,7 @@ class LimitAttributes(CloudFormationLintRule):
 
             for mapping_attribute_name, mapping_attribute in mapping.items():
                 path = ['Mappings', mapping_name, mapping_attribute_name]
-                if len(mapping_attribute) > 0.9 * LIMITS['mappings']['attributes'] and not len(mapping_attribute) > LIMITS['mappings']['attributes']:
+                if LIMITS['threshold'] * LIMITS['mappings']['attributes'] < len(mapping_attribute) <= LIMITS['mappings']['attributes']:
                     message = 'The amount of mapping attributes ({0}) is approaching the limit ({1})'
                     matches.append(RuleMatch(path, message.format(
                         len(mapping_attribute), LIMITS['mappings']['attributes'])))

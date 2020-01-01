@@ -143,7 +143,8 @@ LIMITS = {
     'template': {
         'body': 460800,  # in bytes
         'description': 1024  # in bytes
-    }
+    },
+    'threshold': 0.9, # for rules about approaching the other limit values
 }
 
 

@@ -24,7 +24,7 @@ class LimitName(CloudFormationLintRule):
 
         for mapping_name in mappings:
             path = ['Mappings', mapping_name]
-            if len(mapping_name) > 0.9 * LIMITS['mappings']['name'] and not len(mapping_name) > LIMITS['mappings']['name']:
+            if LIMITS['threshold'] * LIMITS['mappings']['name'] < len(mapping_name) <= LIMITS['mappings']['name']:
                 message = 'The length of mapping name ({0}) is approaching the limit ({1})'
                 matches.append(RuleMatch(path, message.format(
                     len(mapping_name), LIMITS['mappings']['name'])))

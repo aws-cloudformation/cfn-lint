@@ -21,7 +21,7 @@ class LimitDescription(CloudFormationLintRule):
 
         description = cfn.template.get('Description', '')
 
-        if len(description) > 0.9 * LIMITS['template']['description'] and not len(description) > LIMITS['template']['description']:
+        if LIMITS['threshold'] * LIMITS['template']['description'] < len(description) <= LIMITS['template']['description']:
             path = ['Template', 'Description']
             message = 'The template description ({0} bytes) is approaching the limit ({1} bytes)'
             matches.append(RuleMatch(path, message.format(len(description), LIMITS['template']['description'])))

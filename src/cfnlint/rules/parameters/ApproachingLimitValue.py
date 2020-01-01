@@ -31,7 +31,7 @@ class LimitValue(CloudFormationLintRule):
             default_value = paramvalue.get('Default')
 
             if isinstance(default_value, (six.text_type, six.string_types)):
-                if len(default_value) > 0.9 * value_limit and not len(default_value) > value_limit:
+                if LIMITS['threshold'] * value_limit < len(default_value) <= value_limit:
                     path = ['Parameters', paramname, 'Default']
                     message = 'The length of parameter default value ({0}) is approaching the limit ({1})'
                     matches.append(RuleMatch(path, message.format(len(default_value), value_limit)))
@@ -47,7 +47,7 @@ class LimitValue(CloudFormationLintRule):
                     max_length = 0
 
             if isinstance(max_length, six.integer_types):
-                if max_length > 0.9 * value_limit and not max_length > value_limit:
+                if LIMITS['threshold'] * value_limit < max_length <= value_limit:
                     path = ['Parameters', paramname, 'MaxLength']
                     message = 'The MaxLength of parameter ({0}) is approaching the limit ({1})'
                     matches.append(RuleMatch(path, message.format(max_length, value_limit)))
@@ -57,7 +57,7 @@ class LimitValue(CloudFormationLintRule):
 
             for allowed_value in allowed_values:
                 if isinstance(allowed_value, (six.text_type, six.string_types)):
-                    if len(allowed_value) > 0.9 * value_limit and not len(allowed_value) > value_limit:
+                    if LIMITS['threshold'] * value_limit < len(allowed_value) <= value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) is approaching the limit ({1})'
                         matches.append(RuleMatch(path, message.format(

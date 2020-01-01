@@ -22,7 +22,7 @@ class LimitNumber(CloudFormationLintRule):
 
         # Check number of outputs against the defined limit
         outputs = cfn.template.get('Outputs', {})
-        if len(outputs) > 0.9 * LIMITS['outputs']['number'] and not len(outputs) > LIMITS['outputs']['number']:
+        if LIMITS['threshold'] * LIMITS['outputs']['number'] < len(outputs) <= LIMITS['outputs']['number']:
             message = 'The number of outputs ({0}) is approaching the limit ({1})'
             matches.append(RuleMatch(['Outputs'], message.format(
                 len(outputs), LIMITS['outputs']['number'])))
