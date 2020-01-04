@@ -62,7 +62,7 @@ class TestTemplate(BaseTestCase):
 
         matches = []
         matches.extend(self.rules.run(filename, cfn))
-        assert len(matches) == 6, 'Expected {} failures, got {}'.format(5, len(matches))
+        self.assertEqual(5, len(matches), 'Expected {} failures, got {}'.format(5, len(matches)))
 
     def test_success_filtering_of_rules_default(self):
         """Test extend function"""
