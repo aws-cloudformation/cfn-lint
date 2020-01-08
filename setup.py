@@ -63,7 +63,8 @@ setup(
     packages=find_packages('src'),
     zip_safe=False,
     install_requires=[
-        'pyyaml',
+        'pyyaml<=5.2;python_version=="3.4"',
+        'pyyaml;python_version!="3.4"',
         'six~=1.11',
         'aws-sam-translator>=1.19.1',
         'jsonpatch',
