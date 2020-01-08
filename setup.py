@@ -63,8 +63,7 @@ setup(
     packages=find_packages('src'),
     zip_safe=False,
     install_requires=[
-        'pyyaml<=5.2;python_version=="3.4"',
-        'pyyaml;python_version!="3.4"',
+        'pyyaml',
         'six~=1.11',
         'aws-sam-translator>=1.19.1',
         'jsonpatch',
@@ -72,7 +71,7 @@ setup(
         'pathlib2>=2.3.0;python_version<="3.4"',
         'importlib_resources~=1.0.2;python_version<"3.7"',
     ],
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
+    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
     entry_points={
         'console_scripts': [
             'cfn-lint = cfnlint.__main__:main'
@@ -89,9 +88,9 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )
