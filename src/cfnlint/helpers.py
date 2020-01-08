@@ -283,46 +283,58 @@ def create_rules(mod):
     return result
 
 
+if sys.version_info < (3,):
+    def import_filename(pluginname, root):
+        """ import_filename imports a module from a file"""
+        fh = None
+        try:
+            fh, filename, desc = imp.find_module(pluginname, [root])
+            mod = imp.load_module(pluginname, fh, filename, desc)
+            return mod
+        finally:
+            if fh:
+                fh.close()
+
+        return None
+
+else:
+    loader_details = (
+        importlib.machinery.SourceFileLoader,  # pylint: disable=no-member
+        importlib.machinery.SOURCE_SUFFIXES  # pylint: disable=no-member
+    )
+
+    def import_filename(pluginname, root):
+        """ import_filename imports a module from a file"""
+        mod_finder = importlib.machinery.FileFinder(  # pylint: disable=no-member
+            root, loader_details)
+
+        mod_spec = mod_finder.find_spec(pluginname)
+        if mod_spec is not None:
+            if sys.version_info < (3, 5):
+                # for python 2.7 disabling pylint checks
+                mod = mod_spec.loader.load_module()  # pylint: disable=no-member
+                return mod
+            # for python 2.7 disabling pylint checks
+            mod = importlib.util.module_from_spec(mod_spec)  # pylint: disable=no-member
+            mod_spec.loader.exec_module(mod)
+            return mod
+
+        return None
+
+
 def load_plugins(directory):
     """Load plugins"""
     result = []
-    fh = None
 
     def onerror(os_error):
         """Raise an error"""
         raise os_error
 
     for root, _, filenames in os.walk(directory, onerror=onerror):
-        if sys.version_info < (3,):
-            for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
-                pluginname = filename.replace('.py', '')
-                try:
-                    fh, filename, desc = imp.find_module(pluginname, [root])
-                    mod = imp.load_module(pluginname, fh, filename, desc)
-                    result.extend(create_rules(mod))
-                finally:
-                    if fh:
-                        fh.close()
-        else:
-            loader_details = (
-                importlib.machinery.SourceFileLoader,  # pylint: disable=no-member
-                importlib.machinery.SOURCE_SUFFIXES  # pylint: disable=no-member
-            )
-            mod_finder = importlib.machinery.FileFinder(  # pylint: disable=no-member
-                root, loader_details)
-            for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
-                pluginname = filename.replace('.py', '')
-                mod_spec = mod_finder.find_spec(pluginname)
-                if mod_spec is not None:
-                    if sys.version_info < (3, 5):
-                        # for python 2.7 disabling pylint checks
-                        mod = mod_spec.loader.load_module()  # pylint: disable=no-member
-                    else:
-                        # for python 2.7 disabling pylint checks
-                        mod = importlib.util.module_from_spec(mod_spec)  # pylint: disable=no-member
-                        mod_spec.loader.exec_module(mod)
-
-                    result.extend(create_rules(mod))
+        for filename in fnmatch.filter(filenames, '[A-Za-z]*.py'):
+            mod = import_filename(filename.replace('.py', ''), root)
+            if mod is not None:
+                result.extend(create_rules(mod))
 
     return result
 
