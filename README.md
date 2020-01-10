@@ -157,7 +157,7 @@ Metadata:
 ```
 
 #### Resource Based Metadata
-Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs.
+Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs. Keep in mind that resources may lose metadata when passed through aws-sam-translator, such as `AWS::Serverless::Function` resources.
 
 ```yaml
 Resources:
