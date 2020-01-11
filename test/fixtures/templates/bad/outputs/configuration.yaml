@@ -18,7 +18,7 @@ Outputs:
     Export:
       Name: instance
   myBadOutput:
-    BadValue: 'Test'
+    BadValue: "Test"
   myBadMissingOutput:
     Export:
       Name: Missing
@@ -27,18 +27,37 @@ Outputs:
     Export:
       BadName: instance
   myBadGetAttArrayOutput:
-    Value: !GetAtt [ myVpc, CidrBlockAssociations ]
+    Value: !GetAtt [myVpc, CidrBlockAssociations]
   myBadArrayOutput:
     Value:
       - !Ref RouteTablePrivate1
       - !Ref RouteTablePrivate2
   myGoodArrayOutput:
     Value:
-      Fn::Join: [ ',', !GetAtt [ myVpc, CidrBlockAssociations ]]
+      Fn::Join: [",", !GetAtt [myVpc, CidrBlockAssociations]]
   myBadRefArrayOutput:
     Value: !Ref myNumbers
   myGoodRefArrayOutput:
     Value:
-      Fn::Join: [ ',', !Ref myNumbers]
+      Fn::Join: [",", !Ref myNumbers]
   myOutputImportValue:
     Value: !ImportValue "existing-output"
+  invalidFunction:
+    Value: !BadFunc value
+  invalidExportKey:
+    Export:
+      Bad: Value
+  invalidExportObject:
+    Export:
+      Ref: test
+      Bad: key
+  invalidExportList:
+    Export:
+      - Ref: test
+      - Bad: key
+  invalidValueObject:
+    Value:
+      Ref: test
+      Bad: key
+  invalidDescription:
+    Description: !Ref test
