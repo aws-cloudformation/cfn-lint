@@ -1,3 +1,17 @@
+### v0.26.3
+###### Features
+- Add extra attributes to rules [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1024), [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3027), [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) (pull #[1272](https://github.com/aws-cloudformation/cfn-python-lint/pull/1272))
+###### CloudFormation Specifications
+- Move `AWS::S3::Bucket.RoutingRuleCondition` properties from OnlyOne to AtLeastOne (pull #[1283](https://github.com/aws-cloudformation/cfn-python-lint/pull/1283))
+- Add `AWS::SSM::Parameter.Value` to the `AWS::EC2::VPC.Id` type (pull #[1288](https://github.com/aws-cloudformation/cfn-python-lint/pull/1288))
+- Add `CNAME` as an allowed value to `ServiceDiscoveryDnsType` (pull #[1296](https://github.com/aws-cloudformation/cfn-python-lint/pull/1296))
+- Patch `AWS::WAFv2::RegexPatternSet.RegularExpressionList` removing extra layer (pull #[1300](https://github.com/aws-cloudformation/cfn-python-lint/pull/1300))
+- Add `LambdaProvisionedConcurrencyUtilization` as allowed value to Application Autoscaling Metric (pull #[1303](https://github.com/aws-cloudformation/cfn-python-lint/pull/1303))
+- Add some exclusive attributes to `AWS::CloudWatch::Alarm` for `Metrics` and `Threshold` (pull #[1306](https://github.com/aws-cloudformation/cfn-python-lint/pull/1306))
+###### Fixes
+- pyyaml has ended support for Python 3.4.  Pin pyyaml to version 5.2 for Python 3.4 (pull #[1290](https://github.com/aws-cloudformation/cfn-python-lint/pull/1290))
+- Convert from using imp to importlib for python 3.x (pull #[1292](https://github.com/aws-cloudformation/cfn-python-lint/pull/1292))
+
 ### v0.26.2
 ###### Features
 - Update `aws-sam-translator` to `1.19.1` (pull #[1275](https://github.com/aws-cloudformation/cfn-python-lint/pull/1275))
