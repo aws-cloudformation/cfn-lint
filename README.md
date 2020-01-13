@@ -157,7 +157,7 @@ Metadata:
 ```
 
 #### Resource Based Metadata
-Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs.
+Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs. Keep in mind that resources may lose metadata when passed through aws-sam-translator, such as `AWS::Serverless::Function` resources.
 
 ```yaml
 Resources:
@@ -219,7 +219,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.26.2  # The version of cfn-lint to use
+    rev: v0.26.3  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$
