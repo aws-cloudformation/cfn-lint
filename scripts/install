@@ -17,7 +17,7 @@ from contextlib import contextmanager
 PACKAGES_DIR = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), 'packages')
 INSTALL_DIR = os.path.expanduser(os.path.join(
-    '~', '.local', 'lib', 'aws'))
+    '~', '.local', 'lib', 'cfn-lint'))
 GTE_PY37 = sys.version_info[:2] >= (3, 7)
 UNSUPPORTED_PYTHON = (
     (sys.version_info[0] == 2 and sys.version_info[:2] <= (2, 6)) or
@@ -119,7 +119,7 @@ def create_working_dir():
 
 def pip_install_packages(install_dir):
     cli_tarball = [p for p in os.listdir(PACKAGES_DIR)
-                   if p.startswith('awscli')]
+                   if p.startswith('cfn-lint')]
     if len(cli_tarball) != 1:
         message = (
             "Multiple versions of the CLI were found in %s. Please clear "
@@ -171,14 +171,14 @@ def create_symlink(real_location, symlink_name):
 def main():
     parser = optparse.OptionParser()
     parser.add_option('-i', '--install-dir', help="The location to install "
-                      "the AWS CLI.  The default value is ~/.local/lib/aws",
+                      "the CloudFormation Linter.  The default value is ~/.local/lib/cfn-lint",
                       default=INSTALL_DIR)
     parser.add_option('-b', '--bin-location', help="If this argument is "
                       "provided, then a symlink will be created at this "
-                      "location that points to the aws executable. "
-                      "This argument is useful if you want to put the aws "
+                      "location that points to the cfn-lint executable. "
+                      "This argument is useful if you want to put the cfn-lint "
                       "executable somewhere already on your path, e.g. "
-                      "-b /usr/local/bin/aws.  This is an optional argument. "
+                      "-b /usr/local/bin/cfn-lint.  This is an optional argument. "
                       "If you do not provide this argument you will have to "
                       "add INSTALL_DIR/bin to your PATH.")
     if UNSUPPORTED_PYTHON:
@@ -198,7 +198,7 @@ def main():
     try:
         create_install_structure(working_dir, opts.install_dir)
         pip_install_packages(opts.install_dir)
-        real_location = os.path.join(opts.install_dir, bin_path(), 'aws')
+        real_location = os.path.join(opts.install_dir, bin_path(), 'cfn-lint')
         if opts.bin_location and create_symlink(real_location,
                                                 opts.bin_location):
             print("You can now run: %s --version" % opts.bin_location)

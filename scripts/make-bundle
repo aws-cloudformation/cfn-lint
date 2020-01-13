@@ -85,25 +85,25 @@ def download_package_tarballs(dirname, packages):
 
 
 def download_cli_deps(scratch_dir):
-    awscli_dir = os.path.dirname(
+    cfnlint_dir = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
     with cd(scratch_dir):
         run('pip download -c %s %s %s' % (
-            CONSTRAINTS_FILE, PIP_DOWNLOAD_ARGS, awscli_dir))
+            CONSTRAINTS_FILE, PIP_DOWNLOAD_ARGS, cfnlint_dir))
 
 
 def _remove_cli_zip(scratch_dir):
-    clidir = [f for f in os.listdir(scratch_dir) if f.startswith('awscli')]
+    clidir = [f for f in os.listdir(scratch_dir) if f.startswith('cfn-lint')]
     assert len(clidir) == 1
     os.remove(os.path.join(scratch_dir, clidir[0]))
 
 
 def add_cli_sdist(scratch_dir):
-    awscli_dir = os.path.dirname(
+    cfnlint_dir = os.path.dirname(
         os.path.dirname(os.path.abspath(__file__)))
-    if os.path.exists(os.path.join(awscli_dir, 'dist')):
-        shutil.rmtree(os.path.join(awscli_dir, 'dist'))
-    with cd(awscli_dir):
+    if os.path.exists(os.path.join(cfnlint_dir, 'dist')):
+        shutil.rmtree(os.path.join(cfnlint_dir, 'dist'))
+    with cd(cfnlint_dir):
         run('%s setup.py sdist' % sys.executable)
         filename = os.listdir('dist')[0]
         shutil.move(os.path.join('dist', filename),
@@ -117,15 +117,15 @@ def create_bootstrap_script(scratch_dir):
 
 
 def zip_dir(scratch_dir):
-    basename = 'awscli-bundle.zip'
+    basename = 'cfn-lint-bundle.zip'
     dirname, tmpdir = os.path.split(scratch_dir)
-    final_dir_name = os.path.join(dirname, 'awscli-bundle')
+    final_dir_name = os.path.join(dirname, 'cfn-lint-bundle')
     if os.path.isdir(final_dir_name):
         shutil.rmtree(final_dir_name)
     shutil.move(scratch_dir, final_dir_name)
     with cd(dirname):
         with zipfile.ZipFile(basename, 'w', zipfile.ZIP_DEFLATED) as zipped:
-            for root, dirnames, filenames in os.walk('awscli-bundle'):
+            for root, dirnames, filenames in os.walk('cfn-lint-bundle'):
                 for filename in filenames:
                     zipped.write(os.path.join(root, filename))
     return os.path.join(dirname, basename)
