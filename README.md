@@ -175,7 +175,10 @@ Resources:
 
 ### Precedence
 
-cfn-lint applies the configuration from the CloudFormation Metadata first and then overrides those values with anything specified in the CLI.
+cfn-lint applies configurations from several sources. The rules at lower levels are overrided by those at higher levels.
+1. `.cfnlintrc` configurations
+2. Template Metadata configurations
+3. CLI parameters
 
 ### Configure Rules
 
