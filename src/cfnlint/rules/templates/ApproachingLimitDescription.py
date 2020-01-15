@@ -9,9 +9,9 @@ from cfnlint.helpers import LIMITS
 
 class LimitDescription(CloudFormationLintRule):
     """Check Template Description Size"""
-    id = 'E1003'
+    id = 'I1003'
     shortdesc = 'Template description limit'
-    description = 'Check if the size of the template description is less than the upper limit'
+    description = 'Check if the size of the template description is approaching the upper limit'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['limits']
 
@@ -21,9 +21,9 @@ class LimitDescription(CloudFormationLintRule):
 
         description = cfn.template.get('Description', '')
 
-        if len(description) > LIMITS['template']['description']:
+        if LIMITS['threshold'] * LIMITS['template']['description'] < len(description) <= LIMITS['template']['description']:
             path = ['Template', 'Description']
-            message = 'The template description ({0} bytes) exceeds the limit ({1} bytes)'
+            message = 'The template description ({0} bytes) is approaching the limit ({1} bytes)'
             matches.append(RuleMatch(path, message.format(len(description), LIMITS['template']['description'])))
 
         return matches

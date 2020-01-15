@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
+import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
@@ -49,9 +50,10 @@ class RecordSet(CloudFormationLintRule):
         matches = []
 
         # Check if a valid IPv4 address is specified
-        if not re.match(REGEX_IPV4, value):
-            message = 'A record ({}) is not a valid IPv4 address'
-            matches.append(RuleMatch(path, message.format(value)))
+        if isinstance(value, six.string_types):
+            if not re.match(REGEX_IPV4, value):
+                message = 'A record ({}) is not a valid IPv4 address'
+                matches.append(RuleMatch(path, message.format(value)))
 
         return matches
 
@@ -59,7 +61,7 @@ class RecordSet(CloudFormationLintRule):
         """Check AAAA record Configuration"""
         matches = []
 
-        if not isinstance(value, dict):
+        if isinstance(value, six.string_types):
             # Check if a valid IPv4 address is specified
             if not re.match(REGEX_IPV6, value):
                 message = 'AAAA record ({}) is not a valid IPv6 address'
@@ -71,7 +73,7 @@ class RecordSet(CloudFormationLintRule):
         """Check CAA record Configuration"""
         matches = []
 
-        if not isinstance(value, dict):
+        if isinstance(value, six.string_types):
             # Split the record up to the mandatory settings (flags tag "value")
             items = value.split(' ', 2)
             # Check if the 3 settings are given.
@@ -82,7 +84,8 @@ class RecordSet(CloudFormationLintRule):
                 # Check the flag value
                 if not items[0].isdigit():
                     message = 'CAA record flag setting ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    extra_args = {'actual_type': type(
+                        items[0]).__name__, 'expected_type': int.__name__}
                     matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
                 else:
                     if int(items[0]) not in [0, 128]:
@@ -119,7 +122,7 @@ class RecordSet(CloudFormationLintRule):
         """Check MX record Configuration"""
         matches = []
 
-        if not isinstance(value, dict):
+        if isinstance(value, six.string_types):
             # Split the record up to the mandatory settings (priority domainname)
             items = value.split(' ')
 
@@ -131,7 +134,8 @@ class RecordSet(CloudFormationLintRule):
                 # Check the priority value
                 if not items[0].isdigit():
                     message = 'MX record priority setting ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    extra_args = {'actual_type': type(
+                        items[0]).__name__, 'expected_type': int.__name__}
                     matches.append(RuleMatch(path, message.format(items[0], value), **extra_args))
                 else:
                     if not 0 <= int(items[0]) <= 65535:
@@ -148,7 +152,7 @@ class RecordSet(CloudFormationLintRule):
         """Check NS record Configuration"""
         matches = []
 
-        if not isinstance(value, dict):
+        if isinstance(value, six.string_types):
             if not re.match(self.REGEX_DOMAINNAME, value):
                 message = 'NS record ({}) does not contain a valid domain name'
                 matches.append(RuleMatch(path, message.format(value)))
@@ -159,7 +163,7 @@ class RecordSet(CloudFormationLintRule):
         """Check PTR record Configuration"""
         matches = []
 
-        if not isinstance(value, dict):
+        if isinstance(value, six.string_types):
             if not re.match(self.REGEX_DOMAINNAME, value):
                 message = 'PTR record ({}) does not contain a valid domain name'
                 matches.append(RuleMatch(path, message.format(value)))
