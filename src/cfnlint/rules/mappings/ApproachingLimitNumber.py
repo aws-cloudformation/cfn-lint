@@ -8,10 +8,10 @@ from cfnlint.helpers import LIMITS
 
 
 class LimitNumber(CloudFormationLintRule):
-    """Check if maximum Mapping limit is exceeded"""
-    id = 'E7010'
-    shortdesc = 'Mapping limit not exceeded'
-    description = 'Check the number of Mappings in the template is less than the upper limit'
+    """Check maximum Mapping limit"""
+    id = 'I7010'
+    shortdesc = 'Mapping limit'
+    description = 'Check the number of Mappings in the template is approaching the upper limit'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['mappings', 'limits']
 
@@ -22,8 +22,8 @@ class LimitNumber(CloudFormationLintRule):
 
         # Check number of mappings against the defined limit
         mappings = cfn.template.get('Mappings', {})
-        if len(mappings) > LIMITS['mappings']['number']:
-            message = 'The number of mappings ({0}) exceeds the limit ({1})'
+        if LIMITS['threshold'] * LIMITS['mappings']['number'] < len(mappings) <= LIMITS['mappings']['number']:
+            message = 'The number of mappings ({0}) is approaching the limit ({1})'
             matches.append(RuleMatch(['Mappings'], message.format(
                 len(mappings), LIMITS['mappings']['number'])))
 
