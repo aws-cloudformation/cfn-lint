@@ -8,10 +8,10 @@ from cfnlint.helpers import LIMITS
 
 
 class LimitName(CloudFormationLintRule):
-    """Check if maximum Parameter name size limit is exceeded"""
-    id = 'E2011'
-    shortdesc = 'Parameter name limit not exceeded'
-    description = 'Check the size of Parameter names in the template is less than the upper limit'
+    """Check maximum Parameter name size limit"""
+    id = 'I2011'
+    shortdesc = 'Parameter name limit'
+    description = 'Check the size of Parameter names in the template is approaching the upper limit'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['parameters', 'limits']
 
@@ -24,8 +24,8 @@ class LimitName(CloudFormationLintRule):
 
         for parameter_name in parameters:
             path = ['Parameters', parameter_name]
-            if len(parameter_name) > LIMITS['parameters']['name']:
-                message = 'The length of parameter name ({0}) exceeds the limit ({1})'
+            if LIMITS['threshold'] * LIMITS['parameters']['name'] < len(parameter_name) <= LIMITS['parameters']['name']:
+                message = 'The length of parameter name ({0}) is approaching the limit ({1})'
                 matches.append(RuleMatch(path, message.format(
                     len(parameter_name), LIMITS['parameters']['name'])))
 
