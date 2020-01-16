@@ -21,6 +21,10 @@ Resources:
           Action:
             - "iam:UploadSSHPublicKey"
           Resource: "arn:aws:iam::*:user/${aws:username}"
+        - Effect: "Deny"
+          Action:
+           - "iam:GetLoginProfile"
+          NotResource: "arn:aws:iam::*:user/${aws:username}"
   myPolicy2:
     Type: AWS::IAM::Policy
     Properties:
