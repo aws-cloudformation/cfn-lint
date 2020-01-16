@@ -103,10 +103,7 @@ class SubNeeded(CloudFormationLintRule):
             # Exxclude the special IAM variables
             variable = parameter_string_path[-1]
 
-            if 'Resource' in parameter_string_path:
-                if variable in self.resource_excludes:
-                    continue
-            if 'NotResource' in parameter_string_path:
+            if 'Resource' or 'NotResource' in parameter_string_path:
                 if variable in self.resource_excludes:
                     continue
             if 'Condition' in parameter_string_path:
