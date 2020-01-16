@@ -106,6 +106,9 @@ class SubNeeded(CloudFormationLintRule):
             if 'Resource' in parameter_string_path:
                 if variable in self.resource_excludes:
                     continue
+            if 'NotResource' in parameter_string_path:
+                if variable in self.resource_excludes:
+                    continue
             if 'Condition' in parameter_string_path:
                 if variable in self.condition_excludes:
                     continue

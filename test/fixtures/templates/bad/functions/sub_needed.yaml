@@ -23,6 +23,10 @@ Resources:
           Action:
             - "iam:UploadSSHPublicKey"
           Resource: "arn:aws:iam::${AWS::AccountId}:user/${aws:username}-${AMIId}"
+        - Effect: "Deny"
+          Action:
+             - "iam:GetLoginProfile"
+          NotResource: "arn:aws:iam::${AWS::AccountId}:user/${aws:username}-${AMIId}"
   mySnsTopic:
     Type: AWS::SNS::Topic
     Properties:
