@@ -106,6 +106,11 @@ FUNCTIONS = [
     'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
     'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
 
+FUNCTIONS_MULTIPLE = ['Fn::GetAZs', 'Fn::Split']
+
+# FindInMap can be singular or multiple.  This needs to be acconted for individually
+FUNCTIONS_SINGLE = list(set(FUNCTIONS) - set(FUNCTIONS_MULTIPLE) - set('Fn::FindInMap'))
+
 FUNCTION_IF = 'Fn::If'
 FUNCTION_AND = 'Fn::And'
 FUNCTION_OR = 'Fn::Or'
