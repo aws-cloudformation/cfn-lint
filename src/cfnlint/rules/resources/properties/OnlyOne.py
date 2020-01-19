@@ -32,31 +32,33 @@ class OnlyOne(CloudFormationLintRule):
     def check(self, properties, onlyoneprops, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_object_without_conditions(properties)
-        for property_set in property_sets:
-            for onlyoneprop in onlyoneprops:
-                count = 0
-                for prop in onlyoneprop:
-                    if prop in property_set['Object']:
-                        count += 1
 
-                if count != 1:
-                    if property_set['Scenario'] is None:
-                        message = 'Only one of [{0}] should be specified for {1}'
-                        matches.append(RuleMatch(
-                            path,
-                            message.format(', '.join(map(str, onlyoneprop)),
-                                           '/'.join(map(str, path)))
-                        ))
-                    else:
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                            k, v) for (k, v) in property_set['Scenario'].items()])
-                        message = 'Only one of [{0}] should be specified {1} at {2}'
-                        matches.append(RuleMatch(
-                            path,
-                            message.format(', '.join(map(str, onlyoneprop)),
-                                           scenario_text, '/'.join(map(str, path)))
-                        ))
+        for onlyoneprop in onlyoneprops:
+            for (safe_properties, safe_path) in properties.items_safe(path):
+                property_sets = cfn.get_object_without_conditions(safe_properties, onlyoneprop)
+                for property_set in property_sets:
+                    count = 0
+                    for prop in onlyoneprop:
+                        if prop in property_set['Object']:
+                            count += 1
+
+                    if count != 1:
+                        if property_set['Scenario'] is None:
+                            message = 'Only one of [{0}] should be specified for {1}'
+                            matches.append(RuleMatch(
+                                path,
+                                message.format(', '.join(map(str, onlyoneprop)),
+                                               '/'.join(map(str, safe_path)))
+                            ))
+                        else:
+                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
+                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            message = 'Only one of [{0}] should be specified {1} at {2}'
+                            matches.append(RuleMatch(
+                                path,
+                                message.format(', '.join(map(str, onlyoneprop)),
+                                               scenario_text, '/'.join(map(str, safe_path)))
+                            ))
 
         return matches
 

@@ -22,7 +22,7 @@ class HealthCheck(CloudFormationLintRule):
     def check(self, properties, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_object_without_conditions(properties)
+        property_sets = cfn.get_object_without_conditions(properties, ['Type', 'AlarmIdentifier'])
         for property_set in property_sets:
             health_type = property_set.get('Object').get('Type')
             if health_type == 'CLOUDWATCH_METRIC':
