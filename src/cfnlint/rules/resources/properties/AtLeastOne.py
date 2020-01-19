@@ -32,31 +32,33 @@ class AtLeastOne(CloudFormationLintRule):
     def check(self, properties, atleastoneprops, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_object_without_conditions(properties)
-        for property_set in property_sets:
-            for atleastoneprop in atleastoneprops:
-                count = 0
-                for prop in atleastoneprop:
-                    if prop in property_set['Object']:
-                        count += 1
 
-                if count == 0:
-                    if property_set['Scenario'] is None:
-                        message = 'At least one of [{0}] should be specified for {1}'
-                        matches.append(RuleMatch(
-                            path,
-                            message.format(', '.join(map(str, atleastoneprop)),
-                                           '/'.join(map(str, path)))
-                        ))
-                    else:
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                            k, v) for (k, v) in property_set['Scenario'].items()])
-                        message = 'At least one of [{0}] should be specified {1} at {2}'
-                        matches.append(RuleMatch(
-                            path,
-                            message.format(', '.join(map(str, atleastoneprop)),
-                                           scenario_text, '/'.join(map(str, path)))
-                        ))
+        for atleastoneprop in atleastoneprops:
+            for (safe_properties, safe_path) in properties.items_safe(path):
+                property_sets = cfn.get_object_without_conditions(safe_properties, atleastoneprop)
+                for property_set in property_sets:
+                    count = 0
+                    for prop in atleastoneprop:
+                        if prop in property_set['Object']:
+                            count += 1
+
+                    if count == 0:
+                        if property_set['Scenario'] is None:
+                            message = 'At least one of [{0}] should be specified for {1}'
+                            matches.append(RuleMatch(
+                                path,
+                                message.format(', '.join(map(str, atleastoneprop)),
+                                               '/'.join(map(str, safe_path)))
+                            ))
+                        else:
+                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
+                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            message = 'At least one of [{0}] should be specified {1} at {2}'
+                            matches.append(RuleMatch(
+                                path,
+                                message.format(', '.join(map(str, atleastoneprop)),
+                                               scenario_text, '/'.join(map(str, safe_path)))
+                            ))
 
         return matches
 

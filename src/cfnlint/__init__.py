@@ -767,7 +767,7 @@ class Template(object):  # pylint: disable=R0904
 
         return result
 
-    def get_object_without_conditions(self, obj):
+    def get_object_without_conditions(self, obj, property_names=None):
         """
             Gets a list of object values without conditions included
             Input:
@@ -798,10 +798,16 @@ class Template(object):  # pylint: disable=R0904
                     }
                 ]
         """
+        property_names = [] if property_names is None else property_names
+        o = {}
+        if property_names:
+            for property_name in property_names:
+                o[property_name] = deepcopy(obj.get(property_name))
+        else:
+            o = deepcopy(obj)
         results = []
 
-        scenarios = self.get_conditions_scenarios_from_object([obj])
-
+        scenarios = self.get_conditions_scenarios_from_object([o])
         if not isinstance(obj, dict):
             return results
 

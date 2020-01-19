@@ -23,7 +23,8 @@ class BillingMode(CloudFormationLintRule):
     def check(self, properties, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_object_without_conditions(properties)
+        property_sets = cfn.get_object_without_conditions(
+            properties, ['BillingMode', 'ProvisionedThroughput'])
         for property_set in property_sets:
             billing_mode = property_set.get('Object').get('BillingMode')
             if billing_mode == 'PAY_PER_REQUEST':
