@@ -23,7 +23,7 @@ class Configuration(CloudFormationLintRule):
     ]
 
     # Map can be singular or multiple for this case we are going to skip
-    valid_funcs = FUNCTIONS_SINGLE + ['Fn::FindInMap']
+    valid_funcs = FUNCTIONS_SINGLE + ['Fn::FindInMap', 'Fn::Transform']
 
     def check_func(self, value, path):
         """ Check that a value is using the correct functions """
