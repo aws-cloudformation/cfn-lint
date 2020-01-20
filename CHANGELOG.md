@@ -1,3 +1,9 @@
+### v0.27.1
+###### CloudFormation Specifications
+- Update CloudFormation patches to include pricing and SSM data from 2020.01.20 (pull #[1322](https://github.com/aws-cloudformation/cfn-python-lint/pull/1322))
+###### Fixes
+- Update rule [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001) to allow `Fn::Transform` (pull #[1321](https://github.com/aws-cloudformation/cfn-python-lint/pull/1321))
+
 ### v0.27.0
 ###### Features
 - Add additional configuration checks to rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2001) (pull #[1301](https://github.com/aws-cloudformation/cfn-python-lint/pull/1301))
