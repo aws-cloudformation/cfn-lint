@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.com/aws-cloudformation/cfn-python-lint.svg?branch=master)](https://travis-ci.com/aws-cloudformation/cfn-python-lint)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
+[![PyPI downloads](https://img.shields.io/pypi/dw/cfn-lint.svg)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://img.shields.io/pypi/dm/cfn-lint.svg)](https://pypistats.org/packages/cfn-lint)
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
@@ -228,9 +230,3 @@ repos:
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
 * You can see available cfn-lint versions on the [releases page](https://github.com/aws-cloudformation/cfn-python-lint/releases).
-
-----
-**PyPi:**
-
-[![PyPI - Downloads](https://img.shields.io/pypi/dw/cfn-lint.svg)](https://pypi.org/project/cfn-lint/#history)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/cfn-lint.svg)](https://pypi.org/project/cfn-lint/#history)
