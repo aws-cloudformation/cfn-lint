@@ -9,11 +9,10 @@ SPDX-License-Identifier: MIT-0
     This script requires Boto3 and Credentials to call the Pricing API
 """
 
+
 import boto3
 import json
 import logging
-
-
 LOGGER = logging.getLogger('cfnlint')
 
 
@@ -43,8 +42,13 @@ region_map = {
     'Middle East (Bahrain)': 'me-south-1',
 }
 
+region_exceptions = [
+    'US West (Los Angeles)',
+]
+
 session = boto3.session.Session()
 client = session.client('pricing', region_name='us-east-1')
+
 
 def configure_logging():
     """Setup Logging"""
@@ -89,6 +93,8 @@ def get_ec2_pricing():
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
+            if product.get('attributes').get('location') in region_exceptions:
+                continue
             if product:
                 if product.get('productFamily') in ['Compute Instance', 'Compute Instance (bare metal)']:
                     if not results.get(region_map[product.get('attributes').get('location')]):
@@ -97,6 +103,7 @@ def get_ec2_pricing():
                         product.get('attributes').get('instanceType')
                     )
     return results
+
 
 def get_redshift_pricing():
     """ Get Redshift Pricing """
@@ -122,6 +129,7 @@ def get_redshift_pricing():
                     )
     return results
 
+
 def get_dax_pricing():
     LOGGER.info('Get DAX pricing')
     paginator = client.get_paginator('get_products')
@@ -144,6 +152,7 @@ def get_dax_pricing():
                         usage_type
                     )
     return results
+
 
 def get_mq_pricing():
     """ Get MQ Instance Pricing """
@@ -173,6 +182,7 @@ def get_mq_pricing():
                         remap.get(usage_type, usage_type)
                     )
     return results
+
 
 def get_rds_pricing():
     """ Get RDS Pricing """
@@ -250,6 +260,7 @@ def get_rds_pricing():
         json.dump(rds_specs, f, indent=2, sort_keys=True, separators=(',', ': '))
     return results
 
+
 def get_neptune_pricing():
     LOGGER.info('Get Neptune pricing')
     paginator = client.get_paginator('get_products')
@@ -270,6 +281,7 @@ def get_neptune_pricing():
                     usage_type = product.get('attributes').get('usagetype').split(':')[1]
                     results[region_map[product.get('attributes').get('location')]].add(usage_type)
     return results
+
 
 def get_documentdb_pricing():
     LOGGER.info('Get DocumentDB pricing')
@@ -292,6 +304,7 @@ def get_documentdb_pricing():
                         product.get('attributes').get('instanceType')
                     )
     return results
+
 
 def main():
     """ main function """
