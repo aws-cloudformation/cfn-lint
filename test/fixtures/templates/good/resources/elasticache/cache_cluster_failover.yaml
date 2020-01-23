@@ -4,9 +4,13 @@ Parameters:
   toCluster:
     Type: String
     Default: 'yes'
+  optionalCluster:
+    Type: String
+    Default: 'yes'
 Conditions:
   isCluster: !Equals [!Ref 'toCluster', 'yes']
   IsTesting: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  IsOptionalCluster: !Equals [!Ref 'optionalCluster', 'yes']
 Resources:
   MyParameterGroup:
     Type: AWS::ElastiCache::ParameterGroup
@@ -28,6 +32,15 @@ Resources:
     Type: AWS::ElastiCache::ParameterGroup
     Properties:
       Description: "MyNewParameterGroup"
+      CacheParameterGroupFamily: "memcached1.4"
+      Properties:
+        cas_disabled: "1"
+        cluster-enabled: 'no'
+  MyOptionalClusterParameterGroup:
+    Type: AWS::ElastiCache::ParameterGroup
+    Condition: IsOptionalCluster
+    Properties:
+      Description: "MyOptionalParameterGroup"
       CacheParameterGroupFamily: "memcached1.4"
       Properties:
         cas_disabled: "1"
@@ -101,6 +114,40 @@ Resources:
       Engine: "redis"
       EngineVersion: "4.0.10"
       NumNodeGroups: !If [IsTesting, 1, 3]  # No Error when NumNodeGroups specified
+      ReplicasPerNodeGroup: 1
+      PreferredMaintenanceWindow: "Mon:04:00-Mon:06:00"
+      ReplicationGroupDescription: test
+      SecurityGroupIds:
+      - sg-test
+  FifthReplicationGroup:
+    Type: "AWS::ElastiCache::ReplicationGroup"
+    Condition: IsOptionalCluster
+    Properties:
+      AtRestEncryptionEnabled: true
+      AutomaticFailoverEnabled: true
+      CacheNodeType: cache.r3.large
+      CacheParameterGroupName: !Ref "MyOptionalClusterParameterGroup"
+      CacheSubnetGroupName: subnetGroup
+      Engine: "redis"
+      EngineVersion: "4.0.10"
+      NumNodeGroups: 1
+      ReplicasPerNodeGroup: 1
+      PreferredMaintenanceWindow: "Mon:04:00-Mon:06:00"
+      ReplicationGroupDescription: test
+      SecurityGroupIds:
+      - sg-test
+  SixthReplicationGroup:
+    Type: "AWS::ElastiCache::ReplicationGroup"
+    Condition: IsOptionalCluster
+    Properties:
+      AtRestEncryptionEnabled: true
+      AutomaticFailoverEnabled: true
+      CacheNodeType: cache.r3.large
+      CacheParameterGroupName: !Ref "MyNonClusterParameterGroup"
+      CacheSubnetGroupName: subnetGroup
+      Engine: "redis"
+      EngineVersion: "4.0.10"
+      NumNodeGroups: 1
       ReplicasPerNodeGroup: 1
       PreferredMaintenanceWindow: "Mon:04:00-Mon:06:00"
       ReplicationGroupDescription: test
