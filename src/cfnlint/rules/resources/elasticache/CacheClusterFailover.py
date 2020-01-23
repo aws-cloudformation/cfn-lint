@@ -36,7 +36,7 @@ class CacheClusterFailover(CloudFormationLintRule):
         pg_conditions = cfn.get_conditions_from_path(cfn.template, pg_path)
         # test to make sure that any condition that may apply to the path for the Ref
         # is not applicable
-        if pg_conditions:
+        if pg_conditions and scenario:
             for c_name, c_value in scenario.items():
                 if c_name in pg_conditions:
                     if c_value not in pg_conditions.get(c_name):
