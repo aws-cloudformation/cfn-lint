@@ -1,3 +1,7 @@
+### v0.27.2
+###### Fixes
+- Update rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3026) to better check for condition scenarios and not fail (pull #[1327](https://github.com/aws-cloudformation/cfn-python-lint/pull/1327))
+
 ### v0.27.1
 ###### CloudFormation Specifications
 - Update CloudFormation patches to include pricing and SSM data from 2020.01.20 (pull #[1322](https://github.com/aws-cloudformation/cfn-python-lint/pull/1322))
