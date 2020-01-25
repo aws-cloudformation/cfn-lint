@@ -21,6 +21,7 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
 
         likely_stateful_resource_types = ['AWS::CloudFormation::Stack',
                                           'AWS::Backup::BackupVault',
+                                          'AWS::Cognito::UserPool',
                                           'AWS::DocDB::DBCluster',
                                           'AWS::DocDB::DBInstance',
                                           'AWS::DynamoDB::Table',
@@ -29,7 +30,9 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
                                           'AWS::EMR::Cluster',
                                           'AWS::ElastiCache::CacheCluster',
                                           'AWS::ElastiCache::ReplicationGroup',
+                                          'AWS::Elasticsearch::Domain',
                                           'AWS::FSx::FileSystem',
+                                          'AWS::Logs::LogGroup',
                                           'AWS::Neptune::DBCluster',
                                           'AWS::Neptune::DBInstance',
                                           'AWS::QLDB::Ledger',
