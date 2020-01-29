@@ -1,3 +1,7 @@
+### v0.27.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.4.0 (pull #[1330](https://github.com/aws-cloudformation/cfn-python-lint/pull/1330))
+
 ### v0.27.2
 ###### Fixes
 - Update rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3026) to better check for condition scenarios and not fail (pull #[1327](https://github.com/aws-cloudformation/cfn-python-lint/pull/1327))
