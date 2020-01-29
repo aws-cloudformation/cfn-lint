@@ -152,8 +152,18 @@ LIMITS = {
         'body': 460800,  # in bytes
         'description': 1024  # in bytes
     },
-    'threshold': 0.9, # for rules about approaching the other limit values
+    'threshold': 0.9,  # for rules about approaching the other limit values
 }
+
+valid_snapshot_types = [
+    'AWS::EC2::Volume',
+    'AWS::ElastiCache::CacheCluster',
+    'AWS::ElastiCache::ReplicationGroup',
+    'AWS::Neptune::DBCluster',
+    'AWS::RDS::DBCluster',
+    'AWS::RDS::DBInstance',
+    'AWS::Redshift::Cluster'
+]
 
 
 def get_url_content(url):
