@@ -1,3 +1,13 @@
+### v0.27.4
+###### Features
+- Add Python 3.8 support (pull #[1334](https://github.com/aws-cloudformation/cfn-python-lint/pull/1334))
+- Add more resources to rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) (pull #[1331](https://github.com/aws-cloudformation/cfn-python-lint/pull/1331))
+###### CloudFormation Specifications
+- Patch specs from updated SSM service data as of 2020.01.30 (pull #[1339](https://github.com/aws-cloudformation/cfn-python-lint/pull/1339))
+- Patch more wafv2 resources (pull #[1343](https://github.com/aws-cloudformation/cfn-python-lint/pull/1343))
+###### Fixes
+- Pin version of jsonpatch for Python 3.4 (pull #[1336](https://github.com/aws-cloudformation/cfn-python-lint/pull/1336))
+
 ### v0.27.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 10.4.0 (pull #[1330](https://github.com/aws-cloudformation/cfn-python-lint/pull/1330))
