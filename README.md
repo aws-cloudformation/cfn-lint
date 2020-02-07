@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.com/aws-cloudformation/cfn-python-lint.svg?branch=master)](https://travis-ci.com/aws-cloudformation/cfn-python-lint)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
+[![PyPI downloads](https://img.shields.io/pypi/dw/cfn-lint.svg)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://img.shields.io/pypi/dm/cfn-lint.svg)](https://pypistats.org/packages/cfn-lint)
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
@@ -129,6 +131,7 @@ Optional parameters:
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
 | -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
+| -m, --mandatory-checks | | | Rules to check regardless of ignore configuration |
 | -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false                    
 | -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
@@ -175,7 +178,10 @@ Resources:
 
 ### Precedence
 
-cfn-lint applies the configuration from the CloudFormation Metadata first and then overrides those values with anything specified in the CLI.
+cfn-lint applies configurations from several sources. The rules at lower levels are overrided by those at higher levels.
+1. `.cfnlintrc` configurations
+2. Template Metadata configurations
+3. CLI parameters
 
 ### Configure Rules
 
@@ -216,7 +222,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.26.2  # The version of cfn-lint to use
+    rev: v0.27.4  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -224,9 +230,3 @@ repos:
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
 * You can see available cfn-lint versions on the [releases page](https://github.com/aws-cloudformation/cfn-python-lint/releases).
-
-----
-**PyPi:**
-
-[![PyPI - Downloads](https://img.shields.io/pypi/dw/cfn-lint.svg)](https://pypi.org/project/cfn-lint/#history)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/cfn-lint.svg)](https://pypi.org/project/cfn-lint/#history)

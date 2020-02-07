@@ -67,7 +67,8 @@ setup(
         'pyyaml;python_version!="3.4"',
         'six~=1.11',
         'aws-sam-translator>=1.19.1',
-        'jsonpatch',
+        'jsonpatch;python_version!="3.4"',
+        'jsonpatch<=1.24;python_version=="3.4"',
         'jsonschema~=3.0',
         'pathlib2>=2.3.0;python_version<="3.4"',
         'importlib_resources~=1.0.2;python_version<"3.7"',
@@ -93,5 +94,6 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
     ],
 )

@@ -25,7 +25,6 @@ class LimitSize(CloudFormationLintRule):
         """Basic Matching"""
         matches = []
 
-        # Check number of resources against the defined limit
         filename = cfn.filename
 
         # Only check if the file exists. The template could be passed in using stdIn

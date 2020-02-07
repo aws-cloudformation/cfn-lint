@@ -106,6 +106,11 @@ FUNCTIONS = [
     'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
     'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
 
+FUNCTIONS_MULTIPLE = ['Fn::GetAZs', 'Fn::Split']
+
+# FindInMap can be singular or multiple.  This needs to be acconted for individually
+FUNCTIONS_SINGLE = list(set(FUNCTIONS) - set(FUNCTIONS_MULTIPLE) - set('Fn::FindInMap'))
+
 FUNCTION_IF = 'Fn::If'
 FUNCTION_AND = 'Fn::And'
 FUNCTION_OR = 'Fn::Or'
@@ -146,8 +151,19 @@ LIMITS = {
     'template': {
         'body': 460800,  # in bytes
         'description': 1024  # in bytes
-    }
+    },
+    'threshold': 0.9,  # for rules about approaching the other limit values
 }
+
+valid_snapshot_types = [
+    'AWS::EC2::Volume',
+    'AWS::ElastiCache::CacheCluster',
+    'AWS::ElastiCache::ReplicationGroup',
+    'AWS::Neptune::DBCluster',
+    'AWS::RDS::DBCluster',
+    'AWS::RDS::DBInstance',
+    'AWS::Redshift::Cluster'
+]
 
 
 def get_url_content(url):

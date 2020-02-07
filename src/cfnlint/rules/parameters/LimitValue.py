@@ -24,7 +24,7 @@ class LimitValue(CloudFormationLintRule):
         value_limit = LIMITS['parameters']['value']
 
         # There are no real "Values" in the template, check the "meta" information
-        # (Default, ALlowedValue and MaxLength) against the limnit
+        # (Default, AllowedValue and MaxLength) against the limit
         for paramname, paramvalue in cfn.get_parameters().items():
 
             # Check Default value
@@ -36,7 +36,7 @@ class LimitValue(CloudFormationLintRule):
                     message = 'The length of parameter default value ({0}) exceeds the limit ({1})'
                     matches.append(RuleMatch(path, message.format(len(default_value), value_limit)))
 
-            # CHeck MaxLength parameters
+            # Check MaxLength parameters
             max_length = paramvalue.get('MaxLength', 0)
 
             if isinstance(max_length, (six.text_type, six.string_types)):

@@ -28,12 +28,5 @@ class Required(CloudFormationLintRule):
                         ['Outputs', output_name, 'Value'],
                         message.format(output_name, 'Value')
                     ))
-                if 'Export' in output_value:
-                    if 'Name' not in output_value['Export']:
-                        message = 'Output {0} is missing property {1}'
-                        matches.append(RuleMatch(
-                            ['Outputs', output_name, 'Export'],
-                            message.format(output_name, 'Name')
-                        ))
 
         return matches

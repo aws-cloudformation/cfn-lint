@@ -1,3 +1,57 @@
+### v0.27.4
+###### Features
+- Add Python 3.8 support (pull #[1334](https://github.com/aws-cloudformation/cfn-python-lint/pull/1334))
+- Add more resources to rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) (pull #[1331](https://github.com/aws-cloudformation/cfn-python-lint/pull/1331))
+###### CloudFormation Specifications
+- Patch specs from updated SSM service data as of 2020.01.30 (pull #[1339](https://github.com/aws-cloudformation/cfn-python-lint/pull/1339))
+- Patch more wafv2 resources (pull #[1343](https://github.com/aws-cloudformation/cfn-python-lint/pull/1343))
+###### Fixes
+- Pin version of jsonpatch for Python 3.4 (pull #[1336](https://github.com/aws-cloudformation/cfn-python-lint/pull/1336))
+
+### v0.27.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.4.0 (pull #[1330](https://github.com/aws-cloudformation/cfn-python-lint/pull/1330))
+
+### v0.27.2
+###### Fixes
+- Update rule [E3026](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3026) to better check for condition scenarios and not fail (pull #[1327](https://github.com/aws-cloudformation/cfn-python-lint/pull/1327))
+
+### v0.27.1
+###### CloudFormation Specifications
+- Update CloudFormation patches to include pricing and SSM data from 2020.01.20 (pull #[1322](https://github.com/aws-cloudformation/cfn-python-lint/pull/1322))
+###### Fixes
+- Update rule [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001) to allow `Fn::Transform` (pull #[1321](https://github.com/aws-cloudformation/cfn-python-lint/pull/1321))
+
+### v0.27.0
+###### Features
+- Add additional configuration checks to rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2001) (pull #[1301](https://github.com/aws-cloudformation/cfn-python-lint/pull/1301))
+- Add additional configuration checks to rule [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001) (pull #[1301](https://github.com/aws-cloudformation/cfn-python-lint/pull/1301))
+- Move `Export` `Name` required from `Outputs` in rule [E6002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6002) to [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001) (pull #[1301](https://github.com/aws-cloudformation/cfn-python-lint/pull/1301))
+- Move checking for list in `Outputs` `Value` in rule [E6003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6003) to [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001) (pull #[1301](https://github.com/aws-cloudformation/cfn-python-lint/pull/1301))
+- Add rules [I1002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I1002), [I1003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I1003), [I2010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I2010), [I2011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I2011), [I2012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I2012), [I3010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3010), [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011), [I6010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I6010), [I6011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I6011), [I6012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I6012), [I7010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I7010), [I7011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I7011), [I7012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I7012) to alert when approaching limits (pull #[1271](https://github.com/aws-cloudformation/cfn-python-lint/pull/1271))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.3.0 (pull #[1317](https://github.com/aws-cloudformation/cfn-python-lint/pull/1317))
+- Patch wafV2 Resources in the CloudFormation spec (pull #[1313](https://github.com/aws-cloudformation/cfn-python-lint/pull/1313))
+###### Fixes
+- Update rules [E6001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6001), [E6002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6002), [E6003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6003) to filter out unneeded columns when processing conditions (pull #[1316](https://github.com/aws-cloudformation/cfn-python-lint/pull/1316))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to allow for exlusions in `NotResource` (pull #[1315](https://github.com/aws-cloudformation/cfn-python-lint/pull/1315))
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to check for string types before doing regex (pull #[1311](https://github.com/aws-cloudformation/cfn-python-lint/pull/1311))
+
+
+### v0.26.3
+###### Features
+- Add extra attributes to rules [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1024), [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3027), [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) (pull #[1272](https://github.com/aws-cloudformation/cfn-python-lint/pull/1272))
+###### CloudFormation Specifications
+- Move `AWS::S3::Bucket.RoutingRuleCondition` properties from OnlyOne to AtLeastOne (pull #[1283](https://github.com/aws-cloudformation/cfn-python-lint/pull/1283))
+- Add `AWS::SSM::Parameter.Value` to the `AWS::EC2::VPC.Id` type (pull #[1288](https://github.com/aws-cloudformation/cfn-python-lint/pull/1288))
+- Add `CNAME` as an allowed value to `ServiceDiscoveryDnsType` (pull #[1296](https://github.com/aws-cloudformation/cfn-python-lint/pull/1296))
+- Patch `AWS::WAFv2::RegexPatternSet.RegularExpressionList` removing extra layer (pull #[1300](https://github.com/aws-cloudformation/cfn-python-lint/pull/1300))
+- Add `LambdaProvisionedConcurrencyUtilization` as allowed value to Application Autoscaling Metric (pull #[1303](https://github.com/aws-cloudformation/cfn-python-lint/pull/1303))
+- Add some exclusive attributes to `AWS::CloudWatch::Alarm` for `Metrics` and `Threshold` (pull #[1306](https://github.com/aws-cloudformation/cfn-python-lint/pull/1306))
+###### Fixes
+- pyyaml has ended support for Python 3.4.  Pin pyyaml to version 5.2 for Python 3.4 (pull #[1290](https://github.com/aws-cloudformation/cfn-python-lint/pull/1290))
+- Convert from using imp to importlib for python 3.x (pull #[1292](https://github.com/aws-cloudformation/cfn-python-lint/pull/1292))
+
 ### v0.26.2
 ###### Features
 - Update `aws-sam-translator` to `1.19.1` (pull #[1275](https://github.com/aws-cloudformation/cfn-python-lint/pull/1275))

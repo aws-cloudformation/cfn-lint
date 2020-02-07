@@ -20,7 +20,6 @@ class LimitName(CloudFormationLintRule):
 
         matches = []
 
-        # Check number of parameters against the defined limit
         parameters = cfn.template.get('Parameters', {})
 
         for parameter_name in parameters:

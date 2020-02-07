@@ -23,7 +23,7 @@ class LimitDescription(CloudFormationLintRule):
 
         if len(description) > LIMITS['template']['description']:
             path = ['Template', 'Description']
-            message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
+            message = 'The template description ({0} bytes) exceeds the limit ({1} bytes)'
             matches.append(RuleMatch(path, message.format(len(description), LIMITS['template']['description'])))
 
         return matches

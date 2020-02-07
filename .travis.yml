@@ -11,8 +11,8 @@ stages:
 jobs:
   include:
   - stage: Linting
-    python: 3.7
-    env: TOXENV=pylint37
+    python: 3.8
+    env: TOXENV=pylint38
   - python: 2.7
     env: TOXENV=pylint27
   - stage: Unit Tests
@@ -23,16 +23,18 @@ jobs:
   - python: 3.5
     env: TOXENV=py35
   - python: 3.6
-    env: TOXENV=py36,codecov
+    env: TOXENV=py36
   - python: 3.7
     env: TOXENV=py37
+  - python: 3.8
+    env: TOXENV=py38, codecov
   - stage: Integration
-    python: 3.7
-    script: docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.7.1-alpine3.8
+    python: 3.8
+    script: docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.8.1-alpine3.11
       /bin/sh -c 'pip3 install -e . && cfn-lint test/fixtures/templates/good/generic.yaml && cat test/fixtures/templates/good/generic.yaml | cfn-lint'
   - stage: Deploy
     script: skip
-    python: 3.6
+    python: 3.8
     deploy:
       provider: pypi
       user: kddejong
