@@ -1,3 +1,10 @@
+### v0.27.5
+###### Features
+- Add scripts to build an offline installer (pull #[1307](https://github.com/aws-cloudformation/cfn-python-lint/pull/1307))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 10.5.0 (pull #[1347](https://github.com/aws-cloudformation/cfn-python-lint/pull/1347))
+- Patch specs from updated SSM and pricing data as of 2020.02.09 (pull #[1348](https://github.com/aws-cloudformation/cfn-python-lint/pull/1348))
+
 ### v0.27.4
 ###### Features
 - Add Python 3.8 support (pull #[1334](https://github.com/aws-cloudformation/cfn-python-lint/pull/1334))
