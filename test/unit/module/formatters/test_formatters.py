@@ -38,7 +38,7 @@ class TestFormatters(BaseTestCase):
         json_results = json.loads(formatter.print_matches(results))
 
         # Check the 3 errors again
-        self.assertEqual(len(json_results), 3)
+        self.assertEqual(len(json_results), 5)
 
         # Check the errors level description
         self.assertEqual(json_results[0]['Level'], 'Informational')
