@@ -11,6 +11,7 @@ import jsonpatch
 import cfnlint
 from cfnlint.helpers import get_url_content
 import cfnlint.data.ExtendedSpecs
+import cfnlint.data.AdditionalSpecs
 
 
 LOGGER = logging.getLogger(__name__)
