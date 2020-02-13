@@ -22,7 +22,8 @@ class AttributeMismatch(CloudFormationLintRule):
     def check(self, properties, path, cfn):
         """Check itself"""
         matches = []
-        property_sets = cfn.get_object_without_conditions(properties)
+        property_sets = cfn.get_object_without_conditions(
+            properties, ['EngineMode', 'ScalingConfiguration'])
         for property_set in property_sets:
             properties = property_set.get('Object')
             if properties.get('EngineMode') != 'serverless':
