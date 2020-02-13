@@ -59,7 +59,7 @@ class AttributeMismatch(CloudFormationLintRule):
             if isinstance(attribute_name, six.string_types):
                 attributes.add(attribute.get('AttributeName'))
             else:
-                self.logger.info("attribute definitions is not using just strings")
+                self.logger.info('attribute definitions is not using just strings')
                 return matches
         keys = keys.union(
             self._get_key_schema_attributes(
@@ -68,10 +68,10 @@ class AttributeMismatch(CloudFormationLintRule):
         )
         keys = keys.union(self._get_attribute_secondary(
             properties.get_safe('GlobalSecondaryIndexes', list_node([], None, None), path, list
-                                )))
+                                )))  # pylint: disable=bad-continuation
         keys = keys.union(self._get_attribute_secondary(
             properties.get_safe('LocalSecondaryIndexes', list_node([], None, None), path, list
-                                )))
+                                )))  # pylint: disable=bad-continuation
 
         if attributes != keys:
             message = 'The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}'
