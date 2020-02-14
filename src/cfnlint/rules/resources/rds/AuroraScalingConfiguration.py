@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -26,13 +27,15 @@ class AttributeMismatch(CloudFormationLintRule):
             properties, ['EngineMode', 'ScalingConfiguration'])
         for property_set in property_sets:
             properties = property_set.get('Object')
-            if properties.get('EngineMode') != 'serverless':
-                if properties.get('ScalingConfiguration'):
-                    message = 'You cannot specify ScalingConfiguration for non Aurora Serverless AWS::RDS::DBCluster: {}'
-                    matches.append(RuleMatch(
-                        path,
-                        message.format('/'.join(map(str, path)))
-                    ))
+            engine = properties.get_safe('EngineMode', type_t=six.string_types)
+            if engine is not None:  # validate that engine isn't None
+                if engine != 'serverless':
+                    if properties.get('ScalingConfiguration'):
+                        message = 'You cannot specify ScalingConfiguration for non Aurora Serverless AWS::RDS::DBCluster: {}'
+                        matches.append(RuleMatch(
+                            path,
+                            message.format('/'.join(map(str, path)))
+                        ))
         return matches
 
     def match_resource_properties(self, properties, _, path, cfn):
