@@ -44,7 +44,7 @@ To include these rules, use the `-e/include-experimental` argument when running 
 
 
 ## Rules
-The following **135** rules are applied by this linter:
+The following **136** rules are applied by this linter:
 (_This documentation is generated from the Rules, do not alter this manually_)
 
 | Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |
@@ -118,6 +118,7 @@ The following **135** rules are applied by this linter:
 | E3025<a name="E3025"></a> | RDS instance type is compatible with the RDS type | Check the RDS instance types are supported by the type of RDS engine. Only if the values are strings will this be checked. |  | [Source](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html) | `resources`,`rds` |
 | E3026<a name="E3026"></a> | Check Elastic Cache Redis Cluster settings | Evaluate Redis Cluster groups to make sure automatic failover is enabled when cluster mode is enabled |  | [Source](https://github.com/awslabs/cfn-python-lint) | `resources`,`elasticcache` |
 | E3027<a name="E3027"></a> | Validate AWS Event ScheduleExpression format | Validate the formation of the AWS::Event ScheduleExpression |  | [Source](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html) | `resources`,`events` |
+| E3028<a name="E3028"></a> | ScalingConfiguration only set for Aurora Serverless | You cannot specify ScalingConfiguration for non Aurora Serverless AWS::RDS::DBCluster |  | [Source](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-scalingconfiguration) | `resources`,`rds` |
 | E3030<a name="E3030"></a> | Check if properties have a valid value | Check if properties have a valid value in case of an enumator |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue) | `resources`,`property`,`allowed value` |
 | E3031<a name="E3031"></a> | Check if property values adhere to a specific pattern | Check if properties have a valid value in case of a pattern (Regular Expression) |  | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`allowed pattern`,`regex` |
 | E3032<a name="E3032"></a> | Check if a list has between min and max number of values specified | Check lists for the number of items in the list to validate they are between the minimum and maximum |  | [Source](https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern) | `resources`,`property`,`list`,`size` |
