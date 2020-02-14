@@ -77,7 +77,7 @@ class AttributeMismatch(CloudFormationLintRule):
             message = 'The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}'
             matches.append(RuleMatch(
                 path,
-                message.format(list(attributes), list(keys), '/'.join(map(str, path)))
+                message.format(sorted(list(attributes)), sorted(list(keys)), '/'.join(map(str, path)))
             ))
 
         return matches
