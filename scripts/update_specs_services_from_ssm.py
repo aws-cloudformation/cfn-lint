@@ -7,6 +7,7 @@ import logging
 import json
 import boto3
 from cfnlint.helpers import get_url_content
+from cfnlint.helpers import REGIONS
 from cfnlint.maintenance import SPEC_REGIONS
 
 """
@@ -15,32 +16,6 @@ from cfnlint.maintenance import SPEC_REGIONS
 """
 
 LOGGER = logging.getLogger('cfnlint')
-
-region_map = {
-    'US East (N. Virginia)': 'us-east-1',
-    'Asia Pacific (Mumbai)': 'ap-south-1',
-    'US East (Ohio)': 'us-east-2',
-    'US West (Oregon)': 'us-west-2',
-    'AWS GovCloud (US-East)': 'us-gov-east-1',
-    'Asia Pacific (Hong Kong)': 'ap-east-1',
-    'Asia Pacific (Tokyo)': 'ap-northeast-1',
-    'EU (Stockholm)': 'eu-north-1',
-    'Asia Pacific (Singapore)': 'ap-southeast-1',
-    # 'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
-    'EU (London)': 'eu-west-2',
-    'South America (Sao Paulo)': 'sa-east-1',
-    'Asia Pacific (Sydney)': 'ap-southeast-2',
-    'EU (Ireland)': 'eu-west-1',
-    'EU (Frankfurt)': 'eu-central-1',
-    'EU (Paris)': 'eu-west-3',
-    'Canada (Central)': 'ca-central-1',
-    'Asia Pacific (Seoul)': 'ap-northeast-2',
-    'AWS GovCloud (US)': 'us-gov-west-1',
-    'US West (N. California)': 'us-west-1',
-    'China (Beijing)': 'cn-north-1',
-    'China (Ningxia)': 'cn-northwest-1',
-    'Middle East (Bahrain)': 'me-south-1',
-}
 
 exclude_regions = {
     'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
@@ -153,14 +128,6 @@ def update_outputs(region, resource_type, name, outputs):
     return outputs
 
 
-def get_all_regions():
-    """ get a list of all the regions """
-    results = []
-    for region in region_map.values():
-        results.append(region)
-    return results
-
-
 def get_regions_for_service(service):
     """ get regions for a service """
     LOGGER.info('Get the regions for service %s', service)
@@ -243,7 +210,7 @@ def main():
     """ main function """
     configure_logging()
 
-    all_regions = get_all_regions()
+    all_regions = list(set(REGIONS) - set(exclude_regions.values()))
     region_service_removal_map = {}
     region_service_add_map = {}
     for region in all_regions:
