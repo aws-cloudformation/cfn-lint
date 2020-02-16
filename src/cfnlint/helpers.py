@@ -17,6 +17,7 @@ from io import BytesIO
 import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
+from cfnlint.maintenance import SPEC_REGIONS
 try:
     from urllib.request import urlopen
 except ImportError:
@@ -37,31 +38,7 @@ TAG_MAP = 'tag:yaml.org,2002:map'
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
 CONDITION_FUNCTIONS = ['Fn::If']
-REGIONS = [
-    'ap-east-1',
-    'ap-northeast-1',
-    'ap-northeast-2',
-    'ap-northeast-3',
-    'ap-south-1',
-    'ap-southeast-1',
-    'ap-southeast-2',
-    'ca-central-1',
-    'cn-north-1',
-    'cn-northwest-1',
-    'eu-central-1',
-    'eu-north-1',
-    'eu-west-1',
-    'eu-west-2',
-    'eu-west-3',
-    'me-south-1',
-    'sa-east-1',
-    'us-east-1',
-    'us-east-2',
-    'us-gov-east-1',
-    'us-gov-west-1',
-    'us-west-1',
-    'us-west-2',
-]
+REGIONS = list(SPEC_REGIONS.keys())
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(
