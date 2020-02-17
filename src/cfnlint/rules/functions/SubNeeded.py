@@ -47,6 +47,17 @@ class SubNeeded(CloudFormationLintRule):
         '${redshift:DbUser}',
     ]
 
+    def __init__(self):
+        """Init"""
+        super(SubNeeded, self).__init__()
+        self.config_definition = {
+            'custom_excludes': {
+                'default': '',
+                'type': 'string'
+            }
+        }
+        self.configure()
+
     def _match_values(self, searchRegex, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
         values = []
@@ -85,6 +96,14 @@ class SubNeeded(CloudFormationLintRule):
         parameter_search = re.compile(r'^\$\{stageVariables\..*\}$')
         return re.match(parameter_search, value)
 
+    def _variable_custom_excluded(self, value):
+        """ User-defined exceptions for variables, anywhere in the file """
+        custom_excludes = self.config['custom_excludes']
+        if custom_excludes:
+            custom_search = re.compile(custom_excludes)
+            return re.match(custom_search, value)
+        return False
+
     def match(self, cfn):
         """Basic Rule Matching"""
 
@@ -100,7 +119,7 @@ class SubNeeded(CloudFormationLintRule):
         for parameter_string_path in parameter_string_paths:
             if parameter_string_path[0] in ['Parameters']:
                 continue
-            # Exxclude the special IAM variables
+            # Exclude the special IAM variables
             variable = parameter_string_path[-1]
 
             if 'Resource' in parameter_string_path:
@@ -112,6 +131,11 @@ class SubNeeded(CloudFormationLintRule):
             if 'Condition' in parameter_string_path:
                 if variable in self.condition_excludes:
                     continue
+
+            # Exclude variables that match custom exclude filters, if configured
+            # (for third-party tools that pre-process templates before uploading them to AWS)
+            if self._variable_custom_excluded(variable):
+                continue
 
             # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
             if variable.startswith('${!'):
