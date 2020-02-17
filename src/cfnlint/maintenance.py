@@ -74,16 +74,16 @@ def update_documentation(rules):
 
     # Read current file up to the Rules part, everything up to that point is
     # static documentation.
-    with open(filename, 'r') as origial_file:
+    with open(filename, 'r') as original_file:
 
-        line = origial_file.readline()
+        line = original_file.readline()
         while line:
             data.append(line)
 
             if line == '## Rules\n':
                 break
 
-            line = origial_file.readline()
+            line = original_file.readline()
 
     # Rebuild the file content
     with open(filename, 'w') as new_file:
@@ -119,7 +119,7 @@ def update_documentation(rules):
         new_file.write(
             rule_output.format(ruleerror.id, ruleerror.shortdesc, ruleerror.description, '', '', tags))
 
-        # Seprate the experimental rules
+        # Separate the experimental rules
         experimental_rules = []
 
         for rule in sorted_rules:
