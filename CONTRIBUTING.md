@@ -19,6 +19,30 @@ reported the issue. Please try to include as much information as you can. Detail
 * Any modifications you've made relevant to the bug
 * Anything unusual about your environment or deployment
 
+## Development Environment
+
+1. You will need Python 2 >= 2.7 or Python 3 >= 3.4. Verify which version you have by running `python --version`. 
+
+    > If you don't have it installed, download it [here](https://www.python.org/downloads/). When you do this, `pip` should be installed automatically.
+
+1. Install `cfn-lint` from source by forking the repository and then doing a developer install:
+
+    ```bash
+    # fork the repository
+    git clone https://github.com/<YOUR-USERNAME>/cfn-python-lint.git
+    cd cfn-python-lint
+    pip install -e . # or "pip3 install -e ." if you are using Python 3.4+
+    ```
+
+1. Run `pip show cfn-lint` (or `pip3 show cfn-lint` if you are using Python 3). The `Location` printed should be the folder from the step above.
+1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: adding new dependencies requires that you run `pip install -e .` again).
+1. To ensure the tests pass, run:
+
+    ```bash
+    pip install tox # or "pip3 install tox"
+    tox -e py37
+    ```
+
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
