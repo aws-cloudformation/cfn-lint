@@ -1,3 +1,12 @@
+### v0.28.0
+###### Features
+- Add rule [E3028](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3028) to check that `ScalingConfiguration` is only specified with Aurora databases (pull #[1338](https://github.com/aws-cloudformation/cfn-python-lint/pull/1338))
+- Add rule [E3039](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3039) to check that `AttributeDefinitions` match `KeySchemas` (pull #[1284](https://github.com/aws-cloudformation/cfn-python-lint/pull/1284))
+###### CloudFormation Specifications
+- Add `AFTER_7_DAYS` to `TransitionToIA` as accepted value (pull #[1352](https://github.com/aws-cloudformation/cfn-python-lint/pull/1352))
+- Update CloudFormation specs to 11.0.0 (pull #[1355](https://github.com/aws-cloudformation/cfn-python-lint/pull/1355))
+- Patch specs from updated SSM and pricing data as of 2020.02.15 (pull #[1356](https://github.com/aws-cloudformation/cfn-python-lint/pull/1356))
+
 ### v0.27.5
 ###### Features
 - Add scripts to build an offline installer (pull #[1307](https://github.com/aws-cloudformation/cfn-python-lint/pull/1307))
