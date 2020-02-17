@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+import os
 from test.testlib.testcase import BaseTestCase
 from mock import patch
 import cfnlint.config  # pylint: disable=E0401
@@ -96,8 +97,8 @@ class TestConfigMixIn(BaseTestCase):
 
         # test defaults
         self.assertEqual(config.templates, [
-            'test/fixtures/templates/public/lambda-poller.yaml',
-            'test/fixtures/templates/public/rds-cluster.yaml'])
+            'test/fixtures/templates/public' + os.path.sep + 'lambda-poller.yaml',
+            'test/fixtures/templates/public' + os.path.sep + 'rds-cluster.yaml'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_expand_paths_failure(self, yaml_mock):
