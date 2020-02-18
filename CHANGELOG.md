@@ -1,4 +1,4 @@
-### v0.28.0
+### v0.28.1
 ###### Features
 - Add option to disable [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) using a regex pattern on the variable name (pull #[1362](https://github.com/aws-cloudformation/cfn-python-lint/pull/1362))
 ###### Fixes
