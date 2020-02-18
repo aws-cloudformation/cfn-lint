@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Template containing third-party preprocessor-like variables to test custom ignore filters
+Resources:
+  TestRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: TestRole-${self:provider.stage}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - arn:aws:iam::${self:custom.config.masterAccount}:user/${self:custom.config.deploymentUser}
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: TestBucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource:
+                  - arn:aws:s3:::${self:custom.config.deploymentBucket}/*
