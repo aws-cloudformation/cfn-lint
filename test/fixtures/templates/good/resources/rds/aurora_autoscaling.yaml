@@ -1,0 +1,18 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  DatabaseCluster1:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: "10.5"
+  DatabaseCluster2:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineMode: serverless
+      EngineVersion: "10.5"
+      ScalingConfiguration:
+        MinCapacity: 1
+        MaxCapacity: 3
