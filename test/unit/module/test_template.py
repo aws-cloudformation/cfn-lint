@@ -449,7 +449,7 @@ class TestTemplate(BaseTestCase):
 
     def test_get_object_without_conditions(self):
         """ Test Getting condition names in an object/list """
-        template = {
+        template = cfnlint.helpers.convert_dict({
             'Conditions': {
                 'useAmiId': {'Fn::Not': [{'Fn::Equals': [{'Ref': 'myAmiId'}, '']}]}
             },
@@ -462,7 +462,7 @@ class TestTemplate(BaseTestCase):
                     }
                 }
             }
-        }
+        })
         template = Template('test.yaml', template)
 
         results = template.get_object_without_conditions(
@@ -545,7 +545,7 @@ class TestTemplate(BaseTestCase):
 
     def test_get_object_without_conditions_for_list(self):
         """ Test Getting condition names in an object/list """
-        template = {
+        template = cfnlint.helpers.convert_dict({
             'Conditions': {
                 'CreateAppVolume': {'Fn::Equals': [{'Ref': 'CreateVolums'}, 'true']}
             },
@@ -581,7 +581,7 @@ class TestTemplate(BaseTestCase):
                     }
                 }
             }
-        }
+        })
 
         template = Template('test.yaml', template)
 
@@ -667,7 +667,7 @@ class TestTemplate(BaseTestCase):
 
     def test_get_object_without_nested_conditions(self):
         """ Test Getting condition names in an object/list """
-        template = {
+        template = cfnlint.helpers.convert_dict({
             'Conditions': {
                 'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'prod']},
                 'isDevelopment': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'dev']}
@@ -692,7 +692,7 @@ class TestTemplate(BaseTestCase):
                     }
                 }
             }
-        }
+        })
         template = Template('test.yaml', template)
 
         results = template.get_object_without_conditions(

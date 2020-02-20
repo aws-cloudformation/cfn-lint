@@ -116,6 +116,9 @@ def create_dict_node_class(cls):
                 Get values in format
             """
             path = path or []
+
+            if default == {}:
+                default = dict_node({}, self.start_mark, self.end_mark)
             value = self.get(key, default)
             if value is None and default is None:
                 # if default is None and value is None return empty list

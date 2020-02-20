@@ -24,11 +24,14 @@ from cfnlint.rules import CloudFormationLintRule as _CloudFormationLintRule
 from cfnlint.rules import ParseError as _ParseError
 from cfnlint.rules import TransformError as _TransformError
 from cfnlint.rules import RuleError as _RuleError
+from cfnlint.decode.node import dict_node
 import cfnlint.rules
 
 LOGGER = logging.getLogger(__name__)
 
 # pylint: disable=too-many-lines
+
+
 def refactored(message):
     """ Decoreate for refactoring classes """
     def cls_wrapper(cls):
@@ -745,7 +748,7 @@ class Template(object):  # pylint: disable=R0904
 
             return value
 
-        result = {}
+        result = dict_node({}, obj.start_mark, obj.end_mark)
         if isinstance(obj, dict):
             if len(obj) == 1:
                 if obj.get('Fn::If'):
@@ -753,13 +756,11 @@ class Template(object):  # pylint: disable=R0904
                     if new_value is not None:
                         result = new_value
                 else:
-                    result = {}
                     for key, value in obj.items():
                         new_value = get_value(value, scenario)
                         if new_value is not None:
                             result[key] = new_value
             else:
-                result = {}
                 for key, value in obj.items():
                     new_value = get_value(value, scenario)
                     if new_value is not None:

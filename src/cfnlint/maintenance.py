@@ -146,7 +146,7 @@ def patch_spec(content, region):
         filenames.sort()
         for filename in fnmatch.filter(filenames, '*.json'):
             file_path = os.path.basename(filename)
-            module = dirpath.replace('%s' % append_dir, '%s' % region).replace('/', '.')
+            module = dirpath.replace('%s' % append_dir, '%s' % region).replace(os.path.sep, '.')
             LOGGER.info('Processing %s/%s', module, file_path)
             all_patches = jsonpatch.JsonPatch(cfnlint.helpers.load_resource(
                 'cfnlint.data.ExtendedSpecs.{}'.format(module), file_path))
