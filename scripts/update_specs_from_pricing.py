@@ -36,6 +36,7 @@ region_map = {
     'Canada (Central)': 'ca-central-1',
     'Asia Pacific (Seoul)': 'ap-northeast-2',
     'AWS GovCloud (US)': 'us-gov-west-1',
+    'AWS GovCloud (US-West)': 'us-gov-west-1',
     'US West (N. California)': 'us-west-1',
     'China (Beijing)': 'cn-north-1',
     'China (Ningxia)': 'cn-northwest-1',
