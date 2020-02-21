@@ -1,3 +1,13 @@
+### v0.28.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to 11.1.0 (pull #[1380](https://github.com/aws-cloudformation/cfn-python-lint/pull/1380))
+- Patch specs from updated SSM and pricing data as of 2020.02.21 (pull #[1380](https://github.com/aws-cloudformation/cfn-python-lint/pull/1380))
+- Update AWS Config supported types to those active on 2020.02.20 (pull #[1378](https://github.com/aws-cloudformation/cfn-python-lint/pull/1378))
+###### Fixes
+- Update condition logic to return dict_node instead of the standard dict node (pull #[1375](https://github.com/aws-cloudformation/cfn-python-lint/pull/1375))
+- Fix `--update-specs` on Windows to have the appropriate seperator (pull #[1371](https://github.com/aws-cloudformation/cfn-python-lint/pull/1371))
+- Update the documentation for `--update-documentation` (pull #[1374](https://github.com/aws-cloudformation/cfn-python-lint/pull/1374))
+
 ### v0.28.1
 ###### Features
 - Add option to disable [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) using a regex pattern on the variable name (pull #[1362](https://github.com/aws-cloudformation/cfn-python-lint/pull/1362))
