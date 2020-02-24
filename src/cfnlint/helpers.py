@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import fnmatch
 import json
+import hashlib
 import os
 import datetime
 import logging
@@ -15,6 +16,7 @@ import inspect
 import gzip
 from io import BytesIO
 import six
+import cfnlint
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
@@ -165,10 +167,52 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
+CACHING_DIR = os.path.join(os.path.dirname(cfnlint.__file__), 'cache/')
 
-def get_url_content(url):
+
+def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
+    metadata_filename = os.path.join(CACHING_DIR, 'download_manager.json')
+    etag = None
+    metadata = {}
+    encoded_url = hashlib.sha256(url.encode()).hexdigest()
+
+    if caching:
+        # Load in the cache
+        metadata = get_download_metadata(metadata_filename)
+
+        if 'urls' in metadata:
+            if encoded_url in metadata['urls']:
+                if 'etag' in metadata['urls'][encoded_url]:
+                    etag = metadata['urls'][encoded_url]['etag']
+
+    # Start the download
     res = urlopen(url)
+
+    # If we have an ETag value stored and it matches the returned one,
+    # then we already have a copy of the most recent version of the
+    # resource, so don't bother fetching it again
+    if caching:
+        if etag:
+            if res.info().get('ETag'):
+                if etag == res.info().get('ETag'):
+                    LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, etag)
+                    return None
+
+    if caching:
+        # If we reach here, then we don't have the latest version of the resource
+        LOGGER.debug('We do not have a cached version of url %s yet', url)
+
+        # Write the etag back to our cache
+        if res.info().get('ETag'):
+            if not 'urls' in metadata:
+                metadata['urls'] = {}
+            if not encoded_url in metadata['urls']:
+                metadata['urls'][encoded_url] = {}
+            metadata['urls'][encoded_url]['etag'] = res.info().get('ETag')
+            save_download_metadata(metadata, metadata_filename)
+
+    # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
         buf = BytesIO(res.read())
         f = gzip.GzipFile(fileobj=buf)
@@ -177,6 +221,25 @@ def get_url_content(url):
         content = res.read().decode('utf-8')
 
     return content
+
+
+def get_download_metadata(filename):
+    """Get the contents of the download metadata file"""
+    metadata = {'urls':{}}
+    if os.path.exists(filename):
+        with open(filename, 'r') as metadata_file:
+            metadata = json.load(metadata_file)
+    return metadata
+
+
+def save_download_metadata(metadata, filename):
+    """Save the contents of the download metadata file"""
+    dirname = os.path.dirname(filename)
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
+    with open(filename, 'w') as metadata_file:
+        json.dump(metadata, metadata_file)
 
 
 def load_resource(package, filename='us-east-1.json'):

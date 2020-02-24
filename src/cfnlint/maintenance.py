@@ -51,7 +51,16 @@ def update_resource_specs():
         filename = os.path.join(os.path.dirname(cfnlint.__file__),
                                 'data/CloudSpecs/%s.json' % region)
         LOGGER.debug('Downloading template %s into %s', url, filename)
-        spec = json.loads(get_url_content(url))
+
+        spec_content = get_url_content(url, caching=True)
+
+        # Check to see if no content was returned, indicating we have the latest version already
+        if not spec_content:
+            LOGGER.debug('We already have the most recent version of %s stored in %s', url, filename)
+            continue
+
+        LOGGER.debug('A more recent version of %s was found, and will be downloaded to %s', url, filename)
+        spec = json.loads(spec_content)
 
         # Patch the files
         spec = patch_spec(spec, 'all')
