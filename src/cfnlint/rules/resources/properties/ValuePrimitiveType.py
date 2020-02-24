@@ -84,7 +84,6 @@ class ValuePrimitiveType(CloudFormationLintRule):
     def check_primitive_type(self, value, item_type, path):
         """Chec item type"""
         matches = []
-
         if isinstance(value, dict) and item_type == 'Json':
             return matches
         if item_type in ['String']:
@@ -140,7 +139,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         return matches
 
-    def check(self, cfn, properties, specs, path):
+    def check(self, cfn, properties, specs, spec_type, path):
         """Check itself"""
         matches = []
 
@@ -154,14 +153,15 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 else:
                     item_type = None
                 if primitive_type:
-                    matches.extend(
-                        cfn.check_value(
-                            properties, prop, path,
-                            check_value=self.check_value,
-                            primitive_type=primitive_type,
-                            item_type=item_type
+                    if not(spec_type == 'AWS::CloudFormation::Stack' and prop == 'Parameters'):
+                        matches.extend(
+                            cfn.check_value(
+                                properties, prop, path,
+                                check_value=self.check_value,
+                                primitive_type=primitive_type,
+                                item_type=item_type
+                            )
                         )
-                    )
 
         return matches
 
@@ -171,7 +171,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         if self.property_specs.get(property_type, {}).get('Properties'):
             property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
-            matches.extend(self.check(cfn, properties, property_specs, path))
+            matches.extend(self.check(cfn, properties, property_specs, property_type, path))
 
         return matches
 
@@ -179,6 +179,6 @@ class ValuePrimitiveType(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
         resource_specs = self.resource_specs.get(resource_type, {}).get('Properties', {})
-        matches.extend(self.check(cfn, properties, resource_specs, path))
+        matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
 
         return matches
