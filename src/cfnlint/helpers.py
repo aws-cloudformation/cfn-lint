@@ -16,7 +16,6 @@ import inspect
 import gzip
 from io import BytesIO
 import six
-import cfnlint
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
@@ -167,7 +166,7 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
-CACHING_DIR = os.path.join(os.path.dirname(cfnlint.__file__), 'cache/')
+CACHING_DIR = os.path.join(os.path.dirname(__file__), 'cache/')
 
 
 def get_url_content(url, caching=False):
