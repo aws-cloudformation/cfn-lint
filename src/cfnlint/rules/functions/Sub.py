@@ -70,7 +70,15 @@ class Sub(CloudFormationLintRule):
                             matches.extend(self._test_parameter(value, cfn, {}, tree))
                         elif key in ['Fn::GetAtt']:
                             if isinstance(value, list):
-                                matches.extend(self._test_parameter('.'.join(value), cfn, {}, tree))
+                                # Only test this if all the items are a string
+                                if_all_strings = True
+                                for v in value:
+                                    if not isinstance(v, six.string_types):
+                                        # skip things got too complex
+                                        if_all_strings = False
+                                if if_all_strings:
+                                    matches.extend(self._test_parameter(
+                                        '.'.join(value), cfn, {}, tree))
                             elif isinstance(value, six.string_types):
                                 matches.extend(self._test_parameter(value, cfn, {}, tree))
                 else:
