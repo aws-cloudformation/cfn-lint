@@ -7,7 +7,7 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
 
-class AttributeMismatch(CloudFormationLintRule):
+class AuroraScalingConfiguration(CloudFormationLintRule):
     """ScalingConfiguration only set for Aurora Serverless"""
     id = 'E3028'
     shortdesc = 'ScalingConfiguration only set for Aurora Serverless'
@@ -17,7 +17,7 @@ class AttributeMismatch(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(AttributeMismatch, self).__init__()
+        super(AuroraScalingConfiguration, self).__init__()
         self.resource_property_types = ['AWS::RDS::DBCluster']
 
     def check(self, properties, path, cfn):
@@ -27,15 +27,20 @@ class AttributeMismatch(CloudFormationLintRule):
             properties, ['EngineMode', 'ScalingConfiguration'])
         for property_set in property_sets:
             properties = property_set.get('Object')
-            engine = properties.get_safe('EngineMode', type_t=six.string_types)
-            if engine is not None:  # validate that engine isn't None
+            scenario = property_set.get('Scenario')
+            engine_sets = properties.get_safe('EngineMode', type_t=six.string_types)
+            for engine, _ in engine_sets:
                 if engine != 'serverless':
                     if properties.get('ScalingConfiguration'):
-                        message = 'You cannot specify ScalingConfiguration for non Aurora Serverless AWS::RDS::DBCluster: {}'
-                        matches.append(RuleMatch(
-                            path,
-                            message.format('/'.join(map(str, path)))
-                        ))
+                        message = 'You cannot specify ScalingConfiguration for non Aurora Serverless AWS::RDS::DBCluster at {}'
+                        if scenario is None:
+                            matches.append(
+                                RuleMatch(path, message.format('/'.join(map(str, path)))))
+                        else:
+                            scenario_text = ' and '.join(
+                                ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            matches.append(
+                                RuleMatch(path, message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
         return matches
 
     def match_resource_properties(self, properties, _, path, cfn):
