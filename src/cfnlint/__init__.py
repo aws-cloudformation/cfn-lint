@@ -349,7 +349,8 @@ class Template(object):  # pylint: disable=R0904
 
     def search_deep_keys(self, searchText):
         """
-            Search for keys in all parts of the templates
+            Search for a key in all parts of the template.
+            :return if searchText is "Ref", an array like ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
         """
         LOGGER.debug('Search for key %s as far down as the template goes', searchText)
         results = []
