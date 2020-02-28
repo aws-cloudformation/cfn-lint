@@ -185,15 +185,21 @@ cfn-lint applies configurations from several sources. The rules at lower levels 
 
 ### Configure Rules
 
-Certain rules will support configuration properties. You can configure these rules by using `configure_rules` parameter.
+Certain rules support configuration properties. You can configure these rules by using `configure_rules` parameter.
 
-From the command line the format is `E3012:strict=false`
+From the command line the format is `RuleId:key=value`, for example: `E3012:strict=false`.
 From the cfnlintrc or Metadata section the format is
+
+```yaml
+Metadata:
+  cfn-lint:
+    config:
+      configure_rules:
+        RuleId:
+          key: value
 ```
-configure_rules:
-  E3012:
-    strict: False  
-```
+
+The configurable rules have a non-empty Config entry in the table [here](docs/rules.md#rules-1).
 
 ### Getting Started Guides
 
@@ -222,7 +228,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.27.5  # The version of cfn-lint to use
+    rev: v0.28.2  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

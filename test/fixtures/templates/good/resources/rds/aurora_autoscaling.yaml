@@ -1,0 +1,38 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  Serverless:
+    Description: Whether to use Aurora Serverless
+    Type: String
+    AllowedValues: ["false", "true"]
+
+Conditions:
+  UseServerless: !Equals [!Ref Serverless, "true"]
+Resources:
+  DatabaseCluster1:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: "10.5"
+  DatabaseCluster2:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineMode: serverless
+      EngineVersion: "10.5"
+      ScalingConfiguration:
+        MinCapacity: 1
+        MaxCapacity: 3
+  DatabaseCluster3:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      Engine: aurora-postgresql
+      EngineMode: !If [UseServerless, "serverless", "provisioned"]
+      EngineVersion: "10.7"
+      ScalingConfiguration: !If
+        - UseServerless
+        - AutoPause: true
+          MaxCapacity: 192
+          MinCapacity: 384
+          SecondsUntilAutoPause: 1800
+        - !Ref AWS::NoValue
