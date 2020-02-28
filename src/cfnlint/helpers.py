@@ -108,7 +108,7 @@ FUNCTIONS = [
 
 FUNCTIONS_MULTIPLE = ['Fn::GetAZs', 'Fn::Split']
 
-# FindInMap can be singular or multiple.  This needs to be acconted for individually
+# FindInMap can be singular or multiple.  This needs to be accounted for individually
 FUNCTIONS_SINGLE = list(set(FUNCTIONS) - set(FUNCTIONS_MULTIPLE) - set('Fn::FindInMap'))
 
 FUNCTION_IF = 'Fn::If'
