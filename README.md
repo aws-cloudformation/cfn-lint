@@ -15,14 +15,14 @@ checks.  Includes checking valid values for resource properties and best practic
 
 This is an attempt to provide validation for CloudFormation templates properties and
 their values.  For values things can get pretty complicated (mappings, joins, splits,
-conditions, and nesting those functions inside each other) so its a best effort to
+conditions, and nesting those functions inside each other) so it's a best effort to
 validate those values but the promise is to not fail if we can't understand or translate
 all the things that could be going on.
 
 #### Serverless Application Model
 
 The Serverless Application Model (SAM) is supported by the linter. The template is
-transformed using AWS SAM [https://github.com/awslabs/serverless-application-model](https://github.com/awslabs/serverless-application-model) before the linter processes the template.
+transformed using [AWS SAM](https://github.com/awslabs/serverless-application-model) before the linter processes the template.
 
 _To get information about the SAM Transformation, run the linter with `--info`_
 
@@ -70,7 +70,7 @@ Multiple files can be linted by either specifying multiple specific files:
 - `cfn-lint template1.yaml template2.yaml`
 - `cfn-lint -t template1.yaml template2.yaml`
 
-Multiple files can also be specified using wildcards (globbing):
+or by using wildcards (globbing). For example:
 
 Lint all `yaml` files in `path`:
 
@@ -178,7 +178,7 @@ Resources:
 
 ### Precedence
 
-cfn-lint applies configurations from several sources. The rules at lower levels are overrided by those at higher levels.
+cfn-lint applies configurations from several sources. The rules at lower levels are overridden by those at higher levels.
 1. `.cfnlintrc` configurations
 2. Template Metadata configurations
 3. CLI parameters
@@ -207,11 +207,11 @@ There are [getting started guides](/docs/getting_started) available in the docum
 
 ## Rules
 
-This linter checks the CloudFormation by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
+This linter checks the CloudFormation template by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
 
 This collection of rules can be extended with custom rules using the `--append-rules` argument.
 
-More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md)
+More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md).
 
 ## Customize specifications
 

@@ -23,8 +23,8 @@ with open('README.md') as f:
 setup(
     name='cfn-lint',
     version=version,
-    description=('checks cloudformation for practices and behaviour \
-        that could potentially be improved'),
+    description=('Checks CloudFormation templates for practices and behaviour \
+that could potentially be improved'),
     long_description=readme,
     long_description_content_type="text/markdown",
     keywords='aws, lint',
