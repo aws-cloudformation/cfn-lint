@@ -1,6 +1,13 @@
+"""
+Helpers for loading resources, managing specs, constants, etc.
+
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 import re
 import six
 from networkx import networkx
+
 
 class Graph(object):
     """Models a template as a directed graph of resources"""
