@@ -278,6 +278,48 @@
       "HasResource": true,
       "StringPrefix": "appmesh-preview"
     },
+    "AWS AppConfig": {
+      "ARNFormat": "arn:aws:appconfig:<region>:<account-id>:<relative-id>",
+      "ARNRegex": "^arn:aws:appconfig:.+",
+      "Actions": [
+        "CreateApplication",
+        "CreateConfigurationProfile",
+        "CreateDeploymentStrategy",
+        "CreateEnvironment",
+        "DeleteApplication",
+        "DeleteConfigurationProfile",
+        "DeleteDeploymentStrategy",
+        "DeleteEnvironment",
+        "GetApplication",
+        "GetConfiguration",
+        "GetConfigurationProfile",
+        "GetDeployment",
+        "GetDeploymentStrategy",
+        "GetEnvironment",
+        "ListApplications",
+        "ListConfigurationProfiles",
+        "ListDeploymentStrategies",
+        "ListDeployments",
+        "ListEnvironments",
+        "ListTagsForResource",
+        "StartDeployment",
+        "StopDeployment",
+        "TagResource",
+        "UntagResource",
+        "UpdateApplication",
+        "UpdateConfigurationProfile",
+        "UpdateDeploymentStrategy",
+        "UpdateEnvironment",
+        "ValidateConfiguration"
+      ],
+      "HasResource": true,
+      "StringPrefix": "appconfig",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "AWS AppSync": {
       "ARNFormat": "arn:aws:appsync:<region>:<account>:<resourceType>/<resourcePath>",
       "ARNRegex": "^arn:aws:appsync:.+",
@@ -354,7 +396,7 @@
     },
     "AWS Backup": {
       "ARNFormat": "arn:<partition>:backup:<region>:<account-id>:<resource-type>:<resource_name>",
-      "ARNRegex": "^arn:aws:backup:.+:.+:.+",
+      "ARNRegex": "^arn:${Partition}:backup:.+:.+:.+",
       "Actions": [
         "CopyIntoBackupVault",
         "CreateBackupPlan",
@@ -1411,6 +1453,8 @@
         "CreateNetworkProfile",
         "CreateProject",
         "CreateRemoteAccessSession",
+        "CreateTestGridProject",
+        "CreateTestGridUrl",
         "CreateUpload",
         "CreateVPCEConfiguration",
         "DeleteDevicePool",
@@ -1419,6 +1463,7 @@
         "DeleteProject",
         "DeleteRemoteAccessSession",
         "DeleteRun",
+        "DeleteTestGridProject",
         "DeleteUpload",
         "DeleteVPCEConfiguration",
         "GetAccountSettings",
@@ -1435,6 +1480,8 @@
         "GetRun",
         "GetSuite",
         "GetTest",
+        "GetTestGridProject",
+        "GetTestGridSession",
         "GetUpload",
         "GetVPCEConfiguration",
         "InstallToRemoteAccessSession",
@@ -1454,6 +1501,10 @@
         "ListSamples",
         "ListSuites",
         "ListTagsForResource",
+        "ListTestGridProjects",
+        "ListTestGridSessionActions",
+        "ListTestGridSessionArtifacts",
+        "ListTestGridSessions",
         "ListTests",
         "ListUniqueProblems",
         "ListUploads",
@@ -1471,6 +1522,7 @@
         "UpdateInstanceProfile",
         "UpdateNetworkProfile",
         "UpdateProject",
+        "UpdateTestGridProject",
         "UpdateUpload",
         "UpdateVPCEConfiguration"
       ],
@@ -1864,12 +1916,15 @@
         "GetObject",
         "ListContainers",
         "ListItems",
+        "ListTagsForResource",
         "PutContainerPolicy",
         "PutCorsPolicy",
         "PutLifecyclePolicy",
         "PutObject",
         "StartAccessLogging",
-        "StopAccessLogging"
+        "StopAccessLogging",
+        "TagResource",
+        "UntagResource"
       ],
       "HasResource": true,
       "StringPrefix": "mediastore"
@@ -3615,8 +3670,8 @@
       ]
     },
     "AWS Security Hub": {
-      "ARNFormat": "arn:aws:securityhub:<region>:<account_ID>:.+",
-      "ARNRegex": "^arn:aws:securityhub:.+",
+      "ARNFormat": "arn:${Partition}:securityhub:<region>:<account_ID>:.+",
+      "ARNRegex": "^arn:${Partition}:securityhub:.+",
       "Actions": [
         "AcceptInvitation",
         "BatchDisableStandards",
@@ -6410,7 +6465,8 @@
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
-        "aws:TagKeys"
+        "aws:TagKeys",
+        "elasticfilesystem:AccessPointArn"
       ]
     },
     "Amazon Elastic Inference": {
