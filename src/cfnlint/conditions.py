@@ -211,7 +211,7 @@ class Conditions(object):
                 cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS))
             for condition_name in cfn.template.get('Conditions', {}):
                 self.Conditions[condition_name] = Condition(cfn.template, condition_name)
-            # Configure parametrs Allowed Values if they have them
+            # Configure parameters Allowed Values if they have them
             for parameter_name, parameter_values in cfn.template.get('Parameters', {}).items():
                 # ALlowed Values must be a list so validate they are
                 if isinstance(parameter_values.get('AllowedValues'), list):
@@ -335,7 +335,7 @@ class Conditions(object):
                 if parameter_values:
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
-                        # protecting against really badlyl formatted templates
+                        # protecting against really badly formatted templates
                         if isinstance(p_value, (six.integer_types, six.string_types)):
                             new = {}
                             # the allowed values could be numbers so force a string
@@ -355,7 +355,7 @@ class Conditions(object):
                 if parameter_values:
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
-                        # protecting against really badlyl formatted templates
+                        # protecting against really badly formatted templates
                         if isinstance(p_value, (six.integer_types, six.string_types)):
                             new = copy(current)
                             # the allowed values could be numbers so force a string
