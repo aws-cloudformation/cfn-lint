@@ -46,12 +46,12 @@ class Graph(object):
 
             if isinstance(value, list) and len(value) == 2 and (self._is_resource(cfn, value[0])):
                 target_resource_id = value[0]
-                self.graph.add_edge(source_id, target_resource_id, label='Fn::GetAtt')
+                self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
             if isinstance(value, (six.string_types, six.text_type)) and '.' in value:
                 target_resource_id = value.split('.')[0]
                 if self._is_resource(cfn, target_resource_id):
-                    self.graph.add_edge(source_id, target_resource_id, label='!GetAtt')
+                    self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
         # add edges for "DependsOn" tags. { "DependsOn" : [ String, ... ] }
         depends_on_paths = cfn.search_deep_keys('DependsOn')
@@ -93,7 +93,7 @@ class Graph(object):
                     if '.' in sub_parameter:
                         sub_parameter = sub_parameter.split('.')[0]
                     if self._is_resource(cfn, sub_parameter):
-                        self.graph.add_edge(source_id, sub_parameter, label='Fn::Sub')
+                        self.graph.add_edge(source_id, sub_parameter, label='Sub')
 
     def get_cycles(self, cfn):
         """Return all resource pairs that have a cycle in them"""
