@@ -35,7 +35,8 @@ class Graph(object):
                 target_resource_id = target_id
                 self.graph.add_edge(source_id, target_resource_id, label='Ref')
 
-        # add edges for "Fn::GetAtt" tags. { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] }
+        # add edges for "Fn::GetAtt" tags.
+        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] } or { "!GetAtt" : "logicalNameOfResource.attributeName" }
         getatt_paths = cfn.search_deep_keys('Fn::GetAtt')
         for getatt_path in getatt_paths:
             ref_type, source_id = getatt_path[:2]
@@ -46,6 +47,11 @@ class Graph(object):
             if isinstance(value, list) and len(value) == 2 and (self._is_resource(cfn, value[0])):
                 target_resource_id = value[0]
                 self.graph.add_edge(source_id, target_resource_id, label='Fn::GetAtt')
+
+            if isinstance(value, (six.string_types, six.text_type)) and '.' in value:
+                target_resource_id = value.split('.')[0]
+                if self._is_resource(cfn, target_resource_id):
+                    self.graph.add_edge(source_id, target_resource_id, label='!GetAtt')
 
         # add edges for "DependsOn" tags. { "DependsOn" : [ String, ... ] }
         depends_on_paths = cfn.search_deep_keys('DependsOn')
