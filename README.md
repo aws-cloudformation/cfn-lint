@@ -39,6 +39,20 @@ Python 2.7+ and 3.4+ are supported.
 
 `brew install cfn-lint`
 
+### Docker install/run
+
+In `cfn-python-lint` source tree:
+
+```
+docker build --tag cfn-python-lint:latest .
+```
+
+In repository to be linted:
+
+```
+docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
+```
+
 ### Editor Plugins
 
 There are IDE plugins available to get direct linter feedback from you favorite editor:
