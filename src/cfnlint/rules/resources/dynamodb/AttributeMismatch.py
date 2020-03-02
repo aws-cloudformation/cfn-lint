@@ -77,7 +77,8 @@ class AttributeMismatch(CloudFormationLintRule):
             message = 'The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}'
             matches.append(RuleMatch(
                 path,
-                message.format(sorted(list(attributes)), sorted(list(keys)), '/'.join(map(str, path)))
+                message.format(sorted(list(attributes)), sorted(
+                    list(keys)), '/'.join(map(str, path)))
             ))
 
         return matches
@@ -86,7 +87,8 @@ class AttributeMismatch(CloudFormationLintRule):
         """Check itself"""
         matches = []
 
-        property_sets = cfn.get_object_without_conditions(properties, path)
+        property_sets = cfn.get_object_without_conditions(
+            properties, ['AttributeDefinitions', 'KeySchema', 'GlobalSecondaryIndexes', 'LocalSecondaryIndexes'])
         for property_set in property_sets:
             matches.extend(self.check_property_set(property_set, path))
         return matches
