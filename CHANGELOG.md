@@ -1,3 +1,14 @@
+### v0.28.3
+###### Features
+- Define an initial Docker file (pull #[1361](https://github.com/aws-cloudformation/cfn-python-lint/pull/1361))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 11.2.0 (pull #[1390](https://github.com/aws-cloudformation/cfn-python-lint/pull/1390))
+- Add allowed values for `AWS::RDS::DBInstance` `Engine` (pull #[1398](https://github.com/aws-cloudformation/cfn-python-lint/pull/1398))
+###### Fixes
+- Update rule [E3039](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3039) to properly filter down attributes before checking values (pull #[1392](https://github.com/aws-cloudformation/cfn-python-lint/pull/1392))
+- Update rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) to not join GetAtt if they aren't strings (pull #[1389](https://github.com/aws-cloudformation/cfn-python-lint/pull/1389))
+- Consolidate region and spec information into singular item (pull #[1357](https://github.com/aws-cloudformation/cfn-python-lint/pull/1357))
+
 ### v0.28.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 11.1.0 (pull #[1380](https://github.com/aws-cloudformation/cfn-python-lint/pull/1380))
