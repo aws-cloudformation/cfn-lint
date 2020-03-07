@@ -39,6 +39,20 @@ Python 2.7+ and 3.4+ are supported.
 
 `brew install cfn-lint`
 
+### Docker install/run
+
+In `cfn-python-lint` source tree:
+
+```
+docker build --tag cfn-python-lint:latest .
+```
+
+In repository to be linted:
+
+```
+docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
+```
+
 ### Editor Plugins
 
 There are IDE plugins available to get direct linter feedback from you favorite editor:
@@ -228,7 +242,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.28.3  # The version of cfn-lint to use
+    rev: v0.28.4  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

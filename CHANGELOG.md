@@ -1,3 +1,9 @@
+### v0.28.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to 11.4.0 (pull #[1403](https://github.com/aws-cloudformation/cfn-python-lint/pull/1403))
+###### Fixes
+- Properly display yaml parse errors when the error was a tab (pull #[1402](https://github.com/aws-cloudformation/cfn-python-lint/pull/1402))
+
 ### v0.28.3
 ###### Features
 - Define an initial Docker file (pull #[1361](https://github.com/aws-cloudformation/cfn-python-lint/pull/1361))

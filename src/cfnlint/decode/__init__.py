@@ -65,7 +65,16 @@ def decode(filename, ignore_bad_template):
                 json_err.match.filename = filename
                 matches = [json_err.match]
             except JSONDecodeError as json_err:
-                matches = [create_match_json_parser_error(json_err, filename)]
+                if hasattr(json_err, 'message'):
+                    if json_err.message == 'No JSON object could be decoded':  # pylint: disable=no-member
+                        matches = [create_match_yaml_parser_error(err, filename)]
+                    else:
+                        matches = [create_match_json_parser_error(json_err, filename)]
+                if hasattr(json_err, 'msg'):
+                    if json_err.msg == 'Expecting value':  # pylint: disable=no-member
+                        matches = [create_match_yaml_parser_error(err, filename)]
+                    else:
+                        matches = [create_match_json_parser_error(json_err, filename)]
             except Exception as json_err:  # pylint: disable=W0703
                 if ignore_bad_template:
                     LOGGER.info('Template %s is malformed: %s',
