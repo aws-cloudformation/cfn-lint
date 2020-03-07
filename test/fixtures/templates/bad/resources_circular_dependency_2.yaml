@@ -1,0 +1,44 @@
+Resources:
+  Resource:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        !Sub ${Resource2}
+  Resource2:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        !GetAtt Resource3.TopicName
+  Resource3:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        !Ref Resource4
+  Resource4:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Sub: ${Resource5}
+  Resource5:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::GetAtt: Resource6.TopicName
+  Resource6:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Ref: Resource7
+  Resource7:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        !Sub ${Resource8.TopicName}
+  Resource8:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName:
+        Fn::Sub: ${Resource9.TopicName}
+  Resource9:
+    DependsOn: Resource
+    Type: AWS::SNS::Topic
