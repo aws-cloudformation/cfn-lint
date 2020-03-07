@@ -1239,6 +1239,17 @@
         "aws:TagKeys"
       ]
     },
+    "AWS Connector Service": {
+      "ARNFormat": "arn:aws:<serviceName>:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNRegex": "^arn:aws:<serviceName>:.+:.+:.+",
+      "Actions": [
+        "GetConnectorHealth",
+        "RegisterConnector",
+        "ValidateConnectorId"
+      ],
+      "HasResource": false,
+      "StringPrefix": "awsconnector"
+    },
     "AWS Cost Explorer Service": {
       "ARNFormat": "arn:aws:ce::<account_ID>:ce",
       "ARNRegex": "^arn:aws:ce::.+:.+",
@@ -1984,26 +1995,39 @@
       "ARNFormat": "arn:aws:globalaccelerator::<account>:accelerator/<AcceleratorId>",
       "ARNRegex": "^arn:aws:globalaccelerator::.+:.+",
       "Actions": [
+        "AdvertiseByoipCidr",
         "CreateAccelerator",
         "CreateEndpointGroup",
         "CreateListener",
         "DeleteAccelerator",
         "DeleteEndpointGroup",
         "DeleteListener",
+        "DeprovisionByoipCidr",
         "DescribeAccelerator",
         "DescribeAcceleratorAttributes",
         "DescribeEndpointGroup",
         "DescribeListener",
         "ListAccelerators",
+        "ListByoipCidrs",
         "ListEndpointGroups",
         "ListListeners",
+        "ListTagsForResource",
+        "ProvisionByoipCidr",
+        "TagResource",
+        "UntagResource",
         "UpdateAccelerator",
         "UpdateAcceleratorAttributes",
         "UpdateEndpointGroup",
-        "UpdateListener"
+        "UpdateListener",
+        "WithdrawByoipCidr"
       ],
       "HasResource": true,
-      "StringPrefix": "globalaccelerator"
+      "StringPrefix": "globalaccelerator",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "AWS Glue": {
       "ARNFormat": "arn:aws:glue:<region>:<accountID>:<resourceType>/<resourcePath>",
@@ -3050,11 +3074,15 @@
       "ARNRegex": "^arn:aws:aws-marketplace:::.+",
       "Actions": [
         "CancelChangeSet",
+        "CompleteTask",
         "DescribeChangeSet",
         "DescribeEntity",
+        "DescribeTask",
         "ListChangeSets",
         "ListEntities",
-        "StartChangeSet"
+        "ListTasks",
+        "StartChangeSet",
+        "UpdateTask"
       ],
       "HasResource": true,
       "StringPrefix": "aws-marketplace",
@@ -5163,14 +5191,15 @@
       "ARNFormat": "arn:aws:synthetics:<region>:<account-id>:<resource-type>:<resource_name>",
       "ARNRegex": "^arn:aws:synthetics:.+",
       "Actions": [
-        "CreateAlarmSettings",
         "CreateCanary",
         "DeleteCanary",
         "DescribeCanaries",
         "DescribeTestRuns",
-        "GetAlarmSettings",
+        "ListTagsForResource",
         "StartCanary",
         "StopCanary",
+        "TagResource",
+        "UntagResource",
         "UpdateCanary"
       ],
       "HasResource": true,
@@ -6594,6 +6623,7 @@
       "Actions": [
         "AddTags",
         "CreateElasticsearchDomain",
+        "CreateElasticsearchServiceRole",
         "DeleteElasticsearchDomain",
         "DeleteElasticsearchServiceRole",
         "DescribeElasticsearchDomain",
@@ -6612,6 +6642,7 @@
         "GetUpgradeHistory",
         "GetUpgradeStatus",
         "ListDomainNames",
+        "ListElasticsearchInstanceTypeDetails",
         "ListElasticsearchInstanceTypes",
         "ListElasticsearchVersions",
         "ListTags",
@@ -7720,6 +7751,7 @@
         "CreateImportJob",
         "CreateJourney",
         "CreatePushTemplate",
+        "CreateRecommenderConfiguration",
         "CreateSegment",
         "CreateSmsTemplate",
         "CreateVoiceTemplate",
@@ -7738,6 +7770,7 @@
         "DeleteGcmChannel",
         "DeleteJourney",
         "DeletePushTemplate",
+        "DeleteRecommenderConfiguration",
         "DeleteSegment",
         "DeleteSmsChannel",
         "DeleteSmsTemplate",
@@ -7770,6 +7803,8 @@
         "GetImportJobs",
         "GetJourney",
         "GetPushTemplate",
+        "GetRecommenderConfiguration",
+        "GetRecommenderConfigurations",
         "GetSegment",
         "GetSegmentExportJobs",
         "GetSegmentImportJobs",
@@ -7809,6 +7844,7 @@
         "UpdateJourney",
         "UpdateJourneyState",
         "UpdatePushTemplate",
+        "UpdateRecommenderConfiguration",
         "UpdateSegment",
         "UpdateSmsChannel",
         "UpdateSmsTemplate",
