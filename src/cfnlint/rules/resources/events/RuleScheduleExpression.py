@@ -37,7 +37,8 @@ class RuleScheduleExpression(CloudFormationLintRule):
                 # Check the Value
                 if not items[0].isdigit():
                     message = 'Rate Value ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(items[0]).__name__, 'expected_type': int.__name__}
+                    extra_args = {'actual_type': type(
+                        items[0]).__name__, 'expected_type': int.__name__}
                     matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
 
         return matches
@@ -57,6 +58,12 @@ class RuleScheduleExpression(CloudFormationLintRule):
             if len(items) != 6:
                 message = 'Cron expression must contain 6 elements (Minutes Hours Day-of-month Month Day-of-week Year), cron contains {} elements'
                 matches.append(RuleMatch(path, message.format(len(items))))
+                return matches
+
+            _, _, day_of_month, _, day_of_week, _ = cron_expression.split(' ')
+            if day_of_month != '?' and day_of_week != '?':
+                matches.append(RuleMatch(
+                    path, 'Don\'t specify the Day-of-month and Day-of-week fields in the same cron expression'))
 
         return matches
 
