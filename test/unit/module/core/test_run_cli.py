@@ -32,6 +32,17 @@ class TestCli(BaseTestCase):
 
         self.assertEqual(len(matches), 1)
 
+    def test_template_not_found_directory(self):
+        """Test template not found"""
+
+        filename = 'test/fixtures/templates/good/core'
+
+        (args, filenames, _) = cfnlint.core.get_args_filenames(
+            ['--template', filename, '--ignore_bad_template'])
+        (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
+
+        self.assertEqual(len(matches), 1)
+
     def test_template_invalid_yaml(self):
         """Test template not found"""
         filename = 'test/fixtures/templates/bad/core/config_invalid_yaml.yaml'
