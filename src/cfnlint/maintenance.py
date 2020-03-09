@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import concurrent.futures
 import fnmatch
 import json
 import logging
@@ -21,19 +22,29 @@ LOGGER = logging.getLogger(__name__)
 def update_resource_specs():
     """ Update Resource Specs """
 
-    for region, url in SPEC_REGIONS.items():
-        filename = os.path.join(os.path.dirname(cfnlint.__file__),
-                                'data/CloudSpecs/%s.json' % region)
-        LOGGER.debug('Downloading template %s into %s', url, filename)
-        spec = json.loads(get_url_content(url))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=32) as executor:
 
-        # Patch the files
-        spec = patch_spec(spec, 'all')
-        spec = patch_spec(spec, region)
+        futures = [executor.submit(_process, region, url) for (region, url) in SPEC_REGIONS.items()]
+        LOGGER.debug('Executing total %s jobs', len(futures))
 
-        with open(filename, 'w') as f:
-            json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
+        # Wait for the executor to complete each future, give 180 seconds for each job
+        for idx, future in enumerate(concurrent.futures.as_completed(futures, timeout=180.0)):
+            res = future.result
+            LOGGER.debug('Processed job %s, result: %s', idx, res)
 
+
+def _process(region, url):
+    filename = os.path.join(os.path.dirname(cfnlint.__file__),
+                            'data/CloudSpecs/%s.json' % region)
+    LOGGER.debug('Downloading template %s into %s', url, filename)
+    spec = json.loads(get_url_content(url))
+
+    # Patch the files
+    spec = patch_spec(spec, 'all')
+    spec = patch_spec(spec, region)
+
+    with open(filename, 'w') as f:
+        json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 def update_documentation(rules):
     """Generate documentation"""
