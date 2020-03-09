@@ -1,0 +1,38 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: "RDS Storage Encrypted"
+Parameters:
+  Engine:
+    Type: String
+  UseAurora:
+    Type: String
+    AllowedValues:
+      - "true"
+      - "false"
+Conditions:
+  IsAurora:
+    Fn::Or:
+      - !Equals [!Ref Engine, "aurora"]
+      - !Equals [!Ref Engine, "aurora-mysql"]
+      - !Equals [!Ref Engine, "aurora-postgresql"]
+  IsAurora2: !Equals [!Ref UseAurora, "true"]
+Resources:
+  MyDbInstance1:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      Engine: mysql
+      AllocatedStorage: "100"
+      DBInstanceClass: db.r3.2xlarge
+      StorageEncrypted: true
+  MyDbInstance2:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      Engine: !Ref Engine
+      DBInstanceClass: db.r3.2xlarge
+      AllocatedStorage: !If [IsAurora, !Ref "AWS::NoValue", "100"]
+  MySqlInstance:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      Engine: !If [IsAurora2, aurora-mysql, mysql]
+      DBInstanceClass: db.r3.2xlarge
+      AllocatedStorage: !If [IsAurora2, !Ref "AWS::NoValue", "100"]
