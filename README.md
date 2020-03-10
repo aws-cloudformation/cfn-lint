@@ -151,6 +151,7 @@ Optional parameters:
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
+| -g, --build-graph | |  | Creates a file in the same directory as the template that models the template's resources in [DOT format](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) |
 | -v, --version | | | Version of cfn-lint |
 
 ### Info Rules

@@ -383,6 +383,10 @@ class CliArgs(object):
             help='A CloudFormation Spec override file that allows customization'
         )
 
+        advanced.add_argument(
+            '-g', '--build-graph', help='Creates a file in the same directory as the template that models the template\'s resources in DOT format', action='store_true'
+        )
+
         standard.add_argument(
             '-v', '--version', help='Version of cfn-lint', action='version',
             version='%(prog)s {version}'.format(version=__version__)
@@ -618,3 +622,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def configure_rules(self):
         """ Configure rules """
         return self._get_argument_value('configure_rules', True, True)
+
+    @property
+    def build_graph(self):
+        """ build_graph """
+        return self._get_argument_value('build_graph', False, False)
