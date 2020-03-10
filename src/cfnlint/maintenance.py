@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import fnmatch
 import json
 import logging
+import multiprocessing
 import os
 import jsonpointer
 import jsonpatch
@@ -47,28 +48,37 @@ SPEC_REGIONS = {
 def update_resource_specs():
     """ Update Resource Specs """
 
-    for region, url in SPEC_REGIONS.items():
-        filename = os.path.join(os.path.dirname(cfnlint.__file__),
-                                'data/CloudSpecs/%s.json' % region)
-        LOGGER.debug('Downloading template %s into %s', url, filename)
+    # Pool() uses cpu count if no number of processors is specified
+    # Pool() only implements the Context Manager protocl from Python3.3 onwards,
+    # so it will fail Python2.7 style linting
+    # pylint: disable=not-context-manager
+    with multiprocessing.Pool() as p:
+        p.starmap(update_resource_spec, SPEC_REGIONS.items())
 
-        spec_content = get_url_content(url, caching=True)
+def update_resource_spec(region, url):
+    """ Update a single resource spec """
+    filename = os.path.join(os.path.dirname(cfnlint.__file__), 'data/CloudSpecs/%s.json' % region)
 
-        # Check to see if no content was returned, indicating we have the latest version already
-        if not spec_content:
-            LOGGER.debug('We already have the most recent version of %s stored in %s', url, filename)
-            continue
+    multiprocessing_logger = multiprocessing.log_to_stderr()
 
-        LOGGER.debug('A more recent version of %s was found, and will be downloaded to %s', url, filename)
-        spec = json.loads(spec_content)
+    multiprocessing_logger.debug('Downloading template %s into %s', url, filename)
 
-        # Patch the files
-        spec = patch_spec(spec, 'all')
-        spec = patch_spec(spec, region)
+    spec_content = get_url_content(url, caching=True)
 
-        with open(filename, 'w') as f:
-            json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
+    # Check to see if no content was returned, indicating we have the latest version already
+    if not spec_content:
+        multiprocessing_logger.debug('We already have the most recent version of %s stored in %s', url, filename)
+        return
 
+    multiprocessing_logger.debug('A more recent version of %s was found, and will be downloaded to %s', url, filename)
+    spec = json.loads(spec_content)
+
+    # Patch the files
+    spec = patch_spec(spec, 'all')
+    spec = patch_spec(spec, region)
+
+    with open(filename, 'w') as f:
+        json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 def update_documentation(rules):
     """Generate documentation"""

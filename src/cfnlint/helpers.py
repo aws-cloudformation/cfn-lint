@@ -19,7 +19,7 @@ import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request
 except ImportError:
     from urllib2 import urlopen
 try:
@@ -166,50 +166,61 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
-CACHING_DIR = os.path.join(os.path.dirname(__file__), 'cache/')
+CACHING_DIR = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
 
 
 def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
-    metadata_filename = os.path.join(CACHING_DIR, 'download_manager.json')
     etag = None
     metadata = {}
     encoded_url = hashlib.sha256(url.encode()).hexdigest()
+    metadata_filename = os.path.join(CACHING_DIR, encoded_url + '.meta.json')
+
+    # To help with Python2's inability to make HEAD requests
+    make_second_request = True
 
     if caching:
         # Load in the cache
         metadata = get_download_metadata(metadata_filename)
 
-        if 'urls' in metadata:
-            if encoded_url in metadata['urls']:
-                if 'etag' in metadata['urls'][encoded_url]:
-                    etag = metadata['urls'][encoded_url]['etag']
+        if 'etag' in metadata:
+            etag = metadata['etag']
 
-    # Start the download
-    res = urlopen(url)
+        # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+        try:
+            req = Request(url, method='HEAD')
 
-    # If we have an ETag value stored and it matches the returned one,
-    # then we already have a copy of the most recent version of the
-    # resource, so don't bother fetching it again
-    if caching:
-        if etag:
-            if res.info().get('ETag'):
-                if etag == res.info().get('ETag'):
-                    LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, etag)
-                    return None
+            # Make an initial HEAD request
+            res = urlopen(req)
 
-    if caching:
+        except NameError:
+            # We're going to request the full body, so don't do this twice
+            make_second_request = False
+
+            # Request the URL with the body too
+            res = urlopen(url)
+
+        # If we have an ETag value stored and it matches the returned one,
+        # then we already have a copy of the most recent version of the
+        # resource, so don't bother fetching it again
+        if etag and res.info().get('ETag'):
+            if etag == res.info().get('ETag'):
+                LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, etag)
+                return None
+
         # If we reach here, then we don't have the latest version of the resource
         LOGGER.debug('We do not have a cached version of url %s yet', url)
 
         # Write the etag back to our cache
         if res.info().get('ETag'):
-            if not 'urls' in metadata:
-                metadata['urls'] = {}
-            if not encoded_url in metadata['urls']:
-                metadata['urls'][encoded_url] = {}
-            metadata['urls'][encoded_url]['etag'] = res.info().get('ETag')
+            metadata['etag'] = res.info().get('ETag')
+            metadata['url'] = url # To make it obvious which url the Tag relates to
             save_download_metadata(metadata, metadata_filename)
+
+    # If we are here, then either 1) we are not using caching, or
+    # 2) the first request shows a different version is available
+    if make_second_request:
+        res = urlopen(url)
 
     # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
@@ -224,7 +235,7 @@ def get_url_content(url, caching=False):
 
 def get_download_metadata(filename):
     """Get the contents of the download metadata file"""
-    metadata = {'urls':{}}
+    metadata = {}
     if os.path.exists(filename):
         with open(filename, 'r') as metadata_file:
             metadata = json.load(metadata_file)

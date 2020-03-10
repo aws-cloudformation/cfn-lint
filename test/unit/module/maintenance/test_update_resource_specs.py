@@ -44,7 +44,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
             builtin_module_name = '__builtin__'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
-            cfnlint.maintenance.update_resource_specs()
+            cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl')
             mock_json_dump.assert_called_with(
                 {
                     'PropertyTypes': {},

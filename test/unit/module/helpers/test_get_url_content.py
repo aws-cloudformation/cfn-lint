@@ -11,9 +11,6 @@ except:
 from test.testlib.testcase import BaseTestCase
 from mock import patch, MagicMock
 import cfnlint.helpers
-import random
-import string
-import hashlib
 
 
 class TestGetUrlContent(BaseTestCase):
@@ -67,15 +64,11 @@ class TestGetUrlContent(BaseTestCase):
 
         input_buffer = '{"key": "value"}'
         # Generate a random ETag to test with
-        etag = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
+        etag = 'ETAG_ONE'
 
         url = 'http://foo.com'
         mocked_getdowloadmetadata.return_value = {
-            'urls': {
-                hashlib.sha256(url.encode()).hexdigest(): {
-                    'etag': etag
-                }
-            }
+            'etag': etag
         }
 
         cm = MagicMock()
@@ -96,7 +89,6 @@ class TestGetUrlContent(BaseTestCase):
         mocked_urlopen.return_value = cm
 
         result = cfnlint.helpers.get_url_content(url, caching=True)
-        mocked_urlopen.assert_called_with(url)
         mocked_savedowloadmetadata.assert_not_called()
         self.assertIsNone(result)
 
@@ -108,16 +100,12 @@ class TestGetUrlContent(BaseTestCase):
 
         input_buffer = '{"key": "value"}'
         # Generate a random ETag to test with
-        etag = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
-        etag2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(40))
+        etag = 'ETAG_ONE'
+        etag2 = 'ETAG_TWO'
 
         url = 'http://foo.com'
         mocked_getdowloadmetadata.return_value = {
-            'urls': {
-                hashlib.sha256(url.encode()).hexdigest(): {
-                    'etag': etag
-                }
-            }
+            'etag': etag
         }
 
         cm = MagicMock()
