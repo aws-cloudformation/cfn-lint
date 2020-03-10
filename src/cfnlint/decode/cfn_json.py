@@ -31,7 +31,7 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     """
         Check for duplicate keys on the current level, this is not desirable
         because a dict does not support this. It overwrites it with the last
-        occurance, which can give unexpected results
+        occurrence, which can give unexpected results
     """
     mapping = dict_node({}, beg_mark, end_mark)
     for key, value in ordered_pairs:
@@ -158,7 +158,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                   memo=None, _w=WHITESPACE.match, _ws=WHITESPACE_STR):
     """ Custom Cfn JSON Object to store keys with start and end times """
     s, end = s_and_end
-    orginal_end = end
+    original_end = end
     pairs = []
     pairs_append = pairs.append
     # Backwards compatibility
@@ -177,7 +177,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             if object_pairs_hook is not None:
                 try:
-                    beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1)
+                    beg_mark, end_mark = get_beg_end_mark(s, original_end, end + 1)
                     result = object_pairs_hook(pairs, beg_mark, end_mark)
                     return result, end + 1
                 except DuplicateError as err:
@@ -186,7 +186,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                     raise JSONDecodeError('Null Error {}'.format(err), s, end)
             pairs = {}
             if object_hook is not None:
-                beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1)
+                beg_mark, end_mark = get_beg_end_mark(s, original_end, end + 1)
                 pairs = object_hook(pairs, beg_mark, end_mark)
             return pairs, end + 1
 
@@ -243,7 +243,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                 'Expecting property name enclosed in double quotes', s, end - 1)
     if object_pairs_hook is not None:
         try:
-            beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end)
+            beg_mark, end_mark = get_beg_end_mark(s, original_end, end)
             result = object_pairs_hook(pairs, beg_mark, end_mark)
         except DuplicateError as err:
             raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
@@ -253,7 +253,7 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
 
     pairs = dict(pairs)
     if object_hook is not None:
-        beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end)
+        beg_mark, end_mark = get_beg_end_mark(s, original_end, end)
         pairs = object_hook(pairs, beg_mark, end_mark)
     return pairs, end
 

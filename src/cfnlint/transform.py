@@ -18,7 +18,7 @@ LOGGER = logging.getLogger('cfnlint')
 
 class Transform(object):
     """
-    Application Serverless Module tranform Wrappor.
+    Application Serverless Module tranform Wrapper.
     Based on code from AWS SAM CLI:
     https://github.com/awslabs/aws-sam-cli/blob/develop/samcli/commands/validate/lib/sam_template_validator.py
     """
@@ -50,7 +50,7 @@ class Transform(object):
         """
         Replaces the CodeUri in AWS::Serverless::Function and DefinitionUri in
         AWS::Serverless::Api to a fake S3 Uri. This is to support running the
-        SAM Translator with valid values for these fields. If this in not done,
+        SAM Translator with valid values for these fields. If this is not done,
         the template is invalid in the eyes of SAM Translator (the translator
         does not support local paths)
         """

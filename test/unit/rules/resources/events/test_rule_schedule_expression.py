@@ -24,4 +24,4 @@ class TestRuleScheduleExpression(BaseRuleTestCase):
     def test_file_negative_alias(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/events/rule_schedule_expression.yaml', 7)
+            'test/fixtures/templates/bad/resources/events/rule_schedule_expression.yaml', 8)

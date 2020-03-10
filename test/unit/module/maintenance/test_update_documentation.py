@@ -74,7 +74,7 @@ Regular Text
                 call('| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n'),
                 call('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n'),
                 call(
-                    '| E0000<a name="E0000"></a> | Parsing error found when parsing the template | Checks for Null values and Duplicate values in resources |  | [Source]() | `base` |\n'),
+                    '| E0000<a name="E0000"></a> | Parsing error found when parsing the template | Checks for JSON/YAML formatting errors in your template |  | [Source]() | `base` |\n'),
                 call(
                     '| E0001<a name="E0001"></a> | Error found when transforming the template | Errors found when performing transformation on the template |  | [Source]() | `base`,`transform` |\n'),
                 call(

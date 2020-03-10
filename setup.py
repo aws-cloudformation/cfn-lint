@@ -23,8 +23,8 @@ with open('README.md') as f:
 setup(
     name='cfn-lint',
     version=version,
-    description=('checks cloudformation for practices and behaviour \
-        that could potentially be improved'),
+    description=('Checks CloudFormation templates for practices and behaviour \
+that could potentially be improved'),
     long_description=readme,
     long_description_content_type="text/markdown",
     keywords='aws, lint',
@@ -66,12 +66,14 @@ setup(
         'pyyaml<=5.2;python_version=="3.4"',
         'pyyaml;python_version!="3.4"',
         'six~=1.11',
-        'aws-sam-translator>=1.19.1',
+        'aws-sam-translator>=1.21.0',
         'jsonpatch;python_version!="3.4"',
         'jsonpatch<=1.24;python_version=="3.4"',
         'jsonschema~=3.0',
         'pathlib2>=2.3.0;python_version<="3.4"',
         'importlib_resources~=1.0.2;python_version<"3.7"',
+        'networkx~=2.4;python_version>="3.5"',
+        'networkx~=2.1;python_version<"3.5"'
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
