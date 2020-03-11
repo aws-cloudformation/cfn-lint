@@ -24,10 +24,16 @@ def update_resource_specs():
 
     # Pool() uses cpu count if no number of processors is specified
     # Pool() only implements the Context Manager protocl from Python3.3 onwards,
-    # so it will fail Python2.7 style linting
-    # pylint: disable=not-context-manager
-    with multiprocessing.Pool() as p:
-        p.starmap(update_resource_spec, SPEC_REGIONS.items())
+    # so it will fail Python2.7 style linting, as well as throw AttributeError
+    try:
+        # pylint: disable=not-context-manager
+        with multiprocessing.Pool() as pool:
+            pool.starmap(update_resource_spec, SPEC_REGIONS.items())
+    except AttributeError:
+
+        # Do it the long, slow way
+        for region, url in SPEC_REGIONS.items():
+            update_resource_spec(region, url)
 
 def update_resource_spec(region, url):
     """ Update a single resource spec """

@@ -18,8 +18,8 @@ class TestUpdateResourceSpecs(BaseTestCase):
     @patch('cfnlint.maintenance.json.dump')
     @patch('cfnlint.maintenance.patch_spec')
     @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
-    def test_update_resource_specs(self, mock_patch_spec, mock_json_dump, mock_content):
-        """Success update resource specs"""
+    def test_update_resource_spec(self, mock_patch_spec, mock_json_dump, mock_content):
+        """Success update resource spec"""
 
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
         mock_patch_spec.side_effect = [
