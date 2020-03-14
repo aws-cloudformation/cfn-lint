@@ -18,6 +18,15 @@ class ValuePrimitiveType(CloudFormationLintRule):
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype'
     tags = ['resources']
 
+    strict_exceptions = {
+        'AWS::CloudFormation::Stack': [
+            'Parameters'
+        ],
+        'AWS::Lambda::Function.Environment': [
+            'Variables'
+        ]
+    }
+
     def __init__(self):
         """Init"""
         super(ValuePrimitiveType, self).__init__()
@@ -41,10 +50,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
         for property_spec in self.property_specs:
             self.resource_sub_property_types.append(property_spec)
 
-    def _value_check(self, value, path, item_type, extra_args):
+    def _value_check(self, value, path, item_type, strict_check, extra_args):
         """ Checks non strict """
         matches = []
-        if not self.config['strict']:
+        if not strict_check:
             try:
                 if item_type in ['String']:
                     str(value)
@@ -81,7 +90,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         return matches
 
-    def check_primitive_type(self, value, item_type, path):
+    def check_primitive_type(self, value, item_type, path, strict_check):
         """Chec item type"""
         matches = []
         if isinstance(value, dict) and item_type == 'Json':
@@ -89,20 +98,20 @@ class ValuePrimitiveType(CloudFormationLintRule):
         if item_type in ['String']:
             if not isinstance(value, (six.string_types)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
-                matches.extend(self._value_check(value, path, item_type, extra_args))
+                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': bool.__name__}
-                matches.extend(self._value_check(value, path, item_type, extra_args))
+                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Double']:
             if not isinstance(value, (float, int)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': [
                     float.__name__, int.__name__]}
-                matches.extend(self._value_check(value, path, item_type, extra_args))
+                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Integer']:
             if not isinstance(value, (int)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
-                matches.extend(self._value_check(value, path, item_type, extra_args))
+                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Long']:
             if sys.version_info < (3,):
                 integer_types = (int, long,)  # pylint: disable=undefined-variable
@@ -111,7 +120,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
             if not isinstance(value, integer_types):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([
                     x.__name__ for x in integer_types])}
-                matches.extend(self._value_check(value, path, item_type, extra_args))
+                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif isinstance(value, list):
             message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
             extra_args = {'actual_type': type(value).__name__, 'expected_type': list.__name__}
@@ -124,18 +133,19 @@ class ValuePrimitiveType(CloudFormationLintRule):
         matches = []
         primitive_type = kwargs.get('primitive_type', {})
         item_type = kwargs.get('item_type', {})
+        strict_check = kwargs.get('non_strict', self.config['strict'])
         if item_type in ['Map']:
             if isinstance(value, dict):
                 for map_key, map_value in value.items():
                     if not isinstance(map_value, dict):
                         matches.extend(self.check_primitive_type(
-                            map_value, primitive_type, path + [map_key]))
+                            map_value, primitive_type, path + [map_key], strict_check))
         else:
             # some properties support primitive types and objects
             # skip in the case it could be an object and the value is a object
             if (item_type or primitive_type) and isinstance(value, dict):
                 return matches
-            matches.extend(self.check_primitive_type(value, primitive_type, path))
+            matches.extend(self.check_primitive_type(value, primitive_type, path, strict_check))
 
         return matches
 
@@ -153,15 +163,19 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 else:
                     item_type = None
                 if primitive_type:
-                    if not(spec_type == 'AWS::CloudFormation::Stack' and prop == 'Parameters'):
-                        matches.extend(
-                            cfn.check_value(
-                                properties, prop, path,
-                                check_value=self.check_value,
-                                primitive_type=primitive_type,
-                                item_type=item_type
-                            )
+                    strict_check = self.config['strict']
+                    if spec_type in self.strict_exceptions:
+                        if prop in self.strict_exceptions[spec_type]:
+                            strict_check = False
+                    matches.extend(
+                        cfn.check_value(
+                            properties, prop, path,
+                            check_value=self.check_value,
+                            primitive_type=primitive_type,
+                            item_type=item_type,
+                            non_strict=strict_check,
                         )
+                    )
 
         return matches
 
