@@ -690,6 +690,7 @@
         "DescribeStacks",
         "DetectStackDrift",
         "DetectStackResourceDrift",
+        "DetectStackSetDrift",
         "EstimateTemplateCost",
         "ExecuteChangeSet",
         "GetStackPolicy",
@@ -722,6 +723,7 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "cloudformation:ChangeSetName",
+        "cloudformation:ImportResourceTypes",
         "cloudformation:ResourceTypes",
         "cloudformation:RoleArn",
         "cloudformation:StackPolicyUrl",
@@ -2122,6 +2124,7 @@
         "ListCrawlers",
         "ListDevEndpoints",
         "ListJobs",
+        "ListMLTransforms",
         "ListTriggers",
         "ListWorkflows",
         "PutDataCatalogEncryptionSettings",
@@ -3040,7 +3043,7 @@
       ]
     },
     "AWS Managed Apache Cassandra Service": {
-      "ARNFormat": "arn:${Partition}:cassandra:${region}:${account}:${resourceType}/${resourcePath}",
+      "ARNFormat": "arn:${Partition}:cassandra:${region}:${account}:/${resourceType}/${resourcePath}/",
       "ARNRegex": "^arn:${Partition}:cassandra:.+",
       "Actions": [
         "Alter",
@@ -3876,10 +3879,14 @@
         "ListApplications",
         "PutApplicationPolicy",
         "SearchApplications",
+        "UnshareApplication",
         "UpdateApplication"
       ],
       "HasResource": true,
-      "StringPrefix": "serverlessrepo"
+      "StringPrefix": "serverlessrepo",
+      "conditionKeys": [
+        "serverlessrepo:applicationType"
+      ]
     },
     "AWS Service Catalog": {
       "ARNFormat": "arn:aws:(catalog|servicecatalog):<region>:<account>:<resourceType>/<id>",
@@ -8330,12 +8337,14 @@
         "ModifyScheduledAction",
         "ModifySnapshotCopyRetentionPeriod",
         "ModifySnapshotSchedule",
+        "PauseCluster",
         "PurchaseReservedNodeOffering",
         "RebootCluster",
         "ResetClusterParameterGroup",
         "ResizeCluster",
         "RestoreFromClusterSnapshot",
         "RestoreTableFromClusterSnapshot",
+        "ResumeCluster",
         "RevokeClusterSecurityGroupIngress",
         "RevokeSnapshotAccess",
         "RotateEncryptionKey",
@@ -9244,6 +9253,7 @@
         "ListTranscriptionJobs",
         "ListVocabularies",
         "ListVocabularyFilters",
+        "StartMedicalStreamTranscription",
         "StartStreamTranscription",
         "StartTranscriptionJob",
         "UpdateVocabulary",
