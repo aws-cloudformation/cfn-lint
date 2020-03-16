@@ -20,8 +20,17 @@ class Graph(object):
         self.graph = networkx.MultiDiGraph()
 
         # add all resources in the template as nodes
-        for resourceId in cfn.template['Resources'].keys():
+        for resourceId, resourceVals in cfn.template.get('Resources', {}).items():
             self.graph.add_node(resourceId)
+            target_ids = resourceVals.get('DependsOn', [])
+            if isinstance(target_ids, (list, six.string_types)):
+                if isinstance(target_ids, (six.string_types)):
+                    target_ids = [target_ids]
+                for target_id in target_ids:
+                    if isinstance(target_id, six.string_types):
+                        if self._is_resource(cfn, target_id):
+                            target_resource_id = target_id
+                            self.graph.add_edge(resourceId, target_resource_id, label='DependsOn')
 
         # add edges for "Ref" tags. { "Ref" : "logicalNameOfResource" }
         refs_paths = cfn.search_deep_keys('Ref')
@@ -52,21 +61,6 @@ class Graph(object):
                 target_resource_id = value.split('.')[0]
                 if self._is_resource(cfn, target_resource_id):
                     self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
-
-        # add edges for "DependsOn" tags. { "DependsOn" : [ String, ... ] }
-        depends_on_paths = cfn.search_deep_keys('DependsOn')
-        for depend_on_path in depends_on_paths:
-            ref_type, source_id = depend_on_path[:2]
-            target_ids = depend_on_path[-1]
-            if not ref_type == 'Resources':
-                continue
-
-            if isinstance(target_ids, (six.text_type, six.string_types)):
-                target_ids = [target_ids]
-            for target_id in target_ids:
-                if self._is_resource(cfn, target_id):
-                    target_resource_id = target_id
-                    self.graph.add_edge(source_id, target_resource_id, label='DependsOn')
 
         # add edges for "Fn::Sub" tags. E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
         sub_objs = cfn.search_deep_keys('Fn::Sub')
