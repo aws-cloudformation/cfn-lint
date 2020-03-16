@@ -3,7 +3,7 @@
 - Update SAM Translator package to 1.21.0 (pull #[1406](https://github.com/aws-cloudformation/cfn-python-lint/pull/1406))
 - Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3027) to check that either Day of Month or Day of Week is a question mark (pull #[1405](https://github.com/aws-cloudformation/cfn-python-lint/pull/1405))
 - New rule [E3029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3029) to check `AWS::RDS::DBInstance` `Aurora` databases don't have certain properties (pull #[1420](https://github.com/aws-cloudformation/cfn-python-lint/pull/1420))
-- Build a graph resource for checking circular dependencies (pull #[1391](https://github.com/aws-cloudformation/cfn-python-lint/pull/1391))
+- Build a resource graph for checking circular dependencies (pull #[1391](https://github.com/aws-cloudformation/cfn-python-lint/pull/1391))
 ###### CloudFormation Specifications
 - Update Exclusive and Only One specs to include additional rules around Security Group Rules (pull #[1407](https://github.com/aws-cloudformation/cfn-python-lint/pull/1407))
 - Update CloudFormation specs to 11.5.0 (pull #[1416](https://github.com/aws-cloudformation/cfn-python-lint/pull/1416))
