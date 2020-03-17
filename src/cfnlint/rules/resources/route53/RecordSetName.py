@@ -1,5 +1,5 @@
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import six
@@ -9,7 +9,7 @@ from cfnlint.rules import RuleMatch
 
 class RecordSetName(CloudFormationLintRule):
     """Check if a Route53 Resoruce Records Name is valid with a HostedZoneName"""
-    id = 'E3040'
+    id = 'E3041'
     shortdesc = 'RecordSet HostedZoneName is a superdomain of Name'
     description = 'In a RecordSet, the HostedZoneName must be a superdomain of the Name being validated'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-name'
@@ -28,8 +28,8 @@ class RecordSetName(CloudFormationLintRule):
         for property_set in property_sets:
             props = property_set.get('Object')
             scenario = property_set.get('Scenario')
-            name = props.get('Name', '')
-            hz_name = props.get('HostedZoneName', '')
+            name = props.get('Name', None)
+            hz_name = props.get('HostedZoneName', None)
             if isinstance(name, six.string_types) and isinstance(hz_name, six.string_types):
                 if hz_name[-1] != '.':
                     message = 'HostedZoneName must end in a dot at {}'
@@ -41,7 +41,6 @@ class RecordSetName(CloudFormationLintRule):
                             ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                         matches.append(
                             RuleMatch(path[:] + ['HostedZoneName'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
-
                 if hz_name[-1] == '.':
                     hz_name = hz_name[:-1]
                 if name[-1] == '.':

@@ -1,5 +1,5 @@
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
@@ -24,4 +24,4 @@ class TestRoute53RecordSetName(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/route53/recordset_name.yaml', 3)
+            'test/fixtures/templates/bad/resources/route53/recordset_name.yaml', 6)
