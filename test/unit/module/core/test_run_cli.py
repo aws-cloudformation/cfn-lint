@@ -24,6 +24,7 @@ class TestCli(BaseTestCase):
 
     def tearDown(self):
         """Tear Down"""
+        logging.disable(logging.NOTSET)
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
 
