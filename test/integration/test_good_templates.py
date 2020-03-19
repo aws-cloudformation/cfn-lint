@@ -266,14 +266,14 @@ class TestQuickStartTemplates(BaseCliTestCase):
                         },
                         "Path": [
                             "Resources",
-                            "SkillFunctionVersionb3d38083f6"
+                            "SkillFunctionVersion55ff35af87"
                         ],
                         "Start": {
                             "ColumnNumber": 1,
                             "LineNumber": 14
                         }
                     },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/SkillFunctionVersionb3d38083f6 from deletion",
+                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/SkillFunctionVersion55ff35af87 from deletion",
                     "Rule": {
                         "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
                         "Id": "W3011",
