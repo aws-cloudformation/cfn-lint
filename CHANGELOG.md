@@ -1,3 +1,11 @@
+### v0.29.1
+- Switch DB Instance Engine check from [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) to [E3040](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3040) so the comparison is case insensitive (pull #[1441](https://github.com/aws-cloudformation/cfn-python-lint/pull/1441))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 11.6.0 (pull #[1433](https://github.com/aws-cloudformation/cfn-python-lint/pull/1433))
+- Add `ruby2.7` to supported list of ruby runtimes (pull #[1436](https://github.com/aws-cloudformation/cfn-python-lint/pull/1436))
+###### Fixes
+- Update regex in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to be more optimal and not hang on large strings (pull #[1430](https://github.com/aws-cloudformation/cfn-python-lint/pull/1430/))
+
 ### v0.29.0
 ###### Features
 - Update SAM Translator package to 1.21.0 (pull #[1406](https://github.com/aws-cloudformation/cfn-python-lint/pull/1406))
