@@ -19,7 +19,7 @@ class SubNeeded(CloudFormationLintRule):
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
     excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
-                'CloudWatchAlarmDefinition', 'TopicRulePayload']
+                'CloudWatchAlarmDefinition', 'TopicRulePayload', 'BuildSpec']
     api_excludes = ['Uri', 'Body']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
@@ -150,8 +150,8 @@ class SubNeeded(CloudFormationLintRule):
             if not found_sub:
                 # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                 path = parameter_string_path[:-1]
-                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format(
-                    '/'.join(map(str, path)))
+                message = 'Found an embedded parameter "{}" outside of an "Fn::Sub" at {}'.format(
+                    variable, '/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
 
         return matches

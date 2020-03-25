@@ -31,9 +31,9 @@ class TestSubNeeded(BaseRuleTestCase):
         )
         self.helper_file_rule_config(
             'test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml',
-            {}, 3
-        )        
+            {}, 4
+        )
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions/sub_needed.yaml', 4)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/sub_needed.yaml', 6)
