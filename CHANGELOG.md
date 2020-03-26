@@ -1,3 +1,7 @@
+### v0.29.2
+###### Fixes
+- Update exceptions in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `BuildSpec` (pull #[1444](https://github.com/aws-cloudformation/cfn-python-lint/pull/1444/))
+
 ### v0.29.1
 ###### Features
 - Switch DB Instance Engine check from [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) to [E3040](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3040) so the comparison is case insensitive (pull #[1441](https://github.com/aws-cloudformation/cfn-python-lint/pull/1441))
