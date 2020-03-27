@@ -84,7 +84,7 @@ AVAILABILITY_ZONES = [
     'ap-south-1a', 'ap-south-1b', 'ap-south-1c',
     'ap-southeast-1a', 'ap-southeast-1b', 'ap-southeast-1c',
     'ap-southeast-2a', 'ap-southeast-2b', 'ap-southeast-2c',
-    'ca-central-1a', 'ca-central-1b',
+    'ca-central-1a', 'ca-central-1b', 'ca-central-1d',
     'cn-north-1a', 'cn-north-1b',
     'cn-northwest-1a', 'cn-northwest-1b', 'cn-northwest-1c',
     'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
