@@ -56,12 +56,13 @@ RootInstanceProfile -> RootRole  [key=0, label=Ref];
 MyEC2Instance -> RootInstanceProfile  [key=0, label=Ref];
 ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
 }
-"""
+""".split('\n')
 
         assert os.path.exists(dot)
         with open(dot, 'r') as file:
-            file_contents = file.read()
-            assert file_contents == expected_content
+            file_contents = file.read().split('\n')
+            # doing set equality instead of string equality because python 2.7 and 3.8 produce the same graph but with different edge order
+            assert len(file_contents) == len(expected_content) and sorted(file_contents) == sorted(expected_content)
 
         os.remove(dot)
 
