@@ -1,3 +1,9 @@
+### v0.29.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to 12.0.0 (pull #[1448](https://github.com/aws-cloudformation/cfn-python-lint/pull/1448))
+###### Fixes
+- Add region `ca-central-1d` (pull #[1447](https://github.com/aws-cloudformation/cfn-python-lint/pull/1447))
+
 ### v0.29.2
 ###### Fixes
 - Update exceptions in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `BuildSpec` (pull #[1444](https://github.com/aws-cloudformation/cfn-python-lint/pull/1444/))
