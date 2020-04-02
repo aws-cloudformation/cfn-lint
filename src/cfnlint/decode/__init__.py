@@ -58,7 +58,8 @@ def decode(filename, ignore_bad_template):
     except ScannerError as err:
         if err.problem in [
                 'found character \'\\t\' that cannot start any token',
-                'found unknown escape character']:
+                'found unknown escape character'] or err.problem.startswith(
+                    'found unknown escape character'):
             try:
                 template = cfn_json.load(filename)
             except cfn_json.JSONDecodeError as json_err:
