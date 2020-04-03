@@ -4,10 +4,12 @@ Helpers for loading resources, managing specs, constants, etc.
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import logging
 import re
 import six
 from networkx import networkx
 
+LOGGER = logging.getLogger('cfnlint.graph')
 
 class Graph(object):
     """Models a template as a directed graph of resources"""
@@ -17,11 +19,13 @@ class Graph(object):
         relationships between resources"""
 
         # Directed graph that allows self loops and parallel edges
-        self.graph = networkx.MultiDiGraph()
+        self.graph = networkx.MultiDiGraph(name='template')
 
         # add all resources in the template as nodes
         for resourceId, resourceVals in cfn.template.get('Resources', {}).items():
-            self.graph.add_node(resourceId)
+            type_val = resourceVals.get('Type', '')
+            graph_label = str.format('{0}\\n<{1}>', resourceId, type_val)
+            self.graph.add_node(resourceId, label=graph_label)
             target_ids = resourceVals.get('DependsOn', [])
             if isinstance(target_ids, (list, six.string_types)):
                 if isinstance(target_ids, (six.string_types)):
@@ -109,3 +113,16 @@ class Graph(object):
         """Search string for tokenized fields"""
         regex = re.compile(r'\${([a-zA-Z0-9.]*)}')
         return regex.findall(string)
+
+    # pylint: disable=import-outside-toplevel,unused-variable
+    def to_dot(self, path):
+        """Export the graph to a file with DOT format"""
+        try:
+            import pygraphviz
+            networkx.drawing.nx_agraph.write_dot(self.graph, path)
+        except ImportError:
+            try:
+                import pydot
+                networkx.drawing.nx_pydot.write_dot(self.graph, path)
+            except ImportError as e:
+                raise e
