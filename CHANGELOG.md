@@ -1,3 +1,11 @@
+### v0.29.4
+###### Features
+- Add `--build-graph` parameter to create a graph of dependencies (pull #[1411](https://github.com/aws-cloudformation/cfn-python-lint/pull/1411))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 12.1.0 (pull #[1455](https://github.com/aws-cloudformation/cfn-python-lint/pull/1455))
+###### Fixes
+- Add `found unknown escape character` to start of err problem to determine when to use json parsing (pull #[1454](https://github.com/aws-cloudformation/cfn-python-lint/pull/1454))
+
 ### v0.29.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 12.0.0 (pull #[1448](https://github.com/aws-cloudformation/cfn-python-lint/pull/1448))
