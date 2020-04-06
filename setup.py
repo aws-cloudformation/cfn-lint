@@ -73,7 +73,7 @@ that could potentially be improved'),
         'pathlib2>=2.3.0;python_version<="3.4"',
         'importlib_resources~=1.0.2;python_version<"3.7"',
         'networkx~=2.4;python_version>="3.5"',
-        'networkx~=2.1;python_version<"3.5"'
+        'networkx<=2.2;python_version<"3.5"'
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
