@@ -66,11 +66,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 * [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint)
 
-### GitHub Actions
-
-There is a GitHub Actions action available to get linter feedback in workflows:
-
-* [cfn-lint-action](https://github.com/marketplace/actions/cfn-lint-action)
+### [GitHub Action](https://github.com/marketplace/actions/cfn-lint-action)
 
 ## Basic Usage
 
