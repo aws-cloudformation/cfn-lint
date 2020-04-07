@@ -1,3 +1,41 @@
+### v0.29.4
+###### Features
+- Add `--build-graph` parameter to create a graph of dependencies (pull #[1411](https://github.com/aws-cloudformation/cfn-python-lint/pull/1411))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 12.1.0 (pull #[1455](https://github.com/aws-cloudformation/cfn-python-lint/pull/1455))
+###### Fixes
+- Add `found unknown escape character` to start of err problem to determine when to use json parsing (pull #[1454](https://github.com/aws-cloudformation/cfn-python-lint/pull/1454))
+
+### v0.29.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to 12.0.0 (pull #[1448](https://github.com/aws-cloudformation/cfn-python-lint/pull/1448))
+###### Fixes
+- Add region `ca-central-1d` (pull #[1447](https://github.com/aws-cloudformation/cfn-python-lint/pull/1447))
+
+### v0.29.2
+###### Fixes
+- Update exceptions in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `BuildSpec` (pull #[1444](https://github.com/aws-cloudformation/cfn-python-lint/pull/1444/))
+
+### v0.29.1
+###### Features
+- Switch DB Instance Engine check from [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) to [E3040](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3040) so the comparison is case insensitive (pull #[1441](https://github.com/aws-cloudformation/cfn-python-lint/pull/1441))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 11.6.0 (pull #[1433](https://github.com/aws-cloudformation/cfn-python-lint/pull/1433))
+- Add `ruby2.7` to supported list of ruby runtimes (pull #[1436](https://github.com/aws-cloudformation/cfn-python-lint/pull/1436))
+###### Fixes
+- Update regex in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to be more optimal and not hang on large strings (pull #[1430](https://github.com/aws-cloudformation/cfn-python-lint/pull/1430/))
+
+### v0.29.0
+###### Features
+- Update SAM Translator package to 1.21.0 (pull #[1406](https://github.com/aws-cloudformation/cfn-python-lint/pull/1406))
+- Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3027) to check that either Day of Month or Day of Week is a question mark (pull #[1405](https://github.com/aws-cloudformation/cfn-python-lint/pull/1405))
+- New rule [E3029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3029) to check `AWS::RDS::DBInstance` `Aurora` databases don't have certain properties (pull #[1409](https://github.com/aws-cloudformation/cfn-python-lint/pull/1409))
+- Build a resource graph for checking circular dependencies (pull #[1391](https://github.com/aws-cloudformation/cfn-python-lint/pull/1391))
+###### CloudFormation Specifications
+- Update Exclusive and Only One specs to include additional rules around Security Group Rules (pull #[1407](https://github.com/aws-cloudformation/cfn-python-lint/pull/1407))
+- Update CloudFormation specs to 11.5.0 (pull #[1416](https://github.com/aws-cloudformation/cfn-python-lint/pull/1416))
+- Patch spec so that TTL is Long on Route53 Change Record Sets (pull #[1417](https://github.com/aws-cloudformation/cfn-python-lint/pull/1417))
+
 ### v0.28.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 11.4.0 (pull #[1403](https://github.com/aws-cloudformation/cfn-python-lint/pull/1403))

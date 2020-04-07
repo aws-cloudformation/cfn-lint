@@ -66,11 +66,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
 * [IntelliJ IDEA](https://plugins.jetbrains.com/plugin/10973-cfn-lint)
 
-### GitHub Actions
-
-There is a GitHub Actions action available to get linter feedback in workflows:
-
-* [cfn-lint-action](https://github.com/marketplace/actions/cfn-lint-action)
+### [GitHub Action](https://github.com/marketplace/actions/cfn-lint-action)
 
 ## Basic Usage
 
@@ -151,6 +147,7 @@ Optional parameters:
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
+| -g, --build-graph | |  | Creates a file in the same directory as the template that models the template's resources in [DOT format](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) |
 | -v, --version | | | Version of cfn-lint |
 
 ### Info Rules
@@ -242,7 +239,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.28.4  # The version of cfn-lint to use
+    rev: v0.29.4  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

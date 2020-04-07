@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
+import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -18,7 +19,7 @@ class SubNeeded(CloudFormationLintRule):
     # Free-form text properties to exclude from this rule
     # content is part of AWS::CloudFormation::Init
     excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
-                'CloudWatchAlarmDefinition', 'TopicRulePayload']
+                'CloudWatchAlarmDefinition', 'TopicRulePayload', 'BuildSpec']
     api_excludes = ['Uri', 'Body']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
@@ -57,38 +58,37 @@ class SubNeeded(CloudFormationLintRule):
             }
         }
         self.configure()
+        self.subParameterRegex = re.compile(r'(\$\{[A-Za-z0-9_:\.]+\})')
 
-    def _match_values(self, searchRegex, cfnelem, path):
+    def _match_values(self, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
         values = []
         if isinstance(cfnelem, dict):
             for key in cfnelem:
                 pathprop = path[:]
                 pathprop.append(key)
-                values.extend(self._match_values(searchRegex, cfnelem[key], pathprop))
+                values.extend(self._match_values(cfnelem[key], pathprop))
         elif isinstance(cfnelem, list):
             for index, item in enumerate(cfnelem):
                 pathprop = path[:]
                 pathprop.append(index)
-                values.extend(self._match_values(searchRegex, item, pathprop))
+                values.extend(self._match_values(item, pathprop))
         else:
             # Leaf node
-            if isinstance(cfnelem, str) and re.match(searchRegex, cfnelem):
-                # Get all variables as seperate paths
-                regex = re.compile(r'(\$\{.*?\.?.*?})')
-                for variable in re.findall(regex, cfnelem):
+            if isinstance(cfnelem, six.string_types):  # and re.match(searchRegex, cfnelem):
+                for variable in re.findall(self.subParameterRegex, cfnelem):
                     values.append(path + [variable])
 
         return values
 
-    def match_values(self, searchRegex, cfn):
+    def match_values(self, cfn):
         """
             Search for values in all parts of the templates that match the searchRegex
         """
         results = []
-        results.extend(self._match_values(searchRegex, cfn.template, []))
+        results.extend(self._match_values(cfn.template, []))
         # Globals are removed during a transform.  They need to be checked manually
-        results.extend(self._match_values(searchRegex, cfn.template.get('Globals', {}), []))
+        results.extend(self._match_values(cfn.template.get('Globals', {}), []))
         return results
 
     def _api_exceptions(self, value):
@@ -109,12 +109,8 @@ class SubNeeded(CloudFormationLintRule):
 
         matches = []
 
-        # Generic regex to match a string containing at least one ${parameter}
-        parameter_search = re.compile(r'^.*(\$\{.*\}.*(\$\{.*\}.*)*)$')
-
         # Get a list of paths to every leaf node string containing at least one ${parameter}
-        parameter_string_paths = self.match_values(parameter_search, cfn)
-
+        parameter_string_paths = self.match_values(cfn)
         # We want to search all of the paths to check if each one contains an 'Fn::Sub'
         for parameter_string_path in parameter_string_paths:
             if parameter_string_path[0] in ['Parameters']:
@@ -154,8 +150,8 @@ class SubNeeded(CloudFormationLintRule):
             if not found_sub:
                 # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                 path = parameter_string_path[:-1]
-                message = 'Found an embedded parameter outside of an "Fn::Sub" at {}'.format(
-                    '/'.join(map(str, path)))
+                message = 'Found an embedded parameter "{}" outside of an "Fn::Sub" at {}'.format(
+                    variable, '/'.join(map(str, path)))
                 matches.append(RuleMatch(path, message))
 
         return matches

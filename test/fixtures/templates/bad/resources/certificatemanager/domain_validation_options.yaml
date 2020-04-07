@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  Certificate1:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      DomainName: "subdomain.example.com"
+      DomainValidationOptions:
+        - DomainName: "subdomain.example.com"
+          ValidationDomain: "example.net"
+  Certificate2:
+    Type: "AWS::CertificateManager::Certificate"
+    Properties:
+      # Initially, the linting code did not check for a leading .
+      # This case ensures that we're actually dealing with a subdomain, not just ending with the validation domain.
+      DomainName: "prefixed-example.com"
+      DomainValidationOptions:
+        - DomainName: "prefixed-example.com"
+          ValidationDomain: "example.com"

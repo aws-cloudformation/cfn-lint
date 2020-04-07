@@ -14,6 +14,7 @@ import six
 from yaml.parser import ParserError
 import cfnlint.helpers
 import cfnlint.conditions
+from cfnlint.graph import Graph
 from cfnlint.transform import Transform
 from cfnlint.decode.node import TemplateAttributeError
 from cfnlint.helpers import PSEUDOPARAMS
@@ -115,6 +116,17 @@ class Template(object):  # pylint: disable=R0904
         for k, v in self.__dict__.items():
             setattr(result, k, deepcopy(v, memo))
         return result
+
+    def build_graph(self):
+        """Generates a DOT representation of the template"""
+        g = Graph(self)
+        path = self.filename + '.dot'
+        try:
+            g.to_dot(path)
+            LOGGER.info('DOT representation of the graph written to %s', path)
+        except ImportError:
+            LOGGER.error(
+                'Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules.')
 
     def get_resources(self, resource_type=[]):
         """

@@ -16,8 +16,15 @@ LOGGER = logging.getLogger('cfnlint')
 class TestCli(BaseTestCase):
     """Test CLI processing """
 
-    def tearDown(self):
+    def setUp(self):
         """Setup"""
+        # Disable all but critical logger output, as both 'test_template_not_found' and
+        # 'test_template_not_found_directory' like to print out errors to the console.
+        logging.disable(logging.CRITICAL)
+
+    def tearDown(self):
+        """Tear Down"""
+        logging.disable(logging.NOTSET)
         for handler in LOGGER.handlers:
             LOGGER.removeHandler(handler)
 
@@ -27,7 +34,7 @@ class TestCli(BaseTestCase):
         filename = 'test/fixtures/templates/good/core/not_found.yaml'
 
         (args, filenames, _) = cfnlint.core.get_args_filenames(
-            ['--template', filename, '--ignore_bad_template'])
+            ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
         self.assertEqual(len(matches), 1)
@@ -38,7 +45,7 @@ class TestCli(BaseTestCase):
         filename = 'test/fixtures/templates/good/core'
 
         (args, filenames, _) = cfnlint.core.get_args_filenames(
-            ['--template', filename, '--ignore_bad_template'])
+            ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
         self.assertEqual(len(matches), 1)

@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
+import os
 from test.testlib.testcase import BaseTestCase
 import cfnlint.helpers
 from cfnlint import Template  # pylint: disable=E0401
@@ -32,6 +33,38 @@ class TestTemplate(BaseTestCase):
             'Package1',
             'pIops'
         ]
+
+    def test_build_graph(self):
+        self.template.build_graph()
+
+        dot = 'test/fixtures/templates/good/generic.yaml.dot'
+
+        expected_content = """digraph "template" {
+RootRole [label="RootRole\\n<AWS::IAM::Role>"];
+RolePolicies [label="RolePolicies\\n<AWS::IAM::Policy>"];
+RootInstanceProfile [label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>"];
+MyEC2Instance [label="MyEC2Instance\\n<AWS::EC2::Instance>"];
+mySnsTopic [label="mySnsTopic\\n<AWS::SNS::Topic>"];
+MyEC2Instance1 [label="MyEC2Instance1\\n<AWS::EC2::Instance>"];
+ElasticIP [label="ElasticIP\\n<AWS::EC2::EIP>"];
+ElasticLoadBalancer [label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>"];
+IamPipeline [label="IamPipeline\\n<AWS::CloudFormation::Stack>"];
+CustomResource [label="CustomResource\\n<Custom::Function>"];
+WaitCondition [label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>"];
+RolePolicies -> RootRole  [key=0, label=Ref];
+RootInstanceProfile -> RootRole  [key=0, label=Ref];
+MyEC2Instance -> RootInstanceProfile  [key=0, label=Ref];
+ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
+}
+""".split('\n')
+
+        assert os.path.exists(dot)
+        with open(dot, 'r') as file:
+            file_contents = file.read().split('\n')
+            # doing set equality instead of string equality because python 2.7 and 3.8 produce the same graph but with different edge order
+            assert len(file_contents) == len(expected_content) and sorted(file_contents) == sorted(expected_content)
+
+        os.remove(dot)
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""

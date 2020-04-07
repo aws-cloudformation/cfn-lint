@@ -25,7 +25,7 @@ class TestTransform(BaseTestCase):
             {
                 'Name': 'Alias',
                 'FunctionName': {'Ref': 'SkillFunction'},
-                'FunctionVersion': {'Fn::GetAtt': ['SkillFunctionVersionb3d38083f6', 'Version']}
+                'FunctionVersion': {'Fn::GetAtt': ['SkillFunctionVersion55ff35af87', 'Version']}
             })
 
     def test_parameter_for_autopublish_version_bad(self):
