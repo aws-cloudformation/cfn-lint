@@ -48,17 +48,25 @@ class ConfigFileArgs(object):
         Parses .cfnlintrc in the Home and Project folder.
     """
     file_args = {}
+    __user_config_file = None
+    __project_config_file = None
+    __custom_config_file = None
 
-    def __init__(self, schema=None):
+    def __init__(self, schema=None, config_file=None):
         # self.file_args = self.get_config_file_defaults()
-        self.__user_config_file = None
-        self.__project_config_file = None
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath(
             'data/CfnLintCli/config/schema.json')
         with self.default_schema_file.open() as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
+
+        if config_file:
+            self.__custom_config_file = config_file
+        else:
+            LOGGER.debug('Looking for CFLINTRC before attempting to load')
+            self.__user_config_file, self.__project_config_file = self._find_config()
+
         self.load()
 
     def _find_config(self):
@@ -113,24 +121,30 @@ class ConfigFileArgs(object):
             CFLINTRC configuration
         """
 
-        LOGGER.debug('Looking for CFLINTRC before attempting to load')
-        user_config, project_config = self._find_config()
+        if self.__custom_config_file:
+            custom_config = self._read_config(self.__custom_config_file)
+            LOGGER.debug('Validating Custom CFNLINTRC')
+            self.validate_config(custom_config, self.schema)
+            LOGGER.debug('Custom configuration loaded as')
+            LOGGER.debug('%s', custom_config)
 
-        user_config = self._read_config(user_config)
-        LOGGER.debug('Validating User CFNLINTRC')
-        self.validate_config(user_config, self.schema)
+            self.file_args = custom_config
+        else:
+            user_config = self._read_config(self.__user_config_file)
+            LOGGER.debug('Validating User CFNLINTRC')
+            self.validate_config(user_config, self.schema)
 
-        project_config = self._read_config(project_config)
-        LOGGER.debug('Validating Project CFNLINTRC')
-        self.validate_config(project_config, self.schema)
+            project_config = self._read_config(self.__project_config_file)
+            LOGGER.debug('Validating Project CFNLINTRC')
+            self.validate_config(project_config, self.schema)
 
-        LOGGER.debug('User configuration loaded as')
-        LOGGER.debug('%s', user_config)
-        LOGGER.debug('Project configuration loaded as')
-        LOGGER.debug('%s', project_config)
+            LOGGER.debug('User configuration loaded as')
+            LOGGER.debug('%s', user_config)
+            LOGGER.debug('Project configuration loaded as')
+            LOGGER.debug('%s', project_config)
 
-        LOGGER.debug('Merging configurations...')
-        self.file_args = self.merge_config(user_config, project_config)
+            LOGGER.debug('Merging configurations...')
+            self.file_args = self.merge_config(user_config, project_config)
 
     def validate_config(self, config, schema):
         """Validate configuration against schema
@@ -378,6 +392,9 @@ class CliArgs(object):
             help='Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false'
         )
 
+        standard.add_argument('--config-file', dest='config_file',
+                              help='Specify the cfnlintrc file to use')
+
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
             help='A CloudFormation Spec override file that allows customization'
@@ -459,8 +476,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         CliArgs.__init__(self, cli_args)
         # configure debug as soon as we can
         configure_logging(self.cli_args.debug, self.cli_args.info)
-        ConfigFileArgs.__init__(self)
         TemplateArgs.__init__(self, {})
+        ConfigFileArgs.__init__(
+            self, config_file=self._get_argument_value('config_file', False, False))
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
         """ Get Argument value """
@@ -622,6 +640,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def configure_rules(self):
         """ Configure rules """
         return self._get_argument_value('configure_rules', True, True)
+
+    @property
+    def config_file(self):
+        """ Config file """
+        return self._get_argument_value('config_file', False, False)
 
     @property
     def build_graph(self):

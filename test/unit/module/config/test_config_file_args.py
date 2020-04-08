@@ -26,12 +26,11 @@ class TestConfigFileArgs(BaseTestCase):
 
     def test_config_parser_read_config(self):
         """ Testing one file successful """
-        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
-        config = cfnlint.config.ConfigFileArgs()
-        config_file = Path('test/fixtures/configs/cfnlintrc_read.yaml')
-        config_template = config._read_config(config_file)
+        config = cfnlint.config.ConfigFileArgs(
+            config_file=Path('test/fixtures/configs/cfnlintrc_read.yaml')
+        )
         self.assertEqual(
-            config_template,
+            config.file_args,
             {
                 'templates': ['test/fixtures/templates/good/**/*.yaml'],
                 'include_checks': ['I']
@@ -39,9 +38,22 @@ class TestConfigFileArgs(BaseTestCase):
         )
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_parser_read_config_only_one_read(self, yaml_mock):
+        """ Testing one file successful """
+        # Should only have one read here
+        # We aren't going to search and find the possible locations of
+        # cfnlintrc
+        yaml_mock.side_effect = [
+            {"regions": ["us-west-1"]},
+        ]
+        config = cfnlint.config.ConfigFileArgs(
+            config_file=Path('test/fixtures/configs/cfnlintrc_read.yaml')
+        )
+        self.assertEqual(config.file_args, {'regions': ['us-west-1']})
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_parser_read(self, yaml_mock):
         """ Testing one file successful """
-        # cfnlintrc_mock.return_value.side_effect = [Mock(return_value=True), Mock(return_value=False)]
         yaml_mock.side_effect = [
             {"regions": ["us-west-1"]},
             {}
