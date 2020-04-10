@@ -2,48 +2,49 @@ language: python
 sudo: true
 dist: xenial
 services:
-- docker
+  - docker
 stages:
-- Linting
-- Unit Tests
-- Integration
-- Deploy
+  - Linting
+  - Unit Tests
+  - Integration
+  - Deploy
 jobs:
   include:
-  - stage: Linting
-    python: 3.8
-    env: TOXENV=pylint38
-  - python: 2.7
-    env: TOXENV=pylint27
-  - stage: Unit Tests
-    python: 2.7
-    env: TOXENV=py27
-  - python: 3.4
-    env: TOXENV=py34
-  - python: 3.5
-    env: TOXENV=py35
-  - python: 3.6
-    env: TOXENV=py36
-  - python: 3.7
-    env: TOXENV=py37
-  - python: 3.8
-    env: TOXENV=py38, codecov
-  - stage: Integration
-    python: 3.8
-    script: docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.8.1-alpine3.11
-      /bin/sh -c 'pip3 install -e . && cfn-lint test/fixtures/templates/good/generic.yaml && cat test/fixtures/templates/good/generic.yaml | cfn-lint'
-  - stage: Deploy
-    script: skip
-    python: 3.8
-    deploy:
-      provider: pypi
-      user: kddejong
-      password:
-        secure: PRFpbdo0pVE7JvNryNJVsMoIaBERtX9touq4N1YfoLXSp3GFLm7l4iTveJf/XwRMDHlirnt5CNzpEUUD8ra3u6NGhM6ME0G/ti2hy5JI+uANrGlXgwM57y/eQcJRkPbqN71OZ1EFauPm1oXr/YkMkFJ/jSIVvy2Wb0sMuzwgzzdCE79vtA5DCU7vRXE89irNOUzmnqYY+ET3WK9esM2KmkVgvC+eQriakTre0Sp1Q0GrMQxqqHgMpkzt82bxBvd2jCCKTIEYTMXxfWNw5NaUY56nKyFsYyPuiXrau/5ltVNOImITO2eFWeZmPPx4KQdOjyCHg1dYf5urXewXaYz5olg+HJS5pycqUCCkoVGKDqJZZ9nnkabfQ7oYxfDahBl66WMnVwkXQB3CFVV9ztTiHfeW4NlFdn86kDNrEIfFGodIugqhiRiyrOKKlygaqegmJE2ky0ZUoLWqNqCmcYEqMbT36AN4fBRPwqczA5iYcgoR5pOTIP+Mk/HtYDHHecolaGsMxJJiK3Zsk8hL01oVZx0YVyG85XOSLB4z+AVPUFb0SLiJfZSyW8oW7l3UJgC4FQcBpEm7WQ4nMVcaRep/tgwPqeQwl8N6Ks4BNNm7udiGQY06YIy2gANqrse6Yi0RiOK0P5cy/xEPWzc/80LHXxVo9WP8D6rZrl5phIBpMD8=
-      on:
-        tags: true
-      distributions: sdist bdist_wheel
-      skip_existing: true
+    - stage: Linting
+      python: 3.8
+      env: TOXENV=pylint38
+    - python: 2.7
+      env: TOXENV=pylint27
+    - stage: Unit Tests
+      python: 2.7
+      env: TOXENV=py27
+    - python: 3.4
+      env: TOXENV=py34
+    - python: 3.5
+      env: TOXENV=py35
+    - python: 3.6
+      env: TOXENV=py36
+    - python: 3.7
+      env: TOXENV=py37
+    - python: 3.8
+      env: TOXENV=py38,codecov
+    - stage: Integration
+      python: 3.8
+      script:
+        docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.8.1-alpine3.11
+        /bin/sh -c 'pip3 install -e . && cfn-lint test/fixtures/templates/good/generic.yaml && cat test/fixtures/templates/good/generic.yaml | cfn-lint'
+    - stage: Deploy
+      script: skip
+      python: 3.8
+      deploy:
+        provider: pypi
+        user: kddejong
+        password:
+          secure: PRFpbdo0pVE7JvNryNJVsMoIaBERtX9touq4N1YfoLXSp3GFLm7l4iTveJf/XwRMDHlirnt5CNzpEUUD8ra3u6NGhM6ME0G/ti2hy5JI+uANrGlXgwM57y/eQcJRkPbqN71OZ1EFauPm1oXr/YkMkFJ/jSIVvy2Wb0sMuzwgzzdCE79vtA5DCU7vRXE89irNOUzmnqYY+ET3WK9esM2KmkVgvC+eQriakTre0Sp1Q0GrMQxqqHgMpkzt82bxBvd2jCCKTIEYTMXxfWNw5NaUY56nKyFsYyPuiXrau/5ltVNOImITO2eFWeZmPPx4KQdOjyCHg1dYf5urXewXaYz5olg+HJS5pycqUCCkoVGKDqJZZ9nnkabfQ7oYxfDahBl66WMnVwkXQB3CFVV9ztTiHfeW4NlFdn86kDNrEIfFGodIugqhiRiyrOKKlygaqegmJE2ky0ZUoLWqNqCmcYEqMbT36AN4fBRPwqczA5iYcgoR5pOTIP+Mk/HtYDHHecolaGsMxJJiK3Zsk8hL01oVZx0YVyG85XOSLB4z+AVPUFb0SLiJfZSyW8oW7l3UJgC4FQcBpEm7WQ4nMVcaRep/tgwPqeQwl8N6Ks4BNNm7udiGQY06YIy2gANqrse6Yi0RiOK0P5cy/xEPWzc/80LHXxVo9WP8D6rZrl5phIBpMD8=
+        on:
+          tags: true
+        distributions: sdist bdist_wheel
+        skip_existing: true
 install:
-- pip install tox
+  - pip install tox
 script: tox
