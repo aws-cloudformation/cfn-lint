@@ -1,3 +1,9 @@
+### v0.29.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to 12.3.0 (pull #[1464](https://github.com/aws-cloudformation/cfn-python-lint/pull/1464))
+###### Fixes
+- Fix an issue when including `cfn-lint` and needing `networkx` (pull #[1458](https://github.com/aws-cloudformation/cfn-python-lint/issues/1458))
+
 ### v0.29.4
 ###### Features
 - Add `--build-graph` parameter to create a graph of dependencies (pull #[1411](https://github.com/aws-cloudformation/cfn-python-lint/pull/1411))
