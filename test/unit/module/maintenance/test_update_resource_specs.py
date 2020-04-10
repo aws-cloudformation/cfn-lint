@@ -14,13 +14,15 @@ LOGGER.addHandler(logging.NullHandler())
 
 class TestUpdateResourceSpecs(BaseTestCase):
     """Used for Testing Resource Specs"""
+    @patch('cfnlint.maintenance.url_has_newer_version')
     @patch('cfnlint.maintenance.get_url_content')
     @patch('cfnlint.maintenance.json.dump')
     @patch('cfnlint.maintenance.patch_spec')
     @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
-    def test_update_resource_spec(self, mock_patch_spec, mock_json_dump, mock_content):
+    def test_update_resource_spec(self, mock_patch_spec, mock_json_dump, mock_content, mock_url_newer_version):
         """Success update resource spec"""
 
+        mock_url_newer_version.return_value = True
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
         mock_patch_spec.side_effect = [
             {
@@ -60,3 +62,19 @@ class TestUpdateResourceSpecs(BaseTestCase):
                 separators=(',', ': '),
                 sort_keys=True
             )
+
+    @patch('cfnlint.maintenance.url_has_newer_version')
+    @patch('cfnlint.maintenance.get_url_content')
+    @patch('cfnlint.maintenance.json.dump')
+    @patch('cfnlint.maintenance.patch_spec')
+    @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
+    def test_do_not_update_resource_spec(self, mock_patch_spec, mock_json_dump, mock_content, mock_url_newer_version):
+        """Success update resource spec"""
+
+        mock_url_newer_version.return_value = False
+
+        result = cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl')
+        self.assertIsNone(result)
+        mock_content.assert_not_called()
+        mock_patch_spec.assert_not_called()
+        mock_json_dump.assert_not_called()

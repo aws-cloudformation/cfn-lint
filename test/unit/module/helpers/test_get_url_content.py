@@ -58,12 +58,49 @@ class TestGetUrlContent(BaseTestCase):
 
     @patch('cfnlint.helpers.urlopen')
     @patch('cfnlint.helpers.get_download_metadata')
+    @patch('cfnlint.helpers.save_download_metadata')
+    def test_get_url_content_zipped_cache_update(self, mocked_savedowloadmetadata, mocked_getdowloadmetadata, mocked_urlopen):
+        """Test success run"""
+        input_buffer = '{"key": "value"}'
+        etag = 'ETAG_ONE'
+        url = 'http://foo.com'
+
+        mocked_getdowloadmetadata.return_value = {}
+
+        cm = MagicMock()
+        cm.getcode.return_value = 200
+        cm.info.return_value = {
+            'Content-Encoding': 'gzip',
+            'ETag': etag
+        }
+
+        if sys.version_info.major == 3:
+            cm.read.return_value = gzip.compress(input_buffer.encode('utf-8'))
+        else:
+            string_buffer = StringIO.StringIO()
+            gzip_file = gzip.GzipFile(fileobj=string_buffer, mode='w', compresslevel=6)
+            gzip_file.write(input_buffer)
+            gzip_file.close()
+            cm.read.return_value = string_buffer.getvalue()
+
+        mocked_urlopen.return_value = cm
+        
+        result = cfnlint.helpers.get_url_content(url, caching=True)
+        mocked_urlopen.assert_called_with(url)
+        mocked_getdowloadmetadata.assert_called_once()
+        mocked_savedowloadmetadata.assert_called_once()
+
+        self.assertEqual(result, '{"key": "value"}')
+
+    @patch('cfnlint.helpers.urlopen')
+    @patch('cfnlint.helpers.get_download_metadata')
     def test_url_has_newer_version_affirmative(self, mocked_getdowloadmetadata, mocked_urlopen):
         """Test success run"""
 
         input_buffer = '{"key": "value"}'
         etag = 'ETAG_ONE'
         url = 'http://foo.com'
+
         mocked_getdowloadmetadata.return_value = {
             'etag': etag
         }
@@ -74,6 +111,7 @@ class TestGetUrlContent(BaseTestCase):
             'Content-Encoding': 'gzip',
             'ETag': etag
         }
+
         mocked_urlopen.return_value = cm
 
         result = cfnlint.helpers.url_has_newer_version(url)
