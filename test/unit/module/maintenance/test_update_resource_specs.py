@@ -82,17 +82,23 @@ class TestUpdateResourceSpecs(BaseTestCase):
     @patch('cfnlint.maintenance.multiprocessing.Pool')
     @patch('cfnlint.maintenance.update_resource_spec')
     @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
-    def test_update_resource_specs(self, mock_update_resource_spec, mock_pool):
+    def test_update_resource_specs_python_3(self, mock_update_resource_spec, mock_pool):
 
         fake_pool = MagicMock()
-        if sys.version_info.major == 3:
-            mock_pool.return_value.__enter__.return_value = fake_pool
-        else:
-            mock_pool.return_value.__enter__.return_value = AttributeError('foobar')
+        mock_pool.return_value.__enter__.return_value = fake_pool
 
         cfnlint.maintenance.update_resource_specs()
 
-        if sys.version_info.major == 3:
-            fake_pool.starmap.assert_called_once()
-        else:
-            mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl')
+        fake_pool.starmap.assert_called_once()
+
+    @patch('cfnlint.maintenance.multiprocessing.Pool')
+    @patch('cfnlint.maintenance.update_resource_spec')
+    @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
+    def test_update_resource_specs_python_2(self, mock_update_resource_spec, mock_pool):
+
+        fake_pool = MagicMock()
+        mock_pool.return_value.__enter__.return_value = AttributeError('foobar')
+
+        cfnlint.maintenance.update_resource_specs()
+
+        mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl')
