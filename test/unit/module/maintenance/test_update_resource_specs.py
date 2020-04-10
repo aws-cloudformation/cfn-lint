@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import logging
 from test.testlib.testcase import BaseTestCase
-from mock import patch
+from mock import patch, MagicMock
 import cfnlint.maintenance
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
@@ -78,3 +78,21 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_content.assert_not_called()
         mock_patch_spec.assert_not_called()
         mock_json_dump.assert_not_called()
+
+    @patch('cfnlint.maintenance.multiprocessing.Pool')
+    @patch('cfnlint.maintenance.update_resource_spec')
+    @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
+    def test_update_resource_specs(self, mock_update_resource_spec, mock_pool):
+
+        fake_pool = MagicMock()
+        if sys.version_info.major == 3:
+            mock_pool.return_value.__enter__.return_value = fake_pool
+        else:
+            mock_pool.return_value.__enter__.return_value = AttributeError('foobar')
+
+        cfnlint.maintenance.update_resource_specs()
+
+        if sys.version_info.major == 3:
+            fake_pool.starmap.assert_called_once()
+        else:
+            mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl')
