@@ -10,7 +10,7 @@ import os
 import jsonpointer
 import jsonpatch
 import cfnlint
-from cfnlint.helpers import get_url_content
+from cfnlint.helpers import get_url_content, url_has_newer_version
 from cfnlint.helpers import SPEC_REGIONS
 import cfnlint.data.ExtendedSpecs
 import cfnlint.data.AdditionalSpecs
@@ -43,12 +43,11 @@ def update_resource_spec(region, url):
 
     multiprocessing_logger.debug('Downloading template %s into %s', url, filename)
 
-    spec_content = get_url_content(url, caching=True)
-
-    # Check to see if no content was returned, indicating we have the latest version already
-    if not spec_content:
-        multiprocessing_logger.debug('We already have the most recent version of %s stored in %s', url, filename)
+    # Check to see if we already have the latest version, and if so stop
+    if not url_has_newer_version(url):
         return
+
+    spec_content = get_url_content(url, caching=True)
 
     multiprocessing_logger.debug('A more recent version of %s was found, and will be downloaded to %s', url, filename)
     spec = json.loads(spec_content)

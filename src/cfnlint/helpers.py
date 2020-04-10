@@ -167,61 +167,63 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
-CACHING_DIR = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
+def get_metadata_filename(url):
+    """Returns the filename for a metadata file associated with a remote resource"""
+    caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
+    encoded_url = hashlib.sha256(url.encode()).hexdigest()
+    metadata_filename = os.path.join(caching_dir, encoded_url + '.meta.json')
 
+    return metadata_filename
+
+def url_has_newer_version(url):
+    """Checks to see if a newer version of the resource at the URL is available
+    Always returns true if using Python2.7 due to lack of HEAD request support,
+    or if we have no caching information for the local version of the resource
+    """
+    metadata_filename = get_metadata_filename(url)
+
+    # Load in the cache
+    metadata = get_download_metadata(metadata_filename)
+
+    # Etag is a caching identifier used by S3 and Cloudfront
+    if 'etag' in metadata:
+        cached_etag = metadata['etag']
+    else:
+        # If we don't know the etag of the local version, we should force an update
+        return True
+
+    # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+    try:
+        # Make an initial HEAD request
+        req = Request(url, method='HEAD')
+        res = urlopen(req)
+
+    except NameError:
+        # We should force an update
+        return True
+
+    # If we have an ETag value stored and it matches the returned one,
+    # then we already have a copy of the most recent version of the
+    # resource, so don't bother fetching it again
+    if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
+        LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
+        return False
+
+    # The ETag value of the remote resource does not match the local one, so a newer version is available
+    return True
 
 def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
-    etag = None
-    metadata = {}
-    encoded_url = hashlib.sha256(url.encode()).hexdigest()
-    metadata_filename = os.path.join(CACHING_DIR, encoded_url + '.meta.json')
 
-    # To help with Python2's inability to make HEAD requests
-    make_second_request = True
+    res = urlopen(url)
 
-    if caching:
-        # Load in the cache
+    if caching and res.info().get('ETag'):
+        metadata_filename = get_metadata_filename(url)
+        # Load in all existing values
         metadata = get_download_metadata(metadata_filename)
-
-        if 'etag' in metadata:
-            etag = metadata['etag']
-
-        # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
-        try:
-            req = Request(url, method='HEAD')
-
-            # Make an initial HEAD request
-            res = urlopen(req)
-
-        except NameError:
-            # We're going to request the full body, so don't do this twice
-            make_second_request = False
-
-            # Request the URL with the body too
-            res = urlopen(url)
-
-        # If we have an ETag value stored and it matches the returned one,
-        # then we already have a copy of the most recent version of the
-        # resource, so don't bother fetching it again
-        if etag and res.info().get('ETag'):
-            if etag == res.info().get('ETag'):
-                LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, etag)
-                return None
-
-        # If we reach here, then we don't have the latest version of the resource
-        LOGGER.debug('We do not have a cached version of url %s yet', url)
-
-        # Write the etag back to our cache
-        if res.info().get('ETag'):
-            metadata['etag'] = res.info().get('ETag')
-            metadata['url'] = url # To make it obvious which url the Tag relates to
-            save_download_metadata(metadata, metadata_filename)
-
-    # If we are here, then either 1) we are not using caching, or
-    # 2) the first request shows a different version is available
-    if make_second_request:
-        res = urlopen(url)
+        metadata['etag'] = res.info().get('ETag')
+        metadata['url'] = url # To make it obvious which url the Tag relates to
+        save_download_metadata(metadata, metadata_filename)
 
     # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
