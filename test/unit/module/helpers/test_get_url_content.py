@@ -57,15 +57,15 @@ class TestGetUrlContent(BaseTestCase):
         self.assertEqual(result, '{"key": "value"}')
 
     @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.get_download_metadata')
-    @patch('cfnlint.helpers.save_download_metadata')
-    def test_get_url_content_zipped_cache_update(self, mocked_savedowloadmetadata, mocked_getdowloadmetadata, mocked_urlopen):
+    @patch('cfnlint.helpers.load_metadata')
+    @patch('cfnlint.helpers.save_metadata')
+    def test_get_url_content_zipped_cache_update(self, mock_save_metadata, mock_load_metadata, mocked_urlopen):
         """Test success run"""
         input_buffer = '{"key": "value"}'
         etag = 'ETAG_ONE'
         url = 'http://foo.com'
 
-        mocked_getdowloadmetadata.return_value = {}
+        mock_load_metadata.return_value = {}
 
         cm = MagicMock()
         cm.getcode.return_value = 200
@@ -87,21 +87,21 @@ class TestGetUrlContent(BaseTestCase):
         
         result = cfnlint.helpers.get_url_content(url, caching=True)
         mocked_urlopen.assert_called_with(url)
-        mocked_getdowloadmetadata.assert_called_once()
-        mocked_savedowloadmetadata.assert_called_once()
+        mock_load_metadata.assert_called_once()
+        mock_save_metadata.assert_called_once()
 
         self.assertEqual(result, '{"key": "value"}')
 
     @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.get_download_metadata')
-    def test_url_has_newer_version_affirmative(self, mocked_getdowloadmetadata, mocked_urlopen):
+    @patch('cfnlint.helpers.load_metadata')
+    def test_url_has_newer_version_affirmative(self, mock_load_metadata, mocked_urlopen):
         """Test success run"""
 
         input_buffer = '{"key": "value"}'
         etag = 'ETAG_ONE'
         url = 'http://foo.com'
 
-        mocked_getdowloadmetadata.return_value = {
+        mock_load_metadata.return_value = {
             'etag': etag
         }
 
@@ -123,8 +123,8 @@ class TestGetUrlContent(BaseTestCase):
             self.assertFalse(result)
 
     @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.get_download_metadata')
-    def test_url_has_newer_version_negative(self, mocked_getdowloadmetadata, mocked_urlopen):
+    @patch('cfnlint.helpers.load_metadata')
+    def test_url_has_newer_version_negative(self, mock_load_metadata, mocked_urlopen):
         """Test success run"""
 
         input_buffer = '{"key": "value"}'
@@ -133,7 +133,7 @@ class TestGetUrlContent(BaseTestCase):
         etag2 = 'ETAG_TWO'
 
         url = 'http://foo.com'
-        mocked_getdowloadmetadata.return_value = {
+        mock_load_metadata.return_value = {
             'etag': etag
         }
 

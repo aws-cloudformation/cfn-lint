@@ -183,7 +183,7 @@ def url_has_newer_version(url):
     metadata_filename = get_metadata_filename(url)
 
     # Load in the cache
-    metadata = get_download_metadata(metadata_filename)
+    metadata = load_metadata(metadata_filename)
 
     # Etag is a caching identifier used by S3 and Cloudfront
     if 'etag' in metadata:
@@ -220,10 +220,10 @@ def get_url_content(url, caching=False):
     if caching and res.info().get('ETag'):
         metadata_filename = get_metadata_filename(url)
         # Load in all existing values
-        metadata = get_download_metadata(metadata_filename)
+        metadata = load_metadata(metadata_filename)
         metadata['etag'] = res.info().get('ETag')
         metadata['url'] = url # To make it obvious which url the Tag relates to
-        save_download_metadata(metadata, metadata_filename)
+        save_metadata(metadata, metadata_filename)
 
     # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
@@ -236,7 +236,7 @@ def get_url_content(url, caching=False):
     return content
 
 
-def get_download_metadata(filename):
+def load_metadata(filename):
     """Get the contents of the download metadata file"""
     metadata = {}
     if os.path.exists(filename):
@@ -245,7 +245,7 @@ def get_download_metadata(filename):
     return metadata
 
 
-def save_download_metadata(metadata, filename):
+def save_metadata(metadata, filename):
     """Save the contents of the download metadata file"""
     dirname = os.path.dirname(filename)
     if not os.path.exists(dirname):

@@ -21,12 +21,12 @@ class TestDownloadsMetadata(BaseTestCase):
 
         filename = 'foo.bar'
 
-        result = cfnlint.helpers.get_download_metadata(filename)
+        result = cfnlint.helpers.load_metadata(filename)
 
         self.assertEqual(result, {})
 
     @patch('cfnlint.helpers.os.path.exists')
-    def test_get_download_metadata(self, mock_path_exists):
+    def test_load_metadata(self, mock_path_exists):
         """Test success run"""
 
         mock_path_exists.return_value = True
@@ -43,7 +43,7 @@ class TestDownloadsMetadata(BaseTestCase):
 
         mo = mock_open(read_data=json.dumps(file_contents))
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:
-            result = cfnlint.helpers.get_download_metadata(filename)
+            result = cfnlint.helpers.load_metadata(filename)
 
             self.assertEqual(result, file_contents)
 
@@ -70,6 +70,6 @@ class TestDownloadsMetadata(BaseTestCase):
 
         mo = mock_open()
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:
-            cfnlint.helpers.save_download_metadata(file_contents, filename)
+            cfnlint.helpers.save_metadata(file_contents, filename)
             mock_mkdir.assert_called_with(filedir)
             mock_json_dump.assert_called_once
