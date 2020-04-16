@@ -1,3 +1,12 @@
+### v0.29.6
+###### CloudFormation Specifications
+- Update Lambda runtimes to support `dotnetcore3.1` (pull #[1469](https://github.com/aws-cloudformation/cfn-python-lint/pull/1469))
+- Update DMS Engine approved values with multiple items (pull #[1472](https://github.com/aws-cloudformation/cfn-python-lint/pull/1472))
+- Add description allowed value regex to `AWS::EC2::SecurityGroup` Ingress/Egress (pull #[1476](https://github.com/aws-cloudformation/cfn-python-lint/pull/1476))
+- Update CloudFormation specs to 13.0.0 (pull #[1480](https://github.com/aws-cloudformation/cfn-python-lint/pull/1480))
+###### Fixes
+- Set `importlib_resources` to 1.4 for all Pythons except 3.4 (pull #[1479](https://github.com/aws-cloudformation/cfn-python-lint/pull/1479))
+
 ### v0.29.5
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 12.3.0 (pull #[1464](https://github.com/aws-cloudformation/cfn-python-lint/pull/1464))
