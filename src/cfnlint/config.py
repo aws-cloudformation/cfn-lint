@@ -301,7 +301,7 @@ class CliArgs(object):
 
         usage = (
             '\nBasic: cfn-lint test.yaml\n'
-            'Ignore a rule: cfn-lint -I E3012 -- test.yaml\n'
+            'Ignore a rule: cfn-lint -i E3012 -- test.yaml\n'
             'Configure a rule: cfn-lint -x E3012:strict=false -t test.yaml\n'
             'Lint all yaml files in a folder: cfn-lint dir/**/*.yaml'
         )
