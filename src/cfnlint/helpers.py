@@ -34,6 +34,7 @@ else:
 LOGGER = logging.getLogger(__name__)
 
 SPEC_REGIONS = {
+    'af-south-1': 'https://cfn-resource-specifications-af-south-1-prod.s3.af-south-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-east-1': 'https://cfn-resource-specifications-ap-east-1-prod.s3.ap-east-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-1': 'https://d33vqc0rt9ld30.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -77,6 +78,7 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 
 AVAILABILITY_ZONES = [
+    'af-south-1a', 'af-south-1b', 'af-south-1c',
     'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
     'ap-northeast-1a', 'ap-northeast-1b', 'ap-northeast-1c', 'ap-northeast-1d',
     'ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c',
