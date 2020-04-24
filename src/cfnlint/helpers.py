@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import fnmatch
 import json
+import hashlib
 import os
 import datetime
 import logging
@@ -18,7 +19,7 @@ import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request
 except ImportError:
     from urllib2 import urlopen
 try:
@@ -166,10 +167,65 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
+def get_metadata_filename(url):
+    """Returns the filename for a metadata file associated with a remote resource"""
+    caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
+    encoded_url = hashlib.sha256(url.encode()).hexdigest()
+    metadata_filename = os.path.join(caching_dir, encoded_url + '.meta.json')
 
-def get_url_content(url):
+    return metadata_filename
+
+def url_has_newer_version(url):
+    """Checks to see if a newer version of the resource at the URL is available
+    Always returns true if using Python2.7 due to lack of HEAD request support,
+    or if we have no caching information for the local version of the resource
+    """
+    metadata_filename = get_metadata_filename(url)
+
+    # Load in the cache
+    metadata = load_metadata(metadata_filename)
+
+    # Etag is a caching identifier used by S3 and Cloudfront
+    if 'etag' in metadata:
+        cached_etag = metadata['etag']
+    else:
+        # If we don't know the etag of the local version, we should force an update
+        return True
+
+    # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+    try:
+        # Make an initial HEAD request
+        req = Request(url, method='HEAD')
+        res = urlopen(req)
+
+    except NameError:
+        # We should force an update
+        return True
+
+    # If we have an ETag value stored and it matches the returned one,
+    # then we already have a copy of the most recent version of the
+    # resource, so don't bother fetching it again
+    if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
+        LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
+        return False
+
+    # The ETag value of the remote resource does not match the local one, so a newer version is available
+    return True
+
+def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
+
     res = urlopen(url)
+
+    if caching and res.info().get('ETag'):
+        metadata_filename = get_metadata_filename(url)
+        # Load in all existing values
+        metadata = load_metadata(metadata_filename)
+        metadata['etag'] = res.info().get('ETag')
+        metadata['url'] = url # To make it obvious which url the Tag relates to
+        save_metadata(metadata, metadata_filename)
+
+    # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
         buf = BytesIO(res.read())
         f = gzip.GzipFile(fileobj=buf)
@@ -178,6 +234,25 @@ def get_url_content(url):
         content = res.read().decode('utf-8')
 
     return content
+
+
+def load_metadata(filename):
+    """Get the contents of the download metadata file"""
+    metadata = {}
+    if os.path.exists(filename):
+        with open(filename, 'r') as metadata_file:
+            metadata = json.load(metadata_file)
+    return metadata
+
+
+def save_metadata(metadata, filename):
+    """Save the contents of the download metadata file"""
+    dirname = os.path.dirname(filename)
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
+    with open(filename, 'w') as metadata_file:
+        json.dump(metadata, metadata_file)
 
 
 def load_resource(package, filename='us-east-1.json'):
