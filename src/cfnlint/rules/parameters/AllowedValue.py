@@ -13,7 +13,7 @@ class AllowedValue(CloudFormationLintRule):
     """Check if parameters have a valid value"""
     id = 'W2030'
     shortdesc = 'Check if parameters have a valid value'
-    description = 'Check if parameters have a valid value in case of an enumator. The Parameter''s allowed values is based on the usages in property (Ref)'
+    description = 'Check if parameters have a valid value in case of an enumator. The Parameter\'s allowed values is based on the usages in property (Ref)'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
     tags = ['resources', 'property', 'allowed value']
 
