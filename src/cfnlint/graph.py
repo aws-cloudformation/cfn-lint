@@ -11,6 +11,7 @@ from networkx import networkx
 
 LOGGER = logging.getLogger('cfnlint.graph')
 
+
 class Graph(object):
     """Models a template as a directed graph of resources"""
 
@@ -118,11 +119,11 @@ class Graph(object):
     def to_dot(self, path):
         """Export the graph to a file with DOT format"""
         try:
-            import pygraphviz
+            import pygraphviz  # pylint: disable=unused-import
             networkx.drawing.nx_agraph.write_dot(self.graph, path)
         except ImportError:
             try:
-                import pydot
+                import pydot  # pylint: disable=unused-import
                 networkx.drawing.nx_pydot.write_dot(self.graph, path)
             except ImportError as e:
                 raise e
