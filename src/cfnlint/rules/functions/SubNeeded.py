@@ -22,7 +22,7 @@ class SubNeeded(CloudFormationLintRule):
     excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
                 'CloudWatchAlarmDefinition', 'TopicRulePayload', 'BuildSpec',
                 'RequestMappingTemplate']
-    api_excludes = ['Uri', 'Body']
+    api_excludes = ['Uri', 'Body', 'ConnectionId']
 
     # IAM Policy has special variables that don't require !Sub, Check for these
     # https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_variables.html
