@@ -231,6 +231,8 @@ def get_rds_pricing():
             product = products.get('product', {})
             if product:
                 if product.get('productFamily') == 'Database Instance':
+                    if product.get('attributes').get('location') in region_exceptions:
+                        continue
                     # Get overall instance types
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
