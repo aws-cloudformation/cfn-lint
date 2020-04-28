@@ -1,3 +1,16 @@
+### v0.30.1
+###### Features
+- Add the ability to specify a config file using parameter `--config-file` (pull #[1462](https://github.com/aws-cloudformation/cfn-python-lint/pull/1462))
+- Speed up `--update-specs` to not download files if they haven't updated (pull #[1383](https://github.com/aws-cloudformation/cfn-python-lint/pull/1383))
+###### CloudFormation Specifications
+- Add region `eu-south-1` (pull #[1496](https://github.com/aws-cloudformation/cfn-python-lint/pull/1496))
+- Add region `af-south-1` (pull #[1494](https://github.com/aws-cloudformation/cfn-python-lint/pull/1494))
+- Update CloudFormation specs to 14.0.0 (pull #[1494](https://github.com/aws-cloudformation/cfn-python-lint/pull/1494))
+- Add new Config supported types `AWS::SecretsManager::Secret` and `AWS::SNS::Topic` (pull #[1492](https://github.com/aws-cloudformation/cfn-python-lint/pull/1492))
+###### Fixes
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to have an exception for `RequestMappingTemplate` in AppSync (pull #[1488](https://github.com/aws-cloudformation/cfn-python-lint/pull/1488))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to have an exception for `ConnectionID` in API Gateway (pull #[1493](https://github.com/aws-cloudformation/cfn-python-lint/pull/1493))
+
 ### v0.29.6
 ###### CloudFormation Specifications
 - Update Lambda runtimes to support `dotnetcore3.1` (pull #[1469](https://github.com/aws-cloudformation/cfn-python-lint/pull/1469))
