@@ -35,7 +35,7 @@ reported the issue. Please try to include as much information as you can. Detail
     ```
 
 1. Run `pip show cfn-lint` (or `pip3 show cfn-lint` if you are using Python 3). The `Location` printed should be the folder from the step above.
-1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: adding new dependencies requires that you run `pip install -e .` again).
+1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: run `pip install -e .` again to re-install changes).
 1. To ensure the tests pass, run:
 
     ```bash
