@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import fnmatch
 import json
+import hashlib
 import os
 import datetime
 import logging
@@ -18,7 +19,7 @@ import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, Request
 except ImportError:
     from urllib2 import urlopen
 try:
@@ -34,6 +35,7 @@ else:
 LOGGER = logging.getLogger(__name__)
 
 SPEC_REGIONS = {
+    'af-south-1': 'https://cfn-resource-specifications-af-south-1-prod.s3.af-south-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-east-1': 'https://cfn-resource-specifications-ap-east-1-prod.s3.ap-east-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-1': 'https://d33vqc0rt9ld30.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -46,6 +48,7 @@ SPEC_REGIONS = {
     'cn-northwest-1': 'https://cfn-resource-specifications-cn-northwest-1-prod.s3.cn-northwest-1.amazonaws.com.cn/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-central-1': 'https://d1mta8qj7i28i2.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-north-1': 'https://diy8iv58sj6ba.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+    'eu-south-1': 'https://cfn-resource-specifications-eu-south-1-prod.s3.eu-south-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-1': 'https://d3teyb21fexa9r.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-2': 'https://d1742qcu2c1ncx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-3': 'https://d2d0mfegowb3wk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -77,6 +80,7 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 
 AVAILABILITY_ZONES = [
+    'af-south-1a', 'af-south-1b', 'af-south-1c',
     'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
     'ap-northeast-1a', 'ap-northeast-1b', 'ap-northeast-1c', 'ap-northeast-1d',
     'ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c',
@@ -89,6 +93,7 @@ AVAILABILITY_ZONES = [
     'cn-northwest-1a', 'cn-northwest-1b', 'cn-northwest-1c',
     'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
     'eu-north-1a', 'eu-north-1b', 'eu-north-1c',
+    'eu-south-1a', 'eu-south-1b', 'eu-south-1c',
     'eu-west-1a', 'eu-west-1b', 'eu-west-1c',
     'eu-west-2a', 'eu-west-2b', 'eu-west-2c',
     'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
@@ -166,10 +171,65 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
+def get_metadata_filename(url):
+    """Returns the filename for a metadata file associated with a remote resource"""
+    caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
+    encoded_url = hashlib.sha256(url.encode()).hexdigest()
+    metadata_filename = os.path.join(caching_dir, encoded_url + '.meta.json')
 
-def get_url_content(url):
+    return metadata_filename
+
+def url_has_newer_version(url):
+    """Checks to see if a newer version of the resource at the URL is available
+    Always returns true if using Python2.7 due to lack of HEAD request support,
+    or if we have no caching information for the local version of the resource
+    """
+    metadata_filename = get_metadata_filename(url)
+
+    # Load in the cache
+    metadata = load_metadata(metadata_filename)
+
+    # Etag is a caching identifier used by S3 and Cloudfront
+    if 'etag' in metadata:
+        cached_etag = metadata['etag']
+    else:
+        # If we don't know the etag of the local version, we should force an update
+        return True
+
+    # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+    try:
+        # Make an initial HEAD request
+        req = Request(url, method='HEAD')
+        res = urlopen(req)
+
+    except NameError:
+        # We should force an update
+        return True
+
+    # If we have an ETag value stored and it matches the returned one,
+    # then we already have a copy of the most recent version of the
+    # resource, so don't bother fetching it again
+    if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
+        LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
+        return False
+
+    # The ETag value of the remote resource does not match the local one, so a newer version is available
+    return True
+
+def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
+
     res = urlopen(url)
+
+    if caching and res.info().get('ETag'):
+        metadata_filename = get_metadata_filename(url)
+        # Load in all existing values
+        metadata = load_metadata(metadata_filename)
+        metadata['etag'] = res.info().get('ETag')
+        metadata['url'] = url # To make it obvious which url the Tag relates to
+        save_metadata(metadata, metadata_filename)
+
+    # Continue to handle the file download normally
     if res.info().get('Content-Encoding') == 'gzip':
         buf = BytesIO(res.read())
         f = gzip.GzipFile(fileobj=buf)
@@ -178,6 +238,25 @@ def get_url_content(url):
         content = res.read().decode('utf-8')
 
     return content
+
+
+def load_metadata(filename):
+    """Get the contents of the download metadata file"""
+    metadata = {}
+    if os.path.exists(filename):
+        with open(filename, 'r') as metadata_file:
+            metadata = json.load(metadata_file)
+    return metadata
+
+
+def save_metadata(metadata, filename):
+    """Save the contents of the download metadata file"""
+    dirname = os.path.dirname(filename)
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
+    with open(filename, 'w') as metadata_file:
+        json.dump(metadata, metadata_file)
 
 
 def load_resource(package, filename='us-east-1.json'):
