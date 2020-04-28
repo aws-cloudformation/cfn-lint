@@ -35,6 +35,7 @@ else:
 LOGGER = logging.getLogger(__name__)
 
 SPEC_REGIONS = {
+    'af-south-1': 'https://cfn-resource-specifications-af-south-1-prod.s3.af-south-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-east-1': 'https://cfn-resource-specifications-ap-east-1-prod.s3.ap-east-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-1': 'https://d33vqc0rt9ld30.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'ap-northeast-2': 'https://d1ane3fvebulky.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -47,6 +48,7 @@ SPEC_REGIONS = {
     'cn-northwest-1': 'https://cfn-resource-specifications-cn-northwest-1-prod.s3.cn-northwest-1.amazonaws.com.cn/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-central-1': 'https://d1mta8qj7i28i2.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-north-1': 'https://diy8iv58sj6ba.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
+    'eu-south-1': 'https://cfn-resource-specifications-eu-south-1-prod.s3.eu-south-1.amazonaws.com/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-1': 'https://d3teyb21fexa9r.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-2': 'https://d1742qcu2c1ncx.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
     'eu-west-3': 'https://d2d0mfegowb3wk.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json',
@@ -78,6 +80,7 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 
 AVAILABILITY_ZONES = [
+    'af-south-1a', 'af-south-1b', 'af-south-1c',
     'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
     'ap-northeast-1a', 'ap-northeast-1b', 'ap-northeast-1c', 'ap-northeast-1d',
     'ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c',
@@ -90,6 +93,7 @@ AVAILABILITY_ZONES = [
     'cn-northwest-1a', 'cn-northwest-1b', 'cn-northwest-1c',
     'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
     'eu-north-1a', 'eu-north-1b', 'eu-north-1c',
+    'eu-south-1a', 'eu-south-1b', 'eu-south-1c',
     'eu-west-1a', 'eu-west-1b', 'eu-west-1c',
     'eu-west-2a', 'eu-west-2b', 'eu-west-2c',
     'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
