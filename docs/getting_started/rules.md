@@ -3,7 +3,7 @@ This guide describes how to create a new rule to be used by `cfn-lint`.
 
 ## Introduction to rules
 
-An overview of all the rules that are currently supported can be found [**here**](./rules.md).
+An overview of all the rules that are currently supported can be found [**here**](../rules.md).
 
 A rule is a standalone Python class inherited from the base rule: `CloudFormationLintRule` that checks the given CloudFormation template for invalid JSON/YAML syntax, deployment errors, best practices, unused resources and other possible issues in the template.
 
