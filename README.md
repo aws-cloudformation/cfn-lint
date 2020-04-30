@@ -111,7 +111,12 @@ From a command prompt run `cfn-lint <path to yaml template>` to run standard lin
 
 ### Config File
 
-You can define a yaml file in your project or home folder called `.cfnlintrc`.  In that file you can specify settings from the parameter section below.
+It will look for a configuration file in the following locations (by order of preference):
+
+- `.cfnlintrc`, `.cfnlintrc.yaml` or `.cfnlintrc.yml` in the current working directory
+- `~/.cfnlintrc` for the home directory
+
+In that file you can specify settings from the parameter section below.
 
 Example:
 
@@ -142,7 +147,7 @@ Optional parameters:
 | -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -m, --mandatory-checks | | | Rules to check regardless of ignore configuration |
-| -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false                    
+| -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false
 | -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
 | -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
@@ -190,7 +195,7 @@ Resources:
 ### Precedence
 
 cfn-lint applies configurations from several sources. The rules at lower levels are overridden by those at higher levels.
-1. `.cfnlintrc` configurations
+1. cfnlintrc configurations
 2. Template Metadata configurations
 3. CLI parameters
 

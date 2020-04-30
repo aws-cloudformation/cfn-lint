@@ -45,7 +45,7 @@ def configure_logging(debug_logging, info_logging):
 class ConfigFileArgs(object):
     """
         Config File arguments.
-        Parses .cfnlintrc in the Home and Project folder.
+        Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
     """
     file_args = {}
     __user_config_file = None
@@ -85,7 +85,12 @@ class ConfigFileArgs(object):
             self.__user_config_file = Path(os.path.expanduser('~')).joinpath(config_file_name)
         else:
             self.__user_config_file = Path.home().joinpath(config_file_name)
+
         self.__project_config_file = Path.cwd().joinpath(config_file_name)
+        if self._has_file(config_file_name + '.yaml'):
+            self.__project_config_file = Path.cwd().joinpath(config_file_name + '.yaml')
+        elif self._has_file(config_file_name + '.yml'):
+            self.__project_config_file = Path.cwd().joinpath(config_file_name + '.yml')
 
         user_config_path = ''
         project_config_path = ''
