@@ -36,13 +36,28 @@ reported the issue. Please try to include as much information as you can. Detail
 
 1. Run `pip show cfn-lint` (or `pip3 show cfn-lint` if you are using Python 3). The `Location` printed should be the folder from the step above.
 1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: run `pip install -e .` again to re-install changes).
-1. To ensure the tests pass, run:
 
-    ```bash
-    pip install tox # or "pip3 install tox"
-    tox -e py37
-    ```
+## Running the tests
 
+The unit tests (and `pylint` for linting the Python code) are processed by [`tox`](https://tox.readthedocs.io/en/latest/). The configuration file is [tox.ini](/tox.ini).
+
+Make sure Tox is installed and then run Tox by just calling it:
+
+```bash
+# Install Tox
+$ pip install tox
+
+# Run all tests (This command is also used when validating a Pull Request)
+$ tox
+
+# Run a specific test suite
+$ tox -e py36 # Run all unit tests again Python 3.6
+```
+Tox test suites available:
+* **py27**: Unit tests (Python 2.7)
+* **pylint27**: Python syntax check (Python 2.7)
+* **py36**: Unit tests (Python 3.6)
+* **pylint36**: Python syntax check (Python 3.6)
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
