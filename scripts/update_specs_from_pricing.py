@@ -81,24 +81,23 @@ def update_outputs(key, values, outputs):
     return outputs
 
 
-def get_ec2_pricing():
-    """ Get Ec2 Pricing """
-
-    LOGGER.info('Get EC2 pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonEC2',
+def get_paginator(service):
+    LOGGER.info('Get ' + service + ' pricing')
+    return client.get_paginator('get_products').paginate(
+        ServiceCode=service,
         FormatVersion='aws_v1',
     )
 
+
+def get_ec2_pricing():
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonEC2'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
-            if product.get('attributes').get('location') in region_exceptions:
-                continue
             if product:
+                if product.get('attributes').get('location') in region_exceptions:
+                    continue
                 if product.get('productFamily') in ['Compute Instance', 'Compute Instance (bare metal)']:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
@@ -109,17 +108,8 @@ def get_ec2_pricing():
 
 
 def get_redshift_pricing():
-    """ Get Redshift Pricing """
-
-    LOGGER.info('Get Redshift pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonRedshift',
-        FormatVersion='aws_v1',
-    )
-
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonRedshift'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
@@ -134,15 +124,8 @@ def get_redshift_pricing():
 
 
 def get_dax_pricing():
-    LOGGER.info('Get DAX pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonDAX',
-        FormatVersion='aws_v1',
-    )
-
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonDAX'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
@@ -158,21 +141,13 @@ def get_dax_pricing():
 
 
 def get_mq_pricing():
-    """ Get MQ Instance Pricing """
-    LOGGER.info('Get AmazonMQ pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonMQ',
-        FormatVersion='aws_v1',
-    )
-
     remap = {
         'mq.m5.2xl': 'mq.m5.2xlarge',
         'mq.m5.4xl': 'mq.m5.4xlarge'
     }
 
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonMQ'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
@@ -188,14 +163,6 @@ def get_mq_pricing():
 
 
 def get_rds_pricing():
-    """ Get RDS Pricing """
-    LOGGER.info('Get RDS pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonRDS',
-        FormatVersion='aws_v1',
-    )
-
     product_map = {
         '2': ['mysql'],
         '3': ['oracle-se1'],
@@ -225,7 +192,7 @@ def get_rds_pricing():
     rds_specs = {}
 
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonRDS'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
@@ -267,15 +234,8 @@ def get_rds_pricing():
 
 
 def get_neptune_pricing():
-    LOGGER.info('Get Neptune pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonNeptune',
-        FormatVersion='aws_v1',
-    )
-
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonNeptune'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
@@ -289,15 +249,8 @@ def get_neptune_pricing():
 
 
 def get_documentdb_pricing():
-    LOGGER.info('Get DocumentDB pricing')
-    paginator = client.get_paginator('get_products')
-    page_iterator = paginator.paginate(
-        ServiceCode='AmazonDocDB',
-        FormatVersion='aws_v1',
-    )
-
     results = {}
-    for page in page_iterator:
+    for page in get_paginator('AmazonDocDB'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
