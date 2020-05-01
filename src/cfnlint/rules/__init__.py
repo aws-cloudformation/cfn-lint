@@ -148,6 +148,7 @@ class RulesCollection(object):
         self.include_rules.extend(['W', 'E'])
 
     def get_all_rules(self):
+        """Returns all the rules, regardless of whether they are enabled or not"""
         return self.all_rules
 
     def register(self, rule):

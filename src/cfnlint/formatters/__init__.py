@@ -3,8 +3,8 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
-from cfnlint.rules import Match
 from junit_xml import TestSuite, TestCase, to_xml_report_string
+from cfnlint.rules import Match
 
 class BaseFormatter(object):
     """Base Formatter class"""
@@ -14,6 +14,9 @@ class BaseFormatter(object):
 
     def print_matches(self, matches, rules=None):
         """Output all the matches"""
+        # Unused argument http://pylint-messages.wikidot.com/messages:w0613
+        del rules
+
         if not matches:
             return None
 
@@ -133,6 +136,9 @@ class JsonFormatter(BaseFormatter):
 
     def print_matches(self, matches, rules=None):
         # JSON formatter outputs a single JSON object
+        # Unused argument http://pylint-messages.wikidot.com/messages:w0613
+        del rules
+
         return json.dumps(
             matches, indent=4, cls=self.CustomEncoder,
             sort_keys=True, separators=(',', ': '))
