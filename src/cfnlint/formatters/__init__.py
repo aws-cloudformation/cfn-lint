@@ -88,7 +88,7 @@ class JUnitFormatter(BaseFormatter):
                         )
                 test_cases.append(test_case)
 
-        test_suite = TestSuite('Cloudformation Lint', test_cases)
+        test_suite = TestSuite('CloudFormation Lint', test_cases)
 
         return to_xml_report_string([test_suite], prettyprint=True)
 
