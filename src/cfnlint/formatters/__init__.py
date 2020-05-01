@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from cfnlint.rules import Match
-
+from junit_xml import TestSuite, TestCase, to_xml_report_string
 
 class BaseFormatter(object):
     """Base Formatter class"""
@@ -12,7 +12,7 @@ class BaseFormatter(object):
     def _format(self, match):
         """Format the specific match"""
 
-    def print_matches(self, matches):
+    def print_matches(self, matches, rules=None):
         """Output all the matches"""
         if not matches:
             return None
@@ -38,6 +38,57 @@ class Formatter(BaseFormatter):
             match.linenumber,
             match.columnnumber
         )
+
+
+class JUnitFormatter(BaseFormatter):
+    """JUnit-style Reports"""
+
+    def _failure_format(self, match):
+        """Format output of a failure"""
+        formatstr = u'{0} at {1}:{2}:{3}'
+        return formatstr.format(
+            match.message,
+            match.filename,
+            match.linenumber,
+            match.columnnumber
+        )
+
+    def print_matches(self, matches, rules=None):
+        """Output all the matches"""
+
+        if not rules:
+            return None
+
+        test_cases = []
+        for rule in rules.get_all_rules():
+            if not rules.is_rule_enabled(rule.id, rule.experimental):
+                if not rule.id:
+                    continue
+                test_case = TestCase(name='{0} {1}'.format(rule.id, rule.shortdesc))
+
+                if rule.experimental:
+                    test_case.add_skipped_info(message='Experimental rule - not enabled')
+                else:
+                    test_case.add_skipped_info(message='Ignored rule')
+                test_cases.append(test_case)
+            else:
+                test_case = TestCase(
+                    name='{0} {1}'.format(rule.id, rule.shortdesc),
+                    allow_multiple_subelements=True,
+                    url=rule.source_url
+                )
+                #has_match = False
+                for match in matches:
+                    if match.rule.id == rule.id:
+                        test_case.add_failure_info(
+                            message=self._failure_format(match),
+                            failure_type=match.message
+                        )
+                test_cases.append(test_case)
+
+        test_suite = TestSuite('Cloudformation Lint', test_cases)
+
+        return to_xml_report_string([test_suite], prettyprint=True)
 
 
 class JsonFormatter(BaseFormatter):
@@ -80,7 +131,7 @@ class JsonFormatter(BaseFormatter):
                 }
             return {'__{}__'.format(o.__class__.__name__): o.__dict__}
 
-    def print_matches(self, matches):
+    def print_matches(self, matches, rules=None):
         # JSON formatter outputs a single JSON object
         return json.dumps(
             matches, indent=4, cls=self.CustomEncoder,

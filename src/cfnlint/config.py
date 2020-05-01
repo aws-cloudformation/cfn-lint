@@ -349,7 +349,7 @@ class CliArgs(object):
             '-I', '--info', help='Enable information logging', action='store_true'
         )
         standard.add_argument(
-            '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json']
+            '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json', 'junit']
         )
 
         standard.add_argument(

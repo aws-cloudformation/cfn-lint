@@ -133,6 +133,7 @@ class RulesCollection(object):
 
     def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
         self.rules = []
+        self.all_rules = []
 
         # Whether "experimental" rules should be added
         self.include_experimental = include_experimental
@@ -146,8 +147,12 @@ class RulesCollection(object):
         # 'I' has to be included manually for backwards compabitility
         self.include_rules.extend(['W', 'E'])
 
+    def get_all_rules(self):
+        return self.all_rules
+
     def register(self, rule):
         """Register rules"""
+        self.all_rules.append(rule)
         if self.is_rule_enabled(rule.id, rule.experimental):
             self.rules.append(rule)
             if rule.id in self.configure_rules:
@@ -162,6 +167,7 @@ class RulesCollection(object):
     def extend(self, more):
         """Extend rules"""
         for rule in more:
+            self.all_rules.append(rule)
             if self.is_rule_enabled(rule.id, rule.experimental):
                 self.rules.append(rule)
                 if rule.id in self.configure_rules:
