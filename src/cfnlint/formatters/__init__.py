@@ -63,7 +63,7 @@ class JUnitFormatter(BaseFormatter):
             return None
 
         test_cases = []
-        for rule in rules.get_all_rules():
+        for rule in rules.all_rules:
             if not rules.is_rule_enabled(rule.id, rule.experimental):
                 if not rule.id:
                     continue
@@ -80,7 +80,6 @@ class JUnitFormatter(BaseFormatter):
                     allow_multiple_subelements=True,
                     url=rule.source_url
                 )
-                #has_match = False
                 for match in matches:
                     if match.rule.id == rule.id:
                         test_case.add_failure_info(

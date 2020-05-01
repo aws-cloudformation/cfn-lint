@@ -147,10 +147,6 @@ class RulesCollection(object):
         # 'I' has to be included manually for backwards compabitility
         self.include_rules.extend(['W', 'E'])
 
-    def get_all_rules(self):
-        """Returns all the rules, regardless of whether they are enabled or not"""
-        return self.all_rules
-
     def register(self, rule):
         """Register rules"""
         self.all_rules.append(rule)
