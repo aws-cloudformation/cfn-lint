@@ -46,6 +46,29 @@ class TestFormatters(BaseTestCase):
         self.assertEqual(json_results[1]['Level'], 'Warning')
         self.assertEqual(json_results[2]['Level'], 'Error')
 
+    def test_junit_returns_none(self):
+        """Test JUnut Formatter returns None if no rules are passed in"""
+
+        # Test setup
+        filename = 'test/fixtures/templates/bad/formatters.yaml'
+        (args, filenames, formatter) = cfnlint.core.get_args_filenames([
+            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+
+        results = []
+        rules = None
+        for filename in filenames:
+            (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+            results.extend(
+                cfnlint.core.run_checks(
+                    filename, template, rules, ['us-east-1']))
+
+        # Validate Formatter class initiated
+        self.assertEqual('JUnitFormatter', formatter.__class__.__name__)
+
+        # The actual test
+        self.assertIsNone(formatter.print_matches([], []))
+
+
     def test_junit_formatter(self):
         """Test JUnit Formatter"""
 
