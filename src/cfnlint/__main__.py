@@ -15,6 +15,7 @@ def main():
     try:
         (args, filenames, formatter) = cfnlint.core.get_args_filenames(sys.argv[1:])
         matches = []
+        rules = None
         for filename in filenames:
             LOGGER.debug('Begin linting of file: %s', str(filename))
             (template, rules, template_matches) = cfnlint.core.get_template_rules(filename, args)
@@ -27,7 +28,7 @@ def main():
                 matches.extend(template_matches)
             LOGGER.debug('Completed linting of file: %s', str(filename))
 
-        matches_output = formatter.print_matches(matches)
+        matches_output = formatter.print_matches(matches, rules)
         if matches_output:
             print(matches_output, file=args.output_file)
             #

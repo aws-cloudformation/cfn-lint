@@ -53,7 +53,8 @@ that could potentially be improved'),
         'importlib_resources~=1.0.2;python_version=="3.4"',
         'importlib_resources~=1.4;python_version<"3.7" and python_version!="3.4"',
         'networkx~=2.4;python_version>="3.5"',
-        'networkx<=2.2;python_version<"3.5"'
+        'networkx<=2.2;python_version<"3.5"',
+        'junit-xml~=1.9',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
