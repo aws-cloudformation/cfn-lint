@@ -3,8 +3,6 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import io
-import sys
 from test.testlib.testcase import BaseTestCase
 import cfnlint.config  # pylint: disable=E0401
 
