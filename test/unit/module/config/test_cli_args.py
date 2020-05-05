@@ -42,7 +42,7 @@ class TestArgsParser(BaseTestCase):
         """Test success run"""
 
         config = cfnlint.config.CliArgs(['-t', 'template1.yaml'])
-        self.assertIsNone(config.cli_args.output_file, None)
+        self.assertIsNone(config.cli_args.output_file)
 
     def test_output_file(self):
         """Test success run"""

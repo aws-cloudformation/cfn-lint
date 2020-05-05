@@ -60,6 +60,36 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(config.ignore_checks, ['W3001'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_file_output(self, yaml_mock):
+        """ Test precedence in  """
+
+        yaml_mock.side_effect = [
+            {
+                "output_file": "test_output.txt"
+            },
+            {}
+        ]
+        config = cfnlint.config.ConfigMixIn([])
+
+        # Config file wins
+        self.assertEqual(config.output_file, 'test_output.txt')
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_file_output_mixin(self, yaml_mock):
+        """ Test precedence in  """
+
+        yaml_mock.side_effect = [
+            {
+                "output_file": "test_output.txt"
+            },
+            {}
+        ]
+        config = cfnlint.config.ConfigMixIn(['--output-file', 'test_output_2.txt'])
+
+        # CLI args win
+        self.assertEqual(config.output_file, 'test_output_2.txt')
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_default_region(self, yaml_mock):
         """ Test precedence in  """
 
