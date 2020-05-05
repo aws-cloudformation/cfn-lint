@@ -29,7 +29,15 @@ def main():
 
         matches_output = formatter.print_matches(matches)
         if matches_output:
-            print(matches_output)
+            print(matches_output, file=args.output_file)
+            #
+            #if args.output_file == sys.stdout:
+            #    print(matches_output)
+            #else:
+            #    with open(args.output_file, 'w') as output_file:
+            #        print(matches_output, file=output_file)
+
+            #print(matches_output)
         return cfnlint.core.get_exit_code(matches)
     except cfnlint.core.CfnLintExitException as e:
         LOGGER.error(str(e))

@@ -421,6 +421,10 @@ class CliArgs(object):
             action='store_true'
         )
 
+        standard.add_argument('--output-file', nargs='?', type=argparse.FileType('w'), default=sys.stdout,
+            help='Writes the output to the specified file, ideal for producing reports'
+        )
+
         return parser
 
 
@@ -650,3 +654,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     def build_graph(self):
         """ build_graph """
         return self._get_argument_value('build_graph', False, False)
+
+    @property
+    def output_file(self):
+        return self._get_argument_value('output_file', False, False)
+    
+
