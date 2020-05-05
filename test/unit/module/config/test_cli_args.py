@@ -3,6 +3,8 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+import io
+import sys
 from test.testlib.testcase import BaseTestCase
 import cfnlint.config  # pylint: disable=E0401
 
@@ -37,6 +39,18 @@ class TestArgsParser(BaseTestCase):
         self.assertEqual(config.cli_args.templates, ['template1.yaml', 'template2.yaml'])
         self.assertEqual(config.cli_args.template_alt, [])
         self.assertEqual(config.cli_args.regions, ['us-east-1', 'us-west-2'])
+
+    def test_stdout(self):
+        """Test success run"""
+
+        config = cfnlint.config.CliArgs(['-t', 'template1.yaml'])
+        self.assertIsNone(config.cli_args.output_file, None)
+
+    def test_output_file(self):
+        """Test success run"""
+
+        config = cfnlint.config.CliArgs(['-t', 'template1.yaml', '--output-file', 'test_output.txt'])
+        self.assertEqual(config.cli_args.output_file, 'test_output.txt')
 
     def test_create_parser_exend(self):
         """Test success run"""
