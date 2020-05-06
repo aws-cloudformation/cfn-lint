@@ -12,8 +12,7 @@ class Exclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
     id = 'E2520'
     shortdesc = 'Check Properties that are mutually exclusive'
-    description = 'Making sure CloudFormation properties ' + \
-                  'that are exclusive are not defined'
+    description = 'Making sure CloudFormation properties that are exclusive are not defined'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 

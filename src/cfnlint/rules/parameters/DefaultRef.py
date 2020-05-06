@@ -12,7 +12,7 @@ class DefaultRef(CloudFormationLintRule):
     shortdesc = 'Default value cannot use Refs'
     description = 'Check if Refs are not used in Parameter Defaults'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
-    tags = ['parameters']
+    tags = ['parameters', 'ref']
 
     def match(self, cfn):
         """Check CloudFormation Parameters"""

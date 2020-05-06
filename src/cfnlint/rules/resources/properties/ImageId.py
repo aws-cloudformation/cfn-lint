@@ -14,7 +14,7 @@ class ImageId(CloudFormationLintRule):
                   'of inappropriate type. Appropriate Types are ' + \
                   '[AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>]'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
-    tags = ['parameters', 'imageid']
+    tags = ['parameters', 'ec2', 'imageid']
 
     def match(self, cfn):
         """Check CloudFormation ImageId Parameters"""

@@ -12,7 +12,7 @@ class Used(CloudFormationLintRule):
     shortdesc = 'Check if Mappings are Used'
     description = 'Making sure the mappings defined are used'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['conditions']
+    tags = ['mappings']
 
     def match(self, cfn):
         """Check CloudFormation Mappings"""

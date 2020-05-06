@@ -12,8 +12,7 @@ class Configuration(CloudFormationLintRule):
     """Check Base Resource Configuration"""
     id = 'E3001'
     shortdesc = 'Basic CloudFormation Resource Check'
-    description = 'Making sure the basic CloudFormation resources ' + \
-                  'are properly configured'
+    description = 'Making sure the basic CloudFormation resources are properly configured'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 

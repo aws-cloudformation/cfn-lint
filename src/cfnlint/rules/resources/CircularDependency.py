@@ -10,10 +10,9 @@ class CircularDependency(CloudFormationLintRule):
     """Check if Resources have a circular dependency"""
     id = 'E3004'
     shortdesc = 'Resource dependencies are not circular'
-    description = 'Check that Resources are not circularly dependent ' \
-                  'by DependsOn, Ref, Sub, or GetAtt'
+    description = 'Check that Resources are not circularly dependent by DependsOn, Ref, Sub, or GetAtt'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['resources', 'circularly']
+    tags = ['resources', 'circularly', 'dependson', 'ref', 'sub', 'getatt']
 
     def match(self, cfn):
         """Check CloudFormation Resources"""
