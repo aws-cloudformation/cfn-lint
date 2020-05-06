@@ -12,8 +12,7 @@ class Properties(CloudFormationLintRule):
     """Check Base Resource Configuration"""
     id = 'E3002'
     shortdesc = 'Resource properties are valid'
-    description = 'Making sure that resources properties ' + \
-                  'are properly configured'
+    description = 'Making sure that resources properties are properly configured'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
     tags = ['resources']
 

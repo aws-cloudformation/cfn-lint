@@ -15,7 +15,7 @@ class RouteTableAssociation(CloudFormationLintRule):
     shortdesc = 'Resource SubnetRouteTableAssociation Properties'
     description = 'Validate there is only one SubnetRouteTableAssociation per subnet'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'
-    tags = ['resources', 'subnet', 'route table']
+    tags = ['resources', 'ec2', 'subnet', 'route table']
 
     # Namespace for unique associated subnets in the form condition::value
     resource_values = {}
