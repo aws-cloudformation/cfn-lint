@@ -12,7 +12,7 @@ class InstanceEngine(CloudFormationLintRule):
     id = 'E3040'
     shortdesc = 'RDS DB Instance Engine is valid'
     description = 'Check the RDS DB Instance Engine is valid'
-    source_url = 'https: // docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_CreateDBInstance.html'
+    source_url = 'https://docs.aws.amazon.com/AmazonRDS/latest/APIReference/API_CreateDBInstance.html'
     tags = ['resources', 'rds']
 
     valid_engines = [
