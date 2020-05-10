@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 import cfnlint.config
-from cfnlint import Runner
+from cfnlint.runner import Runner
 from cfnlint.rules import RulesCollection
 
 
