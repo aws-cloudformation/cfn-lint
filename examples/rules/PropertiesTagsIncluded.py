@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -16,7 +17,7 @@ class PropertiesTagsIncluded(CloudFormationLintRule):
 
     def get_resources_with_tags(self, region):
         """Get resource types that support tags"""
-        resourcespecs = cfnlint.helpers.RESOURCE_SPECS[region]
+        resourcespecs = cfnlint.specs.RESOURCE_SPECS[region]
         resourcetypes = resourcespecs['ResourceTypes']
 
         matches = []

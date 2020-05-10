@@ -3,7 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import six
-from cfnlint.helpers import load_resource
+from cfnlint.specs import load_resource
 from cfnlint.data import CloudSpecs
 from test.testlib.testcase import BaseTestCase
 

@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -19,7 +20,7 @@ class Inclusive(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(Inclusive, self).__init__()
-        inclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Inclusive.json')
+        inclusivespec = cfnlint.specs.load_resource(AdditionalSpecs, 'Inclusive.json')
         self.resource_types_specs = inclusivespec['ResourceTypes']
         self.property_types_specs = inclusivespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:

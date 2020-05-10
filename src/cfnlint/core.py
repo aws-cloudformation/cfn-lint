@@ -5,16 +5,17 @@ SPDX-License-Identifier: MIT-0
 import logging
 import os
 import sys
+
 from jsonschema.exceptions import ValidationError
 
+import cfnlint.specs
 from cfnlint import Template
 from cfnlint.rules import RulesCollection
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
-from cfnlint.helpers import REGIONS
-
+from cfnlint.specs import REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -42,7 +43,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
     """Process args and run"""
 
     if override_spec:
-        cfnlint.helpers.override_specs(override_spec)
+        cfnlint.specs.override_specs(override_spec)
 
     if build_graph:
         template_obj = Template(filename, template, regions)
@@ -118,7 +119,7 @@ def get_args_filenames(cli_args):
     formatter = get_formatter(fmt)
 
     if config.update_specs:
-        cfnlint.maintenance.update_resource_specs()
+        cfnlint.specs.update_resource_specs()
         sys.exit(0)
 
     if config.update_documentation:

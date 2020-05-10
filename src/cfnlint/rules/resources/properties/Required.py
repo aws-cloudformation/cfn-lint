@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -25,7 +26,7 @@ class Required(CloudFormationLintRule):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
+        resourcespecs = cfnlint.specs.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
 

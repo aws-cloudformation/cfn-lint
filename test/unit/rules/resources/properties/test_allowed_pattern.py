@@ -6,7 +6,7 @@ import re
 import json
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern  # pylint: disable=E0401
-from cfnlint.helpers import load_resource
+from cfnlint.specs import load_resource
 from cfnlint.data import CloudSpecs
 
 

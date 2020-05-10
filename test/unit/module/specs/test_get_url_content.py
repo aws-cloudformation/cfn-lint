@@ -4,6 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import sys
 import gzip
+
+import cfnlint.specs
+
 try:
     import StringIO
 except:
@@ -15,7 +18,7 @@ import cfnlint.helpers
 
 class TestGetUrlContent(BaseTestCase):
     """Test Get URL Content """
-    @patch('cfnlint.helpers.urlopen')
+    @patch('cfnlint.specs.urlopen')
     def test_get_url_content_unzipped(self, mocked_urlopen):
         """Test success run"""
 
@@ -27,11 +30,11 @@ class TestGetUrlContent(BaseTestCase):
         mocked_urlopen.return_value = cm
 
         url = 'http://foo.com'
-        result = cfnlint.helpers.get_url_content(url)
+        result = cfnlint.specs.get_url_content(url)
         mocked_urlopen.assert_called_with(url)
         self.assertEqual(result, '{"key": "value"}')
 
-    @patch('cfnlint.helpers.urlopen')
+    @patch('cfnlint.specs.urlopen')
     def test_get_url_content_zipped(self, mocked_urlopen):
         """Test success run"""
         input_buffer = '{"key": "value"}'
@@ -52,13 +55,13 @@ class TestGetUrlContent(BaseTestCase):
         mocked_urlopen.return_value = cm
 
         url = 'http://foo.com'
-        result = cfnlint.helpers.get_url_content(url)
+        result = cfnlint.specs.get_url_content(url)
         mocked_urlopen.assert_called_with(url)
         self.assertEqual(result, '{"key": "value"}')
 
-    @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.load_metadata')
-    @patch('cfnlint.helpers.save_metadata')
+    @patch('cfnlint.specs.urlopen')
+    @patch('cfnlint.specs.load_metadata')
+    @patch('cfnlint.specs.save_metadata')
     def test_get_url_content_zipped_cache_update(self, mock_save_metadata, mock_load_metadata, mocked_urlopen):
         """Test success run"""
         input_buffer = '{"key": "value"}'
@@ -85,15 +88,15 @@ class TestGetUrlContent(BaseTestCase):
 
         mocked_urlopen.return_value = cm
         
-        result = cfnlint.helpers.get_url_content(url, caching=True)
+        result = cfnlint.specs.get_url_content(url, caching=True)
         mocked_urlopen.assert_called_with(url)
         mock_load_metadata.assert_called_once()
         mock_save_metadata.assert_called_once()
 
         self.assertEqual(result, '{"key": "value"}')
 
-    @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.load_metadata')
+    @patch('cfnlint.specs.urlopen')
+    @patch('cfnlint.specs.load_metadata')
     def test_url_has_newer_version_affirmative(self, mock_load_metadata, mocked_urlopen):
         """Test success run"""
 
@@ -114,7 +117,7 @@ class TestGetUrlContent(BaseTestCase):
 
         mocked_urlopen.return_value = cm
 
-        result = cfnlint.helpers.url_has_newer_version(url)
+        result = cfnlint.specs.url_has_newer_version(url)
         
         # Python2 does not support caching, so will always return true
         if sys.version_info.major == 2:
@@ -122,8 +125,8 @@ class TestGetUrlContent(BaseTestCase):
         else:
             self.assertFalse(result)
 
-    @patch('cfnlint.helpers.urlopen')
-    @patch('cfnlint.helpers.load_metadata')
+    @patch('cfnlint.specs.urlopen')
+    @patch('cfnlint.specs.load_metadata')
     def test_url_has_newer_version_negative(self, mock_load_metadata, mocked_urlopen):
         """Test success run"""
 
@@ -145,5 +148,5 @@ class TestGetUrlContent(BaseTestCase):
         }
         mocked_urlopen.return_value = cm
 
-        result = cfnlint.helpers.url_has_newer_version(url)
+        result = cfnlint.specs.url_has_newer_version(url)
         self.assertTrue(result)

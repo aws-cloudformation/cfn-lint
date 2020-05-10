@@ -3,7 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import sys
-import os
+
+import cfnlint.specs
+
 from test.testlib.testcase import BaseTestCase
 from mock import patch, MagicMock, mock_open
 import cfnlint.helpers
@@ -21,7 +23,7 @@ class TestDownloadsMetadata(BaseTestCase):
 
         filename = 'foo.bar'
 
-        result = cfnlint.helpers.load_metadata(filename)
+        result = cfnlint.specs.load_metadata(filename)
 
         self.assertEqual(result, {})
 
@@ -43,7 +45,7 @@ class TestDownloadsMetadata(BaseTestCase):
 
         mo = mock_open(read_data=json.dumps(file_contents))
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:
-            result = cfnlint.helpers.load_metadata(filename)
+            result = cfnlint.specs.load_metadata(filename)
 
             self.assertEqual(result, file_contents)
 
@@ -70,6 +72,6 @@ class TestDownloadsMetadata(BaseTestCase):
 
         mo = mock_open()
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:
-            cfnlint.helpers.save_metadata(file_contents, filename)
+            cfnlint.specs.save_metadata(file_contents, filename)
             mock_mkdir.assert_called_with(filedir)
             mock_json_dump.assert_called_once

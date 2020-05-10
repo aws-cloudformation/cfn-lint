@@ -3,7 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import sys
+
 import six
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -41,7 +43,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
+        specs = cfnlint.specs.RESOURCE_SPECS.get(cfn.regions[0])
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')
         for resource_spec in self.resource_specs:

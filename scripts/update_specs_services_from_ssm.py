@@ -6,9 +6,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import json
 import boto3
-from cfnlint.helpers import get_url_content
-from cfnlint.helpers import REGIONS
-from cfnlint.maintenance import SPEC_REGIONS
+from cfnlint.specs import get_url_content, SPEC_REGIONS, REGIONS
 
 """
     Updates our dynamic patches from SSM data

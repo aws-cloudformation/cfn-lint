@@ -3,6 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import six
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -90,7 +91,7 @@ class Configuration(CloudFormationLintRule):
                     ))
                 else:
                     self.logger.debug('Check resource types by region...')
-                    for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
+                    for region, specs in cfnlint.specs.RESOURCE_SPECS.items():
                         if region in cfn.regions:
                             if resource_type not in specs['ResourceTypes']:
                                 if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
@@ -101,7 +102,7 @@ class Configuration(CloudFormationLintRule):
                                     ))
 
                 if 'Properties' not in resource_values:
-                    resource_spec = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
+                    resource_spec = cfnlint.specs.RESOURCE_SPECS[cfn.regions[0]]
                     if resource_type in resource_spec['ResourceTypes']:
                         properties_spec = resource_spec['ResourceTypes'][resource_type]['Properties']
                         # pylint: disable=len-as-condition

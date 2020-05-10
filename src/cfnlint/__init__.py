@@ -10,8 +10,9 @@ import traceback
 import warnings
 from copy import deepcopy, copy
 from datetime import datetime
+
 import six
-from yaml.parser import ParserError
+import cfnlint.specs
 import cfnlint.helpers
 import cfnlint.conditions
 from cfnlint.graph import Graph
@@ -219,7 +220,7 @@ class Template(object):  # pylint: disable=R0904
     def get_valid_getatts(self):
         """Get all valid GetAtts"""
         LOGGER.debug('Get valid GetAtts from template...')
-        resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
+        resourcetypes = cfnlint.specs.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         resources = self.template.get('Resources', {})
 

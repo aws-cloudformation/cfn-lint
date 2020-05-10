@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -21,7 +22,7 @@ class OnlyOne(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(OnlyOne, self).__init__()
-        onlyonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'OnlyOne.json')
+        onlyonespec = cfnlint.specs.load_resource(AdditionalSpecs, 'OnlyOne.json')
         self.resource_types_specs = onlyonespec['ResourceTypes']
         self.property_types_specs = onlyonespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:

@@ -7,8 +7,7 @@ import os
 from test.testlib.testcase import BaseTestCase
 from mock import patch
 import cfnlint.config  # pylint: disable=E0401
-from cfnlint.helpers import REGIONS
-
+from cfnlint.specs import REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 

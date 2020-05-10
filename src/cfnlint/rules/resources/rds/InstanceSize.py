@@ -18,7 +18,7 @@ class InstanceSize(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.DBInstanceClass.html'
     tags = ['resources', 'rds']
 
-    valid_instance_types = cfnlint.helpers.load_resource(AdditionalSpecs, 'RdsProperties.json')
+    valid_instance_types = cfnlint.specs.load_resource(AdditionalSpecs, 'RdsProperties.json')
 
     def _get_license_model(self, engine, license_model):
         """ Logic to get the correct license model"""

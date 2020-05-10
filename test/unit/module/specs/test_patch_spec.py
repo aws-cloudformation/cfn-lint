@@ -3,11 +3,13 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+
+import cfnlint.specs
+
 import test.fixtures.specs
 from test.testlib.testcase import BaseTestCase
 import cfnlint.helpers
-from cfnlint.maintenance import patch_spec
-
+from cfnlint.specs import patch_spec
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())
@@ -20,7 +22,7 @@ class TestPatchJson(BaseTestCase):
         """Setup"""
         region = 'us-east-1'
 
-        self.spec = cfnlint.helpers.load_resource(test.fixtures.specs, '%s.json' % region)
+        self.spec = cfnlint.specs.load_resource(test.fixtures.specs, '%s.json' % region)
 
     def test_success_rds_dbcluster(self):
         """Success test"""

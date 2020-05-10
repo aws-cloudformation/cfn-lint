@@ -3,6 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
+
+import cfnlint.specs
+
 from test.testlib.testcase import BaseTestCase
 from cfnlint import Runner
 from cfnlint.rules import RulesCollection
@@ -21,7 +24,7 @@ class TestOverrideRequired(BaseTestCase):
     def tearDown(self):
         """Tear Down"""
         # Reset the Spec override to prevent other tests to fail
-        cfnlint.helpers.initialize_specs()
+        cfnlint.specs.initialize_specs()
 
     def test_success_run(self):
         """Success test"""
@@ -30,7 +33,7 @@ class TestOverrideRequired(BaseTestCase):
         with open('test/fixtures/templates/override_spec/required.json') as fp:
             custom_spec = json.load(fp)
 
-        cfnlint.helpers.set_specs(custom_spec)
+        cfnlint.specs.set_specs(custom_spec)
 
         good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         self.assertEqual([], good_runner.run())
@@ -42,7 +45,7 @@ class TestOverrideRequired(BaseTestCase):
         with open('test/fixtures/templates/override_spec/required.json') as fp:
             custom_spec = json.load(fp)
 
-        cfnlint.helpers.set_specs(custom_spec)
+        cfnlint.specs.set_specs(custom_spec)
 
         bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         errs = bad_runner.run()

@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
-from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.specs import RESOURCE_SPECS
 
 
 class Join(CloudFormationLintRule):

@@ -2,6 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import cfnlint.specs
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -21,7 +22,7 @@ class AtLeastOne(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(AtLeastOne, self).__init__()
-        atleastonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'AtLeastOne.json')
+        atleastonespec = cfnlint.specs.load_resource(AdditionalSpecs, 'AtLeastOne.json')
         self.resource_types_specs = atleastonespec['ResourceTypes']
         self.property_types_specs = atleastonespec['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:

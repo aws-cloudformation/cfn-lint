@@ -13,7 +13,8 @@ import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
-from cfnlint.helpers import REGIONS
+from cfnlint.specs import REGIONS
+
 try:  # pragma: no cover
     from pathlib import Path
 except ImportError:  # pragma: no cover

@@ -7,7 +7,7 @@ import json
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
-from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.specs import RESOURCE_SPECS
 
 
 class ListDuplicatesAllowed(CloudFormationLintRule):

@@ -8,6 +8,7 @@ from datetime import datetime
 import importlib
 import traceback
 import cfnlint.helpers
+import cfnlint.specs
 from cfnlint.decode.node import TemplateAttributeError
 
 LOGGER = logging.getLogger(__name__)
@@ -223,7 +224,7 @@ class RulesCollection(object):
     def resource_property(self, filename, cfn, path, properties, resource_type, property_type):
         """Run loops in resource checks for embedded properties"""
         matches = []
-        property_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
+        property_spec = cfnlint.specs.RESOURCE_SPECS['us-east-1'].get('PropertyTypes')
         if property_type == 'Tag':
             property_spec_name = 'Tag'
         else:
@@ -286,7 +287,7 @@ class RulesCollection(object):
     def run_resource(self, filename, cfn, resource_type, resource_properties, path):
         """Run loops in resource checks for embedded properties"""
         matches = []
-        resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
+        resource_spec = cfnlint.specs.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         if resource_properties and resource_type in resource_spec:
             resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
             for resource_property, resource_property_value in resource_properties.items():
