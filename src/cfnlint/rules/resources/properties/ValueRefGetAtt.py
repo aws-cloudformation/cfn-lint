@@ -14,7 +14,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
     id = 'E3008'
     shortdesc = 'Check values of properties for valid Refs and GetAtts'
     description = 'Checks resource properties for Ref and GetAtt values'
-    tags = ['resources']
+    tags = ['resources', 'ref', 'getatt']
 
     def initialize(self, cfn):
         """Initialize the rule"""

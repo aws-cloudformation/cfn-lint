@@ -13,7 +13,7 @@ class RefInCondition(CloudFormationLintRule):
     shortdesc = 'Cannot reference resources in the Conditions block of the template'
     description = 'Check that any Refs in the Conditions block uses no resources'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#w2ab2c21c28c21c45'
-    tags = ['functions', 'ref']
+    tags = ['conditions', 'functions', 'ref']
 
     def match(self, cfn):
         """Check CloudFormation Ref"""

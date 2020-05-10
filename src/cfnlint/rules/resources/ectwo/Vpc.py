@@ -13,10 +13,9 @@ class Vpc(CloudFormationLintRule):
     """Check if EC2 VPC Resource Properties"""
     id = 'E2505'
     shortdesc = 'Resource EC2 VPC Properties'
-    description = 'Check if the default tenancy is default or dedicated and ' \
-                  'that CidrBlock is a valid CIDR range.'
+    description = 'Check if the default tenancy is default or dedicated and that CidrBlock is a valid CIDR range.'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html'
-    tags = ['properties', 'vpc']
+    tags = ['properties', 'ec2', 'vpc']
 
     def check_cidr_value(self, value, path):
         """Check CIDR Strings"""

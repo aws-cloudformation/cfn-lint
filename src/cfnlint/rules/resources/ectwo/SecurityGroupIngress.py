@@ -14,7 +14,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
                   'Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are ' \
                   ' are exclusive and using the type of Ref or GetAtt '
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html'
-    tags = ['resources', 'securitygroup']
+    tags = ['resources', 'ec2', 'securitygroup']
 
     def check_ingress_rule(self, vpc_id, properties, path):
         """Check ingress rule"""

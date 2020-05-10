@@ -78,6 +78,8 @@ def get_formatter(fmt):
             formatter = cfnlint.formatters.ParseableFormatter()
         elif fmt == 'json':
             formatter = cfnlint.formatters.JsonFormatter()
+        elif fmt == 'junit':
+            formatter = cfnlint.formatters.JUnitFormatter()
     else:
         formatter = cfnlint.formatters.Formatter()
 
