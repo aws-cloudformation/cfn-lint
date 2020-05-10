@@ -2,7 +2,6 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
 
 import cfnlint.specs
 
@@ -31,9 +30,7 @@ class TestInclude(BaseTestCase):
         filename = 'test/fixtures/templates/bad/override/include.yaml'
         template = self.load_template(filename)
 
-        with open('test/fixtures/templates/override_spec/include.json') as fp:
-            custom_spec = json.load(fp)
-        cfnlint.specs.set_specs(custom_spec)
+        cfnlint.specs.override_specs('test/fixtures/templates/override_spec/include.json')
 
         bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         errs = bad_runner.run()

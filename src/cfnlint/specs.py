@@ -68,7 +68,7 @@ def override_specs(override_spec_file):
         with open(filename) as fp:
             custom_spec_data = json.load(fp)
 
-        set_specs(custom_spec_data)
+        _set_specs(custom_spec_data)
     except IOError as e:
         if e.errno == 2:
             LOGGER.error('Override spec file not found: %s', filename)
@@ -84,7 +84,7 @@ def override_specs(override_spec_file):
         sys.exit(1)
 
 
-def set_specs(override_spec_data):
+def _set_specs(override_spec_data):
     """ Set Resource Specs """
 
     excludes = []
@@ -100,7 +100,7 @@ def set_specs(override_spec_data):
 
         # Merge override spec file into the AWS Resource specification
         if override_spec_data:
-            RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
+            RESOURCE_SPECS[region] = _merge_spec(override_spec_data, spec)
 
         # Grab a list of all resources
         all_resources = list(RESOURCE_SPECS[region]['ResourceTypes'].keys())[:]
@@ -132,13 +132,13 @@ def set_specs(override_spec_data):
                 del RESOURCE_SPECS[region]['ResourceTypes'][resource]
 
 
-def merge_spec(source, destination):
+def _merge_spec(source, destination):
     """ Recursive merge spec dict """
 
     for key, value in source.items():
         if isinstance(value, dict):
             node = destination.setdefault(key, {})
-            merge_spec(value, node)
+            _merge_spec(value, node)
         else:
             destination[key] = value
 
@@ -242,13 +242,6 @@ def get_metadata_filename(url):
 
     return metadata_filename
 
-def initialize_specs():
-    """ Initialize Resource Specs """
-    for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=('%s.json' % reg))
-
-initialize_specs()
-
 
 def update_resource_specs():
     """ Update Resource Specs """
@@ -318,3 +311,10 @@ def update_resource_spec(region, url):
 
     with open(filename, 'w') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
+
+def initialize_specs():
+    """ Initialize Resource Specs """
+    for reg in REGIONS:
+        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=('%s.json' % reg))
+
+initialize_specs()

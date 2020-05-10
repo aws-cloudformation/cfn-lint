@@ -2,8 +2,6 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
-
 import cfnlint.specs
 
 from test.testlib.testcase import BaseTestCase
@@ -30,10 +28,8 @@ class TestOverrideRequired(BaseTestCase):
         """Success test"""
         filename = 'test/fixtures/templates/good/override/required.yaml'
         template = self.load_template(filename)
-        with open('test/fixtures/templates/override_spec/required.json') as fp:
-            custom_spec = json.load(fp)
 
-        cfnlint.specs.set_specs(custom_spec)
+        cfnlint.specs.override_specs('test/fixtures/templates/override_spec/required.json')
 
         good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         self.assertEqual([], good_runner.run())
@@ -42,10 +38,8 @@ class TestOverrideRequired(BaseTestCase):
         """Failure test required"""
         filename = 'test/fixtures/templates/bad/override/required.yaml'
         template = self.load_template(filename)
-        with open('test/fixtures/templates/override_spec/required.json') as fp:
-            custom_spec = json.load(fp)
 
-        cfnlint.specs.set_specs(custom_spec)
+        cfnlint.specs.override_specs('test/fixtures/templates/override_spec/required.json')
 
         bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         errs = bad_runner.run()

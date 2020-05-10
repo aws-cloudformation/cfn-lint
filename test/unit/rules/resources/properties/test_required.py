@@ -2,8 +2,6 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
-
 import cfnlint.specs
 
 from test.unit.rules import BaseRuleTestCase
@@ -42,9 +40,7 @@ class TestSpecifiedCustomResourceRequiredProperties(TestResourceConfiguration):
         """Setup"""
         super(TestSpecifiedCustomResourceRequiredProperties, self).setUp()
         # Add a Spec override that specifies the Custom::SpecifiedCustomResource type
-        with open('test/fixtures/templates/override_spec/custom.json') as fp:
-            custom_spec = json.load(fp)
-        cfnlint.specs.set_specs(custom_spec)
+        cfnlint.specs.override_specs('test/fixtures/templates/override_spec/custom.json')
         # Reset Spec override after test
         self.addCleanup(cfnlint.specs.initialize_specs)
 
