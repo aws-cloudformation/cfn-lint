@@ -16,7 +16,7 @@ class RelationshipConditions(CloudFormationLintRule):
                   'the resource being related to is available when there is a resource ' \
                   'condition.'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'
-    tags = ['resources', 'relationships']
+    tags = ['conditions', 'resources', 'relationships', 'ref', 'getatt']
 
     def match(self, cfn):
         """Check CloudFormation Ref/GetAtt for Conditions"""

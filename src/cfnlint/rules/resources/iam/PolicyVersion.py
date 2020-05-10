@@ -11,8 +11,7 @@ class PolicyVersion(CloudFormationLintRule):
     """Check if IAM Policy Version is correct"""
     id = 'W2511'
     shortdesc = 'Check IAM Resource Policies syntax'
-    description = 'See if the elements inside an IAM Resource policy ' + \
-                  'are configured correctly.'
+    description = 'See if the elements inside an IAM Resource policy are configured correctly.'
     source_url = 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html'
     tags = ['properties', 'iam']
 

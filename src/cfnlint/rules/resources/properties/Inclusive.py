@@ -12,8 +12,7 @@ class Inclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
     id = 'E2521'
     shortdesc = 'Check Properties that are required together'
-    description = 'Make sure CloudFormation resource properties ' + \
-                  'are included together when required'
+    description = 'Make sure CloudFormation resource properties are included together when required'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 

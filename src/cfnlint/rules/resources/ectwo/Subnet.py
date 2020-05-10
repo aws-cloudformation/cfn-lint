@@ -14,7 +14,7 @@ class Subnet(CloudFormationLintRule):
     shortdesc = 'Resource EC2 PropertiesEc2Subnet Properties'
     description = 'See if EC2 Subnet Properties are set correctly'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html'
-    tags = ['properties', 'subnet']
+    tags = ['properties', 'ec2', 'subnet']
 
     def check_az_value(self, value, path):
         """Check AZ Values"""
