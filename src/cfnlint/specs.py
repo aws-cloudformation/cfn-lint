@@ -26,7 +26,6 @@ try:
 except ImportError:
     from urllib2 import urlopen
 
-import cfnlint
 from cfnlint.data import CloudSpecs
 
 LOGGER = logging.getLogger(__name__)
@@ -279,7 +278,7 @@ def patch_spec(content, region):
             file_path = os.path.basename(filename)
             module = dirpath.replace('%s' % append_dir, '%s' % region).replace(os.path.sep, '.')
             LOGGER.info('Processing %s/%s', module, file_path)
-            all_patches = jsonpatch.JsonPatch(cfnlint.specs.load_resource(
+            all_patches = jsonpatch.JsonPatch(load_resource(
                 'cfnlint.data.ExtendedSpecs.{}'.format(module), file_path))
 
             # Process the generic patches 1 by 1 so we can "ignore" failed ones
@@ -298,7 +297,7 @@ def patch_spec(content, region):
 
 def update_resource_spec(region, url):
     """ Update a single resource spec """
-    filename = os.path.join(os.path.dirname(cfnlint.__file__), 'data/CloudSpecs/%s.json' % region)
+    filename = os.path.join(os.path.dirname(__file__), 'data/CloudSpecs/%s.json' % region)
 
     multiprocessing_logger = multiprocessing.log_to_stderr()
 
