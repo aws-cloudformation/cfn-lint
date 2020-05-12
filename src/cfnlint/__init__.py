@@ -3,9 +3,9 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import warnings
 import cfnlint.helpers
 import cfnlint.conditions
+from cfnlint.decorators.refactored import refactored
 from cfnlint.graph import Graph
 from cfnlint.transform import Transform
 from cfnlint.decode.node import TemplateAttributeError
@@ -21,20 +21,6 @@ from cfnlint.decode.node import dict_node
 import cfnlint.rules
 
 LOGGER = logging.getLogger(__name__)
-
-
-def refactored(message):
-    """ Decoreate for refactoring classes """
-    def cls_wrapper(cls):
-        """ Wrapper Class """
-        class Wrapped(cls, object):
-            """ Wrapped Class """
-
-            def __init__(self, *args, **kwargs):
-                warnings.warn(message, FutureWarning)
-                super(Wrapped, self).__init__(*args, **kwargs)
-        return Wrapped
-    return cls_wrapper
 
 
 @refactored('RuleMatch is refactored and deprecated. Please use cfnlint.rules.RuleMatch')
