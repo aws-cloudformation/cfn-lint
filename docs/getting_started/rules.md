@@ -43,7 +43,7 @@ Use the following skeleton code as a starting point of your new rule:
 
 ```python
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
@@ -89,7 +89,7 @@ Use the following skeleton code as a starting point of your new rule:
 
 ```python
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules.MyNewRule import MyNewRule  # pylint: disable=E0401
