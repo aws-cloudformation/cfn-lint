@@ -1,3 +1,7 @@
+### v0.31.1
+###### Fixes
+- Exempting resource types [AWS::Serverless transform](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html) creates that violated rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) (pull #[1529](https://github.com/aws-cloudformation/cfn-python-lint/pull/1529))
+
 ### v0.31.0
 ###### Features
 - Add support for `.cfnlintrc.yaml` and `.cfnlintrc.yml` (pull #[1504](https://github.com/aws-cloudformation/cfn-python-lint/pull/1504))
