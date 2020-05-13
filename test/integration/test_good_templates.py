@@ -22,34 +22,8 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             'filename': 'test/fixtures/templates/good/transform.yaml',
-            'results': [
-                {
-                    "Filename": "test/fixtures/templates/good/transform.yaml",
-                    "Level": "Warning",
-                    "Location": {
-                        "End": {
-                            "ColumnNumber": 10,
-                            "LineNumber": 4
-                        },
-                        "Path": [
-                            "Resources",
-                            "ExampleLayer29b0582575"
-                        ],
-                        "Start": {
-                            "ColumnNumber": 1,
-                            "LineNumber": 4
-                        }
-                    },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/ExampleLayer29b0582575 from deletion",
-                    "Rule": {
-                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
-                        "Id": "W3011",
-                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
-                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
-                    }
-                }
-            ],
-            'exit_code': 4,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/bad/transform_serverless_template.yaml',
@@ -135,94 +109,17 @@ class TestQuickStartTemplates(BaseCliTestCase):
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_api.yaml',
-            'results': [
-                {
-                    "Filename": "test/fixtures/templates/good/transform_serverless_api.yaml",
-                    "Level": "Warning",
-                    "Location": {
-                        "End": {
-                            "ColumnNumber": 10,
-                            "LineNumber": 4
-                        },
-                        "Path": [
-                            "Resources",
-                            "myFunctionVersionee13cf2679"
-                        ],
-                        "Start": {
-                            "ColumnNumber": 1,
-                            "LineNumber": 4
-                        }
-                    },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
-                    "Rule": {
-                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
-                        "Id": "W3011",
-                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
-                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
-                    }
-                }
-            ],
-            'exit_code': 4,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_function.yaml',
-            'results': [
-                {
-                    "Filename": "test/fixtures/templates/good/transform_serverless_function.yaml",
-                    "Level": "Warning",
-                    "Location": {
-                        "End": {
-                            "ColumnNumber": 10,
-                            "LineNumber": 4
-                        },
-                        "Path": [
-                            "Resources",
-                            "myFunctionVersionee13cf2679"
-                        ],
-                        "Start": {
-                            "ColumnNumber": 1,
-                            "LineNumber": 4
-                        }
-                    },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
-                    "Rule": {
-                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
-                        "Id": "W3011",
-                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
-                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
-                    }
-                }
-            ],
-            'exit_code': 4,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform_serverless_globals.yaml',
             'results': [
-                {
-                    "Filename": "test/fixtures/templates/good/transform_serverless_globals.yaml",
-                    "Level": "Warning",
-                    "Location": {
-                        "End": {
-                            "ColumnNumber": 10,
-                            "LineNumber": 9
-                        },
-                        "Path": [
-                            "Resources",
-                            "myFunctionVersionee13cf2679"
-                        ],
-                        "Start": {
-                            "ColumnNumber": 1,
-                            "LineNumber": 9
-                        }
-                    },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/myFunctionVersionee13cf2679 from deletion",
-                    "Rule": {
-                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
-                        "Id": "W3011",
-                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
-                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
-                    }
-                },
                 {
                     "Filename": "test/fixtures/templates/good/transform_serverless_globals.yaml",
                     "Level": "Error",
@@ -251,38 +148,12 @@ class TestQuickStartTemplates(BaseCliTestCase):
                     }
                 }
             ],
-            'exit_code': 6,
+            'exit_code': 2,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform.yaml',
-            'results': [
-                {
-                    "Filename": "test/fixtures/templates/good/transform/list_transform.yaml",
-                    "Level": "Warning",
-                    "Location": {
-                        "End": {
-                            "ColumnNumber": 10,
-                            "LineNumber": 14
-                        },
-                        "Path": [
-                            "Resources",
-                            "SkillFunctionVersion55ff35af87"
-                        ],
-                        "Start": {
-                            "ColumnNumber": 1,
-                            "LineNumber": 14
-                        }
-                    },
-                    "Message": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect Resources/SkillFunctionVersion55ff35af87 from deletion",
-                    "Rule": {
-                        "Description": "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion",
-                        "Id": "W3011",
-                        "ShortDescription": "Check resources with UpdateReplacePolicy/DeletionPolicy have both",
-                        "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
-                    }
-                }
-            ],
-            'exit_code': 4,
+            'results': [],
+            'exit_code': 0,
         },
         {
             'filename': 'test/fixtures/templates/good/transform/list_transform_many.yaml',
