@@ -1,3 +1,16 @@
+### v0.31.1
+###### Fixes
+- Exempting resource types [AWS::Serverless transform](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html) creates that violated rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) (pull #[1529](https://github.com/aws-cloudformation/cfn-python-lint/pull/1529))
+
+### v0.31.0
+###### Features
+- Add support for `.cfnlintrc.yaml` and `.cfnlintrc.yml` (pull #[1504](https://github.com/aws-cloudformation/cfn-python-lint/pull/1504))
+- Add JUnit XML output format (pull #[1506](https://github.com/aws-cloudformation/cfn-python-lint/pull/1506))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 14.2.0 (pull #[1526](https://github.com/aws-cloudformation/cfn-python-lint/pull/1526))
+- Update `AWS::AutoScaling::LaunchConfiguration` `SecurityGroups` to support GroupID and Names (pull #[1505](https://github.com/aws-cloudformation/cfn-python-lint/pull/1505))
+- Add min max and allowed values for multiple WAFv2 rate rules `Limit` rules (pull #[1507](https://github.com/aws-cloudformation/cfn-python-lint/pull/1507))
+
 ### v0.30.1
 ###### Features
 - Add the ability to specify a config file using parameter `--config-file` (pull #[1462](https://github.com/aws-cloudformation/cfn-python-lint/pull/1462))

@@ -1,5 +1,5 @@
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
@@ -19,10 +19,11 @@ class UpdateReplacePolicyDeletionPolicy(CloudFormationLintRule):
         matches = []
 
         for r_name, r_values in cfn.get_resources().items():
-            # pylint: disable=too-many-boolean-expressions
-            if r_values.get('DeletionPolicy') and r_values.get('DeletionPolicy') != 'Delete' and not r_values.get('UpdateReplacePolicy') or not r_values.get('DeletionPolicy') and r_values.get('UpdateReplacePolicy') and r_values.get('UpdateReplacePolicy') != 'Delete':
-                path = ['Resources', r_name]
-                message = 'Both UpdateReplacePolicy and DeletionPolicy are needed to protect %s from deletion' % '/'.join(path)
-                matches.append(RuleMatch(path, message))
+            if r_values.get('Type') not in ['AWS::Lambda::Version', 'AWS::Lambda::LayerVersion']:
+                # pylint: disable=too-many-boolean-expressions
+                if r_values.get('DeletionPolicy') and r_values.get('DeletionPolicy') != 'Delete' and not r_values.get('UpdateReplacePolicy') or not r_values.get('DeletionPolicy') and r_values.get('UpdateReplacePolicy') and r_values.get('UpdateReplacePolicy') != 'Delete':
+                    path = ['Resources', r_name]
+                    message = 'Both UpdateReplacePolicy and DeletionPolicy are needed to protect %s from deletion' % '/'.join(path)
+                    matches.append(RuleMatch(path, message))
 
         return matches
