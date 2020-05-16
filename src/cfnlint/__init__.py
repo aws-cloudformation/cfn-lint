@@ -17,6 +17,10 @@ from cfnlint.rules import CloudFormationLintRule as _CloudFormationLintRule
 from cfnlint.rules import ParseError as _ParseError
 from cfnlint.rules import TransformError as _TransformError
 from cfnlint.rules import RuleError as _RuleError
+from cfnlint.runner import Runner as _Runner
+from cfnlint.template import Template as _Template
+
+
 from cfnlint.decode.node import dict_node
 import cfnlint.rules
 
@@ -56,3 +60,11 @@ class TransformError(_TransformError):
 @refactored('RuleError is refactored and deprecated. Please use cfnlint.rules.RuleError')
 class RuleError(_RuleError):
     """ Refactored class Rules RuleError """
+
+@refactored('Template is refactored and deprecated. Please use Template in cfnlint.template')
+class Template(_Template):
+    """ Refactored class Template """
+
+@refactored('Runner is refactored and deprecated. Please use Runner in cfnlint.runner')
+class Runner(_Runner):
+    """ Refactored class Runner """

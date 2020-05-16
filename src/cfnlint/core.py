@@ -8,27 +8,18 @@ import sys
 
 from jsonschema.exceptions import ValidationError
 
-from cfnlint.decorators.refactored import refactored
 import cfnlint.runner
-from cfnlint.template import Template as _Template
+from cfnlint.template import Template
 from cfnlint.rules import RulesCollection
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.helpers import REGIONS
-from cfnlint.runner import Runner as _Runner
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
 
-@refactored('Template is refactored and deprecated. Please use Template in cfnlint.template')
-class Template(_Template):
-    """ Refactored class Template """
-
-@refactored('Runner is refactored and deprecated. Please use Runner in cfnlint.runner')
-class Runner(_Runner):
-    """ Refactored class Runner """
 
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
@@ -55,7 +46,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
         cfnlint.helpers.override_specs(override_spec)
 
     if build_graph:
-        template_obj = _Template(filename, template, regions)
+        template_obj = Template(filename, template, regions)
         template_obj.build_graph()
 
     return run_checks(filename, template, rules, regions, mandatory_rules)

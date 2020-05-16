@@ -2,14 +2,16 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import logging
 import re
 from copy import deepcopy, copy
 import six
 
 import cfnlint.conditions
 import cfnlint.helpers
-from cfnlint import Graph, LOGGER, PSEUDOPARAMS, dict_node
+from cfnlint.graph import Graph
 
+LOGGER = logging.getLogger(__name__)
 
 class Template(object):  # pylint: disable=R0904
     """Class for a CloudFormation template"""
@@ -138,7 +140,7 @@ class Template(object):  # pylint: disable=R0904
                     element['From'] = 'Resources'
                     results[name] = element
 
-        for pseudoparam in PSEUDOPARAMS:
+        for pseudoparam in cfnlint.PSEUDOPARAMS:
             element = {}
             element['Type'] = 'Pseudo'
             element['From'] = 'Pseduo'
@@ -690,7 +692,7 @@ class Template(object):  # pylint: disable=R0904
 
             return value
 
-        result = dict_node({}, obj.start_mark, obj.end_mark)
+        result = cfnlint.dict_node({}, obj.start_mark, obj.end_mark)
         if isinstance(obj, dict):
             if len(obj) == 1:
                 if obj.get('Fn::If'):

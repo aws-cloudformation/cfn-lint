@@ -2,8 +2,11 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import logging
 from cfnlint.template import Template
-from cfnlint import LOGGER, Transform
+from cfnlint.transform import Transform
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Runner(object):
