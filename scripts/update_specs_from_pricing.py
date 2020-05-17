@@ -43,11 +43,8 @@ region_map = {
     'US East (Ohio)': 'us-east-2',
     'US West (N. California)': 'us-west-1',
     'US West (Oregon)': 'us-west-2',
+    'US West (Los Angeles)': 'us-west-2',
 }
-
-region_exceptions = [
-    'US West (Los Angeles)',
-]
 
 session = boto3.session.Session()
 client = session.client('pricing', region_name='us-east-1')
@@ -90,25 +87,22 @@ def get_paginator(service):
 
 
 def get_ec2_pricing():
-    return get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)'], True)
+    return get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)'])
 
 
 def get_redshift_pricing():
-    return get_results('AmazonRedshift', ['Compute Instance'], False)
+    return get_results('AmazonRedshift', ['Compute Instance'])
 
 
 def get_dax_pricing():
     service = 'AmazonDAX'
     product_families = 'DAX'
-    exempt_region_exceptions = False
     results = {}
     for page in get_paginator(service):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if exempt_region_exceptions and product.get('attributes').get('location') in region_exceptions:
-                    continue
                 if product.get('productFamily') in product_families:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
@@ -176,8 +170,6 @@ def get_rds_pricing():
             product = products.get('product', {})
             if product:
                 if product.get('productFamily') == 'Database Instance':
-                    if product.get('attributes').get('location') in region_exceptions:
-                        continue
                     # Get overall instance types
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
@@ -212,26 +204,24 @@ def get_rds_pricing():
 
 
 def get_neptune_pricing():
-    return get_results('AmazonNeptune', ['Database Instance'], False)
+    return get_results('AmazonNeptune', ['Database Instance'])
 
 
 def get_documentdb_pricing():
-    return get_results('AmazonDocDB', ['Database Instance'], False)
+    return get_results('AmazonDocDB', ['Database Instance'])
 
 
 def get_elasticache_pricing():
-    return get_results('AmazonElastiCache', ['Cache Instance'], False)
+    return get_results('AmazonElastiCache', ['Cache Instance'])
 
 
-def get_results(service, product_families, exempt_region_exceptions):
+def get_results(service, product_families):
     results = {}
     for page in get_paginator(service):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if exempt_region_exceptions and product.get('attributes').get('location') in region_exceptions:
-                    continue
                 if product.get('productFamily') in product_families:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
