@@ -246,7 +246,7 @@ def main():
     outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
     outputs = update_outputs('DocumentDBInstanceClass', get_documentdb_pricing(), outputs)
     outputs = update_outputs('NeptuneInstanceClass', get_neptune_pricing(), outputs)
-
+    get_elasticache_pricing()
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
         filename = 'src/cfnlint/data/ExtendedSpecs/%s/05_pricing_property_values.json' % region
