@@ -95,15 +95,13 @@ def get_redshift_pricing():
 
 
 def get_dax_pricing():
-    service = 'AmazonDAX'
-    product_families = 'DAX'
     results = {}
-    for page in get_paginator(service):
+    for page in get_paginator('AmazonDAX'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') in product_families:
+                if product.get('productFamily') in ['DAX']:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(
@@ -117,14 +115,13 @@ def get_mq_pricing():
         'mq.m5.2xl': 'mq.m5.2xlarge',
         'mq.m5.4xl': 'mq.m5.4xlarge'
     }
-
     results = {}
     for page in get_paginator('AmazonMQ'):
         for price_item in page.get('PriceList', []):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') == 'Broker Instances':
+                if product.get('productFamily') in ['Broker Instances']:
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     usage_type = product.get('attributes').get('usagetype').split(':')[1]
@@ -169,7 +166,7 @@ def get_rds_pricing():
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') == 'Database Instance':
+                if product.get('productFamily') in ['Database Instance']:
                     # Get overall instance types
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
