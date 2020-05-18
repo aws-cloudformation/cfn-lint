@@ -17,7 +17,6 @@ LOGGER = logging.getLogger('cfnlint')
 
 
 region_map = {
-    'AWS GovCloud (US)': 'us-gov-west-1',
     'AWS GovCloud (US-East)': 'us-gov-east-1',
     'AWS GovCloud (US-West)': 'us-gov-west-1',
     'Africa (Cape Town)': 'af-south-1',
