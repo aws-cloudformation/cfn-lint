@@ -212,6 +212,10 @@ def get_elasticache_pricing():
     return get_results('AmazonElastiCache', ['Cache Instance'])
 
 
+def get_elasticsearch_pricing():
+    return get_results('AmazonES', ['Elastic Search Instance'])
+
+
 def get_results(service, product_families):
     results = {}
     for page in get_paginator(service):
@@ -244,6 +248,7 @@ def main():
     outputs = update_outputs('DocumentDBInstanceClass', get_documentdb_pricing(), outputs)
     outputs = update_outputs('NeptuneInstanceClass', get_neptune_pricing(), outputs)
     outputs = update_outputs('ElastiCacheInstanceType', get_elasticache_pricing(), outputs)
+    outputs = update_outputs('ElasticsearchInstanceType', get_elasticsearch_pricing(), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
