@@ -86,14 +86,6 @@ def get_paginator(service):
     )
 
 
-def get_ec2_pricing():
-    return get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)'])
-
-
-def get_redshift_pricing():
-    return get_results('AmazonRedshift', ['Compute Instance'])
-
-
 def get_dax_pricing():
     results = {}
     for page in get_paginator('AmazonDAX'):
@@ -200,22 +192,6 @@ def get_rds_pricing():
     return results
 
 
-def get_neptune_pricing():
-    return get_results('AmazonNeptune', ['Database Instance'])
-
-
-def get_documentdb_pricing():
-    return get_results('AmazonDocDB', ['Database Instance'])
-
-
-def get_elasticache_pricing():
-    return get_results('AmazonElastiCache', ['Cache Instance'])
-
-
-def get_elasticsearch_pricing():
-    return get_results('AmazonES', ['Elastic Search Instance'])
-
-
 def get_results(service, product_families):
     results = {}
     for page in get_paginator(service):
@@ -240,15 +216,15 @@ def main():
     for region in region_map.values():
         outputs[region] = []
 
-    outputs = update_outputs('Ec2InstanceType', get_ec2_pricing(), outputs)
+    outputs = update_outputs('Ec2InstanceType', get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)']), outputs)
     outputs = update_outputs('AWS::AmazonMQ::Broker.HostInstanceType', get_mq_pricing(), outputs)
     outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
-    outputs = update_outputs('RedshiftInstanceType', get_redshift_pricing(), outputs)
+    outputs = update_outputs('RedshiftInstanceType', get_results('AmazonRedshift', ['Compute Instance']), outputs)
     outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
-    outputs = update_outputs('DocumentDBInstanceClass', get_documentdb_pricing(), outputs)
-    outputs = update_outputs('NeptuneInstanceClass', get_neptune_pricing(), outputs)
-    outputs = update_outputs('ElastiCacheInstanceType', get_elasticache_pricing(), outputs)
-    outputs = update_outputs('ElasticsearchInstanceType', get_elasticsearch_pricing(), outputs)
+    outputs = update_outputs('DocumentDBInstanceClass', get_results('AmazonDocDB', ['Database Instance']), outputs)
+    outputs = update_outputs('NeptuneInstanceClass', get_results('AmazonNeptune', ['Database Instance']), outputs)
+    outputs = update_outputs('ElastiCacheInstanceType', get_results('AmazonElastiCache', ['Cache Instance']), outputs)
+    outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Elastic Search Instance']), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
