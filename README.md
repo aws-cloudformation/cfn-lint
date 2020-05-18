@@ -61,6 +61,7 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 * [Emacs](https://www.emacswiki.org/emacs/CfnLint)
 * NeoVim 0.2.0+/Vim 8
   * [ALE](https://github.com/w0rp/ale#supported-languages)
+  * [Coc](https://github.com/joenye/coc-cfn-lint)
   * [Syntastic](https://github.com/speshak/vim-cfn)
 * [Sublime](https://packagecontrol.io/packages/SublimeLinter-contrib-cloudformation)
 * [Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=kddejong.vscode-cfn-lint)
