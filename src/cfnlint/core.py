@@ -5,16 +5,17 @@ SPDX-License-Identifier: MIT-0
 import logging
 import os
 import sys
+
 from jsonschema.exceptions import ValidationError
 
-from cfnlint import Template
+import cfnlint.runner
+from cfnlint.template import Template
 from cfnlint.rules import RulesCollection
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
 from cfnlint.helpers import REGIONS
-
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -186,7 +187,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
 
     matches = []
 
-    runner = cfnlint.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
+    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:
