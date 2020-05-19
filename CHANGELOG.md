@@ -5,7 +5,7 @@
 - Move Template and Runner classes into their own files (pull #[1523](https://github.com/aws-cloudformation/cfn-python-lint/pull/1523))
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 14.3.0 (pull #[1538](https://github.com/aws-cloudformation/cfn-python-lint/pull/1538))
-- Add instance type allowed values to many different resources (pull #[1535](https://github.com/aws-cloudformation/cfn-python-lint/pull/1535))
+- Add instance type allowed values to ElastiCache, Elasticsearch, ElasticMapReduce, ManagedBlockchain, GameLift, and AppStream (pull #[1535](https://github.com/aws-cloudformation/cfn-python-lint/pull/1535) and #[1541](https://github.com/aws-cloudformation/cfn-python-lint/pull/1541))
 
 
 ### v0.31.1
