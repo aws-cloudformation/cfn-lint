@@ -1,3 +1,13 @@
+### v0.32.0
+###### Features
+- New rule [E3041](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3041) to check if `HostedZoneName` is a super domain for `Name` (pull #[1483](https://github.com/aws-cloudformation/cfn-python-lint/pull/1483))
+- Update SAM Translator dependency to `1.23.0` (pull #[1536](https://github.com/aws-cloudformation/cfn-python-lint/pull/1536))
+- Move Template and Runner classes into their own files (pull #[1523](https://github.com/aws-cloudformation/cfn-python-lint/pull/1523))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 14.3.0 (pull #[1538](https://github.com/aws-cloudformation/cfn-python-lint/pull/1538))
+- Add instance type allowed values to many different resources (pull #[1535](https://github.com/aws-cloudformation/cfn-python-lint/pull/1535))
+
+
 ### v0.31.1
 ###### Fixes
 - Exempting resource types [AWS::Serverless transform](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html) creates that violated rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) (pull #[1529](https://github.com/aws-cloudformation/cfn-python-lint/pull/1529))
