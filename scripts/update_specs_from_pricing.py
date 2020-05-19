@@ -17,7 +17,7 @@ LOGGER = logging.getLogger('cfnlint')
 
 
 region_map = {
-    'AWS GovCloud (US)': 'us-gov-west-1',
+    'Any': 'all',
     'AWS GovCloud (US-East)': 'us-gov-east-1',
     'AWS GovCloud (US-West)': 'us-gov-west-1',
     'Africa (Cape Town)': 'af-south-1',
@@ -225,6 +225,10 @@ def main():
     outputs = update_outputs('NeptuneInstanceClass', get_results('AmazonNeptune', ['Database Instance']), outputs)
     outputs = update_outputs('ElastiCacheInstanceType', get_results('AmazonElastiCache', ['Cache Instance']), outputs)
     outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Elastic Search Instance']), outputs)
+    outputs = update_outputs('EMRInstanceType', get_results('ElasticMapReduce', ['Elastic Map Reduce Instance']), outputs)
+    outputs = update_outputs('BlockchainInstanceType', get_results('AmazonManagedBlockchain', ['Blockchain Instance']), outputs)
+    outputs = update_outputs('GameLiftInstanceType', get_results('AmazonGameLift', ['GameLift EC2 Instance']), outputs)
+    outputs = update_outputs('AppStreamInstanceType', get_results('AmazonAppStream', ['Streaming Instance']), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
