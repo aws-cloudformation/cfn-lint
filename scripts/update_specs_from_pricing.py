@@ -226,6 +226,7 @@ def main():
     outputs = update_outputs('ElastiCacheInstanceType', get_results('AmazonElastiCache', ['Cache Instance']), outputs)
     outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Elastic Search Instance']), outputs)
     outputs = update_outputs('EMRInstanceType', get_results('ElasticMapReduce', ['Elastic Map Reduce Instance']), outputs)
+    outputs = update_outputs('BlockchainInstanceType', get_results('AmazonManagedBlockchain', ['Blockchain Instance']), outputs)
 
     LOGGER.info('Updating spec files')
     for region, patches in outputs.items():
