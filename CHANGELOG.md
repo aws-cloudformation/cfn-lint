@@ -1,3 +1,7 @@
+### v0.32.1
+###### Features
+- Adding [`Hooks`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/blue-green.html) template section to rule [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1001) (pull #[1543](https://github.com/aws-cloudformation/cfn-python-lint/pull/1543))
+
 ### v0.32.0
 ###### Features
 - New rule [E3041](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3041) to check if `HostedZoneName` is a super domain for `Name` (pull #[1483](https://github.com/aws-cloudformation/cfn-python-lint/pull/1483))
