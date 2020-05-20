@@ -8,14 +8,14 @@ import sys
 
 from jsonschema.exceptions import ValidationError
 
-import cfnlint.specs
-from cfnlint import Template
+from cfnlint.template import Template
 from cfnlint.rules import RulesCollection
 import cfnlint.config
-import cfnlint.formatters
 import cfnlint.decode
+import cfnlint.formatters
 import cfnlint.maintenance
-from cfnlint.specs import REGIONS
+import cfnlint.runner
+import cfnlint.specs
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
@@ -179,15 +179,15 @@ def get_template_rules(filename, args):
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
     """Run Checks against the template"""
     if regions:
-        if not set(regions).issubset(set(REGIONS)):
-            unsupported_regions = list(set(regions).difference(set(REGIONS)))
+        if not set(regions).issubset(set(cfnlint.specs.REGIONS)):
+            unsupported_regions = list(set(regions).difference(set(cfnlint.specs.REGIONS)))
             msg = 'Regions %s are unsupported. Supported regions are %s' % (
-                unsupported_regions, REGIONS)
+                unsupported_regions, cfnlint.specs.REGIONS)
             raise InvalidRegionException(msg, 32)
 
     matches = []
 
-    runner = cfnlint.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
+    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:
