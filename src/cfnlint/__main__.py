@@ -37,8 +37,14 @@ def main():
             LOGGER.debug('Completed linting of file: %s', str(filename))
 
         matches_output = formatter.print_matches(matches, rules)
+
         if matches_output:
-            print(matches_output)
+            if args.output_file:
+                with open(args.output_file, 'w') as output_file:
+                    output_file.write(matches_output)
+            else:
+                print(matches_output)
+
         return cfnlint.core.get_exit_code(matches)
     except cfnlint.core.CfnLintExitException as e:
         LOGGER.error(str(e))
