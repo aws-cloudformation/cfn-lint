@@ -7,7 +7,7 @@ from cfnlint.rules import RuleMatch
 
 
 class TaskDefinitionEssentialContainer(CloudFormationLintRule):
-    """Check if Ec2 Ebs Resource Properties"""
+    """Check ECS TaskDefinition ContainerDefinitions Property Species At Least One Essential Container"""
     id = 'E3042'
     shortdesc = 'Check at least one essential container is specified'
     description = 'Check that every TaskDefinition specifies at least one essential container'
