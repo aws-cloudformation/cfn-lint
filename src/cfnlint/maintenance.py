@@ -10,7 +10,7 @@ import os
 import jsonpointer
 import jsonpatch
 import cfnlint
-from cfnlint.helpers import get_url_content, url_has_newer_version
+from cfnlint.helpers import get_url_content
 from cfnlint.helpers import SPEC_REGIONS
 import cfnlint.data.ExtendedSpecs
 import cfnlint.data.AdditionalSpecs
@@ -44,8 +44,9 @@ def update_resource_spec(region, url):
     multiprocessing_logger.debug('Downloading template %s into %s', url, filename)
 
     # Check to see if we already have the latest version, and if so stop
-    if not url_has_newer_version(url):
-        return
+    # commented out for now due to https://github.com/aws-cloudformation/cfn-python-lint/pull/1383#issuecomment-629891506
+    # if not url_has_newer_version(url):
+    #     return
 
     spec_content = get_url_content(url, caching=True)
 
