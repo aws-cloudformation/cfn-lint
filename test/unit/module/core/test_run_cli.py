@@ -130,6 +130,14 @@ class TestCli(BaseTestCase):
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
+        self.assertEqual(args.output_file, None)
+
+    def test_output_file(self):
+        filename = 'test/fixtures/templates/good/core/config_parameters.yaml'
+        (args, _, _,) = cfnlint.core.get_args_filenames([
+            '--template', filename, '--output-file', 'test_output.txt'])
+
+        self.assertEqual(args.output_file, 'test_output.txt')
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_positional_template_parameters(self, yaml_mock):

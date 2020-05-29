@@ -29,6 +29,7 @@ class Template(object):  # pylint: disable=R0904
             'Mappings',
             'Conditions',
             'Transform',
+            'Hooks',
             'Resources',
             'Outputs',
             'Rules'
