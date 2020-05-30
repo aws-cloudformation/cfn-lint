@@ -3,8 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import LIMITS
+from cfnlint.rules.limits import approaching_name_limit
 
 
 class LimitName(CloudFormationLintRule):
@@ -17,9 +16,4 @@ class LimitName(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Parameters"""
-        matches = []
-        for parameter_name in cfn.template.get('Parameters', {}):
-            if LIMITS['threshold'] * LIMITS['Parameters']['name'] < len(parameter_name) <= LIMITS['Parameters']['name']:
-                message = 'The length of parameter name ({0}) is approaching the limit ({1})'
-                matches.append(RuleMatch(['Parameters', parameter_name], message.format(len(parameter_name), LIMITS['Parameters']['name'])))
-        return matches
+        return approaching_name_limit(cfn, 'Parameters')

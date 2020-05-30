@@ -3,8 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import LIMITS
+from cfnlint.rules.limits import name_limit
 
 
 class LimitName(CloudFormationLintRule):
@@ -17,9 +16,4 @@ class LimitName(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Outputs"""
-        matches = []
-        for output_name in cfn.template.get('Outputs', {}):
-            if len(output_name) > LIMITS['Outputs']['name']:
-                message = 'The length of output name ({0}) exceeds the limit ({1})'
-                matches.append(RuleMatch(['Outputs', output_name], message.format(len(output_name), LIMITS['Outputs']['name'])))
-        return matches
+        return name_limit(cfn, 'Outputs')
