@@ -8,7 +8,6 @@ from cfnlint.helpers import LIMITS
 
 
 class LimitAttributes(CloudFormationLintRule):
-    """Check if maximum Mapping attribute limit is exceeded"""
     id = 'E7012'
     shortdesc = 'Mapping attribute limit not exceeded'
     description = 'Check if the amount of Mapping attributes in the template is less than the upper limit'
