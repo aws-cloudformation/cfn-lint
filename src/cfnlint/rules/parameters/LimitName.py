@@ -17,16 +17,9 @@ class LimitName(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Parameters"""
-
         matches = []
-
-        parameters = cfn.template.get('Parameters', {})
-
-        for parameter_name in parameters:
-            path = ['Parameters', parameter_name]
+        for parameter_name in cfn.template.get('Parameters', {}):
             if len(parameter_name) > LIMITS['parameters']['name']:
                 message = 'The length of parameter name ({0}) exceeds the limit ({1})'
-                matches.append(RuleMatch(path, message.format(
-                    len(parameter_name), LIMITS['parameters']['name'])))
-
+                matches.append(RuleMatch(['Parameters', parameter_name], message.format(len(parameter_name), LIMITS['parameters']['name'])))
         return matches

@@ -17,18 +17,12 @@ class LimitDescription(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Outputs"""
-
         matches = []
-
-        outputs = cfn.template.get('Outputs', {})
-
-        for output_name, output_value in outputs.items():
+        for output_name, output_value in cfn.template.get('Outputs', {}).items():
             description = output_value.get('Description')
             if description:
                 path = ['Outputs', output_name, 'Description']
                 if len(description) > LIMITS['outputs']['description']:
                     message = 'The length of output description ({0}) exceeds the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(
-                        len(description), LIMITS['outputs']['description'])))
-
+                    matches.append(RuleMatch(path, message.format(len(description), LIMITS['outputs']['description'])))
         return matches

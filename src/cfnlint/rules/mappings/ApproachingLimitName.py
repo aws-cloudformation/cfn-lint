@@ -17,16 +17,9 @@ class LimitName(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Mappings"""
-
         matches = []
-
-        mappings = cfn.template.get('Mappings', {})
-
-        for mapping_name in mappings:
-            path = ['Mappings', mapping_name]
+        for mapping_name in cfn.template.get('Mappings', {}):
             if LIMITS['threshold'] * LIMITS['mappings']['name'] < len(mapping_name) <= LIMITS['mappings']['name']:
                 message = 'The length of mapping name ({0}) is approaching the limit ({1})'
-                matches.append(RuleMatch(path, message.format(
-                    len(mapping_name), LIMITS['mappings']['name'])))
-
+                matches.append(RuleMatch(['Mappings', mapping_name], message.format(len(mapping_name), LIMITS['mappings']['name'])))
         return matches

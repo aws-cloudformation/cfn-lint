@@ -60,7 +60,6 @@ class LimitValue(CloudFormationLintRule):
                     if LIMITS['threshold'] * value_limit < len(allowed_value) <= value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) is approaching the limit ({1})'
-                        matches.append(RuleMatch(path, message.format(
-                            len(allowed_value), value_limit)))
+                        matches.append(RuleMatch(path, message.format(len(allowed_value), value_limit)))
 
         return matches
