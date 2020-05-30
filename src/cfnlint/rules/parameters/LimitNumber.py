@@ -19,7 +19,7 @@ class LimitNumber(CloudFormationLintRule):
         """Check CloudFormation Parameters"""
         matches = []
         parameters = cfn.template.get('Parameters', {})
-        if len(parameters) > LIMITS['parameters']['number']:
+        if len(parameters) > LIMITS['Parameters']['number']:
             message = 'The number of parameters ({0}) exceeds the limit ({1})'
-            matches.append(RuleMatch(['Parameters'], message.format(len(parameters), LIMITS['parameters']['number'])))
+            matches.append(RuleMatch(['Parameters'], message.format(len(parameters), LIMITS['Parameters']['number'])))
         return matches

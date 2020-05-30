@@ -22,7 +22,7 @@ class LimitDescription(CloudFormationLintRule):
             description = output_value.get('Description')
             if description:
                 path = ['Outputs', output_name, 'Description']
-                if LIMITS['threshold'] * LIMITS['outputs']['description'] < len(description) <= LIMITS['outputs']['description']:
+                if LIMITS['threshold'] * LIMITS['Outputs']['description'] < len(description) <= LIMITS['Outputs']['description']:
                     message = 'The length of output description ({0}) is approaching the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(len(description), LIMITS['outputs']['description'])))
+                    matches.append(RuleMatch(path, message.format(len(description), LIMITS['Outputs']['description'])))
         return matches

@@ -19,7 +19,7 @@ class LimitNumber(CloudFormationLintRule):
         """Check CloudFormation Resources"""
         matches = []
         resources = cfn.get_resources()
-        if len(resources) > LIMITS['resources']['number']:
+        if len(resources) > LIMITS['Resources']['number']:
             message = 'The number of resources ({0}) exceeds the limit ({1})'
-            matches.append(RuleMatch(['Resources'], message.format(len(resources), LIMITS['resources']['number'])))
+            matches.append(RuleMatch(['Resources'], message.format(len(resources), LIMITS['Resources']['number'])))
         return matches

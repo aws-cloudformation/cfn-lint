@@ -19,7 +19,7 @@ class LimitName(CloudFormationLintRule):
         """Check CloudFormation Resources"""
         matches = []
         for resource_name in cfn.template.get('Resources', {}):
-            if LIMITS['threshold'] * LIMITS['resources']['name'] < len(resource_name) <= LIMITS['resources']['name']:
+            if LIMITS['threshold'] * LIMITS['Resources']['name'] < len(resource_name) <= LIMITS['Resources']['name']:
                 message = 'The length of resource name ({0}) is approaching the limit ({1})'
-                matches.append(RuleMatch(['Resources', resource_name], message.format(len(resource_name), LIMITS['resources']['name'])))
+                matches.append(RuleMatch(['Resources', resource_name], message.format(len(resource_name), LIMITS['Resources']['name'])))
         return matches

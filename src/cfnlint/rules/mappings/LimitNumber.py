@@ -19,7 +19,7 @@ class LimitNumber(CloudFormationLintRule):
         """Check CloudFormation Mappings"""
         matches = []
         mappings = cfn.template.get('Mappings', {})
-        if len(mappings) > LIMITS['mappings']['number']:
+        if len(mappings) > LIMITS['Mappings']['number']:
             message = 'The number of mappings ({0}) exceeds the limit ({1})'
-            matches.append(RuleMatch(['Mappings'], message.format(len(mappings), LIMITS['mappings']['number'])))
+            matches.append(RuleMatch(['Mappings'], message.format(len(mappings), LIMITS['Mappings']['number'])))
         return matches

@@ -19,7 +19,7 @@ class LimitName(CloudFormationLintRule):
         """Check CloudFormation Mappings"""
         matches = []
         for mapping_name in cfn.template.get('Mappings', {}):
-            if len(mapping_name) > LIMITS['mappings']['name']:
+            if len(mapping_name) > LIMITS['Mappings']['name']:
                 message = 'The length of mapping name ({0}) exceeds the limit ({1})'
-                matches.append(RuleMatch(['Mappings', mapping_name], message.format(len(mapping_name), LIMITS['mappings']['name'])))
+                matches.append(RuleMatch(['Mappings', mapping_name], message.format(len(mapping_name), LIMITS['Mappings']['name'])))
         return matches

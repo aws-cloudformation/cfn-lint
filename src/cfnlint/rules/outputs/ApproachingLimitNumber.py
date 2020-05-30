@@ -19,7 +19,7 @@ class LimitNumber(CloudFormationLintRule):
         """Check CloudFormation Outputs"""
         matches = []
         outputs = cfn.template.get('Outputs', {})
-        if LIMITS['threshold'] * LIMITS['outputs']['number'] < len(outputs) <= LIMITS['outputs']['number']:
+        if LIMITS['threshold'] * LIMITS['Outputs']['number'] < len(outputs) <= LIMITS['Outputs']['number']:
             message = 'The number of outputs ({0}) is approaching the limit ({1})'
-            matches.append(RuleMatch(['Outputs'], message.format(len(outputs), LIMITS['outputs']['number'])))
+            matches.append(RuleMatch(['Outputs'], message.format(len(outputs), LIMITS['Outputs']['number'])))
         return matches

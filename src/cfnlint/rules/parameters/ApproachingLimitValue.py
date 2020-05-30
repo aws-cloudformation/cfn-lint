@@ -21,7 +21,7 @@ class LimitValue(CloudFormationLintRule):
 
         matches = []
 
-        value_limit = LIMITS['parameters']['value']
+        value_limit = LIMITS['Parameters']['value']
 
         # There are no real "Values" in the template, check the "meta" information
         # (Default, AllowedValue and MaxLength) against the limit
