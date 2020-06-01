@@ -1,0 +1,44 @@
+---
+Resources:
+
+  GoodTaskDefinitionEssentialContainerSpecified:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli
+
+  GoodTaskDefinitionEssentialContainerDefault:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli
+
+  GoodTaskDefinitionEssentialContainerSpecifiedTwo:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli
+        - Essential: false
+          Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli-two
+
+  GoodTaskDefinitionMultipleEssentialContainersSpecified:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli
+        - Image: amazon/aws-cli
+          Memory: 40
+          Name: amazon-cli-two

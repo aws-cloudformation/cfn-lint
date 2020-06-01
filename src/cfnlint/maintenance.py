@@ -7,7 +7,6 @@ import json
 import logging
 import multiprocessing
 import os
-import jsonpointer
 import jsonpatch
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
@@ -155,7 +154,7 @@ def patch_spec(content, region):
                     jsonpatch.JsonPatch([all_patch]).apply(content, in_place=True)
                 except jsonpatch.JsonPatchConflict:
                     LOGGER.debug('Patch (%s) not applied in region %s', all_patch, region)
-                except jsonpointer.JsonPointerException:
+                except jsonpatch.JsonPointerException:
                     # Debug as the parent element isn't supported in the region
                     LOGGER.debug('Parent element not found for patch (%s) in region %s',
                                  all_patch, region)
