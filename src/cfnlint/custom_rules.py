@@ -3,7 +3,7 @@ import cfnlint
 
 
 LOGGER = logging.getLogger(__name__)
-Operators = {'EQUALS': lambda x,y: equals(x,y)}
+Operators = {'EQUALS': lambda x, y: equals(x, y)}
 
 def check_custom_rules(filename, template):
     """ Process custom rule file """
@@ -12,32 +12,32 @@ def check_custom_rules(filename, template):
         count = 1
         for line in customRules:
             LOGGER.debug('Processing Custom Rule Line %d', count)
-            line = line.replace('"','')
-            rule = line.split(" ")
-            if len(rule) == 4 and rule[0][0] != "#":
+            line = line.replace('"', '')
+            rule = line.split(' ')
+            if len(rule) == 4 and rule[0][0] != '#':
                 try:
                     result = Operators[rule[2]](rule, template.get_resource_properties([rule[0]]))
                     if result != rule[2]:
-                        matches.append(cfnlint.rules.Match(count, "0", "0", "0", filename, CustomRule("E9999"), result, None))
+                        matches.append(cfnlint.rules.Match(count, '0', '0', '0', filename, CustomRule('E9999'), result, None))
                 except KeyError as e:
-                    matches.append(cfnlint.rules.Match(count, "0", "0", "0", filename, CustomRule("E9999"), "Error - Invalid Operator", None))
+                    matches.append(cfnlint.rules.Match(count, '0', '0', '0', filename, CustomRule('E9999'), 'Error - Invalid Operator', None))
             count += 1
     return matches
 
 def equals(rule, propertyList):
     """ Process EQUAL operators """
     if len(propertyList) == 0:
-        return "Error - Invalid Resource Type " + rule[0]
+        return 'Error - Invalid Resource Type ' + rule[0]
     for prop in propertyList:
         actualValue = getProperty(prop, rule[1])
         if actualValue.strip() != str(rule[3]).strip():
-            return "Not Equal as " + actualValue + " does not equal " + rule[3]
-    return "EQUALS"
+            return 'Not Equal as ' + actualValue + ' does not equal ' + rule[3]
+    return 'EQUALS'
 
 
 def getProperty(json, nestedProperties):
     """ Converts dot format strings to resultant values """
-    nestedProperties = "Value." + str(nestedProperties)
+    nestedProperties = 'Value.' + str(nestedProperties)
     properties = nestedProperties.split(".")
     for prop in properties:
         try:
