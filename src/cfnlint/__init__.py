@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import cfnlint.helpers
 import cfnlint.conditions
+import cfnlint.custom_rules
 from cfnlint.decorators.refactored import refactored
 from cfnlint.graph import Graph
 from cfnlint.transform import Transform
