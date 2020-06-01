@@ -149,14 +149,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return (config, [None], formatter)
+        return(config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return (config, config.templates, formatter)
+    return(config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -165,7 +165,7 @@ def get_template_rules(filename, args):
     (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
 
     if matches:
-        return (template, [], matches)
+        return(template, [], matches)
 
     args.template_args = template
 
@@ -178,7 +178,7 @@ def get_template_rules(filename, args):
         args.mandatory_checks,
     )
 
-    return (template, rules, [])
+    return(template, rules, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
