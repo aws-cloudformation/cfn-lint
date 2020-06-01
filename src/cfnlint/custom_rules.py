@@ -14,10 +14,13 @@ def check_custom_rules(filename, template):
             LOGGER.debug('Processing Custom Rule Line %d', count)
             line = line.replace('"','')
             rule = line.split(" ")
-            if len(rule) == 4:
-                result = Operators[rule[2]](rule,template.get_resource_properties([rule[0]]))
-                if result != rule[2]:
-                    matches.append(cfnlint.rules.Match(count,"0","0","0",filename,CustomRule("E9999"),result, None))
+            if len(rule) == 4 and rule[0][0] != "#":
+                try:
+                    result = Operators[rule[2]](rule, template.get_resource_properties([rule[0]]))
+                    if result != rule[2]:
+                        matches.append(cfnlint.rules.Match(count, "0", "0", "0", filename, CustomRule("E9999"), result, None))
+                except KeyError as e:
+                    matches.append(cfnlint.rules.Match(count, "0", "0", "0", filename, CustomRule("E9999"), "Error - Invalid Operator", None))
             count += 1
     return matches
 
