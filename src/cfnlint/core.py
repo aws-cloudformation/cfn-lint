@@ -44,7 +44,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
     """Process args and run"""
     template_obj = Template(filename, template, regions)
 
-    customMatches = cfnlint.custom_rules.check_custom_rules('custom_rules.txt', template_obj)
+    customMatches = cfnlint.custom_rules.check('custom_rules.txt', template_obj)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
