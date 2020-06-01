@@ -5,7 +5,7 @@ import cfnlint
 LOGGER = logging.getLogger(__name__)
 Operators = {'EQUALS': lambda x, y: equals(x, y)}
 
-def check_custom_rules(filename, template):
+def check(filename, template):
     """ Process custom rule file """
     matches = []
     with open(filename) as customRules:
