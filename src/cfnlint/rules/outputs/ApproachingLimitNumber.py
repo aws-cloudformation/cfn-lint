@@ -3,8 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import LIMITS
+from cfnlint.rules.limits import approaching_number_limit
 
 
 class LimitNumber(CloudFormationLintRule):
@@ -17,14 +16,4 @@ class LimitNumber(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Outputs"""
-
-        matches = []
-
-        # Check number of outputs against the defined limit
-        outputs = cfn.template.get('Outputs', {})
-        if LIMITS['threshold'] * LIMITS['outputs']['number'] < len(outputs) <= LIMITS['outputs']['number']:
-            message = 'The number of outputs ({0}) is approaching the limit ({1})'
-            matches.append(RuleMatch(['Outputs'], message.format(
-                len(outputs), LIMITS['outputs']['number'])))
-
-        return matches
+        return approaching_number_limit(cfn, 'Outputs')
