@@ -11,7 +11,7 @@ def approaching_name_limit(cfn, section):
     matches = []
     for name in cfn.template.get(section, {}):
         if LIMITS['threshold'] * LIMITS[section]['name'] < len(name) <= LIMITS[section]['name']:
-            message = 'The length of ' + section[:-1].lower() + ' name ({0}) is approaching the limit ({1})'
+            message = 'The length of ' + section[:-1] + ' name ({0}) is approaching the limit ({1})'
             matches.append(RuleMatch([section, name], message.format(len(name), LIMITS[section]['name'])))
     return matches
 
@@ -21,7 +21,7 @@ def approaching_number_limit(cfn, section):
     matches = []
     number = cfn.template.get(section, {})
     if LIMITS['threshold'] * LIMITS[section]['number'] < len(number) <= LIMITS[section]['number']:
-        message = 'The number of ' + section.lower() + ' ({0}) is approaching the limit ({1})'
+        message = 'The number of ' + section + ' ({0}) is approaching the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
     return matches
 
@@ -31,7 +31,7 @@ def name_limit(cfn, section):
     matches = []
     for name in cfn.template.get(section, {}):
         if len(name) > LIMITS[section]['name']:
-            message = 'The length of ' + section[:-1].lower() + ' name ({0}) exceeds the limit ({1})'
+            message = 'The length of ' + section[:-1] + ' name ({0}) exceeds the limit ({1})'
             matches.append(RuleMatch([section, name], message.format(len(name), LIMITS[section]['name'])))
     return matches
 
@@ -41,6 +41,6 @@ def number_limit(cfn, section):
     matches = []
     number = cfn.template.get(section, {})
     if len(number) > LIMITS[section]['number']:
-        message = 'The number of ' + section.lower() + ' ({0}) exceeds the limit ({1})'
+        message = 'The number of ' + section + ' ({0}) exceeds the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
     return matches
