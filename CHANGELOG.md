@@ -1,3 +1,16 @@
+### v0.33.0
+###### Features
+- Upgrade SAM Translator to v1.24.0 (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562))
+- Warning messages for Python 3.4 and 2.7 (pull #[1337](https://github.com/aws-cloudformation/cfn-python-lint/pull/1337))
+- Add `--output-file` parameter to output the results into a file (pull #[1511](https://github.com/aws-cloudformation/cfn-python-lint/pull/1511))
+- Remove usage of jsonpointer (pull #[1546](https://github.com/aws-cloudformation/cfn-python-lint/pull/1546))
+- Add rule [E3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3042) that checks AWS::ECS::TaskDefinition.ContainerDefinition has at least one essential container (pull #[1548](https://github.com/aws-cloudformation/cfn-python-lint/pull/1548))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 14.4.0 (pull #[1555](https://github.com/aws-cloudformation/cfn-python-lint/pull/1555))
+- Add allowed patterns and values for properties in `AWS::S3::Bucket.InventoryConfiguration` (pull #[1551](https://github.com/aws-cloudformation/cfn-python-lint/pull/1551))
+###### Fixes
+- Update Transform logic to support local files for the state machine defintion (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562)) 
+
 ### v0.32.1
 ###### Features
 - Adding [`Hooks`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/blue-green.html) template section to rule [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1001) (pull #[1543](https://github.com/aws-cloudformation/cfn-python-lint/pull/1543))
