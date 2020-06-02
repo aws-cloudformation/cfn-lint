@@ -4,19 +4,16 @@ dist: xenial
 services:
   - docker
 stages:
-  - Linting
-  - Unit Tests
-  - Integration
+  - Tests
   - Deploy
 jobs:
   include:
-    - stage: Linting
+    - stage: Tests
       python: 3.8
       env: TOXENV=pylint38
     - python: 2.7
       env: TOXENV=pylint27
-    - stage: Unit Tests
-      python: 2.7
+    - python: 2.7
       env: TOXENV=py27
     - python: 3.4
       env: TOXENV=py34
@@ -28,8 +25,7 @@ jobs:
       env: TOXENV=py37
     - python: 3.8
       env: TOXENV=py38,codecov
-    - stage: Integration
-      python: 3.8
+    - python: 3.8
       script:
         docker run --rm -it -v ${PWD}:/cfnlint -w /cfnlint python:3.8.1-alpine3.11
         /bin/sh -c 'pip3 install -e . && cfn-lint test/fixtures/templates/good/generic.yaml && cat test/fixtures/templates/good/generic.yaml | cfn-lint'
