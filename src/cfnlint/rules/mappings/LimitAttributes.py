@@ -17,18 +17,11 @@ class LimitAttributes(CloudFormationLintRule):
 
     def match(self, cfn):
         """Check CloudFormation Mappings"""
-
         matches = []
-
-        mappings = cfn.template.get('Mappings', {})
-
-        for mapping_name, mapping in mappings.items():
-
+        for mapping_name, mapping in cfn.template.get('Mappings', {}).items():
             for mapping_attribute_name, mapping_attribute in mapping.items():
                 path = ['Mappings', mapping_name, mapping_attribute_name]
-                if len(mapping_attribute) > LIMITS['mappings']['attributes']:
+                if len(mapping_attribute) > LIMITS['Mappings']['attributes']:
                     message = 'The amount of mapping attributes ({0}) exceeds the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(
-                        len(mapping_attribute), LIMITS['mappings']['attributes'])))
-
+                    matches.append(RuleMatch(path, message.format(len(mapping_attribute), LIMITS['Mappings']['attributes'])))
         return matches
