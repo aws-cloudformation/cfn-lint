@@ -19,6 +19,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
         """Check CloudFormation Resources"""
         matches = []
         pattern = re.compile(r'arn:(\$\{[^:]*::[^:]*}|[^:]*):[^:]+:(\$\{[^:]*::[^:]*}|[^:]*):(\$\{[^:]*::[^:]*}|[^:]*)')
+
         resources = cfn.template.get('Resources', {})
         if resources:
             for resourcename, val  in resources.items():
