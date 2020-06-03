@@ -7,6 +7,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import cfnlint
 import cfnlint.customRules.Operators
+import cfnlint.customRules.Rule
 
 LOGGER = logging.getLogger(__name__)
 Operator = {'EQUALS': lambda x, y: cfnlint.customRules.Operators.equalsOp(x, y),
@@ -16,22 +17,21 @@ def check(filename, template):
     """ Process custom rule file """
     matches = []
     with open(filename) as customRules:
-        count = 1
+        line_number = 1
         for line in customRules:
-            LOGGER.debug('Processing Custom Rule Line %d', count)
+            LOGGER.debug('Processing Custom Rule Line %d', line_number)
             line = line.replace('"', '')
-            rule = line.split(' ')
-            if len(rule) == 4 and rule[0][0] != '#':
-                resource_type = rule[0]
-                operator = rule[2]
+            rule = cfnlint.customRules.Rule.make_rule(line.split(' '))
+            if rule.valid and rule.resourceType[0] != '#':
                 try:
-                    result = Operator[rule[2]](rule, template.get_resource_properties([resource_type]))
-                    if result != operator:
-                        matches.append(cfnlint.rules.Match(count, '0', '0', '0', filename, CustomRule('E9999'), result, None))
+                    template_properties = template.get_resource_properties([rule.resourceType])
+                    result = Operator[rule.operator](rule, template_properties)
+                    if result != rule.operator:
+                        matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('E9999'), result, None))
                 except KeyError:
-                    matches.append(cfnlint.rules.Match(count, '0', '0', '0', filename, CustomRule('E9999'),
-                                                       str(rule[2]) + ' not in supported operators: [EQUALS] at ' + str(line), None))
-            count += 1
+                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('E9999'),
+                                                       str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
+            line_number += 1
     return matches
 
 class CustomRule(object):
