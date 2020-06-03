@@ -34,18 +34,6 @@ def check(filename, template):
             count += 1
     return matches
 
-def getProperty(json, nestedProperties):
-    """ Converts dot format strings to resultant values -
-    i.e inputting 'Value.InstanceSize' to nestedProperties will output the value of that specific property from json"""
-    nestedProperties = 'Value.' + str(nestedProperties)
-    properties = nestedProperties.split('.')
-    for prop in properties:
-        try:
-            json = json[prop]
-        except KeyError as e:
-            return 'The following property was not found - "%s"' % str(e)
-    return str(json)
-
 class CustomRule(object):
     """ Allows creation of match objects"""
     def __init__(self, id):
