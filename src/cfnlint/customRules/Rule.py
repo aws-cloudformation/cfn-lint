@@ -5,11 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 
 def make_rule(line):
+    """ Object Maker Function """
     rule = Rule(line)
     return rule
 
 
 class Rule(object):
+    """ Used to organize intake from custom_rule config """
     valid = False
     resourceType = ''
     prop = ''
