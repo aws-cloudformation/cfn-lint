@@ -1,3 +1,30 @@
+### v0.33.0
+###### Features
+- Upgrade SAM Translator to v1.24.0 (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562))
+- Warning messages for Python 3.4 and 2.7 (pull #[1337](https://github.com/aws-cloudformation/cfn-python-lint/pull/1337))
+- Add `--output-file` parameter to output the results into a file (pull #[1511](https://github.com/aws-cloudformation/cfn-python-lint/pull/1511))
+- Remove usage of jsonpointer (pull #[1546](https://github.com/aws-cloudformation/cfn-python-lint/pull/1546))
+- Add rule [E3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3042) that checks AWS::ECS::TaskDefinition.ContainerDefinition has at least one essential container (pull #[1548](https://github.com/aws-cloudformation/cfn-python-lint/pull/1548))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 14.4.0 (pull #[1555](https://github.com/aws-cloudformation/cfn-python-lint/pull/1555))
+- Add allowed patterns and values for properties in `AWS::S3::Bucket.InventoryConfiguration` (pull #[1551](https://github.com/aws-cloudformation/cfn-python-lint/pull/1551))
+###### Fixes
+- Update Transform logic to support local files for the state machine defintion (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562)) 
+
+### v0.32.1
+###### Features
+- Adding [`Hooks`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/blue-green.html) template section to rule [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1001) (pull #[1543](https://github.com/aws-cloudformation/cfn-python-lint/pull/1543))
+
+### v0.32.0
+###### Features
+- New rule [E3041](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3041) to check if `HostedZoneName` is a super domain for `Name` (pull #[1483](https://github.com/aws-cloudformation/cfn-python-lint/pull/1483))
+- Update SAM Translator dependency to `1.23.0` (pull #[1536](https://github.com/aws-cloudformation/cfn-python-lint/pull/1536))
+- Move Template and Runner classes into their own files (pull #[1523](https://github.com/aws-cloudformation/cfn-python-lint/pull/1523))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 14.3.0 (pull #[1538](https://github.com/aws-cloudformation/cfn-python-lint/pull/1538))
+- Add instance type allowed values to ElastiCache, Elasticsearch, ElasticMapReduce, ManagedBlockchain, GameLift, and AppStream (pull #[1535](https://github.com/aws-cloudformation/cfn-python-lint/pull/1535) and #[1541](https://github.com/aws-cloudformation/cfn-python-lint/pull/1541))
+
+
 ### v0.31.1
 ###### Fixes
 - Exempting resource types [AWS::Serverless transform](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html) creates that violated rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) (pull #[1529](https://github.com/aws-cloudformation/cfn-python-lint/pull/1529))
@@ -55,7 +82,7 @@
 
 ### v0.29.2
 ###### Fixes
-- Update exceptions in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `BuildSpec` (pull #[1444](https://github.com/aws-cloudformation/cfn-python-lint/pull/1444/))
+- Update exceptions in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `BuildSpec` (pull #[1444](https://github.com/aws-cloudformation/cfn-python-lint/pull/1444))
 
 ### v0.29.1
 ###### Features
@@ -64,7 +91,7 @@
 - Update CloudFormation specs to 11.6.0 (pull #[1433](https://github.com/aws-cloudformation/cfn-python-lint/pull/1433))
 - Add `ruby2.7` to supported list of ruby runtimes (pull #[1436](https://github.com/aws-cloudformation/cfn-python-lint/pull/1436))
 ###### Fixes
-- Update regex in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to be more optimal and not hang on large strings (pull #[1430](https://github.com/aws-cloudformation/cfn-python-lint/pull/1430/))
+- Update regex in rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to be more optimal and not hang on large strings (pull #[1430](https://github.com/aws-cloudformation/cfn-python-lint/pull/1430))
 
 ### v0.29.0
 ###### Features
@@ -194,7 +221,7 @@
 - New rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to check stateful resources have a set UpdateReplacePolicy/DeletionPolicy (pull #[1232](https://github.com/aws-cloudformation/cfn-python-lint/pull/1232))
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 10.1.0 (pull #[1255](https://github.com/aws-cloudformation/cfn-python-lint/pull/1255))
-- Add `ALLOW_` values to `ExplicitAuthFlows` (pull #[1261](https://github.com/aws-cloudformation/cfn-python-lint/pull/12611))
+- Add `ALLOW_` values to `ExplicitAuthFlows` (pull #[1261](https://github.com/aws-cloudformation/cfn-python-lint/pull/1261))
 ###### Fixes
 - Update rule [W3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3011) to ignore W3011 if explicit DeletionPolicy/UpdateReplacePolicy value is Delete (pull #[1253](https://github.com/aws-cloudformation/cfn-python-lint/pull/1253))
 - Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to not alert when looking at Parameters (pull #[1256](https://github.com/aws-cloudformation/cfn-python-lint/pull/1256))
@@ -423,7 +450,7 @@ to include cognito-identity keys to list of excluded resourse when checking if F
 - Patch in `AWS::Cognito::UserPool` resource information for `ap-south-1` and `ap-southeast-1` (issue #[1002](https://github.com/aws-cloudformation/cfn-python-lint/issues/1002))
 - Remove manual patching for `AWS::Backup::BackupPlan` resource information and fix a few spec issues (pull #[1006](https://github.com/aws-cloudformation/cfn-python-lint/pull/1006))
 - Fix a few spec regex patterns that were missing escapes of `-` inside `[]` (issue #[997](https://github.com/aws-cloudformation/cfn-python-lint/issues/997))
-- Update pricing script to include bare metal instance types (issue #[998](https://github.com/aws-cloudformation/cfn-python-lint/issue/998))
+- Update pricing script to include bare metal instance types (issue #[998](https://github.com/aws-cloudformation/cfn-python-lint/issues/998))
 - Create a regex pattern for IAM Policy Names (issue #[996](https://github.com/aws-cloudformation/cfn-python-lint/issues/996))
 - Patch CloudFormation specs from SSM data on 2019.07.10
 ###### Fixes
@@ -554,8 +581,8 @@ to include cognito-identity keys to list of excluded resourse when checking if F
 
 ### 0.20.0
 ###### Features
-- Allow a rule's exception to be defined in a [resource's metadata](https://github.com/kddejong/cfn-python-lint/tree/Release/v0.20.0#resource-based-metadata)
-- Add rule [configuration capabilities](https://github.com/kddejong/cfn-python-lint/tree/Release/v0.20.0#configure-rules)
+- Allow a rule's exception to be defined in a [resource's metadata](https://github.com/aws-cloudformation/cfn-python-lint/#resource-based-metadata)
+- Add rule [configuration capabilities](https://github.com/aws-cloudformation/cfn-python-lint/#configure-rules)
 - Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3012) to allow for non strict property checking
 - Add rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to test Fn::Equals structure and syntax
 - Add rule [E8004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8004) to test Fn::And structure and syntax
