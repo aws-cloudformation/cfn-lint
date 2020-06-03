@@ -6,11 +6,11 @@ SPDX-License-Identifier: MIT-0
 def equalsOp(rule, propertyList):
     """ Process EQUALS operators """
     if not propertyList:
-        return 'Error - Invalid Resource Type ' + rule[0]
+        return 'Error - Invalid Resource Type ' + rule.resourceType
     for prop in propertyList:
-        actualValue = getProperty(prop, rule[1])
-        if actualValue.strip() != str(rule[3]).strip():
-            return 'Not Equal as ' + actualValue + ' does not equal ' + rule[3]
+        actualValue = getProperty(prop, rule.prop)
+        if actualValue.strip() != str(rule.value).strip():
+            return 'Not Equal as ' + actualValue + ' does not equal ' + rule.value
     return 'EQUALS'
 
 def getProperty(json, nestedProperties):
