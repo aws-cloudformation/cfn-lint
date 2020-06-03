@@ -21,6 +21,6 @@ def getProperty(json, nestedProperties):
     for prop in properties:
         try:
             json = json[prop]
-        except KeyError as e:
+        except KeyError and TypeError as e:
             return 'The following property was not found - "%s"' % str(e)
     return str(json)
