@@ -81,4 +81,4 @@ class TestCustomRuleParsing(BaseTestCase):
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
             matches = cfnlint.custom_rules.check(self.invalid_rt, cfn)
-            assert (matches[0].message.find('property was not found') > -1)
+            assert (matches[0].message.find('Invalid Resource Type') > -1)
