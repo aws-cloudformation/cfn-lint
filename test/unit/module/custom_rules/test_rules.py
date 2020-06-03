@@ -12,13 +12,13 @@ class TestCustomRules(BaseTestCase):
     def test_invalid_rule(self):
         """Test success run"""
 
-        rule = cfnlint.customRules.Rule.make_rule('ABCD')
-
+        rule = cfnlint.customRules.Rule.make_rule('ABCD'.split(" "))
+        print(rule.valid)
         assert (rule.valid is False)
 
     def test_valid_rule(self):
         """Test success run"""
 
-        rule = cfnlint.customRules.Rule.make_rule('AWS::IAM::Role AssumeRolePolicyDocument.Version EQUALS 2020')
+        rule = cfnlint.customRules.Rule.make_rule('AWS::IAM::Role AssumeRolePolicyDocument.Version EQUALS 2020'.split(" "))
 
         assert (rule.valid is True)
