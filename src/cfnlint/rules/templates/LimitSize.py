@@ -12,7 +12,6 @@ except ImportError:  # pragma: no cover
     from pathlib2 import Path
 
 
-
 class LimitSize(CloudFormationLintRule):
     """Check Template Size"""
     id = 'E1002'
@@ -24,15 +23,11 @@ class LimitSize(CloudFormationLintRule):
     def match(self, cfn):
         """Basic Matching"""
         matches = []
-
-        filename = cfn.filename
-
         # Only check if the file exists. The template could be passed in using stdIn
-        if filename:
-            if Path(filename).is_file():
-                statinfo = os.stat(filename)
+        if cfn.filename:
+            if Path(cfn.filename).is_file():
+                statinfo = os.stat(cfn.filename)
                 if statinfo.st_size > LIMITS['template']['body']:
                     message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
                     matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
-
         return matches
