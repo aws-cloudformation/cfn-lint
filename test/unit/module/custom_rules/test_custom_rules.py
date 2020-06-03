@@ -27,12 +27,12 @@ class TestCustomRuleParsing(BaseTestCase):
                 "filename": 'test/fixtures/templates/good/generic.yaml'
             }
         }
-        self.valid_rule = 'test/fixtures/templates/good/custom_rules/custom_rule_test.txt'
-        self.perfect_rule = 'test/fixtures/templates/good/custom_rules/custom_rule_perfect.txt'
-        self.invalid_op = 'test/fixtures/templates/bad/custom_rules/custom_rule_invalid_op.txt'
-        self.invalid_prop = 'test/fixtures/templates/bad/custom_rules/custom_rule_invalid_prop.txt'
-        self.invalid_propkey = 'test/fixtures/templates/bad/custom_rules/custom_rule_invalid_propkey.txt'
-        self.invalid_rt = 'test/fixtures/templates/bad/custom_rules/custom_rule_invalid_rt.txt'
+        self.valid_rule = 'test/fixtures/custom_rules/good/custom_rule_test.txt'
+        self.perfect_rule = 'test/fixtures/custom_rules/good/custom_rule_perfect.txt'
+        self.invalid_op = 'test/fixtures/custom_rules/bad/custom_rule_invalid_op.txt'
+        self.invalid_prop = 'test/fixtures/custom_rules/bad/custom_rule_invalid_prop.txt'
+        self.invalid_propkey = 'test/fixtures/custom_rules/bad/custom_rule_invalid_propkey.txt'
+        self.invalid_rt = 'test/fixtures/custom_rules/bad/custom_rule_invalid_rt.txt'
 
     def test_success_parse(self):
         """Test Successful YAML Parsing"""
