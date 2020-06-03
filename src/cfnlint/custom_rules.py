@@ -37,4 +37,4 @@ def check(filename, template):
 class CustomRule(object):
     """ Allows creation of match objects"""
     def __init__(self, id):
-        self.__name__ = id
+        self.id = id
