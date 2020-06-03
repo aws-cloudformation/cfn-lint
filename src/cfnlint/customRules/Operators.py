@@ -1,3 +1,7 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 import cfnlint.custom_rules
 
 
@@ -10,4 +14,3 @@ def equalsOp(rule, propertyList):
         if actualValue.strip() != str(rule[3]).strip():
             return 'Not Equal as ' + actualValue + ' does not equal ' + rule[3]
     return 'EQUALS'
-
