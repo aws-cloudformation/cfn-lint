@@ -51,18 +51,6 @@ class TestCustomRuleParsing(BaseTestCase):
         """Test Successful Custom_Rule Parsing"""
         assert (self.run_tests(self.invalid_op).find('not in supported') > -1)
 
-    def test_invalid_prop(self):
-        """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_prop).find('property was not found') > -1)
-
-    def test_invalid_propKey(self):
-        """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_propkey).find('property was not found') > -1)
-
-    def test_invalid_resource_type(self):
-        """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_rt).find('Resource type not found') > -1)
-
     def run_tests(self, rulename):
         for _, values in self.filenames.items():
             filename = values.get('filename')
