@@ -28,8 +28,6 @@ class GetAtt(CloudFormationLintRule):
         self.propertytypes = resourcespecs['PropertyTypes']
 
     def match(self, cfn):
-        """Check CloudFormation GetAtt"""
-
         matches = []
 
         getatts = cfn.search_deep_keys('Fn::GetAtt')

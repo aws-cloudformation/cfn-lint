@@ -16,7 +16,6 @@ class LimitDescription(CloudFormationLintRule):
     tags = ['outputs', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Outputs"""
         matches = []
         for output_name, output_value in cfn.template.get('Outputs', {}).items():
             description = output_value.get('Description')

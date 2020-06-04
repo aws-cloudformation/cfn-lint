@@ -16,8 +16,6 @@ class Used(CloudFormationLintRule):
     tags = ['conditions']
 
     def match(self, cfn):
-        """Check CloudFormation Conditions"""
-
         matches = []
         ref_conditions = []
 

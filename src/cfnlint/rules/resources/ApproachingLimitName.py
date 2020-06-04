@@ -15,5 +15,4 @@ class LimitName(CloudFormationLintRule):
     tags = ['resources', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
         return approaching_name_limit(cfn, 'Resources')
