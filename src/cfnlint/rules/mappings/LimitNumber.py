@@ -15,5 +15,4 @@ class LimitNumber(CloudFormationLintRule):
     tags = ['mappings', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Mappings"""
         return number_limit(cfn, 'Mappings')

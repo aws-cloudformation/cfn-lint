@@ -16,7 +16,6 @@ class LimitDescription(CloudFormationLintRule):
     tags = ['description', 'limits']
 
     def match(self, cfn):
-        """Basic Matching"""
         matches = []
         description = cfn.template.get('Description', '')
         if len(description) > LIMITS['template']['description']:

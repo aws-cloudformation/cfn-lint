@@ -9,7 +9,6 @@ from cfnlint.rules import RuleMatch
 
 
 class RefExist(CloudFormationLintRule):
-    """Check if Parameters are used"""
     id = 'E1012'
     shortdesc = 'Check if Refs exist'
     description = 'Making sure the refs exist'
@@ -22,8 +21,6 @@ class RefExist(CloudFormationLintRule):
         return regex.findall(string)
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
-
         matches = []
 
         # Build the list of refs

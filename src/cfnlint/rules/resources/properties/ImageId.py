@@ -7,7 +7,6 @@ from cfnlint.rules import RuleMatch
 
 
 class ImageId(CloudFormationLintRule):
-    """Check if Parameters are used"""
     id = 'W2506'
     shortdesc = 'Check if ImageId Parameters have the correct type'
     description = 'See if there are any refs for ImageId to a parameter ' + \

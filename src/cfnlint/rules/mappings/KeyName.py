@@ -30,8 +30,6 @@ class KeyName(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Mapping"""
-
         matches = []
 
         mappings = cfn.template.get('Mappings', {})

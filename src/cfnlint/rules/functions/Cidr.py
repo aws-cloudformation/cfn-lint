@@ -71,8 +71,6 @@ class Cidr(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Cidr"""
-
         matches = []
 
         cidr_objs = cfn.search_deep_keys('Fn::Cidr')

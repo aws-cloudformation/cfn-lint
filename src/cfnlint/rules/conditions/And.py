@@ -15,8 +15,6 @@ class And(CloudFormationLintRule):
     tags = ['functions', 'and']
 
     def match(self, cfn):
-        """Check CloudFormation And"""
-
         matches = []
 
         # Build the list of functions

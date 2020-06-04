@@ -27,7 +27,6 @@ class LambdaMemorySize(CloudFormationLintRule):
 
     # pylint: disable=W0613
     def check_lambda_memory_size_ref(self, value, path, parameters, resources):
-        """Check ref for VPC"""
         matches = []
 
         if value in parameters:

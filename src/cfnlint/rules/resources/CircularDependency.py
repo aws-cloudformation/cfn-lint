@@ -15,8 +15,6 @@ class CircularDependency(CloudFormationLintRule):
     tags = ['resources', 'circularly', 'dependson', 'ref', 'sub', 'getatt']
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
-
         matches = []
 
         graph = Graph(cfn)

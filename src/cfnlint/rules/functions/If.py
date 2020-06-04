@@ -16,8 +16,6 @@ class If(CloudFormationLintRule):
     tags = ['functions', 'if']
 
     def match(self, cfn):
-        """Check CloudFormation Conditions"""
-
         matches = []
 
         # Build the list of functions

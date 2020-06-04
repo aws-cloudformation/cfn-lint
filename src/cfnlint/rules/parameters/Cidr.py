@@ -53,7 +53,6 @@ class Cidr(CloudFormationLintRule):
 
     # pylint: disable=W0613
     def check_cidr_ref(self, value, path, parameters, resources):
-        """Check ref for VPC"""
         matches = []
 
         if value in parameters:
