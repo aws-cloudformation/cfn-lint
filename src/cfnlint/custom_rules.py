@@ -24,8 +24,8 @@ def check(filename, template):
             rule = cfnlint.customRules.Rule.make_rule(line.split(' '))
             if rule.valid and rule.resourceType[0] != '#':
                 try:
-                    template_properties = template.get_resource_properties([rule.resourceType])
-                    result = Operator[rule.operator](rule, template_properties)
+                    resource_properties = template.get_resource_properties([rule.resourceType])
+                    result = Operator[rule.operator](rule, resource_properties)
                     if result != rule.operator:
                         matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('E9999'), result, None))
                 except KeyError:
