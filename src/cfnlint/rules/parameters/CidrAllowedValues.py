@@ -60,7 +60,7 @@ class CidrAllowedValues(CloudFormationLintRule):
             parameter = parameters.get(value, {})
             parameter_type = parameters.get(value, {}).get('Type', '')
             if parameter_type == 'AWS::SSM::Parameter::Value<String>':
-                # If we are reading from the Parameter store we can longer
+                # If we are reading from the Parameter store we can no longer
                 # check the value of the allowed values
                 return matches
             allowed_values = parameter.get('AllowedValues', None)
