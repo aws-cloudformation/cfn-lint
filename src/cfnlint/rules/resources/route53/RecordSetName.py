@@ -21,7 +21,6 @@ class RecordSetName(CloudFormationLintRule):
         self.resource_property_types = ['AWS::Route53::RecordSet']
 
     def match_resource_properties(self, properties, _, path, cfn):
-        """ Check Load Balancers """
         matches = []
 
         property_sets = cfn.get_object_without_conditions(properties, ['Name', 'HostedZoneName'])

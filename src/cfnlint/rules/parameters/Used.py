@@ -32,8 +32,6 @@ class Used(CloudFormationLintRule):
         return False
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
-
         matches = []
 
         reftrees = cfn.transform_pre.get('Ref')

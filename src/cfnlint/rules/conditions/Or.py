@@ -15,8 +15,6 @@ class Or(CloudFormationLintRule):
     tags = ['functions', 'or']
 
     def match(self, cfn):
-        """Check CloudFormation Or"""
-
         matches = []
 
         # Build the list of functions

@@ -18,8 +18,6 @@ class ServerlessTransform(CloudFormationLintRule):
     tags = ['resources', 'transform']
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
-
         matches = []
 
         transforms = cfn.template.get('Transform', [])

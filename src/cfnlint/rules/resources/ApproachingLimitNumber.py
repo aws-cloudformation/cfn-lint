@@ -16,7 +16,6 @@ class LimitNumber(CloudFormationLintRule):
     tags = ['resources', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
         matches = []
         resources = cfn.get_resources()
         if LIMITS['threshold'] * LIMITS['Resources']['number'] < len(resources) <= LIMITS['Resources']['number']:
