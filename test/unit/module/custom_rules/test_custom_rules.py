@@ -35,60 +35,37 @@ class TestCustomRuleParsing(BaseTestCase):
         self.invalid_rt = 'test/fixtures/custom_rules/bad/custom_rule_invalid_rt.txt'
 
     def test_success_parse(self):
-        """Test Successful YAML Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            failures = values.get('failures')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.valid_rule, cfn)
-            assert (matches[0].message.find('Not Equal') > -1)
+        """Test Successful Custom_Rule Parsing"""
+        assert(self.run_tests(self.valid_rule).find('Not Equal') > -1)
 
     def test_perfect_parse(self):
-        """Test Successful YAML Parsing"""
+        """Test Successful Custom_Rule Parsing"""
         for _, values in self.filenames.items():
             filename = values.get('filename')
-            failures = values.get('failures')
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
             matches = cfnlint.custom_rules.check(self.perfect_rule, cfn)
+            assert (matches == [])
 
     def test_invalid_op(self):
-        """Test Successful YAML Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            failures = values.get('failures')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.invalid_op, cfn)
-            assert (matches[0].message.find('not in supported') > -1)
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_op).find('not in supported') > -1)
 
     def test_invalid_prop(self):
-        """Test Successful YAML Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            failures = values.get('failures')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.invalid_prop, cfn)
-            assert (matches[0].message.find('property was not found') > -1)
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_prop).find('property was not found') > -1)
 
     def test_invalid_propKey(self):
-        """Test Successful YAML Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            failures = values.get('failures')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.invalid_propkey, cfn)
-            assert (matches[0].message.find('property was not found') > -1)
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_propkey).find('property was not found') > -1)
 
     def test_invalid_resource_type(self):
-        """Test Successful YAML Parsing"""
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_rt).find('Invalid Resource Type') > -1)
+
+    def run_tests(self, rulename):
         for _, values in self.filenames.items():
             filename = values.get('filename')
-            failures = values.get('failures')
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.invalid_rt, cfn)
-            assert (matches[0].message.find('Invalid Resource Type') > -1)
+            return cfnlint.custom_rules.check(rulename, cfn)[0].message
