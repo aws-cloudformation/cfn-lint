@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 def equalsOp(rule, propertyList):
     """ Process EQUALS operators """
     if not propertyList:
-        return 'Error - Invalid Resource Type ' + rule.resourceType
+        return 'Error - Resource type not found ' + rule.resourceType
     for prop in propertyList:
         actualValue = getProperty(prop, rule.prop)
         if actualValue.strip() != str(rule.value).strip():
