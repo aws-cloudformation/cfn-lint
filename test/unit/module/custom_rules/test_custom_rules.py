@@ -36,24 +36,31 @@ class TestCustomRuleParsing(BaseTestCase):
 
     def test_success_parse(self):
         """Test Successful Custom_Rule Parsing"""
-        assert(self.run_tests(self.valid_rule).find('Not Equal') > -1)
+        assert(self.run_tests(self.valid_rule)[0].message.find('Not Equal') > -1)
 
     def test_perfect_parse(self):
         """Test Successful Custom_Rule Parsing"""
-        for _, values in self.filenames.items():
-            filename = values.get('filename')
-            template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ['us-east-1'])
-            matches = cfnlint.custom_rules.check(self.perfect_rule, cfn)
-            assert (matches == [])
+        assert (self.run_tests(self.perfect_rule) == [])
 
     def test_invalid_op(self):
         """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_op).find('not in supported') > -1)
+        assert (self.run_tests(self.invalid_op)[0].message.find('not in supported') > -1)
+
+    def test_invalid_prop(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_prop) == [])
+
+    def test_invalid_propKey(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_propkey) == [])
+
+    def test_invalid_resource_type(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_rt) == [])
 
     def run_tests(self, rulename):
         for _, values in self.filenames.items():
             filename = values.get('filename')
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
-            return cfnlint.custom_rules.check(rulename, cfn)[0].message
+            return cfnlint.custom_rules.check(rulename, cfn)
