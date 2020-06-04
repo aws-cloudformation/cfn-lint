@@ -15,7 +15,7 @@ class KeyName(CloudFormationLintRule):
     shortdesc = 'Mapping keys are strings and alphanumeric'
     description = 'Check if Mappings keys are properly typed as strings and alphanumeric'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'
-    tags = ['mapping']
+    tags = ['mappings']
 
     def check_key(self, key, path, check_alphanumeric=True):
         """ Check the key name for string and alphanumeric"""
