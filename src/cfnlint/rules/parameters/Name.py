@@ -17,8 +17,6 @@ class Name(CloudFormationLintRule):
     tags = ['parameters']
 
     def match(self, cfn):
-        """Check CloudFormation Mapping"""
-
         matches = []
 
         parameters = cfn.template.get('Parameters', {})

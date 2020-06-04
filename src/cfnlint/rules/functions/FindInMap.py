@@ -104,8 +104,6 @@ class FindInMap(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation GetAtt"""
-
         matches = []
 
         findinmaps = cfn.search_deep_keys('Fn::FindInMap')

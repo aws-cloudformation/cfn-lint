@@ -19,7 +19,6 @@ class Base(CloudFormationLintRule):
     ]
 
     def match(self, cfn):
-        """Basic Matching"""
         matches = []
 
         top_level = []

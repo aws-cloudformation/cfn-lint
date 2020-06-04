@@ -17,7 +17,7 @@ class Name(CloudFormationLintRule):
     tags = ['mapping']
 
     def match(self, cfn):
-        """Check CloudFormation Mapping"""
+        """Check CloudFormation Mappings"""
 
         matches = []
 
