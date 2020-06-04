@@ -3,8 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import LIMITS
+from cfnlint.rules.common import name_limit
 
 
 class LimitName(CloudFormationLintRule):
@@ -16,17 +15,4 @@ class LimitName(CloudFormationLintRule):
     tags = ['mappings', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Mappings"""
-
-        matches = []
-
-        mappings = cfn.template.get('Mappings', {})
-
-        for mapping_name in mappings:
-            path = ['Mappings', mapping_name]
-            if len(mapping_name) > LIMITS['mappings']['name']:
-                message = 'The length of mapping name ({0}) exceeds the limit ({1})'
-                matches.append(RuleMatch(path, message.format(
-                    len(mapping_name), LIMITS['mappings']['name'])))
-
-        return matches
+        return name_limit(cfn, 'Mappings')

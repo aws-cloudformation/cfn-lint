@@ -30,8 +30,6 @@ class DependsOn(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
-
         matches = []
 
         resources = cfn.get_resources()

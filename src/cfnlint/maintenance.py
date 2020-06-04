@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import json
 import logging
 import os
-
 import cfnlint
 from cfnlint.specs import get_url_content
 import cfnlint.data.ExtendedSpecs

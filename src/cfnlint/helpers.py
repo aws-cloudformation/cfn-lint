@@ -96,22 +96,22 @@ PSEUDOPARAMS = [
 ]
 
 LIMITS = {
-    'mappings': {
+    'Mappings': {
         'number': 100,
         'attributes': 64,
         'name': 255  # in characters
     },
-    'outputs': {
+    'Outputs': {
         'number': 60,
         'name': 255,  # in characters
         'description': 1024  # in bytes
     },
-    'parameters': {
+    'Parameters': {
         'number': 60,
         'name': 255,  # in characters
         'value': 4096  # in bytes
     },
-    'resources': {
+    'Resources': {
         'number': 200,
         'name': 255  # in characters
     },

@@ -26,8 +26,6 @@ class Value(CloudFormationLintRule):
         self.resourcetypes = resourcespecs['ResourceTypes']
 
     def match(self, cfn):
-        """Check CloudFormation Outputs"""
-
         matches = []
 
         template = cfn.template

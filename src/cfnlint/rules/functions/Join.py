@@ -147,8 +147,6 @@ class Join(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Join"""
-
         matches = []
 
         join_objs = cfn.search_deep_keys('Fn::Join')

@@ -2,10 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import re
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import REGEX_ALPHANUMERIC
+from cfnlint.rules.common import alphanumeric_name
 
 
 class Name(CloudFormationLintRule):
@@ -17,17 +15,4 @@ class Name(CloudFormationLintRule):
     tags = ['resources']
 
     def match(self, cfn):
-        """Check CloudFormation Mapping"""
-
-        matches = []
-
-        resources = cfn.template.get('Resources', {})
-        for resource_name, _ in resources.items():
-            if not re.match(REGEX_ALPHANUMERIC, resource_name):
-                message = 'Resources {0} has invalid name.  Name has to be alphanumeric.'
-                matches.append(RuleMatch(
-                    ['Resources', resource_name],
-                    message.format(resource_name)
-                ))
-
-        return matches
+        return alphanumeric_name(cfn, 'Resources')

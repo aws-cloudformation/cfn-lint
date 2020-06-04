@@ -15,8 +15,6 @@ class ImportValue(CloudFormationLintRule):
     tags = ['outputs', 'importvalue']
 
     def match(self, cfn):
-        """Check CloudFormation Outputs"""
-
         matches = []
 
         # Get all import values

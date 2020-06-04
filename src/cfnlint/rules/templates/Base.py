@@ -19,19 +19,18 @@ class Base(CloudFormationLintRule):
     ]
 
     def match(self, cfn):
-        """Basic Matching"""
         matches = []
 
         top_level = []
         for x in cfn.template:
             top_level.append(x)
             if x not in cfn.sections:
-                message = 'Top level item {0} isn\'t valid'
+                message = 'Top level template section {0} is not valid'
                 matches.append(RuleMatch([x], message.format(x)))
 
         for y in self.required_keys:
             if y not in top_level:
-                message = 'Missing top level item {0} to file module'
+                message = 'Missing top level template section {0}'
                 matches.append(RuleMatch([y], message.format(y)))
 
         return matches

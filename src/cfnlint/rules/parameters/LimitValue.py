@@ -17,11 +17,10 @@ class LimitValue(CloudFormationLintRule):
     tags = ['parameters', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
 
         matches = []
 
-        value_limit = LIMITS['parameters']['value']
+        value_limit = LIMITS['Parameters']['value']
 
         # There are no real "Values" in the template, check the "meta" information
         # (Default, AllowedValue and MaxLength) against the limit
@@ -60,7 +59,6 @@ class LimitValue(CloudFormationLintRule):
                     if len(allowed_value) > value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) exceeds the limit ({1})'
-                        matches.append(RuleMatch(path, message.format(
-                            len(allowed_value), value_limit)))
+                        matches.append(RuleMatch(path, message.format(len(allowed_value), value_limit)))
 
         return matches
