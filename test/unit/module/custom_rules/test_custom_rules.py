@@ -61,7 +61,7 @@ class TestCustomRuleParsing(BaseTestCase):
 
     def test_invalid_resource_type(self):
         """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_rt).find('Invalid Resource Type') > -1)
+        assert (self.run_tests(self.invalid_rt).find('Resource type not found') > -1)
 
     def run_tests(self, rulename):
         for _, values in self.filenames.items():
