@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.limits import name_limit
+from cfnlint.rules.common import name_limit
 
 
 class LimitName(CloudFormationLintRule):
