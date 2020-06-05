@@ -12,9 +12,13 @@ import datetime
 import logging
 import re
 import inspect
+import warnings
 import six
 from cfnlint.decode.node import dict_node, list_node, str_node
-
+# pylint: disable=unused-import
+from cfnlint.specs import RESOURCE_SPECS as _new_RESOURCE_SPECS
+from cfnlint.specs import REGIONS as _new_REGIONS
+from cfnlint.specs import SPEC_REGIONS as _new_SPEC_REGIONS
 
 if sys.version_info < (3,):
     import imp
@@ -38,6 +42,18 @@ REGEX_IPV6 = re.compile(
 REGEX_DYN_REF = re.compile(r'^.*{{resolve:.+}}.*$')
 REGEX_DYN_REF_SSM = re.compile(r'^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
 REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
+
+deprecated_names = {
+    'SPEC_REGIONS': 'is refactored and deprecated. Please use cfnlint.specs.SPEC_REGIONS',
+    'REGIONS': 'is refactored and deprecated. Please use cfnlint.specs.REGIONS',
+    'RESOURCE_SPECS': 'is refactored and deprecated. Please use cfnlint.specs.RESOURCE_SPECS'
+}
+
+def __getattr__(name):
+    if name in deprecated_names:
+        warnings.warn('%s %s' % (name, deprecated_names[name]), FutureWarning)
+        return globals()['_new_%s' % name]
+    raise AttributeError('module %s has no attribute %s' % (__name__, name))
 
 
 AVAILABILITY_ZONES = [
