@@ -11,6 +11,7 @@ from jsonschema.exceptions import ValidationError
 import cfnlint.runner
 from cfnlint.template import Template
 from cfnlint.rules import RulesCollection
+import cfnlint.custom_rules
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -41,15 +42,16 @@ class UnexpectedRuleException(CfnLintExitException):
 
 def run_cli(filename, template, rules, regions, override_spec, build_graph, mandatory_rules=None):
     """Process args and run"""
+    template_obj = Template(filename, template, regions)
+    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
     if build_graph:
-        template_obj = Template(filename, template, regions)
         template_obj.build_graph()
 
-    return run_checks(filename, template, rules, regions, mandatory_rules)
+    return custom_matches + run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
