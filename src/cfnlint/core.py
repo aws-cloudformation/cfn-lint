@@ -43,8 +43,7 @@ class UnexpectedRuleException(CfnLintExitException):
 def run_cli(filename, template, rules, regions, override_spec, build_graph, mandatory_rules=None):
     """Process args and run"""
     template_obj = Template(filename, template, regions)
-
-    custom_matches = cfnlint.custom_rules.check('custom_rule_test.txt', template_obj)
+    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
