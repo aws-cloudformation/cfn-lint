@@ -45,29 +45,19 @@ class RecordSet(CloudFormationLintRule):
 
         return matches
 
-    def check_a_record(self, value, path):
-        """Check A record Configuration"""
+    def check_record(self, value, path, record_type, regex, regex_name):
         matches = []
-
-        # Check if a valid IPv4 address is specified
         if isinstance(value, six.string_types):
-            if not re.match(REGEX_IPV4, value):
-                message = 'A record ({}) is not a valid IPv4 address'
+            if not re.match(regex, value):
+                message = record_type + ' record ({}) is not a valid ' + regex_name
                 matches.append(RuleMatch(path, message.format(value)))
-
         return matches
+
+    def check_a_record(self, value, path):
+        return self.check_record(value, path, 'A', REGEX_IPV4, 'IPv4 address')
 
     def check_aaaa_record(self, value, path):
-        """Check AAAA record Configuration"""
-        matches = []
-
-        if isinstance(value, six.string_types):
-            # Check if a valid IPv4 address is specified
-            if not re.match(REGEX_IPV6, value):
-                message = 'AAAA record ({}) is not a valid IPv6 address'
-                matches.append(RuleMatch(path, message.format(value)))
-
-        return matches
+        return self.check_record(value, path, 'AAAA', REGEX_IPV6, 'IPv6 address')
 
     def check_caa_record(self, value, path):
         """Check CAA record Configuration"""
@@ -149,25 +139,10 @@ class RecordSet(CloudFormationLintRule):
         return matches
 
     def check_ns_record(self, value, path):
-        """Check NS record Configuration"""
-        matches = []
-
-        if isinstance(value, six.string_types):
-            if not re.match(self.REGEX_DOMAINNAME, value):
-                message = 'NS record ({}) does not contain a valid domain name'
-                matches.append(RuleMatch(path, message.format(value)))
-
-        return matches
+        return self.check_record(value, path, 'NS', self.REGEX_DOMAINNAME, 'domain name')
 
     def check_ptr_record(self, value, path):
-        """Check PTR record Configuration"""
-        matches = []
-
-        if isinstance(value, six.string_types):
-            if not re.match(self.REGEX_DOMAINNAME, value):
-                message = 'PTR record ({}) does not contain a valid domain name'
-                matches.append(RuleMatch(path, message.format(value)))
-        return matches
+        return self.check_record(value, path, 'PTR', self.REGEX_DOMAINNAME, 'domain name')
 
     def check_txt_record(self, value, path):
         """Check TXT record Configuration"""
