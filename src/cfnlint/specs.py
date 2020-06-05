@@ -13,7 +13,6 @@ import sys
 import logging
 from io import BytesIO
 import jsonpatch
-import jsonpointer
 
 try:
     import importlib.resources as pkg_resources
@@ -280,7 +279,7 @@ def patch_spec(content, region):
                     jsonpatch.JsonPatch([all_patch]).apply(content, in_place=True)
                 except jsonpatch.JsonPatchConflict:
                     LOGGER.debug('Patch (%s) not applied in region %s', all_patch, region)
-                except jsonpointer.JsonPointerException:
+                except jsonpatch.JsonPointerException:
                     # Debug as the parent element isn't supported in the region
                     LOGGER.debug('Parent element not found for patch (%s) in region %s',
                                  all_patch, region)
