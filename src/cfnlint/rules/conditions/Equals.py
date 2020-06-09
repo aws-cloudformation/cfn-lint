@@ -16,8 +16,6 @@ class Equals(CloudFormationLintRule):
     tags = ['functions', 'equals']
 
     def match(self, cfn):
-        """Check CloudFormation Equals"""
-
         matches = []
 
         # Build the list of functions

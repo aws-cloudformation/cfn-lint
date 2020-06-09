@@ -16,7 +16,6 @@ class LimitAttributes(CloudFormationLintRule):
     tags = ['mappings', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Mappings"""
         matches = []
         for mapping_name, mapping in cfn.template.get('Mappings', {}).items():
             for mapping_attribute_name, mapping_attribute in mapping.items():

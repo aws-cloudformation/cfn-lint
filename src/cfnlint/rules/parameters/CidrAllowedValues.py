@@ -54,11 +54,15 @@ class CidrAllowedValues(CloudFormationLintRule):
 
     # pylint: disable=W0613
     def check_cidr_ref(self, value, path, parameters, resources):
-        """Check ref for VPC"""
         matches = []
 
         if value in parameters:
             parameter = parameters.get(value, {})
+            parameter_type = parameters.get(value, {}).get('Type', '')
+            if parameter_type == 'AWS::SSM::Parameter::Value<String>':
+                # If we are reading from the Parameter store we can no longer
+                # check the value of the allowed values
+                return matches
             allowed_values = parameter.get('AllowedValues', None)
             if allowed_values:
                 for cidr in allowed_values:

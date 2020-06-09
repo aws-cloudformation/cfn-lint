@@ -85,7 +85,7 @@ class Transform(object):
                     Transform._update_to_s3_uri('DefinitionUri', resource_dict)
                 else:
                     resource_dict['DefinitionBody'] = ''
-            if resource_type == 'AWS::Serverless::StateMachine':
+            if resource_type == 'AWS::Serverless::StateMachine' and resource_dict.get('DefinitionUri'):
                 Transform._update_to_s3_uri('DefinitionUri', resource_dict)
 
     def transform_template(self):

@@ -21,7 +21,6 @@ class LimitSize(CloudFormationLintRule):
     tags = ['limits']
 
     def match(self, cfn):
-        """Basic Matching"""
         matches = []
         # Only check if the file exists. The template could be passed in using stdIn
         if cfn.filename:

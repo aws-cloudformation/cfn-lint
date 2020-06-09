@@ -16,7 +16,6 @@ class Description(CloudFormationLintRule):
     tags = ['description']
 
     def match(self, cfn):
-        """Basic Matching"""
         matches = []
 
         description = cfn.template.get('Description')

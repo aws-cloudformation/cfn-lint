@@ -16,8 +16,6 @@ class Base64(CloudFormationLintRule):
     tags = ['functions', 'base64']
 
     def match(self, cfn):
-        """Check CloudFormation Base64"""
-
         matches = []
 
         base64_objs = cfn.search_deep_keys('Fn::Base64')

@@ -82,8 +82,6 @@ class Configuration(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Outputs"""
-
         matches = []
 
         outputs = cfn.template.get('Outputs', {})

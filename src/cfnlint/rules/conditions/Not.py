@@ -15,8 +15,6 @@ class Not(CloudFormationLintRule):
     tags = ['functions', 'not']
 
     def match(self, cfn):
-        """Check CloudFormation Not"""
-
         matches = []
 
         # Build the list of functions

@@ -15,8 +15,6 @@ class SubNotJoin(CloudFormationLintRule):
     tags = ['functions', 'sub', 'join']
 
     def match(self, cfn):
-        """Check CloudFormation """
-
         matches = []
 
         join_objs = cfn.search_deep_keys('Fn::Join')
