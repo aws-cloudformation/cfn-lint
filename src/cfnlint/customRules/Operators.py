@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+# pylint: disable=W0622
 from cfnlint.rules import Match
 
 
@@ -10,20 +11,16 @@ def equalsOp(template, rule, propertyList):
 
     if not propertyList:
         return Match(
-        1, 1,
-        1, 1,
-        template.filename, CustomRule('E9200'),
-        rule.operator, None)  # Resource type not found
+            1, 1,
+            1, 1,
+            template.filename, CustomRule('E9200'),
+            rule.operator, None)  # Resource type not found
 
     for prop in propertyList:
-        #print('Prop: ' + str(prop))
         actualValue = getProperty(prop, rule)
-        #print('rule.prop: ' + rule.prop)
         if actualValue.strip() != str(rule.value).strip():
             path = prop['Path']
-            #print(path)
             path = path + rule.prop.split('.')
-            #print(path)
             linenumbers = template.get_location_yaml(template.template, path)
             if linenumbers:
                 return Match(
@@ -31,12 +28,11 @@ def equalsOp(template, rule, propertyList):
                     linenumbers[2] + 1, linenumbers[3] + 1,
                     template.filename, CustomRule('E9201'),
                     'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
-            else:
-                return Match(
-                    1, 1,
-                    1, 1,
-                    template.filename, CustomRule('E9201'),
-                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
+            return Match(
+                1, 1,
+                1, 1,
+                template.filename, CustomRule('E9201'),
+                'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
     return Match(
         1, 1,
         1, 1,
@@ -61,6 +57,6 @@ def getProperty(json, rule):
 
 class CustomRule(object):
     """ Allows creation of match objects"""
+
     def __init__(self, id):
         self.id = id
-

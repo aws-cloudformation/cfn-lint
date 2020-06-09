@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=W0108
-# pylint: disable=W0622
+
 import logging
 import cfnlint
 import cfnlint.runner
@@ -27,11 +27,10 @@ def check(filename, template, rules, runner):
                 try:
                     resource_properties = template.get_resource_properties([rule.resourceType])
                     result = Operator[rule.operator](template, rule, resource_properties)
-
                     if result.message != rule.operator:
                         matches.append(result)
                 except KeyError:
-                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('C9999'),
+                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, cfnlint.customRules.Operators.CustomRule('C9999'),
                                                        str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
             line_number += 1
     arg_matches = []
@@ -41,9 +40,4 @@ def check(filename, template, rules, runner):
     return runner.check_directives(arg_matches)
 
 def match_helper(id):
-    return cfnlint.rules.Match(1, '0', '0', '0', 'filename', CustomRule(id), 'result', None)
-
-class CustomRule(object):
-    """ Allows creation of match objects"""
-    def __init__(self, id):
-        self.id = id
+    return cfnlint.rules.Match(1, '0', '0', '0', 'filename', cfnlint.customRules.Operators.CustomRule(id), 'result', None)
