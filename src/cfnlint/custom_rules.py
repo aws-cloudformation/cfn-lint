@@ -11,7 +11,7 @@ import cfnlint.customRules.Operators
 import cfnlint.customRules.Rule
 
 LOGGER = logging.getLogger(__name__)
-Operator = {'EQUALS': lambda x, y: cfnlint.customRules.Operators.equalsOp(x, y),
+Operator = {'EQUALS': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
             'PLACEHOLDER': lambda x, y: LOGGER.debug('Placeholder Op')}
 
 def check(filename, template, rules, runner):
@@ -26,11 +26,12 @@ def check(filename, template, rules, runner):
             if rule.valid and rule.resourceType[0] != '#':
                 try:
                     resource_properties = template.get_resource_properties([rule.resourceType])
-                    result = Operator[rule.operator](rule, resource_properties)
+                    result = Operator[rule.operator](template, rule, resource_properties)
+
                     if result.message != rule.operator:
                         matches.append(result)
                 except KeyError:
-                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('E9999'),
+                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, CustomRule('C9999'),
                                                        str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
             line_number += 1
     arg_matches = []

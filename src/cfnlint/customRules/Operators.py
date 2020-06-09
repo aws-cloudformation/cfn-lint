@@ -2,29 +2,46 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.customRules import CustomRuleMatch
+from cfnlint.rules import Match
 
 
-def equalsOp(rule, propertyList):
+def equalsOp(template, rule, propertyList):
     """ Process EQUALS operators """
 
     if not propertyList:
-        result = CustomRuleMatch.CustomRuleMatch(' ', rule.operator)
-        result.set_id('E9200')
-        return result  # Resource type not found
+        return Match(
+        1, 1,
+        1, 1,
+        template.filename, CustomRule('E9200'),
+        rule.operator, None)  # Resource type not found
 
     for prop in propertyList:
         #print('Prop: ' + str(prop))
         actualValue = getProperty(prop, rule)
         #print('rule.prop: ' + rule.prop)
         if actualValue.strip() != str(rule.value).strip():
-            result = CustomRuleMatch.CustomRuleMatch(prop, 'Not Equal as ' + actualValue + ' does not equal ' + rule.value)
-            result.set_id('E9201')
-            return result
-
-    result = CustomRuleMatch.CustomRuleMatch(' ', rule.operator)
-    result.set_id('E9202')
-    return result
+            path = prop['Path']
+            #print(path)
+            path = path + rule.prop.split('.')
+            #print(path)
+            linenumbers = template.get_location_yaml(template.template, path)
+            if linenumbers:
+                return Match(
+                    linenumbers[0] + 1, linenumbers[1] + 1,
+                    linenumbers[2] + 1, linenumbers[3] + 1,
+                    template.filename, CustomRule('E9201'),
+                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
+            else:
+                return Match(
+                    1, 1,
+                    1, 1,
+                    template.filename, CustomRule('E9201'),
+                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
+    return Match(
+        1, 1,
+        1, 1,
+        template.filename, CustomRule('E9202'),
+        rule.operator, None)
 
 
 def getProperty(json, rule):
@@ -40,3 +57,10 @@ def getProperty(json, rule):
         except TypeError:
             return rule.value  # Property type not found
     return str(json)
+
+
+class CustomRule(object):
+    """ Allows creation of match objects"""
+    def __init__(self, id):
+        self.id = id
+
