@@ -157,10 +157,20 @@ def get_args_filenames(cli_args):
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
 
-    (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
+    ignore_bad_template = False
+    if args.ignore_bad_template:
+        ignore_bad_template = True
+    else:
+        for ignore_check in args.ignore_checks:
+            if ignore_check == 'E0000' or 'E0000'.startswith(ignore_check):
+                ignore_bad_template = True
 
-    if matches:
-        return(template, [], matches)
+    (template, errors) = cfnlint.decode.decode(filename)
+
+    if errors:
+        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
+            return(template, [], [])
+        return(template, [], errors)
 
     args.template_args = template
 
@@ -187,7 +197,8 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
 
     matches = []
 
-    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
+    runner = cfnlint.runner.Runner(rules, filename, template, regions,
+                                   mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:

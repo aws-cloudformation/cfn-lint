@@ -41,6 +41,37 @@ class CloudFormationLintRule(object):
     def initialize(self, cfn):
         """Initialize the rule"""
 
+    def is_enabled(self, include_experimental=False, ignore_rules=None, include_rules=None,
+                   mandatory_rules=None):
+        """ Is the rule enabled based on the configuration """
+        ignore_rules = ignore_rules or []
+        include_rules = include_rules or []
+        mandatory_rules = mandatory_rules or []
+
+        # Evaluate experimental rulestox
+        if self.experimental and not include_experimental:
+            return False
+
+        # Evaluate includes first:
+        include_filter = False
+        for include_rule in include_rules:
+            if self.id.startswith(include_rule):
+                include_filter = True
+        if not include_filter:
+            return False
+
+        # Enable mandatory rules without checking for if they are ignored
+        for mandatory_rule in mandatory_rules:
+            if self.id.startswith(mandatory_rule):
+                return True
+
+        # Allowing ignoring of rules based on prefix to ignore checks
+        for ignore_rule in ignore_rules:
+            if self.id.startswith(ignore_rule) and ignore_rule:
+                return False
+
+        return True
+
     def configure(self, configs=None):
         """ Set the configuration """
 
@@ -150,7 +181,7 @@ class RulesCollection(object):
     def register(self, rule):
         """Register rules"""
         self.all_rules.append(rule)
-        if self.is_rule_enabled(rule.id, rule.experimental):
+        if self.is_rule_enabled(rule):
             self.rules.append(rule)
             if rule.id in self.configure_rules:
                 rule.configure(self.configure_rules[rule.id])
@@ -164,41 +195,16 @@ class RulesCollection(object):
     def extend(self, more):
         """Extend rules"""
         for rule in more:
-            self.all_rules.append(rule)
-            if self.is_rule_enabled(rule.id, rule.experimental):
-                self.rules.append(rule)
-                if rule.id in self.configure_rules:
-                    rule.configure(self.configure_rules[rule.id])
+            self.register(rule)
 
     def __repr__(self):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
-    def is_rule_enabled(self, rule_id, experimental):
+    def is_rule_enabled(self, rule):
         """ Checks if an individual rule is valid """
-        # Evaluate experimental rules
-        if experimental and not self.include_experimental:
-            return False
-
-        # Evaluate includes first:
-        include_filter = False
-        for include_rule in self.include_rules:
-            if rule_id.startswith(include_rule):
-                include_filter = True
-        if not include_filter:
-            return False
-
-        # Enable mandatory rules without checking for if they are ignored
-        for mandatory_rule in self.mandatory_rules:
-            if rule_id.startswith(mandatory_rule):
-                return True
-
-        # Allowing ignoring of rules based on prefix to ignore checks
-        for ignore_rule in self.ignore_rules:
-            if rule_id.startswith(ignore_rule) and ignore_rule:
-                return False
-
-        return True
+        return rule.is_enabled(self.include_experimental, self.ignore_rules,
+                               self.include_rules, self.mandatory_rules)
 
     def run_check(self, check, filename, rule_id, *args):
         """ Run a check """
@@ -208,7 +214,7 @@ class RulesCollection(object):
             LOGGER.debug(str(err))
             return []
         except Exception as err:  # pylint: disable=W0703
-            if self.is_rule_enabled('E0002', False):
+            if self.is_rule_enabled(RuleError()):
                 # In debug mode, print the error include complete stack trace
                 if LOGGER.getEffectiveLevel() == logging.DEBUG:
                     error_message = traceback.format_exc()
