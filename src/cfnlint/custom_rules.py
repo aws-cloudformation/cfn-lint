@@ -27,8 +27,7 @@ def check(filename, template, rules, runner):
                 try:
                     resource_properties = template.get_resource_properties([rule.resourceType])
                     result = Operator[rule.operator](template, rule, resource_properties)
-                    if result.message != rule.operator:
-                        matches.append(result)
+                    matches += result
                 except KeyError:
                     matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, cfnlint.customRules.Operators.CustomRule('C9999'),
                                                        str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))

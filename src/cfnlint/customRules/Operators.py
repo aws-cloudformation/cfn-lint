@@ -8,13 +8,13 @@ from cfnlint.rules import Match
 
 def equalsOp(template, rule, propertyList):
     """ Process EQUALS operators """
-
+    matches = []
     if not propertyList:
-        return Match(
+        matches.append(Match(
             1, 1,
             1, 1,
             template.filename, CustomRule('E9200'),
-            rule.operator, None)  # Resource type not found
+            rule.operator, None))  # Resource type not found
 
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
@@ -23,21 +23,17 @@ def equalsOp(template, rule, propertyList):
             path = path + rule.prop.split('.')
             linenumbers = template.get_location_yaml(template.template, path)
             if linenumbers:
-                return Match(
+                matches.append(Match(
                     linenumbers[0] + 1, linenumbers[1] + 1,
                     linenumbers[2] + 1, linenumbers[3] + 1,
                     template.filename, CustomRule('E9201'),
-                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
-            return Match(
+                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None))
+            matches.append(Match(
                 1, 1,
                 1, 1,
                 template.filename, CustomRule('E9201'),
-                'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None)
-    return Match(
-        1, 1,
-        1, 1,
-        template.filename, CustomRule('E9202'),
-        rule.operator, None)
+                'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None))
+    return matches
 
 
 def getProperty(json, rule):

@@ -53,7 +53,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
     if build_graph:
         template_obj.build_graph()
 
-    return custom_matches + run_checks(filename, regions, runner)
+    return custom_matches + run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
@@ -181,7 +181,7 @@ def get_template_rules(filename, args):
     return (template, rules, [])
 
 
-def run_checks(filename, regions, runner):
+def run_checks(filename, template, rules, regions, mandatory_rules=None):
     """Run Checks against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
@@ -192,6 +192,7 @@ def run_checks(filename, regions, runner):
 
     matches = []
 
+    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     # Only do rule analysis if Transform was successful
     if not matches:
@@ -202,4 +203,4 @@ def run_checks(filename, regions, runner):
             UnexpectedRuleException(msg, 1)
     matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return (matches)
+    return(matches)
