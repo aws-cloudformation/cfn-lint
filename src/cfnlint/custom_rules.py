@@ -29,8 +29,11 @@ def check(filename, template, rules, runner):
                     result = Operator[rule.operator](template, rule, resource_properties)
                     matches += result
                 except KeyError:
-                    matches.append(cfnlint.rules.Match(line_number, '0', '0', '0', filename, cfnlint.customRules.Operators.CustomRule('C9999'),
-                                                       str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
+                    matches.append(cfnlint.rules.Match(
+                        1, 1,
+                        1, 1,
+                        template.filename, cfnlint.customRules.Operators.CustomRule('E9999'),
+                        str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
             line_number += 1
     arg_matches = []
     for match in matches:

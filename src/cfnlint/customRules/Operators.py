@@ -9,12 +9,6 @@ from cfnlint.rules import Match
 def equalsOp(template, rule, propertyList):
     """ Process EQUALS operators """
     matches = []
-    if not propertyList:
-        matches.append(Match(
-            1, 1,
-            1, 1,
-            template.filename, CustomRule('E9200'),
-            rule.operator, None))  # Resource type not found
 
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
