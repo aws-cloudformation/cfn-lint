@@ -27,8 +27,8 @@ def check(filename, template, rules, runner):
             if rule.valid and rule.resourceType[0] != '#':
                 try:
                     resource_properties = template.get_resource_properties([rule.resourceType])
-                    result = Operator[rule.operator](template, rule, resource_properties)
-                    matches += result
+                    operator_result = Operator[rule.operator](template, rule, resource_properties)
+                    matches += operator_result
                 except KeyError:
                     matches.append(cfnlint.rules.Match(
                         1, 1,
@@ -40,4 +40,4 @@ def check(filename, template, rules, runner):
     for match in matches:
         if rules.is_rule_enabled(match.rule.id, False):
             arg_matches.append(match)
-    return runner.check_directives(arg_matches)
+    return runner.check_metadata_directives(arg_matches)
