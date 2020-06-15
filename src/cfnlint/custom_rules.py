@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=W0108
+# pylint: disable=W0622
 
 import logging
 import cfnlint
@@ -12,7 +13,7 @@ import cfnlint.customRules.Rule
 
 LOGGER = logging.getLogger(__name__)
 Operator = {'EQUALS': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
-            'PLACEHOLDER': lambda x, y: LOGGER.debug('Placeholder Op')}
+            'PLACEHOLDER': lambda x, y, z: LOGGER.debug('Placeholder Op')}
 
 def check(filename, template, rules, runner):
     """ Process custom rule file """
@@ -40,6 +41,3 @@ def check(filename, template, rules, runner):
         if rules.is_rule_enabled(match.rule.id, False):
             arg_matches.append(match)
     return runner.check_directives(arg_matches)
-
-def match_helper(id):
-    return cfnlint.rules.Match(1, '0', '0', '0', 'filename', cfnlint.customRules.Operators.CustomRule(id), 'result', None)
