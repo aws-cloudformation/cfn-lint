@@ -22,11 +22,12 @@ def equalsOp(template, rule, propertyList):
                     linenumbers[2] + 1, linenumbers[3] + 1,
                     template.filename, CustomRule('E9201'),
                     'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None))
-            matches.append(Match(
-                1, 1,
-                1, 1,
-                template.filename, CustomRule('E9201'),
-                'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None))
+            else:
+                matches.append(Match(
+                    1, 1,
+                    1, 1,
+                    template.filename, CustomRule('E9201'),
+                    'Not Equal as ' + actualValue + ' does not equal ' + rule.value, None))
     return matches
 
 
