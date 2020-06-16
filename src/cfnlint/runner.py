@@ -49,7 +49,9 @@ class Runner(object):
             matches.extend(
                 self.rules.run(
                     self.filename, self.cfn))
+        return self.check_metadata_directives(matches)
 
+    def check_metadata_directives(self, matches):
         # uniq the list of incidents and filter out exceptions from the template
         directives = self.cfn.get_directives()
         return_matches = []
