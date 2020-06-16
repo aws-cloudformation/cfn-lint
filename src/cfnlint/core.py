@@ -44,7 +44,9 @@ class UnexpectedRuleException(CfnLintExitException):
 def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
     """Process args and run"""
     template_obj = Template(filename, template, regions)
-    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj)
+    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
+
+    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj, rules, runner)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -96,7 +98,8 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
+def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
+              mandatory_rules=None):
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -154,14 +157,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return(config, [None], formatter)
+        return (config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return(config, config.templates, formatter)
+    return (config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
