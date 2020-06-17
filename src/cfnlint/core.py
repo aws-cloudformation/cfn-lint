@@ -10,7 +10,7 @@ from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import RulesCollection, ParseError
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -161,9 +161,15 @@ def get_template_rules(filename, args):
     if args.ignore_bad_template:
         ignore_bad_template = True
     else:
-        for ignore_check in args.ignore_checks:
-            if ignore_check == 'E0000' or 'E0000'.startswith(ignore_check):
-                ignore_bad_template = True
+        # There is no collection at this point so we need to handle this
+        # check directly
+        if not ParseError().is_enabled(
+                include_experimental=False,
+                ignore_rules=args.ignore_checks,
+                include_rules=args.include_checks,
+                mandatory_rules=args.mandatory_checks,
+        ):
+            ignore_bad_template = True
 
     (template, errors) = cfnlint.decode.decode(filename)
 

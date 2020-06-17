@@ -176,7 +176,10 @@ class RulesCollection(object):
         self.configure_rules = configure_rules or []
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
-        self.include_rules.extend(['W', 'E'])
+        # Have to add W, E here because integrations don't use config
+        for default_rule in ['W', 'E']:
+            if default_rule not in self.include_rules:
+                self.include_rules.extend([default_rule])
 
     def register(self, rule):
         """Register rules"""
