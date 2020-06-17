@@ -19,7 +19,7 @@ def approaching_name_limit(cfn, section):
 
 def approaching_number_limit(cfn, section):
     matches = []
-    number = cfn.template.get(section, {})
+    number = cfn.get_resources() if section == 'Resources' else cfn.template.get(section, {})
     if LIMITS['threshold'] * LIMITS[section]['number'] < len(number) <= LIMITS[section]['number']:
         message = 'The number of ' + section + ' ({0}) is approaching the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
@@ -37,7 +37,7 @@ def name_limit(cfn, section):
 
 def number_limit(cfn, section):
     matches = []
-    number = cfn.template.get(section, {})
+    number = cfn.get_resources() if section == 'Resources' else cfn.template.get(section, {})
     if len(number) > LIMITS[section]['number']:
         message = 'The number of ' + section + ' ({0}) exceeds the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
