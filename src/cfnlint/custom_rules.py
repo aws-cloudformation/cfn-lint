@@ -20,11 +20,11 @@ Operator = {'EQUALS': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, 
 def check(filename, template, rules, runner):
     """ Process custom rule file """
     matches = []
+
     with open(filename) as customRules:
         line_number = 1
         for line in customRules:
             LOGGER.debug('Processing Custom Rule Line %d', line_number)
-            line = line.replace('"', '')
             rule = cfnlint.customRules.Rule.make_rule(line, line_number)
             if rule.valid and rule.resourceType[0] != '#':
                 try:

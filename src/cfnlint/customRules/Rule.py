@@ -23,6 +23,7 @@ class Rule(object):
     error_message = ''
 
     def __init__(self, line, lineNumber, ruleSet):
+        line = line.replace('"', '')
         self.lineNumber = lineNumber
         self.valid = False
         self.ruleSet = ruleSet
