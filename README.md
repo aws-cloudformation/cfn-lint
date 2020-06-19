@@ -30,7 +30,7 @@ _To get information about the SAM Transformation, run the linter with `--info`_
 
 Python 2.7+ and 3.4+ are supported.
 
-### Pip Install
+### Pip
 
 `pip install cfn-lint`. If pip is not available, run
 `python setup.py clean --all` then `python setup.py install`.
@@ -39,7 +39,7 @@ Python 2.7+ and 3.4+ are supported.
 
 `brew install cfn-lint`
 
-### Docker install/run
+### Docker
 
 In `cfn-python-lint` source tree:
 
@@ -76,14 +76,12 @@ There are IDE plugins available to get direct linter feedback from you favorite 
 - `cfn-lint template.yaml`
 - `cfn-lint -t template.yaml`
 
-##### Lint multiple files
-
 Multiple files can be linted by either specifying multiple specific files:
 
 - `cfn-lint template1.yaml template2.yaml`
 - `cfn-lint -t template1.yaml template2.yaml`
 
-or by using wildcards (globbing). For example:
+or by using wildcards (globbing):
 
 Lint all `yaml` files in `path`:
 
@@ -91,7 +89,7 @@ Lint all `yaml` files in `path`:
 
 Lint all `yaml` files in `path` and all subdirectories (recursive):
 
-- `cfn-lint path/to/templates/**/*.yaml`
+- `cfn-lint path/**/*.yaml`
 
 *Note*: Glob in Python 3.5 supports recursive searching `**/*.yaml`.  If you are using an earlier version of Python you will have to handle this manually (`folder1/*.yaml`, `folder2/*.yaml`, etc).
 
@@ -110,7 +108,7 @@ The template to be linted can also be passed using standard input:
 
 ### Command Line
 
-From a command prompt run `cfn-lint <path to yaml template>` to run standard linting of the template.
+From a command prompt run `cfn-lint <path to template>` to run standard linting of the template.
 
 ### Config File
 
@@ -179,7 +177,7 @@ Metadata:
 ```
 
 #### Resource Based Metadata
-Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs. Keep in mind that resources may lose metadata when passed through aws-sam-translator, such as `AWS::Serverless::Function` resources.
+Inside a resources Metadata key you can configure cfn-lint to ignore checks.  This will filter out failures for the resource in which the Metadata belongs. Keep in mind that [`AWS::Serverless` resources may lose metadata during the Serverless transform](https://github.com/awslabs/serverless-application-model/issues/450#issuecomment-643420308)
 
 ```yaml
 Resources:
@@ -226,7 +224,7 @@ There are [getting started guides](/docs/getting_started) available in the docum
 
 ## Rules
 
-This linter checks the CloudFormation template by processing a collection of Rules, where every rules handles a specific function check or validation of the template.
+This linter checks the CloudFormation template by processing a collection of Rules, where every rule handles a specific function check or validation of the template.
 
 This collection of rules can be extended with custom rules using the `--append-rules` argument.
 
