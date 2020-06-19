@@ -75,12 +75,12 @@ def NotInSetOp(template, rule, propertyList):
 def addMatches(template, rule, actualValue, prop, defaultMessage):
     path = prop['Path']
     path = path + rule.prop.split('.')
-    linenumbers = template.get_location_yaml(template.template, path)
     message = ''
     if not rule.error_message:
         message = defaultMessage + ' comparing ' + actualValue + ' and ' + rule.value
     else:
         message = rule.error_message
+    linenumbers = template.get_location_yaml(template.template, path)
     if linenumbers:
         return Match(
             linenumbers[0] + 1, linenumbers[1] + 1,
