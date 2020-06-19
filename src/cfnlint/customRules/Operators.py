@@ -31,7 +31,7 @@ def greaterOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip().isnumeric() and str(rule.value).strip().isnumeric():
+        if checkInt(actualValue.strip()) and checkInt(str(rule.value).strip()):
             if actualValue.strip().lower() < str(rule.value).strip().lower():
                 matches.append(addMatches(template, rule, actualValue, prop, 'Greater than check failed'))
         else:
@@ -44,7 +44,7 @@ def lessOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip().isnumeric() and str(rule.value).strip().isnumeric():
+        if checkInt(actualValue.strip()) and checkInt(str(rule.value).strip()):
             if int(actualValue.strip()) > int(str(rule.value).strip()):
                 matches.append(addMatches(template, rule, actualValue, prop, 'Less than check failed'))
         else:
@@ -108,6 +108,14 @@ def getProperty(json, rule):
             return rule.value  # Property type not found
     return str(json)
 
+
+def checkInt(i):
+    """ Python 2.7 Compatibility - There is no isnumeric() method """
+    try:
+        int(i)
+        return True
+    except ValueError:
+        return False
 
 class CustomRule(object):
     """ Allows creation of match objects"""
