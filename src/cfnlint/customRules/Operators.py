@@ -57,7 +57,7 @@ def InSetOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip() not in rule.ruleSet:
+        if actualValue.strip() not in rule.value:
             matches.append(addMatches(template, rule, actualValue, prop, 'In set check failed'))
     return matches
 
@@ -67,7 +67,7 @@ def NotInSetOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip() in rule.ruleSet:
+        if actualValue.strip() in rule.value:
             matches.append(addMatches(template, rule, actualValue, prop, 'Not in set check failed'))
     return matches
 

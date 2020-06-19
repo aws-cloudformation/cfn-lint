@@ -19,12 +19,11 @@ class Rule(object):
     value = ''
     lineNumber = 0
     error_level = 'W'
-    ruleSet = []
     error_message = ''
 
-    def __init__(self, line, lineNumber, ruleSet):
+    def __init__(self, line, ruleNumber, ruleSet):
         line = line.replace('"', '')
-        self.lineNumber = lineNumber
+        self.lineNumber = ruleNumber
         self.valid = False
         self.ruleSet = ruleSet
         line = line.split(' ', 3)
@@ -45,16 +44,16 @@ class Rule(object):
         self.lineNumber = str(self.lineNumber).zfill(4)
 
     def set_arguments(self, argument, error):
-        values = argument.split(error)
-        self.value = values[0].strip()
-        self.process_sets(values[0])
-        if len(values) > 1:
-            self.error_message = values[1]
+        raw_value = argument.split(error)
+        self.value = raw_value[0].strip()
+        self.process_sets(raw_value[0])
+        if len(raw_value) > 1:
+            self.error_message = raw_value[1]
 
-    def process_sets(self, value):
-        if len(value) > 1 and value[0] == '[' and (value[-2] == ']' or value[-1] == ']'):
-            value = value[1:-2]
-            value = value.split(',')
-            for x in value:
+    def process_sets(self, raw_value):
+        if len(raw_value) > 1 and raw_value[0] == '[' and (raw_value[-2] == ']' or raw_value[-1] == ']'):
+            raw_value = raw_value[1:-2]
+            raw_value = raw_value.split(',')
+            for x in raw_value:
                 x = x.strip()
-            self.ruleSet = value
+            self.value = raw_value
