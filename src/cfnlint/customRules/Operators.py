@@ -26,6 +26,32 @@ def notEqualsOp(template, rule, propertyList):
     return matches
 
 
+def greaterOp(template, rule, propertyList):
+    """ Process >= operators """
+    matches = []
+    for prop in propertyList:
+        actualValue = getProperty(prop, rule)
+        if actualValue.strip().isnumeric() and str(rule.value).strip().isnumeric():
+            if actualValue.strip().lower() < str(rule.value).strip().lower():
+                matches.append(addMatches(template, rule, actualValue, prop, 'Greater than check failed'))
+        else:
+            matches.append(addMatches(template, rule, actualValue, prop, 'Given values are not numeric'))
+    return matches
+
+
+def lessOp(template, rule, propertyList):
+    """ Process <= operators """
+    matches = []
+    for prop in propertyList:
+        actualValue = getProperty(prop, rule)
+        if actualValue.strip().isnumeric() and str(rule.value).strip().isnumeric():
+            if int(actualValue.strip()) > int(str(rule.value).strip()):
+                matches.append(addMatches(template, rule, actualValue, prop, 'Less than check failed'))
+        else:
+            matches.append(addMatches(template, rule, actualValue, prop, 'Given values are not numeric'))
+    return matches
+
+
 def InSetOp(template, rule, propertyList):
     """ Process INSET operators """
     matches = []

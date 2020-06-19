@@ -37,6 +37,8 @@ class TestCustomRuleParsing(BaseTestCase):
         self.invalid_not_equal = 'test/fixtures/custom_rules/bad/custom_rule_invalid_not_equal.txt'
         self.invalid_set = 'test/fixtures/custom_rules/bad/custom_rule_invalid_set.txt'
         self.invalid_not_set = 'test/fixtures/custom_rules/bad/custom_rule_invalid_not_set.txt'
+        self.invalid_greater_than = 'test/fixtures/custom_rules/bad/custom_rule_invalid_greater_than.txt'
+        self.invalid_less_than = 'test/fixtures/custom_rules/bad/custom_rule_invalid_less_than.txt'
 
     def test_perfect_parse(self):
         """Test Successful Custom_Rule Parsing"""
@@ -61,6 +63,14 @@ class TestCustomRuleParsing(BaseTestCase):
     def test_invalid_not_equal(self):
         """Test Successful Custom_Rule Parsing"""
         assert (self.run_tests(self.invalid_not_equal)[0].message.find('Must not equal') > -1)
+
+    def test_invalid_greater_than(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_greater_than)[0].message.find('Greater than check') > -1)
+
+    def test_invalid_less_than(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (self.run_tests(self.invalid_less_than)[0].message.find('Less than check') > -1)
 
     def test_invalid_prop(self):
         """Test Successful Custom_Rule Parsing"""

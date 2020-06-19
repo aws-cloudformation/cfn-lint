@@ -14,8 +14,12 @@ import cfnlint.customRules.Rule
 LOGGER = logging.getLogger(__name__)
 Operator = {'EQUALS': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
             'NOT_EQUALS': lambda x, y, z: cfnlint.customRules.Operators.notEqualsOp(x, y, z),
+            '==': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
+            '!=': lambda x, y, z: cfnlint.customRules.Operators.notEqualsOp(x, y, z),
             'IN': lambda x, y, z: cfnlint.customRules.Operators.InSetOp(x, y, z),
-            'NOT_IN': lambda x, y, z: cfnlint.customRules.Operators.NotInSetOp(x, y, z)}
+            'NOT_IN': lambda x, y, z: cfnlint.customRules.Operators.NotInSetOp(x, y, z),
+            '>=': lambda x, y, z: cfnlint.customRules.Operators.greaterOp(x, y, z),
+            '<=': lambda x, y, z: cfnlint.customRules.Operators.lessOp(x, y, z)}
 
 def check(filename, template, rules, runner):
     """ Process custom rule file """
