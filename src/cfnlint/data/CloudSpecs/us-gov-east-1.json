@@ -5701,19 +5701,19 @@
         }
       }
     },
-    "AWS::ECS::Cluster.ClusterSetting": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersetting.html",
+    "AWS::ECS::Cluster.ClusterSettings": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersettings.html",
       "Properties": {
         "Name": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersetting.html#cfn-ecs-cluster-clustersetting-name",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersettings.html#cfn-ecs-cluster-clustersettings-name",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Value": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersetting.html#cfn-ecs-cluster-clustersetting-value",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersettings.html#cfn-ecs-cluster-clustersettings-value",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -9472,7 +9472,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticsearch-domain-elasticsearchclusterconfig.html#cfn-elasticsearch-domain-elasticseachclusterconfig-instnacetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "ElasticsearchInstanceType"
+          }
         },
         "ZoneAwarenessConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticsearch-domain-elasticsearchclusterconfig.html#cfn-elasticsearch-domain-elasticsearchclusterconfig-zoneawarenessconfig",
@@ -12029,13 +12032,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-inventoryconfiguration.html#cfn-s3-bucket-inventoryconfiguration-id",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketInventoryId"
+          }
         },
         "IncludedObjectVersions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-inventoryconfiguration.html#cfn-s3-bucket-inventoryconfiguration-includedobjectversions",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketInventoryIncludedObjectVersions"
+          }
         },
         "OptionalFields": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-inventoryconfiguration.html#cfn-s3-bucket-inventoryconfiguration-optionalfields",
@@ -12055,7 +12064,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-inventoryconfiguration.html#cfn-s3-bucket-inventoryconfiguration-schedulefrequency",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "S3BucketInventoryScheduleFrequency"
+          }
         }
       }
     },
@@ -12781,6 +12793,12 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
+        },
+        "OutputS3Region": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-s3outputlocation.html#cfn-ssm-association-s3outputlocation-outputs3region",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -12791,15 +12809,14 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-key",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Values": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-association-target.html#cfn-ssm-association-target-values",
-          "DuplicatesAllowed": false,
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -13082,7 +13099,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "14.2.0",
+  "ResourceSpecificationVersion": "14.4.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -16666,6 +16683,12 @@
           "Type": "MongoDbSettings",
           "UpdateType": "Mutable"
         },
+        "NeptuneSettings": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-endpoint.html#cfn-dms-endpoint-neptunesettings",
+          "Required": false,
+          "Type": "NeptuneSettings",
+          "UpdateType": "Mutable"
+        },
         "Password": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-endpoint.html#cfn-dms-endpoint-password",
           "PrimitiveType": "String",
@@ -16962,6 +16985,12 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable"
+        },
+        "TaskData": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dms-replicationtask.html#cfn-dms-replicationtask-taskdata",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -19492,15 +19521,13 @@
         },
         "ClusterSettings": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html#cfn-ecs-cluster-clustersettings",
-          "DuplicatesAllowed": false,
-          "ItemType": "ClusterSetting",
+          "ItemType": "ClusterSettings",
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html#cfn-ecs-cluster-tags",
-          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -19952,6 +19979,161 @@
         }
       }
     },
+    "AWS::EKS::Cluster": {
+      "Attributes": {
+        "Arn": {
+          "PrimitiveType": "String"
+        },
+        "CertificateAuthorityData": {
+          "PrimitiveType": "String"
+        },
+        "ClusterSecurityGroupId": {
+          "PrimitiveType": "String"
+        },
+        "EncryptionConfigKeyArn": {
+          "PrimitiveType": "String"
+        },
+        "Endpoint": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html",
+      "Properties": {
+        "EncryptionConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-encryptionconfig",
+          "ItemType": "EncryptionConfig",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "ResourcesVpcConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-resourcesvpcconfig",
+          "Required": true,
+          "Type": "ResourcesVpcConfig",
+          "UpdateType": "Immutable"
+        },
+        "RoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-rolearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "Version": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-version",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::EKS::Nodegroup": {
+      "Attributes": {
+        "Arn": {
+          "PrimitiveType": "String"
+        },
+        "ClusterName": {
+          "PrimitiveType": "String"
+        },
+        "NodegroupName": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html",
+      "Properties": {
+        "AmiType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-amitype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "ClusterName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-clustername",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "DiskSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-disksize",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "ForceUpdateEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-forceupdateenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "InstanceTypes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-instancetypes",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "Labels": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-labels",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "NodeRole": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-noderole",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "NodegroupName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-nodegroupname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "ReleaseVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-releaseversion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RemoteAccess": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-remoteaccess",
+          "Required": false,
+          "Type": "RemoteAccess",
+          "UpdateType": "Immutable"
+        },
+        "ScalingConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-scalingconfig",
+          "Required": false,
+          "Type": "ScalingConfig",
+          "UpdateType": "Mutable"
+        },
+        "Subnets": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-subnets",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-tags",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Version": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-version",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::EMR::Cluster": {
       "Attributes": {
         "MasterPublicDNS": {
@@ -20189,7 +20371,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-instancegroupconfig.html#cfn-emr-instancegroupconfig-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "EMRInstanceType"
+          }
         },
         "JobFlowId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-instancegroupconfig.html#cfn-emr-instancegroupconfig-jobflowid",
@@ -20290,7 +20475,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-cache-cluster.html#cfn-elasticache-cachecluster-cachenodetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "ElastiCacheInstanceType"
+          }
         },
         "CacheParameterGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-cache-cluster.html#cfn-elasticache-cachecluster-cacheparametergroupname",
@@ -20496,7 +20684,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-replicationgroup.html#cfn-elasticache-replicationgroup-cachenodetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "ElastiCacheInstanceType"
+          }
         },
         "CacheParameterGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-replicationgroup.html#cfn-elasticache-replicationgroup-cacheparametergroupname",
@@ -23920,8 +24111,26 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "RestoreToTime": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-restoretotime",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "RestoreType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-restoretype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
         "SnapshotIdentifier": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-snapshotidentifier",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "SourceDBClusterIdentifier": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-sourcedbclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Immutable"
@@ -23938,6 +24147,12 @@
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        },
+        "UseLatestRestorableTime": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-uselatestrestorabletime",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Immutable"
         },
         "VpcSecurityGroupIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-neptune-dbcluster.html#cfn-neptune-dbcluster-vpcsecuritygroupids",
@@ -25901,10 +26116,27 @@
       }
     },
     "AWS::SSM::Association": {
+      "Attributes": {
+        "AssociationId": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html",
       "Properties": {
         "AssociationName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-associationname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "AutomationTargetParameterName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-automationtargetparametername",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ComplianceSeverity": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-complianceseverity",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -25919,13 +26151,25 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-instanceid",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
+        },
+        "MaxConcurrency": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxconcurrency",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "MaxErrors": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-maxerrors",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-name",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "OutputLocation": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-outputlocation",
@@ -25935,7 +26179,6 @@
         },
         "Parameters": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters",
-          "DuplicatesAllowed": false,
           "ItemType": "ParameterValues",
           "Required": false,
           "Type": "Map",
@@ -25947,13 +26190,24 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "SyncCompliance": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Targets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-targets",
-          "DuplicatesAllowed": false,
           "ItemType": "Target",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
+        },
+        "WaitForSuccessTimeoutSeconds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-waitforsuccesstimeoutseconds",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -26043,6 +26297,12 @@
       "Properties": {
         "AllowedPattern": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-allowedpattern",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DataType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html#cfn-ssm-parameter-datatype",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -26262,6 +26522,12 @@
           "ItemType": "ProvisioningArtifactProperties",
           "Required": true,
           "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "ReplaceProvisioningArtifacts": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-cloudformationproduct.html#cfn-servicecatalog-cloudformationproduct-replaceprovisioningartifacts",
+          "PrimitiveType": "Boolean",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "SupportDescription": {
@@ -26774,10 +27040,22 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html",
       "Properties": {
+        "DefinitionS3Location": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitions3location",
+          "Required": false,
+          "Type": "S3Location",
+          "UpdateType": "Mutable"
+        },
         "DefinitionString": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionstring",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DefinitionSubstitutions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
+          "Required": false,
+          "Type": "DefinitionSubstitutions",
           "UpdateType": "Mutable"
         },
         "LoggingConfiguration": {
@@ -28586,6 +28864,7 @@
         "AUTO_STOP"
       ]
     },
+    "AppStreamInstanceType": {},
     "AvailabilityZone": {
       "GetAtt": {
         "AWS::EC2::Instance": "AvailabilityZone",
@@ -28608,6 +28887,7 @@
         ]
       }
     },
+    "BlockchainInstanceType": {},
     "CertificateValidationMethod": {
       "AllowedValues": [
         "DNS",
@@ -28824,6 +29104,62 @@
       "AllowedValues": [
         "bursting",
         "provisioned"
+      ]
+    },
+    "EMRInstanceType": {
+      "AllowedValues": [
+        "c5.18xlarge",
+        "c5.2xlarge",
+        "c5.4xlarge",
+        "c5.9xlarge",
+        "c5.xlarge",
+        "c5n.18xlarge",
+        "c5n.2xlarge",
+        "c5n.4xlarge",
+        "c5n.9xlarge",
+        "c5n.xlarge",
+        "d2.2xlarge",
+        "d2.4xlarge",
+        "d2.8xlarge",
+        "d2.xlarge",
+        "i3.16xlarge",
+        "i3.2xlarge",
+        "i3.4xlarge",
+        "i3.8xlarge",
+        "i3.xlarge",
+        "i3en.12xlarge",
+        "i3en.24xlarge",
+        "i3en.2xlarge",
+        "i3en.3xlarge",
+        "i3en.6xlarge",
+        "i3en.xlarge",
+        "m5.12xlarge",
+        "m5.16xlarge",
+        "m5.24xlarge",
+        "m5.2xlarge",
+        "m5.4xlarge",
+        "m5.8xlarge",
+        "m5.xlarge",
+        "m5a.16xlarge",
+        "m5a.8xlarge",
+        "m5d.16xlarge",
+        "m5d.8xlarge",
+        "r5.12xlarge",
+        "r5.16xlarge",
+        "r5.24xlarge",
+        "r5.2xlarge",
+        "r5.4xlarge",
+        "r5.8xlarge",
+        "r5.xlarge",
+        "r5a.16xlarge",
+        "r5a.8xlarge",
+        "r5d.12xlarge",
+        "r5d.16xlarge",
+        "r5d.24xlarge",
+        "r5d.2xlarge",
+        "r5d.4xlarge",
+        "r5d.8xlarge",
+        "r5d.xlarge"
       ]
     },
     "EbsIops": {
@@ -29084,6 +29420,28 @@
         "APPMESH"
       ]
     },
+    "ElastiCacheInstanceType": {
+      "AllowedValues": [
+        "cache.m5.12xlarge",
+        "cache.m5.24xlarge",
+        "cache.m5.2xlarge",
+        "cache.m5.4xlarge",
+        "cache.m5.large",
+        "cache.m5.xlarge",
+        "cache.r5.12xlarge",
+        "cache.r5.24xlarge",
+        "cache.r5.2xlarge",
+        "cache.r5.4xlarge",
+        "cache.r5.large",
+        "cache.r5.xlarge",
+        "cache.t2.medium",
+        "cache.t2.micro",
+        "cache.t2.small",
+        "cache.t3.medium",
+        "cache.t3.micro",
+        "cache.t3.small"
+      ]
+    },
     "ElasticInferenceAccelerator": {
       "AllowedValues": [
         "eia1.large",
@@ -29091,6 +29449,44 @@
         "eia1.xlarge"
       ]
     },
+    "ElasticsearchInstanceType": {
+      "AllowedValues": [
+        "c5.18xlarge.elasticsearch",
+        "c5.2xlarge.elasticsearch",
+        "c5.4xlarge.elasticsearch",
+        "c5.9xlarge.elasticsearch",
+        "c5.large.elasticsearch",
+        "c5.xlarge.elasticsearch",
+        "i3.16xlarge.elasticsearch",
+        "i3.2xlarge.elasticsearch",
+        "i3.4xlarge.elasticsearch",
+        "i3.8xlarge.elasticsearch",
+        "i3.large.elasticsearch",
+        "i3.xlarge.elasticsearch",
+        "m5.12xlarge.elasticsearch",
+        "m5.2xlarge.elasticsearch",
+        "m5.4xlarge.elasticsearch",
+        "m5.large.elasticsearch",
+        "m5.xlarge.elasticsearch",
+        "r4.16xlarge.elasticsearch",
+        "r4.2xlarge.elasticsearch",
+        "r4.4xlarge.elasticsearch",
+        "r4.8xlarge.elasticsearch",
+        "r4.large.elasticsearch",
+        "r4.xlarge.elasticsearch",
+        "r5.12xlarge.elasticsearch",
+        "r5.2xlarge.elasticsearch",
+        "r5.4xlarge.elasticsearch",
+        "r5.large.elasticsearch",
+        "r5.xlarge.elasticsearch",
+        "t2.medium.elasticsearch",
+        "t2.micro.elasticsearch",
+        "t2.small.elasticsearch",
+        "ultrawarm1.large.elasticsearch",
+        "ultrawarm1.medium.elasticsearch"
+      ]
+    },
+    "GameLiftInstanceType": {},
     "HttpProtocol": {
       "AllowedValues": [
         "http",
@@ -29245,12 +29641,12 @@
     },
     "NeptuneInstanceClass": {
       "AllowedValues": [
-        "db.r5.12xl",
-        "db.r5.2xl",
-        "db.r5.4xl",
-        "db.r5.8xl",
+        "db.r5.12xlarge",
+        "db.r5.2xlarge",
+        "db.r5.4xlarge",
+        "db.r5.8xlarge",
         "db.r5.large",
-        "db.r5.xl",
+        "db.r5.xlarge",
         "db.t3.medium"
       ],
       "Ref": {
@@ -29532,6 +29928,24 @@
         "Private",
         "PublicRead",
         "PublicReadWrite"
+      ]
+    },
+    "S3BucketInventoryId": {
+      "AllowedPattern": "[a-zA-Z0-9.-_]+",
+      "AllowedPatternRegex": "^[a-zA-Z0-9-_.]+$",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "S3BucketInventoryIncludedObjectVersions": {
+      "AllowedValues": [
+        "All",
+        "Current"
+      ]
+    },
+    "S3BucketInventoryScheduleFrequency": {
+      "AllowedValues": [
+        "Daily",
+        "Weekly"
       ]
     },
     "S3BucketSSEAlgorithm": {
