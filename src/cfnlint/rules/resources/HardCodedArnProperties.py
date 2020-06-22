@@ -1,5 +1,5 @@
 """
-Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
@@ -9,7 +9,7 @@ from cfnlint.rules import RuleMatch
 
 class HardCodedArnProperties(CloudFormationLintRule):
     """Checks Resources if ARNs use correctly placed Pseudo Parameters instead of hardcoded Partition, Region, and Account Number"""
-    id = 'W3042'
+    id = 'I3042'
     shortdesc = 'ARNs should use correctly placed Pseudo Parameters'
     description = 'Checks Resources if ARNs use correctly placed Pseudo Parameters instead of hardcoded Partition, Region, and Account Number'
     source_url = ''
@@ -18,7 +18,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Resources"""
         matches = []
-        pattern = re.compile('arn:(\$\{[^:]*::[^:]*}|[^:]*):[^:]+:(\$\{[^:]*::[^:]*}|[^:]*):(\$\{[^:]*::[^:]*}|[^:]*)')
+        pattern = re.compile(r'arn:(\$\{[^:]*::[^:]*}|[^:]*):[^:]+:(\$\{[^:]*::[^:]*}|[^:]*):(\$\{[^:]*::[^:]*}|[^:]*)')
         resources = cfn.template.get('Resources', {})
         if resources:
             for resourcename, val  in resources.items():
