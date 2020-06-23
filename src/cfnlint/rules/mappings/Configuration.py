@@ -16,8 +16,6 @@ class Configuration(CloudFormationLintRule):
     tags = ['mappings']
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
-
         matches = []
 
         valid_map_types = (six.string_types, list, six.integer_types, float)

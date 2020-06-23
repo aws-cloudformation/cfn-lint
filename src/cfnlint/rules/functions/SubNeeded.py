@@ -107,8 +107,6 @@ class SubNeeded(CloudFormationLintRule):
         return False
 
     def match(self, cfn):
-        """Basic Rule Matching"""
-
         matches = []
 
         # Get a list of paths to every leaf node string containing at least one ${parameter}

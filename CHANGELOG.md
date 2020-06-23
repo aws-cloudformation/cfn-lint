@@ -1,3 +1,13 @@
+### v0.33.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 15.1.0 (pull #[1593](https://github.com/aws-cloudformation/cfn-python-lint/pull/1593))
+- Add additional allowed values for `AWS::SecretsManager::SecretTargetAttachment.TargetType` (pull #[1573](https://github.com/aws-cloudformation/cfn-python-lint/pull/1573))
+- Add property types for `AvailabilityZone` in the `AWS::DMS::ReplicationInstance` and `AWS::EC2::Subnet` resources (pull #[1585](https://github.com/aws-cloudformation/cfn-python-lint/pull/1585))
+- Expand allowed values for `AWS::CodeBuild::Project.Environment.Type` (pull #[1589](https://github.com/aws-cloudformation/cfn-python-lint/pull/1589))
+###### Fixes
+- Update rule [E2004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2004) to not check AllowedValues when the Type is `AWS::SSM::Parameter::Value<String>` (pull #[1571](https://github.com/aws-cloudformation/cfn-python-lint/pull/1571))
+- Update Transform logic to not update DefinitionUri to S3 when not using DefinitionUri originally (pull #[1576](https://github.com/aws-cloudformation/cfn-python-lint/pull/1576))
+
 ### v0.33.0
 ###### Features
 - Upgrade SAM Translator to v1.24.0 (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562))

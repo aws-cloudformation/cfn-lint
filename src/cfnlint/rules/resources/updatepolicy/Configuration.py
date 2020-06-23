@@ -202,8 +202,6 @@ class Configuration(CloudFormationLintRule):
         return matches
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
-
         matches = []
 
         for r_name, r_values in cfn.get_resources().items():

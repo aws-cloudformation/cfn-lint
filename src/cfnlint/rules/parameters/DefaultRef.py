@@ -15,8 +15,6 @@ class DefaultRef(CloudFormationLintRule):
     tags = ['parameters', 'ref']
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
-
         matches = []
 
         ref_objs = cfn.search_deep_keys('Ref')

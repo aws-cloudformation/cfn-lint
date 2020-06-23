@@ -17,8 +17,6 @@ class Configuration(CloudFormationLintRule):
     tags = ['resources']
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
-
         matches = []
 
         valid_attributes = [

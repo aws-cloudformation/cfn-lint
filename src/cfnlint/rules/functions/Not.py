@@ -15,8 +15,6 @@ class Not(CloudFormationLintRule):
     tags = ['functions', 'not']
 
     def match(self, cfn):
-        """Check CloudFormation GetAtt"""
-
         matches = []
 
         fnnots = cfn.search_deep_keys('Fn::Not')

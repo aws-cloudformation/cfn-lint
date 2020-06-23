@@ -16,8 +16,6 @@ class Select(CloudFormationLintRule):
     tags = ['functions', 'select']
 
     def match(self, cfn):
-        """Check CloudFormation Select"""
-
         matches = []
 
         select_objs = cfn.search_deep_keys('Fn::Select')

@@ -22,7 +22,7 @@ Parameters:
     Type: "String"
     Default: "production"
 Conditions:
-  IsProduction: !Equals [ !Ref Environment, "production" ]
+  IsProduction: !Equals [!Ref Environment, "production"]
 Resources:
   myS3Bucket:
     Type: AWS::S3::Bucket
@@ -39,30 +39,29 @@ Resources:
       BucketName: "my-bucket-name"
       CorsConfiguration:
         Fn::If:
-        - IsProduction
-        - CorsRules:
-            - AllowedOrigins:
-                - "*"
-            # Missing: AllowedHeaders
-        - CorsRules:
-            - AllowedOrigins:
-                - "*"
-              AllowedHeaders:
-              - Test
-              AllowedMethods:
-              - Get
+          - IsProduction
+          - CorsRules:
+              - AllowedOrigins:
+                  - "*"
+              # Missing: AllowedHeaders
+          - CorsRules:
+              - AllowedOrigins:
+                  - "*"
+                AllowedHeaders:
+                  - Test
+                AllowedMethods:
+                  - Get
   myConstraintSet:
     Type: "AWS::WAF::SizeConstraintSet"
     Properties:
       Fn::If:
-      - IsProduction
-      - SizeConstraints: 3
-      -
-        Fn::If:
         - IsProduction
-        - Name: Prod
-          SizeConstraints: 3
         - SizeConstraints: 3
+        - Fn::If:
+            - IsProduction
+            - Name: Prod
+              SizeConstraints: 3
+            - SizeConstraints: 3
   ApplicationLoadBalancerCertificate:
     Type: "AWS::CertificateManager::Certificate"
     Properties:
@@ -72,9 +71,8 @@ Resources:
           ValidationDomain: "example.com"
         - !If
           - AddCustomComain
-          -
-            DomainName: "*.customdomain.com"
-            # Missing: #ValidationDomain
+          - ValidationDomain: "example.com"
+            # Missing: #DomainName
           - !Ref "AWS::NoValue"
       SubjectAlternativeNames:
         - !If
@@ -89,8 +87,7 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal:
               Service:
                 - "codepipeline.amazonaws.com"
@@ -98,13 +95,11 @@ Resources:
               - "sts:AssumeRole"
       Path: /
       Policies:
-        -
-          PolicyName: "CodePipelineNestedCFNAccessPolicy"
+        - PolicyName: "CodePipelineNestedCFNAccessPolicy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "s3:DeleteObject"
                   - "s3:GetObject"
@@ -115,15 +110,13 @@ Resources:
                 Resource:
                   - Fn::Sub: arn:aws:s3:::${ArtifactStoreS3Location}
                   - Fn::Sub: arn:aws:s3:::${ArtifactStoreS3Location}/*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "sns:Publish"
                 Resource:
                   - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${UATTopic}
                   - Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${ProdTopic}
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "codecommit:ListBranches"
                   - "codecommit:ListRepositories"
@@ -134,8 +127,7 @@ Resources:
                 Resource:
                   - Fn::Sub: arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${CFNTemplateRepoName}
                   - Fn::Sub: arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${ValidateResourcesRepoName}
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "cloudformation:CreateChangeSet"
                   - "cloudformation:CreateStack"
@@ -150,8 +142,7 @@ Resources:
                   - Fn::Sub: arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Test-${AWS::StackName}*
                   - Fn::Sub: arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/UAT-${AWS::StackName}*
                   - Fn::Sub: arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Prod-${AWS::StackName}*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "codebuild:StartBuild"
                   - "codebuild:BatchGetBuilds"
@@ -160,8 +151,7 @@ Resources:
                   - Fn::Sub: arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:project/ValidateResource-${AWS::StackName}
                   - Fn::Sub: arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:build/BuildCopyCFN-${AWS::StackName}:*
                   - Fn::Sub: arn:aws:codebuild:${AWS::Region}:${AWS::AccountId}:build/ValidateResource-${AWS::StackName}:*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "iam:PassRole"
                 Resource:
@@ -175,8 +165,7 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal:
               Service:
                 - "cloudformation.amazonaws.com"
@@ -184,13 +173,11 @@ Resources:
               - "sts:AssumeRole"
       Path: /
       Policies:
-        -
-          PolicyName: "CloudFormationNestedCFNAccessPolicy"
+        - PolicyName: "CloudFormationNestedCFNAccessPolicy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "iam:AddRoleToInstanceProfile"
                   - "iam:AttachRolePolicy"
@@ -216,8 +203,7 @@ Resources:
                   - "iam:RemoveRoleFromInstanceProfile"
                 Resource:
                   - Fn::Sub: arn:aws:iam::${AWS::AccountId}:role/WebServerIAMRole-*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "ec2:Describe*"
                   - "ec2:CreateSecurityGroup"
@@ -228,8 +214,7 @@ Resources:
                   - "autoscaling:CreateLaunchConfiguration"
                 Resource:
                   - "*"
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "ec2:AttachNetworkInterface"
                   - "ec2:AttachVolume"
@@ -259,8 +244,7 @@ Resources:
                   - Fn::Sub: arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:security-group/*
                   - Fn::Sub: arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/*
                   - Fn::Sub: arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:volume/*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "iam:AddRoleToInstanceProfile"
                   - "iam:CreateInstanceProfile"
@@ -273,8 +257,7 @@ Resources:
                   - Fn::Sub: arn:aws:iam::${AWS::AccountId}:instance-profile/Test-${AWS::StackName}-SecurityStack*
                   - Fn::Sub: arn:aws:iam::${AWS::AccountId}:instance-profile/UAT-${AWS::StackName}-SecurityStack*
                   - Fn::Sub: arn:aws:iam::${AWS::AccountId}:instance-profile/Prod-${AWS::StackName}-SecurityStack*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "rds:AddTagsToResource"
                   - "rds:CreateDBInstance"
@@ -296,8 +279,7 @@ Resources:
                   - Fn::Sub: arn:aws:rds:${AWS::Region}:${AWS::AccountId}:pg:*
                   - Fn::Sub: arn:aws:rds:${AWS::Region}:${AWS::AccountId}:secgrp:*
                   - Fn::Sub: arn:aws:rds:${AWS::Region}:${AWS::AccountId}:subgrp:*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "elasticloadbalancing:AddTags"
                   - "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer"
@@ -323,8 +305,7 @@ Resources:
                   - "elasticloadbalancing:DisableAvailabilityZonesForLoadBalancer"
                 Resource:
                   - Fn::Sub: arn:aws:elasticloadbalancing:${AWS::Region}:${AWS::AccountId}:loadbalancer/WebELB-*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "autoscaling:AttachInstances"
                   - "autoscaling:AttachLoadBalancers"
@@ -343,8 +324,7 @@ Resources:
                   - Fn::Sub: arn:aws:autoscaling:${AWS::Region}:${AWS::AccountId}:launchConfiguration:${AWS::AccountId}:*:Test-${AWS::StackName}-ServerStack-*
                   - Fn::Sub: arn:aws:autoscaling:${AWS::Region}:${AWS::AccountId}:launchConfiguration:${AWS::AccountId}:*:UAT-${AWS::StackName}-ServerStack-*
                   - Fn::Sub: arn:aws:autoscaling:${AWS::Region}:${AWS::AccountId}:launchConfiguration:${AWS::AccountId}:*:Prod-${AWS::StackName}-ServerStack-*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "s3:GetObject"
                   - "s3:ListBucket"
@@ -359,8 +339,7 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal:
               Service:
                 - "codebuild.amazonaws.com"
@@ -368,21 +347,18 @@ Resources:
               - "sts:AssumeRole"
       Path: /service-role/
       Policies:
-        -
-          PolicyName: "CodeBuildNestedCFNAccessPolicy"
+        - PolicyName: "CodeBuildNestedCFNAccessPolicy"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "cloudformation:Get*"
                   - "cloudformation:Describe*"
                   - "cloudformation:List*"
                 Resource:
                   - Fn::Sub: arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/Test-${AWS::StackName}*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "codecommit:ListBranches"
                   - "codecommit:ListRepositories"
@@ -392,8 +368,7 @@ Resources:
                 Resource:
                   - Fn::Sub: arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${CFNTemplateRepoName}
                   - Fn::Sub: arn:aws:codecommit:${AWS::Region}:${AWS::AccountId}:${ValidateResourcesRepoName}
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "ec2:Describe*"
                   - "cloudformation:ValidateTemplate"
@@ -406,16 +381,14 @@ Resources:
                   - "tag:Get*"
                 Resource:
                   - "*"
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "logs:CreateLogGroup"
                   - "logs:CreateLogStream"
                   - "logs:PutLogEvents"
                 Resource:
                   - Fn::Sub: arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/*
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action:
                   - "s3:PutObject"
                   - "s3:GetObject"
@@ -432,7 +405,7 @@ Resources:
         Fn::Sub: BuildCopyCFN-${AWS::StackName}
       Description: Build to validate and copy CFN templates
       ServiceRole:
-        Fn::GetAtt: [ CodeBuildRole, Arn ]
+        Fn::GetAtt: [CodeBuildRole, Arn]
       Artifacts:
         Type: S3
         Location:
@@ -466,7 +439,7 @@ Resources:
         Fn::Sub: ValidateResource-${AWS::StackName}
       Description: Test build to validate the resources created by CFN templates
       ServiceRole:
-        Fn::GetAtt: [ CodeBuildRole, Arn ]
+        Fn::GetAtt: [CodeBuildRole, Arn]
       Artifacts:
         Type: S3
         Location:
@@ -495,42 +468,35 @@ Resources:
       Name:
         Fn::Sub: ContinuousDeliveryNestedCFN-${AWS::StackName}
       RoleArn:
-          Fn::GetAtt: [ CodePipelineRole, Arn ]
+        Fn::GetAtt: [CodePipelineRole, Arn]
       Stages:
-        -
-          Name: CFNSource
+        - Name: CFNSource
           Actions:
-            -
-              Name: CFNTemplateSource
+            - Name: CFNTemplateSource
 
               OutputArtifacts:
-                -
-                  Name: CFNTemplateOutput
+                - Name: CFNTemplateOutput
               Configuration:
                 BranchName: master
                 RepositoryName:
                   Ref: CFNTemplateRepoName
               RunOrder: 1
-            -
-              Name: TestArtifactSource
+            - Name: TestArtifactSource
               ActionTypeId:
                 Category: Source
                 Owner: AWS
                 Version: 1
                 Provider: CodeCommit
               OutputArtifacts:
-                -
-                  Name: TestArtifacts
+                - Name: TestArtifacts
               Configuration:
                 BranchName: master
                 RepositoryName:
                   Ref: ValidateResourcesRepoName
               RunOrder: 1
-        -
-          Name: Validate
+        - Name: Validate
           Actions:
-            -
-              Name: CodeBuild
+            - Name: CodeBuild
               InputArtifacts:
                 - Name: CFNTemplateOutput
               ActionTypeId:
@@ -538,121 +504,102 @@ Resources:
                 Version: 1
                 Provider: CodeBuild
               OutputArtifacts:
-                -
-                  Name: CFNTemplateArtifact
+                - Name: CFNTemplateArtifact
               Configuration:
                 ProjectName:
                   Ref: BuildCopyCFNProject
               RunOrder: 1
-            -
-              Name: CreateTestCFNStack
+            - Name: CreateTestCFNStack
               InputArtifacts:
-                -
-                  Name: CFNTemplateArtifact
+                - Name: CFNTemplateArtifact
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
                 Version: 1
                 Provider: CloudFormation
               OutputArtifacts:
-                -
-                  Name: CreatedTestCFNStack
+                - Name: CreatedTestCFNStack
               Configuration:
                 ActionMode: CREATE_UPDATE
                 RoleArn:
-                  Fn::GetAtt: [ CloudFormationRole, Arn ]
+                  Fn::GetAtt: [CloudFormationRole, Arn]
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName:
                   Fn::Sub: Test-${AWS::StackName}
                 TemplateConfiguration: CFNTemplateArtifact::config-test.json
                 TemplatePath: CFNTemplateArtifact::master-stack.yml
               RunOrder: 2
-            -
-              Name: ValidateTestStack
+            - Name: ValidateTestStack
               InputArtifacts:
-                -
-                  Name: TestArtifacts
+                - Name: TestArtifacts
               ActionTypeId:
                 Category: Test
                 Owner: AWS
                 Provider: CodeBuild
               OutputArtifacts:
-                -
-                  Name: ValidatedTestStack
+                - Name: ValidatedTestStack
               Configuration:
                 ProjectName:
                   Ref: ValidateResourceProject
               RunOrder: 3
-            -
-              Name: DeleteTestStack
+            - Name: DeleteTestStack
               InputArtifacts:
-                -
-                  Name: ValidatedTestStack
+                - Name: ValidatedTestStack
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
                 Version: 1
                 Provider: CloudFormation
               OutputArtifacts:
-                -
-                  Name: ProceedToUAT
+                - Name: ProceedToUAT
               Configuration:
                 StackName:
                   Fn::Sub: Test-${AWS::StackName}
                 ActionMode: DELETE_ONLY
                 RoleArn:
-                  Fn::GetAtt: [ CloudFormationRole, Arn ]
+                  Fn::GetAtt: [CloudFormationRole, Arn]
               RunOrder: 4
-        -
-          Name: UAT
+        - Name: UAT
           Actions:
-            -
-              Name: CreateUATChangeSet
+            - Name: CreateUATChangeSet
               InputArtifacts:
-                -
-                  Name: CFNTemplateArtifact
-                -
-                  Name: ProceedToUAT
+                - Name: CFNTemplateArtifact
+                - Name: ProceedToUAT
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
                 Version: 1
                 Provider: CloudFormation
               OutputArtifacts:
-                -
-                  Name: CreatedUATChangeSet
+                - Name: CreatedUATChangeSet
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 ChangeSetName: UATCBChangeSet
                 RoleArn:
-                  Fn::GetAtt: [ CloudFormationRole, Arn ]
+                  Fn::GetAtt: [CloudFormationRole, Arn]
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName:
                   Fn::Sub: UAT-${AWS::StackName}
                 TemplateConfiguration: CFNTemplateArtifact::config-uat.json
                 TemplatePath: CFNTemplateArtifact::master-stack.yml
               RunOrder: 1
-            -
-              Name: ExecuteUATChangeSet
+            - Name: ExecuteUATChangeSet
               InputArtifacts:
-                -
-                  Name: CreatedUATChangeSet
+                - Name: CreatedUATChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
                 Version: 1
                 Provider: CloudFormation
               OutputArtifacts:
-                -
-                  Name: DeployedUAT
+                - Name: DeployedUAT
               Configuration:
                 ActionMode: CHANGE_SET_EXECUTE
                 ChangeSetName: UATCBChangeSet
                 StackName:
                   Fn::Sub: UAT-${AWS::StackName}
               RunOrder: 2
-            -
-              Name: UATApproval
+            - Name: UATApproval
               ActionTypeId:
                 Category: Approval
                 Owner: AWS
@@ -663,35 +610,30 @@ Resources:
                   Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${UATTopic}
                 CustomData: Approve once UAT has been completed.
               RunOrder: 3
-        -
-          Name: Production
+        - Name: Production
           Actions:
-            -
-              Name: CreateProdChangeSet
+            - Name: CreateProdChangeSet
               InputArtifacts:
-                -
-                  Name: CFNTemplateArtifact
+                - Name: CFNTemplateArtifact
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
                 Version: 1
                 Provider: CloudFormation
               OutputArtifacts:
-                -
-                  Name: CreatedProdChangeSet
+                - Name: CreatedProdChangeSet
               Configuration:
                 ActionMode: CHANGE_SET_REPLACE
                 ChangeSetName: ProdCBChangeSet
                 RoleArn:
-                  Fn::GetAtt: [ CloudFormationRole, Arn ]
+                  Fn::GetAtt: [CloudFormationRole, Arn]
                 Capabilities: CAPABILITY_NAMED_IAM
                 StackName:
                   Fn::Sub: Prod-${AWS::StackName}
                 TemplateConfiguration: CFNTemplateArtifact::config-prod.json
                 TemplatePath: CFNTemplateArtifact::master-stack.yml
               RunOrder: 1
-            -
-              Name: ProdApproval
+            - Name: ProdApproval
               ActionTypeId:
                 Category: Approval
                 Owner: AWS
@@ -702,11 +644,9 @@ Resources:
                   Fn::Sub: arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${ProdTopic}
                 CustomData: Approve deployment in production.
               RunOrder: 2
-            -
-              Name: DeployProduction
+            - Name: DeployProduction
               InputArtifacts:
-                -
-                  Name: CreatedProdChangeSet
+                - Name: CreatedProdChangeSet
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -724,17 +664,17 @@ Resources:
         Location:
           Ref: ArtifactStoreS3Location
   CustomResource1:
-    Type: 'AWS::CloudFormation::CustomResource'
+    Type: "AWS::CloudFormation::CustomResource"
     Properties:
       # ServiceToken: arn
       StackName: StackName
   CustomResource2:
-    Type: 'Custom::CustomResource'
+    Type: "Custom::CustomResource"
     Properties:
       # ServiceToken: arn
       StackName: StackName
   CustomResource3:
-    Type: 'Custom::SpecifiedCustomResource'
+    Type: "Custom::SpecifiedCustomResource"
     Properties:
       ServiceToken: arn
       # RequiredString: present

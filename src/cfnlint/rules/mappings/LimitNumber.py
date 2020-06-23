@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.limits import number_limit
+from cfnlint.rules.common import number_limit
 
 
 class LimitNumber(CloudFormationLintRule):
@@ -15,5 +15,4 @@ class LimitNumber(CloudFormationLintRule):
     tags = ['mappings', 'limits']
 
     def match(self, cfn):
-        """Check CloudFormation Mappings"""
         return number_limit(cfn, 'Mappings')

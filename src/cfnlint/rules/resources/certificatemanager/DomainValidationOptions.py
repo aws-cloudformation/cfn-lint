@@ -48,7 +48,6 @@ class DomainValidationOptions(CloudFormationLintRule):
         return matches
 
     def match_resource_properties(self, properties, _, path, cfn):
-        """ Check Load Balancers """
         matches = []
         matches.extend(cfn.check_value(
             properties, 'DomainValidationOptions', path[:],

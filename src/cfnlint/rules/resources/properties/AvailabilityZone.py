@@ -48,7 +48,6 @@ class AvailabilityZone(CloudFormationLintRule):
 
     # pylint: disable=W0613
     def check_az_value(self, value, path):
-        """Check ref for VPC"""
         matches = []
 
         # value of `all` is a valide exception in AWS::ElasticLoadBalancingV2::TargetGroup

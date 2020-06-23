@@ -2,12 +2,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import LIMITS
+import re
+
+from cfnlint.helpers import LIMITS, REGEX_ALPHANUMERIC
 from cfnlint.rules import RuleMatch
 
 
 def approaching_name_limit(cfn, section):
-    """approaching name limit"""
     matches = []
     for name in cfn.template.get(section, {}):
         if LIMITS['threshold'] * LIMITS[section]['name'] < len(name) <= LIMITS[section]['name']:
@@ -17,9 +18,8 @@ def approaching_name_limit(cfn, section):
 
 
 def approaching_number_limit(cfn, section):
-    """approaching number limit"""
     matches = []
-    number = cfn.template.get(section, {})
+    number = cfn.get_resources() if section == 'Resources' else cfn.template.get(section, {})
     if LIMITS['threshold'] * LIMITS[section]['number'] < len(number) <= LIMITS[section]['number']:
         message = 'The number of ' + section + ' ({0}) is approaching the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
@@ -27,7 +27,6 @@ def approaching_number_limit(cfn, section):
 
 
 def name_limit(cfn, section):
-    """exceeding name limit"""
     matches = []
     for name in cfn.template.get(section, {}):
         if len(name) > LIMITS[section]['name']:
@@ -37,10 +36,18 @@ def name_limit(cfn, section):
 
 
 def number_limit(cfn, section):
-    """exceeding number limit"""
     matches = []
-    number = cfn.template.get(section, {})
+    number = cfn.get_resources() if section == 'Resources' else cfn.template.get(section, {})
     if len(number) > LIMITS[section]['number']:
         message = 'The number of ' + section + ' ({0}) exceeds the limit ({1})'
         matches.append(RuleMatch([section], message.format(len(number), LIMITS[section]['number'])))
+    return matches
+
+
+def alphanumeric_name(cfn, section):
+    matches = []
+    for name, _ in cfn.template.get(section, {}).items():
+        if not re.match(REGEX_ALPHANUMERIC, name):
+            message = section[:-1] + ' {0} has invalid name.  Name has to be alphanumeric.'
+            matches.append(RuleMatch([section, name], message.format(name)))
     return matches

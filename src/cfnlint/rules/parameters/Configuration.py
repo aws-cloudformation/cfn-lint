@@ -101,8 +101,6 @@ class Configuration(CloudFormationLintRule):
         return results
 
     def match(self, cfn):
-        """Check CloudFormation Parameters"""
-
         matches = []
 
         for paramname, paramvalue in cfn.get_parameters().items():
