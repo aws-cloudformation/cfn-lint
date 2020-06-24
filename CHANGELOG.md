@@ -1,3 +1,12 @@
+### v0.33.2
+###### Features
+- Upgrade SAM Translator to v1.25.0 (pull #[1594](https://github.com/aws-cloudformation/cfn-python-lint/pull/1594))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 15.3.0 (pull #[1600](https://github.com/aws-cloudformation/cfn-python-lint/pull/1600))
+###### Fixes
+- Update rule [E3401](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3401) to not fail on Apex records (pull #[1599](https://github.com/aws-cloudformation/cfn-python-lint/pull/1599))
+
+
 ### v0.33.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 15.1.0 (pull #[1593](https://github.com/aws-cloudformation/cfn-python-lint/pull/1593))
