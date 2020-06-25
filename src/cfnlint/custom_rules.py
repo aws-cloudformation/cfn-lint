@@ -13,17 +13,23 @@ import cfnlint.customRules.Rule
 
 LOGGER = logging.getLogger(__name__)
 Operator = {'EQUALS': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
-            'PLACEHOLDER': lambda x, y, z: LOGGER.debug('Placeholder Op')}
+            'NOT_EQUALS': lambda x, y, z: cfnlint.customRules.Operators.notEqualsOp(x, y, z),
+            '==': lambda x, y, z: cfnlint.customRules.Operators.equalsOp(x, y, z),
+            '!=': lambda x, y, z: cfnlint.customRules.Operators.notEqualsOp(x, y, z),
+            'IN': lambda x, y, z: cfnlint.customRules.Operators.InSetOp(x, y, z),
+            'NOT_IN': lambda x, y, z: cfnlint.customRules.Operators.NotInSetOp(x, y, z),
+            '>=': lambda x, y, z: cfnlint.customRules.Operators.greaterOp(x, y, z),
+            '<=': lambda x, y, z: cfnlint.customRules.Operators.lessOp(x, y, z)}
 
 def check(filename, template, rules, runner):
     """ Process custom rule file """
     matches = []
+
     with open(filename) as customRules:
         line_number = 1
         for line in customRules:
             LOGGER.debug('Processing Custom Rule Line %d', line_number)
-            line = line.replace('"', '')
-            rule = cfnlint.customRules.Rule.make_rule(line.split(' '))
+            rule = cfnlint.customRules.Rule.make_rule(line, line_number)
             if rule.valid and rule.resourceType[0] != '#':
                 try:
                     resource_properties = template.get_resource_properties([rule.resourceType])
@@ -33,8 +39,8 @@ def check(filename, template, rules, runner):
                     matches.append(cfnlint.rules.Match(
                         1, 1,
                         1, 1,
-                        template.filename, cfnlint.customRules.Operators.CustomRule('E9999'),
-                        str(rule.operator) + ' not in supported operators: [EQUALS] at ' + str(line), None))
+                        template.filename, cfnlint.customRules.Operators.CustomRule('E9999', 'Error'),
+                        str(rule.operator) + ' not in supported operators: ' + str(list(Operator.keys())) + ' at ' + str(line), None))
             line_number += 1
     arg_matches = []
     for match in matches:
