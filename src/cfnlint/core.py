@@ -44,9 +44,6 @@ class UnexpectedRuleException(CfnLintExitException):
 def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
     """Process args and run"""
     template_obj = Template(filename, template, regions)
-    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
-
-    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj, rules, runner)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -61,7 +58,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, regi
                     with open(os.path.join(path, f)) as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
 
-    return custom_matches + run_checks(filename, template, rules, regions, mandatory_rules)
+    return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
@@ -157,14 +154,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return (config, [None], formatter)
+        return(config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return (config, config.templates, formatter)
+    return(config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -216,7 +213,7 @@ def get_template_rules(filename, args):
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
-    """Run Checks against the template"""
+    """Run Checks and Custom Rules against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
@@ -245,6 +242,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     # Only do rule analysis if Transform was successful
     try:
         errors.extend(runner.run())
+        errors.extend(cfnlint.custom_rules.check('custom_rules.txt', template, rules, runner))
     except Exception as err:  # pylint: disable=W0703
         msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
         UnexpectedRuleException(msg, 1)
