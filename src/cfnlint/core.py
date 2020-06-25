@@ -188,7 +188,6 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
             raise InvalidRegionException(msg, 32)
 
     matches = []
-    """Pre-Processing"""
     runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
     template_obj = Template(filename, template, regions)
