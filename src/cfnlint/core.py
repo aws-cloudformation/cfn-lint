@@ -43,9 +43,6 @@ class UnexpectedRuleException(CfnLintExitException):
 def run_cli(filename, template, rules, regions, override_spec, build_graph, mandatory_rules=None):
     """Process args and run"""
     template_obj = Template(filename, template, regions)
-    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
-
-    custom_matches = cfnlint.custom_rules.check('custom_rules.txt', template_obj, rules, runner)
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -53,7 +50,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
     if build_graph:
         template_obj.build_graph()
 
-    return custom_matches + run_checks(filename, template, rules, regions, mandatory_rules)
+    return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
 def get_exit_code(matches):
@@ -182,7 +179,7 @@ def get_template_rules(filename, args):
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
-    """Run Checks against the template"""
+    """Run Checks and Custom Rules against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
@@ -191,13 +188,15 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
             raise InvalidRegionException(msg, 32)
 
     matches = []
-
+    """Pre-Processing"""
     runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
+    template_obj = Template(filename, template, regions)
     # Only do rule analysis if Transform was successful
     if not matches:
         try:
             matches.extend(runner.run())
+            matches.extend(cfnlint.custom_rules.check('custom_rules.txt', template_obj, rules, runner))
         except Exception as err:  # pylint: disable=W0703
             msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
             UnexpectedRuleException(msg, 1)
