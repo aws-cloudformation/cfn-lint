@@ -146,14 +146,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return(config, [None], formatter)
+        return (config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return(config, config.templates, formatter)
+    return (config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -162,7 +162,7 @@ def get_template_rules(filename, args):
     (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
 
     if matches:
-        return(template, [], matches)
+        return (template, [], matches)
 
     args.template_args = template
 
@@ -175,7 +175,7 @@ def get_template_rules(filename, args):
         args.mandatory_checks,
     )
 
-    return(template, rules, [])
+    return (template, rules, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
@@ -186,19 +186,19 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
             msg = 'Regions %s are unsupported. Supported regions are %s' % (
                 unsupported_regions, REGIONS)
             raise InvalidRegionException(msg, 32)
-
+    # Pre-Processing
     matches = []
     runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
-    template_obj = Template(filename, template, regions)
     # Only do rule analysis if Transform was successful
     if not matches:
         try:
             matches.extend(runner.run())
-            matches.extend(cfnlint.custom_rules.check('custom_rules.txt', template_obj, rules, runner))
+            matches.extend(cfnlint.custom_rules.check('custom_rules.txt', runner.cfn, rules, runner))
         except Exception as err:  # pylint: disable=W0703
+            print(err)
             msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
             UnexpectedRuleException(msg, 1)
     matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(matches)
+    return (matches)
