@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=W0108
 # pylint: disable=W0622
+# pylint: disable=W0603
 
 import logging
 import cfnlint
