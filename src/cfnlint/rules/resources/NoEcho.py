@@ -12,7 +12,7 @@ class NoEcho(CloudFormationLintRule):
     id = 'W4002'
     shortdesc = 'Check for NoEcho References'
     description = 'Check if there is a NoEcho enabled parameter referenced within a resource'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dne.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-properties'
     tags = ['resources', 'NoEcho']
 
     def match(self, cfn):
