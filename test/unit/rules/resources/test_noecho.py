@@ -7,7 +7,6 @@ from cfnlint.rules.resources.NoEcho import NoEcho  # pylint: disable=E0401
 
 
 class TestNoEcho(BaseRuleTestCase):
-    """Test parameters limit number"""
 
     def setUp(self):
         """Setup"""

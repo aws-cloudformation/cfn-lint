@@ -8,7 +8,6 @@ from cfnlint.rules import RuleMatch
 
 
 class NoEcho(CloudFormationLintRule):
-    """Check maximum Resource limit"""
     id = 'W4002'
     shortdesc = 'Check for NoEcho References'
     description = 'Check if there is a NoEcho enabled parameter referenced within a resource'
