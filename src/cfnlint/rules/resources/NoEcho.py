@@ -2,14 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from ast import literal_eval
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
-from ast import literal_eval
 
 
 class NoEcho(CloudFormationLintRule):
     """Check maximum Resource limit"""
-    id = 'W9919' #To Be Assigned
+    id = 'W4002'
     shortdesc = 'Check for NoEcho References'
     description = 'Check if there is a NoEcho enabled parameter referenced within a resource'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dne.html'
@@ -37,7 +37,8 @@ class NoEcho(CloudFormationLintRule):
                     for prop_name, prop_value in metadata.items():
                         path = ['Resources', resource_name, 'Metadata', prop_name]
                         matches.append(RuleMatch(path, 'As the resource "metadata" section contains reference to a '
-                                                       '"NoEcho" parameter, CFN will display the parameters '
-                                                       'description in plaintext'))
+                                                       '"NoEcho" parameter (' + prop_value + '), CFN will display the '
+                                                                                             'parameters description '
+                                                                                             'in plaintext'))
 
         return matches
