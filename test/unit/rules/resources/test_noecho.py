@@ -20,4 +20,4 @@ class TestNoEcho(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/noecho.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/noecho.yaml', 1)
