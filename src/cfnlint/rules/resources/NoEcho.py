@@ -34,10 +34,13 @@ class NoEcho(CloudFormationLintRule):
                 if key == 'Metadata':
                     metadata = literal_eval(str(value))
                     for prop_name, prop_value in metadata.items():
-                        path = ['Resources', resource_name, 'Metadata', prop_name]
-                        matches.append(RuleMatch(path, 'As the resource "metadata" section contains reference to a '
-                                                       '"NoEcho" parameter (' + prop_value + '), CFN will display the '
-                                                                                             'parameters description '
-                                                                                             'in plaintext'))
-
+                        properties = literal_eval(str(prop_value))
+                        for property_name, property_value in properties.items():
+                            for parameter in no_echo_params:
+                                if str(property_value.find(str(parameter))):
+                                    path = ['Resources', resource_name, 'Metadata', prop_name]
+                                    matches.append(
+                                        RuleMatch(path, 'As the resource "metadata" section contains reference to a '
+                                                        '"NoEcho" parameter (' + str(property_value) +
+                                                  '), CFN will display the parameters description in plaintext'))
         return matches
