@@ -42,7 +42,7 @@ class OnlyOne(CloudFormationLintRule):
                         if prop in property_set['Object']:
                             count += 1
 
-                    if count != 1:
+                    if count > 1:
                         if property_set['Scenario'] is None:
                             message = 'Only one of [{0}] should be specified for {1}'
                             matches.append(RuleMatch(
