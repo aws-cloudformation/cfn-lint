@@ -10,7 +10,7 @@ from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.rules import RulesCollection, ParseError
+from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -201,18 +201,30 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
                 unsupported_regions, REGIONS)
             raise InvalidRegionException(msg, 32)
 
-    matches = []
+    errors = []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
                                    mandatory_rules=mandatory_rules)
-    matches.extend(runner.transform())
-    # Only do rule analysis if Transform was successful
-    if not matches:
-        try:
-            matches.extend(runner.run())
-        except Exception as err:  # pylint: disable=W0703
-            msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
-            UnexpectedRuleException(msg, 1)
-    matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(matches)
+    # Transform logic helps with handling serverless templates
+    ignore_transform_error = False
+    if not rules.is_rule_enabled(TransformError()):
+        ignore_transform_error = True
+
+    errors.extend(runner.transform())
+
+    if errors:
+        if ignore_transform_error:
+            return([])   # if there is a transform error we can't continue
+
+        return(errors)
+
+    # Only do rule analysis if Transform was successful
+    try:
+        errors.extend(runner.run())
+    except Exception as err:  # pylint: disable=W0703
+        msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
+        UnexpectedRuleException(msg, 1)
+    errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
+
+    return(errors)
