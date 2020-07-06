@@ -40,8 +40,8 @@ class NoEcho(CloudFormationLintRule):
                                     path = ['Resources', resource_name, 'Metadata', prop_name]
                                     matches.append(
                                         RuleMatch(path, 'As the resource "metadata" section contains reference to a '
-                                                        '"NoEcho" parameter, CloudFormation will display the parameter '
-                                                        'value in plaintext'))
+                                                        '"NoEcho" parameter ' + str(parameter) + ', CloudFormation'
+                                                  + ' will display the parameter value in plaintext'))
         return matches
 
 
