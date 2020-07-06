@@ -36,7 +36,7 @@ class NoEcho(CloudFormationLintRule):
                         properties = get_dict(prop_value)
                         for property_value in properties.values():
                             for parameter in no_echo_params:
-                                if str(property_value).find(str(parameter)) is True:
+                                if str(property_value).find(str(parameter)) > -1:
                                     path = ['Resources', resource_name, 'Metadata', prop_name]
                                     matches.append(
                                         RuleMatch(path, 'As the resource "metadata" section contains reference to a '
