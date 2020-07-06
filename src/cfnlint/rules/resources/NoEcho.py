@@ -10,7 +10,7 @@ from cfnlint.rules import RuleMatch
 class NoEcho(CloudFormationLintRule):
     id = 'W4002'
     shortdesc = 'Check for NoEcho References'
-    description = "Check if there is a NoEcho enabled parameter referenced within a resource's Metadata section"
+    description = 'Check if there is a NoEcho enabled parameter referenced within a resources Metadata section'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-properties'
     tags = ['resources', 'NoEcho']
 
@@ -28,13 +28,13 @@ class NoEcho(CloudFormationLintRule):
         resource_properties = cfn.get_resources()
         for resource_name, resource_values in resource_properties.items():
 
-            resource = literal_eval(str(resource_values))
+            resource = get_dict(resource_values)
             for key, value in resource.items():
                 if key == 'Metadata':
-                    metadata = literal_eval(str(value))
+                    metadata = get_dict(value)
                     for prop_name, prop_value in metadata.items():
-                        properties = literal_eval(str(prop_value))
-                        for property_name, property_value in properties.items():
+                        properties = get_dict(prop_value)
+                        for property_value in properties.values():
                             for parameter in no_echo_params:
                                 if str(property_value).find(str(parameter)) is True:
                                     path = ['Resources', resource_name, 'Metadata', prop_name]
@@ -43,3 +43,10 @@ class NoEcho(CloudFormationLintRule):
                                                         '"NoEcho" parameter, CloudFormation will display the parameter '
                                                         'value in plaintext'))
         return matches
+
+
+def get_dict(input_string):
+    try:
+        return literal_eval(str(input_string))
+    except ValueError:
+        return dict()
