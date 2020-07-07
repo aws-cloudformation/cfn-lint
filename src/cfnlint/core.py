@@ -193,7 +193,6 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     matches = []
     runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
     matches.extend(runner.transform())
-    template_obj = Template(filename, template, regions)
     # Only do rule analysis if Transform was successful
     if not matches:
         try:
