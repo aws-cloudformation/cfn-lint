@@ -29,8 +29,8 @@ class DomainValidationOptions(CloudFormationLintRule):
             for property_set in property_sets:
                 properties = property_set.get('Object')
                 scenario = property_set.get('Scenario')
-                domain_name = properties.get('DomainName', '')
-                validation_domain = properties.get('ValidationDomain', '')
+                domain_name = properties.get('DomainName', None)
+                validation_domain = properties.get('ValidationDomain', None)
                 if isinstance(domain_name, six.string_types) and isinstance(validation_domain, six.string_types):
                     if domain_name == validation_domain:
                         continue
