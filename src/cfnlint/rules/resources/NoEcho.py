@@ -18,35 +18,35 @@ class NoEcho(CloudFormationLintRule):
         matches = []
         no_echo_params = []
         parameters = cfn.get_parameters()
-
         for parameter_name, parameter_value in parameters.items():
             parameter_properties = literal_eval(str(parameter_value))
             for parameter_properties_name, parameter_properties_value in parameter_properties.items():
                 if parameter_properties_name == 'NoEcho' and parameter_properties_value is True:
                     no_echo_params.append(parameter_name)
 
-        resource_properties = cfn.get_resources()
-        for resource_name, resource_values in resource_properties.items():
+        if not no_echo_params:
+            return no_echo_params
 
-            resource = get_dict(resource_values)
-            for key, value in resource.items():
+        resource_properties = cfn.get_resources()
+        resource_dict = {key: resource_properties[key] for key in resource_properties if
+                         isinstance(resource_properties[key], dict)}
+        for resource_name, resource_values in resource_dict.items():
+            resource_values = {key: resource_values[key] for key in resource_values if
+                             isinstance(resource_values[key], dict)}
+            for key, metadata in resource_values.items():
                 if key == 'Metadata':
-                    metadata = get_dict(value)
-                    for prop_name, prop_value in metadata.items():
-                        properties = get_dict(prop_value)
+                    metadata = {key: metadata[key] for key in metadata if
+                                       isinstance(metadata[key], dict)}
+                    for prop_name, properties in metadata.items():
+                        properties = {key: properties[key] for key in properties if
+                                    isinstance(properties[key], dict)}
                         for property_value in properties.values():
-                            for parameter in no_echo_params:
-                                if str(property_value).find(str(parameter)) > -1:
+                            for param in no_echo_params and no_echo_params:
+                                if str(property_value).find(str(param)) > -1:
                                     path = ['Resources', resource_name, 'Metadata', prop_name]
                                     matches.append(
-                                        RuleMatch(path, 'As the resource "metadata" section contains reference to a '
-                                                        '"NoEcho" parameter ' + str(parameter) + ', CloudFormation'
-                                                  + ' will display the parameter value in plaintext'))
+                                        RuleMatch(path, 'As the resource "metadata" section contains '
+                                                        'reference to a "NoEcho" parameter ' + str(param) +
+                                                        ', CloudFormation will display the parameter '
+                                                        'value in plaintext'))
         return matches
-
-
-def get_dict(input_string):
-    try:
-        return literal_eval(str(input_string))
-    except ValueError:
-        return dict()
