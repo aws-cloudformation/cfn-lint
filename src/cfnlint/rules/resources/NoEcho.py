@@ -3,6 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from ast import literal_eval
+
+from cfnlint.helpers import bool_compare
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -19,10 +21,9 @@ class NoEcho(CloudFormationLintRule):
         no_echo_params = []
         parameters = cfn.get_parameters()
         for parameter_name, parameter_value in parameters.items():
-            parameter_properties = literal_eval(str(parameter_value))
-            for parameter_properties_name, parameter_properties_value in parameter_properties.items():
-                if parameter_properties_name == 'NoEcho' and parameter_properties_value is True:
-                    no_echo_params.append(parameter_name)
+            noecho = parameter_value.get('NoEcho', default=False)
+            if bool_compare(noecho, True):
+                no_echo_params.append(parameter_name)
 
         if not no_echo_params:
             return no_echo_params
