@@ -38,15 +38,15 @@ class NoEcho(CloudFormationLintRule):
                     metadata = {key: metadata[key] for key in metadata if
                                 isinstance(metadata[key], dict)}
                     for prop_name, properties in metadata.items():
-                        properties = {key: properties[key] for key in properties if
-                                      isinstance(properties[key], dict)}
-                        for property_value in properties.values():
-                            for param in no_echo_params and no_echo_params:
-                                if str(property_value).find(str(param)) > -1:
-                                    path = ['Resources', resource_name, 'Metadata', prop_name]
-                                    matches.append(
-                                        RuleMatch(path, 'As the resource "metadata" section contains reference to a '
-                                                        '"NoEcho" parameter ' + str(param) + ', CloudFormation will '
-                                                                                             'display the parameter '
-                                                                                             'value in plaintext'))
+                        if isinstance(properties, dict):
+                            for property_value in properties.values():
+                                for param in no_echo_params and no_echo_params:
+                                    if str(property_value).find(str(param)) > -1:
+                                        path = ['Resources', resource_name, 'Metadata', prop_name]
+                                        matches.append(
+                                            RuleMatch(path, 'As the resource "metadata" section contains reference to '
+                                                            'a "NoEcho" parameter ' + str(param) + ', CloudFormation '
+                                                                                                   'will display the '
+                                                                                                   'parameter value '
+                                                                                                   'in plaintext'))
         return matches
