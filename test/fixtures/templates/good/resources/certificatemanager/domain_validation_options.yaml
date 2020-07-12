@@ -14,3 +14,12 @@ Resources:
       DomainValidationOptions:
         - DomainName: "example.com"
           ValidationDomain: "example.com"
+  Certificate3:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: "*.aws.domain.com"
+      ValidationMethod: DNS
+      DomainValidationOptions:
+        # Don't fail when one of the values don't exist
+        - DomainName: aws.domain.com
+          HostedZoneId: !ImportValue SubdomainHostedZoneId
