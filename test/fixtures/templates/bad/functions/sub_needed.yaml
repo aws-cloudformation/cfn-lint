@@ -31,3 +31,43 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: "${aws:username}-topic"
+
+  TestBadStateMachine1:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        Fn::Join:
+        - "\n"
+        - - "{"
+          - '    "StartAt": "Test",'
+          - '    "States": {'
+          - '        "Test": {'
+          - '            "End": true,'
+          - '            "Resource": "${definition_substitution_1}",'
+          - '            "ResultPath": "$.result",'
+          - '            "Type": "Task"'
+          - "        }"
+          - "    }"
+          - "}"
+      DefinitionSubstitutions:
+        definition_substitution_2: test
+      RoleArn: arn:aws:iam::123456789012:role/abc
+
+  TestBadStateMachine2:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        Fn::Join:
+        - "\n"
+        - - "{"
+          - '    "StartAt": "Test",'
+          - '    "States": {'
+          - '        "Test": {'
+          - '            "End": true,'
+          - '            "Resource": "${definition_substitution_1}",'
+          - '            "ResultPath": "$.result",'
+          - '            "Type": "Task"'
+          - "        }"
+          - "    }"
+          - "}"
+      RoleArn: arn:aws:iam::123456789012:role/abc

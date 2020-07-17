@@ -134,3 +134,23 @@ Resources:
                   - !Ref AWS::Region
                   - !Ref AWS::AccountId
                   - thing/${iot:Connection.Thing.ThingName}*
+  TestGoodStateMachine1:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      DefinitionString:
+        Fn::Join:
+        - "\n"
+        - - "{"
+          - '    "StartAt": "Test",'
+          - '    "States": {'
+          - '        "Test": {'
+          - '            "End": true,'
+          - '            "Resource": "${definition_substitution_1}",'
+          - '            "ResultPath": "$.result",'
+          - '            "Type": "Task"'
+          - "        }"
+          - "    }"
+          - "}"
+      DefinitionSubstitutions:
+        definition_substitution_1: test
+      RoleArn: arn:aws:iam::123456789012:role/abc
