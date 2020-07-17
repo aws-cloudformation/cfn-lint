@@ -1,3 +1,28 @@
+### v0.34.0
+###### Features
+- Add rule [W4002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W4002) that checks if `Metadata` references a `NoEcho` parameter (pull #[1613](https://github.com/aws-cloudformation/cfn-python-lint/pull/1613))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 16.1.0 (pull #[1622](https://github.com/aws-cloudformation/cfn-python-lint/pull/1622))
+- Remove `AWS::EC2::LaunchTemplate.BlockDeviceMapping` from `OnlyOne` (pull #[1617](https://github.com/aws-cloudformation/cfn-python-lint/pull/1617))
+- Add more `AllowedValues` to `AWS::Glue::Trigger.Predicate.Logical` (pull #[1616](https://github.com/aws-cloudformation/cfn-python-lint/pull/1616))
+- Add more `AllowedValues` to `AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType` (pull #[1604](https://github.com/aws-cloudformation/cfn-python-lint/pull/1604))
+- Add more `AllowedValues` to `AWS::S3::Bucket.TopicConfiguration.Event` (pull #[1606](https://github.com/aws-cloudformation/cfn-python-lint/pull/1606))
+- Add more `AllowedValues` to `AWS::EC2::CapacityReservation.InstancePlatform` (pull #[1605](https://github.com/aws-cloudformation/cfn-python-lint/pull/1605))
+- Fix an issue for applying `AllowedValues` to `AWS::RDS::DBInstance MonitoringInterval` and `PerformanceInsightsRetentionPeriod` (pull #[1607](https://github.com/aws-cloudformation/cfn-python-lint/pull/1607))
+- Fix an issue for applying `Maximum` and `Minimum` to `AWS::ElasticLoadBalancingV2::ListenerRule.Priority` (pull #[1608](https://github.com/aws-cloudformation/cfn-python-lint/pull/1608))
+###### Fixes
+- Update rule [E3503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3503) to not fail on if ValidationDomain or DomainName aren't present (pull #[1599](https://github.com/aws-cloudformation/cfn-python-lint/pull/1620))
+
+
+
+### v0.33.2
+###### Features
+- Upgrade SAM Translator to v1.25.0 (pull #[1594](https://github.com/aws-cloudformation/cfn-python-lint/pull/1594))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 15.3.0 (pull #[1600](https://github.com/aws-cloudformation/cfn-python-lint/pull/1600))
+###### Fixes
+- Update rule [E3401](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3401) to not fail on Apex records (pull #[1599](https://github.com/aws-cloudformation/cfn-python-lint/pull/1599))
+
 ### v0.33.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 15.1.0 (pull #[1593](https://github.com/aws-cloudformation/cfn-python-lint/pull/1593))

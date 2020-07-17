@@ -44,7 +44,8 @@ class RecordSetName(CloudFormationLintRule):
                     hz_name = hz_name[:-1]
                 if name[-1] == '.':
                     name = name[:-1]
-                if not name.endswith('.' + hz_name):
+
+                if hz_name not in [name, name[-len(hz_name):]]:
                     message = 'Name must be a superdomain of HostedZoneName at {}'
                     if scenario is None:
                         matches.append(
