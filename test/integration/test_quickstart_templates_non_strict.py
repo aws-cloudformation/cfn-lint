@@ -28,7 +28,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             'filename': 'test/fixtures/templates/quickstart/cis_benchmark.yaml',
             'results_filename': 'test/fixtures/results/quickstart/non_strict/cis_benchmark.json',
-            'exit_code': 4,
+            'exit_code': 12,
         }
     ]
 
