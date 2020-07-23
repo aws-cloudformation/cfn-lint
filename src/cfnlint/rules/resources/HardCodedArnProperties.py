@@ -25,7 +25,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
             for resourcename, val  in resources.items():
                 candidates = pattern.findall(str(val))
                 for candidate in candidates:
-                    if candidate[0] != '${AWS::Partition}' or candidate[1] not in ('${AWS::Region}', '') or candidate[2] not in ('${AWS::AccountId}', ''):
+                    if candidate[0] != '${AWS::Partition}' or not re.match(r'^\$\{\w+}|\$\{AWS::Region}|$', candidate[1]) or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|$', candidate[2]):
                         message = 'ARN in Resource {0} contains hardcoded Partition, Region, and/or Account Number in ARN or incorrectly placed Pseudo Parameters'
                         matches.append(RuleMatch(
                             ['Resources', resourcename],
