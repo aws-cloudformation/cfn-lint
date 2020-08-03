@@ -1,6 +1,6 @@
 ### v0.34.1
 ###### CloudFormation Specifications
-- Update CloudFormation specs to 16.3.0 (pull #[1622](https://github.com/aws-cloudformation/cfn-python-lint/pull/1635))
+- Update CloudFormation specs to 16.3.0 (pull #[1635](https://github.com/aws-cloudformation/cfn-python-lint/pull/1635))
 ###### Fixes
 - Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to catch when Resource `Type` is not a string (pull #[1631](https://github.com/aws-cloudformation/cfn-python-lint/pull/1631))
 - Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to handle `${}` in Step Function State Machines and Definition Substitutions (pull #[1628](https://github.com/aws-cloudformation/cfn-python-lint/pull/1628))
