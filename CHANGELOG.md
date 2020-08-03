@@ -3,8 +3,8 @@
 - Update CloudFormation specs to 16.3.0 (pull #[1635](https://github.com/aws-cloudformation/cfn-python-lint/pull/1635))
 ###### Fixes
 - Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to catch when Resource `Type` is not a string (pull #[1631](https://github.com/aws-cloudformation/cfn-python-lint/pull/1631))
-- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to handle `${}` in Step Function State Machines and Definition Substitutions (pull #[1628](https://github.com/aws-cloudformation/cfn-python-lint/pull/1628))
-- Update rule [E4002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to only look at `Ref` and `Sub` (pull #[1627](https://github.com/aws-cloudformation/cfn-python-lint/pull/1627))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to handle `${}` in Step Function State Machines and Definition Substitutions (pull #[1628](https://github.com/aws-cloudformation/cfn-python-lint/pull/1628))
+- Update rule [W4002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W4002) to only look at `Ref` and `Sub` (pull #[1627](https://github.com/aws-cloudformation/cfn-python-lint/pull/1627))
 
 ### v0.34.0
 ###### Features
