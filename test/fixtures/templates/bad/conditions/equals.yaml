@@ -1,9 +1,23 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Environments:
+    Type: CommaDelimitedList
+    Default: dev,test
 Conditions:
   TestEqual: !Equals 'Value'
   TestEqualToShort: !Equals ['1']
   TestEqualToLong: !Equals ['1', '2', '3']
   Test: !Equals [[{'Ref': 'AWS::Region'}], {'Bad': 'Value'}]
   TestWrongType: !Equals [1.234, ['Not a List']]
+  TagEnvironments: !Not
+  - !Equals
+    - !Ref Environments  # missed !Join
+    - ''
+  ToManyFunctions:
+    Fn::Equals:
+    - Ref: AWS::Region
+      Fn::Select: [Environments, 0]
+    - "dev"
+
 Resources: {}
