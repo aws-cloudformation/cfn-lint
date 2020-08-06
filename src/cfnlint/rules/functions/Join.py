@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
-from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.helpers import RESOURCE_SPECS, VALID_PARAMETER_TYPES_LIST
 
 
 class Join(CloudFormationLintRule):
@@ -51,16 +51,8 @@ class Join(CloudFormationLintRule):
             'AWS::NotificationARNs',
         ]
 
-        odd_list_params = [
-            'CommaDelimitedList',
-            'AWS::SSM::Parameter::Value<CommaDelimitedList>',
-        ]
-
         if parameter in template_parameters:
-            if (
-                    template_parameters.get(parameter) in odd_list_params or
-                    template_parameters.get(parameter).startswith('AWS::SSM::Parameter::Value<List') or
-                    template_parameters.get(parameter).startswith('List')):
+            if template_parameters.get(parameter) in VALID_PARAMETER_TYPES_LIST:
                 return True
         if parameter in list_params:
             return True
