@@ -171,6 +171,64 @@ valid_snapshot_types = [
     'AWS::Redshift::Cluster'
 ]
 
+VALID_PARAMETER_TYPES_SINGLE = [
+    'AWS::EC2::AvailabilityZone::Name',
+    'AWS::EC2::Image::Id',
+    'AWS::EC2::Instance::Id',
+    'AWS::EC2::KeyPair::KeyName',
+    'AWS::EC2::SecurityGroup::GroupName',
+    'AWS::EC2::SecurityGroup::Id',
+    'AWS::EC2::Subnet::Id',
+    'AWS::EC2::VPC::Id',
+    'AWS::EC2::Volume::Id',
+    'AWS::Route53::HostedZone::Id',
+    'AWS::SSM::Parameter::Name',
+    'Number',
+    'String',
+    'AWS::SSM::Parameter::Value<AWS::EC2::AvailabilityZone::Name>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::Instance::Id>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::KeyPair::KeyName>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::GroupName>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::SecurityGroup::Id>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::Subnet::Id>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::VPC::Id>',
+    'AWS::SSM::Parameter::Value<AWS::EC2::Volume::Id>',
+    'AWS::SSM::Parameter::Value<AWS::Route53::HostedZone::Id>',
+    'AWS::SSM::Parameter::Value<AWS::SSM::Parameter::Name>',
+    'AWS::SSM::Parameter::Value<Number>',
+    'AWS::SSM::Parameter::Value<String>',
+]
+
+VALID_PARAMETER_TYPES_LIST = [
+    'CommaDelimitedList',
+    'List<AWS::EC2::AvailabilityZone::Name>',
+    'List<AWS::EC2::Image::Id>',
+    'List<AWS::EC2::Instance::Id>',
+    'List<AWS::EC2::SecurityGroup::GroupName>',
+    'List<AWS::EC2::SecurityGroup::Id>',
+    'List<AWS::EC2::Subnet::Id>',
+    'List<AWS::EC2::VPC::Id>',
+    'List<AWS::EC2::Volume::Id>',
+    'List<AWS::Route53::HostedZone::Id>',
+    'List<Number>',
+    'List<String>',
+    'AWS::SSM::Parameter::Value<CommaDelimitedList>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::AvailabilityZone::Name>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::Image::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::Instance::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::GroupName>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::SecurityGroup::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::Subnet::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::VPC::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::EC2::Volume::Id>>',
+    'AWS::SSM::Parameter::Value<List<AWS::Route53::HostedZone::Id>>',
+    'AWS::SSM::Parameter::Value<List<Number>>',
+    'AWS::SSM::Parameter::Value<List<String>>',
+]
+
+VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
+
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
     caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
