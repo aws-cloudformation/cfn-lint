@@ -7,10 +7,10 @@ Mappings:
   runtime:
     us-east-1:
       production:
-      - CidrIp: 0.0.0.0/0
-        IpProtocol: tcp
-        ToPort: 80
-        FromPort: 80
+        - CidrIp: 0.0.0.0/0
+          IpProtocol: tcp
+          ToPort: 80
+          FromPort: 80
 Parameters:
   myParam:
     Type: String
@@ -35,8 +35,7 @@ Resources:
       FakeKey: MadeYouLook
       IamInstanceProfile: !GetAtt RootInstanceProfile.Arn
       BlockDeviceMappings:
-        -
-          DeviceName: /dev/sda
+        - DeviceName: /dev/sda
           Ebs:
             VolumeType: io1
             Iops: !Ref pIops
@@ -45,7 +44,7 @@ Resources:
             BadSubX2Key: Not valid
       NetworkInterfaces:
         - DeviceIndex:
-          - "1"
+            - "1"
           BadKey: true
   MyEC2Instance3:
     Type: "AWS::EC2::Instance"
@@ -62,8 +61,7 @@ Resources:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Principal:
               Service:
                 - "ec2.amazonaws.com"
@@ -71,13 +69,11 @@ Resources:
               - "sts:AssumeRole"
       Path: "/"
       Policies:
-        -
-          PolicyName: "root"
+        - PolicyName: "root"
           PolicyDocument1:
             Version: "2012-10-17"
             Statement:
-              -
-                Effect: "Allow"
+              - Effect: "Allow"
                 Action: "*"
                 Resource: "*"
   RolePolicies:
@@ -87,48 +83,45 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          -
-            Effect: "Allow"
+          - Effect: "Allow"
             Action: "*"
             Resource: "*"
       Roles:
-        -
-          Ref: "RootRole"
+        - Ref: "RootRole"
   RootInstanceProfile:
     Type: "AWS::IAM::InstanceProfile"
     Properties:
       Path: "/"
       Roles:
-        -
-          Ref: "RootRole"
+        - Ref: "RootRole"
 
   # Bad Key under HealthCheck
   ElasticLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
       AvailabilityZones:
-        Fn::GetAZs: ''
+        Fn::GetAZs: ""
       Instances:
-      - Ref: MyEC2Instance
+        - Ref: MyEC2Instance
       Listeners:
-      - LoadBalancerPort: '80'
-        InstancePort:
-          Ref: WebServerPort
-        Protocol: HTTP
+        - LoadBalancerPort: "80"
+          InstancePort:
+            Ref: WebServerPort
+          Protocol: HTTP
       HealthCheck:
         FakeKey: Another fake key
         Target:
           Fn::Join:
-          - ''
-          - - 'HTTP:'
-            - Ref: WebServerPort
-            - "/"
-        HealthyThreshold: '3'
+            - ""
+            - - "HTTP:"
+              - Ref: WebServerPort
+              - "/"
+        HealthyThreshold: "3"
         # Int which should be string. (No Error)
         UnhealthyThreshold: 5
         # Should be int (Error)
         Interval: Test
-        Timeout: '5'
+        Timeout: "5"
   SecurityGroup:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -145,46 +138,46 @@ Resources:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
       Tags:
-      - Fn::If:
-        - IsProduction
-        - Key: Production
-          Value: True
-        - Key: Production
-          Value: False
-      Fn::If:
-      - IsProduction
-      - AvailabilityZones:
-          Fn::GetAZs: ''
-        Listeners:
         - Fn::If:
-          - IsProduction
-          - LoadBalancerPort: '443'
-            InstancePort: '443'
-            Protocol: HTTP
-          - LoadBalancerPort: '443'
-            InstancePort: '443'
-            Protocol: HTTP
-        HealthCheck:
-          Target: HTTP:80/
-          HealthyThreshold: '3'
-          UnhealthyThreshold: '5'
-          Interval: '30'
-          Timeout: '5'
-        ConnectionDrainingPolicy:
-          Enabled: 'true'
-          Timeout: '60'
-      - AvailabilityZones:
-          Fn::GetAZs: ''
-        Listeners:
-        - LoadBalancerPort: '80'
-          InstancePort: '80'
-          Protocol: HTTP
-        HealthCheck:
-          Target: HTTP:80/
-          HealthyThreshold: '3'
-          UnhealthyThreshold: '5'
-          Interval: '30'
-          Timeout: '5'
+            - IsProduction
+            - Key: Production
+              Value: True
+            - Key: Production
+              Value: False
+      Fn::If:
+        - IsProduction
+        - AvailabilityZones:
+            Fn::GetAZs: ""
+          Listeners:
+            - Fn::If:
+                - IsProduction
+                - LoadBalancerPort: "443"
+                  InstancePort: "443"
+                  Protocol: HTTP
+                - LoadBalancerPort: "443"
+                  InstancePort: "443"
+                  Protocol: HTTP
+          HealthCheck:
+            Target: HTTP:80/
+            HealthyThreshold: "3"
+            UnhealthyThreshold: "5"
+            Interval: "30"
+            Timeout: "5"
+          ConnectionDrainingPolicy:
+            Enabled: "true"
+            Timeout: "60"
+        - AvailabilityZones:
+            Fn::GetAZs: ""
+          Listeners:
+            - LoadBalancerPort: "80"
+              InstancePort: "80"
+              Protocol: HTTP
+          HealthCheck:
+            Target: HTTP:80/
+            HealthyThreshold: "3"
+            UnhealthyThreshold: "5"
+            Interval: "30"
+            Timeout: "5"
   # Fail when not using FindInMap
   lambdaMap1:
     Type: AWS::EC2::SecurityGroup
@@ -199,13 +192,13 @@ Resources:
     Properties:
       GroupDescription: test
       SecurityGroupIngress:
-      - Fn::FindInMap: [ runtime, !Ref 'AWS::Region', production ]
+        - Fn::FindInMap: [runtime, !Ref "AWS::Region", production]
   PermitAllInbound:
     Type: AWS::EC2::NetworkAclEntry
     Properties:
       CidrBlock: 10.0.0.0/16
       Icmp: !Ref AWS::NoValue
-      NetworkAclId: '1'
+      NetworkAclId: "1"
       RuleNumber: 1
       Protocol: 1
       RuleAction: allow
@@ -215,7 +208,7 @@ Resources:
       ImageId: "ami-2f726546"
       InstanceType: t1.micro
       KeyName: testkey
-      BlockDeviceMappings: !Ref 'AWS::NoValue'
+      BlockDeviceMappings: !Ref "AWS::NoValue"
       NetworkInterfaces:
         - DeviceIndex: "1"
 Outputs:

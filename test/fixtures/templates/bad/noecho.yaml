@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  NoEchoParam:
+    Type: String
+    Default: NoEchoWasEchoed
+    NoEcho: true
+Resources:
+  SNSTopicWithSecretNameInRef:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: testname
+    Metadata:
+      NoEchoParamInMetadata: !Ref NoEchoParam
+  SNSTopicWithSecretNameInSub:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: testname
+    Metadata:
+      NoEchoParamInMetadata: !Sub "${NoEchoParam}"

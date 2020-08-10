@@ -8,7 +8,7 @@
 [![PyPI downloads](https://img.shields.io/pypi/dm/cfn-lint.svg)](https://pypistats.org/packages/cfn-lint)
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
-Validate CloudFormation yaml/json templates against the CloudFormation spec and additional
+Validate CloudFormation yaml/json templates against the [CloudFormation Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and additional
 checks.  Includes checking valid values for resource properties and best practices.
 
 ### Warning
@@ -151,7 +151,7 @@ Optional parameters:
 | -x,  --configure-rule | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false
 | -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
-| -u, --update-specs | | | Update the CloudFormation Specs.  You may need sudo to run this.  You will need internet access when running this command |
+| -u, --update-specs | | | Update the [CloudFormation Resource Specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html).  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
 | -g, --build-graph | |  | Creates a file in the same directory as the template that models the template's resources in [DOT format](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) |
 | -v, --version | | | Version of cfn-lint |
@@ -232,7 +232,7 @@ More information describing how rules are set up and an overview of all the Rule
 
 ## Customize specifications
 
-The linter follows the [CloudFormation specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
+The linter follows the [CloudFormation Resource Specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
 
 The linter provides the possibility to implement these customized specifications using the `--override-spec` argument.
 
@@ -245,7 +245,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.33.2  # The version of cfn-lint to use
+    rev: v0.34.1  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

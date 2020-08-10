@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import six
-from cfnlint.helpers import PSEUDOPARAMS
+from cfnlint.helpers import PSEUDOPARAMS, VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -98,11 +98,6 @@ class Sub(CloudFormationLintRule):
         matches = []
         get_atts = cfn.get_valid_getatts()
 
-        odd_list_params = [
-            'CommaDelimitedList',
-            'AWS::SSM::Parameter::Value<CommaDelimitedList>',
-        ]
-
         valid_params = list(PSEUDOPARAMS)
         valid_params.extend(cfn.get_resource_names())
         template_parameters = self._get_parameters(cfn)
@@ -114,10 +109,7 @@ class Sub(CloudFormationLintRule):
             found = False
             if parameter in template_parameters:
                 found = True
-                if (
-                        template_parameters.get(parameter) in odd_list_params or
-                        template_parameters.get(parameter).startswith('AWS::SSM::Parameter::Value<List') or
-                        template_parameters.get(parameter).startswith('List')):
+                if template_parameters.get(parameter) in VALID_PARAMETER_TYPES_LIST:
                     message = 'Fn::Sub cannot use list {0} at {1}'
                     matches.append(RuleMatch(
                         tree, message.format(parameter, '/'.join(map(str, tree)))))
