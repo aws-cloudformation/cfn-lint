@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
+import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -34,18 +35,22 @@ class AllowedPattern(CloudFormationLintRule):
         # the RegEx itself is used.
         value_pattern = kwargs.get('value_specs', {}).get('AllowedPattern', value_pattern_regex)
 
-        if value_pattern_regex:
-            regex = re.compile(value_pattern_regex)
+        if isinstance(value, (int, float)):
+            value = str(value)
 
-            # Ignore values with dynamic references. Simple check to prevent false-positives
-            # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
-            if '{{resolve:' not in value:
-                if not regex.match(value):
-                    full_path = ('/'.join(str(x) for x in path))
+        if isinstance(value, six.string_types):
+            if value_pattern_regex:
+                regex = re.compile(value_pattern_regex)
 
-                    message = '{} contains invalid characters (Pattern: {}) at {}'
-                    matches.append(RuleMatch(path, message.format(
-                        property_name, value_pattern, full_path)))
+                # Ignore values with dynamic references. Simple check to prevent false-positives
+                # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
+                if '{{resolve:' not in value:
+                    if not regex.match(value):
+                        full_path = ('/'.join(str(x) for x in path))
+
+                        message = '{} contains invalid characters (Pattern: {}) at {}'
+                        matches.append(RuleMatch(path, message.format(
+                            property_name, value_pattern, full_path)))
 
         return matches
 
