@@ -9,7 +9,7 @@
 ###### Fixes
 - Update rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) to convert int or float to string before doing an allowed pattern match on it (pull #[1647](https://github.com/aws-cloudformation/cfn-python-lint/pull/1647))
 - Add exceptions to rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) (pull #[1646](https://github.com/aws-cloudformation/cfn-python-lint/pull/1646) and pull #[1648](https://github.com/aws-cloudformation/cfn-python-lint/pull/1648))
-- Update rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to look for string based parameters(pull #[1640](https://github.com/aws-cloudformation/cfn-python-lint/pull/1640))
+- Update rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to look for string based parameters (pull #[1640](https://github.com/aws-cloudformation/cfn-python-lint/pull/1640))
 
 ### v0.34.1
 ###### CloudFormation Specifications
