@@ -1,7 +1,7 @@
 ### v0.34.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 17.0.0 (pull #[1653](https://github.com/aws-cloudformation/cfn-python-lint/pull/1653))
-- Fix many CloudFormation patching patch issues (pull #[1654](https://github.com/aws-cloudformation/cfn-python-lint/pull/1654))
+- Fix ElasticMapReduce and ManagedBlockchain InstanceType patching (pull #[1654](https://github.com/aws-cloudformation/cfn-python-lint/pull/1654))
 - Include a regex pattern to check MetricValue is either a number or starts with `$` (pull #[1647](https://github.com/aws-cloudformation/cfn-python-lint/pull/1647))
 - Add more types to `AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType` (pull #[1652](https://github.com/aws-cloudformation/cfn-python-lint/pull/1652))
 - Add more values to `AWS::Lambda::Function.Runtime` (pull #[1651](https://github.com/aws-cloudformation/cfn-python-lint/pull/1651) and pull #[1649](https://github.com/aws-cloudformation/cfn-python-lint/pull/1649))
