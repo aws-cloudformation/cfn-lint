@@ -1,4 +1,4 @@
-### v0.34.1
+### v0.35.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 17.0.0 (pull #[1653](https://github.com/aws-cloudformation/cfn-python-lint/pull/1653))
 - Fix ElasticMapReduce and ManagedBlockchain InstanceType patching (pull #[1654](https://github.com/aws-cloudformation/cfn-python-lint/pull/1654))
