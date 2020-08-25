@@ -401,7 +401,7 @@ class CliArgs(object):
                               help='Specify the cfnlintrc file to use')
 
         standard.add_argument(
-            '-z', '--custom-rule', dest='custom_rules',
+            '-z', '--custom-rules', dest='custom_rules',
             help='Allows specification of a custom rule file.'
         )
 
@@ -636,7 +636,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def custom_rules(self):
-        """ override_spec """
+        """ custom_rules_spec """
         return self._get_argument_value('custom_rules', False, True)
 
     @property

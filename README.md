@@ -130,6 +130,8 @@ ignore_templates:
 - codebuild.yaml
 include_checks:
 - I
+custom_rules:
+- custom_rules.txt
 ```
 
 ### Parameters
@@ -231,6 +233,46 @@ This linter checks the CloudFormation template by processing a collection of Rul
 This collection of rules can be extended with custom rules using the `--append-rules` argument.
 
 More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md).
+
+## Custom Rules
+
+The linter supports the creation of custom one-line rules which compare any resource with a property using pre-defined operators. These custom rules take the following format:
+```
+<Resource Type> <Property[*]> <Operator> <Value> [Error Level] [Custom Error Message]
+```
+
+### Example
+A seperate custom rule text file must be created.
+
+The example below validates `example_template.yml` does not use any EC2 instances of size `m4.16xlarge`
+
+_custom_rule.txt_
+```
+AWS::EC2::Instance InstanceSize NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
+```
+
+_example_template.yml_
+```
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+        myInstance:
+                Type: AWS::EC2::Instance
+                Properties:
+                        InstanceType: m4.16xlarge
+                        ImageId: ami-asdfef
+```
+
+The custom rule can be added to the [configuration file](#Config-File) or ran as a command line argument with `-z custom_rule.txt` or `-custom-rules custom_rule.txt`
+
+The linter will produce the following output, running `cfn-lint example_template.yml -z custom_rules.txt`:
+
+```
+W9001  This is an expensive instance type, don't use it
+mqtemplate.yml:6:17
+```
+
+
+More information describing how custom rules are setup and an overview of all operators available is documented [here](docs/custom_rules.md).
 
 ## Customize specifications
 

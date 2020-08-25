@@ -60,4 +60,6 @@ def check(template, rules, runner):
 
 def set_filename(filename):
     global CUSTOM_RULES_FILE
+    if isinstance(filename, list):
+        filename = filename[0]
     CUSTOM_RULES_FILE = filename

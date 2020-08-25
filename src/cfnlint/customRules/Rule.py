@@ -22,8 +22,8 @@ class Rule(object):
     error_message = ''
 
     def __init__(self, line, ruleNumber, ruleSet):
-        line = line.replace('"', '')
-        self.lineNumber = ruleNumber
+        line = line.rstrip().replace('"', '')
+        self.lineNumber = ruleNumber + 9000
         self.valid = False
         self.ruleSet = ruleSet
         line = line.split(' ', 3)
