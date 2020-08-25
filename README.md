@@ -141,6 +141,7 @@ Optional parameters:
 | Command Line  | Metadata | Options | Description |
 | ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
+| -z, --custom-rules | | filename | Text file containing user-defined custom rules. See [here](#Custom-Rules) for more information |
 | -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
 | -f, --format    | format | quiet, parseable, json, junit | Output format |
 | -l, --list-rules | | | List all the rules |
@@ -262,7 +263,7 @@ Resources:
                         ImageId: ami-asdfef
 ```
 
-The custom rule can be added to the [configuration file](#Config-File) or ran as a command line argument with `-z custom_rule.txt` or `-custom-rules custom_rule.txt`
+The custom rule can be added to the [configuration file](#Config-File) or ran as a [command line argument](#Parameters)
 
 The linter will produce the following output, running `cfn-lint example_template.yml -z custom_rules.txt`:
 
