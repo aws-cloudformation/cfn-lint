@@ -125,6 +125,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ['us-east-1'])
         self.assertEqual(args.templates, [
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
@@ -160,6 +161,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ['us-east-1'])
         self.assertEqual(args.templates, [
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
@@ -187,6 +189,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ['us-east-1'])
         self.assertEqual(args.templates, [
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
@@ -213,6 +216,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
+        self.assertEqual(args.custom_rules, None)
         self.assertEqual(args.regions, ['us-east-1'])
         self.assertEqual(args.templates, [filename])
         self.assertEqual(args.update_documentation, False)
