@@ -43,12 +43,13 @@ class UnexpectedRuleException(CfnLintExitException):
 
 def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
     """Process args and run"""
-    template_obj = Template(filename, template, regions)
+
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
     if build_graph:
+        template_obj = Template(filename, template, regions)
         template_obj.build_graph()
 
     if registry_schemas:
@@ -127,6 +128,8 @@ def get_args_filenames(cli_args):
 
     fmt = config.format
     formatter = get_formatter(fmt)
+    if config.custom_rules:
+        cfnlint.custom_rules.set_filename(config.custom_rules)
 
     if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
@@ -242,7 +245,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     # Only do rule analysis if Transform was successful
     try:
         errors.extend(runner.run())
-        errors.extend(cfnlint.custom_rules.check('custom_rules.txt', template, rules, runner))
+        errors.extend(cfnlint.custom_rules.check(runner.cfn, rules, runner))
     except Exception as err:  # pylint: disable=W0703
         msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
         UnexpectedRuleException(msg, 1)

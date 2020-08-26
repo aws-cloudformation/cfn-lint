@@ -92,4 +92,5 @@ class TestCustomRuleParsing(BaseTestCase):
             rules = RulesCollection(None, None, None,
                                     False, None)
             runner = cfnlint.runner.Runner(rules, filename, template, None, None)
-            return cfnlint.custom_rules.check(rulename, cfn, rules, runner)
+            cfnlint.custom_rules.set_filename(rulename)
+            return cfnlint.custom_rules.check(cfn, rules, runner)
