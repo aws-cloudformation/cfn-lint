@@ -59,3 +59,11 @@ Resources:
           'Fn::Sub':
             'Fn::Transform':  # Doesn't fail on Transform
               Name: DynamicUserData
+  ProvisionedProduct:
+    Type: AWS::ServiceCatalog::CloudFormationProvisionedProduct
+    Properties:
+      ProductName: example
+      ProvisioningArtifactName: v1
+Outputs:
+  OutputSub:
+    Value: !Sub '${ProvisionedProduct.Outputs.Example}-example'
