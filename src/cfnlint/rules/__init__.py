@@ -49,7 +49,7 @@ class CloudFormationLintRule(object):
         include_rules = include_rules or []
         mandatory_rules = mandatory_rules or []
 
-        # Evaluate experimental rulestox
+        # Evaluate experimental rules
         if self.experimental and not include_experimental:
             return False
 
