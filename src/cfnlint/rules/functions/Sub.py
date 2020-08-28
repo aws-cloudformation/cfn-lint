@@ -115,19 +115,19 @@ class Sub(CloudFormationLintRule):
                         tree, message.format(parameter, '/'.join(map(str, tree)))))
             for resource, attributes in get_atts.items():
                 for attribute_name, attribute_values in attributes.items():
-                    if resource == parameter.split('.')[0] and attribute_name == '*':
-                        if attribute_values.get('Type') == 'List':
-                            message = 'Fn::Sub cannot use list {0} at {1}'
-                            matches.append(RuleMatch(
-                                tree, message.format(parameter, '/'.join(map(str, tree)))))
-                        found = True
-                    elif (resource == parameter.split('.')[0] and
-                          attribute_name == '.'.join(parameter.split('.')[1:])):
-                        if attribute_values.get('Type') == 'List':
-                            message = 'Fn::Sub cannot use list {0} at {1}'
-                            matches.append(RuleMatch(
-                                tree, message.format(parameter, '/'.join(map(str, tree)))))
-                        found = True
+                    if resource == parameter.split('.')[0]:
+                        if attribute_name == '*':
+                            found = True
+                        elif attribute_name == '.'.join(parameter.split('.')[1:]):
+                            if attribute_values.get('Type') == 'List':
+                                message = 'Fn::Sub cannot use list {0} at {1}'
+                                matches.append(RuleMatch(
+                                    tree, message.format(parameter, '/'.join(map(str, tree)))))
+                            found = True
+                        else:
+                            if attribute_name == parameter.split('.')[1] and attribute_values.get('Type') == 'Map':
+                                found = True
+
             if not found:
                 message = 'Parameter {0} for Fn::Sub not found at {1}'
                 matches.append(RuleMatch(

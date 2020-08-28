@@ -18,11 +18,9 @@ class SubNeeded(CloudFormationLintRule):
     tags = ['functions', 'sub']
 
     # Free-form text properties to exclude from this rule
-    # content is part of AWS::CloudFormation::Init
-    # RequestMappingTemplate is because of issue #1485
     excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
                 'CloudWatchAlarmDefinition', 'TopicRulePayload', 'BuildSpec',
-                'RequestMappingTemplate']
+                'RequestMappingTemplate', 'LogFormat', 'TemplateBody', 'ResponseMappingTemplate']
     api_excludes = ['Uri', 'Body', 'ConnectionId']
 
 

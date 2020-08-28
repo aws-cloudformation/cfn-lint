@@ -1,3 +1,16 @@
+### v0.35.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to 17.0.0 (pull #[1653](https://github.com/aws-cloudformation/cfn-python-lint/pull/1653))
+- Fix ElasticMapReduce and ManagedBlockchain InstanceType patching (pull #[1654](https://github.com/aws-cloudformation/cfn-python-lint/pull/1654))
+- Include a regex pattern to check MetricValue is either a number or starts with `$` (pull #[1647](https://github.com/aws-cloudformation/cfn-python-lint/pull/1647))
+- Add more types to `AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType` (pull #[1652](https://github.com/aws-cloudformation/cfn-python-lint/pull/1652))
+- Add more values to `AWS::Lambda::Function.Runtime` (pull #[1651](https://github.com/aws-cloudformation/cfn-python-lint/pull/1651) and pull #[1649](https://github.com/aws-cloudformation/cfn-python-lint/pull/1649))
+- Add more values to `AWS::Budgets::Budget.BudgetType` (pull #[1643](https://github.com/aws-cloudformation/cfn-python-lint/pull/1643))
+###### Fixes
+- Update rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) to convert int or float to string before doing an allowed pattern match on it (pull #[1647](https://github.com/aws-cloudformation/cfn-python-lint/pull/1647))
+- Add exceptions to rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) (pull #[1646](https://github.com/aws-cloudformation/cfn-python-lint/pull/1646) and pull #[1648](https://github.com/aws-cloudformation/cfn-python-lint/pull/1648))
+- Update rule [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E8003) to look for string based parameters (pull #[1640](https://github.com/aws-cloudformation/cfn-python-lint/pull/1640))
+
 ### v0.34.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 16.3.0 (pull #[1635](https://github.com/aws-cloudformation/cfn-python-lint/pull/1635))

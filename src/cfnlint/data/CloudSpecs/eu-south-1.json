@@ -5041,7 +5041,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-cluster-instancegroupconfig.html#cfn-elasticmapreduce-cluster-instancegroupconfig-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "EMRInstanceType"
+          }
         },
         "Market": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-cluster-instancegroupconfig.html#cfn-elasticmapreduce-cluster-instancegroupconfig-market",
@@ -5090,7 +5093,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-cluster-instancetypeconfig.html#cfn-elasticmapreduce-cluster-instancetypeconfig-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "EMRInstanceType"
+          }
         },
         "WeightedCapacity": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-cluster-instancetypeconfig.html#cfn-elasticmapreduce-cluster-instancetypeconfig-weightedcapacity",
@@ -5582,7 +5588,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-instancefleetconfig-instancetypeconfig.html#cfn-elasticmapreduce-instancefleetconfig-instancetypeconfig-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "EMRInstanceType"
+          }
         },
         "WeightedCapacity": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticmapreduce-instancefleetconfig-instancetypeconfig.html#cfn-elasticmapreduce-instancefleetconfig-instancetypeconfig-weightedcapacity",
@@ -8974,7 +8983,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricValue"
+          }
         }
       }
     },
@@ -11115,7 +11127,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "16.3.0",
+  "ResourceSpecificationVersion": "17.0.0",
   "ResourceTypes": {
     "AWS::ApiGateway::Account": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
@@ -21398,12 +21410,6 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
-        "FifoTopic": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html#cfn-sns-topic-fifotopic",
-          "PrimitiveType": "Boolean",
-          "Required": false,
-          "UpdateType": "Immutable"
-        },
         "KmsMasterKeyId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html#cfn-sns-topic-kmsmasterkeyid",
           "PrimitiveType": "String",
@@ -22698,9 +22704,10 @@
     "AWS::ApplicationAutoScaling::ScalingPolicy.PredefinedMetricSpecification.PredefinedMetricType": {
       "AllowedValues": [
         "ALBRequestCountPerTarget",
-        "ASGAverageCPUUtilization",
-        "ASGAverageNetworkIn",
-        "ASGAverageNetworkOut",
+        "AppStreamAverageCapacityUtilization",
+        "CassandraReadCapacityUtilization",
+        "CassandraWriteCapacityUtilization",
+        "ComprehendInferenceUtilization",
         "DynamoDBReadCapacityUtilization",
         "DynamoDBWriteCapacityUtilization",
         "EC2SpotFleetRequestAverageCPUUtilization",
@@ -22835,6 +22842,8 @@
         "COST",
         "RI_COVERAGE",
         "RI_UTILIZATION",
+        "SAVINGS_PLANS_COVERAGE",
+        "SAVINGS_PLANS_UTILIZATION",
         "USAGE"
       ]
     },
@@ -24126,6 +24135,9 @@
         "3653"
       ]
     },
+    "AWS::Logs::MetricFilter.MetricTransformation.MetricValue": {
+      "AllowedPatternRegex": "^(([0-9]*)|(\\$.*))$"
+    },
     "AWS::RDS::DBCluster.BackupRetentionPeriod": {
       "NumberMax": 35,
       "NumberMin": 1
@@ -24561,6 +24573,12 @@
         "d2.4xlarge",
         "d2.8xlarge",
         "d2.xlarge",
+        "g4dn.12xlarge",
+        "g4dn.16xlarge",
+        "g4dn.2xlarge",
+        "g4dn.4xlarge",
+        "g4dn.8xlarge",
+        "g4dn.xlarge",
         "i3.16xlarge",
         "i3.2xlarge",
         "i3.4xlarge",
@@ -24771,6 +24789,7 @@
         "dotnetcore3.1",
         "go1.x",
         "java8",
+        "java8.al2",
         "java11",
         "nodejs",
         "nodejs4.3-edge",
@@ -24780,6 +24799,7 @@
         "nodejs10.x",
         "nodejs12.x",
         "provided",
+        "provided.al2",
         "python2.7",
         "python3.6",
         "python3.7",

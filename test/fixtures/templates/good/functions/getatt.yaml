@@ -57,6 +57,11 @@ Resources:
       Tags:
         - Key: foo
           Value: bar
+  ProvisionedProduct:
+    Type: AWS::ServiceCatalog::CloudFormationProvisionedProduct
+    Properties:
+      ProductName: example
+      ProvisioningArtifactName: v1
 Outputs:
   ElasticSearchHostname:
     Value:
@@ -65,3 +70,5 @@ Outputs:
     Description: Endpoint address for Redshift cluster.
     Value:
       Fn::GetAtt: myCluster.Endpoint.Address
+  OutputValue:
+    Value: !GetAtt ProvisionedProduct.Outputs.Example

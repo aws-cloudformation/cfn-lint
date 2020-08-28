@@ -80,6 +80,15 @@ class GetAtt(CloudFormationLintRule):
             if resname:
                 if resname in valid_getatts:
                     if restype is not None:
+                        # Check for maps
+                        restypeparts = restype.split('.')
+                        if restypeparts[0] in valid_getatts[resname] and len(restypeparts) >= 2:
+                            if valid_getatts[resname][restypeparts[0]].get('Type') != 'Map':
+                                message = 'Invalid GetAtt {0}.{1} for resource {2}'
+                                matches.append(RuleMatch(
+                                    getatt[:-1], message.format(resname, restype, getatt[1])))
+                            else:
+                                continue
                         if restype not in valid_getatts[resname] and '*' not in valid_getatts[resname]:
                             message = 'Invalid GetAtt {0}.{1} for resource {2}'
                             matches.append(RuleMatch(
