@@ -104,7 +104,7 @@ AVAILABILITY_ZONES = [
     'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
     'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
     'us-west-1a', 'us-west-1b', 'us-west-1c',
-    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d', 'us-west-2-lax-1a',
+    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d', 'us-west-2-lax-1a', 'us-west-2-lax-1b',
 ]
 
 FUNCTIONS = [
