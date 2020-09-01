@@ -509,7 +509,6 @@
       "Properties": {
         "Types": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-domainname-endpointconfiguration.html#cfn-apigateway-domainname-endpointconfiguration-types",
-          "DuplicatesAllowed": false,
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
@@ -7316,8 +7315,9 @@
       "Properties": {
         "Options": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-firelensconfiguration.html#cfn-ecs-taskdefinition-firelensconfiguration-options",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "Options",
+          "Type": "Map",
           "UpdateType": "Immutable"
         },
         "Type": {
@@ -7505,8 +7505,9 @@
         },
         "Options": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-logconfiguration.html#cfn-ecs-taskdefinition-containerdefinition-logconfiguration-options",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "Options",
+          "Type": "Map",
           "UpdateType": "Immutable"
         },
         "SecretOptions": {
@@ -7540,9 +7541,6 @@
           "UpdateType": "Immutable"
         }
       }
-    },
-    "AWS::ECS::TaskDefinition.Options": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-options.html"
     },
     "AWS::ECS::TaskDefinition.PortMapping": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html",
@@ -18483,7 +18481,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "17.0.0",
+  "ResourceSpecificationVersion": "18.1.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -18960,8 +18958,8 @@
         "DomainName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-domainname",
           "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "EndpointConfiguration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-endpointconfiguration",
@@ -18983,7 +18981,6 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-tags",
-          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -19806,6 +19803,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "IntegrationSubtype": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-integration.html#cfn-apigatewayv2-integration-integrationsubtype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "IntegrationType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-integration.html#cfn-apigatewayv2-integration-integrationtype",
           "PrimitiveType": "String",
@@ -20603,6 +20606,40 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::Athena::NamedQuery": {
+      "Attributes": {
+        "NamedQueryId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-athena-namedquery.html",
+      "Properties": {
+        "Database": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-athena-namedquery.html#cfn-athena-namedquery-database",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "Description": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-athena-namedquery.html#cfn-athena-namedquery-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-athena-namedquery.html#cfn-athena-namedquery-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "QueryString": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-athena-namedquery.html#cfn-athena-namedquery-querystring",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -26884,12 +26921,6 @@
           "Type": "List",
           "UpdateType": "Mutable"
         },
-        "TaskDefinitionStatus": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-taskdefinitionstatus",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
         "TaskRoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-taskrolearn",
           "PrimitiveType": "String",
@@ -27238,6 +27269,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-labels",
           "PrimitiveType": "Json",
           "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "LaunchTemplate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-nodegroup.html#cfn-eks-nodegroup-launchtemplate",
+          "Required": false,
+          "Type": "LaunchTemplateSpecification",
           "UpdateType": "Mutable"
         },
         "NodeRole": {
@@ -30069,6 +30106,12 @@
     "AWS::GuardDuty::Detector": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html",
       "Properties": {
+        "DataSources": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-datasources",
+          "Required": false,
+          "Type": "CFNDataSourceConfigurations",
+          "UpdateType": "Mutable"
+        },
         "Enable": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-guardduty-detector.html#cfn-guardduty-detector-enable",
           "PrimitiveType": "Boolean",
@@ -31338,6 +31381,9 @@
       "Attributes": {
         "Arn": {
           "PrimitiveType": "String"
+        },
+        "KeyId": {
+          "PrimitiveType": "String"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-key.html",
@@ -31383,7 +31429,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kms-key.html#cfn-kms-key-tags",
-          "DuplicatesAllowed": true,
+          "DuplicatesAllowed": false,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -35207,6 +35253,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "PathName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-cloudformationprovisionedproduct.html#cfn-servicecatalog-cloudformationprovisionedproduct-pathname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "ProductId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-cloudformationprovisionedproduct.html#cfn-servicecatalog-cloudformationprovisionedproduct-productid",
           "PrimitiveType": "String",
@@ -35284,6 +35336,9 @@
     },
     "AWS::StepFunctions::StateMachine": {
       "Attributes": {
+        "Arn": {
+          "PrimitiveType": "String"
+        },
         "Name": {
           "PrimitiveType": "String"
         }
@@ -35330,10 +35385,11 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "TagsEntry",
           "Required": false,
           "Type": "List",
@@ -36698,7 +36754,8 @@
         "TLSv1",
         "TLSv1_2016",
         "TLSv1.1_2016",
-        "TLSv1.2_2018"
+        "TLSv1.2_2018",
+        "TLSv1.2_2019"
       ]
     },
     "AWS::CloudFront::Distribution.OriginProtocolPolicy": {
@@ -37145,6 +37202,7 @@
         "AWS::ShieldRegional::Protection",
         "AWS::SNS::Topic",
         "AWS::SSM::AssociationCompliance",
+        "AWS::SSM::FileData",
         "AWS::SSM::ManagedInstanceInventory",
         "AWS::SSM::PatchCompliance",
         "AWS::SQS::Queue",
@@ -37336,6 +37394,8 @@
     "AWS::Glue::Connection.ConnectionInput.ConnectionType": {
       "AllowedValues": [
         "JDBC",
+        "KAFKA",
+        "MONGODB",
         "SFTP"
       ]
     },
@@ -37800,64 +37860,6 @@
         "GITHUB_HMAC",
         "IP",
         "UNAUTHENTICATED"
-      ]
-    },
-    "ConfigResourceType": {
-      "AllowedValues": [
-        "AWS::ACM::Certificate",
-        "AWS::AutoScaling::AutoScalingGroup",
-        "AWS::AutoScaling::LaunchConfiguration",
-        "AWS::AutoScaling::ScalingPolicy",
-        "AWS::AutoScaling::ScheduledAction",
-        "AWS::CloudFormation::Stack",
-        "AWS::CloudTrail::Trail",
-        "AWS::CloudWatch::Alarm",
-        "AWS::CodeBuild::Project",
-        "AWS::CodePipeline::Pipeline",
-        "AWS::DynamoDB::Table",
-        "AWS::EC2::CustomerGateway",
-        "AWS::EC2::EIP",
-        "AWS::EC2::Host",
-        "AWS::EC2::Instance",
-        "AWS::EC2::InternetGateway",
-        "AWS::EC2::NetworkAcl",
-        "AWS::EC2::NetworkInterface",
-        "AWS::EC2::RouteTable",
-        "AWS::EC2::SecurityGroup",
-        "AWS::EC2::Subnet",
-        "AWS::EC2::Volume",
-        "AWS::EC2::VPC",
-        "AWS::EC2::VPNConnection",
-        "AWS::EC2::VPNGateway",
-        "AWS::ElasticBeanstalk::Application",
-        "AWS::ElasticBeanstalk::ApplicationVersion",
-        "AWS::ElasticBeanstalk::Environment",
-        "AWS::ElasticLoadBalancing::LoadBalancer",
-        "AWS::ElasticLoadBalancingV2::LoadBalancer",
-        "AWS::IAM::Group",
-        "AWS::IAM::Policy",
-        "AWS::IAM::Role",
-        "AWS::IAM::User",
-        "AWS::Lambda::Function",
-        "AWS::RDS::DBInstance",
-        "AWS::RDS::DBSecurityGroup",
-        "AWS::RDS::DBSnapshot",
-        "AWS::RDS::DBSubnetGroup",
-        "AWS::RDS::EventSubscription",
-        "AWS::Redshift::Cluster",
-        "AWS::Redshift::ClusterParameterGroup",
-        "AWS::Redshift::ClusterSecurityGroup",
-        "AWS::Redshift::ClusterSnapshot",
-        "AWS::Redshift::ClusterSubnetGroup",
-        "AWS::Redshift::EventSubscription",
-        "AWS::S3::Bucket",
-        "AWS::ServiceCatalog::CloudFormationProduct",
-        "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
-        "AWS::ServiceCatalog::Portfolio",
-        "AWS::SSM::AssociationCompliance",
-        "AWS::SSM::ManagedInstanceInventory",
-        "AWS::SSM::PatchCompliance",
-        "AWS::XRay::EncryptionConfig"
       ]
     },
     "CustomerGatewayType": {
