@@ -1,3 +1,15 @@
+### v0.35.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 18.1.0 (pull #[1671](https://github.com/aws-cloudformation/cfn-python-lint/pull/1671))
+- Expand `AllowedValues` for `AWS::Glue::Connection.ConnectionInput.ConnectionType` (pull #[1673](https://github.com/aws-cloudformation/cfn-python-lint/pull/1673))
+- Expand `AllowedValues` for `AWS::Config::ConfigurationRecorder.ResourceTypes` (pull #[1664](https://github.com/aws-cloudformation/cfn-python-lint/pull/1664))
+- Expand `AllowedValues` for `AWS::CloudFront::Distribution.MinimumProtocolVersion` (pull #[1661](https://github.com/aws-cloudformation/cfn-python-lint/pull/1661))
+- Add localzone `us-west-2-lax-1b` (pull #[1670](https://github.com/aws-cloudformation/cfn-python-lint/pull/1670))
+###### Fixes
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include `routing.http.desync_mitigation_mode` (pull #[1660](https://github.com/aws-cloudformation/cfn-python-lint/pull/1660))
+- Update excludes for rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `ResponseMappingTemplate` (pull #[1667](https://github.com/aws-cloudformation/cfn-python-lint/pull/1667))
+- Update rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) and [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) to handle resource attributes of type `Map` (pull #[1659](https://github.com/aws-cloudformation/cfn-python-lint/pull/1659))
+
 ### v0.35.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 17.0.0 (pull #[1653](https://github.com/aws-cloudformation/cfn-python-lint/pull/1653))
