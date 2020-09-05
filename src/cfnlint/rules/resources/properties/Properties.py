@@ -181,6 +181,7 @@ class Properties(CloudFormationLintRule):
             'AWS::Lambda::Function': ['Code'],
             'AWS::Lambda::LayerVersion': ['Content'],
             'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
+            'AWS::StepFunctions::StateMachine': ['DefinitionS3Location'],
         }
 
         exceptions = templated_exceptions.get(parenttype, [])
