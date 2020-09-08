@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=W0622
+import json
 from cfnlint.rules import Match
 
 
@@ -11,7 +12,7 @@ def equalsOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip().lower() != str(rule.value).strip().lower():
+        if str(actualValue).strip().lower() != str(rule.value).strip().lower():
             matches.append(addMatches(template, rule, actualValue, prop, 'Must equal check failed'))
     return matches
 
@@ -21,7 +22,7 @@ def notEqualsOp(template, rule, propertyList):
     matches = []
     for prop in propertyList:
         actualValue = getProperty(prop, rule)
-        if actualValue.strip().lower() == str(rule.value).strip().lower():
+        if str(actualValue).strip().lower() == str(rule.value).strip().lower():
             matches.append(addMatches(template, rule, actualValue, prop, 'Must not equal check failed'))
     return matches
 
@@ -77,7 +78,7 @@ def addMatches(template, rule, actualValue, prop, defaultMessage):
     path = path + rule.prop.split('.')
     message = ''
     if not rule.error_message:
-        message = defaultMessage + ' comparing ' + actualValue + ' and ' + rule.value
+        message = defaultMessage + ' comparing ' + json.dumps(actualValue) + ' and ' + json.dumps(rule.value)
     else:
         message = rule.error_message
     linenumbers = template.get_location_yaml(template.template, path)
@@ -94,19 +95,19 @@ def addMatches(template, rule, actualValue, prop, defaultMessage):
         message, None)
 
 
-def getProperty(json, rule):
+def getProperty(j, rule):
     """ Converts dot format strings to resultant values -
     i.e inputting 'Value.InstanceSize' to nestedProperties will output the value of that specific property from json"""
     nestedProperties = 'Value.' + str(rule.prop)
     properties = nestedProperties.split('.')
     for prop in properties:
         try:
-            json = json[prop]
+            j = j[prop]
         except KeyError:
             return rule.value  # Property type not found
         except TypeError:
             return rule.value  # Property type not found
-    return str(json)
+    return str(j)
 
 
 def checkInt(i):

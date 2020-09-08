@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=R0902
+import json
 
 def make_rule(line, lineNumber, ruleset=None):
     """ Object Maker Function """
@@ -22,7 +23,7 @@ class Rule(object):
     error_message = ''
 
     def __init__(self, line, ruleNumber, ruleSet):
-        line = line.rstrip().replace('"', '')
+        line = line.rstrip()
         self.lineNumber = ruleNumber + 9000
         self.valid = False
         self.ruleSet = ruleSet
@@ -40,12 +41,19 @@ class Rule(object):
                 self.set_arguments(line[3], 'ERROR')
             else:
                 self.process_sets(line[3])
-                self.value = line[3]
+                self.get_value(line[3])
         self.lineNumber = str(self.lineNumber).zfill(4)
+
+    def get_value(self, value):
+        raw_value = value.strip()
+        try:
+            self.value = json.loads(raw_value)
+        except ValueError:
+            self.value = raw_value
 
     def set_arguments(self, argument, error):
         raw_value = argument.split(error)
-        self.value = raw_value[0].strip()
+        self.get_value(raw_value[0])
         self.process_sets(raw_value[0])
         if len(raw_value) > 1:
             self.error_message = raw_value[1]
