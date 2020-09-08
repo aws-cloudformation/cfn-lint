@@ -22,7 +22,9 @@ class PropertiesTemplated(CloudFormationLintRule):
         self.resource_property_types.extend([
             'AWS::ApiGateway::RestApi',
             'AWS::Lambda::Function',
+            'AWS::Lambda::LayerVersion',
             'AWS::ElasticBeanstalk::ApplicationVersion',
+            'AWS::StepFunctions::StateMachine',
         ])
 
     def check_value(self, value, path):
@@ -44,6 +46,7 @@ class PropertiesTemplated(CloudFormationLintRule):
             'AWS::Lambda::Function': ['Code'],
             'AWS::Lambda::LayerVersion': ['Content'],
             'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
+            'AWS::StepFunctions::StateMachine': ['DefinitionS3Location'],
         }
 
         for key in templated_exceptions.get(resourcetype, []):

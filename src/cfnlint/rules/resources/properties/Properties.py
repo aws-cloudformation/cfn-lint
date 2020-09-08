@@ -177,10 +177,11 @@ class Properties(CloudFormationLintRule):
             - Start with handling exceptions for templated code.
         """
         templated_exceptions = {
-            'AWS::ApiGateway::RestApi': ['BodyS3Location'],
+            'AWS::ApiGateway::RestApi': ['S3Location'],
             'AWS::Lambda::Function': ['Code'],
             'AWS::Lambda::LayerVersion': ['Content'],
             'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
+            'AWS::StepFunctions::StateMachine': ['S3Location'],
         }
 
         exceptions = templated_exceptions.get(parenttype, [])
