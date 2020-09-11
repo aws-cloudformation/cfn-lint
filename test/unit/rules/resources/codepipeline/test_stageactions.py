@@ -35,3 +35,13 @@ class TestCodePipelineStageActions(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             'test/fixtures/templates/bad/resources/codepipeline/action_non_unique.yaml', 1)
+
+    def test_output_artifact_names_unique(self):
+        """Test failure"""
+        self.helper_file_negative(
+            'test/fixtures/templates/bad/resources/codepipeline/output_artifact_non_unique.yaml', 1)
+
+    def test_input_artifact_names_exist(self):
+        """Test failure"""
+        self.helper_file_negative(
+            'test/fixtures/templates/bad/resources/codepipeline/input_artifact_not_exists.yaml', 1)
