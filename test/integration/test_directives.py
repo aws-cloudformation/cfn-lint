@@ -9,6 +9,11 @@ class TestDirectives(BaseCliTestCase):
     '''Test Directives '''
     scenarios = [
         {
+            'filename': 'test/fixtures/templates/good/core/directives.yaml',
+            'exit_code': 0,
+            'results': [],
+        },
+        {
             'filename': 'test/fixtures/templates/bad/core/directives.yaml',
             'exit_code': 2,
             'results': [
