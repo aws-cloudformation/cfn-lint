@@ -55,6 +55,7 @@ that could potentially be improved'),
         'networkx~=2.4;python_version>="3.5"',
         'networkx<=2.2;python_version<"3.5"',
         'junit-xml~=1.9',
+        'pyrsistent<=0.16.0;python_version<"3.5"',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     entry_points={
