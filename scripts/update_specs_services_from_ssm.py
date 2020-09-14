@@ -24,7 +24,7 @@ exclude_regions = {
 service_map = {
     'acm': ['AWS::CertificateManager::'],
     'apigateway': ['AWS::ApiGateway::', 'AWS::ApiGatewayV2::'],
-    'application-autoscaling': ['AWS::ApplicationAutoScaling::'],
+    # 'application-autoscaling': ['AWS::ApplicationAutoScaling::'], ## remove because SSM endpoints aren't correct
     'appstream': ['AWS::AppStream::'],
     'appsync': ['AWS::AppSync::'],
     'athena': ['AWS::Athena::'],
