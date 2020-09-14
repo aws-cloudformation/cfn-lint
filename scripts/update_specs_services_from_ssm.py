@@ -24,7 +24,7 @@ exclude_regions = {
 service_map = {
     'acm': ['AWS::CertificateManager::'],
     'apigateway': ['AWS::ApiGateway::', 'AWS::ApiGatewayV2::'],
-    'application-autoscaling': ['AWS::ApplicationAutoScaling::'],
+    # 'application-autoscaling': ['AWS::ApplicationAutoScaling::'], ## remove because SSM endpoints aren't correct
     'appstream': ['AWS::AppStream::'],
     'appsync': ['AWS::AppSync::'],
     'athena': ['AWS::Athena::'],
@@ -190,11 +190,11 @@ def add_spec_missing_services_patch(region, services):
                     for resource in sorted(spec_standard.get(standard_spec_type).keys()):
                         for spec_name in service_map.get(service):
                             if resource.startswith(spec_name):
-                                if spec_standard.get(spec_type).get(resource):
+                                if spec_standard.get(standard_spec_type).get(resource):
                                     element = {
                                         'op': 'add',
-                                        'path': '/%s/%s' % (spec_type, resource),
-                                        'value': spec_standard.get(spec_type).get(resource)
+                                        'path': '/%s/%s' % (standard_spec_type, resource),
+                                        'value': spec_standard.get(standard_spec_type).get(resource)
                                     }
                                     patches.append(element)
                                 elif standard_spec_type == 'ResourceTypes':
