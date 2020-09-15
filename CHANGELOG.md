@@ -1,3 +1,13 @@
+### v0.35.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 18.1.0 (pull #[1671](https://github.com/aws-cloudformation/cfn-python-lint/pull/1671))
+- Expand `AllowedValues` for `AWS::CloudFront::Distribution.MinimumProtocolVersion`, `AWS::Config::ConfigurationRecorder.ResourceTypes`, and `AWS::Glue::Connection.ConnectionInput.ConnectionType` (pull #[1661](https://github.com/aws-cloudformation/cfn-python-lint/pull/1661), #[1664](https://github.com/aws-cloudformation/cfn-python-lint/pull/1664), #[1673](https://github.com/aws-cloudformation/cfn-python-lint/pull/1673))
+- Add localzone `us-west-2-lax-1b` (pull #[1670](https://github.com/aws-cloudformation/cfn-python-lint/pull/1670))
+###### Fixes
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include `routing.http.desync_mitigation_mode` (pull #[1660](https://github.com/aws-cloudformation/cfn-python-lint/pull/1660))
+- Update excludes for rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) to include `ResponseMappingTemplate` (pull #[1667](https://github.com/aws-cloudformation/cfn-python-lint/pull/1667))
+- Update rule [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1019) and [E1010](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1010) to handle resource attributes of type `Map` (pull #[1659](https://github.com/aws-cloudformation/cfn-python-lint/pull/1659))
+
 ### v0.35.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 17.0.0 (pull #[1653](https://github.com/aws-cloudformation/cfn-python-lint/pull/1653))
@@ -32,7 +42,7 @@
 - Fix an issue for applying `AllowedValues` to `AWS::RDS::DBInstance MonitoringInterval` and `PerformanceInsightsRetentionPeriod` (pull #[1607](https://github.com/aws-cloudformation/cfn-python-lint/pull/1607))
 - Fix an issue for applying `Maximum` and `Minimum` to `AWS::ElasticLoadBalancingV2::ListenerRule.Priority` (pull #[1608](https://github.com/aws-cloudformation/cfn-python-lint/pull/1608))
 ###### Fixes
-- Update rule [E3503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3503) to not fail on if ValidationDomain or DomainName aren't present (pull #[1599](https://github.com/aws-cloudformation/cfn-python-lint/pull/1620))
+- Update rule [E3503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3503) to not fail on if ValidationDomain or DomainName aren't present (pull #[1620](https://github.com/aws-cloudformation/cfn-python-lint/pull/1620))
 
 
 
@@ -966,7 +976,7 @@ samtranslator 1.10.0
 - Update specs to version 2.15.0
 ###### Fixes
 - Fix rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to allow multiple text records of up to 255 characters
-- Fix rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3020) to handle conditions in Update Policies
+- Fix rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3016) to handle conditions in Update Policies
 - Fix rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to not fail when using a Fn::Sub and a number for a param
 
 ### 0.9.1
@@ -1093,7 +1103,7 @@ samtranslator 1.10.0
 - Add rule [E1027](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1027) to validate that dynamic reference secure strings are to supported properties
 - Add rule [E1004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1004) to validate that the Template Description is only a string
 - Add rule [E6005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is only a string
-- Add rule [E6012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6005) to validate that an Output Description is less than the maximum length
+- Add rule [E6012](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E6012) to validate that an Output Description is less than the maximum length
 ###### Fixes
 - Fix core libraries to handle conditions around resource properties so that the resource and property checks still run
 - Fix core libraries to handle the special property type `Tag` so that its checked when a rule is doing a Property Check

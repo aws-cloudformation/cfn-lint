@@ -220,6 +220,35 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
+    def check_artifact_names(self, action, path, artifact_names):
+        """Check that output artifact names are unique and inputs are from previous stage outputs."""
+        matches = []
+
+        input_artifacts = action.get('InputArtifacts')
+        if isinstance(input_artifacts, list):
+            for input_artifact in input_artifacts:
+                artifact_name = input_artifact.get('Name')
+                if isinstance(artifact_name, six.string_types):
+                    if not artifact_name in artifact_names:
+                        message = 'Every input artifact for an action must match the output artifact of an action earlier in the pipeline. ({name})'.format(
+                            name=artifact_name
+                        )
+                        matches.append(RuleMatch(path + ['InputArtifacts', 'Name'], message))
+
+        output_artifacts = action.get('OutputArtifacts')
+        if isinstance(output_artifacts, list):
+            for output_artifact in output_artifacts:
+                artifact_name = output_artifact.get('Name')
+                if isinstance(artifact_name, six.string_types):
+                    if artifact_name in artifact_names:
+                        message = 'Every output artifact in the pipeline must have a unique name. ({name})'.format(
+                            name=artifact_name
+                        )
+                        matches.append(RuleMatch(path + ['OutputArtifacts', 'Name'], message))
+                    artifact_names.add(artifact_name)
+
+        return matches
+
     def match(self, cfn):
         """Check that stage actions are set up properly."""
         matches = []
@@ -228,6 +257,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         for resource in resources:
             path = resource['Path']
             properties = resource['Value']
+            artifact_names = set()
 
             s_stages = properties.get_safe('Stages', path)
             for s_stage_v, s_stage_p in s_stages:
@@ -255,6 +285,8 @@ class CodepipelineStageActions(CloudFormationLintRule):
                                     l_i_a_action, 'InputArtifacts', full_path))
                                 matches.extend(self.check_artifact_counts(
                                     l_i_a_action, 'OutputArtifacts', full_path))
+                                matches.extend(self.check_artifact_names(
+                                    l_i_a_action, full_path, artifact_names))
                             except AttributeError as err:
                                 self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
                                                   'Ignoring the error here: %s', str(err))

@@ -186,17 +186,18 @@ class Template(object):  # pylint: disable=R0904
     def get_directives(self):
         """ Get Directives"""
         results = {}
-        for _, resource_values in self.template.get('Resources', {}).items():
+        for resource_name, resource_values in self.template.get('Resources', {}).items():
             if isinstance(resource_values, dict):
                 ignore_rule_ids = resource_values.get('Metadata', {}).get(
                     'cfn-lint', {}).get('config', {}).get('ignore_checks', [])
                 for ignore_rule_id in ignore_rule_ids:
                     if ignore_rule_id not in results:
                         results[ignore_rule_id] = []
-                    location = self._loc(resource_values)
+                    value_location = self._loc(resource_values)
+                    name_location = self._loc(resource_name)
                     results[ignore_rule_id].append({
-                        'start': location[0],
-                        'end': location[2]
+                        'start': (name_location[0] + 1, name_location[1] + 1),
+                        'end': (value_location[2] + 1, value_location[3] + 1),
                     })
         return results
 

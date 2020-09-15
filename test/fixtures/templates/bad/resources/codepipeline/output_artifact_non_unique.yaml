@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: The AWS CloudFormation template for this Serverless application
+Resources:
+  ServerlessDeploymentPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStores:
+        - Region: ca-central-1
+          ArtifactStore:
+            Type: S3
+            Location: my-artifact-bucket
+      Name: my-code-pipeline
+      RestartExecutionOnUpdate: false
+      RoleArn: arn:aws:iam::000000000000:role/root
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: "1"
+                Provider: S3
+              OutputArtifacts:
+                - Name: SourceArtifact
+              Configuration:
+                S3Bucket: my-source-bucket
+                S3ObjectKey: source-item.zip
+              RunOrder: 1
+        - Name: DeployToEnvA
+          Actions:
+            - Name: CreateChangeSetEnvA
+              Region: us-east-1
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: SourceArtifact
+              OutputArtifacts:
+                - Name: CreateOutput
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                StackName: my-service-env-a
+                Capabilities: CAPABILITY_NAMED_IAM
+                RoleArn: arn:aws:iam::000000000000:role/root
+                TemplatePath: SourceArtifact::env-a-us-east-1.json
+                ChangeSetName: ChangeSet
+              RunOrder: 1
+              RoleArn: arn:aws:iam::000000000000:role/root
+            - Name: CreateChangeSetEnvB
+              Region: us-east-1
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: SourceArtifact
+              OutputArtifacts:
+                - Name: CreateOutput
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                StackName: my-service-env-b
+                Capabilities: CAPABILITY_NAMED_IAM
+                RoleArn: arn:aws:iam::000000000000:role/root
+                TemplatePath: SourceArtifact::env-b-us-east-1.json
+                ChangeSetName: ChangeSet
+              RunOrder: 1
+              RoleArn: arn:aws:iam::000000000000:role/root

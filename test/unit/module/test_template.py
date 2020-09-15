@@ -1014,11 +1014,11 @@ ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
         directives = template.get_directives()
         expected_result = {
             'E3012': [
-                {'end': 22, 'start': 9},
-                {'end': 35, 'start': 23}
+                {'end': (23, 10), 'start': (10, 9)},
+                {'end': (36, 10), 'start': (24, 9)}
             ],
             'I1001': [
-                {'end': 22, 'start': 9}
+                {'end': (23, 10), 'start': (10, 9)}
             ]
         }
         self.assertEqual(len(expected_result), len(directives))

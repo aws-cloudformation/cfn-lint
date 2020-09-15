@@ -64,7 +64,13 @@ class Runner(object):
                             break
                     else:
                         for directive in directives.get(match.rule.id):
-                            if directive.get('start') <= match.linenumber <= directive.get('end'):
+                            start = directive.get('start')
+                            end = directive.get('end')
+                            if start[0] < match.linenumber < end[0]:
+                                break
+                            if start[0] == match.linenumber and start[1] <= match.columnnumber:
+                                break
+                            if end[0] == match.linenumber and end[1] >= match.columnnumberend:
                                 break
                         else:
                             return_matches.append(match)
