@@ -15,6 +15,7 @@ class TestTemplate(BaseTestCase):
     def setUp(self):
         """ SetUp template object"""
         self.rules = RulesCollection()
+        self.rules.include_rules = ['I', 'W', 'E']
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
             self.rules.create_from_directory(rulesdir)
@@ -48,7 +49,7 @@ class TestTemplate(BaseTestCase):
         filename = 'test/fixtures/templates/bad/generic.yaml'
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ['us-east-1'])
-        expected_err_count = 35
+        expected_err_count = 36
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert len(matches) == expected_err_count, 'Expected {} failures, got {}'.format(
