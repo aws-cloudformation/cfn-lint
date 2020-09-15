@@ -15,7 +15,6 @@ class UniqueNames(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
         for resource in cfn.get_resources():
-            for parameter in cfn.template.get('Parameters', {}):
-                if resource == parameter:
-                    matches.append(RuleMatch(['Resources', resource], 'Resources and Parameters must not share name: ' + resource))
+            if resource in cfn.template.get('Parameters', {}):
+                matches.append(RuleMatch(['Resources', resource], 'Resources and Parameters must not share name: ' + resource))
         return matches
