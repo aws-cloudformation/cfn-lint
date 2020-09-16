@@ -17,10 +17,6 @@ from cfnlint.maintenance import SPEC_REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 
-exclude_regions = {
-    'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
-}
-
 service_map = {
     'acm': ['AWS::CertificateManager::'],
     'apigateway': ['AWS::ApiGateway::', 'AWS::ApiGatewayV2::'],
@@ -210,7 +206,7 @@ def main():
     """ main function """
     configure_logging()
 
-    all_regions = list(set(REGIONS) - set(exclude_regions.values()))
+    all_regions = list(set(REGIONS))
     region_service_removal_map = {}
     region_service_add_map = {}
     for region in all_regions:
@@ -219,7 +215,7 @@ def main():
     for service in service_map:
         regions = get_regions_for_service(service)
         if regions:
-            for region in list(set(regions) - set(exclude_regions.values())):
+            for region in list(set(regions)):
                 region_service_add_map[region].append(service)
             for region in list(set(all_regions) - set(regions)):
                 region_service_removal_map[region].append(service)
