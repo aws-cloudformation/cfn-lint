@@ -6,7 +6,7 @@
 - Update CloudFormation specs to 18.3.0 (pull #[1697](https://github.com/aws-cloudformation/cfn-python-lint/pull/1697))
 - Expand `AllowedValues` for `AWS::AmazonMQ::Broker.EngineVersion`, `AWS::Glue::Trigger.Condition.State`, and `AWS::Glue::Connection.ConnectionInput.ConnectionType` (pull #[1680](https://github.com/aws-cloudformation/cfn-python-lint/pull/1680), #[1681](https://github.com/aws-cloudformation/cfn-python-lint/pull/1681))
 ###### Fixes
-- Expand `templated_exceptions` property types that require package command for rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) and [W3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3002)
+- Expand `templated_exceptions` property types that require package command for rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) and [W3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3002) (pull #[1684](https://github.com/aws-cloudformation/cfn-python-lint/pull/1684))
 - Pin pyrsistent to `0.16.0` with Python versions less than `3.5` (pull #[1693](https://github.com/aws-cloudformation/cfn-python-lint/pull/1693))
 - Fix an issue with SSM Spec patching that resulted in resource `PropertyTypes` not being added to the spec patches (pull #[1696](https://github.com/aws-cloudformation/cfn-python-lint/pull/1696))
 - Update directives to use the resource name key as the start (pull #[1692](https://github.com/aws-cloudformation/cfn-python-lint/pull/1692))
