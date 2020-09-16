@@ -4,7 +4,7 @@
 - New rule [E3007](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3007) to validate parameter and resource names are unique (pull #[1698](https://github.com/aws-cloudformation/cfn-python-lint/pull/1698))
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 18.3.0 (pull #[1697](https://github.com/aws-cloudformation/cfn-python-lint/pull/1697))
-- Expand `AllowedValues` for `AWS::AmazonMQ::Broker.EngineVersion`, `AWS::Glue::Trigger.Condition.State`, and `AWS::Glue::Connection.ConnectionInput.ConnectionType` (pull #[1680](https://github.com/aws-cloudformation/cfn-python-lint/pull/1680), #[1681](https://github.com/aws-cloudformation/cfn-python-lint/pull/1681))
+- Expand `AllowedValues` for `AWS::AmazonMQ::Broker.EngineVersion` and `AWS::Glue::Trigger.Condition.State` (pull #[1680](https://github.com/aws-cloudformation/cfn-python-lint/pull/1680), #[1681](https://github.com/aws-cloudformation/cfn-python-lint/pull/1681))
 ###### Fixes
 - Expand `templated_exceptions` property types that require package command for rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) and [W3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W3002) (pull #[1684](https://github.com/aws-cloudformation/cfn-python-lint/pull/1684))
 - Pin pyrsistent to `0.16.0` with Python versions less than `3.5` (pull #[1693](https://github.com/aws-cloudformation/cfn-python-lint/pull/1693))
