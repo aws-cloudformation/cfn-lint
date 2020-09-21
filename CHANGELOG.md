@@ -1,3 +1,9 @@
+### v0.36.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 18.4.0 (pull #[1707](https://github.com/aws-cloudformation/cfn-python-lint/pull/1707))
+- Add `ap-northeast-3` to `scripts/update_specs_services_from_ssm.py` (pull #[1703](https://github.com/aws-cloudformation/cfn-python-lint/pull/1703))
+- Remove unneeded regional resource specification patching (pull #[1704](https://github.com/aws-cloudformation/cfn-python-lint/pull/1704))
+
 ### v0.36.0
 ###### Features
 - Update rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2541) to validate that input artifacts are output artifacts from a previous action and that output artifact names are unique in the pipeline (pull #[1690](https://github.com/aws-cloudformation/cfn-python-lint/pull/1690))
