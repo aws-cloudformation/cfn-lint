@@ -516,6 +516,23 @@
         }
       }
     },
+    "AWS::ApiGateway::DomainName.MutualTlsAuthentication": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-domainname-mutualtlsauthentication.html",
+      "Properties": {
+        "TruststoreUri": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-domainname-mutualtlsauthentication.html#cfn-apigateway-domainname-mutualtlsauthentication-truststoreuri",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "TruststoreVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigateway-domainname-mutualtlsauthentication.html#cfn-apigateway-domainname-mutualtlsauthentication-truststoreversion",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::ApiGateway::Method.Integration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apitgateway-method-integration.html",
       "Properties": {
@@ -1016,6 +1033,29 @@
         },
         "EndpointType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-domainname-domainnameconfiguration.html#cfn-apigatewayv2-domainname-domainnameconfiguration-endpointtype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "SecurityPolicy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-domainname-domainnameconfiguration.html#cfn-apigatewayv2-domainname-domainnameconfiguration-securitypolicy",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ApiGatewayV2::DomainName.MutualTlsAuthentication": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-domainname-mutualtlsauthentication.html",
+      "Properties": {
+        "TruststoreUri": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-domainname-mutualtlsauthentication.html#cfn-apigatewayv2-domainname-mutualtlsauthentication-truststoreuri",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "TruststoreVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-domainname-mutualtlsauthentication.html#cfn-apigatewayv2-domainname-mutualtlsauthentication-truststoreversion",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -16027,6 +16067,12 @@
     "AWS::MSK::Cluster.ClientAuthentication": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-clientauthentication.html",
       "Properties": {
+        "Sasl": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-clientauthentication.html#cfn-msk-cluster-clientauthentication-sasl",
+          "Required": false,
+          "Type": "Sasl",
+          "UpdateType": "Immutable"
+        },
         "Tls": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-clientauthentication.html#cfn-msk-cluster-clientauthentication-tls",
           "Required": false,
@@ -16223,6 +16269,28 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.Sasl": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-sasl.html",
+      "Properties": {
+        "Scram": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-sasl.html#cfn-msk-cluster-sasl-scram",
+          "Required": true,
+          "Type": "Scram",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::MSK::Cluster.Scram": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-scram.html",
+      "Properties": {
+        "Enabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-scram.html#cfn-msk-cluster-scram-enabled",
+          "PrimitiveType": "Boolean",
+          "Required": true,
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -18462,7 +18530,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "18.3.0",
+  "ResourceSpecificationVersion": "18.4.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -18946,6 +19014,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-endpointconfiguration",
           "Required": false,
           "Type": "EndpointConfiguration",
+          "UpdateType": "Mutable"
+        },
+        "MutualTlsAuthentication": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-domainname.html#cfn-apigateway-domainname-mutualtlsauthentication",
+          "Required": false,
+          "Type": "MutualTlsAuthentication",
           "UpdateType": "Mutable"
         },
         "RegionalCertificateArn": {
@@ -19471,6 +19545,11 @@
       }
     },
     "AWS::ApiGatewayV2::Api": {
+      "Attributes": {
+        "ApiEndpoint": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html",
       "Properties": {
         "ApiKeySelectionExpression": {
@@ -19512,6 +19591,12 @@
         "Description": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html#cfn-apigatewayv2-api-description",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DisableExecuteApiEndpoint": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html#cfn-apigatewayv2-api-disableexecuteapiendpoint",
+          "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -19717,6 +19802,12 @@
           "ItemType": "DomainNameConfiguration",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "MutualTlsAuthentication": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-domainname.html#cfn-apigatewayv2-domainname-mutualtlsauthentication",
+          "Required": false,
+          "Type": "MutualTlsAuthentication",
           "UpdateType": "Mutable"
         },
         "Tags": {
@@ -35192,6 +35283,14 @@
         "c5.large",
         "c5.metal",
         "c5.xlarge",
+        "c5a.12xlarge",
+        "c5a.16xlarge",
+        "c5a.24xlarge",
+        "c5a.2xlarge",
+        "c5a.4xlarge",
+        "c5a.8xlarge",
+        "c5a.large",
+        "c5a.xlarge",
         "c5d.18xlarge",
         "c5d.2xlarge",
         "c5d.4xlarge",
