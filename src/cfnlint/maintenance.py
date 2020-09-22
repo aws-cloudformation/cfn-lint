@@ -8,7 +8,6 @@ import logging
 import multiprocessing
 import os
 import jsonpatch
-import requests
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
 from cfnlint.helpers import SPEC_REGIONS
@@ -66,7 +65,7 @@ def update_resource_spec(region, url):
                 service_and_type = line.split('"')[3]
                 service = '/'.join(service_and_type.split('/')[:-1])
                 botocore_type = service_and_type.split('/')[-1]
-                r = requests.get('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json').json()
+                r = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
                 lines += '      "AllowedValues": [\n'
                 for value in sorted(r['shapes'][botocore_type]['enum']):
                     lines.append('        "' + value + '",\n')
