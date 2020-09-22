@@ -8,6 +8,7 @@ import logging
 import multiprocessing
 import os
 import jsonpatch
+import requests
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
 from cfnlint.helpers import SPEC_REGIONS
@@ -57,6 +58,26 @@ def update_resource_spec(region, url):
 
     with open(filename, 'w') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
+
+    lines = []
+    with open(filename, 'r') as f:
+        for line in f:
+            if 'botocore' in line:
+                service_and_type = line.split('"')[3]
+                service = '/'.join(service_and_type.split('/')[:-1])
+                botocore_type = service_and_type.split('/')[-1]
+                r = requests.get('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json').json()
+                lines += '      "AllowedValues": [\n'
+                for value in sorted(r['shapes'][botocore_type]['enum']):
+                    lines.append('        "' + value + '",\n')
+                lines[-1] = lines[-1].replace(',', '')
+                lines += '      ]\n'
+            else:
+                lines += line
+
+    with open(filename, 'w') as f:
+        for line in lines:
+            f.write(line)
 
 def update_documentation(rules):
     """Generate documentation"""
