@@ -59,15 +59,17 @@ def update_resource_spec(region, url):
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
     lines = []
+    botocore_cache = {}
     with open(filename, 'r') as f:
         for line in f:
             if 'botocore' in line:
                 service_and_type = line.split('"')[3]
                 service = '/'.join(service_and_type.split('/')[:-1])
                 botocore_type = service_and_type.split('/')[-1]
-                r = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
+                if service not in botocore_cache:
+                    botocore_cache[service] = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
                 lines += '      "AllowedValues": [\n'
-                for value in sorted(r['shapes'][botocore_type]['enum']):
+                for value in sorted(botocore_cache[service]['shapes'][botocore_type]['enum']):
                     lines.append('        "' + value + '",\n')
                 lines[-1] = lines[-1].replace(',', '')
                 lines += '      ]\n'
