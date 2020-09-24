@@ -232,12 +232,30 @@ class RulesCollection(object):
 
         if property_spec_name in property_spec:
             for rule in self.rules:
-                matches.extend(
-                    self.run_check(
-                        rule.matchall_resource_sub_properties, filename, rule.id,
-                        filename, cfn, properties, property_spec_name, path
+                if isinstance(properties, dict):
+                    if len(properties) == 1:
+                        for k, _ in properties.items():
+                            if k != 'Fn::If':
+                                matches.extend(
+                                    self.run_check(
+                                        rule.matchall_resource_sub_properties, filename, rule.id,
+                                        filename, cfn, properties, property_spec_name, path
+                                    )
+                                )
+                    else:
+                        matches.extend(
+                            self.run_check(
+                                rule.matchall_resource_sub_properties, filename, rule.id,
+                                filename, cfn, properties, property_spec_name, path
+                            )
+                        )
+                else:
+                    matches.extend(
+                        self.run_check(
+                            rule.matchall_resource_sub_properties, filename, rule.id,
+                            filename, cfn, properties, property_spec_name, path
+                        )
                     )
-                )
 
             resource_spec_properties = property_spec.get(property_spec_name, {}).get('Properties')
             if not resource_spec_properties:
@@ -259,10 +277,17 @@ class RulesCollection(object):
                             if isinstance(resource_property_value, list):
                                 if len(resource_property_value) == 3:
                                     for index, c_value in enumerate(resource_property_value[1:]):
-                                        matches.extend(self.resource_property(
-                                            filename, cfn,
-                                            property_path[:] + [index + 1],
-                                            c_value, resource_type, property_type))
+                                        if isinstance(c_value, list):
+                                            for s_i, c_l_value in enumerate(c_value):
+                                                matches.extend(self.resource_property(
+                                                    filename, cfn,
+                                                    property_path[:] + [index + 1] + [s_i],
+                                                    c_l_value, resource_type, property_type))
+                                        else:
+                                            matches.extend(self.resource_property(
+                                                filename, cfn,
+                                                property_path[:] + [index + 1],
+                                                c_value, resource_type, property_type))
                         continue
                     if (resource_spec_property.get('Type') == 'List' and
                             not resource_spec_properties.get('PrimitiveItemType')):
