@@ -9,7 +9,9 @@ import importlib
 import traceback
 import six
 import cfnlint.helpers
+import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -419,6 +421,21 @@ class RulesCollection(object):
         if rulesdir != '':
             result = cfnlint.helpers.load_plugins(os.path.expanduser(rulesdir))
         self.extend(result)
+
+    def create_from_custom_rules_file(self, custom_rules_file):
+        """Create rules from custom rules file """
+        custom_rules = []
+        if custom_rules_file:
+            with open(custom_rules_file) as customRules:
+                line_number = 1
+                for line in customRules:
+                    LOGGER.debug('Processing Custom Rule Line %d', line_number)
+                    custom_rule = cfnlint.rules.custom.make_rule(line, line_number)
+                    if custom_rule:
+                        custom_rules.append(custom_rule)
+                    line_number += 1
+
+        self.extend(custom_rules)
 
 
 class RuleMatch(object):

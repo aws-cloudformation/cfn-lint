@@ -97,7 +97,7 @@ def get_formatter(fmt):
 
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
-              mandatory_rules=None):
+              mandatory_rules=None, custom_rules=None):
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -107,6 +107,8 @@ def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, i
                 rules.create_from_directory(rules_path)
             else:
                 rules.create_from_module(rules_path)
+
+        rules.create_from_custom_rules_file(custom_rules)
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
     return rules
@@ -128,8 +130,6 @@ def get_args_filenames(cli_args):
 
     fmt = config.format
     formatter = get_formatter(fmt)
-    if config.custom_rules:
-        cfnlint.custom_rules.set_filename(config.custom_rules)
 
     if config.update_specs:
         cfnlint.maintenance.update_resource_specs()
@@ -201,6 +201,7 @@ def get_template_rules(filename, args):
             configure_rules=args.configure_rules,
             include_experimental=args.include_experimental,
             mandatory_rules=args.mandatory_checks,
+            custom_rules=args.custom_rules,
         )
     else:
         __CACHED_RULES = cfnlint.core.get_rules(
@@ -210,6 +211,7 @@ def get_template_rules(filename, args):
             args.configure_rules,
             args.include_experimental,
             args.mandatory_checks,
+            args.custom_rules,
         )
 
     return(template, __CACHED_RULES, [])
@@ -245,7 +247,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     # Only do rule analysis if Transform was successful
     try:
         errors.extend(runner.run())
-        errors.extend(cfnlint.custom_rules.check(runner.cfn, rules, runner))
+        # errors.extend(cfnlint.custom_rules.check(runner.cfn, rules, runner))
     except Exception as err:  # pylint: disable=W0703
         msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
         UnexpectedRuleException(msg, 1)

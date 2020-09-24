@@ -422,6 +422,8 @@ def create_rules(mod):
     from the given module."""
     result = []
     for _, clazz in inspect.getmembers(mod, inspect.isclass):
+        if clazz.__name__ == 'CustomRule' and clazz.__module__ == 'cfnlint.rules.custom':
+            continue
         method_resolution = inspect.getmro(clazz)
         if [clz for clz in method_resolution[1:] if clz.__module__ in ('cfnlint', 'cfnlint.rules') and clz.__name__ == 'CloudFormationLintRule']:
             # create and instance of subclasses of CloudFormationLintRule

@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
-import cfnlint.custom_rules
 from six import StringIO
 from mock import patch
 from cfnlint.template import Template  # pylint: disable=E0401
@@ -70,7 +69,7 @@ class TestCustomRuleParsing(BaseTestCase):
 
     def test_invalid_less_than(self):
         """Test Successful Custom_Rule Parsing"""
-        assert (self.run_tests(self.invalid_less_than)[0].message.find('Less than check') > -1)
+        assert (self.run_tests(self.invalid_less_than)[0].message.find('Lesser than check') > -1)
 
     def test_invalid_prop(self):
         """Test Successful Custom_Rule Parsing"""
@@ -89,8 +88,8 @@ class TestCustomRuleParsing(BaseTestCase):
             filename = values.get('filename')
             template = cfnlint.decode.cfn_yaml.load(filename)
             cfn = Template(filename, template, ['us-east-1'])
-            rules = RulesCollection(None, None, None,
-                                    False, None)
+            rules = RulesCollection(None, None, None, False, None)
+            rules.create_from_custom_rules_file(rulename)
             runner = cfnlint.runner.Runner(rules, filename, template, None, None)
-            cfnlint.custom_rules.set_filename(rulename)
-            return cfnlint.custom_rules.check(cfn, rules, runner)
+            return runner.run()
+
