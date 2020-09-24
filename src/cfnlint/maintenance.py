@@ -55,30 +55,36 @@ def update_resource_spec(region, url):
     spec = patch_spec(spec, 'all')
     spec = patch_spec(spec, region)
 
+    botocore_cache = {}
+
+    def search_and_replace_botocore_types(obj):
+        if isinstance(obj, dict):
+            new_obj = {}
+            for key, value in obj.items():
+                if key == 'botocore':
+                    service_and_type = value.split('/')
+                    service = '/'.join(service_and_type[:-1])
+                    botocore_type = service_and_type[-1]
+                    if service not in botocore_cache:
+                        botocore_cache[service] = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
+                    new_obj['AllowedValues'] = sorted(botocore_cache[service]['shapes'][botocore_type]['enum'])
+                else:
+                    new_obj[key] = search_and_replace_botocore_types(value)
+            return new_obj
+
+        if isinstance(obj, list):
+            print(obj)
+            new_list = []
+            for item in obj:
+                new_list.append(search_and_replace_botocore_types(item))
+            return new_list
+
+        return obj
+
+    spec = search_and_replace_botocore_types(spec)
+
     with open(filename, 'w') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
-
-    lines = []
-    botocore_cache = {}
-    with open(filename, 'r') as f:
-        for line in f:
-            if 'botocore' in line:
-                service_and_type = line.split('"')[3]
-                service = '/'.join(service_and_type.split('/')[:-1])
-                botocore_type = service_and_type.split('/')[-1]
-                if service not in botocore_cache:
-                    botocore_cache[service] = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
-                lines += '      "AllowedValues": [\n'
-                for value in sorted(botocore_cache[service]['shapes'][botocore_type]['enum']):
-                    lines.append('        "' + value + '",\n')
-                lines[-1] = lines[-1].replace(',', '')
-                lines += '      ]\n'
-            else:
-                lines += line
-
-    with open(filename, 'w') as f:
-        for line in lines:
-            f.write(line)
 
 def update_documentation(rules):
     """Generate documentation"""
