@@ -245,9 +245,17 @@ class Properties(CloudFormationLintRule):
                 if prop in cfnlint.helpers.CONDITION_FUNCTIONS and len_of_text == 1:
                     cond_values = self.cfn.get_condition_values(text[prop])
                     for cond_value in cond_values:
-                        matches.extend(self.propertycheck(
-                            cond_value['Value'], proptype, parenttype, resourcename,
-                            proppath + cond_value['Path'], root))
+                        if isinstance(cond_value['Value'], dict):
+                            matches.extend(self.propertycheck(
+                                cond_value['Value'], proptype, parenttype, resourcename,
+                                proppath + cond_value['Path'], root))
+                        elif isinstance(cond_value['Value'], list):
+                            for index, item in enumerate(cond_value['Value']):
+                                matches.extend(
+                                    self.propertycheck(
+                                        item, proptype, parenttype, resourcename,
+                                        proppath + cond_value['Path'] + [index], root)
+                                )
                 elif text.is_function_returning_object():
                     self.logger.debug('Ran into function "%s".  Skipping remaining checks', prop)
                 elif len(text) == 1 and prop in 'Ref' and text.get(prop) == 'AWS::NoValue':
