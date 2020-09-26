@@ -176,13 +176,13 @@
         "DefaultTTL": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-cachepolicy-cachepolicyconfig.html#cfn-cloudfront-cachepolicy-cachepolicyconfig-defaultttl",
           "PrimitiveType": "Double",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         },
         "MaxTTL": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-cachepolicy-cachepolicyconfig.html#cfn-cloudfront-cachepolicy-cachepolicyconfig-maxttl",
           "PrimitiveType": "Double",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         },
         "MinTTL": {
@@ -199,7 +199,7 @@
         },
         "ParametersInCacheKeyAndForwardedToOrigin": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-cachepolicy-cachepolicyconfig.html#cfn-cloudfront-cachepolicy-cachepolicyconfig-parametersincachekeyandforwardedtoorigin",
-          "Required": false,
+          "Required": true,
           "Type": "ParametersInCacheKeyAndForwardedToOrigin",
           "UpdateType": "Mutable"
         }
@@ -2152,6 +2152,12 @@
           "Type": "List",
           "UpdateType": "Immutable"
         },
+        "KubernetesNetworkConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-kubernetesnetworkconfig",
+          "Required": false,
+          "Type": "KubernetesNetworkConfig",
+          "UpdateType": "Immutable"
+        },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-name",
           "PrimitiveType": "String",
@@ -2362,6 +2368,21 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/PropertyTypes/AWS::EKS::Cluster.KubernetesNetworkConfig",
+    "value": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-kubernetesnetworkconfig.html",
+      "Properties": {
+        "ServiceIpv4Cidr": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-kubernetesnetworkconfig.html#cfn-eks-cluster-kubernetesnetworkconfig-serviceipv4cidr",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -3370,14 +3391,15 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-activity.html",
       "Properties": {
-        "Name": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-activity.html#cfn-stepfunctions-activity-name",
+        "Arn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-activity.html#cfn-stepfunctions-activity-arn",
           "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Immutable"
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-activity.html#cfn-stepfunctions-activity-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "TagsEntry",
           "Required": false,
           "Type": "List",

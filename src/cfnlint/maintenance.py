@@ -73,7 +73,6 @@ def update_resource_spec(region, url):
             return new_obj
 
         if isinstance(obj, list):
-            print(obj)
             new_list = []
             for item in obj:
                 new_list.append(search_and_replace_botocore_types(item))
