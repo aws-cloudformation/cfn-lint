@@ -39,8 +39,13 @@ class OnlyOne(CloudFormationLintRule):
                 for property_set in property_sets:
                     count = 0
                     for prop in onlyoneprop:
-                        if prop in property_set['Object']:
-                            count += 1
+                        obj = property_set['Object']
+                        if prop in obj:
+                            if isinstance(obj.get(prop), dict) and len(obj.get(prop)) == 1:
+                                if not ('Ref' in obj.get(prop) and obj.get(prop).get('Ref') == 'AWS::NoValue'):
+                                    count += 1
+                            else:
+                                count += 1
 
                     if count != 1:
                         if property_set['Scenario'] is None:

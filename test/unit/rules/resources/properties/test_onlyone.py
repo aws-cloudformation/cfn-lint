@@ -13,6 +13,9 @@ class TestPropertyOnlyOne(BaseRuleTestCase):
         """Setup"""
         super(TestPropertyOnlyOne, self).setUp()
         self.collection.register(OnlyOne())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/onlyone.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
