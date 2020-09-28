@@ -140,6 +140,17 @@ def create_dict_node_class(cls):
 
             return results
 
+        def clean(self):
+            """Clean object to remove any Ref AWS::NoValue"""
+            result = dict_node({}, self.start_mark, self.end_mark)
+            for k, v in self.items():
+                if isinstance(v, dict) and len(v) == 1:
+                    if v.get('Ref') == 'AWS::NoValue':
+                        continue
+                result[k] = v
+            return result
+
+
         def items_safe(self, path=None, type_t=()):
             """Get items while handling IFs"""
             path = path or []
@@ -163,10 +174,10 @@ def create_dict_node_class(cls):
                                             yield if_v, path[:] + [k, i + 1]
                     elif not (k == 'Ref' and v == 'AWS::NoValue'):
                         if isinstance(self, type_t) or not type_t:
-                            yield self, path[:]
+                            yield self.clean(), path[:]
             else:
                 if isinstance(self, type_t) or not type_t:
-                    yield self, path[:]
+                    yield self.clean(), path[:]
 
         def __getattr__(self, name):
             raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
