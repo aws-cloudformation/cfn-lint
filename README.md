@@ -24,7 +24,7 @@ all the things that could be going on.
 The Serverless Application Model (SAM) is supported by the linter. The template is
 transformed using [AWS SAM](https://github.com/awslabs/serverless-application-model) before the linter processes the template.
 
-_To get information about the SAM Transformation, run the linter with `--info`_
+_To get information about the [SAM Transformation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-aws-serverless.html), run the linter with `--info`_
 
 ## Install
 
