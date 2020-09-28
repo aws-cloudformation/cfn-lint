@@ -33,10 +33,11 @@ class Exclusive(CloudFormationLintRule):
 
         property_sets = cfn.get_object_without_conditions(properties)
         for property_set in property_sets:
-            for prop in property_set['Object']:
+            obj = property_set['Object'].clean()
+            for prop in obj:
                 if prop in exclusions:
                     for excl_property in exclusions[prop]:
-                        if excl_property in property_set['Object']:
+                        if excl_property in obj:
                             if property_set['Scenario'] is None:
                                 message = 'Property {0} should NOT exist with {1} for {2}'
                                 matches.append(RuleMatch(
