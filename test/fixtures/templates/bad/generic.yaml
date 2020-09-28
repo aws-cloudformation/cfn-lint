@@ -24,6 +24,17 @@ Resources:
     Type: "AWS::EC2::Instance1"
   myIamProfile:
     Type: "AWS::IAM::Role"
+  myIamProfile2:
+    Type: "AWS::IAM::Role"
+    Properties: {}
+  myIamProfile3:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument: {}
+      Fn::If:
+        - IsProduction
+        - BadIf
+        - BadElse
   ## Fake Properties Key on main level
   ## Bad sub properties in BlockDeviceMappings/Ebs and NetworkInterfaces
   MyEC2Instance:
@@ -137,13 +148,6 @@ Resources:
   conditionLoadBalancer:
     Type: AWS::ElasticLoadBalancing::LoadBalancer
     Properties:
-      Tags:
-        - Fn::If:
-            - IsProduction
-            - Key: Production
-              Value: True
-            - Key: Production
-              Value: False
       Fn::If:
         - IsProduction
         - AvailabilityZones:
@@ -166,6 +170,13 @@ Resources:
           ConnectionDrainingPolicy:
             Enabled: "true"
             Timeout: "60"
+          Tags:
+          - Fn::If:
+              - IsProduction
+              - Key: Production
+                Value: True
+              - Key: Production
+                Value: False
         - AvailabilityZones:
             Fn::GetAZs: ""
           Listeners:
