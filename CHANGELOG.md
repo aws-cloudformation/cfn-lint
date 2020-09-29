@@ -1,3 +1,13 @@
+### v0.37.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to 18.5.0 (pull #[1715](https://github.com/aws-cloudformation/cfn-python-lint/pull/1715))
+- Get `AllowedValues` from Botocore during `--update-specs` (pull #[1682](https://github.com/aws-cloudformation/cfn-python-lint/pull/1682))
+- Add string length requirements for `AWS::Config::ConfigRule.Description` (pull #[1712](https://github.com/aws-cloudformation/cfn-python-lint/pull/1712))
+- Patch `AWS::StepFunctions::Activity` to include `Name` and remove `Arn` (pull #[1722](https://github.com/aws-cloudformation/cfn-python-lint/pull/1722))
+###### Fixes
+- Fix an issue with rule `E3002` to better handle when conditions are used at the root level of a list (pull #[1714](https://github.com/aws-cloudformation/cfn-python-lint/pull/1714))
+- Update core node libraries to remove `Ref: AWS::NoValue` from returned properties (pull #[1716](https://github.com/aws-cloudformation/cfn-python-lint/pull/1716))
+
 ### v0.36.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 18.4.0 (pull #[1707](https://github.com/aws-cloudformation/cfn-python-lint/pull/1707))
