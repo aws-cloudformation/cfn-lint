@@ -513,7 +513,12 @@
       "HasResource": true,
       "StringPrefix": "batch",
       "conditionKeys": [
+        "batch:AWSLogsCreateGroup",
+        "batch:AWSLogsGroup",
+        "batch:AWSLogsRegion",
+        "batch:AWSLogsStreamPrefix",
         "batch:Image",
+        "batch:LogDriver",
         "batch:Privileged",
         "batch:User"
       ]
@@ -2840,8 +2845,8 @@
       "StringPrefix": "iot-device-tester"
     },
     "AWS IoT Events": {
-      "ARNFormat": "arn:aws:iotevents:<region>:<account-id>:<resource-type>/<resource_name>",
-      "ARNRegex": "^arn:aws:iotevents:.+",
+      "ARNFormat": "arn:${Partition}:iotevents:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNRegex": "^arn:${Partition}:iotevents:.+",
       "Actions": [
         "BatchPutMessage",
         "BatchUpdateDetector",
@@ -4474,6 +4479,7 @@
         "DescribePatchProperties",
         "DescribeSessions",
         "GetAutomationExecution",
+        "GetCalendarState",
         "GetCommandInvocation",
         "GetConnectionStatus",
         "GetDefaultPatchBaseline",
@@ -4567,6 +4573,38 @@
       ],
       "HasResource": false,
       "StringPrefix": "resource-explorer"
+    },
+    "AWS Timestream": {
+      "ARNFormat": "arn:${Partition}:timestream:${Region}:${Account}:database/${DatabaseName}/table/${TableName}",
+      "ARNRegex": "^arn:${Partition}:timestream:.+",
+      "Actions": [
+        "CancelQuery",
+        "CreateDatabase",
+        "CreateTable",
+        "DeleteDatabase",
+        "DeleteTable",
+        "DescribeDatabase",
+        "DescribeEndpoints",
+        "DescribeTable",
+        "ListDatabases",
+        "ListMeasures",
+        "ListTables",
+        "ListTagsForResource",
+        "Select",
+        "SelectValues",
+        "TagResource",
+        "UntagResource",
+        "UpdateDatabase",
+        "UpdateTable",
+        "WriteRecords"
+      ],
+      "HasResource": true,
+      "StringPrefix": "timestream",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "AWS Transfer for SFTP": {
       "ARNFormat": "arn:aws:transfer:<region>:<account-id>:<resource-type>/<resource_name>",
@@ -6901,14 +6939,22 @@
       "ARNFormat": "arn:aws:ebs:<region>:<account>:<resourceType>/<resourcePath>",
       "ARNRegex": "^arn:aws:ebs:.+",
       "Actions": [
+        "CompleteSnapshot",
         "GetSnapshotBlock",
         "ListChangedBlocks",
-        "ListSnapshotBlocks"
+        "ListSnapshotBlocks",
+        "PutSnapshotBlock",
+        "StartSnapshot"
       ],
       "HasResource": true,
       "StringPrefix": "ebs",
       "conditionKeys": [
-        "aws:ResourceTag/${TagKey}"
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys",
+        "ebs:Description",
+        "ebs:ParentSnapshot",
+        "ebs:VolumeSize"
       ]
     },
     "Amazon Elastic Container Registry": {
@@ -7682,6 +7728,7 @@
         "ListDetectors",
         "ListFilters",
         "ListFindings",
+        "ListIPSets",
         "ListInvitations",
         "ListMembers",
         "ListOrganizationAdminAccounts",
@@ -9459,7 +9506,6 @@
         "GetObjectVersionTagging",
         "GetObjectVersionTorrent",
         "GetReplicationConfiguration",
-        "HeadBucket",
         "ListAccessPoints",
         "ListAllMyBuckets",
         "ListBucket",
@@ -9547,6 +9593,66 @@
         "s3:x-amz-server-side-encryption-aws-kms-key-id",
         "s3:x-amz-storage-class",
         "s3:x-amz-website-redirect-location"
+      ]
+    },
+    "Amazon S3 on Outposts": {
+      "ARNFormat": "arn:${Partition}:s3-outposts:${Region}:${Account}:${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:s3-outposts:.+",
+      "Actions": [
+        "AbortMultipartUpload",
+        "CreateAccessPoint",
+        "CreateBucket",
+        "CreateEndpoint",
+        "DeleteAccessPoint",
+        "DeleteAccessPointPolicy",
+        "DeleteBucket",
+        "DeleteBucketPolicy",
+        "DeleteEndpoint",
+        "DeleteObject",
+        "DeleteObjectTagging",
+        "GetAccessPoint",
+        "GetAccessPointPolicy",
+        "GetBucket",
+        "GetBucketPolicy",
+        "GetBucketTagging",
+        "GetLifecycleConfiguration",
+        "GetObject",
+        "GetObjectTagging",
+        "ListAccessPoints",
+        "ListBucket",
+        "ListBucketMultipartUploads",
+        "ListEndpoints",
+        "ListMultipartUploadParts",
+        "ListRegionalBuckets",
+        "PutAccessPointPolicy",
+        "PutBucketPolicy",
+        "PutBucketTagging",
+        "PutLifecycleConfiguration",
+        "PutObject",
+        "PutObjectAcl",
+        "PutObjectTagging"
+      ],
+      "HasResource": true,
+      "StringPrefix": "s3-outposts",
+      "conditionKeys": [
+        "s3-outposts:AccessPointNetworkOrigin",
+        "s3-outposts:DataAccessPointAccount",
+        "s3-outposts:DataAccessPointArn",
+        "s3-outposts:ExistingObjectTag/<key>",
+        "s3-outposts:RequestObjectTag/<key>",
+        "s3-outposts:RequestObjectTagKeys",
+        "s3-outposts:authType",
+        "s3-outposts:delimiter",
+        "s3-outposts:max-keys",
+        "s3-outposts:prefix",
+        "s3-outposts:signatureAge",
+        "s3-outposts:signatureversion",
+        "s3-outposts:x-amz-acl",
+        "s3-outposts:x-amz-content-sha256",
+        "s3-outposts:x-amz-copy-source",
+        "s3-outposts:x-amz-metadata-directive",
+        "s3-outposts:x-amz-server-side-encryption",
+        "s3-outposts:x-amz-storage-class"
       ]
     },
     "Amazon SES": {
@@ -10661,6 +10767,7 @@
       "StringPrefix": "elasticloadbalancing",
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "elasticloadbalancing:ResourceTag/",
         "elasticloadbalancing:ResourceTag/${TagKey}"
@@ -10710,6 +10817,7 @@
       "StringPrefix": "elasticloadbalancing",
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "elasticloadbalancing:ResourceTag/${TagKey}"
       ]
