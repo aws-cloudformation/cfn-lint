@@ -313,37 +313,30 @@ class RulesCollection(object):
         """Run loops in resource checks for embedded properties"""
         matches = []
         resource_spec = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
-        if resource_properties and resource_type in resource_spec:
+        if resource_properties is not None and resource_type in resource_spec:
             resource_spec_properties = resource_spec.get(resource_type, {}).get('Properties')
-            for resource_property, resource_property_value in resource_properties.items():
-                resource_spec_property = resource_spec_properties.get(resource_property, {})
-                if resource_property not in resource_spec_properties:
-                    if resource_property == 'Fn::If':
-                        if isinstance(resource_property_value, list):
-                            if len(resource_property_value) == 3:
-                                for index, c_resource_properties in enumerate(resource_property_value[1:]):
-                                    matches.extend(self.run_resource(
-                                        filename, cfn, resource_type, c_resource_properties,
-                                        path[:] + [resource_property, index + 1]))
-                    continue
-                if (resource_spec_property.get('Type') == 'List' and
-                        not resource_spec_properties.get('PrimitiveItemType')):
-                    if isinstance(resource_property_value, (list)):
-                        for index, value in enumerate(resource_property_value):
-                            matches.extend(self.resource_property(
-                                filename, cfn,
-                                path[:] + [resource_property, index],
-                                value, resource_type, resource_spec_property.get('ItemType')
-                            ))
-                elif resource_spec_property.get('Type'):
-                    if isinstance(resource_property_value, (dict)):
-                        matches.extend(
-                            self.resource_property(
-                                filename, cfn,
-                                path[:] + [resource_property],
-                                resource_property_value,
-                                resource_type, resource_spec_property.get('Type')
-                            ))
+            items_safe = resource_properties.items_safe(path, type_t=(dict))
+            for resource_properties_safe, path_safe in items_safe:
+                for resource_property, resource_property_value in resource_properties_safe.items():
+                    resource_spec_property = resource_spec_properties.get(resource_property, {})
+                    if (resource_spec_property.get('Type') == 'List' and
+                            not resource_spec_properties.get('PrimitiveItemType')):
+                        if isinstance(resource_property_value, (list)):
+                            for index, value in enumerate(resource_property_value):
+                                matches.extend(self.resource_property(
+                                    filename, cfn,
+                                    path_safe[:] + [resource_property, index],
+                                    value, resource_type, resource_spec_property.get('ItemType')
+                                ))
+                    elif resource_spec_property.get('Type'):
+                        if isinstance(resource_property_value, (dict)):
+                            matches.extend(
+                                self.resource_property(
+                                    filename, cfn,
+                                    path_safe[:] + [resource_property],
+                                    resource_property_value,
+                                    resource_type, resource_spec_property.get('Type')
+                                ))
 
         return matches
 
@@ -362,7 +355,7 @@ class RulesCollection(object):
 
         for resource_name, resource_attributes in cfn.get_resources().items():
             resource_type = resource_attributes.get('Type')
-            resource_properties = resource_attributes.get('Properties', {})
+            resource_properties = resource_attributes.get('Properties')
             if isinstance(resource_type, six.string_types) and isinstance(resource_properties, dict):
                 path = ['Resources', resource_name, 'Properties']
                 for rule in self.rules:
