@@ -1,3 +1,11 @@
+### v0.37.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to 18.6.0 (pull #[1726](https://github.com/aws-cloudformation/cfn-python-lint/pull/1726))
+- Add `AllowedValues` for `AWS::DMS::Endpoint.EngineName` (pull #[1725](https://github.com/aws-cloudformation/cfn-python-lint/pull/1725))
+###### Fixes
+- Fix an issue with rule [E2521](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2521) and [E2520](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2520) to handle `Ref: AWS::Novalue` (pull #[1717](https://github.com/aws-cloudformation/cfn-python-lint/pull/1717), #[1719](https://github.com/aws-cloudformation/cfn-python-lint/pull/1719))
+
+
 ### v0.37.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 18.5.0 (pull #[1715](https://github.com/aws-cloudformation/cfn-python-lint/pull/1715))
