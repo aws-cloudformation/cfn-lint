@@ -16,5 +16,6 @@ class ResourceSchema(CloudFormationLintRule):
 
     def match(self, cfn):
         matches = []
+        cfn.get_resources(['AWS::Logs::LogGroup'])
         load_resource(CloudformationSchema, 'aws-logs-loggroup.json')
         return matches
