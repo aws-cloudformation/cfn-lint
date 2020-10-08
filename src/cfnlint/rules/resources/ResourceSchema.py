@@ -7,7 +7,7 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.data import CloudformationSchema
 
-class MyNewRule(CloudFormationLintRule):
+class ResourceSchema(CloudFormationLintRule):
     id = 'E3000'
     shortdesc = ''
     description = ''
@@ -16,5 +16,5 @@ class MyNewRule(CloudFormationLintRule):
 
     def match(self, cfn):
         matches = []
-        print(load_resource(CloudformationSchema, 'aws-logs-loggroup.json'))
+        load_resource(CloudformationSchema, 'aws-logs-loggroup.json')
         return matches
