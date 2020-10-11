@@ -40,6 +40,7 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
                                           'AWS::RDS::DBInstance',
                                           'AWS::Redshift::Cluster',
                                           'AWS::SDB::Domain',
+                                          'AWS::SQS::Queue',
                                           # 'AWS::S3::Bucket', (CloudFormation won't delete anyways)
                                          ]
 
