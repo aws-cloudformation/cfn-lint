@@ -22,37 +22,7 @@ Regular Text
 '''
 
     def test_update_docs(self):
-        """Success update documentation"""
-
-        class TestRuleError(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'E1000'
-            shortdesc = 'Test Error'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources']
-
-        class TestRuleExperimental(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'E1001'
-            shortdesc = 'Test Experimental'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources']
-            experimental = True
-
-        class TestRuleWarning(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'W1001'
-            shortdesc = 'Test Warning'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources', 'iam']
-
         collection = RulesCollection(include_rules=['I'], include_experimental=True)
-        collection.register(TestRuleError())
-        collection.register(TestRuleWarning())
-        collection.register(TestRuleExperimental())
 
         if sys.version_info.major == 3:
             builtin_module_name = 'builtins'
@@ -79,12 +49,6 @@ Regular Text
                     '| [E0001<a name="E0001"></a>](../src/cfnlint/rules/__init__.py) | Error found when transforming the template | Errors found when performing transformation on the template |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `base`,`transform` |\n'),
                 call(
                     '| [E0002<a name="E0002"></a>](../src/cfnlint/rules/__init__.py) | Error processing rule on the template | Errors found when processing a rule on the template |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `base`,`rule` |\n'),
-                call(
-                    '| E1000<a name="E1000"></a> | Test Error | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources` |\n'),
-                call(
-                    '| E1001*<a name="E1001*"></a> | Test Expiremental | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources` |\n'),
-                call(
-                    '| W1001<a name="W1001"></a> | Test Warning | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources`,`iam` |\n'),
                 call('\n\\* experimental rules\n'),
             ]
             mock_builtin_open.return_value.write.assert_has_calls(expected_calls)
