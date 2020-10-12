@@ -129,7 +129,7 @@ def update_documentation(rules):
         rule_output = '| [{0}<a name="{0}"></a>]({6}) | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
 
         for rule in [cfnlint.rules.ParseError(), cfnlint.rules.TransformError(), cfnlint.rules.RuleError()] + sorted_rules:
-            file = '../' + subprocess.check_output(["git", "grep", "-l", "id = '" + rule.id + "'", "src/cfnlint/rules/"]).decode('ascii').strip()
+            file = '../' + subprocess.check_output(['git', 'grep', '-l', "id = '" + rule.id + "'", 'src/cfnlint/rules/']).decode('ascii').strip()
             rule_id = rule.id + '*' if rule.experimental else rule.id
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
