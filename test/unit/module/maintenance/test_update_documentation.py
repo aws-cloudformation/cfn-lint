@@ -21,38 +21,8 @@ Regular Text
 ## Rules
 '''
 
-    def test_update_iam_policies(self):
-        """Success update documentation"""
-
-        class TestRuleError(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'E1000'
-            shortdesc = 'Test Error'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources']
-
-        class TestRuleExpiremental(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'E1001'
-            shortdesc = 'Test Expiremental'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources']
-            experimental = True
-
-        class TestRuleWarning(CloudFormationLintRule):
-            """ Def Rule """
-            id = 'W1001'
-            shortdesc = 'Test Warning'
-            description = 'Test Description'
-            source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/'
-            tags = ['resources', 'iam']
-
+    def test_update_docs(self):
         collection = RulesCollection(include_rules=['I'], include_experimental=True)
-        collection.register(TestRuleError())
-        collection.register(TestRuleWarning())
-        collection.register(TestRuleExpiremental())
 
         if sys.version_info.major == 3:
             builtin_module_name = 'builtins'
@@ -74,20 +44,12 @@ Regular Text
                 call('| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n'),
                 call('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n'),
                 call(
-                    '| E0000<a name="E0000"></a> | Parsing error found when parsing the template | Checks for JSON/YAML formatting errors in your template |  | [Source]() | `base` |\n'),
+                    '| [E0000<a name="E0000"></a>](../src/cfnlint/rules/__init__.py) | Parsing error found when parsing the template | Checks for JSON/YAML formatting errors in your template |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `base` |\n'),
                 call(
-                    '| E0001<a name="E0001"></a> | Error found when transforming the template | Errors found when performing transformation on the template |  | [Source]() | `base`,`transform` |\n'),
+                    '| [E0001<a name="E0001"></a>](../src/cfnlint/rules/__init__.py) | Error found when transforming the template | Errors found when performing transformation on the template |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `base`,`transform` |\n'),
                 call(
-                    '| E0002<a name="E0002"></a> | Error processing rule on the template | Errors found when processing a rule on the template |  | [Source]() | `base`,`rule` |\n'),
-                call(
-                    '| E1000<a name="E1000"></a> | Test Error | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources` |\n'),
-                call(
-                    '| W1001<a name="W1001"></a> | Test Warning | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources`,`iam` |\n'),
-                call('### Experimental rules\n'),
-                call('| Rule ID  | Title | Description | Source | Tags |\n'),
-                call('| -------- | ----- | ----------- | ------ | ---- |\n'),
-                call(
-                    '| E1001<a name="E1001"></a> | Test Expiremental | Test Description |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint/) | `resources` |\n'),
+                    '| [E0002<a name="E0002"></a>](../src/cfnlint/rules/__init__.py) | Error processing rule on the template | Errors found when processing a rule on the template |  | [Source](https://github.com/aws-cloudformation/cfn-python-lint) | `base`,`rule` |\n'),
+                call('\n\\* experimental rules\n'),
             ]
             mock_builtin_open.return_value.write.assert_has_calls(expected_calls)
             self.assertEqual(len(expected_calls), mock_builtin_open.return_value.write.call_count)
