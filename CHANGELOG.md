@@ -434,7 +434,7 @@
 - Remove manual patches that are no longer needed (pull #[1146](https://github.com/aws-cloudformation/cfn-python-lint/pull/1146))
 - Update CloudFormation spec links for a few regions that using old links (pull #[1148](https://github.com/aws-cloudformation/cfn-python-lint/pull/1148))
 ###### Fixes
-- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to allow `DeletionPolicy` and `UpdateReplacePolciy` to be allowed on all resources (pull #[1139](https://github.com/aws-cloudformation/cfn-python-lint/pull/1139))
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3001) to allow `DeletionPolicy` and `UpdateReplacePolicy` to be allowed on all resources (pull #[1139](https://github.com/aws-cloudformation/cfn-python-lint/pull/1139))
 - Update rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2030) to not check Paramter default values when using a Resource Condition (pull #[1140](https://github.com/aws-cloudformation/cfn-python-lint/pull/1140))
 - Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to allow new types in Step Functions (pull #[1143](https://github.com/aws-cloudformation/cfn-python-lint/pull/1143))
 
