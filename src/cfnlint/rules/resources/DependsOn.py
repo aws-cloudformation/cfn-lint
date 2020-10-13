@@ -15,7 +15,7 @@ class DependsOn(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html'
     tags = ['resources', 'dependson']
 
-    def check_value(self, key, path, resources):
+    def check_value(self, key, path, resources, cfn):
         """Check resource names for DependsOn"""
         matches = []
 
@@ -26,6 +26,13 @@ class DependsOn(CloudFormationLintRule):
         if key not in resources:
             message = 'DependsOn should reference other resources at {0}'
             matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
+        else:
+            for scenario in cfn.is_resource_available(path, key):
+                if scenario:
+                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, scenario[k]) for k in sorted(scenario)])
+                    message = 'DependsOn {0} may not exist when condition {1} at {2}'
+                    matches.append(RuleMatch(path, message.format(key, scenario_text, '/'.join(map(str, path)))))
+
 
         return matches
 
@@ -41,8 +48,8 @@ class DependsOn(CloudFormationLintRule):
                 self.logger.debug('Validating DependsOn for %s base configuration', resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
-                        matches.extend(self.check_value(depends_on, path[:] + [index], resources))
+                        matches.extend(self.check_value(depends_on, path[:] + [index], resources, cfn))
                 else:
-                    matches.extend(self.check_value(depends_ons, path, resources))
+                    matches.extend(self.check_value(depends_ons, path, resources, cfn))
 
         return matches
