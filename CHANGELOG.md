@@ -1,6 +1,6 @@
 ### v0.38.0
 ###### Features
-- Expand likely_stateful_resource_types for explicit UpdateReplacePolicy/DeletionPolicy rule to include AWS::SQS::Queue (pull #[1736](https://github.com/aws-cloudformation/cfn-python-lint/pull/1736))
+- Expand `likely_stateful_resource_types` for explicit UpdateReplacePolicy/DeletionPolicy rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to include `AWS::SQS::Queue` (pull #[1736](https://github.com/aws-cloudformation/cfn-python-lint/pull/1736))
 ###### CloudFormation Specifications
 - Update CloudFormation specs to 18.7.0 (pull #[1734](https://github.com/aws-cloudformation/cfn-python-lint/pull/1734))
 ###### Fixes
