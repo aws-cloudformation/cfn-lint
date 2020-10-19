@@ -13,10 +13,10 @@ from cfnlint.data import CloudformationSchema
 
 class ResourceSchema(CloudFormationLintRule):
     id = 'E3000'
-    shortdesc = ''
-    description = ''
-    source_url = ''
-    tags = []
+    shortdesc = 'Resource schema'
+    description = 'CloudFormation Registry resource schema validation'
+    source_url = 'https://github.com/aws-cloudformation/aws-cloudformation-resource-schema/'
+    tags = ['resources']
 
     def match(self, cfn):
         matches = []
