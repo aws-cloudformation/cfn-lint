@@ -51,7 +51,7 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
-        "Level": "Warning",
+        "Level": "Error",
         "Location": {
             "End": {
                 "ColumnNumber": 28,
@@ -68,12 +68,12 @@
                 "LineNumber": 278
             }
         },
-        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ApplicationTemplate/Properties/Parameters/pAppPrivateSubnetA/Fn::GetAtt",
+        "Message": "DependsOn ProductionVpcTemplate may not exist when condition when condition \"EulaAccepted\" is False at Resources/ApplicationTemplate/DependsOn/0",
         "Rule": {
-            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
-            "Id": "W3005",
-            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
-            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+            "Description": "Check that the DependsOn values are valid",
+            "Id": "E3005",
+            "ShortDescription": "Check DependsOn values for Resources",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
         }
     },
     {
@@ -204,6 +204,33 @@
             }
         },
         "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ApplicationTemplate/Properties/Parameters/pDMZSubnetB/Fn::GetAtt",
+        "Rule": {
+            "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
+            "Id": "W3005",
+            "ShortDescription": "Check obsolete DependsOn configuration for Resources",
+            "Source": "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
+        "Level": "Warning",
+        "Location": {
+            "End": {
+                "ColumnNumber": 28,
+                "LineNumber": 278
+            },
+            "Path": [
+                "Resources",
+                "ApplicationTemplate",
+                "DependsOn",
+                0
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 278
+            }
+        },
+        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ApplicationTemplate/Properties/Parameters/pAppPrivateSubnetA/Fn::GetAtt",
         "Rule": {
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
             "Id": "W3005",
@@ -606,6 +633,87 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 18,
+                "LineNumber": 389
+            },
+            "Path": [
+                "Resources",
+                "ConfigRulesTemplate",
+                "DependsOn",
+                0
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 389
+            }
+        },
+        "Message": "DependsOn IamTemplate may not exist when condition when condition \"EulaAccepted\" is False and when condition \"LoadConfigRulesTemplate\" is True at Resources/ConfigRulesTemplate/DependsOn/0",
+        "Rule": {
+            "Description": "Check that the DependsOn values are valid",
+            "Id": "E3005",
+            "ShortDescription": "Check DependsOn values for Resources",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 28,
+                "LineNumber": 390
+            },
+            "Path": [
+                "Resources",
+                "ConfigRulesTemplate",
+                "DependsOn",
+                1
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 390
+            }
+        },
+        "Message": "DependsOn ProductionVpcTemplate may not exist when condition when condition \"EulaAccepted\" is False and when condition \"LoadConfigRulesTemplate\" is True at Resources/ConfigRulesTemplate/DependsOn/1",
+        "Rule": {
+            "Description": "Check that the DependsOn values are valid",
+            "Id": "E3005",
+            "ShortDescription": "Check DependsOn values for Resources",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 22,
+                "LineNumber": 392
+            },
+            "Path": [
+                "Resources",
+                "ConfigRulesTemplate",
+                "DependsOn",
+                3
+            ],
+            "Start": {
+                "ColumnNumber": 7,
+                "LineNumber": 392
+            }
+        },
+        "Message": "DependsOn LoggingTemplate may not exist when condition when condition \"EulaAccepted\" is False and when condition \"LoadConfigRulesTemplate\" is True at Resources/ConfigRulesTemplate/DependsOn/3",
+        "Rule": {
+            "Description": "Check that the DependsOn values are valid",
+            "Id": "E3005",
+            "ShortDescription": "Check DependsOn values for Resources",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
         "Level": "Informational",
         "Location": {
             "End": {
@@ -846,6 +954,32 @@
     },
     {
         "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
+        "Level": "Error",
+        "Location": {
+            "End": {
+                "ColumnNumber": 14,
+                "LineNumber": 445
+            },
+            "Path": [
+                "Resources",
+                "ManagementVpcTemplate",
+                "DependsOn"
+            ],
+            "Start": {
+                "ColumnNumber": 5,
+                "LineNumber": 445
+            }
+        },
+        "Message": "DependsOn ProductionVpcTemplate may not exist when condition when condition \"EulaAccepted\" is False at Resources/ManagementVpcTemplate/DependsOn",
+        "Rule": {
+            "Description": "Check that the DependsOn values are valid",
+            "Id": "E3005",
+            "ShortDescription": "Check DependsOn values for Resources",
+            "Source": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html"
+        }
+    },
+    {
+        "Filename": "test/fixtures/templates/quickstart/nist_high_master.yaml",
         "Level": "Warning",
         "Location": {
             "End": {
@@ -862,7 +996,7 @@
                 "LineNumber": 445
             }
         },
-        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ManagementVpcTemplate/Properties/Parameters/pProductionVPC/Fn::GetAtt",
+        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ManagementVpcTemplate/Properties/Parameters/pRouteTableProdPublic/Fn::GetAtt",
         "Rule": {
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
             "Id": "W3005",
@@ -914,7 +1048,7 @@
                 "LineNumber": 445
             }
         },
-        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ManagementVpcTemplate/Properties/Parameters/pRouteTableProdPublic/Fn::GetAtt",
+        "Message": "Obsolete DependsOn on resource (ProductionVpcTemplate), dependency already enforced by a \"Fn:GetAtt\" at Resources/ManagementVpcTemplate/Properties/Parameters/pProductionVPC/Fn::GetAtt",
         "Rule": {
             "Description": "Check if DependsOn is specified if not needed. A Ref or a Fn::GetAtt already is an implicit dependency.",
             "Id": "W3005",
