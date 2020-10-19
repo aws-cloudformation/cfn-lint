@@ -104,7 +104,7 @@ class Configuration(CloudFormationLintRule):
             for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                 if region in cfn.regions:
                     if resource_type not in specs['ResourceTypes'] and resource_type not in [
-                        cfnlint.helpers.load_resource(CloudformationSchema, os.path.basename(f))['typeName'] for f in glob('src/cfnlint/data/CloudformationSchema/*.json')]:
+                            cfnlint.helpers.load_resource(CloudformationSchema, os.path.basename(f))['typeName'] for f in glob('src/cfnlint/data/CloudformationSchema/*.json')]:
                         if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
                             message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                             matches.append(RuleMatch(

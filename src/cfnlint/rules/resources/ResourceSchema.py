@@ -20,13 +20,13 @@ class ResourceSchema(CloudFormationLintRule):
 
     def match(self, cfn):
         matches = []
-        for file in [os.path.basename(f) for f in glob('src/cfnlint/data/CloudformationSchema/*.json')]:
-            resource_type = load_resource(CloudformationSchema, file)['typeName']
+        for resource_schema in [os.path.basename(f) for f in glob('src/cfnlint/data/CloudformationSchema/*.json')]:
+            resource_type = load_resource(CloudformationSchema, resource_schema)['typeName']
             for resource_name, resource_values in cfn.get_resources([resource_type]).items():
                 properties = resource_values.get('Properties', {})
                 if not re.match(REGEX_DYN_REF, str(properties)) and not any(x in str(properties) for x in PSEUDOPARAMS + UNCONVERTED_SUFFIXES) and FN_PREFIX not in str(properties):
                     try:
-                        validate(properties, load_resource(CloudformationSchema, file))
+                        validate(properties, load_resource(CloudformationSchema, resource_schema))
                     except ValidationError as e:
                         matches.append(RuleMatch(['Resources', resource_name], e.message))
         return matches
