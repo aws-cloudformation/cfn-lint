@@ -312,6 +312,7 @@ Parameters:
     Type: "CommaDelimitedList"
     Default: "foo.com, bar.com"
 Conditions:
+  S3ReplicationEnabled: !Equals [!Ref 'AWS::Region', 'us-east']
   HasSingleClusterInstance: !Equals [!Ref 'AWS::Region', 'us-east-1']
   Conditions:
     ConditionTrue:
@@ -727,3 +728,15 @@ Resources:
           - Type: BASE_REF
             Pattern: ^refs/heads/master$
             ExcludeMatchedPattern: false
+  CloudAvailS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      ReplicationConfiguration: !If
+        - S3ReplicationEnabled
+        - - Role: !GetAtt CloudAvailReplicationRole.Arn
+            Rules:
+            - Destination:
+                Bucket: arn:aws:s3:::cloudavail.replication.bucket
+              Status: Enabled
+            
+        - - !Ref "AWS::NoValue"

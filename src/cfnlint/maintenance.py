@@ -7,6 +7,7 @@ import json
 import logging
 import multiprocessing
 import os
+import subprocess
 import jsonpatch
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
@@ -55,6 +56,33 @@ def update_resource_spec(region, url):
     spec = patch_spec(spec, 'all')
     spec = patch_spec(spec, region)
 
+    botocore_cache = {}
+
+    def search_and_replace_botocore_types(obj):
+        if isinstance(obj, dict):
+            new_obj = {}
+            for key, value in obj.items():
+                if key == 'botocore':
+                    service_and_type = value.split('/')
+                    service = '/'.join(service_and_type[:-1])
+                    botocore_type = service_and_type[-1]
+                    if service not in botocore_cache:
+                        botocore_cache[service] = json.loads(get_url_content('https://raw.githubusercontent.com/boto/botocore/master/botocore/data/' + service + '/service-2.json'))
+                    new_obj['AllowedValues'] = sorted(botocore_cache[service]['shapes'][botocore_type]['enum'])
+                else:
+                    new_obj[key] = search_and_replace_botocore_types(value)
+            return new_obj
+
+        if isinstance(obj, list):
+            new_list = []
+            for item in obj:
+                new_list.append(search_and_replace_botocore_types(item))
+            return new_list
+
+        return obj
+
+    spec = search_and_replace_botocore_types(spec)
+
     with open(filename, 'w') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
@@ -98,40 +126,17 @@ def update_documentation(rules):
             '| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n')
         new_file.write('| -------- | ----- | ----------- | ---------- | ------ | ---- |\n')
 
-        rule_output = '| {0}<a name="{0}"></a> | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
+        rule_output = '| [{0}<a name="{0}"></a>]({6}) | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
 
-        # Add system Errors (hardcoded)
-        for error in [cfnlint.rules.ParseError(), cfnlint.rules.TransformError(), cfnlint.rules.RuleError()]:
-            tags = ','.join('`{0}`'.format(tag) for tag in error.tags)
-            new_file.write(rule_output.format(error.id, error.shortdesc, error.description, '', '', tags))
-
-        # Separate the experimental rules
-        experimental_rules = []
-
-        for rule in sorted_rules:
-
-            if rule.experimental:
-                experimental_rules.append(rule)
-                continue
-
+        for rule in [cfnlint.rules.ParseError(), cfnlint.rules.TransformError(), cfnlint.rules.RuleError()] + sorted_rules:
+            rule_source_code_file = '../' + subprocess.check_output(['git', 'grep', '-l', "id = '" + rule.id + "'", 'src/cfnlint/rules/']).decode('ascii').strip()  # pylint: disable=invalid-string-quote
+            rule_id = rule.id + '*' if rule.experimental else rule.id
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
                                    for key, values in rule.config_definition.items())
-            new_file.write(rule_output.format(rule.id, rule.shortdesc,
-                                              rule.description, config, rule.source_url, tags))
-
-        # Output the experimental rules (if any)
-        if experimental_rules:
-            new_file.write('### Experimental rules\n')
-            new_file.write('| Rule ID  | Title | Description | Source | Tags |\n')
-            new_file.write('| -------- | ----- | ----------- | ------ | ---- |\n')
-
-            for rule in experimental_rules:
-                tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
-                config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
-                                       for key, values in rule.config_definition.items())
-                new_file.write(rule_output.format(rule.id, rule.shortdesc,
-                                                  rule.description, config, rule.source_url, tags))
+            new_file.write(rule_output.format(rule_id, rule.shortdesc,
+                                              rule.description, config, rule.source_url, tags, rule_source_code_file))
+        new_file.write('\n\\* experimental rules\n')
 
 
 def patch_spec(content, region):

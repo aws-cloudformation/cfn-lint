@@ -22,7 +22,7 @@ class DeprecatedRuntimeEol(DeprecatedRuntime):
         runtime = self.deprecated_runtimes.get(runtime_value)
         if runtime:
             if datetime.strptime(runtime['eol'], '%Y-%m-%d') < self.current_date and datetime.strptime(runtime['deprecated'], '%Y-%m-%d') > self.current_date:
-                message = 'EOL runtime ({0}) specified. Runtime is EOL since {1} and updating will be disabled at {2}, please consider to update to {3}'
+                message = 'EOL runtime ({0}) specified. Runtime is EOL since {1} and updating will be disabled at {2}. Please consider updating to {3}'
                 matches.append(
                     RuleMatch(
                         path,

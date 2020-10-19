@@ -103,7 +103,7 @@ class TestMyNewRule(BaseRuleTestCase):
         super(TestMyNewRule, self).setUp()
         self.collection.register(MyNewRule())
 
-    def atest_file_positive(self):
+    def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive() # By default, a set of "correct" templates are checked
 
