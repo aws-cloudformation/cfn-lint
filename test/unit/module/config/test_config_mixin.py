@@ -31,7 +31,7 @@ class TestConfigMixIn(BaseTestCase):
 
         config = cfnlint.config.ConfigMixIn(['--regions', 'us-west-1'])
         self.assertEqual(config.regions, ['us-west-1'])
-        self.assertEqual(config.include_checks, ['I', 'I1111'])
+        self.assertEqual(config.include_checks, ['W', 'E', 'I', 'I1111'])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_precedence(self, yaml_mock):
@@ -55,7 +55,7 @@ class TestConfigMixIn(BaseTestCase):
         # config files wins
         self.assertEqual(config.regions, ['us-west-2'])
         # CLI should win
-        self.assertEqual(config.include_checks, ['I1234', 'I4321'])
+        self.assertEqual(config.include_checks, ['W', 'E', 'I1234', 'I4321'])
         # template file wins over config file
         self.assertEqual(config.ignore_checks, ['W3001'])
 

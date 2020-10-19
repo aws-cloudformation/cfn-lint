@@ -18,7 +18,7 @@ from cfnlint.rules import Match, ParseError
 LOGGER = logging.getLogger(__name__)
 
 
-def decode(filename, ignore_bad_template):
+def decode(filename):
     """
         Decode filename into an object
     """
@@ -77,20 +77,14 @@ def decode(filename, ignore_bad_template):
                     else:
                         matches = [create_match_json_parser_error(json_err, filename)]
             except Exception as json_err:  # pylint: disable=W0703
-                if ignore_bad_template:
-                    LOGGER.info('Template %s is malformed: %s',
-                                filename, err.problem)
-                    LOGGER.info('Tried to parse %s as JSON but got error: %s',
-                                filename, str(json_err))
-                else:
-                    LOGGER.error(
-                        'Template %s is malformed: %s', filename, err.problem)
-                    LOGGER.error('Tried to parse %s as JSON but got error: %s',
-                                 filename, str(json_err))
-                    return (None, [create_match_file_error(
-                        filename,
-                        'Tried to parse %s as JSON but got error: %s' % (
-                            filename, str(json_err)))])
+                LOGGER.error(
+                    'Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error('Tried to parse %s as JSON but got error: %s',
+                             filename, str(json_err))
+                return (None, [create_match_file_error(
+                    filename,
+                    'Tried to parse %s as JSON but got error: %s' % (
+                        filename, str(json_err)))])
         else:
             matches = [create_match_yaml_parser_error(err, filename)]
     except YAMLError as err:

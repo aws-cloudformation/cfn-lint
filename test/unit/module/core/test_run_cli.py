@@ -37,7 +37,7 @@ class TestCli(BaseTestCase):
             ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
-        self.assertEqual(len(matches), 1)
+        self.assertEqual(len(matches), 0)
 
     def test_template_not_found_directory(self):
         """Test template not found"""
@@ -48,7 +48,7 @@ class TestCli(BaseTestCase):
             ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
-        self.assertEqual(len(matches), 1)
+        self.assertEqual(len(matches), 0)
 
     def test_template_invalid_yaml(self):
         """Test template not found"""
@@ -78,7 +78,17 @@ class TestCli(BaseTestCase):
             ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
-        self.assertEqual(len(matches), 1)
+        self.assertEqual(len(matches), 0)
+
+    def test_template_invalid_yaml_ignore_by_rule_id(self):
+        """Test template not found"""
+        filename = 'test/fixtures/templates/bad/core/config_invalid_yaml.yaml'
+
+        (args, filenames, _) = cfnlint.core.get_args_filenames(
+            ['--template', filename, '--ignore-checks', 'E0000'])
+        (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
+
+        self.assertEqual(len(matches), 0)
 
     def test_template_invalid_json_ignore(self):
         """Test template not found"""
@@ -88,7 +98,7 @@ class TestCli(BaseTestCase):
             ['--template', filename, '--ignore-bad-template'])
         (_, _, matches) = cfnlint.core.get_template_rules(filenames[0], args)
 
-        self.assertEqual(len(matches), 1)
+        self.assertEqual(len(matches), 0)
 
     def test_template_via_stdin(self):
         """Test getting the template from stdin doesn't crash"""
@@ -121,7 +131,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.format, None)
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.ignore_checks, [])
-        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.include_checks, ['W', 'E'])
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
@@ -156,7 +166,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.format, None)
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.ignore_checks, ['E0000'])
-        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.include_checks, ['W', 'E'])
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
@@ -183,7 +193,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.format, None)
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.ignore_checks, ['E0000'])
-        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.include_checks, ['W', 'E'])
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)
@@ -209,7 +219,7 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.format, None)
         self.assertEqual(args.ignore_bad_template, True)
         self.assertEqual(args.ignore_checks, [])
-        self.assertEqual(args.include_checks, [])
+        self.assertEqual(args.include_checks, ['W', 'E'])
         self.assertEqual(args.listrules, False)
         self.assertEqual(args.debug, False)
         self.assertEqual(args.override_spec, None)

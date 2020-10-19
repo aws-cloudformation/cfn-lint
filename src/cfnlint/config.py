@@ -511,7 +511,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def include_checks(self):
         """ include_checks """
-        return self._get_argument_value('include_checks', True, True)
+        results = self._get_argument_value('include_checks', True, True)
+        return ['W', 'E'] + results
 
     @property
     def mandatory_checks(self):
