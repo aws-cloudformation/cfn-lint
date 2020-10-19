@@ -3,8 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import os
-import six
 from glob import glob
+import six
 from cfnlint.data import CloudformationSchema
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
