@@ -56,11 +56,11 @@ def get_exit_code(matches):
     """ Determine exit code """
     exit_code = 0
     for match in matches:
-        if match.rule.id[0] == 'I':
+        if match.rule.severity == 'informational':
             exit_code = exit_code | 8
-        elif match.rule.id[0] == 'W':
+        elif match.rule.severity == 'warning':
             exit_code = exit_code | 4
-        elif match.rule.id[0] == 'E':
+        elif match.rule.severity == 'error':
             exit_code = exit_code | 2
 
     return exit_code
@@ -79,11 +79,10 @@ def get_formatter(fmt):
             formatter = cfnlint.formatters.JsonFormatter()
         elif fmt == 'junit':
             formatter = cfnlint.formatters.JUnitFormatter()
-    else:
-        if sys.stdout.isatty():
+        elif fmt == 'pretty':
             formatter = cfnlint.formatters.PrettyFormatter()
-        else:
-            formatter = cfnlint.formatters.Formatter()
+    else:
+        formatter = cfnlint.formatters.Formatter()
 
     return formatter
 

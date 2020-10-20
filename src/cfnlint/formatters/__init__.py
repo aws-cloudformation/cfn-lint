@@ -4,8 +4,25 @@ SPDX-License-Identifier: MIT-0
 """
 import itertools
 import json
+import operator
+import sys
 from junit_xml import TestSuite, TestCase, to_xml_report_string
 from cfnlint.rules import Match
+
+
+class color(object):
+    error = '\033[31m'
+    warning = '\033[33m'
+    informational = '\033[34m'
+    unknown = '\033[37m'
+    green = '\033[32m'
+    reset = '\033[0m'
+    bold_green = '\033[1;32m'
+
+
+def colored(s, c):
+    """ Takes in string s and outputs it with color """
+    return '{}{}{}'.format(c, s, color.reset)
 
 
 class BaseFormatter(object):
@@ -104,13 +121,6 @@ class JsonFormatter(BaseFormatter):
 
         def default(self, o):
             if isinstance(o, Match):
-                if o.rule.id[0] == 'W':
-                    level = 'Warning'
-                elif o.rule.id[0] == 'I':
-                    level = 'Informational'
-                else:
-                    level = 'Error'
-
                 return {
                     'Rule': {
                         'Id': o.rule.id,
@@ -129,7 +139,7 @@ class JsonFormatter(BaseFormatter):
                         },
                         'Path': getattr(o, 'path', None),
                     },
-                    'Level': level,
+                    'Level': o.rule.severity.capitalize(),
                     'Message': o.message,
                     'Filename': o.filename,
                 }
@@ -177,20 +187,22 @@ class ParseableFormatter(BaseFormatter):
 
 class PrettyFormatter(BaseFormatter):
     """Generic Formatter"""
-    SEVERITY_COLOR = {
-        CloudFormationLintRule.ERROR: 'red',
-        CloudFormationLintRule.WARNING: 'yellow',
-        CloudFormationLintRule.INFO: 'white',
-        CloudFormationLintRule.NOTSET: 'grey',
-    }
 
     def _format(self, match):
         """Format output"""
         formatstr = '{0}:{1}:\t\t{2}\t{3}'
+        if sys.stdout.isatty():
+            return formatstr.format(
+                colored(match.linenumber, color.green),
+                colored(match.columnnumber, color.green),
+                colored(match.rule.id, getattr(color, match.rule.severity.lower())),
+                match.message,
+            )
+
         return formatstr.format(
-            colored(match.linenumber, 'green'),
-            colored(match.columnnumber, 'green'),
-            colored(match.rule.id, self.SEVERITY_COLOR[match.rule.severity]),
+            match.linenumber,
+            match.columnnumber,
+            match.rule.id,
             match.message,
         )
 
@@ -206,8 +218,11 @@ class PrettyFormatter(BaseFormatter):
         for filename, file_matches in itertools.groupby(
                 matches,
                 key=operator.attrgetter('filename')
-            ):
-            output.append(colored(filename, 'green', attrs=['bold']))
+        ):
+            if sys.stdout.isatty():
+                output.append(colored(filename, color.bold_green))
+            else:
+                output.append(filename)
             for match in file_matches:
                 output.extend([self._format(match)])
             output.append('')  # Newline after each group

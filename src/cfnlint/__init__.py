@@ -19,6 +19,8 @@ from cfnlint.rules import TransformError as _TransformError
 from cfnlint.rules import RuleError as _RuleError
 from cfnlint.runner import Runner as _Runner
 from cfnlint.template import Template as _Template
+
+
 from cfnlint.decode.node import dict_node
 import cfnlint.rules
 
