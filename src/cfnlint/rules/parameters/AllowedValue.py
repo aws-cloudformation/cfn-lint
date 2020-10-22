@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -43,6 +44,7 @@ class AllowedValue(CloudFormationLintRule):
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
 
         if allowed_value_specs:
+            description = kwargs.get('value_specs', {}).get('AllowedValuesDescription') or 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
             if value in cfn.template.get('Parameters', {}):
                 param = cfn.template.get('Parameters').get(value, {})
                 parameter_values = param.get('AllowedValues')
@@ -57,16 +59,16 @@ class AllowedValue(CloudFormationLintRule):
                             for index, allowed_value in enumerate(parameter_values):
                                 if str(allowed_value) not in allowed_value_specs:
                                     param_path = ['Parameters', value, 'AllowedValues', index]
-                                    message = 'You must specify a valid allowed value for {0} ({1}).\nValid values are {2}'
+                                    message = 'You must specify a valid allowed value for {0} ({1}).\n{2}'
                                     matches.append(RuleMatch(param_path, message.format(
-                                        value, allowed_value, allowed_value_specs)))
+                                        value, allowed_value, description)))
                         if default_value:
                             # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
                             if str(default_value) not in allowed_value_specs:
                                 param_path = ['Parameters', value, 'Default']
-                                message = 'You must specify a valid Default value for {0} ({1}).\nValid values are {2}'
+                                message = 'You must specify a valid Default value for {0} ({1}).\n{2}'
                                 matches.append(RuleMatch(param_path, message.format(
-                                    value, default_value, allowed_value_specs)))
+                                    value, default_value, description)))
 
         return matches
 

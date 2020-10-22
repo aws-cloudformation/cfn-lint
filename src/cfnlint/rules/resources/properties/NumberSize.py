@@ -72,7 +72,9 @@ class NumberSize(CloudFormationLintRule):
                         property_type = specs.get(prop).get('PrimitiveType')
                         value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
                             'ValueTypes').get(value_type, {})
-                        if value_specs.get('NumberMax') is not None and value_specs.get('NumberMin') is not None:
+                        # only check NumberMax and NumberMin when AllowedValues don't exist
+                        # otherwise rely on the Allowed Values check to do the validation
+                        if value_specs.get('NumberMax') is not None and value_specs.get('NumberMin') is not None and value_specs.get('AllowedValues') is None:
                             if property_type in ['Integer', 'Double', 'Long', 'String']:
                                 matches.extend(
                                     cfn.check_value(

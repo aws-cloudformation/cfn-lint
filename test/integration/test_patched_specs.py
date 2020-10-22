@@ -114,7 +114,7 @@ class TestPatchedSpecs(BaseTestCase):
             number_max = 0
             number_min = 0
             for p_name, p_values in v_values.items():
-                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex',
+                self.assertIn(p_name, ['Ref', 'GetAtt', 'AllowedValues', 'AllowedPattern', 'AllowedPatternRegex', 'AllowedValuesDescription',
                                        'ListMin', 'ListMax', 'JsonMax', 'NumberMax', 'NumberMin', 'StringMax', 'StringMin'])
 
                 if p_name == 'NumberMin':
