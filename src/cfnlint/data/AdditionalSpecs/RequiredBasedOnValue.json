@@ -1,0 +1,23 @@
+{
+    "PropertyTypes": {
+    },
+    "ResourceTypes": {
+        "AWS::Lambda::EventSourceMapping": {
+            "EventSourceArn": [
+                {
+                    "Regex": "arn:aws*:(kinesis|kafka|dynamodb):*",
+                    "GetAtt": {
+                        "AWS::DynamoDB::Table": "StreamArn",
+                        "AWS::Kinesis::Stream": "Arn"
+                    },
+                    "Ref": [
+                        "AWS::MSK::Cluster"
+                    ],
+                    "RequiredProperties": [
+                        "StartingPosition"
+                    ]
+                }
+            ]
+        }
+    }
+}
