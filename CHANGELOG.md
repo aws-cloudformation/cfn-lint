@@ -1,3 +1,13 @@
+### v0.39.0
+###### Features
+- Allow ignoring of [E0000](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E0000) and [E0001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E0001) (pull #[1580](https://github.com/aws-cloudformation/cfn-python-lint/pull/1580))
+- Update rule [E3005](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3005) to include resource based conditions (pull #[1738](https://github.com/aws-cloudformation/cfn-python-lint/pull/1738))
+- Update template limits to new [standards](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html) (pull #[1747](https://github.com/aws-cloudformation/cfn-python-lint/pull/1747))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 19.0.0 (pull #[1751](https://github.com/aws-cloudformation/cfn-python-lint/pull/1751))
+- Add `ap-northeast-2d` to the list of approved Availibility Zones (pull #[1739](https://github.com/aws-cloudformation/cfn-python-lint/pull/1739))
+- Add AllowedValues to `AWS::CloudFormation::StackSet.PermissionModel` from botocore (pull #[1741](https://github.com/aws-cloudformation/cfn-python-lint/pull/1741))
+
 ### v0.38.0
 ###### Features
 - Expand `likely_stateful_resource_types` for explicit UpdateReplacePolicy/DeletionPolicy rule [I3011](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3011) to include `AWS::SQS::Queue` (pull #[1736](https://github.com/aws-cloudformation/cfn-python-lint/pull/1736))
