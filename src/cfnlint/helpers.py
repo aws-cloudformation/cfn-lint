@@ -136,26 +136,26 @@ PSEUDOPARAMS = [
 
 LIMITS = {
     'Mappings': {
-        'number': 100,
-        'attributes': 64,
+        'number': 200,
+        'attributes': 200,
         'name': 255  # in characters
     },
     'Outputs': {
-        'number': 60,
+        'number': 200,
         'name': 255,  # in characters
         'description': 1024  # in bytes
     },
     'Parameters': {
-        'number': 60,
+        'number': 200,
         'name': 255,  # in characters
         'value': 4096  # in bytes
     },
     'Resources': {
-        'number': 200,
+        'number': 500,
         'name': 255  # in characters
     },
     'template': {
-        'body': 460800,  # in bytes
+        'body': 1000000,  # in bytes
         'description': 1024  # in bytes
     },
     'threshold': 0.9,  # for rules about approaching the other limit values
