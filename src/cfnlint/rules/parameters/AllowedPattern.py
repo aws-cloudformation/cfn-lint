@@ -42,9 +42,10 @@ class AllowedPattern(CloudFormationLintRule):
             return matches
 
         allowed_pattern = kwargs.get('value_specs', {}).get('AllowedPattern', {})
+        allowed_pattern_regex = kwargs.get('value_specs', {}).get('AllowedPatternRegex', {})
         allowed_pattern_description = kwargs.get('value_specs', {}).get('AllowedPatternDescription', {})
 
-        if allowed_pattern:
+        if allowed_pattern_regex:
             if value in cfn.template.get('Parameters', {}):
                 param = cfn.template.get('Parameters').get(value, {})
                 parameter_values = param.get('AllowedValues')
@@ -57,7 +58,7 @@ class AllowedPattern(CloudFormationLintRule):
                         # Check Allowed Values
                         if parameter_values:
                             for index, allowed_value in enumerate(parameter_values):
-                                if not re.match(str(allowed_value), allowed_pattern):
+                                if not re.match(allowed_pattern_regex, str(allowed_value)):
                                     param_path = ['Parameters', value, 'AllowedValues', index]
                                     description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
                                     message = 'You must specify a valid allowed value for {0} ({1}).\n{2}'
@@ -65,7 +66,7 @@ class AllowedPattern(CloudFormationLintRule):
                                         value, allowed_value, description)))
                         if default_value:
                             # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
-                            if not re.match(str(default_value), allowed_pattern):
+                            if not re.match(allowed_pattern_regex, str(default_value)):
                                 param_path = ['Parameters', value, 'Default']
                                 description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
                                 message = 'You must specify a valid Default value for {0} ({1}).\n{2}'
