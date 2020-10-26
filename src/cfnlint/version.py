@@ -3,4 +3,4 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-__version__ = '0.38.0'
+__version__ = '0.39.0'
