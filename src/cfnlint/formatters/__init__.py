@@ -17,16 +17,17 @@ class color(object):
     unknown = '\033[37m'
     green = '\033[32m'
     reset = '\033[0m'
-    bold_green = '\033[1;32m'
     bold_reset = '\033[1:0m'
+    underline_reset = '\033[4m'
 
 
 def colored(s, c):
     """ Takes in string s and outputs it with color """
     if sys.stdout.isatty():
         return '{}{}{}'.format(c, s, color.reset)
-    else:
-        return s
+
+    return s
+
 
 class BaseFormatter(object):
     """Base Formatter class"""
@@ -194,11 +195,11 @@ class PrettyFormatter(BaseFormatter):
 
     def _format(self, match):
         """Format output"""
-        formatstr = '{0}:{1}:\t\t{2}\t{3}'
+        formatstr = '{0}{1}{2}'
+        pos = '{0}:{1}:'.format(match.linenumber, match.columnnumber)
         return formatstr.format(
-            colored(match.linenumber, color.green),
-            colored(match.columnnumber, color.green),
-            colored(match.rule.id, getattr(color, match.rule.severity.lower())),
+            colored('{:20}'.format(pos), color.reset),
+            colored('{:10}'.format(match.rule.id), getattr(color, match.rule.severity.lower())),
             match.message,
         )
 
@@ -210,7 +211,8 @@ class PrettyFormatter(BaseFormatter):
             colored(len(rules), color.bold_reset),
             colored(len([i for i in matches if i.rule.severity.lower() == 'error']), color.error),
             colored(len([i for i in matches if i.rule.severity.lower() == 'warning']), color.warning),
-            colored(len([i for i in matches if i.rule.severity.lower() == 'informational']), color.informational),
+            colored(len([i for i in matches if i.rule.severity.lower()
+                         == 'informational']), color.informational),
         ))
         return '\n'.join(results)
 
@@ -229,10 +231,8 @@ class PrettyFormatter(BaseFormatter):
                 'informational': [],
                 'unknown': []
             }
-            if sys.stdout.isatty():
-                output.append(colored(filename, color.bold_green))
-            else:
-                output.append(filename)
+
+            output.append(colored(filename, color.underline_reset))
             for match in file_matches:
                 level = match.rule.severity.lower()
                 if level not in ['error', 'warning', 'informational']:
