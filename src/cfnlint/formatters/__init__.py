@@ -18,12 +18,15 @@ class color(object):
     green = '\033[32m'
     reset = '\033[0m'
     bold_green = '\033[1;32m'
+    bold_reset = '\033[1:0m'
 
 
 def colored(s, c):
     """ Takes in string s and outputs it with color """
-    return '{}{}{}'.format(c, s, color.reset)
-
+    if sys.stdout.isatty():
+        return '{}{}{}'.format(c, s, color.reset)
+    else:
+        return s
 
 class BaseFormatter(object):
     """Base Formatter class"""
@@ -31,10 +34,11 @@ class BaseFormatter(object):
     def _format(self, match):
         """Format the specific match"""
 
-    def print_matches(self, matches, rules=None):
+    def print_matches(self, matches, rules=None, filenames=None):
         """Output all the matches"""
         # Unused argument http://pylint-messages.wikidot.com/messages:w0613
         del rules
+        del filenames
 
         if not matches:
             return None
@@ -75,7 +79,7 @@ class JUnitFormatter(BaseFormatter):
             match.columnnumber
         )
 
-    def print_matches(self, matches, rules=None):
+    def print_matches(self, matches, rules=None, filenames=None):
         """Output all the matches"""
 
         if not rules:
@@ -145,7 +149,7 @@ class JsonFormatter(BaseFormatter):
                 }
             return {'__{}__'.format(o.__class__.__name__): o.__dict__}
 
-    def print_matches(self, matches, rules=None):
+    def print_matches(self, matches, rules=None, filenames=None):
         # JSON formatter outputs a single JSON object
         # Unused argument http://pylint-messages.wikidot.com/messages:w0613
         del rules
@@ -191,40 +195,53 @@ class PrettyFormatter(BaseFormatter):
     def _format(self, match):
         """Format output"""
         formatstr = '{0}:{1}:\t\t{2}\t{3}'
-        if sys.stdout.isatty():
-            return formatstr.format(
-                colored(match.linenumber, color.green),
-                colored(match.columnnumber, color.green),
-                colored(match.rule.id, getattr(color, match.rule.severity.lower())),
-                match.message,
-            )
-
         return formatstr.format(
-            match.linenumber,
-            match.columnnumber,
-            match.rule.id,
+            colored(match.linenumber, color.green),
+            colored(match.columnnumber, color.green),
+            colored(match.rule.id, getattr(color, match.rule.severity.lower())),
             match.message,
         )
 
-    def print_matches(self, matches):
-        if not matches:
-            return []
-        return '\n'.join(self._format_matches(matches))
+    def print_matches(self, matches, rules=None, filenames=None):
+        results = self._format_matches(matches)
+
+        results.append('Cfn-lint scanned {} templates against {} rules and found {} errors, {} warnings, and {} informational violations'.format(
+            colored(len(filenames), color.bold_reset),
+            colored(len(rules), color.bold_reset),
+            colored(len([i for i in matches if i.rule.severity.lower() == 'error']), color.error),
+            colored(len([i for i in matches if i.rule.severity.lower() == 'warning']), color.warning),
+            colored(len([i for i in matches if i.rule.severity.lower() == 'informational']), color.informational),
+        ))
+        return '\n'.join(results)
 
     def _format_matches(self, matches):
         """Output all the matches"""
         output = []
+
         # This better be sorted
         for filename, file_matches in itertools.groupby(
                 matches,
                 key=operator.attrgetter('filename')
         ):
+            levels = {
+                'error': [],
+                'warning': [],
+                'informational': [],
+                'unknown': []
+            }
             if sys.stdout.isatty():
                 output.append(colored(filename, color.bold_green))
             else:
                 output.append(filename)
             for match in file_matches:
-                output.extend([self._format(match)])
+                level = match.rule.severity.lower()
+                if level not in ['error', 'warning', 'informational']:
+                    level = 'unknown'
+                levels[level].append(match)
+            for _, all_matches in levels.items():
+                for match in all_matches:
+                    output.extend([self._format(match)])
+
             output.append('')  # Newline after each group
 
         return output
