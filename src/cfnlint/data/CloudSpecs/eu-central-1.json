@@ -59013,7 +59013,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-eventsourcearn",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.EventSourceArn"
+          }
         },
         "FunctionName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionname",
@@ -59031,19 +59034,28 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumrecordageinseconds",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds"
+          }
         },
         "MaximumRetryAttempts": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumretryattempts",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts"
+          }
         },
         "ParallelizationFactor": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-parallelizationfactor",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.ParallelizationFactor"
+          }
         },
         "Queues": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-queues",
@@ -59065,7 +59077,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingposition",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.StartingPosition"
+          }
         },
         "Topics": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-topics",
@@ -69486,6 +69501,44 @@
     "AWS::Lambda::EventSourceMapping.BatchSize": {
       "NumberMax": 10000,
       "NumberMin": 1
+    },
+    "AWS::Lambda::EventSourceMapping.EventSourceArn": {
+      "GetAtt": {
+        "AWS::DynamoDB::Table": "StreamArn",
+        "AWS::Kinesis::Stream": "Arn",
+        "AWS::SQS::Queue": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::MSK::Cluster"
+        ]
+      }
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds": {
+      "NumberMax": 300,
+      "NumberMin": 0
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds": {
+      "NumberMax": 604800,
+      "NumberMin": 60
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts": {
+      "NumberMax": 10000,
+      "NumberMin": 0
+    },
+    "AWS::Lambda::EventSourceMapping.ParallelizationFactor": {
+      "NumberMax": 10,
+      "NumberMin": 1
+    },
+    "AWS::Lambda::EventSourceMapping.StartingPosition": {
+      "AllowedValues": [
+        "AT_TIMESTAMP",
+        "LATEST",
+        "TRIM_HORIZON"
+      ]
     },
     "AWS::Lambda::Function.MemorySize": {
       "NumberMax": 3008,

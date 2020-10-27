@@ -18902,6 +18902,44 @@
       "NumberMax": 10000,
       "NumberMin": 1
     },
+    "AWS::Lambda::EventSourceMapping.EventSourceArn": {
+      "GetAtt": {
+        "AWS::DynamoDB::Table": "StreamArn",
+        "AWS::Kinesis::Stream": "Arn",
+        "AWS::SQS::Queue": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::MSK::Cluster"
+        ]
+      }
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds": {
+      "NumberMax": 300,
+      "NumberMin": 0
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds": {
+      "NumberMax": 604800,
+      "NumberMin": 60
+    },
+    "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts": {
+      "NumberMax": 10000,
+      "NumberMin": 0
+    },
+    "AWS::Lambda::EventSourceMapping.ParallelizationFactor": {
+      "NumberMax": 10,
+      "NumberMin": 1
+    },
+    "AWS::Lambda::EventSourceMapping.StartingPosition": {
+      "AllowedValues": [
+        "AT_TIMESTAMP",
+        "LATEST",
+        "TRIM_HORIZON"
+      ]
+    },
     "AWS::Lambda::Function.MemorySize": {
       "NumberMax": 3008,
       "NumberMin": 128
