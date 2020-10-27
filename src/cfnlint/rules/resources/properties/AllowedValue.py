@@ -38,7 +38,7 @@ class AllowedValue(CloudFormationLintRule):
                 # Always compare the allowed value as a string, strict typing is not of concern for this rule
                 if str(value) not in allowed_value_specs:
                     message = 'You must specify a valid value for {0} ({1}).\n{2}'
-                    description = kwargs.get('value_specs', {}).get('AllowedValuesDescription') or 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
+                    description = 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
                     matches.append(RuleMatch(path, message.format(
                         property_name, value, description)))
 
