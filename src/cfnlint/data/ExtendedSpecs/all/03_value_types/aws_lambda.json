@@ -22,5 +22,63 @@
       "NumberMax": 10000,
       "NumberMin": 1
     }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.EventSourceArn",
+    "value": {
+      "GetAtt": {
+        "AWS::DynamoDB::Table": "StreamArn",
+        "AWS::Kinesis::Stream": "Arn",
+        "AWS::SQS::Queue": "Arn"
+      },
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::MSK::Cluster"
+        ]
+      }
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.StartingPosition",
+    "value": {
+      "botocore": "lambda/2015-03-31/EventSourcePosition"
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.ParallelizationFactor",
+    "value": {
+      "NumberMax": 10,
+      "NumberMin": 1
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.MaximumRetryAttempts",
+    "value": {
+      "NumberMax": 10000,
+      "NumberMin": -1
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds",
+    "value": {
+      "NumberMax": 604800,
+      "NumberMin": -1
+    }
+  },
+  {
+    "op": "add",
+    "path": "/ValueTypes/AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds",
+    "value": {
+      "NumberMax": 300,
+      "NumberMin": 0
+    }
   }
 ]
