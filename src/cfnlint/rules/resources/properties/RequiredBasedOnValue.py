@@ -21,10 +21,10 @@ class RequiredBasedOnValue(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(RequiredBasedOnValue, self).__init__()
-        self.requiredbasedonvalue = cfnlint.helpers.load_resource(
+        requiredbasedonvalue = cfnlint.helpers.load_resource(
             AdditionalSpecs, 'RequiredBasedOnValue.json')
-        self.resource_types_specs = self.requiredbasedonvalue['ResourceTypes']
-        self.property_types_specs = self.requiredbasedonvalue['PropertyTypes']
+        self.resource_types_specs = requiredbasedonvalue['ResourceTypes']
+        self.property_types_specs = requiredbasedonvalue['PropertyTypes']
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
@@ -37,7 +37,7 @@ class RequiredBasedOnValue(CloudFormationLintRule):
             if regex:
                 if re.match(spec.get('Regex'), value):
                     return True
-        if isinstance(value, dict):
+        elif isinstance(value, dict):
             if len(value) == 1:
                 for k, v in value.items():
                     ref = spec.get('Ref')
@@ -92,7 +92,7 @@ class RequiredBasedOnValue(CloudFormationLintRule):
             return matches
 
         # Need to get this spec
-        specs = self.requiredbasedonvalue.get('ResourceTypes').get(resource_type)
+        specs = self.resource_types_specs.get(resource_type)
 
         matches.extend(
             self._check_obj(properties, specs, path, cfn)
@@ -109,7 +109,7 @@ class RequiredBasedOnValue(CloudFormationLintRule):
             return matches
 
         # Need to get this spec
-        specs = self.requiredbasedonvalue.get('PropertyTypes').get(property_type)
+        specs = self.property_types_specs.get(property_type)
 
         matches.extend(
             self._check_obj(properties, specs, path, cfn)
