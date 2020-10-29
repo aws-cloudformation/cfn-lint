@@ -7,7 +7,6 @@ from cfnlint.rules.resources.properties.RequiredBasedOnValue import RequiredBase
 
 
 class TestRequiredBasedOnValue(BaseRuleTestCase):
-    """Test OnlyOne Property Configuration"""
 
     def setUp(self):
         """Setup"""
