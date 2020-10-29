@@ -1,0 +1,19 @@
+{
+    "PropertyTypes": {
+    },
+    "ResourceTypes": {
+        "AWS::Lambda::EventSourceMapping": {
+            "EventSourceArn": [
+                {
+                    "Regex": "arn:aws*:(sqs):*",
+                    "GetAtt": {
+                        "AWS::SQS::Queue": "Arn"
+                    },
+                    "UnwantedProperties": [
+                        "StartingPosition"
+                    ]
+                }
+            ]
+        }
+    }
+}
