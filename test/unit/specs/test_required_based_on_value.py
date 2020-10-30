@@ -16,7 +16,7 @@ LOGGER.addHandler(logging.NullHandler())
 class TestRequiredBasedOnValueSpec(BaseTestCase):
 
 
-    def validate_additional_specs_schema(self):
-        spec = cfnlint.helpers.load_resource(cfnlint.data.AdditionalSpecs, 'RequiredBasedOnValue.json')
-        schema = cfnlint.helpers.load_resource(test.fixtures.schemas, 'RequiredBasedOnValue.json')
-        validate(spec, schema)
+    def test_validate_additional_specs_schema(self):
+        spec = cfnlint.helpers.load_resource(cfnlint.data.AdditionalSpecs, 'BasedOnValue.json')
+        schema = cfnlint.helpers.load_resource(test.fixtures.schemas, 'BasedOnValue.json')
+        validate(instance=spec, schema=schema)
