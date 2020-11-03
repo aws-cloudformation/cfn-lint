@@ -18989,6 +18989,23 @@
         }
       }
     },
+    "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-sourceaccessconfiguration.html",
+      "Properties": {
+        "Type": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-sourceaccessconfiguration.html#cfn-lambda-eventsourcemapping-sourceaccessconfiguration-type",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "URI": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-sourceaccessconfiguration.html#cfn-lambda-eventsourcemapping-sourceaccessconfiguration-uri",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Lambda::Function.Code": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html",
       "Properties": {
@@ -20427,17 +20444,6 @@
         }
       }
     },
-    "AWS::S3::Bucket.ReplicaModifications": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-replicamodifications.html",
-      "Properties": {
-        "Status": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-replicamodifications.html#cfn-s3-bucket-replicamodifications-status",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        }
-      }
-    },
     "AWS::S3::Bucket.ReplicationConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-replicationconfiguration.html",
       "Properties": {
@@ -20794,12 +20800,6 @@
     "AWS::S3::Bucket.SourceSelectionCriteria": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-sourceselectioncriteria.html",
       "Properties": {
-        "ReplicaModifications": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-sourceselectioncriteria.html#cfn-s3-bucket-sourceselectioncriteria-replicamodifications",
-          "Required": false,
-          "Type": "ReplicaModifications",
-          "UpdateType": "Mutable"
-        },
         "SseKmsEncryptedObjects": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-sourceselectioncriteria.html#cfn-s3-bucket-sourceselectioncriteria-ssekmsencryptedobjects",
           "Required": false,
@@ -24053,7 +24053,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "19.0.0",
+  "ResourceSpecificationVersion": "20.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -37796,6 +37796,22 @@
             "ValueType": "AWS::Lambda::EventSourceMapping.ParallelizationFactor"
           }
         },
+        "Queues": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-queues",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "SourceAccessConfigurations": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-sourceaccessconfigurations",
+          "DuplicatesAllowed": false,
+          "ItemType": "SourceAccessConfiguration",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "StartingPosition": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingposition",
           "PrimitiveType": "String",
@@ -43866,11 +43882,11 @@
     },
     "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds": {
       "NumberMax": 604800,
-      "NumberMin": 60
+      "NumberMin": -1
     },
     "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts": {
       "NumberMax": 10000,
-      "NumberMin": 0
+      "NumberMin": -1
     },
     "AWS::Lambda::EventSourceMapping.ParallelizationFactor": {
       "NumberMax": 10,
@@ -43929,7 +43945,7 @@
     },
     "AWS::RDS::DBInstance.Engine": {
       "AllowedPattern": "Has to be one of [aurora, aurora-mysql, aurora-postgresql, mariadb, mysql, oracle-ee, oracle-se2, oracle-se1, oracle-se, postgres, sqlserver-ee, sqlserver-se, sqlserver-ex, sqlserver-web]",
-      "AllowedPatternRegex": "(?i)^(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"
+      "AllowedPatternRegex": "(?i)(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"
     },
     "AWS::RDS::DBInstance.PromotionTier": {
       "NumberMax": 15,
