@@ -23,4 +23,4 @@ class TestRequiredBasedOnValue(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/required_based_on_value.yaml', 4)
+            'test/fixtures/templates/bad/resources/properties/required_based_on_value.yaml', 5)

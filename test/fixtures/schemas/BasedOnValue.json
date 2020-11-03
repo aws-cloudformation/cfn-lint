@@ -1,0 +1,112 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Product",
+    "description": "Required Based on Value",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "ResourceTypes": {
+            "$ref": "#/definitions/resourcetypes"
+        },
+        "PropertyTypes": {
+            "$ref": "#/definitions/propertytypes"
+        }
+    },
+    "definitions": {
+        "propertytypes": {
+            "patternProperties": {
+                "^[a-zA-Z0-9]+::[a-zA-Z0-9]+::[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$": {
+                    "$ref": "#/definitions/property"
+                }
+            },
+            "additionalProperties": false,
+            "uniqueItems": true
+        },
+        "resourcetypes": {
+            "patternProperties": {
+                "^[a-zA-Z0-9]+::[a-zA-Z0-9]+::[a-zA-Z0-9]+$": {
+                    "$ref": "#/definitions/property"
+                }
+            },
+            "additionalProperties": false,
+            "uniqueItems": true
+        },
+        "property": {
+            "type": "object",
+            "patternProperties": {
+                "^[a-zA-Z0-9]+$": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/constraint"
+                    },
+                    "additionalItems": false,
+                    "uniqueItems": true
+                }
+            },
+            "additionalProperties": false
+        },
+        "getatt": {
+            "description": "The type of supported GetAtt resource type and attribute",
+            "type": "object",
+            "patternProperties": {
+                "^.*$": {
+                    "type": "string",
+                    "uniqueItems": true
+                }
+            },
+            "uniqueItems": true
+        },
+        "constraint": {
+            "type": "object",
+            "properties": {
+                "Regex": {
+                    "description": "The regex of the value we are looking for",
+                    "type": "string"
+                },
+                "GetAtt": {
+                    "$ref": "#/definitions/getatt"
+                },
+                "Ref": {
+                    "description": "The type of Resource Types that can be REFed",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "RequiredProperties": {
+                    "description": "Defines other properties that are required",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "UnwantedProperties": {
+                    "description": "Defines other properties that are unwanted",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "oneOf": [
+                {
+                    "required": [
+                        "Regex",
+                        "RequiredProperties"
+                    ]
+                },
+                {
+                    "required": [
+                        "Regex",
+                        "UnwantedProperties"
+                    ]
+                }
+            ]
+        }
+    },
+    "required": [
+        "ResourceTypes",
+        "PropertyTypes"
+    ]
+}
