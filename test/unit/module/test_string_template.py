@@ -18,5 +18,5 @@ class TestNonObjectTemplate(BaseTestCase):
 
         filename = 'test/fixtures/templates/bad/string.yaml'
 
-        _, matches = cfnlint.decode.decode(filename, True)
+        _, matches = cfnlint.decode.decode(filename)
         assert len(matches) == 1

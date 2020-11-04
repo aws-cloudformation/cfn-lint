@@ -9,7 +9,7 @@ from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 
 
-class TestTemplate(BaseTestCase):
+class TestRulesCollection(BaseTestCase):
     """Test Template RulesCollection in cfnlint """
 
     def setUp(self):
@@ -79,7 +79,7 @@ class TestTemplate(BaseTestCase):
             """Info Rule"""
             id = 'I0000'
 
-        rules_to_add = [rule_e0000, rule_w0000, rule_i0000]
+        rules_to_add = [rule_e0000(), rule_w0000(), rule_i0000()]
         rules = RulesCollection(ignore_rules=None, include_rules=None)
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 2)
@@ -100,7 +100,7 @@ class TestTemplate(BaseTestCase):
             """Info Rule"""
             id = 'I0000'
 
-        rules_to_add = [rule_e0000, rule_w0000, rule_i0000]
+        rules_to_add = [rule_e0000(), rule_w0000(), rule_i0000()]
         rules = RulesCollection(ignore_rules=None, include_rules=['I'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 3)
@@ -121,7 +121,7 @@ class TestTemplate(BaseTestCase):
             """Info Rule"""
             id = 'I0000'
 
-        rules_to_add = [rule_e0000, rule_w0000, rule_i0000]
+        rules_to_add = [rule_e0000(), rule_w0000(), rule_i0000()]
         rules = RulesCollection(ignore_rules=['E'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 1)
@@ -142,7 +142,7 @@ class TestTemplate(BaseTestCase):
             """Error Rule"""
             id = 'E0002'
 
-        rules_to_add = [rule_e0000, rule_e0010, rule_e0002]
+        rules_to_add = [rule_e0000(), rule_e0010(), rule_e0002()]
         rules = RulesCollection(ignore_rules=['E000'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 1)
@@ -163,7 +163,7 @@ class TestTemplate(BaseTestCase):
             """Error Rule"""
             id = 'E0002'
 
-        rules_to_add = [rule_e0000, rule_e0010, rule_e0002]
+        rules_to_add = [rule_e0000(), rule_e0010(), rule_e0002()]
         rules = RulesCollection(ignore_rules=['E0002'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 2)
@@ -184,7 +184,7 @@ class TestTemplate(BaseTestCase):
             """Info Rule"""
             id = 'I0000'
 
-        rules_to_add = [rule_e0000, rule_w0000, rule_i0000]
+        rules_to_add = [rule_e0000(), rule_w0000(), rule_i0000()]
         rules = RulesCollection(ignore_rules=['E'], mandatory_rules=['E'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 2)
@@ -209,7 +209,7 @@ class TestTemplate(BaseTestCase):
             """Warning Rule"""
             id = 'W0000'
 
-        rules_to_add = [rule_e0000, rule_e0010, rule_e0002, rule_w0000]
+        rules_to_add = [rule_e0000(), rule_e0010(), rule_e0002(), rule_w0000()]
         rules = RulesCollection(ignore_rules=['E'], mandatory_rules=['E000'])
         rules.extend(rules_to_add)
         self.assertEqual(len(rules), 3)

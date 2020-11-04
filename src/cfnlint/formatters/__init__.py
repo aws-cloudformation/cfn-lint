@@ -6,6 +6,7 @@ import json
 from junit_xml import TestSuite, TestCase, to_xml_report_string
 from cfnlint.rules import Match
 
+
 class BaseFormatter(object):
     """Base Formatter class"""
 
@@ -64,7 +65,7 @@ class JUnitFormatter(BaseFormatter):
 
         test_cases = []
         for rule in rules.all_rules:
-            if not rules.is_rule_enabled(rule.id, rule.experimental):
+            if not rules.is_rule_enabled(rule):
                 if not rule.id:
                     continue
                 test_case = TestCase(name='{0} {1}'.format(rule.id, rule.shortdesc))

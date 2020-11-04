@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.mappings.LimitAttributes import LimitAttributes  # pylint: disable=E0401
+from test.unit.rules.templates.test_limitsize_template import write_limit_test_templates
 
 
 class TestParameterLimitAttributes(BaseRuleTestCase):
@@ -13,6 +14,7 @@ class TestParameterLimitAttributes(BaseRuleTestCase):
         """Setup"""
         super(TestParameterLimitAttributes, self).setUp()
         self.collection.register(LimitAttributes())
+        write_limit_test_templates()
 
     def test_file_positive(self):
         """Test Positive"""
