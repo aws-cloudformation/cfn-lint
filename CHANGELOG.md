@@ -1,3 +1,13 @@
+### v0.40.0
+###### Features
+- Add rule [E3017](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3017) to validate when properties are required based on a value of another property (pull #[1746](https://github.com/aws-cloudformation/cfn-python-lint/pull/1746))
+- Add rule [E3018](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3018) to validate when properties are unwanted based on the value of another property (pull #[1759](https://github.com/aws-cloudformation/cfn-python-lint/pull/1759))
+- Remove rule [E3040](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3040) and replace with rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031) (pull #[1754](https://github.com/aws-cloudformation/cfn-python-lint/pull/1754))
+- Remove rule [E3023](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3023) and replace with rule [E3017](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3017) (pull #[1758](https://github.com/aws-cloudformation/cfn-python-lint/pull/1758))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 20.0.0 (pull #[1760](https://github.com/aws-cloudformation/cfn-python-lint/pull/1760))
+- Add allowed values for `AWS::Lambda::EventSourceMapping` (pull #[1748](https://github.com/aws-cloudformation/cfn-python-lint/pull/1748))
+
 ### v0.39.0
 ###### Features
 - Allow ignoring of [E0000](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E0000) and [E0001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E0001) (pull #[1580](https://github.com/aws-cloudformation/cfn-python-lint/pull/1580))
