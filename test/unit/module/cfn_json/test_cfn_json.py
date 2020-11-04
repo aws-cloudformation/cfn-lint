@@ -36,7 +36,7 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc_management": {
                 "filename": 'test/fixtures/templates/quickstart/vpc-management.json',
-                "failures": 36
+                "failures": 23
             },
             "vpc": {
                 "filename": 'test/fixtures/templates/quickstart/vpc.json',
