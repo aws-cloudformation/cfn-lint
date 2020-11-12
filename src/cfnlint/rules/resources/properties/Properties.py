@@ -23,6 +23,7 @@ class Properties(CloudFormationLintRule):
         self.resourcetypes = {}
         self.propertytypes = {}
         self.parameternames = {}
+        self.intrinsictypes = {}
 
     def primitivetypecheck(self, value, primtype, proppath):
         """
@@ -238,6 +239,7 @@ class Properties(CloudFormationLintRule):
         # return objects.  FindInMap cannot directly return an object.
         len_of_text = len(text)
 
+        #pylint: disable=too-many-nested-blocks
         for prop in text:
             proppath = path[:]
             proppath.append(prop)
@@ -315,6 +317,17 @@ class Properties(CloudFormationLintRule):
                                             RuleMatch(
                                                 proppath,
                                                 message.format(prop, resourcename)))
+                                else:
+                                    if len(text[prop]) == 1:
+                                        for k in text[prop].keys():
+                                            def_intrinsic_type = self.intrinsictypes.get(k, {})
+                                            if def_intrinsic_type:
+                                                if len(def_intrinsic_type.get('ReturnTypes')) == 1 and def_intrinsic_type.get('ReturnTypes')[0] == 'Singular':
+                                                    message = 'Property {0} is using {1} when a List is needed for resource {2}'
+                                                    matches.append(
+                                                        RuleMatch(
+                                                            proppath,
+                                                            message.format(prop, k, resourcename)))
                             else:
                                 message = 'Property {0} should be of type List for resource {1}'
                                 matches.append(
@@ -340,6 +353,7 @@ class Properties(CloudFormationLintRule):
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs['ResourceTypes']
         self.propertytypes = resourcespecs['PropertyTypes']
+        self.intrinsictypes = resourcespecs['IntrinsicTypes']
         self.parameternames = self.cfn.get_parameter_names()
         for resourcename, resourcevalue in cfn.get_resources().items():
             if 'Properties' in resourcevalue and 'Type' in resourcevalue:
