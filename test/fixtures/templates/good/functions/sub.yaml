@@ -13,6 +13,8 @@ Parameters:
     Description: App Package
   mySubnets:
     Type: List<AWS::EC2::Subnet::Id>
+  CidrBlock:
+    Type: String
 Resources:
   myInstance:
     Type: AWS::EC2::Instance
@@ -64,6 +66,14 @@ Resources:
     Properties:
       ProductName: example
       ProvisioningArtifactName: v1
+  myVPc2:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock:
+        Fn::Sub:
+        - "${myCidr}${number}"
+        - myCidr: !Ref CidrBlock
+          number: 1
 Outputs:
   OutputSub:
     Value: !Sub '${ProvisionedProduct.Outputs.Example}-example'

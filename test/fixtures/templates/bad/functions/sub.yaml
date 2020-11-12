@@ -54,8 +54,10 @@ Resources:
     Properties:
       CidrBlock:
         Fn::Sub:
-        - "${myCidr}"
+        - "${myCidr}${number}"
         - myCidr: !Ref CidrBlock
+          number:
+          - bad
   LaunchConfiguration:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:

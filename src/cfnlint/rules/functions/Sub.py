@@ -85,8 +85,8 @@ class Sub(CloudFormationLintRule):
                     message = 'Sub parameter should be an object of 1 for {0}'
                     matches.append(RuleMatch(
                         param_tree, message.format('/'.join(map(str, tree)))))
-            elif not isinstance(parameter_value_obj, six.string_types):
-                message = 'Sub parameter should be an object of 1 or string for {0}'
+            elif isinstance(parameter_value_obj, list):
+                message = 'Sub parameter value should be a string for {0}'
                 matches.append(RuleMatch(
                     param_tree, message.format('/'.join(map(str, tree)))))
 
