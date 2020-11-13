@@ -49,6 +49,8 @@ region_map = {
     'US West (Oregon)': 'us-west-2',
     'US West (Los Angeles)': 'us-west-2',
     'US West (Verizon) - San Francisco Bay Area': 'us-west-2',
+    'US East (Verizon) - Miami': 'us-east-1',
+    'US East (Verizon) - Dallas': 'us-east-1',
 }
 
 session = boto3.session.Session()
