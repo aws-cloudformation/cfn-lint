@@ -91,7 +91,8 @@ HTTPS has certificate HTTP has no certificate'
                 'idle_timeout.timeout_seconds',
                 'routing.http.desync_mitigation_mode',
                 'routing.http.drop_invalid_header_fields.enabled',
-                'routing.http2.enabled'
+                'routing.http2.enabled',
+                'waf.fail_open.enabled'
             ],
             'network': [
                 'load_balancing.cross_zone.enabled'
