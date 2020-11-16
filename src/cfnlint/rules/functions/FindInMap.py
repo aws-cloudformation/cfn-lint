@@ -55,7 +55,7 @@ class FindInMap(CloudFormationLintRule):
                 matches.extend(self.check_dict(map_name, tree[:] + [0]))
             else:
                 if map_name not in mappings:
-                    message = 'Map Name {0} doesn\'t exist for {0}'
+                    message = 'Map Name {0} does not exist for {0}'
                     matches.append(RuleMatch(
                         tree[:] + [0], message.format(map_name, '/'.join(map(str, tree)))))
         else:
