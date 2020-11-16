@@ -28,5 +28,5 @@ class ResourceSchema(CloudFormationLintRule):
                     try:
                         validate(properties, load_resource(ResourceSchemas, resource_schema))
                     except ValidationError as e:
-                        matches.append(RuleMatch(['Resources', resource_name], e.message))
+                        matches.append(RuleMatch(['Resources', resource_name, 'Properties'], e.message))
         return matches
