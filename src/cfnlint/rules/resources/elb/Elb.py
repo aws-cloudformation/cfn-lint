@@ -91,7 +91,8 @@ HTTPS has certificate HTTP has no certificate'
                 'idle_timeout.timeout_seconds',
                 'routing.http.desync_mitigation_mode',
                 'routing.http.drop_invalid_header_fields.enabled',
-                'routing.http2.enabled'
+                'routing.http2.enabled',
+                'waf.fail_open.enabled'
             ],
             'network': [
                 'load_balancing.cross_zone.enabled'
@@ -130,7 +131,7 @@ HTTPS has certificate HTTP has no certificate'
                 cfn.check_value(
                     result['Value'], 'Protocol', result['Path'],
                     check_value=self.check_protocol_value,
-                    accepted_protocols=['HTTP', 'HTTPS', 'TCP', 'TCP_UDP', 'TLS', 'UDP'],
+                    accepted_protocols=['GENEVE', 'HTTP', 'HTTPS', 'TCP', 'TCP_UDP', 'TLS', 'UDP'],
                     certificate_protocols=['HTTPS', 'TLS'],
                     certificates=result['Value'].get('Certificates')))
 
