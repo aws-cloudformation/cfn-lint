@@ -189,10 +189,6 @@ class SubNeeded(CloudFormationLintRule):
             # The variable to be substituted
             variable = parameter_string_path[-1]
 
-            # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
-            if variable.startswith('${!'):
-                continue
-
             # Exclude variables that match custom exclude filters, if configured
             # (for third-party tools that pre-process templates before uploading them to AWS)
             if self._variable_custom_excluded(variable):
