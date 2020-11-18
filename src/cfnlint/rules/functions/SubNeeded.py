@@ -116,9 +116,7 @@ class SubNeeded(CloudFormationLintRule):
 
                 current_property = cfn.template.get('Resources').get(full_path[0]).get('Properties')
 
-                while exclude_based_on_property_path:
-                    if not current_property:
-                        break
+                while exclude_based_on_property_path and current_property:
                     current_property = current_property.get(exclude_based_on_property_path[0])
                     exclude_based_on_property_path = exclude_based_on_property_path[1:]
 
@@ -148,13 +146,9 @@ class SubNeeded(CloudFormationLintRule):
         for sub_field in sub_fields:
             if sub_field in exclusions:
 
-                # Traverse over any arrays
-                while path and isinstance(path[0], int):
+                # Traverse over any arrays, path should never end with an integer
+                while isinstance(path[0], int):
                     path = path[1:]
-
-                # Again, make sure the path is well-defined
-                if not path:
-                    return False
 
                 # Recurse
                 if path[0] in exclusions[sub_field]:
