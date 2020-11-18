@@ -182,11 +182,13 @@ def get_template_rules(filename, args):
     args.template_args = template
 
     if __CACHED_RULES:
-        __CACHED_RULES.ignore_checks = args.ignore_checks
-        __CACHED_RULES.include_checks = args.include_checks
-        __CACHED_RULES.configure_rules = args.configure_rules
-        __CACHED_RULES.include_experimental = args.include_experimental
-        __CACHED_RULES.mandatory_checks = args.mandatory_checks
+        __CACHED_RULES.configure(
+            ignore_rules=args.ignore_checks,
+            include_rules=args.include_checks,
+            configure_rules=args.configure_rules,
+            include_experimental=args.include_experimental,
+            mandatory_rules=args.mandatory_checks,
+        )
     else:
         __CACHED_RULES = cfnlint.core.get_rules(
             args.append_rules,
