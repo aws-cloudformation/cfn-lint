@@ -1,0 +1,181 @@
+{
+    "ResourceTypes": {
+        "AWS::ApiGateway::Method": {
+            "ExcludeRegex": "stageVariables\\..*"
+        },
+        "AWS::AppSync::FunctionConfiguration": {
+            "Properties": {
+                "RequestMappingTemplate": {
+                    "ExcludeAll": true
+                },
+                "ResponseMappingTemplate": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::AppSync::Resolver": {
+            "Properties": {
+                "RequestMappingTemplate": {
+                    "ExcludeAll": true
+                },
+                "ResponseMappingTemplate": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::AutoScaling::LaunchConfiguration": {
+            "Properties": {
+                "UserData": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::CloudFormation::StackSet": {
+            "Properties": {
+                "TemplateBody": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::CodeBuild::Project": {
+            "Properties": {
+                "BuildSpec": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::EC2::FlowLog": {
+            "Properties": {
+                "LogFormat": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::EC2::Instance": {
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "ExcludeAll": true
+                }
+            },
+            "Properties": {
+                "UserData": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::EMR::InstanceGroupConfig": {
+            "Properties": {
+                "AutoScalingPolicy": {
+                    "Properties": {
+                        "ScalingRule": {
+                            "Properties": {
+                                "ScalingTrigger": {
+                                    "Properties": {
+                                       "CloudWatchAlarmDefinition": {
+                                            "ExcludeAll": true
+                                        } 
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }                        
+            }
+        },
+        "AWS::IAM::Policy": {
+            "Properties": {
+                "PolicyDocument": {
+                    "Properties": {
+                        "Statement": {
+                            "ExcludeValues": [
+                                "aws:CurrentTime",
+                                "aws:EpochTime",
+                                "aws:TokenIssueTime",
+                                "aws:principaltype",
+                                "aws:SecureTransport",
+                                "aws:SourceIp",
+                                "aws:UserAgent",
+                                "aws:userid",
+                                "aws:username",
+                                "ec2:SourceInstanceARN",
+                                "iot:Connection.Thing.ThingName",
+                                "iot:Connection.Thing.ThingTypeName",
+                                "iot:Connection.Thing.IsAttached",
+                                "iot:ClientId",
+                                "transfer:HomeBucket",
+                                "transfer:HomeDirectory",
+                                "transfer:HomeFolder",
+                                "transfer:UserName",
+                                "redshift:DbUser",
+                                "cognito-identity.amazonaws.com:aud",
+                                "cognito-identity.amazonaws.com:sub",
+                                "cognito-identity.amazonaws.com:amr"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "AWS::IoT::Policy": {
+            "Properties": {
+                "PolicyDocument": {
+                    "Properties": {
+                        "Statement": {
+                            "ExcludeValues": [
+                                "aws:CurrentTime",
+                                "aws:EpochTime",
+                                "aws:TokenIssueTime",
+                                "aws:principaltype",
+                                "aws:SecureTransport",
+                                "aws:SourceIp",
+                                "aws:UserAgent",
+                                "aws:userid",
+                                "aws:username",
+                                "ec2:SourceInstanceARN",
+                                "iot:Connection.Thing.ThingName",
+                                "iot:Connection.Thing.ThingTypeName",
+                                "iot:Connection.Thing.IsAttached",
+                                "iot:ClientId",
+                                "transfer:HomeBucket",
+                                "transfer:HomeDirectory",
+                                "transfer:HomeFolder",
+                                "transfer:UserName",
+                                "redshift:DbUser",
+                                "cognito-identity.amazonaws.com:aud",
+                                "cognito-identity.amazonaws.com:sub",
+                                "cognito-identity.amazonaws.com:amr"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "AWS::IoT::TopicRule": {
+            "Properties": {
+                "TopicRulePayload": {
+                    "ExcludeAll": true
+                }
+            }
+        },
+        "AWS::Lambda::Function": {
+            "Properties": {
+                "Code": {
+                    "Properties": {
+                        "ZipFile": {
+                            "ExcludeAll": true
+                        }
+                    }
+                }
+            }
+        },
+        "AWS::StepFunctions::StateMachine": {
+            "Properties": {
+                "DefinitionString": {
+                    "ExcludeBasedOnProperties": [
+                        "AWS::StepFunctions::StateMachine.DefinitionSubstitutions"
+                    ]
+                }
+            }
+        }
+    }
+}
