@@ -19,7 +19,7 @@ from cfnlint.helpers import REGIONS
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
-
+__CACHED_RULES = None
 
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
@@ -156,6 +156,7 @@ def get_args_filenames(cli_args):
 
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
+    global __CACHED_RULES  #pylint: disable=global-statement
 
     ignore_bad_template = False
     if args.ignore_bad_template:
@@ -180,16 +181,23 @@ def get_template_rules(filename, args):
 
     args.template_args = template
 
-    rules = cfnlint.core.get_rules(
-        args.append_rules,
-        args.ignore_checks,
-        args.include_checks,
-        args.configure_rules,
-        args.include_experimental,
-        args.mandatory_checks,
-    )
+    if __CACHED_RULES:
+        __CACHED_RULES.ignore_checks = args.ignore_checks
+        __CACHED_RULES.include_checks = args.include_checks
+        __CACHED_RULES.configure_rules = args.configure_rules
+        __CACHED_RULES.include_experimental = args.include_experimental
+        __CACHED_RULES.mandatory_checks = args.mandatory_checks
+    else:
+        __CACHED_RULES = cfnlint.core.get_rules(
+            args.append_rules,
+            args.ignore_checks,
+            args.include_checks,
+            args.configure_rules,
+            args.include_experimental,
+            args.mandatory_checks,
+        )
 
-    return(template, rules, [])
+    return(template, __CACHED_RULES, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
