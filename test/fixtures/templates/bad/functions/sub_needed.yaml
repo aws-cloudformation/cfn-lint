@@ -31,7 +31,21 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: "${aws:username}-topic"
-
+  MultilineYAMLTestPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyDocument: >
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "iot:Connect",
+              "Resource": "arn:aws:iot:eu-central-1:123456789012:${badstringsubstitution}/${iot:Connection.Thing.ThingName}"
+            }
+          ]
+        }
+      PolicyName: ConnectWithThingName
   GreetingRequest:
     Type: AWS::ApiGateway::Method
     Properties:
