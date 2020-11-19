@@ -11,7 +11,14 @@ from cfnlint.data import AdditionalSpecs
 
 
 class SubNeeded(CloudFormationLintRule):
-    """Check if a substitution string exists without a substitution function"""
+    """
+        Check if a substitution string exists without a substitution function
+
+        Found a false-positive or false-negative? All configuration for this rule
+        is contained in `src/cfnlint/data/AdditionalSpecs/SubNeededExcludes.json`
+        so you can add new entries to fix false-positives or amend existing
+        entries for false-negatives.
+    """
     id = 'E1029'
     shortdesc = 'Sub is required if a variable is used in a string'
     description = 'If a substitution variable exists in a string but isn\'t wrapped with the Fn::Sub function the deployment will fail.'
