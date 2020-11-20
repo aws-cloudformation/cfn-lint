@@ -1,0 +1,66 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Product",
+    "description": "Exclusion critera for the Fn::Sub Needed rule (E1029)",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "ResourceTypes": {
+            "$ref": "#/definitions/resourcetypes"
+        }
+    },
+    "definitions": {
+        "resourcetypes": {
+            "patternProperties": {
+                "^[a-zA-Z0-9]+::[a-zA-Z0-9]+::[a-zA-Z0-9]+$": {
+                    "$ref": "#/definitions/resource"
+                }
+            },
+            "additionalProperties": false,
+            "uniqueItems": true
+        },
+        "resource": {
+            "type": "object",
+            "properties": {
+                "ExcludeRegex": {
+                    "description": "A regex to match variables to exclude from the rule",
+                    "type": "string"
+                },
+                "ExcludeAll": {
+                    "description": "Exclude all variables from the rule",
+                    "type": "boolean"
+                },
+                "ExcludeValues": {
+                    "description": "Exclude any variable matching these values from the rule",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "ExcludeBasedOnProperties": {
+                    "description": "Exclude any variables defined in these properties from the rule",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "Metadata": {
+                    "description": "Exclusion critera for metadata associated with a resource",
+                    "$ref": "#/definitions/resource"
+                },
+                "Properties": {
+                    "description": "Exclusion critera for properties associated with a resource",
+                    "$ref": "#/definitions/resource"
+                }
+            },
+            "additionalProperties": {
+                "$ref": "#/definitions/resource"
+            }
+        }
+    },
+    "required": [
+        "ResourceTypes"
+    ]
+}
