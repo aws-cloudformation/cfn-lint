@@ -28,9 +28,11 @@ class SubNeeded(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(SubNeeded, self).__init__()
-        excludes_config = cfnlint.helpers.load_resource(AdditionalSpecs, 'SubNeededExcludes.json')
 
-        self.excludes = excludes_config
+        self.excludes = cfnlint.helpers.load_resource(AdditionalSpecs, 'SubNeededExcludes.json')
+        self.global_excludes = {
+            'Properties': self.excludes['GlobalPropertyTypes']
+        }
 
         self.config_definition = {
             'custom_excludes': {
@@ -93,10 +95,34 @@ class SubNeeded(CloudFormationLintRule):
         resource_name = path[0]
         resource_type = cfn.template.get('Resources').get(resource_name).get('Type')
 
-        if resource_type in self.excludes['ResourceTypes']:
-            return self._excluded_by_additional_resource_specs_recursive(variable, path, path[2:], self.excludes['ResourceTypes'][resource_type], cfn)
+        exclusions = {}
 
-        return False
+        if resource_type in self.excludes['ResourceTypes']:
+            exclusions.update(self.excludes['ResourceTypes'][resource_type])
+
+        if self._excluded_by_additional_resource_specs_recursive(variable, path, path[2:], exclusions, cfn):
+            return True
+
+        return self._excluded_by_global_excludes_recursive(variable, path, path[2:], cfn)
+
+
+    def _excluded_by_global_excludes_recursive(self, variable, full_path, path, cfn):
+        # Make sure the path is well-defined
+        if not path:
+            return False
+
+        # Should we exclude the variable based on the global property exclusion criteria defined in the specs?
+        if path[0] in self.global_excludes['Properties']:
+            if self._excluded_by_criteria(variable, full_path, self.global_excludes['Properties'][path[0]], cfn):
+                return True
+
+        path = path[1:]
+
+        # Traverse over any arrays, path should never end with an integer
+        while path and isinstance(path[0], int):
+            path = path[1:]
+
+        return self._excluded_by_global_excludes_recursive(variable, full_path, path, cfn)
 
 
     def _excluded_by_criteria(self, variable, full_path, exclusions, cfn):
