@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -31,10 +32,11 @@ class ServerlessTransform(CloudFormationLintRule):
 
         for resource_name, resource_values in cfn.get_resources().items():
             resource_type = resource_values['Type']
-            if resource_type.startswith('AWS::Serverless::'):
-                message = 'Serverless Transform required for Type {0} for resource {1}'
-                matches.append(
-                    RuleMatch(['Transform'], message.format(resource_type, resource_name))
-                )
-                break
+            if isinstance(resource_type, six.string_types):
+                if resource_type.startswith('AWS::Serverless::'):
+                    message = 'Serverless Transform required for Type {0} for resource {1}'
+                    matches.append(
+                        RuleMatch(['Transform'], message.format(resource_type, resource_name))
+                    )
+                    break
         return matches
