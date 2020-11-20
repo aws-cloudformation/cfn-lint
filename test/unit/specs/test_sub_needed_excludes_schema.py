@@ -14,10 +14,10 @@ LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())
 
 
-class TestRequiredBasedOnValueSpec(BaseTestCase):
+class TestSubNeededExcludesSchema(BaseTestCase):
 
 
     def test_validate_additional_specs_schema(self):
-        spec = cfnlint.helpers.load_resource(cfnlint.data.AdditionalSpecs, 'BasedOnValue.json')
-        schema = cfnlint.helpers.load_resource(test.fixtures.schemas, 'BasedOnValue.json')
+        spec = cfnlint.helpers.load_resource(cfnlint.data.AdditionalSpecs, 'SubNeededExcludes.json')
+        schema = cfnlint.helpers.load_resource(test.fixtures.schemas, 'SubNeededExcludes.json')
         validate(instance=spec, schema=schema)
