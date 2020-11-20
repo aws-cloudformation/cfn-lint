@@ -63,23 +63,54 @@
                 }
             }
         },
+        "AWS::EC2::SpotFleet": {
+            "Metadata": {
+                "AWS::CloudFormation::Init": {
+                    "ExcludeAll": true
+                }
+            },
+            "Properties": {
+                "SpotFleetRequestConfigData": {
+                    "Properties": {
+                        "LaunchSpecifications": {
+                            "Properties": {
+                                "UserData": {
+                                    "ExcludeAll": true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "AWS::EC2::LaunchTemplate": {
+            "Properties": {
+                "LaunchTemplateData": {
+                    "Properties": {
+                        "UserData": {
+                            "ExcludeAll": true
+                        }
+                    }
+                }
+            }
+        },
         "AWS::EMR::InstanceGroupConfig": {
             "Properties": {
                 "AutoScalingPolicy": {
                     "Properties": {
-                        "ScalingRule": {
+                        "Rules": {
                             "Properties": {
-                                "ScalingTrigger": {
+                                "Trigger": {
                                     "Properties": {
-                                       "CloudWatchAlarmDefinition": {
+                                        "CloudWatchAlarmDefinition": {
                                             "ExcludeAll": true
-                                        } 
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }                        
+                }
             }
         },
         "AWS::IAM::Policy": {
