@@ -166,20 +166,21 @@ class Template(object):  # pylint: disable=R0904
         for name, value in resources.items():
             if 'Type' in value:
                 valtype = value['Type']
-                if valtype.startswith(astrik_string_types):
-                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                    results[name] = {'*': {'PrimitiveItemType': 'String'}}
-                elif valtype.startswith(astrik_unknown_types):
-                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                    results[name] = {'*': {}}
-                else:
-                    if value['Type'] in resourcetypes:
-                        if 'Attributes' in resourcetypes[valtype]:
-                            results[name] = {}
-                            for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
-                                element = {}
-                                element.update(attvalue)
-                                results[name][attname] = element
+                if isinstance(valtype, six.string_types):
+                    if valtype.startswith(astrik_string_types):
+                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                        results[name] = {'*': {'PrimitiveItemType': 'String'}}
+                    elif valtype.startswith(astrik_unknown_types):
+                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                        results[name] = {'*': {}}
+                    else:
+                        if value['Type'] in resourcetypes:
+                            if 'Attributes' in resourcetypes[valtype]:
+                                results[name] = {}
+                                for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
+                                    element = {}
+                                    element.update(attvalue)
+                                    results[name][attname] = element
 
         return results
 
