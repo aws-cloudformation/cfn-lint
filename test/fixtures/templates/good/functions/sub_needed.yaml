@@ -134,6 +134,21 @@ Resources:
                   - !Ref AWS::Region
                   - !Ref AWS::AccountId
                   - thing/${iot:Connection.Thing.ThingName}*
+  MultilineYAMLTestPolicy:
+    Type: AWS::IoT::Policy
+    Properties:
+      PolicyDocument: >
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "iot:Connect",
+              "Resource": "arn:aws:iot:eu-central-1:123456789012:client/${iot:Connection.Thing.ThingName}"
+            }
+          ]
+        }
+      PolicyName: ConnectWithThingName
   TestGoodStateMachine1:
     Type: AWS::StepFunctions::StateMachine
     Properties:
