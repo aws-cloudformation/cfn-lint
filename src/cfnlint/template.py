@@ -89,6 +89,21 @@ class Template(object):  # pylint: disable=R0904
 
         return parameters
 
+    def get_modules(self):
+        """Get Modules"""
+        LOGGER.debug('Get modules from template...')
+        resources = self.template.get('Resources', {})
+        if not resources:
+            return {}
+
+        results = {}
+        for k, v in resources.items():
+            if isinstance(v, dict):
+                if v.get('Type') is not None and str(v.get('Type')).endswith('::MODULE'):
+                    results[k] = v
+
+        return results
+
     def get_mappings(self):
         """Get Resources"""
         LOGGER.debug('Get mapping from template...')
@@ -170,7 +185,7 @@ class Template(object):  # pylint: disable=R0904
                     if valtype.startswith(astrik_string_types):
                         LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
                         results[name] = {'*': {'PrimitiveItemType': 'String'}}
-                    elif valtype.startswith(astrik_unknown_types):
+                    elif valtype.startswith(astrik_unknown_types) or valtype.endswith('::MODULE'):
                         LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
                         results[name] = {'*': {}}
                     else:
