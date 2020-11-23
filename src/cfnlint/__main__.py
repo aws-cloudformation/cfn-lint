@@ -38,7 +38,7 @@ def main():
                 matches.extend(errors)
             LOGGER.debug('Completed linting of file: %s', str(filename))
 
-        matches_output = formatter.print_matches(matches, rules)
+        matches_output = formatter.print_matches(matches, rules, filenames)
 
         if matches_output:
             if args.output_file:
