@@ -1,3 +1,14 @@
+### v0.42.0
+###### Features
+- Add support for modules (pull #[1800](https://github.com/aws-cloudformation/cfn-python-lint/pull/1800) and pull #[1801](https://github.com/aws-cloudformation/cfn-python-lint/pull/1801))
+- Colored Output and Pretty Formatting (pull #[1742](https://github.com/aws-cloudformation/cfn-python-lint/pull/1742))
+###### Fixes
+- Removing Verizon Wavelength Zones from region_map in pricing script (pull #[1793](https://github.com/aws-cloudformation/cfn-python-lint/pull/1793))
+- Patch AWS::EC2::CarrierGateway for Tags (pull #[1790](https://github.com/aws-cloudformation/cfn-python-lint/pull/1790))
+- Make sure types are strings before assuming they are (pull #[1791](https://github.com/aws-cloudformation/cfn-python-lint/pull/1791))
+- Add all for certain availability zone items (pull #[1798](https://github.com/aws-cloudformation/cfn-python-lint/pull/1798))
+
+
 ### v0.41.0
 ###### Features
 - Remove rules [W2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2509), [E2004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2004), [E2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2505), [E2510](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2510) and move logic to rules [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030), [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031), and [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) (pull #[1750](https://github.com/aws-cloudformation/cfn-python-lint/pull/1750))
