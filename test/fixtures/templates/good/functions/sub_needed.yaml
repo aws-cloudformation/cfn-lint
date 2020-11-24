@@ -182,3 +182,48 @@ Resources:
         Rules:
           Trigger:
             CloudWatchAlarmDefinition: "${test}"
+  NestedProperties2:
+    Type: AWS::EMR::Cluster
+    Properties:
+      AutoScalingPolicy:
+        Rules:
+          Trigger:
+            CloudWatchAlarmDefinition: "${test}"
+  BuildSpecTest:
+    Type: AWS::Amplify::App
+    Properties:
+      BuildSpec: |
+        frontend:
+          phases:
+            build:
+              commands:
+                - if [ "${AWS_BRANCH}" = "main" ]; then echo "main branch"; fi
+                - if [ "${AWS_BRANCH}" = "dev" ]; then echo "dev branch"; fi
+  MetadataTestEC2:
+    Type: AWS::EC2::Instance
+    Metadata: 
+      AWS::CloudFormation::Init: 
+        config: 
+          packages: ${some}
+          groups: ${test}
+          users: ${!substitutions}
+          sources: ${go}
+          files: ${AWS:Here}
+    Properties:
+      Some:
+        Properties:
+          Here: World
+  MetadataTestASG:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Metadata: 
+      AWS::CloudFormation::Init: 
+        config: 
+          packages: ${some}
+          groups: ${test}
+          users: ${!substitutions}
+          sources: ${go}
+          files: ${AWS:Here}
+    Properties:
+      Some:
+        Properties:
+          Here: World

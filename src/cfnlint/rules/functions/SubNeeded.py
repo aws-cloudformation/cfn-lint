@@ -31,7 +31,8 @@ class SubNeeded(CloudFormationLintRule):
 
         self.excludes = cfnlint.helpers.load_resource(AdditionalSpecs, 'SubNeededExcludes.json')
         self.global_excludes = {
-            'Properties': self.excludes['GlobalPropertyTypes']
+            'Properties': self.excludes['GlobalPropertyTypes'],
+            'Metadata': self.excludes['GlobalMetadataTypes']
         }
 
         self.config_definition = {
@@ -103,17 +104,21 @@ class SubNeeded(CloudFormationLintRule):
         if self._excluded_by_additional_resource_specs_recursive(variable, path, path[2:], exclusions, cfn):
             return True
 
-        return self._excluded_by_global_excludes_recursive(variable, path, path[2:], cfn)
+        return self._excluded_by_global_excludes_recursive(variable, path, path[2:], path[1], cfn)
 
 
-    def _excluded_by_global_excludes_recursive(self, variable, full_path, path, cfn):
+    def _excluded_by_global_excludes_recursive(self, variable, full_path, path, exclusion_type, cfn):
         # Make sure the path is well-defined
         if not path:
             return False
 
+        # Is this something we exclude globally on?
+        if not exclusion_type in self.global_excludes:
+            return False
+
         # Should we exclude the variable based on the global property exclusion criteria defined in the specs?
-        if path[0] in self.global_excludes['Properties']:
-            if self._excluded_by_criteria(variable, full_path, self.global_excludes['Properties'][path[0]], cfn):
+        if path[0] in self.global_excludes[exclusion_type]:
+            if self._excluded_by_criteria(variable, full_path, self.global_excludes[exclusion_type][path[0]], cfn):
                 return True
 
         path = path[1:]
@@ -122,7 +127,7 @@ class SubNeeded(CloudFormationLintRule):
         while path and isinstance(path[0], int):
             path = path[1:]
 
-        return self._excluded_by_global_excludes_recursive(variable, full_path, path, cfn)
+        return self._excluded_by_global_excludes_recursive(variable, full_path, path, exclusion_type, cfn)
 
 
     def _excluded_by_criteria(self, variable, full_path, exclusions, cfn):
