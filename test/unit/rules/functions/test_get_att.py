@@ -14,7 +14,8 @@ class TestRulesGetAtt(BaseRuleTestCase):
         super(TestRulesGetAtt, self).setUp()
         self.collection.register(GetAtt())
         self.success_templates = [
-            'test/fixtures/templates/good/functions/getatt.yaml'
+            'test/fixtures/templates/good/functions/getatt.yaml',
+            'test/fixtures/templates/good/functions/modules_getatt.yaml',
         ]
 
     def test_file_positive(self):
