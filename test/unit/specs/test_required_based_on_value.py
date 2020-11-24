@@ -6,7 +6,6 @@ import logging
 import test.fixtures.schemas
 from jsonschema import validate
 from test.testlib.testcase import BaseTestCase
-from cfnlint.data import AdditionalSpecs
 import cfnlint.helpers
 
 
