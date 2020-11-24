@@ -1,0 +1,10 @@
+Resources:
+  IamRoleModule:
+    Type: "Some::IAM::Role::MODULE"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: "test"
+  OtherResource:
+    Type: "AWS::S3::Bucket"
+    DependsOn: [IamRoleModule]
