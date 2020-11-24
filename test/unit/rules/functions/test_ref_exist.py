@@ -13,6 +13,9 @@ class TestRulesRefExist(BaseRuleTestCase):
         """Setup"""
         super(TestRulesRefExist, self).setUp()
         self.collection.register(RefExist())
+        self.success_templates = [
+            'test/fixtures/templates/good/functions/ref.yaml',
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
