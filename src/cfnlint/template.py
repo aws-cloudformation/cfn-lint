@@ -138,7 +138,7 @@ class Template(object):  # pylint: disable=R0904
     def get_valid_refs(self):
         """Get all valid Refs"""
         LOGGER.debug('Get all valid REFs from template...')
-        results = {}
+        results = cfnlint.helpers.RegexDict()
         parameters = self.template.get('Parameters', {})
         if parameters:
             for name, value in parameters.items():
@@ -150,9 +150,15 @@ class Template(object):  # pylint: disable=R0904
         resources = self.template.get('Resources', {})
         if resources:
             for name, value in resources.items():
-                if 'Type' in value:
+                resource_type = value.get('Type', '')
+                if resource_type.endswith('::MODULE'):
                     element = {}
-                    element['Type'] = value['Type']
+                    element['Type'] = 'MODULE'
+                    element['From'] = 'Resources'
+                    results['{}.*'.format(name)] = element
+                elif resource_type:
+                    element = {}
+                    element['Type'] = resource_type
                     element['From'] = 'Resources'
                     results[name] = element
 
