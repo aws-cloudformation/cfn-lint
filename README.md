@@ -135,11 +135,11 @@ Example:
 
 ```yaml
 templates:
-- test/fixtures/templates/good/**/*.yaml
+  - test/fixtures/templates/good/**/*.yaml
 ignore_templates:
-- codebuild.yaml
+  - codebuild.yaml
 include_checks:
-- I
+  - I
 ```
 
 ### Parameters
@@ -183,10 +183,10 @@ Metadata:
   cfn-lint:
     config:
       regions:
-      - us-east-1
-      - us-east-2
+        - us-east-1
+        - us-east-2
       ignore_checks:
-      - E2530
+        - E2530
 ```
 
 #### Resource Based Metadata
@@ -200,7 +200,7 @@ Resources:
       cfn-lint:
         config:
           ignore_checks:
-          - E3030
+            - E3030
     Properties:
       InstanceType: nt.x4superlarge
       ImageId: ami-abc1234
@@ -257,11 +257,11 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 
 ```yaml
 repos:
--   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.44.7  # The version of cfn-lint to use
-    hooks:
-    -   id: cfn-python-lint
-        files: path/to/cfn/dir/.*\.(json|yml|yaml)$
+- repo: https://github.com/aws-cloudformation/cfn-python-lint
+  rev: v0.44.7  # The version of cfn-lint to use
+  hooks:
+    - id: cfn-python-lint
+      files: path/to/cfn/dir/.*\.(json|yml|yaml)$
 ```
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
