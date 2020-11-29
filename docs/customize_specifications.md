@@ -17,7 +17,8 @@ If you want to block the use of specific resources, you can easily disable them 
 Wildcards (`*`) are supported in these lists, so `AWS::EC2::*` allows ALL EC2 ResourceTypes. Both lists can work in conjunction with each other.
 
 The following example only allows the usage of all `EC2` resources, except for `AWS::EC2::SpotFleet`:
-```
+
+```json
 {
   "IncludeResourceTypes": [
     "AWS::EC2::*"
@@ -32,7 +33,8 @@ The following example only allows the usage of all `EC2` resources, except for `
 The spec file overwrites values from the Regional spec files which give you the possible to alter the specifications for your own needs. A good example is making optional Parameters required.
 
 For example, to enforce tagging on an S3 bucket, the override file looks like this:
-```
+
+```json
 {
   "ResourceTypes": {
     "AWS::S3::Bucket": {
@@ -45,5 +47,6 @@ For example, to enforce tagging on an S3 bucket, the override file looks like th
   }
 }
 ```
+
 **WARNING**
 The file is checked for valid JSON syntax, but does not check the contents of the file before merging it into the Specifications. Be careful with your changes because it can possibly corrupt the Specifications and break the linting process.

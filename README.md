@@ -43,13 +43,13 @@ Python 2.7+ and 3.4+ are supported.
 
 In `cfn-python-lint` source tree:
 
-```
+```shell
 docker build --tag cfn-python-lint:latest .
 ```
 
 In repository to be linted:
 
-```
+```shell
 docker run --rm -v `pwd`:/data cfn-python-lint:latest /data/template.yaml
 ```
 
