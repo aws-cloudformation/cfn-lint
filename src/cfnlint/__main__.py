@@ -12,7 +12,6 @@ LOGGER = logging.getLogger('cfnlint')
 
 
 def main():
-    """Main function"""
     if sys.version_info[:2] == (3, 4):
         warnings.warn('Python 3.4 has reached end of life. '
                       'cfn-lint will end support for python 3.4 on July 1st, 2020.', Warning, stacklevel=3)
