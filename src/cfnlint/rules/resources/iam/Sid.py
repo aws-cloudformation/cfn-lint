@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from datetime import date
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -64,7 +63,6 @@ class Sid(CloudFormationLintRule):
                             matches.append(RuleMatch(p_p + ['Sid'], message))
                         else:
                             sids.append(sid)
-                    
 
         return matches
 
