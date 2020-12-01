@@ -37,7 +37,6 @@ that could potentially be improved'),
         'data/AdditionalSpecs/*.json',
         'data/Serverless/*.json',
         'data/ExtendedSpecs/*/*.json',
-        'data/RegistrySchemas/*.json',
         'data/CfnLintCli/config/schema.json'
     ]},
     packages=find_packages('src'),

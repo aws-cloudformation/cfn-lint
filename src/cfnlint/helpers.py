@@ -326,7 +326,7 @@ def load_resource(package, filename='us-east-1.json'):
 
 
 RESOURCE_SPECS = {}
-
+REGISTRY_SCHEMAS = []
 
 def merge_spec(source, destination):
     """ Recursive merge spec dict """
