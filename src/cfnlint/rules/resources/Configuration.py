@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import os
 from glob import glob
 import six
-from cfnlint.data import ResourceSchemas
+from cfnlint.data import RegistrySchemas
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -104,7 +104,7 @@ class Configuration(CloudFormationLintRule):
             for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                 if region in cfn.regions:
                     if resource_type not in specs['ResourceTypes'] and resource_type not in [
-                            cfnlint.helpers.load_resource(ResourceSchemas, os.path.basename(f))['typeName'] for f in glob('src/cfnlint/data/ResourceSchemas/*.json')]:
+                            cfnlint.helpers.load_resource(RegistrySchemas, os.path.basename(f))['typeName'] for f in glob('src/cfnlint/data/RegistrySchemas/*.json')]:
                         if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
                             message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                             matches.append(RuleMatch(
