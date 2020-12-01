@@ -1,0 +1,49 @@
+Parameters:
+  Kinesis:
+    Type: String
+    Default: ""
+Conditions:
+  isKinesis: !Not [!Equals [!Ref Kinesis, ""]]
+
+Resources:
+  EventSourceValue:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn: "arn:aws:kinesis:test"
+  EventSourceValueWithCondition:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn:
+        !If [isKinesis, "arn:aws:kinesis:test", "arn:aws:sqs:test"]
+      StartingPosition: !If [isKinesis, !Ref "AWS::NoValue", ""]
+  KmsCluster:
+    Type: AWS::MSK::Cluster
+    Properties:
+      ClusterName: Test
+      KafkaVersion: Test
+      BrokerNodeGroupInfo:
+        ClientSubnets:
+          - subnet-123456
+        InstanceType: t2.medium
+      NumberOfBrokerNodes: 3
+  EventSourceRef:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn: !Ref KmsCluster
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  EventSourceGetAtt:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn: !GetAtt KinesisStream.Arn
+  HealthCheck:
+    Type: AWS::Route53::HealthCheck
+    Properties:
+      HealthCheckConfig:
+        Type: CLOUDWATCH_METRIC

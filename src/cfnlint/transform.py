@@ -57,6 +57,16 @@ class Transform(object):
 
         all_resources = self._template.get('Resources', {})
 
+        template_globals = self._template.get('Globals', {})
+        auto_publish_alias = template_globals.get('Function', {}).get('AutoPublishAlias')
+        if isinstance(auto_publish_alias, dict):
+            if len(auto_publish_alias) == 1:
+                for k, v in auto_publish_alias.items():
+                    if k == 'Ref':
+                        if v in self._template.get('Parameters'):
+                            self._parameters[v] = 'Alias'
+
+
         for _, resource in all_resources.items():
 
             resource_type = resource.get('Type')

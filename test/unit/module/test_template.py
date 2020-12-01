@@ -25,7 +25,8 @@ class TestTemplate(BaseTestCase):
             'RootRole',
             'mySnsTopic',
             'MyEC2Instance1',
-            'ElasticLoadBalancer'
+            'ElasticLoadBalancer',
+            'MyModule'
         ]
         self.parameter_names = [
             'WebServerPort',
@@ -41,6 +42,7 @@ class TestTemplate(BaseTestCase):
 
         expected_content = """digraph "template" {
 RootRole [label="RootRole\\n<AWS::IAM::Role>"];
+MyModule [label="MyModule\\n<My::Organization::Custom::MODULE>"];
 RolePolicies [label="RolePolicies\\n<AWS::IAM::Policy>"];
 RootInstanceProfile [label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>"];
 MyEC2Instance [label="MyEC2Instance\\n<AWS::EC2::Instance>"];
@@ -68,10 +70,17 @@ ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
-        valid_resource_count = 11
+        valid_resource_count = 12
         resources = self.template.get_resources()
         assert len(resources) == valid_resource_count, 'Expected {} resources, got {}'.format(
             valid_resource_count, len(resources))
+
+    def test_get_modules_success(self):
+        """Test Success on Get Modules"""
+        expected_modules_count = 1
+        actual_modules = self.template.get_modules()
+        assert len(actual_modules) == expected_modules_count, 'Expected {} modules, got {}'.format(
+            expected_modules_count, len(actual_modules))
 
     def test_get_resources_bad(self):
         """Don't get resources that aren't properly configured"""
@@ -106,7 +115,7 @@ ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
 
     def test_get_valid_refs(self):
         """ Get Valid REFs"""
-        valid_ref_count = 26
+        valid_ref_count = 27
         refs = self.template.get_valid_refs()
         assert len(refs) == valid_ref_count, 'Expected {} refs, got {}'.format(
             valid_ref_count, len(refs))

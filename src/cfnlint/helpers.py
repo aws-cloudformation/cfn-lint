@@ -79,34 +79,6 @@ REGEX_DYN_REF_SSM = re.compile(r'^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
 REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
 
 
-AVAILABILITY_ZONES = [
-    'af-south-1a', 'af-south-1b', 'af-south-1c',
-    'ap-east-1a', 'ap-east-1b', 'ap-east-1c',
-    'ap-northeast-1a', 'ap-northeast-1b', 'ap-northeast-1c', 'ap-northeast-1d',
-    'ap-northeast-2a', 'ap-northeast-2b', 'ap-northeast-2c',
-    'ap-northeast-3a',
-    'ap-south-1a', 'ap-south-1b', 'ap-south-1c',
-    'ap-southeast-1a', 'ap-southeast-1b', 'ap-southeast-1c',
-    'ap-southeast-2a', 'ap-southeast-2b', 'ap-southeast-2c',
-    'ca-central-1a', 'ca-central-1b', 'ca-central-1d',
-    'cn-north-1a', 'cn-north-1b',
-    'cn-northwest-1a', 'cn-northwest-1b', 'cn-northwest-1c',
-    'eu-central-1a', 'eu-central-1b', 'eu-central-1c',
-    'eu-north-1a', 'eu-north-1b', 'eu-north-1c',
-    'eu-south-1a', 'eu-south-1b', 'eu-south-1c',
-    'eu-west-1a', 'eu-west-1b', 'eu-west-1c',
-    'eu-west-2a', 'eu-west-2b', 'eu-west-2c',
-    'eu-west-3a', 'eu-west-3b', 'eu-west-3c',
-    'me-south-1a', 'me-south-1b', 'me-south-1c',
-    'sa-east-1a', 'sa-east-1b', 'sa-east-1c',
-    'us-east-1a', 'us-east-1b', 'us-east-1c', 'us-east-1d', 'us-east-1e', 'us-east-1f',
-    'us-east-2a', 'us-east-2b', 'us-east-2c',
-    'us-gov-east-1a', 'us-gov-east-1b', 'us-gov-east-1c',
-    'us-gov-west-1a', 'us-gov-west-1b', 'us-gov-west-1c',
-    'us-west-1a', 'us-west-1b', 'us-west-1c',
-    'us-west-2a', 'us-west-2b', 'us-west-2c', 'us-west-2d', 'us-west-2-lax-1a', 'us-west-2-lax-1b',
-]
-
 FUNCTIONS = [
     'Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
     'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
@@ -136,26 +108,26 @@ PSEUDOPARAMS = [
 
 LIMITS = {
     'Mappings': {
-        'number': 100,
-        'attributes': 64,
+        'number': 200,
+        'attributes': 200,
         'name': 255  # in characters
     },
     'Outputs': {
-        'number': 60,
+        'number': 200,
         'name': 255,  # in characters
         'description': 1024  # in bytes
     },
     'Parameters': {
-        'number': 60,
+        'number': 200,
         'name': 255,  # in characters
         'value': 4096  # in bytes
     },
     'Resources': {
-        'number': 200,
+        'number': 500,
         'name': 255  # in characters
     },
     'template': {
-        'body': 460800,  # in bytes
+        'body': 1000000,  # in bytes
         'description': 1024  # in bytes
     },
     'threshold': 0.9,  # for rules about approaching the other limit values
@@ -228,6 +200,20 @@ VALID_PARAMETER_TYPES_LIST = [
 ]
 
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
+
+class RegexDict(dict):
+
+    def __getitem__(self, item):
+        for k, v in self.items():
+            if re.match(k, item):
+                return v
+        raise KeyError
+
+    def __contains__(self, item):
+        for k in self.keys():
+            if re.match(k, item):
+                return True
+        return False
 
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""

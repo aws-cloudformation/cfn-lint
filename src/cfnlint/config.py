@@ -353,7 +353,7 @@ class CliArgs(object):
             '-I', '--info', help='Enable information logging', action='store_true'
         )
         standard.add_argument(
-            '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json', 'junit']
+            '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json', 'junit', 'pretty']
         )
         standard.add_argument(
             '-l', '--list-rules', dest='listrules', default=False,
@@ -501,7 +501,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def include_checks(self):
-        return self._get_argument_value('include_checks', True, True)
+        results = self._get_argument_value('include_checks', True, True)
+        return ['W', 'E'] + results
 
     @property
     def mandatory_checks(self):

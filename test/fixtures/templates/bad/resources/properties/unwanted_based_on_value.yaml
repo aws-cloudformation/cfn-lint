@@ -1,0 +1,29 @@
+Parameters:
+  Sqs:
+    Type: String
+    Default: ""
+Conditions:
+  isSqs: !Not [!Equals [!Ref Sqs, ""]]
+Resources:
+  EventSourceValue:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn: "arn:aws:sqs:test"
+      StartingPosition: LATEST
+  EventSourceValueWithCondition:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn:
+        !If [isSqs, "arn:aws:kinesis:test", "arn:aws:sqs:test"]
+      StartingPosition: !If [isSqs, "LATEST", "LATEST"]
+  MySqs:
+    Type: AWS::SQS::Queue
+    Properties: {}
+  EventSourceRef:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      FunctionName: Test
+      EventSourceArn: !GetAtt MySqs.Arn
+      StartingPosition: LATEST

@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.rules import RulesCollection
+from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -64,11 +64,11 @@ def get_exit_code(matches):
     """ Determine exit code """
     exit_code = 0
     for match in matches:
-        if match.rule.id[0] == 'I':
+        if match.rule.severity == 'informational':
             exit_code = exit_code | 8
-        elif match.rule.id[0] == 'W':
+        elif match.rule.severity == 'warning':
             exit_code = exit_code | 4
-        elif match.rule.id[0] == 'E':
+        elif match.rule.severity == 'error':
             exit_code = exit_code | 2
 
     return exit_code
@@ -86,6 +86,8 @@ def get_formatter(fmt):
             formatter = cfnlint.formatters.JsonFormatter()
         elif fmt == 'junit':
             formatter = cfnlint.formatters.JUnitFormatter()
+        elif fmt == 'pretty':
+            formatter = cfnlint.formatters.PrettyFormatter()
     else:
         formatter = cfnlint.formatters.Formatter()
 
@@ -163,10 +165,26 @@ def get_args_filenames(cli_args):
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
 
-    (template, matches) = cfnlint.decode.decode(filename, args.ignore_bad_template)
+    ignore_bad_template = False
+    if args.ignore_bad_template:
+        ignore_bad_template = True
+    else:
+        # There is no collection at this point so we need to handle this
+        # check directly
+        if not ParseError().is_enabled(
+                include_experimental=False,
+                ignore_rules=args.ignore_checks,
+                include_rules=args.include_checks,
+                mandatory_rules=args.mandatory_checks,
+        ):
+            ignore_bad_template = True
 
-    if matches:
-        return(template, [], matches)
+    (template, errors) = cfnlint.decode.decode(filename)
+
+    if errors:
+        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
+            return(template, [], [])
+        return(template, [], errors)
 
     args.template_args = template
 
@@ -191,17 +209,30 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
                 unsupported_regions, REGIONS)
             raise InvalidRegionException(msg, 32)
 
-    matches = []
+    errors = []
 
-    runner = cfnlint.runner.Runner(rules, filename, template, regions, mandatory_rules=mandatory_rules)
-    matches.extend(runner.transform())
+    runner = cfnlint.runner.Runner(rules, filename, template, regions,
+                                   mandatory_rules=mandatory_rules)
+
+    # Transform logic helps with handling serverless templates
+    ignore_transform_error = False
+    if not rules.is_rule_enabled(TransformError()):
+        ignore_transform_error = True
+
+    errors.extend(runner.transform())
+
+    if errors:
+        if ignore_transform_error:
+            return([])   # if there is a transform error we can't continue
+
+        return(errors)
+
     # Only do rule analysis if Transform was successful
-    if not matches:
-        try:
-            matches.extend(runner.run())
-        except Exception as err:  # pylint: disable=W0703
-            msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
-            UnexpectedRuleException(msg, 1)
-    matches.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
+    try:
+        errors.extend(runner.run())
+    except Exception as err:  # pylint: disable=W0703
+        msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
+        UnexpectedRuleException(msg, 1)
+    errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(matches)
+    return(errors)

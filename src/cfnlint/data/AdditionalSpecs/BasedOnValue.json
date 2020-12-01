@@ -1,0 +1,78 @@
+{
+    "PropertyTypes": {
+        "AWS::Route53::HealthCheck.HealthCheckConfig": {
+            "Type": [
+                {
+                    "Regex": "CLOUDWATCH_METRIC",
+                    "RequiredProperties": [
+                        "AlarmIdentifier"
+                    ]
+                }
+            ]
+        }
+    },
+    "ResourceTypes": {
+        "AWS::Lambda::EventSourceMapping": {
+            "EventSourceArn": [
+                {
+                    "Regex": "arn:aws.*:(kinesis|kafka|dynamodb):.*",
+                    "GetAtt": {
+                        "AWS::DynamoDB::Table": "StreamArn",
+                        "AWS::Kinesis::Stream": "Arn"
+                    },
+                    "Ref": [
+                        "AWS::MSK::Cluster"
+                    ],
+                    "RequiredProperties": [
+                        "StartingPosition"
+                    ]
+                },
+                {
+                    "Regex": "arn:aws.*:sqs:.*",
+                    "GetAtt": {
+                        "AWS::SQS::Queue": "Arn"
+                    },
+                    "UnwantedProperties": [
+                        "StartingPosition"
+                    ]
+                }
+            ]
+        },
+        "AWS::RDS::DBCluster": {
+            "EngineMode": [
+                {
+                    "Regex": "^((?!serverless).)*$",
+                    "UnwantedProperties": [
+                        "ScalingConfiguration"
+                    ]
+                }
+            ]
+        },
+        "AWS::RDS::DBInstance": {
+            "Engine": [
+                {
+                    "Regex": "(aurora|aurora-mysql|aurora-postgresql)",
+                    "UnwantedProperties": [
+                        "AllocatedStorage",
+                        "BackupRetentionPeriod",
+                        "CopyTagsToSnapshot",
+                        "DeletionProtection",
+                        "EnableIAMDatabaseAuthentication",
+                        "MasterUserPassword",
+                        "StorageEncrypted"
+                    ]
+                }
+            ]
+        },
+        "AWS::DynamoDB::Table": {
+            "BillingMode": [
+                {
+                    "Regex": "PAY_PER_REQUEST",
+                    "UnwantedProperties": [
+                        "ProvisionedThroughput"
+                    ]
+                }
+            ]
+        }
+    }
+}

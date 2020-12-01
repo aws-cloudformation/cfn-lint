@@ -35,3 +35,16 @@ Resources:
       UserData: !Ref AWS::NotificationARNs
       Tags:
       - Key: Test
+  LambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Runtime: java8
+      Code:
+        S3Bucket: 'foo-bar'
+        S3Key: 'foo-bar'
+        S3ObjectVersion: 'foo-bar'
+      Handler: 'com.foo.bar::handleRequest'
+      Role: 'arn:aws:iam::123456789101:role/foo-bar'
+      VpcConfig:
+        SubnetIds: !ImportValue foobar1
+        SecurityGroupIds: !ImportValue foobar2
