@@ -402,6 +402,9 @@ class CliArgs(object):
         advanced.add_argument(
             '-g', '--build-graph', help='Creates a file in the same directory as the template that models the template\'s resources in DOT format', action='store_true'
         )
+        advanced.add_argument(
+            '-s', '--registry-schemas', help='one or more directories of CloudFormation Registry Schemas', action='extend', type=comma_separated_arg, nargs='+'
+        )
         standard.add_argument(
             '-v', '--version', help='Version of cfn-lint', action='version',
             version='%(prog)s {version}'.format(version=__version__)
@@ -634,3 +637,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def output_file(self):
         return self._get_argument_value('output_file', False, True)
+
+    @property
+    def registry_schemas(self):
+        return self._get_argument_value('registry_schemas', False, True)
