@@ -21,6 +21,7 @@ class ResourceSchema(CloudFormationLintRule):
             resource_type = schema['typeName']
             for resource_name, resource_values in cfn.get_resources([resource_type]).items():
                 properties = resource_values.get('Properties', {})
+                # ignoring resources with CloudFormation template syntax in Properties
                 if not re.match(REGEX_DYN_REF, str(properties)) and not any(x in str(properties) for x in PSEUDOPARAMS + UNCONVERTED_SUFFIXES) and FN_PREFIX not in str(properties):
                     try:
                         validate(properties, schema)
