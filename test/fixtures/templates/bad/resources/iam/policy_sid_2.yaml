@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Test bad Policy Version
+Resources:
+  rIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {}
+      Policies:
+      - PolicyName: String
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+              Sid: "invalid regex"
+              Effect: "Allow"
+              Action:
+                - "s3:ListBucket"
+              Resource: '*'
