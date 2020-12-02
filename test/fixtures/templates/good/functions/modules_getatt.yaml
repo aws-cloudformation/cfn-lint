@@ -1,0 +1,12 @@
+Resources:
+  MyBucket:
+    Type: "My::S5::UltimateBucket::MODULE"
+    Properties:
+      BucketName: "test"
+  SomeQueueToMakeItExciting:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName:
+        Fn::GetAtt:
+          - MyBucketS3Bucket
+          - BucketName

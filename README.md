@@ -93,6 +93,18 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 
 *Note*: Glob in Python 3.5 supports recursive searching `**/*.yaml`.  If you are using an earlier version of Python you will have to handle this manually (`folder1/*.yaml`, `folder2/*.yaml`, etc).
 
+##### Exit Codes
+`cfn-lint` will return a non zero exit if there are any issues with your template. The value is dependent on the sevirity of the issues found.  For each level of discovered error `cfn-lint` will use bitwise OR to determine the final exit code.  This will result in these possibilities.
+
+- 0 is no issue was found
+- 2 is an error
+- 4 is a warning
+- 6 is an error and a warning
+- 8 is an informational
+- 10 is an error and informational
+- 12 is an warning and informational
+- 14 is an error and a warning and an informational
+
 ##### Specifying the template as an input stream
 
 The template to be linted can also be passed using standard input:
@@ -138,7 +150,7 @@ Optional parameters:
 | ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
 | -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
-| -f, --format    | format | quiet, parseable, json, junit | Output format |
+| -f, --format    | format | quiet, parseable, json, junit, pretty | Output format |
 | -l, --list-rules | | | List all the rules |
 | -r, --regions | regions | [REGIONS [REGIONS ...]], ALL_REGIONS  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
 | -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
@@ -245,7 +257,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.41.0  # The version of cfn-lint to use
+    rev: v0.42.0  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

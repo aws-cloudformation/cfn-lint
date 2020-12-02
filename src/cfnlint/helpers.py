@@ -201,6 +201,21 @@ VALID_PARAMETER_TYPES_LIST = [
 
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
 
+class RegexDict(dict):
+
+    def __getitem__(self, item):
+        possible_items = {k: v for k, v in self.items() if re.match(k, item)}
+        if not possible_items:
+            raise KeyError
+        longest_match = sorted(possible_items.keys(), key=len)[-1]
+        return possible_items[longest_match]
+
+    def __contains__(self, item):
+        for k in self.keys():
+            if re.match(k, item):
+                return True
+        return False
+
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
     caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')

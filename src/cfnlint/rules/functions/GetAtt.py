@@ -2,11 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import logging
+
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 
+LOGGER = logging.getLogger('cfnlint')
 
 class GetAtt(CloudFormationLintRule):
     """Check if GetAtt values are correct"""
@@ -94,7 +97,11 @@ class GetAtt(CloudFormationLintRule):
                             matches.append(RuleMatch(
                                 getatt[:-1], message.format(resname, restype, getatt[1])))
                 else:
-                    message = 'Invalid GetAtt {0}.{1} for resource {2}'
-                    matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
+                    modules = cfn.get_modules()
+                    if any(resname.startswith(s) for s in modules.keys()):
+                        LOGGER.debug('Will consider valid getatt %s because it references a resource within a module', resname)
+                    else:
+                        message = 'Invalid GetAtt {0}.{1} for resource {2}'
+                        matches.append(RuleMatch(getatt, message.format(resname, restype, getatt[1])))
 
         return matches

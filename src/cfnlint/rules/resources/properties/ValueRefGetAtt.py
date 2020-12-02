@@ -129,7 +129,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
             #  A custom resource voids the spec.  Move on
             return matches
 
-        if resource_type == 'AWS::CloudFormation::Stack' and resource_attribute[0] == 'Outputs':
+        if resource_type in ['AWS::CloudFormation::Stack', 'AWS::ServiceCatalog::CloudFormationProvisionedProduct'] and resource_attribute[0] == 'Outputs':
             # Nested Stack Outputs
             # if its a string type we are good and return matches
             # if its a list its a failure as Outputs can only be strings
