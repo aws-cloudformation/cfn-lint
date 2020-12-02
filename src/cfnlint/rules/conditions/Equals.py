@@ -35,8 +35,8 @@ class Equals(CloudFormationLintRule):
                 elif element_key == 'Ref':
                     valid_refs = cfn.get_valid_refs()
                     if element_value in valid_refs:
-                        if valid_refs[element_value].get('From') == 'Parameters':
-                            if valid_refs[element_value].get('Type') in VALID_PARAMETER_TYPES_LIST:
+                        if valid_refs.get(element_value).get('From') == 'Parameters':
+                            if valid_refs.get(element_value).get('Type') in VALID_PARAMETER_TYPES_LIST:
                                 message = 'Every Fn::Equals object requires a list of 2 string parameters'
                                 matches.append(RuleMatch(
                                     path, message))
