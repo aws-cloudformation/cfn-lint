@@ -1,3 +1,14 @@
+### v0.43.0
+###### Features
+- Add support to validate private types from the CloudFormation Registry (pull #[1732](https://github.com/aws-cloudformation/cfn-python-lint/pull/1732))
+###### CloudFormation Specifications
+- Update allowed values for AWS::DocDB::DBCluster.EngineVersion (pull #[1810](https://github.com/aws-cloudformation/cfn-python-lint/pull/1810))
+- Updated specs as of 2020.12.3 (pull #[1804](https://github.com/aws-cloudformation/cfn-python-lint/pull/1804))
+###### Fixes
+- Fix an issue with RegexDict to return the longest matched value (pull #[1815](https://github.com/aws-cloudformation/cfn-python-lint/pull/1815))
+- Fix rule [E3008] to not fail when using `AWS::ServiceCatalog::CloudFormationProvisionedProduct` `Outputs` (pull #[1809](https://github.com/aws-cloudformation/cfn-python-lint/pull/1809))
+- Loosen version constraints on `importlib_resources` (pull #[1808](https://github.com/aws-cloudformation/cfn-python-lint/pull/1808))
+
 ### v0.42.0
 ###### Features
 - Add support for modules (pull #[1800](https://github.com/aws-cloudformation/cfn-python-lint/pull/1800) and pull #[1801](https://github.com/aws-cloudformation/cfn-python-lint/pull/1801))
