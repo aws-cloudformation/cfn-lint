@@ -166,6 +166,7 @@ Optional parameters:
 | -u, --update-specs | | | Update the [CloudFormation Resource Specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html).  You may need sudo to run this.  You will need internet access when running this command |
 | -o, --override-spec | | filename | Spec-style file containing custom definitions. Can be used to override CloudFormation specifications. More info [here](#customize-specifications) |
 | -g, --build-graph | |  | Creates a file in the same directory as the template that models the template's resources in [DOT format](https://en.wikipedia.org/wiki/DOT_(graph_description_language)) |
+| -s, --registry-schemas | | | one or more directories of [CloudFormation Registry](https://aws.amazon.com/blogs/aws/cloudformation-update-cli-third-party-resource-support-registry/) [Resource Schemas](https://github.com/aws-cloudformation/aws-cloudformation-resource-schema/)
 | -v, --version | | | Version of cfn-lint |
 
 ### Info Rules
@@ -257,7 +258,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 -   repo: https://github.com/aws-cloudformation/cfn-python-lint
-    rev: v0.42.0  # The version of cfn-lint to use
+    rev: v0.43.0  # The version of cfn-lint to use
     hooks:
     -   id: cfn-python-lint
         files: path/to/cfn/dir/.*\.(json|yml|yaml)$

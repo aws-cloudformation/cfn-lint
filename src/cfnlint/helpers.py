@@ -216,6 +216,12 @@ class RegexDict(dict):
                 return True
         return False
 
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
     caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
@@ -313,7 +319,7 @@ def load_resource(package, filename='us-east-1.json'):
 
 
 RESOURCE_SPECS = {}
-
+REGISTRY_SCHEMAS = []
 
 def merge_spec(source, destination):
     """ Recursive merge spec dict """
