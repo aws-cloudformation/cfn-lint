@@ -1,3 +1,12 @@
+### v0.44.0
+###### Features
+- Cache all rules to speed up reloading rules when scanning multiple templates (pull #[1789](https://github.com/aws-cloudformation/cfn-python-lint/pull/1789))
+###### CloudFormation Specifications
+- Update FSx Storage Capacity to a minimum of 32 (pull #[#1827](https://github.com/aws-cloudformation/cfn-python-lint/pull/1827)}
+- Update spec files as of 2012.12.14 (pull #[1821](https://github.com/aws-cloudformation/cfn-python-lint/pull/1821))
+###### Fixes
+- Loosen version requirements for python package six (pull #[1825](https://github.com/aws-cloudformation/cfn-python-lint/pull/1825))
+
 ### v0.43.0
 ###### Features
 - Add support to validate private types from the CloudFormation Registry (pull #[1732](https://github.com/aws-cloudformation/cfn-python-lint/pull/1732))
