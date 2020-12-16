@@ -16,7 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 class CloudFormationLintRule(object):
     """CloudFormation linter rules"""
-
     id = ''
     shortdesc = ''
     description = ''
@@ -34,6 +33,16 @@ class CloudFormationLintRule(object):
 
     def __repr__(self):
         return '%s: %s' % (self.id, self.shortdesc)
+
+    @property
+    def severity(self):
+        """Severity level"""
+        levels = {
+            'I': 'informational',
+            'E': 'error',
+            'W': 'warning',
+        }
+        return levels.get(self.id[0].upper(), 'unknown')
 
     def verbose(self):
         """Verbose output"""
@@ -167,6 +176,16 @@ class RulesCollection(object):
         self.rules = []
         self.all_rules = []
 
+        self.configure(
+            ignore_rules=ignore_rules,
+            include_rules=include_rules,
+            configure_rules=configure_rules,
+            include_experimental=include_experimental,
+            mandatory_rules=mandatory_rules,
+            )
+
+    def configure(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
+        self.rules = []
         # Whether "experimental" rules should be added
         self.include_experimental = include_experimental
 
@@ -182,13 +201,20 @@ class RulesCollection(object):
             if default_rule not in self.include_rules:
                 self.include_rules.extend([default_rule])
 
-    def register(self, rule):
-        """Register rules"""
-        self.all_rules.append(rule)
+        for rule in self.all_rules:
+            self.__register(rule)
+
+    def __register(self, rule):
+        """ Register and configure the rule """
         if self.is_rule_enabled(rule):
             self.rules.append(rule)
             if rule.id in self.configure_rules:
                 rule.configure(self.configure_rules[rule.id])
+
+    def register(self, rule):
+        """Register rules"""
+        self.all_rules.append(rule)
+        self.__register(rule)
 
     def __iter__(self):
         return iter(self.rules)

@@ -1,3 +1,54 @@
+### v0.44.0
+###### Features
+- Cache all rules to speed up reloading rules when scanning multiple templates (pull #[1789](https://github.com/aws-cloudformation/cfn-python-lint/pull/1789))
+###### CloudFormation Specifications
+- Update FSx Storage Capacity to a minimum of 32 (pull #[#1827](https://github.com/aws-cloudformation/cfn-python-lint/pull/1827))
+- Update spec files as of 2012.12.14 (pull #[1821](https://github.com/aws-cloudformation/cfn-python-lint/pull/1821))
+###### Fixes
+- Loosen version requirements for python package six (pull #[1825](https://github.com/aws-cloudformation/cfn-python-lint/pull/1825))
+
+### v0.43.0
+###### Features
+- Add support to validate private types from the CloudFormation Registry (pull #[1732](https://github.com/aws-cloudformation/cfn-python-lint/pull/1732))
+###### CloudFormation Specifications
+- Update allowed values for AWS::DocDB::DBCluster.EngineVersion (pull #[1810](https://github.com/aws-cloudformation/cfn-python-lint/pull/1810))
+- Updated specs as of 2020.12.3 (pull #[1804](https://github.com/aws-cloudformation/cfn-python-lint/pull/1804))
+###### Fixes
+- Fix an issue with RegexDict to return the longest matched value (pull #[1815](https://github.com/aws-cloudformation/cfn-python-lint/pull/1815))
+- Fix rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) to not fail when using `AWS::ServiceCatalog::CloudFormationProvisionedProduct` `Outputs` (pull #[1809](https://github.com/aws-cloudformation/cfn-python-lint/pull/1809))
+- Loosen version constraints on `importlib_resources` (pull #[1808](https://github.com/aws-cloudformation/cfn-python-lint/pull/1808))
+
+### v0.42.0
+###### Features
+- Add support for modules (pull #[1800](https://github.com/aws-cloudformation/cfn-python-lint/pull/1800) and pull #[1801](https://github.com/aws-cloudformation/cfn-python-lint/pull/1801))
+- Colored Output and Pretty Formatting (pull #[1742](https://github.com/aws-cloudformation/cfn-python-lint/pull/1742))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 21.0.0 (pull #[1799](https://github.com/aws-cloudformation/cfn-python-lint/pull/1799))
+###### Fixes
+- Patch AWS::EC2::CarrierGateway for Tags (pull #[1790](https://github.com/aws-cloudformation/cfn-python-lint/pull/1790))
+- Make sure types are strings before assuming they are (pull #[1791](https://github.com/aws-cloudformation/cfn-python-lint/pull/1791))
+- Add all for certain availability zone items (pull #[1798](https://github.com/aws-cloudformation/cfn-python-lint/pull/1798))
+
+
+### v0.41.0
+###### Features
+- Remove rules [W2509](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W2509), [E2004](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2004), [E2505](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2505), [E2510](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2510) and move logic to rules [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030), [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3031), and [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) (pull #[1750](https://github.com/aws-cloudformation/cfn-python-lint/pull/1750))
+- Remove rule [E2530](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2530) and move logic to [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W203) and [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3030) (pull #[1749](https://github.com/aws-cloudformation/cfn-python-lint/pull/1749))
+- Remove rule [E3028](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3028) and move logic to [E3018](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3018) (pull #[1769](https://github.com/aws-cloudformation/cfn-python-lint/pull/1769))
+- Remove rule [E3029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3029) and move logic to [E3018](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3018) (pull #[1770](https://github.com/aws-cloudformation/cfn-python-lint/pull/1770))
+- Remove rule [E3024](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3024) and move logic to [E3018](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3018) (pull #[1771](https://github.com/aws-cloudformation/cfn-python-lint/pull/1771))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3002) to error when a singular function is used when a list is needed (pull #[1773](https://github.com/aws-cloudformation/cfn-python-lint/pull/1773))
+- Update dates for Python 2.7 Lambda runtime support (pull #[1777](https://github.com/aws-cloudformation/cfn-python-lint/pull/1777))
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2503) to include more attributes for application load balancers and protocols (pull #[1783](https://github.com/aws-cloudformation/cfn-python-lint/pull/1783) and pull #[1784](https://github.com/aws-cloudformation/cfn-python-lint/pull/1784))
+###### CloudFormation Specifications
+- Update CloudFormation specs to 20.3.0 (pull #[1781](https://github.com/aws-cloudformation/cfn-python-lint/pull/1781))
+- Expand Allowed Values for `AWS::AmazonMQ::Broker` `EngineVersion` (pull #[1778](https://github.com/aws-cloudformation/cfn-python-lint/pull/1778))
+###### Fixes
+- Update rule [E2529](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2529) to allow for two subscriptions per log group (pull #[1767](https://github.com/aws-cloudformation/cfn-python-lint/pull/1767))
+- Allow SAM translation for `AutoPublishAlias` in `Globals` (pull #[1768](https://github.com/aws-cloudformation/cfn-python-lint/pull/1768))
+- Allow numbers and booleans when doing a `Fn::Sub` parameter (pull #[1774](https://github.com/aws-cloudformation/cfn-python-lint/pull/1774))
+
+
 ### v0.40.0
 ###### Features
 - Add rule [E3017](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3017) to validate when properties are required based on a value of another property (pull #[1746](https://github.com/aws-cloudformation/cfn-python-lint/pull/1746))

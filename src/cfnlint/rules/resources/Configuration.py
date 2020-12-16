@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import six
+from cfnlint.helpers import REGISTRY_SCHEMAS
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -62,7 +63,6 @@ class Configuration(CloudFormationLintRule):
             ))
 
         resource_type = resource_values.get('Type', '')
-        check_attributes = []
         if not isinstance(resource_type, six.string_types):
             message = 'Type has to be a string at {0}'
             matches.append(RuleMatch(
@@ -100,8 +100,8 @@ class Configuration(CloudFormationLintRule):
             self.logger.debug('Check resource types by region...')
             for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                 if region in cfn.regions:
-                    if resource_type not in specs['ResourceTypes']:
-                        if not resource_type.startswith(('Custom::', 'AWS::Serverless::')):
+                    if resource_type not in specs['ResourceTypes'] and resource_type not in [s['typeName'] for s in REGISTRY_SCHEMAS]:
+                        if not resource_type.startswith(('Custom::', 'AWS::Serverless::')) and not resource_type.endswith('::MODULE'):
                             message = 'Invalid or unsupported Type {0} for resource {1} in {2}'
                             matches.append(RuleMatch(
                                 ['Resources', resource_name, 'Type'],

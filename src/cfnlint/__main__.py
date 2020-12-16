@@ -12,7 +12,6 @@ LOGGER = logging.getLogger('cfnlint')
 
 
 def main():
-    """Main function"""
     if sys.version_info[:2] == (3, 4):
         warnings.warn('Python 3.4 has reached end of life. '
                       'cfn-lint will end support for python 3.4 on July 1st, 2020.', Warning, stacklevel=3)
@@ -33,12 +32,12 @@ def main():
                 matches.extend(
                     cfnlint.core.run_cli(
                         filename, template, rules,
-                        args.regions, args.override_spec, args.build_graph, args.mandatory_checks))
+                        args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks))
             else:
                 matches.extend(errors)
             LOGGER.debug('Completed linting of file: %s', str(filename))
 
-        matches_output = formatter.print_matches(matches, rules)
+        matches_output = formatter.print_matches(matches, rules, filenames)
 
         if matches_output:
             if args.output_file:

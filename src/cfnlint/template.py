@@ -81,7 +81,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_parameters(self):
-        """Get Resources"""
         LOGGER.debug('Get parameters from template...')
         parameters = self.template.get('Parameters', {})
         if not parameters:
@@ -89,8 +88,22 @@ class Template(object):  # pylint: disable=R0904
 
         return parameters
 
+    def get_modules(self):
+        """Get Modules"""
+        LOGGER.debug('Get modules from template...')
+        resources = self.template.get('Resources', {})
+        if not resources:
+            return {}
+
+        results = {}
+        for k, v in resources.items():
+            if isinstance(v, dict):
+                if v.get('Type') is not None and str(v.get('Type')).endswith('::MODULE'):
+                    results[k] = v
+
+        return results
+
     def get_mappings(self):
-        """Get Resources"""
         LOGGER.debug('Get mapping from template...')
         mappings = self.template.get('Mappings', {})
         if not mappings:
@@ -99,7 +112,6 @@ class Template(object):  # pylint: disable=R0904
         return mappings
 
     def get_resource_names(self):
-        """Get all the Resource Names"""
         LOGGER.debug('Get the names of all resources from template...')
         results = []
         resources = self.template.get('Resources', {})
@@ -110,7 +122,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_parameter_names(self):
-        """Get all Parameter Names"""
         LOGGER.debug('Get names of all parameters from template...')
         results = []
         parameters = self.template.get('Parameters', {})
@@ -121,9 +132,8 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_refs(self):
-        """Get all valid Refs"""
         LOGGER.debug('Get all valid REFs from template...')
-        results = {}
+        results = cfnlint.helpers.RegexDict()
         parameters = self.template.get('Parameters', {})
         if parameters:
             for name, value in parameters.items():
@@ -135,9 +145,15 @@ class Template(object):  # pylint: disable=R0904
         resources = self.template.get('Resources', {})
         if resources:
             for name, value in resources.items():
-                if 'Type' in value:
+                resource_type = value.get('Type', '')
+                if resource_type.endswith('::MODULE'):
                     element = {}
-                    element['Type'] = value['Type']
+                    element['Type'] = 'MODULE'
+                    element['From'] = 'Resources'
+                    results['{}.*'.format(name)] = element
+                elif resource_type:
+                    element = {}
+                    element['Type'] = resource_type
                     element['From'] = 'Resources'
                     results[name] = element
 
@@ -149,7 +165,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_getatts(self):
-        """Get all valid GetAtts"""
         LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
@@ -166,25 +181,25 @@ class Template(object):  # pylint: disable=R0904
         for name, value in resources.items():
             if 'Type' in value:
                 valtype = value['Type']
-                if valtype.startswith(astrik_string_types):
-                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                    results[name] = {'*': {'PrimitiveItemType': 'String'}}
-                elif valtype.startswith(astrik_unknown_types):
-                    LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
-                    results[name] = {'*': {}}
-                else:
-                    if value['Type'] in resourcetypes:
-                        if 'Attributes' in resourcetypes[valtype]:
-                            results[name] = {}
-                            for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
-                                element = {}
-                                element.update(attvalue)
-                                results[name][attname] = element
+                if isinstance(valtype, six.string_types):
+                    if valtype.startswith(astrik_string_types):
+                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                        results[name] = {'*': {'PrimitiveItemType': 'String'}}
+                    elif valtype.startswith(astrik_unknown_types) or valtype.endswith('::MODULE'):
+                        LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
+                        results[name] = {'*': {}}
+                    else:
+                        if value['Type'] in resourcetypes:
+                            if 'Attributes' in resourcetypes[valtype]:
+                                results[name] = {}
+                                for attname, attvalue in resourcetypes[valtype]['Attributes'].items():
+                                    element = {}
+                                    element.update(attvalue)
+                                    results[name][attname] = element
 
         return results
 
     def get_directives(self):
-        """ Get Directives"""
         results = {}
         for resource_name, resource_values in self.template.get('Resources', {}).items():
             if isinstance(resource_values, dict):
@@ -508,9 +523,6 @@ class Template(object):  # pylint: disable=R0904
                     check_find_in_map=None, check_split=None, check_join=None,
                     check_import_value=None, check_sub=None,
                     **kwargs):
-        """
-            Check the value
-        """
         LOGGER.debug('Check value %s for %s', key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)

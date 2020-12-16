@@ -41,14 +41,9 @@ region_map = {
     'South America (Sao Paulo)': 'sa-east-1',
     'US East (N. Virginia)': 'us-east-1',
     'US East (Ohio)': 'us-east-2',
-    'US East (Verizon) - Atlanta': 'us-east-1',
-    'US East (Verizon) - Boston': 'us-east-1',
-    'US East (Verizon) - New York': 'us-east-1',
-    'US East (Verizon) - Washington DC': 'us-east-1',
     'US West (N. California)': 'us-west-1',
     'US West (Oregon)': 'us-west-2',
     'US West (Los Angeles)': 'us-west-2',
-    'US West (Verizon) - San Francisco Bay Area': 'us-west-2',
 }
 
 session = boto3.session.Session()
@@ -204,7 +199,7 @@ def get_results(service, product_families):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') in product_families:
+                if product.get('productFamily') in product_families and product.get('attributes').get('locationType') == "AWS Region":
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(

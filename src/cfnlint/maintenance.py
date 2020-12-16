@@ -20,8 +20,6 @@ LOGGER = logging.getLogger(__name__)
 
 
 def update_resource_specs():
-    """ Update Resource Specs """
-
     # Pool() uses cpu count if no number of processors is specified
     # Pool() only implements the Context Manager protocol from Python3.3 onwards,
     # so it will fail Python2.7 style linting, as well as throw AttributeError
@@ -87,8 +85,6 @@ def update_resource_spec(region, url):
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 def update_documentation(rules):
-    """Generate documentation"""
-
     # Update the overview of all rules in the linter
     filename = 'docs/rules.md'
 
