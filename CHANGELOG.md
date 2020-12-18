@@ -1,3 +1,8 @@
+### v0.44.1
+###### Fixes
+- Reinitialize the limits in rule [E3021](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3021) (pull #[1834](https://github.com/aws-cloudformation/cfn-python-lint/pull/1834))
+- Add `registry_schemas` to be supported in the `.cfnlintrc` (pull #[1836](https://github.com/aws-cloudformation/cfn-python-lint/pull/1836))
+
 ### v0.44.0
 ###### Features
 - Cache all rules to speed up reloading rules when scanning multiple templates (pull #[1789](https://github.com/aws-cloudformation/cfn-python-lint/pull/1789))
