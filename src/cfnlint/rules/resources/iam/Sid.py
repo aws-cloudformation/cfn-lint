@@ -18,14 +18,6 @@ class Sid(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super(Sid, self).__init__()
-        self.resources_and_keys = {
-            'AWS::ECR::Repository': 'RepositoryPolicyText',
-            'AWS::Elasticsearch::Domain': 'AccessPolicies',
-            'AWS::KMS::Key': 'KeyPolicy',
-            'AWS::S3::BucketPolicy': 'PolicyDocument',
-            'AWS::SNS::TopicPolicy': 'PolicyDocument',
-            'AWS::SQS::QueuePolicy': 'PolicyDocument',
-        }
         self.idp_and_keys = {
             'AWS::IAM::Group': 'Policies',
             'AWS::IAM::ManagedPolicy': 'PolicyDocument',
@@ -33,8 +25,6 @@ class Sid(CloudFormationLintRule):
             'AWS::IAM::Role': 'Policies',
             'AWS::IAM::User': 'Policies',
         }
-        for resource_type in self.resources_and_keys:
-            self.resource_property_types.append(resource_type)
         for resource_type in self.idp_and_keys:
             self.resource_property_types.append(resource_type)
         self.sid_regex = re.compile('^[A-Za-z0-9]*$')
@@ -70,11 +60,7 @@ class Sid(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        key = None
-        if resourcetype in self.resources_and_keys:
-            key = self.resources_and_keys.get(resourcetype)
-        else:
-            key = self.idp_and_keys.get(resourcetype)
+        key = self.idp_and_keys.get(resourcetype)
 
         if key == 'Policies':
             for index, policy in enumerate(properties.get(key, [])):
