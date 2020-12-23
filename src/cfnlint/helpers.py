@@ -204,16 +204,23 @@ VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIS
 class RegexDict(dict):
 
     def __getitem__(self, item):
-        for k, v in self.items():
-            if re.match(k, item):
-                return v
-        raise KeyError
+        possible_items = {k: v for k, v in self.items() if re.match(k, item)}
+        if not possible_items:
+            raise KeyError
+        longest_match = sorted(possible_items.keys(), key=len)[-1]
+        return possible_items[longest_match]
 
     def __contains__(self, item):
         for k in self.keys():
             if re.match(k, item):
                 return True
         return False
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
 
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
@@ -312,7 +319,7 @@ def load_resource(package, filename='us-east-1.json'):
 
 
 RESOURCE_SPECS = {}
-
+REGISTRY_SCHEMAS = []
 
 def merge_spec(source, destination):
     """ Recursive merge spec dict """

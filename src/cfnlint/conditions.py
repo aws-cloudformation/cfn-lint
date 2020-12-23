@@ -138,7 +138,6 @@ class Condition(object):
                 self.Influenced_Equals[equal.Right.Function].add(equal.Left.String)
 
     def process_condition(self, template, value):
-        """ process condition """
         if isinstance(value, dict):
             if len(value) == 1:
                 for func_name, func_value in value.items():
@@ -166,7 +165,6 @@ class Condition(object):
             raise ConditionParseError
 
     def process_function(self, template, values):
-        """ Process Function """
         results = []
         for value in values:
             if isinstance(value, dict):

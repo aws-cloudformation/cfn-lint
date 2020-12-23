@@ -8,7 +8,7 @@ from test.testlib.testcase import BaseTestCase
 class TestRegexDict(BaseTestCase):
     """Test Regex Dict """
 
-    def test_success_run(self):
+    def test_getitem(self):
         """Test success run"""
 
         obj = RegexDict()
@@ -16,3 +16,16 @@ class TestRegexDict(BaseTestCase):
 
         with self.assertRaises(KeyError):
             obj['NotExist']
+
+    def test_get(self):
+        obj = RegexDict()
+        obj['^Value$'] = True
+
+        self.assertEqual(obj.get('NotExist', 'Default'), 'Default')
+
+    def test_return_longest(self):
+        obj = RegexDict()
+        obj['^Test'] = False
+        obj['^TestLonger'] = True
+
+        self.assertTrue(obj['TestLongerObject'])

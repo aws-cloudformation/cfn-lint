@@ -20,7 +20,7 @@ class Equals(CloudFormationLintRule):
                          'Fn::Sub', 'Fn::Join', 'Fn::Select', 'Fn::Split']
     function = 'Fn::Equals'
 
-    def _check_equal_values(self, cfn, element, path):
+    def _check_equal_values(self, element, path, valid_refs):
         matches = []
 
         if len(element) == 1:
@@ -33,10 +33,10 @@ class Equals(CloudFormationLintRule):
                         message.format(', '.join(self.allowed_functions))
                     ))
                 elif element_key == 'Ref':
-                    valid_refs = cfn.get_valid_refs()
-                    if element_value in valid_refs:
-                        if valid_refs[element_value].get('From') == 'Parameters':
-                            if valid_refs[element_value].get('Type') in VALID_PARAMETER_TYPES_LIST:
+                    valid_ref = valid_refs.get(element_value)
+                    if valid_ref:
+                        if valid_ref.get('From') == 'Parameters':
+                            if valid_ref.get('Type') in VALID_PARAMETER_TYPES_LIST:
                                 message = 'Every Fn::Equals object requires a list of 2 string parameters'
                                 matches.append(RuleMatch(
                                     path, message))
@@ -53,6 +53,7 @@ class Equals(CloudFormationLintRule):
         # Build the list of functions
         trees = cfn.search_deep_keys(self.function)
 
+        valid_refs = cfn.get_valid_refs()
         for tree in trees:
             # Test when in Conditions
             if tree[0] == 'Conditions':
@@ -73,7 +74,7 @@ class Equals(CloudFormationLintRule):
                     for index, element in enumerate(value):
                         if isinstance(element, dict):
                             matches.extend(self._check_equal_values(
-                                cfn, element, tree[:-1] + [index]))
+                                element, tree[:-1] + [index], valid_refs))
                         elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
                             message = self.function + \
                                 ' element must be a String, Boolean, Number, or supported function ({0})'

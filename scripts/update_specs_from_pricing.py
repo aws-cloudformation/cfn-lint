@@ -199,7 +199,7 @@ def get_results(service, product_families):
             products = json.loads(price_item)
             product = products.get('product', {})
             if product:
-                if product.get('productFamily') in product_families and 'Verizon' not in product.get('attributes').get('location'):
+                if product.get('productFamily') in product_families and product.get('attributes').get('locationType') == "AWS Region":
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(

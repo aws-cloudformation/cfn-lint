@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 import logging
 import os
 import sys
@@ -15,11 +16,11 @@ import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
-from cfnlint.helpers import REGIONS
+from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
-
+__CACHED_RULES = None
 
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
@@ -39,7 +40,7 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec, build_graph, mandatory_rules=None):
+def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
     """Process args and run"""
 
     if override_spec:
@@ -48,6 +49,13 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, mand
     if build_graph:
         template_obj = Template(filename, template, regions)
         template_obj.build_graph()
+
+    if registry_schemas:
+        for path in registry_schemas:
+            if path and os.path.isdir(os.path.expanduser(path)):
+                for f in os.listdir(path):
+                    with open(os.path.join(path, f)) as schema:
+                        REGISTRY_SCHEMAS.append(json.load(schema))
 
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
@@ -67,7 +75,6 @@ def get_exit_code(matches):
 
 
 def get_formatter(fmt):
-    """ Get Formatter"""
     formatter = {}
     if fmt:
         if fmt == 'quiet':
@@ -88,7 +95,6 @@ def get_formatter(fmt):
 
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
-    """Get rules"""
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -158,6 +164,7 @@ def get_args_filenames(cli_args):
 
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
+    global __CACHED_RULES  #pylint: disable=global-statement
 
     ignore_bad_template = False
     if args.ignore_bad_template:
@@ -182,16 +189,25 @@ def get_template_rules(filename, args):
 
     args.template_args = template
 
-    rules = cfnlint.core.get_rules(
-        args.append_rules,
-        args.ignore_checks,
-        args.include_checks,
-        args.configure_rules,
-        args.include_experimental,
-        args.mandatory_checks,
-    )
+    if __CACHED_RULES:
+        __CACHED_RULES.configure(
+            ignore_rules=args.ignore_checks,
+            include_rules=args.include_checks,
+            configure_rules=args.configure_rules,
+            include_experimental=args.include_experimental,
+            mandatory_rules=args.mandatory_checks,
+        )
+    else:
+        __CACHED_RULES = cfnlint.core.get_rules(
+            args.append_rules,
+            args.ignore_checks,
+            args.include_checks,
+            args.configure_rules,
+            args.include_experimental,
+            args.mandatory_checks,
+        )
 
-    return(template, rules, [])
+    return(template, __CACHED_RULES, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):

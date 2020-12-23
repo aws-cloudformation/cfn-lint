@@ -23,7 +23,6 @@ LOGGER = logging.getLogger('cfnlint')
 
 
 def configure_logging(debug_logging, info_logging):
-    """Setup Logging"""
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
 
@@ -333,7 +332,7 @@ class CliArgs(object):
         standard = parser.add_argument_group('Standard')
         advanced = parser.add_argument_group('Advanced / Debugging')
 
-        # Alllow the template to be passes as an optional or a positional argument
+        # Allow the template to be passes as an optional or a positional argument
         standard.add_argument(
             'templates', metavar='TEMPLATE', nargs='*', help='The CloudFormation template to be linted')
         standard.add_argument(
@@ -356,7 +355,6 @@ class CliArgs(object):
         standard.add_argument(
             '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json', 'junit', 'pretty']
         )
-
         standard.add_argument(
             '-l', '--list-rules', dest='listrules', default=False,
             action='store_true', help='list all the rules'
@@ -390,25 +388,23 @@ class CliArgs(object):
         standard.add_argument(
             '-e', '--include-experimental', help='Include experimental rules', action='store_true'
         )
-
         standard.add_argument(
             '-x', '--configure-rule', dest='configure_rules', nargs='+', default={},
             action=RuleConfigurationAction,
             help='Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false'
         )
-
         standard.add_argument('--config-file', dest='config_file',
                               help='Specify the cfnlintrc file to use')
-
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
             help='A CloudFormation Spec override file that allows customization'
         )
-
         advanced.add_argument(
             '-g', '--build-graph', help='Creates a file in the same directory as the template that models the template\'s resources in DOT format', action='store_true'
         )
-
+        advanced.add_argument(
+            '-s', '--registry-schemas', help='one or more directories of CloudFormation Registry Schemas', action='extend', type=comma_separated_arg, nargs='+'
+        )
         standard.add_argument(
             '-v', '--version', help='Version of cfn-lint', action='version',
             version='%(prog)s {version}'.format(version=__version__)
@@ -425,7 +421,6 @@ class CliArgs(object):
             '--update-iam-policies', help=argparse.SUPPRESS,
             action='store_true'
         )
-
         standard.add_argument(
             '--output-file', type=str, default=None,
             help='Writes the output to the specified file, ideal for producing reports'
@@ -441,11 +436,9 @@ class TemplateArgs(object):
         self.set_template_args(template_args)
 
     def get_template_args(self):
-        """ Get Template Args"""
         return self._template_args
 
     def set_template_args(self, template):
-        """ Set Template Args"""
         defaults = {}
         if isinstance(template, dict):
             configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
@@ -491,7 +484,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
             self, config_file=self._get_argument_value('config_file', False, False))
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
-        """ Get Argument value """
         cli_value = getattr(self.cli_args, arg_name)
         template_value = self.template_args.get(arg_name)
         file_value = self.file_args.get(arg_name)
@@ -505,28 +497,23 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def ignore_checks(self):
-        """ ignore_checks """
         return self._get_argument_value('ignore_checks', True, True)
 
     @property
     def include_checks(self):
-        """ include_checks """
         results = self._get_argument_value('include_checks', True, True)
         return ['W', 'E'] + results
 
     @property
     def mandatory_checks(self):
-        """ mandatory_checks """
         return self._get_argument_value('mandatory_checks', False, True)
 
     @property
     def include_experimental(self):
-        """ include_experimental """
         return self._get_argument_value('include_experimental', True, True)
 
     @property
     def regions(self):
-        """ regions """
         results = self._get_argument_value('regions', True, True)
         if not results:
             return ['us-east-1']
@@ -536,22 +523,18 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def ignore_bad_template(self):
-        """ ignore_bad_template """
         return self._get_argument_value('ignore_bad_template', True, True)
 
     @property
     def debug(self):
-        """ debug """
         return self._get_argument_value('debug', False, False)
 
     @property
     def format(self):
-        """ format """
         return self._get_argument_value('format', False, True)
 
     @property
     def templates(self):
-        """ templates """
         templates_args = self._get_argument_value('templates', False, True)
         template_alt_args = self._get_argument_value('template_alt', False, False)
         if template_alt_args:
@@ -588,7 +571,6 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         return sorted(all_filenames)
 
     def _ignore_templates(self):
-        """ templates """
         ignore_template_args = self._get_argument_value('ignore_templates', False, True)
         if ignore_template_args:
             filenames = ignore_template_args
@@ -619,50 +601,44 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def append_rules(self):
-        """ append_rules """
         return self._get_argument_value('append_rules', False, True)
 
     @property
     def override_spec(self):
-        """ override_spec """
         return self._get_argument_value('override_spec', False, True)
 
     @property
     def update_specs(self):
-        """ update_specs """
         return self._get_argument_value('update_specs', False, False)
 
     @property
     def update_documentation(self):
-        """ update_specs """
         return self._get_argument_value('update_documentation', False, False)
 
     @property
     def update_iam_policies(self):
-        """ update_iam_policies """
         return self._get_argument_value('update_iam_policies', False, False)
 
     @property
     def listrules(self):
-        """ listrules """
         return self._get_argument_value('listrules', False, False)
 
     @property
     def configure_rules(self):
-        """ Configure rules """
         return self._get_argument_value('configure_rules', True, True)
 
     @property
     def config_file(self):
-        """ Config file """
         return self._get_argument_value('config_file', False, False)
 
     @property
     def build_graph(self):
-        """ build_graph """
         return self._get_argument_value('build_graph', False, False)
 
     @property
     def output_file(self):
-        """ output_file """
         return self._get_argument_value('output_file', False, True)
+
+    @property
+    def registry_schemas(self):
+        return self._get_argument_value('registry_schemas', False, True)

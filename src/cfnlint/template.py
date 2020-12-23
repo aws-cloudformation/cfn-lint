@@ -81,7 +81,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_parameters(self):
-        """Get Resources"""
         LOGGER.debug('Get parameters from template...')
         parameters = self.template.get('Parameters', {})
         if not parameters:
@@ -105,7 +104,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_mappings(self):
-        """Get Resources"""
         LOGGER.debug('Get mapping from template...')
         mappings = self.template.get('Mappings', {})
         if not mappings:
@@ -114,7 +112,6 @@ class Template(object):  # pylint: disable=R0904
         return mappings
 
     def get_resource_names(self):
-        """Get all the Resource Names"""
         LOGGER.debug('Get the names of all resources from template...')
         results = []
         resources = self.template.get('Resources', {})
@@ -125,7 +122,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_parameter_names(self):
-        """Get all Parameter Names"""
         LOGGER.debug('Get names of all parameters from template...')
         results = []
         parameters = self.template.get('Parameters', {})
@@ -136,7 +132,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_refs(self):
-        """Get all valid Refs"""
         LOGGER.debug('Get all valid REFs from template...')
         results = cfnlint.helpers.RegexDict()
         parameters = self.template.get('Parameters', {})
@@ -170,7 +165,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_getatts(self):
-        """Get all valid GetAtts"""
         LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
@@ -206,7 +200,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_directives(self):
-        """ Get Directives"""
         results = {}
         for resource_name, resource_values in self.template.get('Resources', {}).items():
             if isinstance(resource_values, dict):
@@ -530,9 +523,6 @@ class Template(object):  # pylint: disable=R0904
                     check_find_in_map=None, check_split=None, check_join=None,
                     check_import_value=None, check_sub=None,
                     **kwargs):
-        """
-            Check the value
-        """
         LOGGER.debug('Check value %s for %s', key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
