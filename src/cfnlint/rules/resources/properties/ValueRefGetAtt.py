@@ -157,7 +157,22 @@ class ValueRefGetAtt(CloudFormationLintRule):
                         property_name,
                         ', '.join(map(str, specs)),
                         '/'.join(map(str, path)))))
+        elif isinstance(specs[resource_type], list):
+            found = False
+            for allowed_att in specs[resource_type]:
+                if '.'.join(map(str, resource_attribute)) == allowed_att:
+                    found = True
+            if not found:
+                message = 'Property "{0}" can Fn::GetAtt to a resource attribute "{1}" at {2}'
+                matches.append(
+                    RuleMatch(
+                        path,
+                        message.format(
+                            property_name,
+                            specs[resource_type],
+                            '/'.join(map(str, path)))))
         elif '.'.join(map(str, resource_attribute)) != specs[resource_type]:
+            print(resource_type)
             message = 'Property "{0}" can Fn::GetAtt to a resource attribute "{1}" at {2}'
             matches.append(
                 RuleMatch(

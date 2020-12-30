@@ -133,3 +133,28 @@ Resources:
         - SubStack
         - Outputs.Protocol
       LoadBalancerArn: !GetAtt SubStack.Outputs.LoadBalancerArn
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  StreamConsumer:
+    Type: AWS::Kinesis::StreamConsumer
+    Properties:
+      ConsumerName: MyConsumer
+      StreamARN: !GetAtt KinesisStream.Arn
+  03EventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 500
+      Enabled: true
+      EventSourceArn: !GetAtt StreamConsumer.ConsumerARN
+      FunctionName: !Ref LambdaFunctionArn
+      StartingPosition: LATEST
+  04EventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 500
+      Enabled: true
+      EventSourceArn: !GetAtt StreamConsumer.StreamARN
+      FunctionName: !Ref LambdaFunctionArn
+      StartingPosition: LATEST
