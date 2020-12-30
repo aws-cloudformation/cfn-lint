@@ -124,3 +124,20 @@ Resources:
       - Key: idle_timeout.timeout_seconds
         Value: '50'
       SecurityGroups: !GetAtt SubStack.Outputs.SecurityGroups
+  KinesisStream:
+    Type: AWS::Kinesis::Stream
+    Properties:
+      ShardCount: 1
+  StreamConsumer:
+    Type: AWS::Kinesis::StreamConsumer
+    Properties:
+      ConsumerName: MyConsumer
+      StreamARN: !GetAtt KinesisStream.Arn
+  EventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      BatchSize: 500
+      Enabled: true
+      EventSourceArn: !GetAtt StreamConsumer.AnotherARN
+      FunctionName: !Ref LambdaFunctionArn
+      StartingPosition: LATEST
