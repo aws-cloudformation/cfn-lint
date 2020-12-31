@@ -181,7 +181,13 @@ class Transform(object):
         uri_property = resource_property_dict.get(property_key, '.')
 
         # ignore if dict or already an S3 Uri
-        if isinstance(uri_property, dict) or Transform.is_s3_uri(uri_property):
+        if isinstance(uri_property, dict):
+            if len(uri_property) == 1:
+                for k in uri_property.keys():
+                    if k == 'Ref':
+                        resource_property_dict[property_key] = s3_uri_value
+            return
+        if Transform.is_s3_uri(uri_property):
             return
 
         resource_property_dict[property_key] = s3_uri_value
