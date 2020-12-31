@@ -21,6 +21,9 @@ class RuleTargetsLimit(CloudFormationLintRule):
         self.resource_property_types = ['AWS::Events::Rule']
         self.limits = {}
 
+    def initialize(self, cfn):
+        self.limits = {}
+
     # pylint: disable=W0613
     def check_value(self, value, path):
         """Count them up """

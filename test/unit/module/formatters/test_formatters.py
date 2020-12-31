@@ -22,6 +22,7 @@ class TestFormatters(BaseTestCase):
         results = []
         for filename in filenames:
             (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+
             results.extend(
                 cfnlint.core.run_checks(
                     filename, template, rules, ['us-east-1']))
@@ -96,7 +97,7 @@ class TestFormatters(BaseTestCase):
         self.assertEqual(results[2].rule.id, 'E3012')
 
         root = ET.fromstring(formatter.print_matches(results, rules))
-        
+
         self.assertEqual(root.tag, 'testsuites')
         self.assertEqual(root[0].tag, 'testsuite')
 

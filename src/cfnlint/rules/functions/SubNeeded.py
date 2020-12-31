@@ -20,7 +20,8 @@ class SubNeeded(CloudFormationLintRule):
     # Free-form text properties to exclude from this rule
     excludes = ['UserData', 'ZipFile', 'Condition', 'AWS::CloudFormation::Init',
                 'CloudWatchAlarmDefinition', 'TopicRulePayload', 'BuildSpec',
-                'RequestMappingTemplate', 'LogFormat', 'TemplateBody', 'ResponseMappingTemplate']
+                'RequestMappingTemplate', 'LogFormat', 'TemplateBody', 'ResponseMappingTemplate',
+                'RouteSelectionExpression']
     api_excludes = ['Uri', 'Body', 'ConnectionId']
 
 
