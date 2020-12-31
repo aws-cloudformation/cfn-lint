@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import json
 import operator
+import re
 import sys
 from junit_xml import TestSuite, TestCase, to_xml_report_string
 from cfnlint.rules import Match
@@ -186,7 +187,7 @@ class ParseableFormatter(BaseFormatter):
             match.linenumberend,
             match.columnnumberend,
             match.rule.id,
-            match.message
+            re.sub(r'(\r*\n)+', ' ', match.message)
         )
 
 

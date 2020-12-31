@@ -61,7 +61,7 @@ class AllowedPattern(CloudFormationLintRule):
                                 if not re.match(allowed_pattern_regex, str(allowed_value)):
                                     param_path = ['Parameters', value, 'AllowedValues', index]
                                     description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
-                                    message = 'You must specify a valid allowed value for {0} ({1}).\n{2}'
+                                    message = 'You must specify a valid allowed value for {0} ({1}). {2}'
                                     matches.append(RuleMatch(param_path, message.format(
                                         value, allowed_value, description)))
                         if default_value:
@@ -69,7 +69,7 @@ class AllowedPattern(CloudFormationLintRule):
                             if not re.match(allowed_pattern_regex, str(default_value)):
                                 param_path = ['Parameters', value, 'Default']
                                 description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
-                                message = 'You must specify a valid Default value for {0} ({1}).\n{2}'
+                                message = 'You must specify a valid Default value for {0} ({1}). {2}'
                                 matches.append(RuleMatch(param_path, message.format(
                                     value, default_value, description)))
 
