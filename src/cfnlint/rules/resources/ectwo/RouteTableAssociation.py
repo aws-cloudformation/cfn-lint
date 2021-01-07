@@ -17,9 +17,14 @@ class RouteTableAssociation(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'
     tags = ['resources', 'ec2', 'subnet', 'route table']
 
-    # Namespace for unique associated subnets in the form condition::value
-    resource_values = {}
-    associated_resources = defaultdict(list)
+    def __init__(self):
+        super(RouteTableAssociation, self).__init__()
+        self.resource_values = {}
+        self.associated_resources = defaultdict(list)
+
+    def initialize(self, cfn):
+        self.resource_values = {}
+        self.associated_resources = defaultdict(list)
 
     def get_values(self, subnetid, resource_condition, property_condition):
         """Get string literal(s) from value of SubnetId"""

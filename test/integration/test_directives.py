@@ -144,7 +144,7 @@ class TestDirectives(BaseCliTestCase):
                             'LineNumber': 37
                         }
                     },
-                    'Message': 'You must specify a valid value for Status (Enabled1).\nValid values are ["Enabled", "Suspended"]',
+                    'Message': 'You must specify a valid value for Status (Enabled1). Valid values are ["Enabled", "Suspended"]',
                     'Rule': {
                         'Description': 'Check if properties have a valid value in case of an enumator',
                         'Id': 'E3030',

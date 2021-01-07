@@ -153,11 +153,15 @@ class TestPatchedSpecs(BaseTestCase):
                         p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for g_name, g_value in p_values.items():
                         self.assertIsInstance(
-                            g_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                            g_value, (six.string_types, list), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
                         self.assertIn(g_name, self.spec.get(
                             'ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
-                        self.assertIn(g_value, self.spec.get('ResourceTypes', {}).get(g_name, {}).get(
-                            'Attributes', {}), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                        values = g_value
+                        if isinstance(values, six.string_types):
+                            values = [values]
+                        for value in values:
+                            self.assertIn(value, self.spec.get('ResourceTypes', {}).get(g_name, {}).get(
+                                'Attributes', {}), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
                 elif p_name == 'AllowedValues':
                     self.assertIsInstance(p_values, list)
                     for l_value in p_values:

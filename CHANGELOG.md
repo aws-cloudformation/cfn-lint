@@ -1,3 +1,17 @@
+### v0.44.2
+###### CloudFormation Specifications
+- Expand Allowed Values for `AWS::AmazonMQ::Broker.EngineVersion` (pull #[#1841](https://github.com/aws-cloudformation/cfn-python-lint/pull/1841))
+- Update spec files as of 2012.12.30 (pull #[1831](https://github.com/aws-cloudformation/cfn-python-lint/pull/1831))
+- Update `AWS::Lambda::EventSourceMapping.EventSourceArn` to allow `StreamARN` and `ConsumerARN` (pull #[1850](https://github.com/aws-cloudformation/cfn-python-lint/pull/1850))
+###### Fixes
+- Reinitialize [E3022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3022) on every template (pull #[1848](https://github.com/aws-cloudformation/cfn-python-lint/pull/1848))
+- Update rule [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3008) to allow for lists in getatt allowed values (pull #[1850](https://github.com/aws-cloudformation/cfn-python-lint/pull/1850))
+
+### v0.44.1
+###### Fixes
+- Reinitialize the limits in rule [E3021](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3021) (pull #[1834](https://github.com/aws-cloudformation/cfn-python-lint/pull/1834))
+- Add `registry_schemas` to be supported in the `.cfnlintrc` (pull #[1836](https://github.com/aws-cloudformation/cfn-python-lint/pull/1836))
+
 ### v0.44.0
 ###### Features
 - Cache all rules to speed up reloading rules when scanning multiple templates (pull #[1789](https://github.com/aws-cloudformation/cfn-python-lint/pull/1789))
