@@ -1,7 +1,16 @@
+### v0.44.3
+###### CloudFormation Specifications
+- Update spec files as of 2021.01.08 (pull #[1846](https://github.com/aws-cloudformation/cfn-python-lint/pull/1846))
+- Update `AWS::Lambda::Function.MemorySize` to new service limits (pull #[1858](https://github.com/aws-cloudformation/cfn-python-lint/pull/1858))
+###### Fixes
+- Replace `ContentUri` to a s3 path when doing a SAM transform (pull #[1853](https://github.com/aws-cloudformation/cfn-python-lint/pull/1853))
+- Add `RouteSelectionExpression` to exludes on rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1029) (pull #[1852](https://github.com/aws-cloudformation/cfn-python-lint/pull/1852))
+- Remove newlines from parseable format messages (pull #[1854](https://github.com/aws-cloudformation/cfn-python-lint/pull/1854))
+
 ### v0.44.2
 ###### CloudFormation Specifications
-- Expand Allowed Values for `AWS::AmazonMQ::Broker.EngineVersion` (pull #[#1841](https://github.com/aws-cloudformation/cfn-python-lint/pull/1841))
-- Update spec files as of 2012.12.30 (pull #[1831](https://github.com/aws-cloudformation/cfn-python-lint/pull/1831))
+- Expand Allowed Values for `AWS::AmazonMQ::Broker.EngineVersion` (pull #[1841](https://github.com/aws-cloudformation/cfn-python-lint/pull/1841))
+- Update spec files as of 2020.12.30 (pull #[1831](https://github.com/aws-cloudformation/cfn-python-lint/pull/1831))
 - Update `AWS::Lambda::EventSourceMapping.EventSourceArn` to allow `StreamARN` and `ConsumerARN` (pull #[1850](https://github.com/aws-cloudformation/cfn-python-lint/pull/1850))
 ###### Fixes
 - Reinitialize [E3022](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3022) on every template (pull #[1848](https://github.com/aws-cloudformation/cfn-python-lint/pull/1848))
