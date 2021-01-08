@@ -3494,6 +3494,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "Throughput": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-blockdevicemapping-ebs.html#cfn-ec2-launchtemplate-blockdevicemapping-ebs-throughput",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "VolumeSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-blockdevicemapping-ebs.html#cfn-ec2-launchtemplate-blockdevicemapping-ebs-volumesize",
           "PrimitiveType": "Integer",
@@ -6385,43 +6391,6 @@
         }
       }
     },
-    "AWS::ElastiCache::User.PasswordList": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-passwordlist.html",
-      "Properties": {
-        "PasswordList": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-passwordlist.html#cfn-elasticache-user-passwordlist-passwordlist",
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::ElastiCache::User.UserGroupIdList": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-usergroupidlist.html",
-      "Properties": {
-        "UserGroupIdList": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-usergroupidlist.html#cfn-elasticache-user-usergroupidlist-usergroupidlist",
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::ElastiCache::UserGroup.ReplicationGroupIdList": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-replicationgroupidlist.html",
-      "Properties": {
-        "ReplicationGroupIdList": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-replicationgroupidlist.html#cfn-elasticache-usergroup-replicationgroupidlist-replicationgroupidlist",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        }
-      }
-    },
     "AWS::ElastiCache::UserGroup.UserGroupPendingChanges": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-usergrouppendingchanges.html",
       "Properties": {
@@ -6435,19 +6404,6 @@
         },
         "UserIdsToRemove": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-usergrouppendingchanges.html#cfn-elasticache-usergroup-usergrouppendingchanges-useridstoremove",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::ElastiCache::UserGroup.UserIdList": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-useridlist.html",
-      "Properties": {
-        "UserIdList": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-useridlist.html#cfn-elasticache-usergroup-useridlist-useridlist",
           "DuplicatesAllowed": false,
           "PrimitiveItemType": "String",
           "Required": false,
@@ -10618,9 +10574,6 @@
         }
       }
     },
-    "AWS::StepFunctions::StateMachine.DefinitionSubstitutions": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stepfunctions-statemachine-definitionsubstitutions.html"
-    },
     "AWS::StepFunctions::StateMachine.LogDestination": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stepfunctions-statemachine-logdestination.html",
       "Properties": {
@@ -10968,7 +10921,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "22.0.0",
+  "ResourceSpecificationVersion": "23.0.0",
   "ResourceTypes": {
     "AWS::ApiGateway::Account": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-account.html",
@@ -16351,14 +16304,8 @@
         "Arn": {
           "PrimitiveType": "String"
         },
-        "Authentication": {
-          "Type": "Authentication"
-        },
         "Status": {
           "PrimitiveType": "String"
-        },
-        "UserGroupIds": {
-          "Type": "UserGroupIdList"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html",
@@ -16367,6 +16314,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-accessstring",
           "PrimitiveType": "String",
           "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Authentication": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-authentication",
+          "Required": false,
+          "Type": "Authentication",
           "UpdateType": "Mutable"
         },
         "Engine": {
@@ -16383,8 +16336,18 @@
         },
         "Passwords": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-passwords",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "PasswordList",
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "UserGroupIds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-usergroupids",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
           "UpdateType": "Mutable"
         },
         "UserId": {
@@ -16406,12 +16369,6 @@
         "Arn": {
           "PrimitiveType": "String"
         },
-        "PendingChanges": {
-          "Type": "UserGroupPendingChanges"
-        },
-        "ReplicationGroupIds": {
-          "Type": "ReplicationGroupIdList"
-        },
         "Status": {
           "PrimitiveType": "String"
         }
@@ -16424,6 +16381,20 @@
           "Required": true,
           "UpdateType": "Immutable"
         },
+        "PendingChanges": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-pendingchanges",
+          "Required": false,
+          "Type": "UserGroupPendingChanges",
+          "UpdateType": "Mutable"
+        },
+        "ReplicationGroupIds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-replicationgroupids",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "UserGroupId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-usergroupid",
           "PrimitiveType": "String",
@@ -16432,8 +16403,10 @@
         },
         "UserIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-userids",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "UserIdList",
+          "Type": "List",
           "UpdateType": "Mutable"
         }
       }
@@ -20342,8 +20315,9 @@
         },
         "DefinitionSubstitutions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "DefinitionSubstitutions",
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "LoggingConfiguration": {
@@ -22135,54 +22109,8 @@
       ]
     },
     "AWS::Lambda::Function.MemorySize": {
-      "AllowedValues": [
-        "128",
-        "192",
-        "256",
-        "320",
-        "384",
-        "448",
-        "512",
-        "576",
-        "640",
-        "704",
-        "768",
-        "832",
-        "896",
-        "960",
-        "1024",
-        "1088",
-        "1152",
-        "1216",
-        "1280",
-        "1344",
-        "1408",
-        "1472",
-        "1536",
-        "1600",
-        "1664",
-        "1728",
-        "1792",
-        "1856",
-        "1920",
-        "1984",
-        "2048",
-        "2112",
-        "2176",
-        "2240",
-        "2304",
-        "2368",
-        "2432",
-        "2496",
-        "2560",
-        "2624",
-        "2688",
-        "2752",
-        "2816",
-        "2880",
-        "2944",
-        "3008"
-      ]
+      "NumberMax": 10240,
+      "NumberMin": 128
     },
     "AWS::Lambda::Function.Timeout": {
       "NumberMax": 900,
