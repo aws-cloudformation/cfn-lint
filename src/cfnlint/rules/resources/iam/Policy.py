@@ -38,6 +38,7 @@ class Policy(CloudFormationLintRule):
             'AWS::IAM::Policy': 'PolicyDocument',
             'AWS::IAM::Role': 'Policies',
             'AWS::IAM::User': 'Policies',
+            'AWS::SSO::PermissionSet': 'InlinePolicy',
         }
         for resource_type in self.resources_and_keys:
             self.resource_property_types.append(resource_type)
@@ -197,7 +198,7 @@ class Policy(CloudFormationLintRule):
                             resource_exceptions=resource_exceptions,
                             start_mark=key.start_mark, end_mark=key.end_mark,
                         ))
-            elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies']:
+            elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies', 'InlinePolicy']:
                 matches.extend(
                     cfn.check_value(
                         obj=properties, key=key,
