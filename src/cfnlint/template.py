@@ -470,6 +470,10 @@ class Template(object):  # pylint: disable=R0904
                 result = self.get_location_yaml(text[path[0]], path[1:])
             except KeyError as err:
                 pass
+            # TypeError will help catch string indices must be integers for when
+            # we parse JSON string and get a path inside that json string
+            except TypeError as err:
+                pass
             if not result:
                 try:
                     for key in text:
