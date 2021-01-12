@@ -1,9 +1,9 @@
-name: Lint and Unit
+name: Testing
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  unitlint:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -29,3 +29,22 @@ jobs:
           name: py${{ matrix.python-version }}-${{ matrix.env.TOXENV }}-${{ matrix.os }}
           flags: unittests # optional
           fail_ci_if_error: true # optional (default = false)
+  integration:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install cfn-lint
+        run: |
+          pip3 install -e .
+      - name: Run cfn-lint
+        run: |
+          cfn-lint test/fixtures/templates/good/generic.yaml
+          cat test/fixtures/templates/good/generic.yaml | cfn-lint
