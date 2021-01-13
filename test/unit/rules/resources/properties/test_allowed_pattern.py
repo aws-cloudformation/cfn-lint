@@ -2,7 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import re
+import regex as re
 import json
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern  # pylint: disable=E0401
