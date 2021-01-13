@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import json
 import boto3
+import regex as re
 from botocore.config import Config
 from cfnlint.helpers import get_url_content
 from cfnlint.helpers import REGIONS
@@ -80,12 +81,14 @@ def get_object_details(name, properties, schema):
                 subname = propname
             if propdetails.get('properties'):
                 results.update(get_object_details(name + '.' + subname, propdetails.get('properties'), schema))
-            else:
-                LOGGER.info("Type %s object for %s has no properties", name, propname)
+            elif propdetails.get('oneOf') or propdetails.get('anyOf') or propdetails.get('allOf'):
+                LOGGER.info("Type %s object for %s has only oneOf,anyOf, or allOf properties", name, propname)
                 continue
         elif t not in ['string', 'integer', 'number', 'boolean']:
             if propdetails.get('$ref'):
                 results.update(get_object_details(name + '.' + propname, schema.get('definitions').get(t.get('$ref').split("/")[-1]), schema))
+            elif isinstance(t, list):
+                LOGGER.info("Type for %s object and %s property is a list", name, propname)
             else:
                 LOGGER.info("Unable to handle %s object for %s property", name, propname)
         elif t == 'string':
@@ -93,9 +96,14 @@ def get_object_details(name, properties, schema):
                 if propdetails.get('pattern') or (propdetails.get('minLength') and propdetails.get('maxLength')) or propdetails.get('enum'):
                     results[name + '.' + propname] = {}
             if propdetails.get('pattern'):
-                results[name + '.' + propname].update({
-                    'AllowedPattern': propdetails.get('pattern')
-                })
+                p = propdetails.get('pattern')
+                try:
+                    re.compile(p, re.UNICODE)
+                    results[name + '.' + propname].update({
+                        'AllowedPatternRegex': p
+                    })
+                except:
+                    LOGGER.info("Unable to handle regex for type %s and property %s with regex %s", name, propname, p)
             if propdetails.get('minLength') and propdetails.get('maxLength'):
                 results[name + '.' + propname].update({
                     'StringMin': propdetails.get('minLength'),
