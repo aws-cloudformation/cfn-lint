@@ -8,10 +8,10 @@ import logging
 import multiprocessing
 import os
 import subprocess
-import jsonpatch
 import zipfile
 import re
-from io import BytesIO, TextIOWrapper
+from io import BytesIO
+import jsonpatch
 try:
     from urllib.request import urlopen, Request
 except ImportError:
@@ -73,7 +73,7 @@ def update_resource_spec(region, url):
             # since there could be patched in values to ValueTypes
             # Ref/GetAtt as an example.  So we want to add new
             # ValueTypes that don't exist
-            path_details = patch.get('path').split("/")
+            path_details = patch.get('path').split('/')
             if path_details[1] == 'ValueTypes':
                 if not spec.get('ValueTypes').get(path_details[2]):
                     spec['ValueTypes'][path_details[2]] = {}
@@ -161,8 +161,9 @@ def update_documentation(rules):
         rule_output = '| [{0}<a name="{0}"></a>]({6}) | {1} | {2} | {3} | [Source]({4}) | {5} |\n'
 
         for rule in [cfnlint.rules.ParseError(), cfnlint.rules.TransformError(), cfnlint.rules.RuleError()] + sorted_rules:
+            # pylint: disable=invalid-string-quote
             rule_source_code_file = '../' + subprocess.check_output(['git', 'grep', '-l', "id = '" + rule.id + "'", 'src/cfnlint/rules/']).decode(
-                'ascii').strip()  # pylint: disable=invalid-string-quote
+                'ascii').strip()
             rule_id = rule.id + '*' if rule.experimental else rule.id
             tags = ','.join('`{0}`'.format(tag) for tag in rule.tags)
             config = '<br />'.join('{0}:{1}:{2}'.format(key, values.get('type'), values.get('default'))
@@ -232,7 +233,7 @@ def get_schema_value_types():
         name = None
 
         if properties.get('$ref'):
-            name = properties.get('$ref').split("/")[-1]
+            name = properties.get('$ref').split('/')[-1]
             subname, results = resolve_refs(schema.get('definitions').get(name), schema)
             if subname:
                 name = subname
@@ -268,16 +269,16 @@ def get_schema_value_types():
                             names + [subname], propdetails.get('properties'), schema))
                 elif propdetails.get('oneOf') or propdetails.get('anyOf') or propdetails.get('allOf'):
                     LOGGER.info(
-                        "Type %s object for %s has only oneOf,anyOf, or allOf properties", names[0], propname)
+                        'Type %s object for %s has only oneOf,anyOf, or allOf properties', names[0], propname)
                     continue
             elif t not in ['string', 'integer', 'number', 'boolean']:
                 if propdetails.get('$ref'):
                     results.update(get_object_details(
-                        names + [propname], schema.get('definitions').get(t.get('$ref').split("/")[-1]), schema))
+                        names + [propname], schema.get('definitions').get(t.get('$ref').split('/')[-1]), schema))
                 elif isinstance(t, list):
-                    LOGGER.info("Type for %s object and %s property is a list", names[0], propname)
+                    LOGGER.info('Type for %s object and %s property is a list', names[0], propname)
                 else:
-                    LOGGER.info("Unable to handle %s object for %s property", names[0], propname)
+                    LOGGER.info('Unable to handle %s object for %s property', names[0], propname)
             elif t == 'string':
                 if not results.get('.'.join(names + [propname])):
                     if propdetails.get('pattern') or (propdetails.get('minLength') and propdetails.get('maxLength')) or propdetails.get('enum'):
@@ -289,9 +290,9 @@ def get_schema_value_types():
                         results['.'.join(names + [propname])].update({
                             'AllowedPatternRegex': p
                         })
-                    except:
+                    except:  #pylint: disable=bare-except
                         LOGGER.info(
-                            "Unable to handle regex for type %s and property %s with regex %s", names[0], propname, p)
+                            'Unable to handle regex for type %s and property %s with regex %s', names[0], propname, p)
                 if propdetails.get('minLength') and propdetails.get('maxLength'):
                     results['.'.join(names + [propname])].update({
                         'StringMin': propdetails.get('minLength'),
