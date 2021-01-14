@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import datetime
 import json
-import regex as re
+import re
 import six
 import cfnlint.helpers
 from cfnlint.rules import CloudFormationLintRule

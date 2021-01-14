@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import json
 import operator
-import regex as re
+import re
 import sys
 from junit_xml import TestSuite, TestCase, to_xml_report_string
 from cfnlint.rules import Match
