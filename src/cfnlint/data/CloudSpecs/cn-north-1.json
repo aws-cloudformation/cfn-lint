@@ -8730,9 +8730,32 @@
         }
       }
     },
+    "AWS::ECS::Service.DeploymentCircuitBreaker": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentcircuitbreaker.html",
+      "Properties": {
+        "Enable": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentcircuitbreaker.html#cfn-ecs-service-deploymentcircuitbreaker-enable",
+          "PrimitiveType": "Boolean",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Rollback": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentcircuitbreaker.html#cfn-ecs-service-deploymentcircuitbreaker-rollback",
+          "PrimitiveType": "Boolean",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::ECS::Service.DeploymentConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentconfiguration.html",
       "Properties": {
+        "DeploymentCircuitBreaker": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentconfiguration.html#cfn-ecs-service-deploymentconfiguration-deploymentcircuitbreaker",
+          "Required": false,
+          "Type": "DeploymentCircuitBreaker",
+          "UpdateType": "Mutable"
+        },
         "MaximumPercent": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-service-deploymentconfiguration.html#cfn-ecs-service-deploymentconfiguration-maximumpercent",
           "PrimitiveType": "Integer",
@@ -11459,44 +11482,6 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Immutable"
-        }
-      }
-    },
-    "AWS::ElastiCache::User.Authentication": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-authentication.html",
-      "Properties": {
-        "PasswordCount": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-authentication.html#cfn-elasticache-user-authentication-passwordcount",
-          "PrimitiveType": "Integer",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
-        "Type": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-user-authentication.html#cfn-elasticache-user-authentication-type",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::ElastiCache::UserGroup.UserGroupPendingChanges": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-usergrouppendingchanges.html",
-      "Properties": {
-        "UserIdsToAdd": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-usergrouppendingchanges.html#cfn-elasticache-usergroup-usergrouppendingchanges-useridstoadd",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        },
-        "UserIdsToRemove": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticache-usergroup-usergrouppendingchanges.html#cfn-elasticache-usergroup-usergrouppendingchanges-useridstoremove",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
         }
       }
     },
@@ -19696,7 +19681,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-instancetype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "SecurityGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-msk-cluster-brokernodegroupinfo.html#cfn-msk-cluster-brokernodegroupinfo-securitygroups",
@@ -23354,7 +23339,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "23.0.0",
+  "ResourceSpecificationVersion": "24.0.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -31943,12 +31928,6 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
-        "Authentication": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-authentication",
-          "Required": false,
-          "Type": "Authentication",
-          "UpdateType": "Mutable"
-        },
         "Engine": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-engine",
           "PrimitiveType": "String",
@@ -31963,14 +31942,6 @@
         },
         "Passwords": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-passwords",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
-        },
-        "UserGroupIds": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-user.html#cfn-elasticache-user-usergroupids",
           "DuplicatesAllowed": false,
           "PrimitiveItemType": "String",
           "Required": false,
@@ -32007,20 +31978,6 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable"
-        },
-        "PendingChanges": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-pendingchanges",
-          "Required": false,
-          "Type": "UserGroupPendingChanges",
-          "UpdateType": "Mutable"
-        },
-        "ReplicationGroupIds": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-replicationgroupids",
-          "DuplicatesAllowed": false,
-          "PrimitiveItemType": "String",
-          "Required": false,
-          "Type": "List",
-          "UpdateType": "Mutable"
         },
         "UserGroupId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-usergroup.html#cfn-elasticache-usergroup-usergroupid",
@@ -33012,7 +32969,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-filesystem.html#cfn-fsx-filesystem-storagecapacity",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::FSx::FileSystem.StorageCapacity"
+          }
         },
         "StorageType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-filesystem.html#cfn-fsx-filesystem-storagetype",
@@ -35403,9 +35363,6 @@
       "Attributes": {
         "Arn": {
           "PrimitiveType": "String"
-        },
-        "Id": {
-          "PrimitiveType": "String"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html",
@@ -35442,7 +35399,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesis-stream.html#cfn-kinesis-stream-tags",
-          "DuplicatesAllowed": true,
+          "DuplicatesAllowed": false,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -36372,7 +36329,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-brokernodegroupinfo",
           "Required": true,
           "Type": "BrokerNodeGroupInfo",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "ClientAuthentication": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-clientauthentication",
@@ -38616,13 +38573,13 @@
         "MaxConcurrency": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxconcurrency",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "MaxErrors": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-maxerrors",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Name": {
@@ -38646,7 +38603,7 @@
         "Targets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-maintenancewindowtask.html#cfn-ssm-maintenancewindowtask-targets",
           "ItemType": "Target",
-          "Required": true,
+          "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
         },
@@ -41641,6 +41598,14 @@
         "c5d.large",
         "c5d.metal",
         "c5d.xlarge",
+        "c6g.12xlarge",
+        "c6g.16xlarge",
+        "c6g.2xlarge",
+        "c6g.4xlarge",
+        "c6g.8xlarge",
+        "c6g.large",
+        "c6g.medium",
+        "c6g.xlarge",
         "d2.2xlarge",
         "d2.4xlarge",
         "d2.8xlarge",
@@ -41704,6 +41669,14 @@
         "m5d.large",
         "m5d.metal",
         "m5d.xlarge",
+        "m6g.12xlarge",
+        "m6g.16xlarge",
+        "m6g.2xlarge",
+        "m6g.4xlarge",
+        "m6g.8xlarge",
+        "m6g.large",
+        "m6g.medium",
+        "m6g.xlarge",
         "p2.16xlarge",
         "p2.8xlarge",
         "p2.xlarge",
@@ -41747,6 +41720,14 @@
         "r5d.large",
         "r5d.metal",
         "r5d.xlarge",
+        "r6g.12xlarge",
+        "r6g.16xlarge",
+        "r6g.2xlarge",
+        "r6g.4xlarge",
+        "r6g.8xlarge",
+        "r6g.large",
+        "r6g.medium",
+        "r6g.xlarge",
         "t2.2xlarge",
         "t2.large",
         "t2.medium",
