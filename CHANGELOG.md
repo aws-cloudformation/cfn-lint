@@ -1,3 +1,13 @@
+### v0.44.4
+###### Features
+- Add support for `AWS::SSO::PermissionSet` `InlinePolicy` to [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) (pull #[1864](https://github.com/aws-cloudformation/cfn-python-lint/pull/1864))
+###### CloudFormation Specifications
+- Update resource specs to `24.0.0` (pull #[1863](https://github.com/aws-cloudformation/cfn-python-lint/pull/1863))
+- Update `AWS::DataBrew::Recipe.Action` `Parameters` `Type` to `Map` (pull #[1871](https://github.com/aws-cloudformation/cfn-python-lint/pull/1871))
+###### Fixes
+- Fix an issue when we parse a json string in [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) and used the parsed json to append to the location (pull #[1864](https://github.com/aws-cloudformation/cfn-python-lint/pull/1864))
+
+
 ### v0.44.3
 ###### CloudFormation Specifications
 - Update spec files as of 2021.01.08 (pull #[1846](https://github.com/aws-cloudformation/cfn-python-lint/pull/1846))
