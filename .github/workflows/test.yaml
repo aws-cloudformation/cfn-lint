@@ -1,0 +1,50 @@
+name: Testing
+
+on: [push, pull_request]
+
+jobs:
+  unitlint:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Tox and any other packages
+        run: pip install tox
+      - name: Run Tox
+        run: |
+          tox -e pylint
+          tox -e py
+      - uses: codecov/codecov-action@v1
+        if: matrix.os == 'ubuntu-latest'
+        with:
+          file: ./coverage.xml # optional
+          name: py${{ matrix.python-version }}-${{ matrix.env.TOXENV }}-${{ matrix.os }}
+          flags: unittests # optional
+          fail_ci_if_error: true # optional (default = false)
+  integration:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install cfn-lint
+        run: |
+          pip3 install -e .
+      - name: Run cfn-lint
+        run: |
+          cfn-lint test/fixtures/templates/good/generic.yaml
+          cat test/fixtures/templates/good/generic.yaml | cfn-lint
