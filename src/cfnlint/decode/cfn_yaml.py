@@ -173,7 +173,7 @@ def construct_getatt(node):
     """
 
     if isinstance(node.value, (six.string_types)):
-        return list_node(node.value.split('.'), node.start_mark, node.end_mark)
+        return list_node(node.value.split('.', 1), node.start_mark, node.end_mark)
     if isinstance(node.value, list):
         return list_node([s.value for s in node.value], node.start_mark, node.end_mark)
 
