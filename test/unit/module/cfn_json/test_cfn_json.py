@@ -28,7 +28,7 @@ class TestCfnJson(BaseTestCase):
             },
             "iam": {
                 "filename": 'test/fixtures/templates/quickstart/iam.json',
-                "failures": 4
+                "failures": 5
             },
             "nat_instance": {
                 "filename": 'test/fixtures/templates/quickstart/nat-instance.json',
