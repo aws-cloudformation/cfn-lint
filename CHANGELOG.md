@@ -1,3 +1,7 @@
+### v0.44.5
+###### CloudFormation Specifications
+- Update resource specs to `25.0.0` (pull #[1873](https://github.com/aws-cloudformation/cfn-python-lint/pull/1873))
+
 ### v0.44.4
 ###### Features
 - Add support for `AWS::SSO::PermissionSet` `InlinePolicy` to [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2507) (pull #[1864](https://github.com/aws-cloudformation/cfn-python-lint/pull/1864))
