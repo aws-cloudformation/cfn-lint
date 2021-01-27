@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import sys
 import fnmatch
 import json
 import logging
@@ -11,11 +12,12 @@ import subprocess
 import zipfile
 import re
 from io import BytesIO
+import six
 import jsonpatch
 try:
     from urllib.request import urlopen, Request
 except ImportError:
-    from urllib2 import urlopen
+    from urllib2 import urlopen, Request
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
 from cfnlint.helpers import SPEC_REGIONS
@@ -285,7 +287,26 @@ def get_schema_value_types():
                         results['.'.join(names + [propname])] = {}
                 if propdetails.get('pattern'):
                     p = propdetails.get('pattern')
+                    if '.'.join(names + [propname]) == 'AWS::OpsWorksCM::Server.CustomPrivateKey':
+                        # one off exception to handle a weird parsing issue in python 2.7
+                        continue
+                    if sys.version_info[0] == 2:
+                        # for python 2 strings can be unicode
+                        if isinstance(p, unicode):  #pylint: disable=undefined-variable
+                            try:
+                                p = p.decode('ascii')
+                            except:  #pylint: disable=bare-except
+                                continue
+                    else:
+                        # python 3 has the ability to test isascii
+                        # python 3.7 introduces is ascii so switching to encode
+                        try:
+                            p.encode('ascii')
+                        except UnicodeEncodeError:
+                            continue
                     try:
+                        if '\\p{' in p:
+                            continue
                         re.compile(p, re.UNICODE)
                         results['.'.join(names + [propname])].update({
                             'AllowedPatternRegex': p
@@ -365,7 +386,13 @@ def get_schema_value_types():
     with zipfile.ZipFile(BytesIO(res.read())) as z:
         for f in z.namelist():
             with z.open(f) as d:
-                schema = json.load(d)
+                if not isinstance(d, six.string_types):
+                    data = d.read()
+                else:
+                    data = d
+                if isinstance(data, bytes):
+                    data = data.decode('utf-8')
+                schema = json.loads(data)
                 fvaluetypes, fpropvalues = process_schema(schema)
                 results.extend(fvaluetypes)
                 results.extend(fpropvalues)
