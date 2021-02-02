@@ -34,7 +34,7 @@ class ListDuplicates(CloudFormationLintRule):
         if isinstance(values, list):
             for index, value in enumerate(values):
                 value_hash = hashlib.sha1(json.dumps(
-                    value, sort_keys=True).encode('utf-8')).hexdigest()
+                    value, sort_keys=True, default=str).encode('utf-8')).hexdigest()
                 if value_hash in list_items:
                     if not scenario:
                         message = 'List has a duplicate value at {0}'
