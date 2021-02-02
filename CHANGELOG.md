@@ -1,3 +1,9 @@
+### v0.44.6
+###### CloudFormation Specifications
+- Update resource specs to `26.0.0` (pull #[1884](https://github.com/aws-cloudformation/cfn-python-lint/pull/1884))
+###### Fixes
+- Fix an issue when directives are checked and resources aren't a dict (pull #[1877](https://github.com/aws-cloudformation/cfn-python-lint/pull/1877))
+
 ### v0.44.5
 ###### CloudFormation Specifications
 - Update resource specs to `25.0.0` (pull #[1873](https://github.com/aws-cloudformation/cfn-python-lint/pull/1873))
