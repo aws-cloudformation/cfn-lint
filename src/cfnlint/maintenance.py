@@ -34,18 +34,21 @@ def update_resource_specs():
     # Pool() uses cpu count if no number of processors is specified
     # Pool() only implements the Context Manager protocol from Python3.3 onwards,
     # so it will fail Python2.7 style linting, as well as throw AttributeError
+    schema_cache = get_schema_value_types()
     try:
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
-            pool.starmap(update_resource_spec, SPEC_REGIONS.items())
+            # Patch from registry schema
+            pool_tuple = [(k, v, schema_cache) for k, v in SPEC_REGIONS.items()]
+            pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
 
         # Do it the long, slow way
         for region, url in SPEC_REGIONS.items():
-            update_resource_spec(region, url)
+            update_resource_spec(region, url, schema_cache)
 
 
-def update_resource_spec(region, url):
+def update_resource_spec(region, url, schema_cache):
     """ Update a single resource spec """
     filename = os.path.join(os.path.dirname(cfnlint.__file__), 'data/CloudSpecs/%s.json' % region)
 
@@ -67,24 +70,38 @@ def update_resource_spec(region, url):
     spec = patch_spec(spec, 'all')
     spec = patch_spec(spec, region)
 
-    # Patch from registry schema
-    schema_cache = get_schema_value_types()
     # do each patch individually so we can ignore errors
     for patch in schema_cache:
         try:
             # since there could be patched in values to ValueTypes
             # Ref/GetAtt as an example.  So we want to add new
             # ValueTypes that don't exist
-            path_details = patch.get('path').split('/')
-            if path_details[1] == 'ValueTypes':
-                if not spec.get('ValueTypes').get(path_details[2]):
-                    spec['ValueTypes'][path_details[2]] = {}
-
+            for i_patch in patch:
+                path_details = i_patch.get('path').split('/')
+                if path_details[1] == 'ValueTypes':
+                    if not spec.get('ValueTypes').get(path_details[2]):
+                        spec['ValueTypes'][path_details[2]] = {}
             # do the patch
-            jsonpatch.JsonPatch([patch]).apply(spec, in_place=True)
+            jsonpatch.JsonPatch(patch).apply(spec, in_place=True)
         except jsonpatch.JsonPatchConflict:
+            for i_patch in patch:
+                path_details = i_patch.get('path').split('/')
+                if path_details[1] == 'ValueTypes':
+                    if not spec.get('ValueTypes').get(path_details[2]):
+                        try:
+                            del spec['ValueTypes'][path_details[2]]
+                        except:  # pylint: disable=bare-except
+                            pass
             LOGGER.debug('Patch (%s) not applied in region %s', patch, region)
         except jsonpatch.JsonPointerException:
+            for i_patch in patch:
+                path_details = i_patch.get('path').split('/')
+                if path_details[1] == 'ValueTypes':
+                    if not spec.get('ValueTypes').get(path_details[2]):
+                        try:
+                            del spec['ValueTypes'][path_details[2]]
+                        except:  # pylint: disable=bare-except
+                            pass
             # Debug as the parent element isn't supported in the region
             LOGGER.debug('Parent element not found for patch (%s) in region %s',
                          patch, region)
@@ -336,47 +353,44 @@ def get_schema_value_types():
         return results
 
     def process_schema(schema):
-        results = get_object_details([schema.get('typeName')], schema.get('properties'), schema)
+        details = get_object_details([schema.get('typeName')], schema.get('properties'), schema)
 
         # Remove duplicates
         vtypes = {}
-        for n, v in results.items():
+        for n, v in details.items():
             if n.count('.') > 1:
                 s = n.split('.')
                 vtypes[s[0] + '.' + '.'.join(s[-2:])] = v
             else:
                 vtypes[n] = v
 
-        valuetypes = []
-        propvalues = []
+        patches = []
         for n, v in vtypes.items():
+            patch = []
             if v:
+                if n.count('.') == 2:
+                    r_type = 'PropertyTypes'
+                else:
+                    r_type = 'ResourceTypes'
+                element = {
+                    'op': 'add',
+                    'path': '/%s/%s/Properties/%s/Value' % (r_type, '.'.join(n.split('.')[0:-1]), n.split('.')[-1]),
+                    'value': {
+                        'ValueType': n,
+                    },
+                }
+                patch.append(element)
                 for s, vs in v.items():
                     element = {
                         'op': 'add',
                         'path': '/ValueTypes/%s/%s' % (n, s),
                         'value': vs,
                     }
-                    valuetypes.append(element)
-                if n.count('.') == 2:
-                    element = {
-                        'op': 'add',
-                        'path': '/PropertyTypes/%s/Properties/%s/Value' % (n.split('.')[0], n.split('.')[1]),
-                        'value': {
-                            'ValueType': n,
-                        },
-                    }
-                else:
-                    element = {
-                        'op': 'add',
-                        'path': '/ResourceTypes/%s/Properties/%s/Value' % (n.split('.')[0], n.split('.')[1]),
-                        'value': {
-                            'ValueType': n,
-                        },
-                    }
-                propvalues.append(element)
+                    patch.append(element)
+            if patch:
+                patches.append(patch)
 
-        return valuetypes, propvalues
+        return patches
 
     req = Request(REGISTRY_SCHEMA_ZIP)
     res = urlopen(req)
@@ -393,8 +407,7 @@ def get_schema_value_types():
                 if isinstance(data, bytes):
                     data = data.decode('utf-8')
                 schema = json.loads(data)
-                fvaluetypes, fpropvalues = process_schema(schema)
-                results.extend(fvaluetypes)
-                results.extend(fpropvalues)
+                patches = process_schema(schema)
+                results.extend(patches)
 
     return results

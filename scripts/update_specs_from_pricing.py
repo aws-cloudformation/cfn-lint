@@ -218,7 +218,7 @@ def main():
 
     outputs = update_outputs('Ec2InstanceType', get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)']), outputs)
     outputs = update_outputs('AWS::AmazonMQ::Broker.HostInstanceType', get_mq_pricing(), outputs)
-    outputs = update_outputs('RdsInstanceType', get_rds_pricing(), outputs)
+    outputs = update_outputs('AWS::RDS::DBInstance.DBInstanceClass', get_rds_pricing(), outputs)
     outputs = update_outputs('RedshiftInstanceType', get_results('AmazonRedshift', ['Compute Instance']), outputs)
     outputs = update_outputs('DAXInstanceType', get_dax_pricing(), outputs)
     outputs = update_outputs('DocumentDBInstanceClass', get_results('AmazonDocDB', ['Database Instance']), outputs)

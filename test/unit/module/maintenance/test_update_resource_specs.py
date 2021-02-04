@@ -6,7 +6,7 @@ import sys
 import logging
 import zipfile
 from test.testlib.testcase import BaseTestCase
-from mock import patch, MagicMock, Mock
+from mock import patch, MagicMock, Mock, ANY
 import cfnlint.maintenance
 try:
     from urllib.request import urlopen, Request
@@ -32,13 +32,67 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
         mock_patch_spec.side_effect = [
             {
-                'PropertyTypes': {},
-                'ResourceTypes': {},
+                'PropertyTypes': {
+                    'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
+                        'Properties': {
+                            'SigningProfileVersionArns': {},
+                        }
+                    },
+                    'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
+                        'Properties': {
+                            'UntrustedArtifactOnDeployment': {},
+                        }
+                    },
+                },
+                'ResourceTypes': {
+                    'AWS::Lambda::CodeSigningConfig': {
+                        'Attributes': {
+                            'CodeSigningConfigArn': {
+                                'PrimitiveType': 'String',
+                            },
+                            'CodeSigningConfigId': {
+                                'PrimitiveType': 'String',
+                            }
+                        },
+                        'Properties': {
+                            'AllowedPublishers': {},
+                            'CodeSigningPolicies': {},
+                            'Description': {},
+                        }
+                    }
+                },
                 'ValueTypes': {}
             },
             {
-                'PropertyTypes': {},
-                'ResourceTypes': {},
+                'PropertyTypes': {
+                    'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
+                        'Properties': {
+                            'SigningProfileVersionArns': {},
+                        }
+                    },
+                    'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
+                        'Properties': {
+                            'UntrustedArtifactOnDeployment': {},
+                        }
+                    },
+                },
+                'ResourceTypes': {
+                    'AWS::Lambda::CodeSigningConfig': {
+                        'Attributes': {
+                            'CodeSigningConfigArn': {
+                                'PrimitiveType': 'String',
+                            },
+                            'CodeSigningConfigId': {
+                                'PrimitiveType': 'String',
+                            }
+                        },
+                        'Properties': {
+                            'AllowedPublishers': {},
+                            'CodeSigningPolicies': {},
+                            'Description': {},
+                        }
+                    }
+                },
                 'ValueTypes': {
                     'AWS::EC2::Instance.Types': [
                         'm2.medium'],
@@ -52,17 +106,54 @@ class TestUpdateResourceSpecs(BaseTestCase):
             mock_urlresponse.read.side_effect = [byte]
             mock_urlopen.return_value = mock_urlresponse
 
+        schema_cache = cfnlint.maintenance.get_schema_value_types()
+
         if sys.version_info.major == 3:
             builtin_module_name = 'builtins'
         else:
             builtin_module_name = '__builtin__'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
-            cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl')
+            cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl', schema_cache)
             mock_json_dump.assert_called_with(
                 {
-                    'PropertyTypes': {},
-                    'ResourceTypes': {},
+                    'PropertyTypes': {
+                        'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
+                            'Properties': {
+                                'SigningProfileVersionArns': {
+                                    'Value': {
+                                        'ValueType': 'AWS::Lambda::CodeSigningConfig.AllowedPublishers.SigningProfileVersionArns',
+                                    }
+                                },
+                            }
+                        },
+                        'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
+                            'Properties': {
+                                'UntrustedArtifactOnDeployment': {
+                                    'Value': {
+                                         'ValueType': 'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment',
+                                    }
+                                },
+                            }
+                        },
+                    },
+                    'ResourceTypes': {
+                        'AWS::Lambda::CodeSigningConfig': {
+                            'Attributes': {
+                                'CodeSigningConfigArn': {
+                                    'PrimitiveType': 'String',
+                                },
+                                'CodeSigningConfigId': {
+                                    'PrimitiveType': 'String',
+                                }
+                            },
+                            'Properties': {
+                                'AllowedPublishers': {},
+                                'CodeSigningPolicies': {},
+                                'Description': {},
+                            }
+                        }
+                    },
                     'ValueTypes': {
                         'AWS::EC2::Instance.Types': [
                             'm2.medium'
@@ -75,12 +166,6 @@ class TestUpdateResourceSpecs(BaseTestCase):
                         'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment': {
                             'AllowedValues': ['Warn', 'Enforce']
                         },
-                        'AWS::Lambda::CodeSigningConfig.CodeSigningConfigId': {
-                            'AllowedPatternRegex': 'csc-[a-zA-Z0-9-_\\.]{17}'
-                        },
-                        'AWS::Lambda::CodeSigningConfig.CodeSigningConfigArn': {
-                            'AllowedPatternRegex': 'arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}'
-                        }
                     }
                 },
                 mock_builtin_open.return_value.__enter__.return_value,
@@ -99,7 +184,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = False
 
-        result = cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl')
+        result = cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl', ANY)
         self.assertIsNone(result)
         mock_content.assert_not_called()
         mock_patch_spec.assert_not_called()
@@ -127,4 +212,4 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         cfnlint.maintenance.update_resource_specs()
 
-        mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl')
+        mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl', ANY)
