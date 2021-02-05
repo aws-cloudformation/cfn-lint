@@ -2141,6 +2141,29 @@
         "aws:TagKeys"
       ]
     },
+    "AWS Elemental Appliances and Software Activation Service": {
+      "ARNFormat": "arn:aws:elemental-activations:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNRegex": "^arn:aws:elemental-activations:.+:.+:.+",
+      "Actions": [
+        "CompleteAccountRegistration",
+        "CompleteFileUpload",
+        "DownloadSoftware",
+        "GenerateLicenses",
+        "GetActivation",
+        "ListTagsForResource",
+        "StartAccountRegistration",
+        "StartFileUpload",
+        "TagResource",
+        "UntagResource"
+      ],
+      "HasResource": true,
+      "StringPrefix": "elemental-activations",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "AWS Elemental MediaConnect": {
       "ARNFormat": "arn:${Partition}:mediaconnect:${Region}:${Account}:<namespace>:<relative-id>:<relative-name>",
       "ARNRegex": "^arn:${Partition}:mediaconnect:.+",
@@ -2649,6 +2672,7 @@
         "DeleteSchedule",
         "DescribeDataset",
         "DescribeJob",
+        "DescribeJobRun",
         "DescribeProject",
         "DescribeRecipe",
         "DescribeSchedule",
@@ -3333,6 +3357,7 @@
         "GetServiceRoleForAccount",
         "GetSubscriptionDefinition",
         "GetSubscriptionDefinitionVersion",
+        "GetThingRuntimeConfiguration",
         "ListBulkDeploymentDetailedReports",
         "ListBulkDeployments",
         "ListConnectorDefinitionVersions",
@@ -3368,7 +3393,8 @@
         "UpdateGroupCertificateConfiguration",
         "UpdateLoggerDefinition",
         "UpdateResourceDefinition",
-        "UpdateSubscriptionDefinition"
+        "UpdateSubscriptionDefinition",
+        "UpdateThingRuntimeConfiguration"
       ],
       "HasResource": true,
       "StringPrefix": "greengrass",
@@ -5956,6 +5982,7 @@
         "GetWorkGroup",
         "ListDataCatalogs",
         "ListDatabases",
+        "ListEngineVersions",
         "ListNamedQueries",
         "ListQueryExecutions",
         "ListTableMetadata",
@@ -9266,6 +9293,69 @@
         "lex:channelType"
       ]
     },
+    "Amazon Lex V2": {
+      "ARNFormat": "arn:aws:lex:<region>:<account-id>:<resource-type>/<resourceid>",
+      "ARNRegex": "^arn:aws:lex:.+:[0-9]+:.+",
+      "Actions": [
+        "BuildBotLocale",
+        "CreateBot",
+        "CreateBotAlias",
+        "CreateBotChannel",
+        "CreateBotLocale",
+        "CreateBotVersion",
+        "CreateIntent",
+        "CreateSlot",
+        "CreateSlotType",
+        "DeleteBot",
+        "DeleteBotAlias",
+        "DeleteBotChannel",
+        "DeleteBotLocale",
+        "DeleteBotVersion",
+        "DeleteIntent",
+        "DeleteSession",
+        "DeleteSlot",
+        "DeleteSlotType",
+        "DescribeBot",
+        "DescribeBotAlias",
+        "DescribeBotChannel",
+        "DescribeBotLocale",
+        "DescribeBotVersion",
+        "DescribeIntent",
+        "DescribeSlot",
+        "DescribeSlotType",
+        "GetBuiltinIntents",
+        "GetBuiltinSlotTypes",
+        "GetSession",
+        "ListBotAliases",
+        "ListBotChannels",
+        "ListBotLocales",
+        "ListBotVersions",
+        "ListBots",
+        "ListIntents",
+        "ListSlotTypes",
+        "ListSlots",
+        "ListTagsForResource",
+        "PutSession",
+        "RecognizeSpeech",
+        "RecognizeText",
+        "StartConversation",
+        "TagResource",
+        "UntagResource",
+        "UpdateBot",
+        "UpdateBotAlias",
+        "UpdateBotLocale",
+        "UpdateIntent",
+        "UpdateSlot",
+        "UpdateSlotType"
+      ],
+      "HasResource": true,
+      "StringPrefix": "lex",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "Amazon Lightsail": {
       "ARNFormat": "arn:aws:lightsail:<regionName>:<userAccountId>:<resourceType>/<Id>",
       "ARNRegex": "arn:aws:lightsail:.+",
@@ -9425,6 +9515,41 @@
       ],
       "HasResource": true,
       "StringPrefix": "geo"
+    },
+    "Amazon Lookout for Equipment": {
+      "ARNFormat": "arn:aws:lookoutequipment:${Region}:${AccountId}:${ResourceType}/${ResourceName}/${ResourceId}",
+      "ARNRegex": "^arn:aws:lookoutequipment:.+",
+      "Actions": [
+        "CreateDataset",
+        "CreateInferenceScheduler",
+        "CreateModel",
+        "DeleteDataset",
+        "DeleteInferenceScheduler",
+        "DeleteModel",
+        "DescribeDataIngestionJob",
+        "DescribeDataset",
+        "DescribeInferenceScheduler",
+        "DescribeModel",
+        "ListDataIngestionJobs",
+        "ListDatasets",
+        "ListInferenceExecutions",
+        "ListInferenceSchedulers",
+        "ListModels",
+        "ListTagsForResource",
+        "StartDataIngestionJob",
+        "StartInferenceScheduler",
+        "StopInferenceScheduler",
+        "TagResource",
+        "UntagResource",
+        "UpdateInferenceScheduler"
+      ],
+      "HasResource": true,
+      "StringPrefix": "lookoutequipment",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "Amazon Lookout for Vision": {
       "ARNFormat": "arn:aws:lookoutvision:<region>:<account-id>:<resource-type>/<resource_name>",
@@ -11614,7 +11739,9 @@
         "DeleteTapeArchive",
         "DeleteTapePool",
         "DeleteVolume",
+        "DescribeAvailabilityMonitorTest",
         "DescribeBandwidthRateLimit",
+        "DescribeBandwidthRateLimitSchedule",
         "DescribeCache",
         "DescribeCachediSCSIVolumes",
         "DescribeChapCredentials",
@@ -11653,15 +11780,19 @@
         "SetLocalConsolePassword",
         "SetSMBGuestPassword",
         "ShutdownGateway",
+        "StartAvailabilityMonitorTest",
         "StartGateway",
         "UpdateAutomaticTapeCreationPolicy",
         "UpdateBandwidthRateLimit",
+        "UpdateBandwidthRateLimitSchedule",
         "UpdateChapCredentials",
         "UpdateGatewayInformation",
         "UpdateGatewaySoftwareNow",
         "UpdateMaintenanceStartTime",
         "UpdateNFSFileShare",
         "UpdateSMBFileShare",
+        "UpdateSMBFileShareVisibility",
+        "UpdateSMBSecurityStrategy",
         "UpdateSnapshotSchedule",
         "UpdateVTLDeviceType"
       ],
@@ -12348,27 +12479,6 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "elasticloadbalancing:ResourceTag/${TagKey}"
-      ]
-    },
-    "Elemental Activations": {
-      "ARNFormat": "arn:aws:elemental-activations:<region>:<account-id>:<resource-type>/<resource_name>",
-      "ARNRegex": "^arn:aws:elemental-activations:.+:.+:.+",
-      "Actions": [
-        "CompleteFileUpload",
-        "DownloadSoftware",
-        "GenerateLicenses",
-        "GetActivation",
-        "ListTagsForResource",
-        "StartFileUpload",
-        "TagResource",
-        "UntagResource"
-      ],
-      "HasResource": true,
-      "StringPrefix": "elemental-activations",
-      "conditionKeys": [
-        "aws:RequestTag/${TagKey}",
-        "aws:ResourceTag/${TagKey}",
-        "aws:TagKeys"
       ]
     },
     "Elemental Support Cases": {
