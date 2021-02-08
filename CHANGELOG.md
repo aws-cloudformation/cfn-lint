@@ -1,3 +1,9 @@
+### v0.44.7
+###### CloudFormation Specifications
+- Update resource specs to `27.0.0` (pull #[1892](https://github.com/aws-cloudformation/cfn-python-lint/pull/1892))
+###### Fixes
+- Fix an issue with rule [E3037](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3037) when certain types aren't serializable and forcing them to strings (pull #[1887](https://github.com/aws-cloudformation/cfn-python-lint/pull/1887))
+
 ### v0.44.6
 ###### CloudFormation Specifications
 - Update resource specs to `26.0.0` (pull #[1884](https://github.com/aws-cloudformation/cfn-python-lint/pull/1884))
