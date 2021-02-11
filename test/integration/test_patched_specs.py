@@ -10,47 +10,43 @@ from test.testlib.testcase import BaseTestCase
 
 class TestPatchedSpecs(BaseTestCase):
     """Test Patched spec files """
+    found_value_types = []
 
     def setUp(self):
         """ SetUp template object"""
 
         self.spec = load_resource(CloudSpecs, 'us-east-1.json')
 
+    def _test_property_type_values(self, values, r_name, p_name, r_type):
+        p_value_type = values.get('Value', {}).get('ValueType')
+        if p_value_type:
+            self.found_value_types.append(p_value_type)
+            self.assertIn(p_value_type, self.spec.get('ValueTypes'),
+                            '%s: %s, Property: %s. %s not found' % (r_type, r_name, p_name, p_value_type))
+            # List Value if a singular value is set and the type is List
+            if values.get('Type') == 'List':
+                p_list_value_type = values.get('Value', {}).get('ListValueType')
+                if p_list_value_type:
+                    self.found_value_types.append(p_list_value_type)
+                    self.assertIn(p_list_value_type, self.spec.get('ValueTypes'),
+                                    '%s: %s, Property: %s. %s not found' % (r_type, r_name, p_name, p_value_type))
+
     def test_resource_type_values(self):
         """Test Resource Type Value"""
+        r_type = 'ResourceTypes'
         for r_name, r_values in self.spec.get('ResourceTypes').items():
             for p_name, p_values in r_values.get('Properties').items():
-                p_value_type = p_values.get('Value', {}).get('ValueType')
-                if p_value_type:
-                    self.assertIn(p_value_type, self.spec.get('ValueTypes'),
-                                  'ResourceType: %s, Property: %s' % (r_name, p_name))
-                    # List Value if a singular value is set and the type is List
-                    if p_values.get('Type') == 'List':
-                        p_list_value_type = p_values.get('Value', {}).get('ListValueType')
-                        if p_list_value_type:
-                            self.assertIn(p_list_value_type, self.spec.get('ValueTypes'),
-                                          'ResourceType: %s, Property: %s' % (r_name, p_name))
+                self._test_property_type_values(p_values, r_name, p_name, r_type)
 
     def test_property_type_values(self):
         """Test Property Type Values"""
-        def _test_property_type_values(values, r_name, p_name):
-            p_value_type = values.get('Value', {}).get('ValueType')
-            if p_value_type:
-                self.assertIn(p_value_type, self.spec.get('ValueTypes'),
-                              'PropertyType: %s, Property: %s' % (r_name, p_name))
-                # List Value if a singular value is set and the type is List
-                if values.get('Type') == 'List':
-                    p_list_value_type = values.get('Value', {}).get('ListValueType')
-                    if p_list_value_type:
-                        self.assertIn(p_list_value_type, self.spec.get('ValueTypes'),
-                                      'ResourceType: %s, Property: %s' % (r_name, p_name))
-
-        for r_name, r_values in self.spec.get('PropertyTypes').items():
+        r_type = 'PropertyTypes'
+        for r_name, r_values in self.spec.get(r_type).items():
             if r_values.get('Properties') is None:
-                _test_property_type_values(r_values, r_name, '')
+                self._test_property_type_values(r_values, r_name, '', r_type)
             else:
                 for p_name, p_values in r_values.get('Properties', {}).items():
-                    _test_property_type_values(p_values, r_name, p_name)
+                    self._test_property_type_values(p_values, r_name, p_name, r_type)
 
     def _test_sub_properties(self, resource_name, v_propertyname, v_propertyvalues):
         property_types = self.spec.get('PropertyTypes').keys()
@@ -104,9 +100,10 @@ class TestPatchedSpecs(BaseTestCase):
             for return_type in i_value.get('ReturnTypes'):
                 self.assertIn(return_type, ['Singular', 'List'])
 
-    def test_property_value_types(self):
+    def test_z_property_value_types(self):
         """Test Property Value Types"""
         for v_name, v_values in self.spec.get('ValueTypes').items():
+            self.assertIn(v_name, self.found_value_types, 'Value type {} is not used'.format(v_name))
             list_count = 0
             number_count = 0
             string_count = 0

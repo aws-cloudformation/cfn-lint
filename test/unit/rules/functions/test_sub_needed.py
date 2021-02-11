@@ -27,7 +27,7 @@ class TestSubNeeded(BaseRuleTestCase):
         """Test custom excludes configuration"""
         self.helper_file_rule_config(
             'test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml',
-            {'custom_excludes': '^\${self.+}$'}, 0
+            {'custom_excludes': '^\\$\\{self.+\\}$'}, 0
         )
         self.helper_file_rule_config(
             'test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml',
