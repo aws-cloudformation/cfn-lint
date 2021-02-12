@@ -12,7 +12,6 @@ from jsonschema.exceptions import ValidationError
 import cfnlint.runner
 from cfnlint.template import Template
 from cfnlint.rules import RulesCollection, ParseError, TransformError
-import cfnlint.custom_rules
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -201,7 +200,6 @@ def get_template_rules(filename, args):
             configure_rules=args.configure_rules,
             include_experimental=args.include_experimental,
             mandatory_rules=args.mandatory_checks,
-            custom_rules=args.custom_rules,
         )
     else:
         __CACHED_RULES = cfnlint.core.get_rules(
@@ -247,7 +245,6 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     # Only do rule analysis if Transform was successful
     try:
         errors.extend(runner.run())
-        # errors.extend(cfnlint.custom_rules.check(runner.cfn, rules, runner))
     except Exception as err:  # pylint: disable=W0703
         msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
         UnexpectedRuleException(msg, 1)

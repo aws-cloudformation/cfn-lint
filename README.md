@@ -139,13 +139,9 @@ templates:
 ignore_templates:
   - codebuild.yaml
 include_checks:
-<<<<<<< HEAD
   - I
-=======
-- I
 custom_rules:
-- custom_rules.txt
->>>>>>> Integration of custom rules to .rc configuration file and command line arguments (#1668)
+  - custom_rules.txt
 ```
 
 ### Parameters

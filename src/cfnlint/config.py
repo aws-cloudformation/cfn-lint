@@ -19,6 +19,7 @@ try:  # pragma: no cover
 except ImportError:  # pragma: no cover
     from pathlib2 import Path
 
+# pylint: disable=too-many-public-methods
 LOGGER = logging.getLogger('cfnlint')
 
 
@@ -395,15 +396,10 @@ class CliArgs(object):
         )
         standard.add_argument('--config-file', dest='config_file',
                               help='Specify the cfnlintrc file to use')
-<<<<<<< HEAD
-=======
-
         standard.add_argument(
             '-z', '--custom-rules', dest='custom_rules',
             help='Allows specification of a custom rule file.'
         )
-
->>>>>>> Integration of custom rules to .rc configuration file and command line arguments (#1668)
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
             help='A CloudFormation Spec override file that allows customization'
