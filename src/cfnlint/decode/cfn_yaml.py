@@ -36,20 +36,22 @@ class CfnParseError(ConstructorError):
     Error thrown when the template contains Cfn Error
     """
 
-    def __init__(self, filename, message, line_number, column_number, key=' '):
+    def __init__(self, filename, errors):
+
+        if isinstance(errors, cfnlint.rules.Match):
+            errors = [errors]
 
         # Call the base class constructor with the parameters it needs
-        super(CfnParseError, self).__init__(message)
+        super(CfnParseError, self).__init__(errors[0].message)
 
         # Now for your custom code...
         self.filename = filename
-        self.line_number = line_number
-        self.column_number = column_number
-        self.message = message
-        self.match = cfnlint.rules.Match(
-            line_number + 1, column_number + 1, line_number + 1,
-            column_number + 1 + len(key), filename, cfnlint.rules.ParseError(), message=message)
+        self.matches = errors
 
+def build_match(filename, message, line_number, column_number, key):
+    return cfnlint.rules.Match(
+        line_number + 1, column_number + 1, line_number + 1,
+        column_number + 1 + len(key), filename, cfnlint.rules.ParseError(), message=message)
 
 class NodeConstructor(SafeConstructor):
     """
@@ -81,9 +83,25 @@ class NodeConstructor(SafeConstructor):
             if key in mapping:
                 raise CfnParseError(
                     self.filename,
-                    'Duplicate resource found "{}" (line {})'.format(
-                        key, key_node.start_mark.line + 1),
-                    key_node.start_mark.line, key_node.start_mark.column, key)
+                    [
+                        build_match(
+                            filename=self.filename,
+                            message='Duplicate resource found "{}" (line {})'.format(
+                                key, key_node.start_mark.line + 1),
+                            line_number=key_node.start_mark.line,
+                            column_number=key_node.start_mark.column,
+                            key=key
+                        ),
+                        build_match(
+                            filename=self.filename,
+                            message='Duplicate resource found "{}" (line {})'.format(
+                                key, mapping[key].start_mark.line + 1),
+                            line_number=mapping[key].start_mark.line,
+                            column_number=mapping[key].start_mark.column,
+                            key=key
+                        )
+                    ]
+                )
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
@@ -103,9 +121,17 @@ class NodeConstructor(SafeConstructor):
         """Throw a null error"""
         raise CfnParseError(
             self.filename,
-            'Null value at line {0} column {1}'.format(
-                node.start_mark.line + 1, node.start_mark.column + 1),
-            node.start_mark.line, node.start_mark.column, ' ')
+            [
+                build_match(
+                    filename=self.filename,
+                    message='Null value at line {0} column {1}'.format(
+                        node.start_mark.line + 1, node.start_mark.column + 1),
+                    line_number=node.start_mark.line,
+                    column_number=node.start_mark.column,
+                    key=' ',
+                )
+            ]
+        )
 
 
 NodeConstructor.add_constructor(
