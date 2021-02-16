@@ -1,3 +1,8 @@
+### v0.45.0
+###### CloudFormation Specifications
+- Get value constraints from AWS CloudFormation registry types (pull #[1867](https://github.com/aws-cloudformation/cfn-python-lint/pull/1867))
+- Update resource specs to `28.0.0` (pull #[1899](https://github.com/aws-cloudformation/cfn-python-lint/pull/1899))
+
 ### v0.44.7
 ###### CloudFormation Specifications
 - Update resource specs to `27.0.0` (pull #[1892](https://github.com/aws-cloudformation/cfn-python-lint/pull/1892))
