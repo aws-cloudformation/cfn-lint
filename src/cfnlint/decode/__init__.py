@@ -51,8 +51,7 @@ def decode(filename):
         matches.append(create_match_file_error(
             filename, 'Cannot read file contents: %s' % filename))
     except cfn_yaml.CfnParseError as err:
-        err.match.Filename = filename
-        matches = [err.match]
+        matches = err.matches
     except ParserError as err:
         matches = [create_match_yaml_parser_error(err, filename)]
     except ScannerError as err:
@@ -63,8 +62,9 @@ def decode(filename):
             try:
                 template = cfn_json.load(filename)
             except cfn_json.JSONDecodeError as json_err:
-                json_err.match.filename = filename
-                matches = [json_err.match]
+                for e in json_err.matches:
+                    e.filename = filename
+                matches = json_err.matches
             except JSONDecodeError as json_err:
                 if hasattr(json_err, 'message'):
                     if json_err.message == 'No JSON object could be decoded':  # pylint: disable=no-member

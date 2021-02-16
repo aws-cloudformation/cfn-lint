@@ -20,6 +20,11 @@ class DuplicateError(Exception):
     Error thrown when the template contains duplicates
     """
 
+    def __init__(self, message, mapping, key):
+        super(DuplicateError, self).__init__(message)
+
+        self.mapping = mapping
+        self.key = key
 
 class NullError(Exception):
     """
@@ -38,7 +43,7 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
         if value is None:
             raise NullError('"{}"'.format(key))
         if key in mapping:
-            raise DuplicateError('"{}"'.format(key))
+            raise DuplicateError('"{}"'.format(key), mapping, key)
         mapping[key] = value
     return mapping
 
@@ -53,23 +58,39 @@ class JSONDecodeError(ValueError):
     """
     # Note that this exception is used from _json
 
-    def __init__(self, msg, doc, pos, key=' '):
-        lineno = doc.count('\n', 0, pos) + 1
-        colno = pos - doc.rfind('\n', 0, pos)
-        errmsg = '%s: line %d column %d (char %d)' % (msg, lineno, colno, pos)
+    def __init__(self, doc, pos, errors):
+
+        if isinstance(errors, cfnlint.rules.Match):
+            errors = [errors]
+
+        errmsg = '%s: line %d column %d (char %d)' % (errors[0].message, errors[0].linenumber, errors[0].linenumber, pos)
         ValueError.__init__(self, errmsg)
-        self.msg = msg
+        self.msg = errors[0].message
         self.doc = doc
         self.pos = pos
-        self.lineno = lineno
-        self.colno = colno
-        self.match = cfnlint.rules.Match(
-            lineno, colno + 1, lineno,
-            colno + 1 + len(key), '', cfnlint.rules.ParseError(), message=msg)
+        self.lineno = errors[0].linenumber
+        self.colno = errors[0].linenumber
+        self.matches = errors
 
     def __reduce__(self):
         return self.__class__, (self.msg, self.doc, self.pos)
 
+
+def build_match(message, doc, pos, key=' '):
+
+    lineno = doc.count('\n', 0, pos) + 1
+    colno = pos - doc.rfind('\n', 0, pos)
+
+    return cfnlint.rules.Match(
+        lineno, colno + 1, lineno,
+        colno + 1 + len(key), '', cfnlint.rules.ParseError(), message=message)
+
+
+def build_match_from_node(message, node, key):
+
+    return cfnlint.rules.Match(
+        node[key].start_mark.line, node[key].start_mark.column + 1, node[key].end_mark.line,
+        node[key].end_mark.column + 1 + len(key), '', cfnlint.rules.ParseError(), message=message)
 
 class Mark(object):
     """Mark of line and column"""
@@ -98,7 +119,17 @@ def py_scanstring(s, end, strict=True,
     while 1:
         chunk = _m(s, end)
         if chunk is None:
-            raise JSONDecodeError('Unterminated string starting at', s, begin)
+            raise JSONDecodeError(
+                doc=s,
+                pos=begin,
+                errors=[
+                    build_match(
+                        message='Unterminated string starting at',
+                        doc=s,
+                        pos=begin,
+                    ),
+                ]
+            )
         end = chunk.end()
         content, terminator = chunk.groups()
         # Content is contains zero or more unescaped string characters
@@ -111,20 +142,50 @@ def py_scanstring(s, end, strict=True,
         if terminator != '\\':
             if strict:
                 msg = 'Invalid control character {0!r} at'.format(terminator)
-                raise JSONDecodeError(msg, s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match(
+                            message=msg,
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
             _append(terminator)
             continue
         try:
             esc = s[end]
         except IndexError:
-            raise JSONDecodeError('Unterminated string starting at', s, begin)
+            raise JSONDecodeError(
+                doc=s,
+                pos=begin,
+                errors=[
+                    build_match(
+                        message='Unterminated string starting at',
+                        doc=s,
+                        pos=begin,
+                    ),
+                ]
+            )
         # If not a unicode escape sequence, must be in the lookup table
         if esc != 'u':
             try:
                 char = _b[esc]
             except KeyError:
                 msg = 'Invalid \\escape: {0!r}'.format(esc)
-                raise JSONDecodeError(msg, s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match(
+                            message=msg,
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
             end += 1
         else:
             uni = _decode_uXXXX(s, end)
@@ -151,7 +212,17 @@ def _decode_uXXXX(s, pos):
         except ValueError:
             pass
     msg = 'Invalid \\uXXXX escape'
-    raise JSONDecodeError(msg, s, pos)
+    raise JSONDecodeError(
+        doc=s,
+        pos=pos,
+        errors=[
+            build_match(
+                message=msg,
+                doc=s,
+                pos=pos,
+            ),
+        ]
+    )
 
 
 def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
@@ -181,9 +252,34 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
                     result = object_pairs_hook(pairs, beg_mark, end_mark)
                     return result, end + 1
                 except DuplicateError as err:
-                    raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+                    raise JSONDecodeError(
+                        doc=s,
+                        pos=end,
+                        errors=[
+                            build_match_from_node(
+                                message='Duplicate found {}'.format(err),
+                                node=err.mapping,
+                                key=err.key,
+                            ),
+                            build_match(
+                                message='Duplicate found {}'.format(err),
+                                doc=s,
+                                pos=end,
+                            ),
+                        ]
+                    )
                 except NullError as err:
-                    raise JSONDecodeError('Null Error {}'.format(err), s, end)
+                    raise JSONDecodeError(
+                        doc=s,
+                        pos=end,
+                        errors=[
+                            build_match(
+                                message='Null Error {}'.format(err),
+                                doc=s,
+                                pos=end,
+                            ),
+                        ]
+                    )
             pairs = {}
             if object_hook is not None:
                 beg_mark, end_mark = get_beg_end_mark(s, original_end, end + 1)
@@ -191,7 +287,17 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
             return pairs, end + 1
 
         if nextchar != '"':
-            raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
+            raise JSONDecodeError(
+                doc=s,
+                pos=end,
+                errors=[
+                    build_match(
+                        message='Expecting property name enclosed in double quotes',
+                        doc=s,
+                        pos=end,
+                    ),
+                ]
+            )
     end += 1
     while True:
         begin = end - 1
@@ -204,7 +310,17 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if s[end:end + 1] != ':':
             end = _w(s, end).end()
             if s[end:end + 1] != ':':
-                raise JSONDecodeError('Expecting \':\' delimiter', s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match(
+                            message='Expecting \':\' delimiter',
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
         end += 1
 
         try:
@@ -219,7 +335,17 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         try:
             value, end = scan_once(s, end)
         except StopIteration as err:
-            raise JSONDecodeError('Expecting value', s, str(err))
+            raise JSONDecodeError(
+                doc=s,
+                pos=str(err),
+                errors=[
+                    build_match(
+                        message='Expecting value',
+                        doc=s,
+                        pos=str(err),
+                    ),
+                ]
+            )
         key_str = str_node(key, beg_mark, end_mark)
         pairs_append((key_str, value))
         try:
@@ -234,21 +360,65 @@ def CfnJSONObject(s_and_end, strict, scan_once, object_hook, object_pairs_hook,
         if nextchar == '}':
             break
         if nextchar != ',':
-            raise JSONDecodeError('Expecting \',\' delimiter', s, end - 1)
+            raise JSONDecodeError(
+                doc=s,
+                pos=end - 1,
+                errors=[
+                    build_match(
+                        message='Expecting \',\' delimiter',
+                        doc=s,
+                        pos=end - 1,
+                    ),
+                ]
+            )
         end = _w(s, end).end()
         nextchar = s[end:end + 1]
         end += 1
         if nextchar != '"':
             raise JSONDecodeError(
-                'Expecting property name enclosed in double quotes', s, end - 1)
+                doc=s,
+                pos=end - 1,
+                errors=[
+                    build_match(
+                        message='Expecting property name enclosed in double quotes',
+                        doc=s,
+                        pos=end - 1,
+                    ),
+                ]
+            )
     if object_pairs_hook is not None:
         try:
             beg_mark, end_mark = get_beg_end_mark(s, original_end, end)
             result = object_pairs_hook(pairs, beg_mark, end_mark)
         except DuplicateError as err:
-            raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
+            raise JSONDecodeError(
+                doc=s,
+                pos=end,
+                errors=[
+                    build_match_from_node(
+                        message='Duplicate found {}'.format(err),
+                        node=err.mapping,
+                        key=err.key,
+                    ),
+                    build_match(
+                        message='Duplicate found {}'.format(err),
+                        doc=s,
+                        pos=end,
+                    ),
+                ]
+            )
         except NullError as err:
-            raise JSONDecodeError('Null Error {}'.format(err), s, begin, key)
+            raise JSONDecodeError(
+                doc=s,
+                pos=end,
+                errors=[
+                    build_match(
+                        message='Null Error {}'.format(err),
+                        doc=s,
+                        pos=end,
+                    ),
+                ]
+            )
         return result, end
 
     pairs = dict(pairs)
