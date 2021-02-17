@@ -18,6 +18,32 @@ class TestHardCodedArnProperties(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive() # By default, a set of "correct" templates are checked
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/hard_coded_arn_properties.yaml', 5) # Amount of expected matches
+    def test_file_negative_partition(self):
+        self.helper_file_rule_config(
+            'test/fixtures/templates/bad/hard_coded_arn_properties.yaml',
+            {
+                'partition': True,
+                'region': False,
+                'accountId': False,
+            }, 2
+        )
+
+    def test_file_negative_region(self):
+        self.helper_file_rule_config(
+            'test/fixtures/templates/bad/hard_coded_arn_properties.yaml',
+            {
+                'partition': False,
+                'region': True,
+                'accountId': False,
+            }, 4
+        )
+
+    def test_file_negative_accountid(self):
+        self.helper_file_rule_config(
+            'test/fixtures/templates/bad/hard_coded_arn_properties.yaml',
+            {
+                'partition': False,
+                'region': False,
+                'accountId': True,
+            }, 1
+        )

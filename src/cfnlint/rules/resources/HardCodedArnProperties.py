@@ -17,6 +17,25 @@ class HardCodedArnProperties(CloudFormationLintRule):
     tags = ['resources']
     regex = re.compile(r'arn:(\$\{[^:]*::[^:]*}|[^:]*):[^:]+:(\$\{[^:]*::[^:]*}|[^:]*):(\$\{[^:]*::[^:]*}|[^:]*)')
 
+    def __init__(self):
+        """Init"""
+        super(HardCodedArnProperties, self).__init__()
+        self.config_definition = {
+            'partition': {
+                'default': True,
+                'type': 'boolean',
+            },
+            'region': {
+                'default': False,
+                'type': 'boolean',
+            },
+            'accountId': {
+                'default': False,
+                'type': 'boolean',
+            },
+        }
+        self.configure()
+
     def _match_values(self, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
         values = []
@@ -61,8 +80,22 @@ class HardCodedArnProperties(CloudFormationLintRule):
 
             # !Sub arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
             # is valid even with aws as the account #.  This handles empty string
-            if not re.match(r'^\$\{\w+}|\$\{AWS::Partition}|$', candidate[0]) or not re.match(r'^(\$\{\w+}|\$\{AWS::Region}|)$', candidate[1]) or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
-                message = 'ARN in Resource {0} contains hardcoded Partition, Region, and/or Account Number in ARN or incorrectly placed Pseudo Parameters'
+            if self.config['partition'] and not re.match(r'^\$\{\w+}|\$\{AWS::Partition}|$', candidate[0]):
+                # or not re.match(r'^(\$\{\w+}|\$\{AWS::Region}|)$', candidate[1]) or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
+                message = 'ARN in Resource {0} contains hardcoded Partition in ARN or incorrectly placed Pseudo Parameters'
+                matches.append(RuleMatch(
+                    path,
+                    message.format(path[1])
+                ))
+            if self.config['region'] and not re.match(r'^(\$\{\w+}|\$\{AWS::Region}|)$', candidate[1]):
+                # or  or not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
+                message = 'ARN in Resource {0} contains hardcoded Region in ARN or incorrectly placed Pseudo Parameters'
+                matches.append(RuleMatch(
+                    path,
+                    message.format(path[1])
+                ))
+            if self.config['accountId'] and not re.match(r'^\$\{\w+}|\$\{AWS::AccountId}|aws|$', candidate[2]):
+                message = 'ARN in Resource {0} contains hardcoded AccountId in ARN or incorrectly placed Pseudo Parameters'
                 matches.append(RuleMatch(
                     path,
                     message.format(path[1])
