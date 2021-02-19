@@ -1,3 +1,9 @@
+### v0.45.1
+###### CloudFormation Specifications
+- Update resource specs to `28.1.0` (pull #[1905](https://github.com/aws-cloudformation/cfn-python-lint/pull/1905))
+####
+- Return two errors when finding duplicates in the decode phase (pull #[1900](https://github.com/aws-cloudformation/cfn-python-lint/pull/1900))
+
 ### v0.45.0
 ###### CloudFormation Specifications
 - Get value constraints from AWS CloudFormation registry types (pull #[1867](https://github.com/aws-cloudformation/cfn-python-lint/pull/1867))
