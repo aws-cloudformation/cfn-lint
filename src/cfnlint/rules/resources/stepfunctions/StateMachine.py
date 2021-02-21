@@ -40,15 +40,15 @@ class StateMachine(CloudFormationLintRule):
         ]
         state_key_types = {
             'Pass': ['Result', 'ResultPath', 'Parameters'],
-            'Task': ['Resource', 'ResultPath', 'Retry', 'Catch',
+            'Task': ['Resource', 'ResultPath', 'ResultSelector', 'Retry', 'Catch',
                      'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
             'Map': ['MaxConcurrency', 'Iterator', 'ItemsPath', 'ResultPath',
-                    'Retry', 'Catch', 'Parameters'],
+                    'ResultSelector', 'Retry', 'Catch', 'Parameters'],
             'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],
             'Fail': ['Cause', 'Error'],
-            'Parallel': ['Branches', 'ResultPath', 'Retry', 'Catch']
+            'Parallel': ['Branches', 'ResultPath', 'ResultSelector', 'Parameters', 'Retry', 'Catch']
         }
         state_required_types = {
             'Pass': [],
