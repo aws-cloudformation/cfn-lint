@@ -236,6 +236,7 @@ class RulesCollection(object):
         return rule.is_enabled(self.include_experimental, self.ignore_rules,
                                self.include_rules, self.mandatory_rules)
 
+    # pylint: disable=inconsistent-return-statements
     def run_check(self, check, filename, rule_id, *args):
         """ Run a check """
         try:
