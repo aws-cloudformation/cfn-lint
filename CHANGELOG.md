@@ -1,7 +1,8 @@
-### v0.45.1
+### v0.46.0
 ###### CloudFormation Specifications
 - Update resource specs to `28.1.0` (pull #[1905](https://github.com/aws-cloudformation/cfn-python-lint/pull/1905))
-####
+###### Fixes
+- Update `aws-sam-translator` to `1.34.0` (pull #[1910](https://github.com/aws-cloudformation/cfn-python-lint/pull/1910))
 - Return two errors when finding duplicates in the decode phase (pull #[1900](https://github.com/aws-cloudformation/cfn-python-lint/pull/1900))
 
 ### v0.45.0
