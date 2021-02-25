@@ -40,7 +40,7 @@ class Select(CloudFormationLintRule):
                     if isinstance(index_obj, dict):
                         if len(index_obj) == 1:
                             for index_key, _ in index_obj.items():
-                                if index_key not in ['Ref', 'Fn::FindInMap']:
+                                if index_key not in ['Ref', 'Fn::FindInMap', 'Fn::Select']:
                                     message = 'Select index should be an Integer or a function Ref or FindInMap for {0}'
                                     matches.append(RuleMatch(
                                         tree, message.format('/'.join(map(str, tree)))))
