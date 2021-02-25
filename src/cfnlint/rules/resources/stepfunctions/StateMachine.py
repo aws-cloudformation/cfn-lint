@@ -13,7 +13,7 @@ class StateMachine(CloudFormationLintRule):
     id = 'E2532'
     shortdesc = 'Check State Machine Definition for proper syntax'
     description = 'Check the State Machine String Definition to make sure its JSON. ' \
-            'Validate basic syntax of the file to determine validity.'
+        'Validate basic syntax of the file to determine validity.'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html'
     tags = ['resources', 'stepfunctions']
 
@@ -41,7 +41,7 @@ class StateMachine(CloudFormationLintRule):
         state_key_types = {
             'Pass': ['Result', 'ResultPath', 'Parameters'],
             'Task': ['Resource', 'ResultPath', 'ResultSelector', 'Retry', 'Catch',
-                    'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
+                     'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
             'Map': ['MaxConcurrency', 'Iterator', 'ItemsPath', 'ResultPath',
                     'ResultSelector', 'Retry', 'Catch', 'Parameters'],
             'Choice': ['Choices', 'Default'],
