@@ -1,3 +1,15 @@
+### v0.47.0
+###### Features
+- Add rule [I3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3042) to check for hardcoded partitions, account IDs, and regions in an ARN (pull #[1805](https://github.com/aws-cloudformation/cfn-python-lint/pull/1805))
+- Allow for merging of list configurations using `--merge-configs` (pull #[1915](https://github.com/aws-cloudformation/cfn-python-lint/pull/1915))
+###### CloudFormation Specifications
+- Update resource specs to `30.0.0` (pull #[1911](https://github.com/aws-cloudformation/cfn-python-lint/pull/1911))
+- Add Kinesis Data Firehose to permitted SNS subscription protocols (pull #[1924](https://github.com/aws-cloudformation/cfn-python-lint/pull/1924))
+- Changed DMS endpoint engine name for `DocumentDB` to `docdb` (pull #[1920](https://github.com/aws-cloudformation/cfn-python-lint/pull/1920))
+###### Fixes
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2532) to add `ResultSelector` field to Task, Parallel & Map in step functions (pull #[1912](https://github.com/aws-cloudformation/cfn-python-lint/pull/1912))
+- Update rule [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E1017) to add `Fn::Select` to allowed value in index field of `Fn::Select` (pull #[1922](https://github.com/aws-cloudformation/cfn-python-lint/pull/1922))
+
 ### v0.46.0
 ###### CloudFormation Specifications
 - Update resource specs to `28.1.0` (pull #[1905](https://github.com/aws-cloudformation/cfn-python-lint/pull/1905))
