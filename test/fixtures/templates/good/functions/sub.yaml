@@ -61,8 +61,8 @@ Resources:
           'Fn::Sub':
             'Fn::Transform':  # Doesn't fail on Transform
               Name: DynamicUserData
-  ProvisionedProduct:
-    Type: AWS::ServiceCatalog::CloudFormationProvisionedProduct
+  MyStack:
+    Type: AWS::CloudFormation::Stack
     Properties:
       ProductName: example
       ProvisioningArtifactName: v1
@@ -76,4 +76,4 @@ Resources:
           number: 1
 Outputs:
   OutputSub:
-    Value: !Sub '${ProvisionedProduct.Outputs.Example}-example'
+    Value: !Sub '${MyStack.Outputs.Example}-example'

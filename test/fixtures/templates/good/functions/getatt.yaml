@@ -57,8 +57,8 @@ Resources:
       Tags:
         - Key: foo
           Value: bar
-  ProvisionedProduct:
-    Type: AWS::ServiceCatalog::CloudFormationProvisionedProduct
+  MyStack:
+    Type: AWS::CloudFormation::Stack
     Properties:
       ProductName: example
       ProvisioningArtifactName: v1
@@ -71,4 +71,4 @@ Outputs:
     Value:
       Fn::GetAtt: myCluster.Endpoint.Address
   OutputValue:
-    Value: !GetAtt ProvisionedProduct.Outputs.Example
+    Value: !GetAtt MyStack.Outputs.Example
