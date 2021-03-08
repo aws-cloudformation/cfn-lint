@@ -159,3 +159,29 @@ class TestConfigMixIn(BaseTestCase):
         self.assertNotIn(
             'test/fixtures/templates/bad/resources/iam/resource_policy.yaml', config.templates)
         self.assertEqual(len(config.templates), 4)
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_merge(self, yaml_mock):
+        """ Test merging lists  """
+
+        yaml_mock.side_effect = [
+            {"include_checks": ["I"], "ignore_checks": ["E3001"], "regions": ["us-west-2"]},
+            {}
+        ]
+        config = cfnlint.config.ConfigMixIn(['--include-checks', 'I1234', 'I4321', '--merge-configs'])
+        config.template_args = {
+            'Metadata': {
+                'cfn-lint': {
+                    'config': {
+                        'include_checks': ['I9876'],
+                        'ignore_checks': ['W3001']
+                    }
+                }
+            }
+        }
+        # config files wins
+        self.assertEqual(config.regions, ['us-west-2'])
+        # CLI should win
+        self.assertEqual(config.include_checks, ['W', 'E', 'I1234', 'I4321', 'I9876', 'I'])
+        # template file wins over config file
+        self.assertEqual(config.ignore_checks, ['W3001', 'E3001'])

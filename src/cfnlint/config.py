@@ -425,6 +425,10 @@ class CliArgs(object):
             '--output-file', type=str, default=None,
             help='Writes the output to the specified file, ideal for producing reports'
         )
+        standard.add_argument(
+            '--merge-configs', default=False, action='store_true',
+            help='Merges lists between configuration layers'
+        )
 
         return parser
 
@@ -472,6 +476,7 @@ class TemplateArgs(object):
     template_args = property(get_template_args, set_template_args)
 
 
+# pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     """ Mixin for the Configs """
 
@@ -487,6 +492,22 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         cli_value = getattr(self.cli_args, arg_name)
         template_value = self.template_args.get(arg_name)
         file_value = self.file_args.get(arg_name)
+
+        # merge list configurations
+        # make sure we don't do an infinite loop so skip this check for merge_configs
+        if arg_name != 'merge_configs':
+            if self.merge_configs:
+                # the CLI will always have an empty list when the item is a list
+                # we will use that to evaluate if we need to merge the lists
+                if isinstance(cli_value, list):
+                    result = cli_value
+                    if isinstance(template_value, list):
+                        result.extend(template_value)
+                    if isinstance(file_value, list):
+                        result.extend(file_value)
+                    return result
+
+        # return individual items
         if cli_value:
             return cli_value
         if template_value and is_template:
@@ -642,3 +663,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def registry_schemas(self):
         return self._get_argument_value('registry_schemas', False, True)
+
+    @property
+    def merge_configs(self):
+        return self._get_argument_value('merge_configs', True, True)
