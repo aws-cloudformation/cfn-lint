@@ -1,3 +1,9 @@
+### v0.47.1
+###### CloudFormation Specifications
+- Update resource specs to `30.1.0` (pull #[1936](https://github.com/aws-cloudformation/cfn-python-lint/pull/1936))
+- Add `Analytics` to `AWS::CDK::Metadata` (pull #[1937](https://github.com/aws-cloudformation/cfn-python-lint/pull/1937))
+- Patch in `Outputs` into `Attributes` for `AWS::ServiceCatalog::CloudFormationProvisionedProduct` (pull #[1934](https://github.com/aws-cloudformation/cfn-python-lint/pull/1934))
+
 ### v0.47.0
 ###### Features
 - Add rule [I3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3042) to check for hardcoded partitions, account IDs, and regions in an ARN (pull #[1805](https://github.com/aws-cloudformation/cfn-python-lint/pull/1805))
