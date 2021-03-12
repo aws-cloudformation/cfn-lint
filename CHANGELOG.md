@@ -1,3 +1,8 @@
+### v0.47.2
+###### CloudFormation Specifications
+- Update resource specs to `31.0.0` (pull #[1939](https://github.com/aws-cloudformation/cfn-python-lint/pull/1939))
+- Only flag rule [I3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#I3042) when the ARN is inside a `Fn::Sub` (pull #[1928](https://github.com/aws-cloudformation/cfn-python-lint/pull/1928))
+
 ### v0.47.1
 ###### CloudFormation Specifications
 - Update resource specs to `30.1.0` (pull #[1936](https://github.com/aws-cloudformation/cfn-python-lint/pull/1936))
