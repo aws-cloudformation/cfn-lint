@@ -6156,6 +6156,12 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "LambdaAuthorizerConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-lambdaauthorizerconfig",
+          "Required": false,
+          "Type": "LambdaAuthorizerConfig",
+          "UpdateType": "Mutable"
+        },
         "OpenIDConnectConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-additionalauthenticationprovider.html#cfn-appsync-graphqlapi-additionalauthenticationprovider-openidconnectconfig",
           "Required": false,
@@ -6194,6 +6200,29 @@
         },
         "UserPoolId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-cognitouserpoolconfig.html#cfn-appsync-graphqlapi-cognitouserpoolconfig-userpoolid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::AppSync::GraphQLApi.LambdaAuthorizerConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-lambdaauthorizerconfig.html",
+      "Properties": {
+        "AuthorizerResultTtlInSeconds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-lambdaauthorizerconfig.html#cfn-appsync-graphqlapi-lambdaauthorizerconfig-authorizerresultttlinseconds",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "AuthorizerUri": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-lambdaauthorizerconfig.html#cfn-appsync-graphqlapi-lambdaauthorizerconfig-authorizeruri",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "IdentityValidationExpression": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-graphqlapi-lambdaauthorizerconfig.html#cfn-appsync-graphqlapi-lambdaauthorizerconfig-identityvalidationexpression",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -8092,6 +8121,7 @@
       "Properties": {
         "AdvancedBackupSettings": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-backupplanresourcetype.html#cfn-backup-backupplan-backupplanresourcetype-advancedbackupsettings",
+          "DuplicatesAllowed": true,
           "ItemType": "AdvancedBackupSettingResourceType",
           "Required": false,
           "Type": "List",
@@ -8105,6 +8135,7 @@
         },
         "BackupPlanRule": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-backupplanresourcetype.html#cfn-backup-backupplan-backupplanresourcetype-backupplanrule",
+          "DuplicatesAllowed": true,
           "ItemType": "BackupRuleResourceType",
           "Required": true,
           "Type": "List",
@@ -8123,6 +8154,7 @@
         },
         "CopyActions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-backupruleresourcetype.html#cfn-backup-backupplan-backupruleresourcetype-copyactions",
+          "DuplicatesAllowed": true,
           "ItemType": "CopyActionResourceType",
           "Required": false,
           "Type": "List",
@@ -8136,8 +8168,9 @@
         },
         "RecoveryPointTags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-backupruleresourcetype.html#cfn-backup-backupplan-backupruleresourcetype-recoverypointtags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "RuleName": {
@@ -8265,6 +8298,7 @@
       "Properties": {
         "BackupVaultEvents": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupvault-notificationobjecttype.html#cfn-backup-backupvault-notificationobjecttype-backupvaultevents",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
@@ -9266,6 +9300,20 @@
           "PrimitiveType": "Integer",
           "Required": true,
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::CertificateManager::Account.ExpiryEventsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-certificatemanager-account-expiryeventsconfiguration.html",
+      "Properties": {
+        "DaysBeforeExpiry": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-certificatemanager-account-expiryeventsconfiguration.html#cfn-certificatemanager-account-expiryeventsconfiguration-daysbeforeexpiry",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CertificateManager::Account.ExpiryEventsConfiguration.DaysBeforeExpiry"
+          }
         }
       }
     },
@@ -15647,9 +15695,26 @@
         }
       }
     },
+    "AWS::DynamoDB::Table.ContributorInsightsSpecification": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-contributorinsightsspecification.html",
+      "Properties": {
+        "Enabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-contributorinsightsspecification.html#cfn-dynamodb-contributorinsightsspecification-enabled",
+          "PrimitiveType": "Boolean",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::DynamoDB::Table.GlobalSecondaryIndex": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-gsi.html",
       "Properties": {
+        "ContributorInsightsSpecification": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-gsi.html#cfn-dynamodb-contributorinsightsspecification-enabled",
+          "Required": false,
+          "Type": "ContributorInsightsSpecification",
+          "UpdateType": "Mutable"
+        },
         "IndexName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-gsi.html#cfn-dynamodb-gsi-indexname",
           "PrimitiveType": "String",
@@ -15695,17 +15760,6 @@
           "Value": {
             "ValueType": "AWS::DynamoDB::Table.KeySchema.KeyType"
           }
-        }
-      }
-    },
-    "AWS::DynamoDB::Table.KinesisStreamSpecification": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-kinesisstreamspecification.html",
-      "Properties": {
-        "StreamArn": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-kinesisstreamspecification.html#cfn-dynamodb-kinesisstreamspecification-streamarn",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
         }
       }
     },
@@ -17376,6 +17430,13 @@
           "UpdateType": "Mutable"
         }
       }
+    },
+    "AWS::EC2::LaunchTemplate.TagSpecifications": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-launchtemplate-tagspecifications.html",
+      "ItemType": "TagSpecification",
+      "Required": false,
+      "Type": "List",
+      "UpdateType": "Mutable"
     },
     "AWS::EC2::NetworkAclEntry.Icmp": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-networkaclentry-icmp.html",
@@ -19054,13 +19115,13 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider-managedscaling",
           "Required": false,
           "Type": "ManagedScaling",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "ManagedTerminationProtection": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-autoscalinggroupprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider-managedterminationprotection",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::ECS::CapacityProvider.AutoScalingGroupProvider.ManagedTerminationProtection"
           }
@@ -19074,19 +19135,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-managedscaling.html#cfn-ecs-capacityprovider-managedscaling-maximumscalingstepsize",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "MinimumScalingStepSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-managedscaling.html#cfn-ecs-capacityprovider-managedscaling-minimumscalingstepsize",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Status": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-managedscaling.html#cfn-ecs-capacityprovider-managedscaling-status",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::ECS::CapacityProvider.ManagedScaling.Status"
           }
@@ -19095,7 +19156,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-capacityprovider-managedscaling.html#cfn-ecs-capacityprovider-managedscaling-targetcapacity",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -19122,6 +19183,17 @@
         }
       }
     },
+    "AWS::ECS::Cluster.ClusterConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clusterconfiguration.html",
+      "Properties": {
+        "ExecuteCommandConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clusterconfiguration.html#cfn-ecs-cluster-clusterconfiguration-executecommandconfiguration",
+          "Required": false,
+          "Type": "ExecuteCommandConfiguration",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::ECS::Cluster.ClusterSettings": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersettings.html",
       "Properties": {
@@ -19134,6 +19206,87 @@
         "Value": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-clustersettings.html#cfn-ecs-cluster-clustersettings-value",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ECS::Cluster.ExecuteCommandConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandconfiguration.html",
+      "Properties": {
+        "KmsKeyId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandconfiguration.html#cfn-ecs-cluster-executecommandconfiguration-kmskeyid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "LogConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandconfiguration.html#cfn-ecs-cluster-executecommandconfiguration-logconfiguration",
+          "Required": false,
+          "Type": "ExecuteCommandLogConfiguration",
+          "UpdateType": "Mutable"
+        },
+        "Logging": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandconfiguration.html#cfn-ecs-cluster-executecommandconfiguration-logging",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html",
+      "Properties": {
+        "CloudWatchEncryptionEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html#cfn-ecs-cluster-executecommandlogconfiguration-cloudwatchencryptionenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "CloudWatchLogGroupName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html#cfn-ecs-cluster-executecommandlogconfiguration-cloudwatchloggroupname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "S3BucketName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html#cfn-ecs-cluster-executecommandlogconfiguration-s3bucketname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "S3EncryptionEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html#cfn-ecs-cluster-executecommandlogconfiguration-s3encryptionenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "S3KeyPrefix": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-cluster-executecommandlogconfiguration.html#cfn-ecs-cluster-executecommandlogconfiguration-s3keyprefix",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-clustercapacityproviderassociations-capacityproviderstrategy.html",
+      "Properties": {
+        "Base": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-clustercapacityproviderassociations-capacityproviderstrategy.html#cfn-ecs-clustercapacityproviderassociations-capacityproviderstrategy-base",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "CapacityProvider": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-clustercapacityproviderassociations-capacityproviderstrategy.html#cfn-ecs-clustercapacityproviderassociations-capacityproviderstrategy-capacityprovider",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Weight": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-clustercapacityproviderassociations-capacityproviderstrategy.html#cfn-ecs-clustercapacityproviderassociations-capacityproviderstrategy-weight",
+          "PrimitiveType": "Integer",
           "Required": false,
           "UpdateType": "Mutable"
         }
@@ -24336,7 +24489,7 @@
         "Type": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-gamelift-alias-routingstrategy.html#cfn-gamelift-alias-routingstrategy-type",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::GameLift::Alias.RoutingStrategy.Type"
@@ -29134,6 +29287,15 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "CannedAcl": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-s3action.html#cfn-iot-topicrule-s3action-cannedacl",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::TopicRule.S3Action.CannedAcl"
+          }
+        },
         "Key": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-s3action.html#cfn-iot-topicrule-s3action-key",
           "PrimitiveType": "String",
@@ -29245,7 +29407,6 @@
       "Properties": {
         "Actions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-topicrulepayload.html#cfn-iot-topicrule-topicrulepayload-actions",
-          "DuplicatesAllowed": false,
           "ItemType": "Action",
           "Required": true,
           "Type": "List",
@@ -29272,7 +29433,7 @@
         "RuleDisabled": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-topicrule-topicrulepayload.html#cfn-iot-topicrule-topicrulepayload-ruledisabled",
           "PrimitiveType": "Boolean",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Sql": {
@@ -36063,6 +36224,29 @@
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::RDS::DBProxy.TagFormat.Value"
+          }
+        }
+      }
+    },
+    "AWS::RDS::DBProxyEndpoint.TagFormat": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbproxyendpoint-tagformat.html",
+      "Properties": {
+        "Key": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbproxyendpoint-tagformat.html#cfn-rds-dbproxyendpoint-tagformat-key",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBProxyEndpoint.TagFormat.Key"
+          }
+        },
+        "Value": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbproxyendpoint-tagformat.html#cfn-rds-dbproxyendpoint-tagformat-value",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBProxyEndpoint.TagFormat.Value"
           }
         }
       }
@@ -44712,7 +44896,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "30.1.0",
+  "ResourceSpecificationVersion": "31.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -47568,6 +47752,12 @@
             "ValueType": "AWS::AppSync::GraphQLApi.AuthType"
           }
         },
+        "LambdaAuthorizerConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-lambdaauthorizerconfig",
+          "Required": false,
+          "Type": "LambdaAuthorizerConfig",
+          "UpdateType": "Mutable"
+        },
         "LogConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-graphqlapi.html#cfn-appsync-graphqlapi-logconfig",
           "Required": false,
@@ -48628,8 +48818,9 @@
         },
         "BackupPlanTags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-backup-backupplan.html#cfn-backup-backupplan-backupplantags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Mutable"
         }
       }
@@ -48690,8 +48881,9 @@
         },
         "BackupVaultTags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-backup-backupvault.html#cfn-backup-backupvault-backupvaulttags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "EncryptionKeyArn": {
@@ -48975,6 +49167,22 @@
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::CertificateManager::Account": {
+      "Attributes": {
+        "AccountId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-certificatemanager-account.html",
+      "Properties": {
+        "ExpiryEventsConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-certificatemanager-account.html#cfn-certificatemanager-account-expiryeventsconfiguration",
+          "Required": true,
+          "Type": "ExpiryEventsConfiguration",
           "UpdateType": "Mutable"
         }
       }
@@ -53672,6 +53880,12 @@
     "AWS::Detective::MemberInvitation": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-detective-memberinvitation.html",
       "Properties": {
+        "DisableEmailNotification": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-detective-memberinvitation.html#cfn-detective-memberinvitation-disableemailnotification",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "GraphArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-detective-memberinvitation.html#cfn-detective-memberinvitation-grapharn",
           "PrimitiveType": "String",
@@ -54125,6 +54339,12 @@
             "ValueType": "AWS::DynamoDB::Table.BillingMode"
           }
         },
+        "ContributorInsightsSpecification": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-contributorinsightsspecification-enabled",
+          "Required": false,
+          "Type": "ContributorInsightsSpecification",
+          "UpdateType": "Mutable"
+        },
         "GlobalSecondaryIndexes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-gsi",
           "DuplicatesAllowed": true,
@@ -54140,12 +54360,6 @@
           "Required": true,
           "Type": "List",
           "UpdateType": "Immutable"
-        },
-        "KinesisStreamSpecification": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-kinesisstreamspecification",
-          "Required": false,
-          "Type": "KinesisStreamSpecification",
-          "UpdateType": "Mutable"
         },
         "LocalSecondaryIndexes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-lsi",
@@ -55224,6 +55438,12 @@
           "Value": {
             "ValueType": "LaunchTemplateName"
           }
+        },
+        "TagSpecifications": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-launchtemplate.html#cfn-ec2-launchtemplate-tagspecifications",
+          "Required": false,
+          "Type": "TagSpecifications",
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -57381,7 +57601,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-capacityprovider.html#cfn-ecs-capacityprovider-autoscalinggroupprovider",
           "Required": true,
           "Type": "AutoScalingGroupProvider",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-capacityprovider.html#cfn-ecs-capacityprovider-name",
@@ -57426,6 +57646,12 @@
           "Type": "List",
           "UpdateType": "Mutable"
         },
+        "Configuration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html#cfn-ecs-cluster-configuration",
+          "Required": false,
+          "Type": "ClusterConfiguration",
+          "UpdateType": "Mutable"
+        },
         "DefaultCapacityProviderStrategy": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html#cfn-ecs-cluster-defaultcapacityproviderstrategy",
           "ItemType": "CapacityProviderStrategyItem",
@@ -57437,6 +57663,35 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html#cfn-ecs-cluster-tags",
           "ItemType": "Tag",
           "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ECS::ClusterCapacityProviderAssociations": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-clustercapacityproviderassociations.html",
+      "Properties": {
+        "CapacityProviders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-clustercapacityproviderassociations.html#cfn-ecs-clustercapacityproviderassociations-capacityproviders",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "Cluster": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-clustercapacityproviderassociations.html#cfn-ecs-clustercapacityproviderassociations-cluster",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::ECS::ClusterCapacityProviderAssociations.Cluster"
+          }
+        },
+        "DefaultCapacityProviderStrategy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-clustercapacityproviderassociations.html#cfn-ecs-clustercapacityproviderassociations-defaultcapacityproviderstrategy",
+          "ItemType": "CapacityProviderStrategy",
+          "Required": true,
           "Type": "List",
           "UpdateType": "Mutable"
         }
@@ -57509,6 +57764,12 @@
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Immutable"
+        },
+        "EnableExecuteCommand": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-enableexecutecommand",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "HealthCheckGracePeriodSeconds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-healthcheckgraceperiodseconds",
@@ -69348,6 +69609,73 @@
         }
       }
     },
+    "AWS::RDS::DBProxyEndpoint": {
+      "Attributes": {
+        "DBProxyEndpointArn": {
+          "PrimitiveType": "String"
+        },
+        "Endpoint": {
+          "PrimitiveType": "String"
+        },
+        "IsDefault": {
+          "PrimitiveType": "Boolean"
+        },
+        "VpcId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html",
+      "Properties": {
+        "DBProxyEndpointName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-dbproxyendpointname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBProxyEndpoint.DBProxyEndpointName"
+          }
+        },
+        "DBProxyName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-dbproxyname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBProxyEndpoint.DBProxyName"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-tags",
+          "ItemType": "TagFormat",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "TargetRole": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-targetrole",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBProxyEndpoint.TargetRole"
+          }
+        },
+        "VpcSecurityGroupIds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-vpcsecuritygroupids",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "VpcSubnetIds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-vpcsubnetids",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::RDS::DBProxyTargetGroup": {
       "Attributes": {
         "TargetGroupArn": {
@@ -74137,7 +74465,7 @@
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -74193,7 +74521,7 @@
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Vpc": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicediscovery-privatednsnamespace.html#cfn-servicediscovery-privatednsnamespace-vpc",
@@ -74231,7 +74559,7 @@
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -74290,7 +74618,7 @@
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -76813,6 +77141,10 @@
     "AWS::Cassandra::Table.TableName": {
       "AllowedPatternRegex": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$"
     },
+    "AWS::CertificateManager::Account.ExpiryEventsConfiguration.DaysBeforeExpiry": {
+      "NumberMax": 45,
+      "NumberMin": 1
+    },
     "AWS::Chatbot::SlackChannelConfiguration.ConfigurationName": {
       "AllowedPatternRegex": "^[A-Za-z0-9-_]+$",
       "StringMax": 128,
@@ -78413,6 +78745,10 @@
         "ENABLED"
       ]
     },
+    "AWS::ECS::ClusterCapacityProviderAssociations.Cluster": {
+      "StringMax": 2048,
+      "StringMin": 1
+    },
     "AWS::ECS::Service.AwsVpcConfiguration.AssignPublicIp": {
       "AllowedValues": [
         "DISABLED",
@@ -79483,6 +79819,18 @@
         "p99.9",
         "p99.99",
         "p100"
+      ]
+    },
+    "AWS::IoT::TopicRule.S3Action.CannedAcl": {
+      "AllowedValues": [
+        "private",
+        "public-read",
+        "public-read-write",
+        "aws-exec-read",
+        "authenticated-read",
+        "bucket-owner-read",
+        "bucket-owner-full-control",
+        "log-delivery-write"
       ]
     },
     "AWS::IoT::TopicRuleDestination.Status": {
@@ -80556,6 +80904,24 @@
     },
     "AWS::RDS::DBProxy.TagFormat.Value": {
       "AllowedPatternRegex": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*"
+    },
+    "AWS::RDS::DBProxyEndpoint.DBProxyEndpointName": {
+      "AllowedPatternRegex": "[0-z]*"
+    },
+    "AWS::RDS::DBProxyEndpoint.DBProxyName": {
+      "AllowedPatternRegex": "[0-z]*"
+    },
+    "AWS::RDS::DBProxyEndpoint.TagFormat.Key": {
+      "AllowedPatternRegex": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*"
+    },
+    "AWS::RDS::DBProxyEndpoint.TagFormat.Value": {
+      "AllowedPatternRegex": "(\\w|\\d|\\s|\\\\|-|\\.:=+-)*"
+    },
+    "AWS::RDS::DBProxyEndpoint.TargetRole": {
+      "AllowedValues": [
+        "READ_WRITE",
+        "READ_ONLY"
+      ]
     },
     "AWS::RDS::DBProxyTargetGroup.DBProxyName": {
       "AllowedPatternRegex": "[A-z][0-z]*"
