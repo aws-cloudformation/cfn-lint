@@ -467,7 +467,9 @@ class Template(object):  # pylint: disable=R0904
         """
         LOGGER.debug('Get location of path %s', path)
         result = None
-        if len(path) > 1:
+        if not path:
+            result = self._loc(text)
+        elif len(path) > 1:
             try:
                 result = self.get_location_yaml(text[path[0]], path[1:])
             except KeyError as err:
