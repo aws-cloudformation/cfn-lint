@@ -200,6 +200,9 @@ def get_results(service, product_families):
             product = products.get('product', {})
             if product:
                 if product.get('productFamily') in product_families and product.get('attributes').get('locationType') == "AWS Region":
+                    if product.get('attributes').get('location') not in region_map:
+                        LOGGER.warning('Region "%s" not found', product.get('attributes').get('location'))
+                        continue
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(
