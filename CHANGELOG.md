@@ -1,3 +1,9 @@
+### v0.48.0
+###### Features
+- Allow writing of custom rules in plain text (pull #[1702](https://github.com/aws-cloudformation/cfn-python-lint/pull/1702))
+###### CloudFormation Specifications
+- Update resource specs to `31.1.0` (pull #[1942](https://github.com/aws-cloudformation/cfn-python-lint/pull/1942))
+
 ### v0.47.2
 ###### CloudFormation Specifications
 - Update resource specs to `31.0.0` (pull #[1939](https://github.com/aws-cloudformation/cfn-python-lint/pull/1939))
