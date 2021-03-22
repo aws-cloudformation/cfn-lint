@@ -254,7 +254,7 @@ The linter supports the creation of custom one-line rules which compare any reso
 ```
 
 ### Example
-A seperate custom rule text file must be created.
+A separate custom rule text file must be created.
 
 The example below validates `example_template.yml` does not use any EC2 instances of size `m4.16xlarge`
 
