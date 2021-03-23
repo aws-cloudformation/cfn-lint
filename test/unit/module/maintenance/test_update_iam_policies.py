@@ -19,7 +19,7 @@ class TestUpdateIamPolicies(BaseTestCase):
     def test_update_iam_policies(self, mock_json_dump, mock_content):
         """Success update iam policies"""
 
-        mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
+        mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Amazon API Gateway Management":{"Actions":[]},"Amazon API Gateway Management V2":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
 
         if sys.version_info.major == 3:
             builtin_module_name = 'builtins'
@@ -31,7 +31,10 @@ class TestUpdateIamPolicies(BaseTestCase):
             mock_json_dump.assert_called_with(
                 {
                     'serviceMap': {
-                        'Manage Amazon API Gateway': {
+                        'Amazon API Gateway Management': {
+                            'Actions': ['HEAD', 'OPTIONS']
+                        },
+                        'Amazon API Gateway Management V2': {
                             'Actions': ['HEAD', 'OPTIONS']
                         },
                         'Amazon Kinesis Video Streams': {
