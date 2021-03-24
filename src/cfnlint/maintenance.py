@@ -234,15 +234,18 @@ def update_iam_policies():
 
     content = content.split('app.PolicyEditorConfig=')[1]
     content = json.loads(content)
-    content['serviceMap']['Amazon API Gateway Management']['Actions'].extend(
-        ['HEAD', 'OPTIONS']
-    )
-    content['serviceMap']['Amazon API Gateway Management V2']['Actions'].extend(
-        ['HEAD', 'OPTIONS']
-    )
-    content['serviceMap']['Amazon Kinesis Video Streams']['Actions'].append(
-        'StartStreamEncryption'
-    )
+
+    actions = {
+        'Manage Amazon API Gateway': ['HEAD', 'OPTIONS'],
+        'Amazon API Gateway Management': ['HEAD', 'OPTIONS'],
+        'Amazon API Gateway Management V2': ['HEAD', 'OPTIONS'],
+        'Amazon Kinesis Video Streams': ['StartStreamEncryption'],
+    }
+    for k, v in actions.items():
+        if content.get('serviceMap').get(k):
+            content['serviceMap'][k]['Actions'].extend(v)
+        else:
+            LOGGER.debug('"%s" was not found in the policies file', k)
 
     with open(filename, 'w') as f:
         json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
