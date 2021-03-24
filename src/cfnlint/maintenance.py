@@ -234,10 +234,7 @@ def update_iam_policies():
 
     content = content.split('app.PolicyEditorConfig=')[1]
     content = json.loads(content)
-    content['serviceMap']['Amazon API Gateway Management']['Actions'].extend(
-        ['HEAD', 'OPTIONS']
-    )
-    content['serviceMap']['Amazon API Gateway Management V2']['Actions'].extend(
+    content['serviceMap']['Manage Amazon API Gateway']['Actions'].extend(
         ['HEAD', 'OPTIONS']
     )
     content['serviceMap']['Amazon Kinesis Video Streams']['Actions'].append(
