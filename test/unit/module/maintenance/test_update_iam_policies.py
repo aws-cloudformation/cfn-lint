@@ -14,12 +14,13 @@ LOGGER.addHandler(logging.NullHandler())
 
 class TestUpdateIamPolicies(BaseTestCase):
     """Used for Testing Rules"""
+
     @patch('cfnlint.maintenance.get_url_content')
     @patch('cfnlint.maintenance.json.dump')
     def test_update_iam_policies(self, mock_json_dump, mock_content):
         """Success update iam policies"""
 
-        mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Amazon API Gateway Management":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
+        mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
 
         if sys.version_info.major == 3:
             builtin_module_name = 'builtins'
