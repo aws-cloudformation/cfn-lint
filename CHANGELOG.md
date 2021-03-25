@@ -1,3 +1,10 @@
+### v0.48.1
+###### CloudFormation Specifications
+- Add regex pattern for `AWS::CloudWatch::Alarm.MetricDataQuery` `Id` (pull #[1948](https://github.com/aws-cloudformation/cfn-python-lint/pull/1948))
+###### Fixes
+- Update update IAM policies to not fail on changing upstream IAM policies (pull #[1954](https://github.com/aws-cloudformation/cfn-python-lint/pull/1954))
+- Switch RegexDict to only string match based on if the type is Module (pull #[1956](https://github.com/aws-cloudformation/cfn-python-lint/pull/1956))
+
 ### v0.48.0
 ###### Features
 - Allow writing of custom rules in plain text (pull #[1702](https://github.com/aws-cloudformation/cfn-python-lint/pull/1702))
