@@ -9961,12 +9961,20 @@
         "ListAnomalyGroupSummaries",
         "ListAnomalyGroupTimeSeries",
         "ListMetricSets",
+        "ListTagsForResource",
         "PutFeedback",
+        "TagResource",
+        "UntagResource",
         "UpdateAnomalyDetector",
         "UpdateMetricSet"
       ],
       "HasResource": true,
-      "StringPrefix": "lookoutmetrics"
+      "StringPrefix": "lookoutmetrics",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "Amazon Lookout for Vision": {
       "ARNFormat": "arn:aws:lookoutvision:<region>:<account-id>:<resource-type>/<resource_name>",
@@ -12283,7 +12291,7 @@
       "StringPrefix": "sdb"
     },
     "Amazon Storage Gateway": {
-      "ARNFormat": "arn:aws:storagegateway:us-east-1:<account>:<resourceType>/<resourceName>",
+      "ARNFormat": "arn:aws:storagegateway:<region>:<account>:<resourceType>/<resourceName>",
       "ARNRegex": "^arn:aws:storagegateway:.+",
       "Actions": [
         "ActivateGateway",
@@ -12292,6 +12300,7 @@
         "AddUploadBuffer",
         "AddWorkingStorage",
         "AssignTapePool",
+        "AssociateFileSystem",
         "AttachVolume",
         "BypassGovernanceRetention",
         "CancelArchival",
@@ -12321,6 +12330,7 @@
         "DescribeCache",
         "DescribeCachediSCSIVolumes",
         "DescribeChapCredentials",
+        "DescribeFileSystemAssociations",
         "DescribeGatewayInformation",
         "DescribeMaintenanceStartTime",
         "DescribeNFSFileShares",
@@ -12336,9 +12346,11 @@
         "DescribeWorkingStorage",
         "DetachVolume",
         "DisableGateway",
+        "DisassociateFileSystem",
         "JoinDomain",
         "ListAutomaticTapeCreationPolicies",
         "ListFileShares",
+        "ListFileSystemAssociations",
         "ListGateways",
         "ListLocalDisks",
         "ListTagsForResource",
@@ -12362,6 +12374,7 @@
         "UpdateBandwidthRateLimit",
         "UpdateBandwidthRateLimitSchedule",
         "UpdateChapCredentials",
+        "UpdateFileSystemAssociation",
         "UpdateGatewayInformation",
         "UpdateGatewaySoftwareNow",
         "UpdateMaintenanceStartTime",
@@ -13007,6 +13020,7 @@
       "ARNFormat": "arn:aws:elemental-support-cases:<region>:<account-id>:<resource-type>/<resource_name>",
       "ARNRegex": "^arn:aws:elemental-support-cases:.+:.+:.+",
       "Actions": [
+        "CheckCasePermission",
         "CreateCase",
         "GetCase",
         "GetCases",
