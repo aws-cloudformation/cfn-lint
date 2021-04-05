@@ -2,10 +2,10 @@
 
 <img alt="[cfn-lint logo]" src="https://github.com/aws-cloudformation/cfn-python-lint/blob/master/logo.png?raw=true" width="150" align="right">
 
-[![Lint and Unit](https://github.com/aws-cloudformation/cfn-python-lint/workflows/Lint%20and%20Unit/badge.svg?branch=master)](https://github.com/aws-cloudformation/cfn-python-lint/actions?query=workflow%3A%22Lint+and+Unit%22+branch%3Amaster)
+[![Testing](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml/badge.svg?branch=master)](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
-[![PyPI downloads](https://img.shields.io/pypi/dw/cfn-lint)](https://pypistats.org/packages/cfn-lint)
-[![PyPI downloads](https://img.shields.io/pypi/dm/cfn-lint)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://pepy.tech/badge/cfn-lint/week)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate AWS CloudFormation yaml/json templates against the [AWS CloudFormation Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and additional
