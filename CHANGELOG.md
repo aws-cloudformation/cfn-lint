@@ -1,3 +1,10 @@
+### v0.48.2
+###### CloudFormation Specifications
+- Update resource specs to `32.0.0` (pull #[1962](https://github.com/aws-cloudformation/cfn-python-lint/pull/1962))
+- Add `AWS::Kinesis::StreamConsumer` as a REF for `AWS::Lambda::EventSourceMapping.EventSourceArn` (pull #[1961](https://github.com/aws-cloudformation/cfn-python-lint/pull/1961))
+###### Fixes
+- Update EOL dates for AWS::Lambda::Function.Runtime used by rule [E2531](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2531) (pull #[1965](https://github.com/aws-cloudformation/cfn-python-lint/pull/1965))
+
 ### v0.48.1
 ###### CloudFormation Specifications
 - Add regex pattern for `AWS::CloudWatch::Alarm.MetricDataQuery` `Id` (pull #[1948](https://github.com/aws-cloudformation/cfn-python-lint/pull/1948))
