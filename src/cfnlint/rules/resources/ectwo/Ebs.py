@@ -9,10 +9,10 @@ from cfnlint.rules import RuleMatch
 
 
 class Ebs(CloudFormationLintRule):
-    """Check if Ec2 Ebs Resource Properties"""
+    """Check Ec2 Ebs Resource Properties"""
     id = 'E2504'
     shortdesc = 'Check Ec2 Ebs Properties'
-    description = 'See if Ec2 Eb2 Properties are valid'
+    description = 'See if Ec2 Ebs Properties are valid'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-blockdev-template.html'
     tags = ['properties', 'ec2', 'ebs']
 
@@ -26,13 +26,15 @@ class Ebs(CloudFormationLintRule):
                 for volume_type_obj in volume_types_obj:
                     volume_type = volume_type_obj.get('Value')
                     if isinstance(volume_type, six.string_types):
-                        if volume_type == 'io1':
+                        if volume_type in ('io1', 'io2'):
                             if iops_obj is None:
                                 pathmessage = path[:] + ['VolumeType']
-                                message = 'VolumeType io1 requires Iops to be specified for {0}'
+                                message = 'VolumeType {0} requires Iops to be specified for {1}'
                                 matches.append(
-                                    RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
-                        elif volume_type:
+                                    RuleMatch(
+                                        pathmessage,
+                                        message.format(volume_type, '/'.join(map(str, pathmessage)))))
+                        elif volume_type in ('gp2', 'st1', 'sc1', 'standard'):
                             if iops_obj is not None:
                                 pathmessage = path[:] + ['Iops']
                                 message = 'Iops shouldn\'t be defined for type {0} for {1}'
