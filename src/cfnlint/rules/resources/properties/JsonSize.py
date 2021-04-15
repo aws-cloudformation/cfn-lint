@@ -66,19 +66,25 @@ class JsonSize(CloudFormationLintRule):
         scenarios = cfn.get_object_without_nested_conditions(value, path)
         json_max_size = specs.get('JsonMax')
         for scenario in scenarios:
-            if len(json.dumps(remove_functions(scenario['Object'][prop]), separators=(',', ':'), default=self._serialize_date)) > json_max_size:
+            j = remove_functions(scenario['Object'][prop])
+            if isinstance(j, six.string_types):
+                try:
+                    j = json.loads(j)
+                except:  #pylint: disable=bare-except
+                    continue
+            if len(json.dumps(j, separators=(',', ':'), default=self._serialize_date)) > json_max_size:
                 if scenario['Scenario']:
-                    message = 'Role trust policy JSON text cannot be longer than {0} characters when {1}'
+                    message = '{0} JSON text cannot be longer than {1} characters when {2}'
                     scenario_text = ' and '.join(['when condition "%s" is %s' % (
                         k, v) for (k, v) in scenario['Scenario'].items()])
                     matches.append(
-                        RuleMatch(path + [prop], message.format(json_max_size, scenario_text)))
+                        RuleMatch(path + [prop], message.format(prop, json_max_size, scenario_text)))
                 else:
-                    message = 'Role trust policy JSON text cannot be longer than {0} characters'
+                    message = '{0} JSON text cannot be longer than {1} characters'
                     matches.append(
                         RuleMatch(
                             path + [prop],
-                            message.format(json_max_size),
+                            message.format(prop, json_max_size),
                         )
                     )
 
