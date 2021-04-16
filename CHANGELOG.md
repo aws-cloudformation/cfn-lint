@@ -4,7 +4,7 @@
 - Remove `AWS::AmazonMQ::Broker.EngineVersion AllowedValues` from manual upkeep based on amount of change (pull #[1975](https://github.com/aws-cloudformation/cfn-python-lint/pull/1975))
 ###### Fixes
 - Update rule [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E3502) to convert strings into json before checking the size of the json (pull #[1982](https://github.com/aws-cloudformation/cfn-python-lint/pull/1982))
-- Update rule [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) to check for Iops when type is `io1` or `io2` (pull #[1978)(https://github.com/aws-cloudformation/cfn-python-lint/pull/1978))
+- Update rule [E2504](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E2504) to check for Iops when type is `io1` or `io2` (pull #[1978](https://github.com/aws-cloudformation/cfn-python-lint/pull/1978))
 
 ### v0.48.2
 ###### CloudFormation Specifications
