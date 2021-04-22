@@ -309,7 +309,7 @@ class Template(object):  # pylint: disable=R0904
 
         return keys
 
-    def search_deep_keys(self, searchText):
+    def search_deep_keys(self, searchText, includeGlobals=True):
         """
             Search for a key in all parts of the template.
             :return if searchText is "Ref", an array like ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
@@ -318,7 +318,10 @@ class Template(object):  # pylint: disable=R0904
         results = []
         results.extend(self._search_deep_keys(searchText, self.template, []))
         # Globals are removed during a transform.  They need to be checked manually
-        results.extend(self._search_deep_keys(searchText, self.transform_pre.get('Globals'), []))
+        if includeGlobals:
+            pre_results = self._search_deep_keys(searchText, self.transform_pre.get('Globals'), [])
+            for pre_result in pre_results:
+                results.append(['Globals'] + pre_result)
         return results
 
     def get_condition_values(self, template, path=[]):
