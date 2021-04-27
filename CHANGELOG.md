@@ -1,3 +1,12 @@
+### v0.49.0
+###### CloudFormation Specifications
+- Update resource specs to `35.0.0` (pull #[1986](https://github.com/aws-cloudformation/cfn-python-lint/pull/1986))
+- Patch in Glue resources into `us-gov-west-1` (pull #[1993](https://github.com/aws-cloudformation/cfn-python-lint/pull/1993))
+###### Fixes
+- Require pyyaml to be at least `5.4` for versions of Python that support it (pull #[1992](https://github.com/aws-cloudformation/cfn-python-lint/pull/1992))
+- Update `aws-sam-translator` dependency to be at least `1.35.0` (pull #[1991](https://github.com/aws-cloudformation/cfn-python-lint/pull/1991))
+- Update rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#W1001) to not validate `Globals` when looking at Refs and GetAtts (pull #[1989](https://github.com/aws-cloudformation/cfn-python-lint/pull/1989))
+
 ### v0.48.3
 ###### CloudFormation Specifications
 - Update resource specs to `33.0.0` (pull #[1981](https://github.com/aws-cloudformation/cfn-python-lint/pull/1981))
