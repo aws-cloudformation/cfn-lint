@@ -1,3 +1,7 @@
+### v0.49.1
+###### CloudFormation Specifications
+- Update resource specs to `35.2.0` (pull #[1998](https://github.com/aws-cloudformation/cfn-python-lint/pull/1998))
+
 ### v0.49.0
 ###### CloudFormation Specifications
 - Update resource specs to `35.0.0` (pull #[1986](https://github.com/aws-cloudformation/cfn-python-lint/pull/1986))
