@@ -10436,6 +10436,17 @@
         }
       }
     },
+    "AWS::ECS::TaskDefinition.EphemeralStorage": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-ephemeralstorage.html",
+      "Properties": {
+        "SizeInGiB": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-ephemeralstorage.html#cfn-ecs-taskdefinition-ephemeralstorage-sizeingib",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::ECS::TaskDefinition.FirelensConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-firelensconfiguration.html",
       "Properties": {
@@ -14858,8 +14869,9 @@
         },
         "Parameters": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplateaction.html#cfn-fis-experimenttemplate-experimenttemplateaction-parameters",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "ExperimentTemplateActionItemParameterMap",
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "StartAfter": {
@@ -14871,17 +14883,12 @@
         },
         "Targets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplateaction.html#cfn-fis-experimenttemplate-experimenttemplateaction-targets",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "ExperimentTemplateActionItemTargetMap",
+          "Type": "Map",
           "UpdateType": "Mutable"
         }
       }
-    },
-    "AWS::FIS::ExperimentTemplate.ExperimentTemplateActionItemParameterMap": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplateactionitemparametermap.html"
-    },
-    "AWS::FIS::ExperimentTemplate.ExperimentTemplateActionItemTargetMap": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplateactionitemtargetmap.html"
     },
     "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplatestopcondition.html",
@@ -14922,8 +14929,9 @@
         },
         "ResourceTags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-experimenttemplatetarget.html#cfn-fis-experimenttemplate-experimenttemplatetarget-resourcetags",
+          "PrimitiveItemType": "String",
           "Required": false,
-          "Type": "TagMap",
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "ResourceType": {
@@ -14957,9 +14965,6 @@
           "UpdateType": "Mutable"
         }
       }
-    },
-    "AWS::FIS::ExperimentTemplate.TagMap": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fis-experimenttemplate-tagmap.html"
     },
     "AWS::FMS::Policy.IEMap": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fms-policy-iemap.html",
@@ -18598,19 +18603,28 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-s3bucket",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Code.S3Bucket"
+          }
         },
         "S3Key": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-s3key",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Code.S3Key"
+          }
         },
         "S3ObjectVersion": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-s3objectversion",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Code.S3ObjectVersion"
+          }
         },
         "ZipFile": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-zipfile",
@@ -18627,7 +18641,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-deadletterconfig.html#cfn-lambda-function-deadletterconfig-targetarn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.DeadLetterConfig.TargetArn"
+          }
         }
       }
     },
@@ -18651,13 +18668,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-filesystemconfig.html#cfn-lambda-function-filesystemconfig-arn",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.FileSystemConfig.Arn"
+          }
         },
         "LocalMountPath": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-filesystemconfig.html#cfn-lambda-function-filesystemconfig-localmountpath",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.FileSystemConfig.LocalMountPath"
+          }
         }
       }
     },
@@ -18695,7 +18718,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-tracingconfig.html#cfn-lambda-function-tracingconfig-mode",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.TracingConfig.Mode"
+          }
         }
       }
     },
@@ -21560,6 +21586,59 @@
           "Required": true,
           "Type": "List",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::SSM::Document.AttachmentsSource": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html",
+      "Properties": {
+        "Key": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-key",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.AttachmentsSource.Key"
+          }
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "Values": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-values",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.AttachmentsSource.Values"
+          }
+        }
+      }
+    },
+    "AWS::SSM::Document.DocumentRequires": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html",
+      "Properties": {
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.DocumentRequires.Name"
+          }
+        },
+        "Version": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-version",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.DocumentRequires.Version"
+          }
         }
       }
     },
@@ -24763,6 +24842,220 @@
         }
       }
     },
+    "AWS::XRay::Group.InsightsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-insightsconfiguration.html",
+      "Properties": {
+        "InsightsEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-insightsconfiguration.html#cfn-xray-group-insightsconfiguration-insightsenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "NotificationsEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-insightsconfiguration.html#cfn-xray-group-insightsconfiguration-notificationsenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::XRay::SamplingRule.SamplingRule": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html",
+      "Properties": {
+        "Attributes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-attributes",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "Map",
+          "UpdateType": "Mutable"
+        },
+        "FixedRate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-fixedrate",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HTTPMethod": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-httpmethod",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Host": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-host",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Priority": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-priority",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::SamplingRule.SamplingRule.Priority"
+          }
+        },
+        "ReservoirSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-reservoirsize",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ResourceARN": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-resourcearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RuleARN": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-rulearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RuleName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-rulename",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::SamplingRule.SamplingRule.RuleName"
+          }
+        },
+        "ServiceName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-servicename",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ServiceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-servicetype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "URLPath": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-urlpath",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Version": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-version",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::XRay::SamplingRule.SamplingRuleRecord": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html",
+      "Properties": {
+        "CreatedAt": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-createdat",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ModifiedAt": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-modifiedat",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "SamplingRule": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-samplingrule",
+          "Required": false,
+          "Type": "SamplingRule",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::XRay::SamplingRule.SamplingRuleUpdate": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html",
+      "Properties": {
+        "Attributes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-attributes",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "Map",
+          "UpdateType": "Mutable"
+        },
+        "FixedRate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-fixedrate",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HTTPMethod": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-httpmethod",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Host": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-host",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Priority": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-priority",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::SamplingRule.SamplingRuleUpdate.Priority"
+          }
+        },
+        "ReservoirSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-reservoirsize",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ResourceARN": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-resourcearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RuleARN": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-rulearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RuleName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-rulename",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::SamplingRule.SamplingRuleUpdate.RuleName"
+          }
+        },
+        "ServiceName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-servicename",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ServiceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-servicetype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "URLPath": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-urlpath",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "Tag": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html",
       "Properties": {
@@ -24781,7 +25074,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "35.1.0",
+  "ResourceSpecificationVersion": "35.2.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -24859,6 +25152,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-acmpca-certificateauthority.html#cfn-acmpca-certificateauthority-keyalgorithm",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "KeyStorageSecurityStandard": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-acmpca-certificateauthority.html#cfn-acmpca-certificateauthority-keystoragesecuritystandard",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Immutable"
         },
         "RevocationConfiguration": {
@@ -28777,7 +29076,7 @@
         "OutputFormat": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudwatch-metricstream.html#cfn-cloudwatch-metricstream-outputformat",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::CloudWatch::MetricStream.OutputFormat"
@@ -29570,7 +29869,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-configurationaggregator.html#cfn-config-configurationaggregator-configurationaggregatorname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Config::ConfigurationAggregator.ConfigurationAggregatorName"
+          }
         },
         "OrganizationAggregationSource": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-config-configurationaggregator.html#cfn-config-configurationaggregator-organizationaggregationsource",
@@ -33209,10 +33511,19 @@
       "Attributes": {
         "Arn": {
           "PrimitiveType": "String"
+        },
+        "RepositoryUri": {
+          "PrimitiveType": "String"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecr-repository.html",
       "Properties": {
+        "EncryptionConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecr-repository.html#cfn-ecr-repository-encryptionconfiguration",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
         "ImageScanningConfiguration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecr-repository.html#cfn-ecr-repository-imagescanningconfiguration",
           "PrimitiveType": "Json",
@@ -33389,6 +33700,9 @@
       "Attributes": {
         "Name": {
           "PrimitiveType": "String"
+        },
+        "ServiceArn": {
+          "PrimitiveType": "String"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html",
@@ -33511,12 +33825,6 @@
             "ValueType": "AWS::ECS::Service.SchedulingStrategy"
           }
         },
-        "ServiceArn": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-servicearn",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
         "ServiceName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html#cfn-ecs-service-servicename",
           "PrimitiveType": "String",
@@ -33566,6 +33874,12 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Immutable"
+        },
+        "EphemeralStorage": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-ephemeralstorage",
+          "Required": false,
+          "Type": "EphemeralStorage",
+          "UpdateType": "Mutable"
         },
         "ExecutionRoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html#cfn-ecs-taskdefinition-executionrolearn",
@@ -39069,7 +39383,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-codesigningconfigarn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.CodeSigningConfigArn"
+          }
         },
         "DeadLetterConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-deadletterconfig",
@@ -39107,7 +39424,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-handler",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Handler"
+          }
         },
         "ImageConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-imageconfig",
@@ -39119,7 +39439,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-kmskeyarn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.KmsKeyArn"
+          }
         },
         "Layers": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-layers",
@@ -39142,7 +39465,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-packagetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.PackageType"
+          }
         },
         "ReservedConcurrentExecutions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-reservedconcurrentexecutions",
@@ -39156,7 +39482,7 @@
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "AWS::IAM::Role.Arn"
+            "ValueType": "AWS::Lambda::Function.Role"
           }
         },
         "Runtime": {
@@ -42579,11 +42905,27 @@
     "AWS::SSM::Document": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html",
       "Properties": {
+        "Attachments": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-attachments",
+          "ItemType": "AttachmentsSource",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
         "Content": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content",
           "PrimitiveType": "Json",
           "Required": true,
           "UpdateType": "Immutable"
+        },
+        "DocumentFormat": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documentformat",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.DocumentFormat"
+          }
         },
         "DocumentType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documenttype",
@@ -42603,13 +42945,37 @@
             "ValueType": "AWS::SSM::Document.Name"
           }
         },
+        "Requires": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-requires",
+          "ItemType": "DocumentRequires",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags",
-          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        },
+        "TargetType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-targettype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.TargetType"
+          }
+        },
+        "VersionName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-versionname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.VersionName"
+          }
         }
       }
     },
@@ -45400,6 +45766,88 @@
           }
         }
       }
+    },
+    "AWS::XRay::Group": {
+      "Attributes": {
+        "GroupARN": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-group.html",
+      "Properties": {
+        "FilterExpression": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-group.html#cfn-xray-group-filterexpression",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "GroupName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-group.html#cfn-xray-group-groupname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::Group.GroupName"
+          }
+        },
+        "InsightsConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-group.html#cfn-xray-group-insightsconfiguration",
+          "Required": false,
+          "Type": "InsightsConfiguration",
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-group.html#cfn-xray-group-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::XRay::SamplingRule": {
+      "Attributes": {
+        "RuleARN": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html",
+      "Properties": {
+        "RuleName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-rulename",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::XRay::SamplingRule.RuleName"
+          }
+        },
+        "SamplingRule": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingrule",
+          "Required": false,
+          "Type": "SamplingRule",
+          "UpdateType": "Mutable"
+        },
+        "SamplingRuleRecord": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingrulerecord",
+          "Required": false,
+          "Type": "SamplingRuleRecord",
+          "UpdateType": "Mutable"
+        },
+        "SamplingRuleUpdate": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingruleupdate",
+          "Required": false,
+          "Type": "SamplingRuleUpdate",
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
     }
   },
   "ValueTypes": {
@@ -46729,6 +47177,11 @@
         "OversizedConfigurationItemChangeNotification",
         "ScheduledNotification"
       ]
+    },
+    "AWS::Config::ConfigurationAggregator.ConfigurationAggregatorName": {
+      "AllowedPatternRegex": "[\\w\\-]+",
+      "StringMax": 256,
+      "StringMin": 1
     },
     "AWS::Config::ConfigurationRecorder.ResourceTypes": {
       "AllowedValues": [
@@ -48561,13 +49014,59 @@
       "StringMax": 249,
       "StringMin": 1
     },
+    "AWS::Lambda::Function.Code.S3Bucket": {
+      "AllowedPatternRegex": "^[0-9A-Za-z\\.\\-_]*(?<!\\.)$",
+      "StringMax": 63,
+      "StringMin": 3
+    },
+    "AWS::Lambda::Function.Code.S3Key": {
+      "StringMax": 1024,
+      "StringMin": 1
+    },
+    "AWS::Lambda::Function.Code.S3ObjectVersion": {
+      "StringMax": 1024,
+      "StringMin": 1
+    },
+    "AWS::Lambda::Function.CodeSigningConfigArn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:lambda:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:code-signing-config:csc-[a-z0-9]{17}"
+    },
+    "AWS::Lambda::Function.DeadLetterConfig.TargetArn": {
+      "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+    },
+    "AWS::Lambda::Function.FileSystemConfig.Arn": {
+      "AllowedPatternRegex": "^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}$"
+    },
+    "AWS::Lambda::Function.FileSystemConfig.LocalMountPath": {
+      "AllowedPatternRegex": "^/mnt/[a-zA-Z0-9-_.]+$"
+    },
+    "AWS::Lambda::Function.Handler": {
+      "AllowedPatternRegex": "^[^\\s]+$"
+    },
+    "AWS::Lambda::Function.KmsKeyArn": {
+      "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+    },
     "AWS::Lambda::Function.MemorySize": {
       "NumberMax": 10240,
       "NumberMin": 128
     },
+    "AWS::Lambda::Function.PackageType": {
+      "AllowedValues": [
+        "Image",
+        "Zip"
+      ]
+    },
+    "AWS::Lambda::Function.Role": {
+      "AllowedPatternRegex": "^arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$"
+    },
     "AWS::Lambda::Function.Timeout": {
       "NumberMax": 900,
       "NumberMin": 1
+    },
+    "AWS::Lambda::Function.TracingConfig.Mode": {
+      "AllowedValues": [
+        "Active",
+        "PassThrough"
+      ]
     },
     "AWS::Logs::LogGroup.KmsKeyId": {
       "AllowedPatternRegex": "^arn:[a-z0-9-]+:kms:[a-z0-9-]+:\\d{12}:(key|alias)/.+\\Z"
@@ -48994,6 +49493,29 @@
       "NumberMax": 172800,
       "NumberMin": 15
     },
+    "AWS::SSM::Document.AttachmentsSource.Key": {
+      "AllowedValues": [
+        "SourceUrl",
+        "S3FileUrl",
+        "AttachmentReference"
+      ]
+    },
+    "AWS::SSM::Document.AttachmentsSource.Values": {
+      "StringMax": 100000,
+      "StringMin": 1
+    },
+    "AWS::SSM::Document.DocumentFormat": {
+      "AllowedValues": [
+        "YAML",
+        "JSON"
+      ]
+    },
+    "AWS::SSM::Document.DocumentRequires.Name": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9_\\-.:/]{3,200}$"
+    },
+    "AWS::SSM::Document.DocumentRequires.Version": {
+      "AllowedPatternRegex": "([$]LATEST|[$]DEFAULT|^[1-9][0-9]*$)"
+    },
     "AWS::SSM::Document.DocumentType": {
       "AllowedValues": [
         "ApplicationConfiguration",
@@ -49009,6 +49531,12 @@
     },
     "AWS::SSM::Document.Name": {
       "AllowedPatternRegex": "^[a-zA-Z0-9_\\-.]{3,128}$"
+    },
+    "AWS::SSM::Document.TargetType": {
+      "AllowedPatternRegex": "^\\/[\\w\\.\\-\\:\\/]*$"
+    },
+    "AWS::SSM::Document.VersionName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9_\\-.]{1,128}$"
     },
     "AWS::SSM::MaintenanceWindow.Cutoff": {
       "NumberMax": 23,
@@ -49856,6 +50384,30 @@
         "ALWAYS_ON",
         "AUTO_STOP"
       ]
+    },
+    "AWS::XRay::Group.GroupName": {
+      "StringMax": 32,
+      "StringMin": 1
+    },
+    "AWS::XRay::SamplingRule.RuleName": {
+      "StringMax": 32,
+      "StringMin": 1
+    },
+    "AWS::XRay::SamplingRule.SamplingRule.Priority": {
+      "NumberMax": 9999,
+      "NumberMin": 1
+    },
+    "AWS::XRay::SamplingRule.SamplingRule.RuleName": {
+      "StringMax": 32,
+      "StringMin": 1
+    },
+    "AWS::XRay::SamplingRule.SamplingRuleUpdate.Priority": {
+      "NumberMax": 9999,
+      "NumberMin": 1
+    },
+    "AWS::XRay::SamplingRule.SamplingRuleUpdate.RuleName": {
+      "StringMax": 32,
+      "StringMin": 1
     },
     "AppStreamInstanceType": {},
     "AvailabilityZone": {
