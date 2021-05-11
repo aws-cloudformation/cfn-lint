@@ -231,25 +231,41 @@ def create_sub_node_class(cls):
                 if not isinstance(v[1], dict):
                     return
                 self.__cache_sub_vars = v[1]
-
-            self.__cache_is_valid = True   
+                self.__cache_is_valid = True
 
         def __setup(self):
             if len(self) == 1:
                 for k, v in self.items():
                     if k == 'Fn::Sub':
                         if isinstance(v, six.string_types):
-                            self.____setup_list_sub_string(v)
+                            self.__setup_list_sub_string(v)
                             self.__cache_is_valid = True
                         elif isinstance(v, list):
                             self.__setup_list(v)
 
-            print(self.__cache_is_valid, self)
-            print('String', self.__cache_sub_string)
-            print('String vars', self.__cache_sub_string_vars)
-            print('Sub vars', self.__cache_sub_vars)
+        def get_defined_vars(self):
+            # Returns that are in the second part of a list Fn::Sub
+            # This function will not return implied variables from a String Ref and GetAtt
+            if self.is_valid():
+                return self.__cache_sub_vars
 
-        def valid(self):
+            return {}
+
+        def get_string_vars(self):
+            # Returns all variables in the Sub String
+            if self.is_valid():
+                return self.__cache_sub_string_vars
+
+            return set()
+
+        def get_string(self):
+            # Returns the sub string as it was when it was decoded
+            if self.is_valid():
+                return self.__cache_sub_string
+
+            return ''
+
+        def is_valid(self):
             return self.__cache_is_valid
 
 
@@ -305,4 +321,5 @@ def create_dict_list_class(cls):
 str_node = create_str_node_class(str)
 dict_node = create_dict_node_class(dict)
 list_node = create_dict_list_class(list)
-sub_node = create_sub_node_class(dict_node)
+intrinsic_node = create_intrinsic_node_class(dict_node)
+sub_node = create_sub_node_class(intrinsic_node)

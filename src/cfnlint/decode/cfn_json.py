@@ -9,7 +9,7 @@ import json
 from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
 from json.scanner import NUMBER_RE
 import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node
+from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
 
 
 LOGGER = logging.getLogger(__name__)
@@ -45,6 +45,10 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
         if key in mapping:
             raise DuplicateError('"{}"'.format(key), mapping, key)
         mapping[key] = value
+
+    if len(mapping) == 1:
+        if 'Fn::Sub' in mapping:
+            return sub_node(ordered_pairs, beg_mark, end_mark)
     return mapping
 
 

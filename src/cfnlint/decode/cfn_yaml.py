@@ -107,9 +107,9 @@ class NodeConstructor(SafeConstructor):
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
 
-        if key == 'Fn::Sub':
-            if len(mapping) == 1:
-                return sub_node(obj, node.start_mark, node.end_mark)          
+        if len(mapping) == 1:
+            if 'Fn::Sub' in mapping:
+                return sub_node(obj, node.start_mark, node.end_mark)
 
         return dict_node(obj, node.start_mark, node.end_mark)
 
@@ -195,6 +195,9 @@ def multi_constructor(loader, tag_suffix, node):
         constructor = loader.construct_mapping
     else:
         raise 'Bad tag: !{}'.format(tag_suffix)
+
+    if tag_suffix == 'Fn::Sub':
+        return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
