@@ -17,14 +17,26 @@ class KeyName(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'
     tags = ['mappings']
 
-    def check_key(self, key, path, check_alphanumeric=True):
+    def check_attribute(self, key, path):
+        """ Check the key name for string and alphanumeric"""
+        matches = []
+        if not isinstance(key, six.string_types):
+            message = 'Mapping attribute ({0}) has to be a string.'
+            matches.append(RuleMatch(path[:], message.format(key)))
+        elif not re.match(REGEX_ALPHANUMERIC, key):
+            message = 'Mapping attribute ({0}) has invalid name. Name has to be alphanumeric.'
+            matches.append(RuleMatch(path[:], message.format(key)))
+
+        return matches
+
+    def check_key(self, key, path):
         """ Check the key name for string and alphanumeric"""
         matches = []
         if not isinstance(key, six.string_types):
             message = 'Mapping key ({0}) has to be a string.'
             matches.append(RuleMatch(path[:], message.format(key)))
-        elif not re.match(REGEX_ALPHANUMERIC, key) and check_alphanumeric:
-            message = 'Mapping key ({0}) has invalid name. Name has to be alphanumeric.'
+        elif not re.match('^[a-zA-Z0-9.-]{1,255}$', key):
+            message = 'Mapping key ({0}) has invalid name. Name has to be alphanumeric, \'-\' or \'.\''
             matches.append(RuleMatch(path[:], message.format(key)))
 
         return matches
@@ -37,11 +49,11 @@ class KeyName(CloudFormationLintRule):
             if isinstance(mapping_value, dict):
                 for key_name, key_value in mapping_value.items():
                     matches.extend(self.check_key(
-                        key_name, ['Mappings', mapping_name, key_name], False))
+                        key_name, ['Mappings', mapping_name, key_name]))
                     if isinstance(key_value, dict):
                         for sub_key_name, _ in key_value.items():
                             matches.extend(
-                                self.check_key(
+                                self.check_attribute(
                                     sub_key_name, ['Mappings', mapping_name, key_name, sub_key_name]))
 
         return matches
