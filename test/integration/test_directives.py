@@ -41,7 +41,7 @@ class TestDirectives(BaseCliTestCase):
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
                         'ShortDescription': 'Resource properties are valid',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
+                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
                 {
@@ -68,7 +68,7 @@ class TestDirectives(BaseCliTestCase):
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
                         'ShortDescription': 'Resource properties are valid',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
+                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
                 {
@@ -121,7 +121,7 @@ class TestDirectives(BaseCliTestCase):
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
                         'ShortDescription': 'Resource properties are valid',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#properties'
+                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
                 {
@@ -149,7 +149,7 @@ class TestDirectives(BaseCliTestCase):
                         'Description': 'Check if properties have a valid value in case of an enumator',
                         'Id': 'E3030',
                         'ShortDescription': 'Check if properties have a valid value',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedvalue'
+                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue'
                     }
                 }
             ]

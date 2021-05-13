@@ -16,7 +16,7 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
     shortdesc = 'Check if a list that allows duplicates has any duplicates'
     description = 'Certain lists support duplicate items.' \
                   'Provide an alert when list of strings or numbers have repeats.'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#rules-1'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#rules-1'
     tags = ['resources', 'property', 'list']
 
     def initialize(self, cfn):
