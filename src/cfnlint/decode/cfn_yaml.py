@@ -80,28 +80,29 @@ class NodeConstructor(SafeConstructor):
             key = self.construct_object(key_node, False)
             value = self.construct_object(value_node, False)
 
-            if key in mapping:
-                raise CfnParseError(
-                    self.filename,
-                    [
-                        build_match(
-                            filename=self.filename,
-                            message='Duplicate resource found "{}" (line {})'.format(
-                                key, key_node.start_mark.line + 1),
-                            line_number=key_node.start_mark.line,
-                            column_number=key_node.start_mark.column,
-                            key=key
-                        ),
-                        build_match(
-                            filename=self.filename,
-                            message='Duplicate resource found "{}" (line {})'.format(
-                                key, mapping[key].start_mark.line + 1),
-                            line_number=mapping[key].start_mark.line,
-                            column_number=mapping[key].start_mark.column,
-                            key=key
-                        )
-                    ]
-                )
+            for key_dup in mapping:
+                if key_dup == key:
+                    raise CfnParseError(
+                        self.filename,
+                        [
+                            build_match(
+                                filename=self.filename,
+                                message='Duplicate resource found "{}" (line {})'.format(
+                                    key, key_dup.start_mark.line + 1),
+                                line_number=key_dup.start_mark.line,
+                                column_number=key_dup.start_mark.column,
+                                key=key
+                            ),
+                            build_match(
+                                filename=self.filename,
+                                message='Duplicate resource found "{}" (line {})'.format(
+                                    key, key_node.start_mark.line + 1),
+                                line_number=key_node.start_mark.line,
+                                column_number=key_node.start_mark.column,
+                                key=key
+                            ),
+                        ]
+                    )
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
