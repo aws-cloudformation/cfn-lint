@@ -1,3 +1,10 @@
+### v0.49.2
+###### CloudFormation Specifications
+- Update resource specs to `36.0.0` (pull #[2001](https://github.com/aws-cloudformation/cfn-python-lint/pull/2001))
+- Add Boston, Miami, Houston as local zones (pull #[2002](https://github.com/aws-cloudformation/cfn-python-lint/pull/2002))
+###### Fixes
+- Update the key regex for rule [E7003](https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/rules.md#E7003) (pull #[2006](https://github.com/aws-cloudformation/cfn-python-lint/pull/2006))
+
 ### v0.49.1
 ###### CloudFormation Specifications
 - Update resource specs to `35.2.0` (pull #[1998](https://github.com/aws-cloudformation/cfn-python-lint/pull/1998))
