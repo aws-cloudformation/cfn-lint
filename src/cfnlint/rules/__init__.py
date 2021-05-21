@@ -136,6 +136,8 @@ class CloudFormationLintRule(object):
 
                 if results:
                     for result in results:
+                        if 'Fn::Transform' in result.path:
+                            continue
                         linenumbers = cfn.get_location_yaml(cfn.template, result.path)
                         if linenumbers:
                             matches.append(Match(
