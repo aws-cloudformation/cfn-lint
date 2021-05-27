@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import json
 from datetime import date
 import six
-from cfnlint.helpers import convert_dict
+from cfnlint.helpers import convert_dict, FUNCTIONS_SINGLE
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -153,6 +153,23 @@ class Policy(CloudFormationLintRule):
                 message = 'IAM Policy statement missing Resource or NotResource'
                 matches.append(
                     RuleMatch(branch[:], message))
+
+        resources = statement.get('Resource', [])
+        if isinstance(resources, six.string_types):
+            resources = [resources]
+
+        for index, resource in enumerate(resources):
+            if isinstance(resource, dict):
+                if len(resource) == 1:
+                    for k in resource.keys():
+                        if k not in FUNCTIONS_SINGLE:
+                            message = 'IAM Policy statement Resource incorrectly formatted'
+                            matches.append(
+                                RuleMatch(branch[:] + ['Resource', index], message))
+                else:
+                    message = 'IAM Policy statement Resource incorrectly formatted'
+                    matches.append(
+                        RuleMatch(branch[:] + ['Resource', index], message))
 
         return(matches)
 
