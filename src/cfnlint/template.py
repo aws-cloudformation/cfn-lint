@@ -132,7 +132,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_refs(self):
-        LOGGER.debug('Get all valid REFs from template...')
         results = cfnlint.helpers.RegexDict()
         parameters = self.template.get('Parameters', {})
         if parameters:
@@ -165,7 +164,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_getatts(self):
-        LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         resources = self.template.get('Resources', {})
