@@ -8,8 +8,8 @@ This makes it easy to apply your our rules on top of the CloudFormation rules wi
 ### Features
 The `--override-spec` functionality currently supports the following features:
 
-#### Whitelist/Blacklist resources
-If you want to block the use of specific resources, you can easily disable them by using the Whitelist/Blacklist features. This can be done by specifying a list of `IncludedResourceTypes` and/or `ExcludedResourceTypes`.
+#### Include/Exclude resources
+If you want to block the use of specific resources, you can easily disable them by using the Include/Exclude features. This can be done by specifying a list of `IncludedResourceTypes` and/or `ExcludedResourceTypes`.
 
 * `IncludedResourceTypes`: List of resources that are supported. If specified, all resources that are not in this list are not allowed.
 * `ExcludedResourceTypes`: List of resources that are not supported. Resources in this list are not allowed.

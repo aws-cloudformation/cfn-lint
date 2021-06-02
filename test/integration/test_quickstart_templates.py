@@ -21,8 +21,8 @@ class TestQuickStartTemplates(BaseCliTestCase):
             'exit_code': 8,
         },
         {
-            'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',
-            'results_filename': 'test/fixtures/results/quickstart/nist_high_master.json',
+            'filename': 'test/fixtures/templates/quickstart/nist_high_main.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/nist_high_main.json',
             'exit_code': 14,
         },
         {
