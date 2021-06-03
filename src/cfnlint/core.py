@@ -16,11 +16,12 @@ import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
 import cfnlint.maintenance
-from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
+from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS, REGISTRY_TYPES
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
 __CACHED_RULES = None
+
 
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
@@ -40,9 +41,13 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
-    """Process args and run"""
+class InvalidRegistryTypesException(CfnLintExitException):
+    """When an unsupported/invalid registry type is supplied"""
 
+
+def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas,
+            mandatory_rules=None, validate_registry_types=None):
+    """Process args and run"""
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -58,7 +63,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, regi
                     with open(os.path.join(path, f)) as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
 
-    return run_checks(filename, template, rules, regions, mandatory_rules)
+    return run_checks(filename, template, rules, regions, mandatory_rules, validate_registry_types)
 
 
 def get_exit_code(matches):
@@ -168,7 +173,7 @@ def get_args_filenames(cli_args):
 
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
-    global __CACHED_RULES  #pylint: disable=global-statement
+    global __CACHED_RULES  # pylint: disable=global-statement
 
     ignore_bad_template = False
     if args.ignore_bad_template:
@@ -215,14 +220,25 @@ def get_template_rules(filename, args):
     return(template, __CACHED_RULES, [])
 
 
-def run_checks(filename, template, rules, regions, mandatory_rules=None):
+def run_checks(filename, template, rules, regions, mandatory_rules=None, validate_registry_types=None):
     """Run Checks and Custom Rules against the template"""
+    if validate_registry_types is None:
+        validate_registry_types = []
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
             msg = 'Regions %s are unsupported. Supported regions are %s' % (
                 unsupported_regions, REGIONS)
             raise InvalidRegionException(msg, 32)
+
+    if validate_registry_types:
+        # Validate input of client for --validate-registry-types
+        if not set(validate_registry_types).issubset(set(REGISTRY_TYPES)):
+            unsupported_registry_types = list(set(validate_registry_types).difference(set(REGISTRY_TYPES)))
+            msg = 'Registry types %s are unsupported. Supported registry types are %s' % (
+                unsupported_registry_types, REGISTRY_TYPES
+            )
+            raise InvalidRegistryTypesException(msg, 32)
 
     errors = []
 
@@ -238,7 +254,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
 
     if errors:
         if ignore_transform_error:
-            return([])   # if there is a transform error we can't continue
+            return([])  # if there is a transform error we can't continue
 
         return(errors)
 

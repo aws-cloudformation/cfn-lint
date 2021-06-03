@@ -141,7 +141,9 @@ class TestCli(BaseTestCase):
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
+        self.assertEqual(args.update_registry_type_specs, False)
         self.assertEqual(args.output_file, None)
+        self.assertEqual(args.validate_registry_types, [])
 
     def test_output_file(self):
         filename = 'test/fixtures/templates/good/core/config_parameters.yaml'
@@ -177,6 +179,8 @@ class TestCli(BaseTestCase):
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
+        self.assertEqual(args.update_registry_type_specs, False)
+        self.assertEqual(args.validate_registry_types, [])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_override_parameters(self, yaml_mock):
@@ -205,6 +209,8 @@ class TestCli(BaseTestCase):
                          'test/fixtures/templates/good/core/config_parameters.yaml'])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
+        self.assertEqual(args.update_registry_type_specs, False)
+        self.assertEqual(args.validate_registry_types, [])
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_bad_config(self, yaml_mock):
@@ -231,3 +237,5 @@ class TestCli(BaseTestCase):
         self.assertEqual(args.templates, [filename])
         self.assertEqual(args.update_documentation, False)
         self.assertEqual(args.update_specs, False)
+        self.assertEqual(args.update_registry_type_specs, False)
+        self.assertEqual(args.validate_registry_types, [])
