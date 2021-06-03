@@ -25,7 +25,7 @@ class TestFormatters(BaseTestCase):
 
             results.extend(
                 cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+                    filename, template, rules, ['us-east-1'], []))
 
         # Validate Formatter class initiated
         self.assertEqual('JsonFormatter', formatter.__class__.__name__)
@@ -61,7 +61,7 @@ class TestFormatters(BaseTestCase):
             (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
             results.extend(
                 cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+                    filename, template, rules, ['us-east-1'], []))
 
         # Validate Formatter class initiated
         self.assertEqual('JUnitFormatter', formatter.__class__.__name__)
@@ -84,7 +84,7 @@ class TestFormatters(BaseTestCase):
             (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
             results.extend(
                 cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+                    filename, template, rules, ['us-east-1'], []))
 
         # Validate Formatter class initiated
         self.assertEqual('JUnitFormatter', formatter.__class__.__name__)

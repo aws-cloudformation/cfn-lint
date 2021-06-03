@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 import cfnlint.core
 import cfnlint.helpers  # pylint: disable=E0401
+from mock import patch
 
 
 class TestRunChecks(BaseTestCase):
@@ -22,7 +23,7 @@ class TestRunChecks(BaseTestCase):
             (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
             results.extend(
                 cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+                    filename, template, rules, ['us-east-1'], []))
 
         assert(results == [])
 
@@ -37,7 +38,7 @@ class TestRunChecks(BaseTestCase):
             (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
             results.extend(
                 cfnlint.core.run_checks(
-                    filename, template, rules, ['us-east-1']))
+                    filename, template, rules, ['us-east-1'], []))
 
         assert(results[0].rule.id == 'W2506')
         assert(results[1].rule.id == 'W2001')
@@ -49,7 +50,21 @@ class TestRunChecks(BaseTestCase):
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
         err = None
         try:
-            cfnlint.core.run_checks(filename, template, rules, ['not-a-region'])
+            cfnlint.core.run_checks(filename, template, rules, ['not-a-region'], [])
         except cfnlint.core.InvalidRegionException as e:
             err = e
         assert(type(err) == cfnlint.core.InvalidRegionException)
+
+    def test_bad_registry_type(self):
+        """Test bad registry type"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        err = None
+        try:
+            cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], ['not-a-registry-type'])
+        except cfnlint.core.InvalidRegistryTypesException as e:
+            err = e
+        assert(type(err) == cfnlint.core.InvalidRegistryTypesException)
+
+
