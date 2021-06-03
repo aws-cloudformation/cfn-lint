@@ -1,3 +1,15 @@
+### v0.50.0
+###### Features
+- Update rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2507) to validate resource configuration in an IAM policy (pull #[2023](https://github.com/aws-cloudformation/cfn-lint/pull/2023))
+- Update `aws-sam-translator` to `1.36.0` (pull #[2027](https://github.com/aws-cloudformation/cfn-lint/pull/2027))
+###### CloudFormation Specifications
+- Update resource specs to `37.1.0` (pull #[2012](https://github.com/aws-cloudformation/cfn-python-lint/pull/2012))
+- Update Lambda EOL for `dotnetcore2.1` (pull #[2015](https://github.com/aws-cloudformation/cfn-lint/pull/2015))
+- UPdate Lambda EOL for `nodejs10.x` and `ruby2.5` (pull #[2033](https://github.com/aws-cloudformation/cfn-lint/pull/2033))
+###### Fixes
+- Fix an issue with rule [E7003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E7003) when a `Fn::Transform` was in a mapping (pull #[2017](https://github.com/aws-cloudformation/cfn-lint/pull/2017))
+- Fix an issue when finding duplicate keys where the 2nd error wasn't to the key (pull #[2011](https://github.com/aws-cloudformation/cfn-lint/pull/2011))
+
 ### v0.49.2
 ###### CloudFormation Specifications
 - Update resource specs to `36.0.0` (pull #[2001](https://github.com/aws-cloudformation/cfn-python-lint/pull/2001))
