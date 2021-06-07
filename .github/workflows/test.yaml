@@ -22,9 +22,10 @@ jobs:
         run: |
           tox -e pylint
           tox -e py
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v1.0.5
         if: matrix.os == 'ubuntu-latest'
         with:
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml # optional
           name: py${{ matrix.python-version }}-${{ matrix.env.TOXENV }}-${{ matrix.os }}
           flags: unittests # optional
