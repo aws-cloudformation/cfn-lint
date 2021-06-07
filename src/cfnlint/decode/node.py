@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import re
 import sys
 import logging
 from copy import deepcopy
@@ -186,6 +187,91 @@ def create_dict_node_class(cls):
     return node_class
 
 
+def create_intrinsic_node_class(cls):
+    """
+    Create dynamic sub class
+    """
+    class intrinsic_class(cls):
+        """Node class created based on the input class"""
+        def is_valid(self):
+            raise TemplateAttributeError('intrisnic class shouldn\'t be directly used')
+
+    intrinsic_class.__name__ = '%s_intrinsic' % cls.__name__
+    return intrinsic_class
+
+
+def create_sub_node_class(cls):
+    """
+    Create dynamic sub class
+    """
+    class sub_class(cls):
+        """Node class created based on the input class"""
+
+        def __init__(self, x, start_mark, end_mark):
+            cls.__init__(self, x, start_mark, end_mark)
+            self.__cache_is_valid = False
+            self.__cache_sub_string = ''
+            self.__cache_sub_string_vars = set()
+            self.__cache_sub_vars = {}
+            self.__setup()
+
+        def __setup_list_sub_string(self, s):
+            self.__cache_sub_string = s
+            regex = re.compile(r'\${[^!].*?}')
+            string_params = regex.findall(s)
+
+            for string_param in string_params:
+                self.__cache_sub_string_vars.add(string_param[2:-1].strip())
+
+        def __setup_list(self, v):
+            if len(v) == 2:
+                if not isinstance(v[0], six.string_types):
+                    return
+                self.__setup_list_sub_string(v[0])
+                if not isinstance(v[1], dict):
+                    return
+                self.__cache_sub_vars = v[1]
+                self.__cache_is_valid = True
+
+        def __setup(self):
+            if len(self) == 1:
+                for k, v in self.items():
+                    if k == 'Fn::Sub':
+                        if isinstance(v, six.string_types):
+                            self.__setup_list_sub_string(v)
+                            self.__cache_is_valid = True
+                        elif isinstance(v, list):
+                            self.__setup_list(v)
+
+        def get_defined_vars(self):
+            # Returns that are in the second part of a list Fn::Sub
+            # This function will not return implied variables from a String Ref and GetAtt
+            if self.is_valid():
+                return self.__cache_sub_vars
+
+            return {}
+
+        def get_string_vars(self):
+            # Returns all variables in the Sub String
+            if self.is_valid():
+                return self.__cache_sub_string_vars
+
+            return set()
+
+        def get_string(self):
+            # Returns the sub string as it was when it was decoded
+            if self.is_valid():
+                return self.__cache_sub_string
+
+            return ''
+
+        def is_valid(self):
+            return self.__cache_is_valid
+
+
+    sub_class.__name__ = '%s_sub' % cls.__name__
+    return sub_class
+
 def create_dict_list_class(cls):
     """
     Create dynamic list class
@@ -235,3 +321,5 @@ def create_dict_list_class(cls):
 str_node = create_str_node_class(str)
 dict_node = create_dict_node_class(dict)
 list_node = create_dict_list_class(list)
+intrinsic_node = create_intrinsic_node_class(dict_node)
+sub_node = create_sub_node_class(intrinsic_node)
