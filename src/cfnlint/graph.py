@@ -7,7 +7,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import re
 import six
-from networkx import networkx
+import networkx
 
 LOGGER = logging.getLogger('cfnlint.graph')
 
