@@ -7995,7 +7995,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "EbsVolumeType"
+            "ValueType": "AWS::EC2::SpotFleet.EbsBlockDevice.VolumeType"
           }
         }
       }
@@ -8013,7 +8013,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-fleetlaunchtemplatespecification.html#cfn-ec2-spotfleet-fleetlaunchtemplatespecification-launchtemplatename",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EC2::SpotFleet.FleetLaunchTemplateSpecification.LaunchTemplateName"
+          }
         },
         "Version": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-fleetlaunchtemplatespecification.html#cfn-ec2-spotfleet-fleetlaunchtemplatespecification-version",
@@ -8240,7 +8243,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotcapacityrebalance.html#cfn-ec2-spotfleet-spotcapacityrebalance-replacementstrategy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EC2::SpotFleet.SpotCapacityRebalance.ReplacementStrategy"
+          }
         }
       }
     },
@@ -8382,7 +8388,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "Ec2FleetSpotAllocationStrategy"
+            "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.AllocationStrategy"
           }
         },
         "ExcessCapacityTerminationPolicy": {
@@ -8391,7 +8397,7 @@
           "Required": false,
           "UpdateType": "Mutable",
           "Value": {
-            "ValueType": "SpotFleetExcessCapacityTerminationPolicy"
+            "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.ExcessCapacityTerminationPolicy"
           }
         },
         "IamFleetRole": {
@@ -8409,7 +8415,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SpotFleetInstanceInterruptionBehavior"
+            "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.InstanceInterruptionBehavior"
           }
         },
         "InstancePoolsToUseCount": {
@@ -8500,7 +8506,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "SpotFleetType"
+            "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.Type"
           }
         },
         "ValidFrom": {
@@ -8524,7 +8530,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-tagspecifications.html#cfn-ec2-spotfleet-spotfleettagspecification-resourcetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EC2::SpotFleet.SpotFleetTagSpecification.ResourceType"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-tagspecifications.html#cfn-ec2-spotfleet-tags",
@@ -8569,7 +8578,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications-placement.html#cfn-ec2-spotfleet-spotplacement-tenancy",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EC2::SpotFleet.SpotPlacement.Tenancy"
+          }
         }
       }
     },
@@ -24034,7 +24046,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "37.1.0",
+  "ResourceSpecificationVersion": "38.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -25406,7 +25418,7 @@
         "CreationTime": {
           "PrimitiveType": "String"
         },
-        "EffectiveEngineVersion": {
+        "WorkGroupConfiguration.EngineVersion.EffectiveEngineVersion": {
           "PrimitiveType": "String"
         }
       },
@@ -26879,6 +26891,9 @@
     "AWS::CloudFront::Function": {
       "Attributes": {
         "FunctionARN": {
+          "PrimitiveType": "String"
+        },
+        "FunctionMetadata.FunctionARN": {
           "PrimitiveType": "String"
         },
         "Stage": {
@@ -34820,6 +34835,9 @@
     },
     "AWS::FSx::FileSystem": {
       "Attributes": {
+        "DNSName": {
+          "PrimitiveType": "String"
+        },
         "LustreMountName": {
           "PrimitiveType": "String"
         }
@@ -41092,7 +41110,7 @@
         },
         "Parameters": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-parameters",
-          "ItemType": "ParameterValues",
+          "PrimitiveItemType": "Json",
           "Required": false,
           "Type": "Map",
           "UpdateType": "Mutable"
@@ -45944,6 +45962,114 @@
           "SecurityGroupIds"
         ]
       }
+    },
+    "AWS::EC2::SpotFleet.EbsBlockDevice.VolumeType": {
+      "AllowedValues": [
+        "gp2",
+        "gp3",
+        "io1",
+        "io2",
+        "sc1",
+        "st1",
+        "standard"
+      ]
+    },
+    "AWS::EC2::SpotFleet.FleetLaunchTemplateSpecification.LaunchTemplateName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9\\(\\)\\.\\-/_]+",
+      "StringMax": 128,
+      "StringMin": 3
+    },
+    "AWS::EC2::SpotFleet.SpotCapacityRebalance.ReplacementStrategy": {
+      "AllowedValues": [
+        "launch"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.AllocationStrategy": {
+      "AllowedValues": [
+        "capacityOptimized",
+        "capacityOptimizedPrioritized",
+        "diversified",
+        "lowestPrice"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.ExcessCapacityTerminationPolicy": {
+      "AllowedValues": [
+        "Default",
+        "NoTermination",
+        "default",
+        "noTermination"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.InstanceInterruptionBehavior": {
+      "AllowedValues": [
+        "hibernate",
+        "stop",
+        "terminate"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.Type": {
+      "AllowedValues": [
+        "maintain",
+        "request"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotFleetTagSpecification.ResourceType": {
+      "AllowedValues": [
+        "client-vpn-endpoint",
+        "customer-gateway",
+        "dedicated-host",
+        "dhcp-options",
+        "egress-only-internet-gateway",
+        "elastic-gpu",
+        "elastic-ip",
+        "export-image-task",
+        "export-instance-task",
+        "fleet",
+        "fpga-image",
+        "host-reservation",
+        "image",
+        "import-image-task",
+        "import-snapshot-task",
+        "instance",
+        "internet-gateway",
+        "key-pair",
+        "launch-template",
+        "local-gateway-route-table-vpc-association",
+        "natgateway",
+        "network-acl",
+        "network-insights-analysis",
+        "network-insights-path",
+        "network-interface",
+        "placement-group",
+        "reserved-instances",
+        "route-table",
+        "security-group",
+        "snapshot",
+        "spot-fleet-request",
+        "spot-instances-request",
+        "subnet",
+        "traffic-mirror-filter",
+        "traffic-mirror-session",
+        "traffic-mirror-target",
+        "transit-gateway",
+        "transit-gateway-attachment",
+        "transit-gateway-connect-peer",
+        "transit-gateway-multicast-domain",
+        "transit-gateway-route-table",
+        "volume",
+        "vpc",
+        "vpc-flow-log",
+        "vpc-peering-connection",
+        "vpn-connection",
+        "vpn-gateway"
+      ]
+    },
+    "AWS::EC2::SpotFleet.SpotPlacement.Tenancy": {
+      "AllowedValues": [
+        "dedicated",
+        "default",
+        "host"
+      ]
     },
     "AWS::EC2::VPC.Id": {
       "GetAtt": {
