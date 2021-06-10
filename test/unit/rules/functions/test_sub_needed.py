@@ -27,13 +27,13 @@ class TestSubNeeded(BaseRuleTestCase):
         """Test custom excludes configuration"""
         self.helper_file_rule_config(
             'test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml',
-            {'custom_excludes': '^\\$\\{self.+\\}$'}, 0
+            {'custom_excludes': '^\\$\\{Stage\\}$'}, 0
         )
         self.helper_file_rule_config(
             'test/fixtures/templates/good/functions/sub_needed_custom_excludes.yaml',
-            {}, 4
+            {}, 1
         )
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions/sub_needed.yaml', 8)
+        self.helper_file_negative('test/fixtures/templates/bad/functions/sub_needed.yaml', 7)
