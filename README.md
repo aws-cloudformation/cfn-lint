@@ -6,7 +6,7 @@
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
 [![PyPI downloads](https://pepy.tech/badge/cfn-lint/week)](https://pypistats.org/packages/cfn-lint)
 [![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)
-[![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
+[![codecov](https://codecov.io/gh/aws-cloudformation/cfn-lint/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate AWS CloudFormation yaml/json templates against the [AWS CloudFormation Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and additional
 checks.  Includes checking valid values for resource properties and best practices.
@@ -301,7 +301,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-python-lint
-  rev: v0.50.0  # The version of cfn-lint to use
+  rev: v0.51.0  # The version of cfn-lint to use
   hooks:
     - id: cfn-python-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
