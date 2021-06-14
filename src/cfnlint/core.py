@@ -120,9 +120,12 @@ def get_matches(filenames, args):
         # template matches may be empty but the template is still None
         # this happens when ignoring bad templates
         if not errors and template:
-            yield from run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks)
+            matches = run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks)
+            for match in matches:
+                yield match
         else:
-            yield from errors
+            for match in matches:
+                yield match
         LOGGER.debug('Completed linting of file: %s', str(filename))
 
 
