@@ -1,3 +1,12 @@
+### v0.51.0
+###### Features
+- A new sub class to make working with `Fn::Sub` easier (pull #[2003](https://github.com/aws-cloudformation/cfn-lint/pull/2003))
+###### CloudFormation Specifications
+- Update resource specs to `39.1.0` (pull #[2044](https://github.com/aws-cloudformation/cfn-python-lint/pull/2044))
+###### Fixes
+- Fix an issue with `networkx` package nesting in the graph function (pull #[2035](https://github.com/aws-cloudformation/cfn-lint/pull/2033))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1029) to only alert when the value found is a parameter or a resource (pull #[2031](https://github.com/aws-cloudformation/cfn-lint/pull/2031))
+
 ### v0.50.0
 ###### Features
 - Update rule [E2507](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2507) to validate resource configuration in an IAM policy (pull #[2023](https://github.com/aws-cloudformation/cfn-lint/pull/2023))
