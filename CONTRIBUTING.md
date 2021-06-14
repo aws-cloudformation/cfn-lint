@@ -21,7 +21,7 @@ reported the issue. Please try to include as much information as you can. Detail
 
 ## Development Environment
 
-1. You will need Python 2 >= 2.7 or Python 3 >= 3.4. Verify which version you have by running `python --version`. 
+1. You will need Python 2 >= 2.7 or Python 3 >= 3.5. Verify which version you have by running `python --version`. 
 
     > If you don't have it installed, download it [here](https://www.python.org/downloads/). When you do this, `pip` should be installed automatically.
 
@@ -31,7 +31,7 @@ reported the issue. Please try to include as much information as you can. Detail
     # fork the repository
     git clone https://github.com/<YOUR-USERNAME>/cfn-python-lint.git
     cd cfn-python-lint
-    pip install -e . # or "pip3 install -e ." if you are using Python 3.4+
+    pip install -e . # or "pip3 install -e ." if you are using Python 3.5+
     ```
 
 1. Run `pip show cfn-lint` (or `pip3 show cfn-lint` if you are using Python 3). The `Location` printed should be the folder from the step above.

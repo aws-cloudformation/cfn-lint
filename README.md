@@ -28,7 +28,7 @@ _To get information about the [SAM Transformation](https://docs.aws.amazon.com/A
 
 ## Install
 
-Python 2.7+ and 3.4+ are supported.
+Python 2.7+ and 3.5+ are supported.
 
 ### Pip
 
