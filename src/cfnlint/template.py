@@ -40,6 +40,7 @@ class Template(object):  # pylint: disable=R0904
         self.transform_pre['Fn::Sub'] = self.search_deep_keys('Fn::Sub')
         self.transform_pre['Fn::FindInMap'] = self.search_deep_keys('Fn::FindInMap')
         self.conditions = cfnlint.conditions.Conditions(self)
+        self.__cache_search_deep_class = {}
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -132,7 +133,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_refs(self):
-        LOGGER.debug('Get all valid REFs from template...')
         results = cfnlint.helpers.RegexDict()
         parameters = self.template.get('Parameters', {})
         if parameters:
@@ -165,7 +165,6 @@ class Template(object):  # pylint: disable=R0904
         return results
 
     def get_valid_getatts(self):
-        LOGGER.debug('Get valid GetAtts from template...')
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS['us-east-1'].get('ResourceTypes')
         results = {}
         resources = self.template.get('Resources', {})
@@ -279,6 +278,42 @@ class Template(object):  # pylint: disable=R0904
                 matches.extend(results)
 
         return matches
+
+     # pylint: disable=dangerous-default-value
+    def _search_deep_class(self, searchClass, cfndict, path):
+        """Search deep for keys and get their values"""
+        keys = []
+        if isinstance(cfndict, searchClass):
+            keys.append((path[:], cfndict))
+
+        if isinstance(cfndict, dict):
+            for key in cfndict:
+                keys.extend(self._search_deep_class(searchClass, cfndict[key], path[:] + [key]))
+        elif isinstance(cfndict, list):
+            for index, item in enumerate(cfndict):
+                keys.extend(self._search_deep_class(searchClass, item, path[:] + [index]))
+
+        return keys
+
+    def search_deep_class(self, searchClass, includeGlobals=True):
+        """
+            Search for a key in all parts of the template.
+            :return if searchText is "Ref", an array like ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
+        """
+        results = []
+        if searchClass in self.__cache_search_deep_class:
+            results = self.__cache_search_deep_class[searchClass]
+        else:
+            results.extend(self._search_deep_class(searchClass, self.template, []))
+            self.__cache_search_deep_class[searchClass] = results
+
+        # Globals are removed during a transform.  They need to be checked manually
+        if includeGlobals:
+            pre_results = self._search_deep_keys(searchClass, self.transform_pre.get('Globals'), [])
+            for pre_result in pre_results:
+                results.append(['Globals'] + pre_result)
+
+        return results
 
     # pylint: disable=dangerous-default-value
     def _search_deep_keys(self, searchText, cfndict, path):

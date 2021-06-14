@@ -158,7 +158,7 @@ class TestConfigMixIn(BaseTestCase):
         # test defaults
         self.assertNotIn(
             'test/fixtures/templates/bad/resources/iam/resource_policy.yaml', config.templates)
-        self.assertEqual(len(config.templates), 4)
+        self.assertEqual(len(config.templates), 5)
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_merge(self, yaml_mock):

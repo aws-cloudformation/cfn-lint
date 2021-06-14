@@ -15,7 +15,7 @@ class AllowedPattern(CloudFormationLintRule):
     id = 'W2031'
     shortdesc = 'Check if parameters have a valid value based on an allowed pattern'
     description = 'Check if parameters have a valid value in a pattern. The Parameter\'s allowed pattern is based on the usages in property (Ref)'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
     tags = ['parameters', 'resources', 'property', 'allowed pattern']
 
     def initialize(self, cfn):

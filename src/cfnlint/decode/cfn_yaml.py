@@ -16,7 +16,7 @@ from yaml import MappingNode
 from yaml.constructor import SafeConstructor
 from yaml.constructor import ConstructorError
 import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node
+from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
 
 try:
     from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
@@ -80,31 +80,37 @@ class NodeConstructor(SafeConstructor):
             key = self.construct_object(key_node, False)
             value = self.construct_object(value_node, False)
 
-            if key in mapping:
-                raise CfnParseError(
-                    self.filename,
-                    [
-                        build_match(
-                            filename=self.filename,
-                            message='Duplicate resource found "{}" (line {})'.format(
-                                key, key_node.start_mark.line + 1),
-                            line_number=key_node.start_mark.line,
-                            column_number=key_node.start_mark.column,
-                            key=key
-                        ),
-                        build_match(
-                            filename=self.filename,
-                            message='Duplicate resource found "{}" (line {})'.format(
-                                key, mapping[key].start_mark.line + 1),
-                            line_number=mapping[key].start_mark.line,
-                            column_number=mapping[key].start_mark.column,
-                            key=key
-                        )
-                    ]
-                )
+            for key_dup in mapping:
+                if key_dup == key:
+                    raise CfnParseError(
+                        self.filename,
+                        [
+                            build_match(
+                                filename=self.filename,
+                                message='Duplicate resource found "{}" (line {})'.format(
+                                    key, key_dup.start_mark.line + 1),
+                                line_number=key_dup.start_mark.line,
+                                column_number=key_dup.start_mark.column,
+                                key=key
+                            ),
+                            build_match(
+                                filename=self.filename,
+                                message='Duplicate resource found "{}" (line {})'.format(
+                                    key, key_node.start_mark.line + 1),
+                                line_number=key_node.start_mark.line,
+                                column_number=key_node.start_mark.column,
+                                key=key
+                            ),
+                        ]
+                    )
             mapping[key] = value
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
+
+        if len(mapping) == 1:
+            if 'Fn::Sub' in mapping:
+                return sub_node(obj, node.start_mark, node.end_mark)
+
         return dict_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_str(self, node):
@@ -189,6 +195,9 @@ def multi_constructor(loader, tag_suffix, node):
         constructor = loader.construct_mapping
     else:
         raise 'Bad tag: !{}'.format(tag_suffix)
+
+    if tag_suffix == 'Fn::Sub':
+        return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 

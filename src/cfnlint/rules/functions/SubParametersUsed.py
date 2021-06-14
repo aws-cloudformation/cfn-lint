@@ -2,10 +2,9 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
-
+from cfnlint.decode.node import sub_node
 
 class SubParametersUsed(CloudFormationLintRule):
     """Check if Sub Parameters are used"""
@@ -15,37 +14,20 @@ class SubParametersUsed(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
     tags = ['functions', 'sub']
 
-    def _test_parameters(self, cfn, sub_string, parameters, tree):
-        """Test if sub parmaeters are in the string"""
-
-        matches = []
-        sub_string_parameters = cfn.get_sub_parameters(sub_string)
-
-        for parameter_name, _ in parameters.items():
-            if parameter_name not in sub_string_parameters:
-                message = 'Parameter {0} not used in Fn::Sub at {1}'
-                matches.append(RuleMatch(
-                    tree, message.format(parameter_name, '/'.join(map(str, tree[:] + [parameter_name])))))
-
-        return matches
-
     def match(self, cfn):
         matches = []
 
-        sub_objs = cfn.search_deep_keys('Fn::Sub')
+        sub_objs = cfn.search_deep_class(sub_node)
 
-        for sub_obj in sub_objs:
-            sub_value_obj = sub_obj[-1]
-            tree = sub_obj[:-1]
-            if isinstance(sub_value_obj, list):
-                if len(sub_value_obj) == 2:
-                    sub_string = sub_value_obj[0]
-                    parameters = sub_value_obj[1]
-                    if not isinstance(sub_string, six.string_types):
-                        continue
-                    if not isinstance(parameters, dict):
-                        continue
-
-                    matches.extend(self._test_parameters(cfn, sub_string, parameters, tree + [1]))
+        for sub_obj_tuple in sub_objs:
+            path, sub_obj = sub_obj_tuple
+            result_path = path[:] + ['Fn::Sub', 1]
+            sub_string_vars = sub_obj.get_string_vars()
+            sub_vars = sub_obj.get_defined_vars()
+            for sub_var in sub_vars:
+                if sub_var not in sub_string_vars:
+                    message = 'Parameter {0} not used in Fn::Sub at {1}'
+                    matches.append(RuleMatch(
+                        result_path + [sub_var], message.format(sub_var, '/'.join(map(str, result_path + [sub_var])))))
 
         return matches

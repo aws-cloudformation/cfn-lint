@@ -1,0 +1,578 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Conditions:
+  EulaAccepted:
+    Fn::Equals:
+    - Ref: pDeepSecurityAcceptEula
+    - 'Yes'
+  LoadConfigRulesTemplate:
+    Fn::Equals:
+    - Ref: pSupportsConfig
+    - 'Yes'
+  LoadConfigRulesTemplateAuto:
+    Fn::Equals:
+    - Fn::FindInMap:
+      - RegionServiceSupport
+      - Ref: AWS::Region
+      - ConfigRules
+    - 'true'
+Description: QS(0029) Enterprise Accelerator - Provides nesting for required stacks
+  to deploy a full sample web application with reverse proxy, ELBs, IAM, and other
+  resources (for demonstration/POC/testing)
+Mappings:
+  CustomVariables:
+    vResourceEnvironmentTagKey:
+      Value: Environment
+    vResourceEnvironmentTagValue:
+      Value: development
+    vTemplateNickName:
+      Value: nist-high
+    vTemplateUrlPrefix:
+      Value: https://s3.amazonaws.com/quickstart-reference/enterprise-accelerator/nist-high/latest/
+  RegionMap:
+    ap-northeast-1:
+      AMI: ami-f80e0596
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    ap-northeast-2:
+      AMI: ami-6598510b
+      InstanceType: t2.large
+      InstanceTypeDatabase: db.t2.large
+    ap-southeast-1:
+      AMI: ami-e90dc68a
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    ap-southeast-2:
+      AMI: ami-f2210191
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    eu-central-1:
+      AMI: ami-e2df388d
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    eu-west-1:
+      AMI: ami-31328842
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    sa-east-1:
+      AMI: ami-1e159872
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    us-east-1:
+      AMI: ami-08111162
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    us-gov-west-1:
+      AMI: ami-0a60dc6b
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    us-west-1:
+      AMI: ami-1b0f7d7b
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+    us-west-2:
+      AMI: ami-c229c0a2
+      InstanceType: m3.large
+      InstanceTypeDatabase: db.m3.large
+  RegionServiceSupport:
+    ap-northeast-1:
+      ConfigRules: 'true'
+      Glacier: 'true'
+      NatGateway: 'true'
+    ap-northeast-2:
+      ConfigRules: 'false'
+      Glacier: 'false'
+      NatGateway: 'true'
+    ap-southeast-1:
+      ConfigRules: 'false'
+      Glacier: 'false'
+      NatGateway: 'true'
+    ap-southeast-2:
+      ConfigRules: 'false'
+      Glacier: 'true'
+      NatGateway: 'true'
+    eu-central-1:
+      ConfigRules: 'true'
+      Glacier: 'true'
+      NatGateway: 'true'
+    eu-west-1:
+      ConfigRules: 'true'
+      Glacier: 'true'
+      NatGateway: 'true'
+    sa-east-1:
+      ConfigRules: 'false'
+      Glacier: 'false'
+      NatGateway: 'false'
+    us-east-1:
+      ConfigRules: 'true'
+      Glacier: 'true'
+      NatGateway: 'true'
+    us-gov-west-1:
+      ConfigRules: 'false'
+      Glacier: 'false'
+      NatGateway: 'false'
+    us-west-1:
+      ConfigRules: 'false'
+      Glacier: 'false'
+      NatGateway: 'false'
+    us-west-2:
+      ConfigRules: 'true'
+      Glacier: 'true'
+      NatGateway: 'true'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: 'Please provide the following parameter values:'
+      Parameters:
+      - pDBPassword
+      - pNotifyEmail
+      - pEC2KeyPairBastion
+      - pEC2KeyPair
+      - pSupportsConfig
+      - pAvailabilityZoneA
+      - pAvailabilityZoneB
+    - Label:
+        default: 'Deep Security Configuration:'
+      Parameters:
+      - pDeepSecurityAdminUserName
+      - pDeepSecurityAdminPass
+      - pDeepSecurityAcceptEula
+    ParameterLabels:
+      pAvailabilityZoneA:
+        default: First Availability Zone
+      pAvailabilityZoneB:
+        default: Second Availability zone
+      pDBPassword:
+        default: Database Password
+      pDeepSecurityAcceptEula:
+        default: Accept Trend Micro EULA
+      pDeepSecurityAdminPass:
+        default: Password for Deep Security Manager Admin user
+      pDeepSecurityAdminUserName:
+        default: Username for Deep Security Manager Web Console Administrator
+      pEC2KeyPair:
+        default: Existing SSH Key for Other Instances
+      pEC2KeyPairBastion:
+        default: Existing SSH Key for the Bastion Instance
+      pNotifyEmail:
+        default: Notification Email Address
+      pSupportsConfig:
+        default: Support Config
+  Identifier:
+    Value: template-main
+  Input:
+    Description: Input of all required parameters in nested stacks
+  Output:
+    Description: N/A
+  Stack:
+    Value: '0'
+  VersionDate:
+    Value: '20160518'
+Outputs:
+  BastionIP:
+    Description: Use this IP via SSH to connect to Bastion Instance
+    Value:
+      Fn::GetAtt:
+      - ManagementVpcTemplate
+      - Outputs.rBastionInstanceIP
+  DeepSecurityConsole:
+    Value:
+      Fn::GetAtt:
+      - ManagementVpcTemplate
+      - Outputs.rDeepSecurityConsole
+  Help:
+    Description: For assistance or questions regarding this quickstart please email
+      compliance-accelerator@amazon.com
+    Value: ''
+  LandingPageURL:
+    Value:
+      Fn::GetAtt:
+      - ApplicationTemplate
+      - Outputs.LandingPageURL
+  SurveyLink:
+    Description: Please take a moment to complete the survey by clicking this link
+    Value: https://aws.au1.qualtrics.com/SE/?SID=SV_55sYYdtY1NhTTgN&qs=nist-high
+  TemplateType:
+    Value: Standard Multi-Tier Web Application
+  TemplateVersion:
+    Value: '2.0'
+  WebsiteURL:
+    Value:
+      Fn::GetAtt:
+      - ApplicationTemplate
+      - Outputs.WebsiteURL
+Parameters:
+  pAvailabilityZoneA:
+    Description: Availability Zone 1
+    Type: AWS::EC2::AvailabilityZone::Name
+  pAvailabilityZoneB:
+    Description: Availability Zone 2
+    Type: AWS::EC2::AvailabilityZone::Name
+  pDBPassword:
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+, between 8 and 28 characters
+    Description: Mixed alphanumeric and must be between 8 and 28 characters and contain
+      at least one capital letter
+    MaxLength: 28
+    MinLength: 8
+    NoEcho: true
+    Type: String
+  pDeepSecurityAcceptEula:
+    AllowedValues:
+    - 'Yes'
+    - 'No'
+    ConstraintDescription: Must accept license agreement to launch stack
+    Default: 'Yes'
+    Description: By launching this CloudFormation Stack that installs Trend Micro's
+      Deep Security, you accept the terms and conditions of Trend Micro's EULA (see
+      http://www.trendmicro.com/cloud-content/us/pdfs/eula/en-english_multicountry-smb-enterprise_eula_june_2016.pdf
+      ).
+    Type: String
+  pDeepSecurityAdminPass:
+    AllowedPattern: '[a-zA-Z0-9!^*\-_+]*'
+    ConstraintDescription: Can only contain alphanumeric characters or the following
+      special characters !^*-_+ Min length 8, max length 41
+    Description: The Deep Security Manager administrator password. Must be 8-41 characters
+      long and can only contain alphanumeric characters or the following special characters
+      !^*-_+
+    MaxLength: 41
+    MinLength: 8
+    NoEcho: true
+    Type: String
+  pDeepSecurityAdminUserName:
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Must begin with a letter and contain only alphanumeric
+      characters. Min length 1, max length 16
+    Description: The Deep Security Manager administrator username for Web Console
+      Access.
+    MaxLength: 16
+    MinLength: 1
+    NoEcho: false
+    Type: String
+  pEC2KeyPair:
+    Description: The SSH key pair in your account to use for all other EC2 instance
+      logins
+    Type: AWS::EC2::KeyPair::KeyName
+  pEC2KeyPairBastion:
+    Description: The SSH key pair in your account to use for the bastion host login
+    Type: AWS::EC2::KeyPair::KeyName
+  pNotifyEmail:
+    Default: distlist@example.org
+    Description: Notification email address for security events (you will receive
+      a confirmation email)
+    Type: String
+  pSupportsConfig:
+    AllowedValues:
+    - 'Yes'
+    - 'No'
+    Default: 'No'
+    Description: 'Is AWS Config already configured for this region? Use "No" if you
+      are uncertain. Config is available in these regions: US East (Virginia), US
+      West (Oregon), EU West (Ireland), and EU Central (Frankfurt). See AWS Config
+      Management Console or Deployment Guide for details.'
+    Type: String
+Resources:
+  ApplicationTemplate:
+    DependsOn:
+    - ProductionVpcTemplate
+    - ManagementVpcTemplate
+    Properties:
+      Parameters:
+        pAppAmi:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+        pAppInstanceType:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceType
+        pAppPrivateSubnetA:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rAppPrivateSubnetA
+        pAppPrivateSubnetB:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rAppPrivateSubnetB
+        pBastionSSHCIDR: 0.0.0.0/0
+        pDBAllocatedStorage: '10'
+        pDBClass:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceTypeDatabase
+        pDBName: testDB
+        pDBPassword:
+          Ref: pDBPassword
+        pDBPrivateSubnetA:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rDBPrivateSubnetA
+        pDBPrivateSubnetB:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rDBPrivateSubnetB
+        pDBUser: testuserdb
+        pDMZSubnetA:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rDMZSubnetA
+        pDMZSubnetB:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rDMZSubnetB
+        pDeepSecurityAgentDownload:
+          Fn::GetAtt:
+          - ManagementVpcTemplate
+          - Outputs.rDeepSecurityAgentDownload
+        pDeepSecurityHeartbeat:
+          Fn::GetAtt:
+          - ManagementVpcTemplate
+          - Outputs.rDeepSecurityHeartbeat
+        pEC2KeyPair:
+          Ref: pEC2KeyPair
+        pEnvironment:
+          Fn::FindInMap:
+          - CustomVariables
+          - vResourceEnvironmentTagValue
+          - Value
+        pManagementCIDR: 10.10.0.0/16
+        pProductionCIDR: 10.100.0.0/16
+        pProductionVPC:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rVPCProduction
+        pRegionAZ1Name:
+          Ref: pAvailabilityZoneA
+        pRegionAZ2Name:
+          Ref: pAvailabilityZoneB
+        pSecurityAlarmTopic:
+          Fn::GetAtt:
+          - LoggingTemplate
+          - Outputs.rSecurityAlarmTopic
+        pSupportsGlacier:
+          Fn::FindInMap:
+          - RegionServiceSupport
+          - Ref: AWS::Region
+          - Glacier
+        pTemplateUrlPrefix:
+          Fn::FindInMap:
+          - CustomVariables
+          - vTemplateUrlPrefix
+          - Value
+        pWebInstanceType:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceType
+        pWebServerAMI:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-application.json
+      TimeoutInMinutes: '30'
+    Type: AWS::CloudFormation::Stack
+  ConfigRulesTemplate:
+    Condition: LoadConfigRulesTemplate
+    DependsOn:
+    - IamTemplate
+    - ProductionVpcTemplate
+    - ManagementVpcTemplate
+    - LoggingTemplate
+    Properties:
+      Parameters:
+        pRequiredTagKey:
+          Fn::FindInMap:
+          - CustomVariables
+          - vResourceEnvironmentTagKey
+          - Value
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-config-rules.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  IamTemplate:
+    Condition: EulaAccepted
+    Properties:
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-iam.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  LoggingTemplate:
+    Condition: EulaAccepted
+    Properties:
+      Parameters:
+        pNotifyEmail:
+          Ref: pNotifyEmail
+        pSupportsGlacier:
+          Fn::FindInMap:
+          - RegionServiceSupport
+          - Ref: AWS::Region
+          - Glacier
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-logging.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  ManagementVpcTemplate:
+    DependsOn: ProductionVpcTemplate
+    Properties:
+      Parameters:
+        pBastionAmi:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+        pBastionInstanceType:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceType
+        pBastionSSHCIDR: 0.0.0.0/0
+        pDeepSecurityAdminPass:
+          Ref: pDeepSecurityAdminPass
+        pDeepSecurityAdminUserName:
+          Ref: pDeepSecurityAdminUserName
+        pEC2KeyPair:
+          Ref: pEC2KeyPair
+        pEC2KeyPairBastion:
+          Ref: pEC2KeyPairBastion
+        pEnvironment:
+          Fn::FindInMap:
+          - CustomVariables
+          - vResourceEnvironmentTagValue
+          - Value
+        pManagementCIDR: 10.10.0.0/16
+        pManagementDMZSubnetACIDR: 10.10.1.0/24
+        pManagementDMZSubnetBCIDR: 10.10.2.0/24
+        pManagementPrivateSubnetACIDR: 10.10.20.0/24
+        pManagementPrivateSubnetBCIDR: 10.10.30.0/24
+        pManagementVPCName: Management VPC
+        pNatAmi:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+        pNatInstanceType:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceType
+        pProductionCIDR: 10.100.0.0/16
+        pProductionVPC:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rVPCProduction
+        pRegionAZ1Name:
+          Ref: pAvailabilityZoneA
+        pRegionAZ2Name:
+          Ref: pAvailabilityZoneB
+        pRouteTableProdPrivate:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rRouteTableProdPrivate
+        pRouteTableProdPublic:
+          Fn::GetAtt:
+          - ProductionVpcTemplate
+          - Outputs.rRouteTableProdPublic
+        pSupportsNatGateway:
+          Fn::FindInMap:
+          - RegionServiceSupport
+          - Ref: AWS::Region
+          - NatGateway
+        pTemplateUrlPrefix:
+          Fn::FindInMap:
+          - CustomVariables
+          - vTemplateUrlPrefix
+          - Value
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-vpc-management.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack
+  ProductionVpcTemplate:
+    Condition: EulaAccepted
+    Properties:
+      Parameters:
+        pAppPrivateSubnetACIDR: 10.100.96.0/21
+        pAppPrivateSubnetBCIDR: 10.100.119.0/21
+        pBastionSSHCIDR: 0.0.0.0/0
+        pDBPrivateSubnetACIDR: 10.100.194.0/21
+        pDBPrivateSubnetBCIDR: 10.100.212.0/21
+        pDMZSubnetACIDR: 10.100.10.0/24
+        pDMZSubnetBCIDR: 10.100.20.0/24
+        pEC2KeyPair:
+          Ref: pEC2KeyPair
+        pEnvironment:
+          Fn::FindInMap:
+          - CustomVariables
+          - vResourceEnvironmentTagValue
+          - Value
+        pManagementCIDR: 10.10.0.0/16
+        pNatAmi:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - AMI
+        pNatInstanceType:
+          Fn::FindInMap:
+          - RegionMap
+          - Ref: AWS::Region
+          - InstanceType
+        pProductionVPCName: Production VPC
+        pRegionAZ1Name:
+          Ref: pAvailabilityZoneA
+        pRegionAZ2Name:
+          Ref: pAvailabilityZoneB
+        pSupportsNatGateway:
+          Fn::FindInMap:
+          - RegionServiceSupport
+          - Ref: AWS::Region
+          - NatGateway
+        pTemplateUrlPrefix:
+          Fn::FindInMap:
+          - CustomVariables
+          - vTemplateUrlPrefix
+          - Value
+      TemplateURL:
+        Fn::Join:
+        - ''
+        - - Fn::FindInMap:
+            - CustomVariables
+            - vTemplateUrlPrefix
+            - Value
+          - templates/template-vpc-production.json
+      TimeoutInMinutes: '20'
+    Type: AWS::CloudFormation::Stack

@@ -14,7 +14,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
     id = 'E3012'
     shortdesc = 'Check resource properties values'
     description = 'Checks resource property values with Primitive Types for values that match those types.'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#valueprimitivetype'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype'
     tags = ['resources']
 
     strict_exceptions = {
