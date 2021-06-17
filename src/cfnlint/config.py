@@ -19,6 +19,7 @@ try:  # pragma: no cover
 except ImportError:  # pragma: no cover
     from pathlib2 import Path
 
+# pylint: disable=too-many-public-methods
 LOGGER = logging.getLogger('cfnlint')
 
 
@@ -395,6 +396,10 @@ class CliArgs(object):
         )
         standard.add_argument('--config-file', dest='config_file',
                               help='Specify the cfnlintrc file to use')
+        standard.add_argument(
+            '-z', '--custom-rules', dest='custom_rules',
+            help='Allows specification of a custom rule file.'
+        )
         advanced.add_argument(
             '-o', '--override-spec', dest='override_spec',
             help='A CloudFormation Spec override file that allows customization'
@@ -461,6 +466,9 @@ class TemplateArgs(object):
                     if config_name == 'override_spec':
                         if isinstance(config_value, (six.string_types)):
                             defaults['override_spec'] = config_value
+                    if config_name == 'custom_rules':
+                        if isinstance(config_value, (six.string_types)):
+                            defaults['custom_rules'] = config_value
                     if config_name == 'ignore_bad_template':
                         if isinstance(config_value, bool):
                             defaults['ignore_bad_template'] = config_value
@@ -627,6 +635,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def override_spec(self):
         return self._get_argument_value('override_spec', False, True)
+
+    @property
+    def custom_rules(self):
+        """ custom_rules_spec """
+        return self._get_argument_value('custom_rules', False, True)
 
     @property
     def update_specs(self):

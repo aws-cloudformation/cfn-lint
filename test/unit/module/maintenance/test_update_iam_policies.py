@@ -14,6 +14,7 @@ LOGGER.addHandler(logging.NullHandler())
 
 class TestUpdateIamPolicies(BaseTestCase):
     """Used for Testing Rules"""
+
     @patch('cfnlint.maintenance.get_url_content')
     @patch('cfnlint.maintenance.json.dump')
     def test_update_iam_policies(self, mock_json_dump, mock_content):

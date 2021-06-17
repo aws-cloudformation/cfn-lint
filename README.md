@@ -1,12 +1,12 @@
 # AWS CloudFormation Linter
 
-<img alt="[cfn-lint logo]" src="https://github.com/aws-cloudformation/cfn-python-lint/blob/master/logo.png?raw=true" width="150" align="right">
+<img alt="[cfn-lint logo]" src="https://github.com/aws-cloudformation/cfn-python-lint/blob/main/logo.png?raw=true" width="150" align="right">
 
-[![Lint and Unit](https://github.com/aws-cloudformation/cfn-python-lint/workflows/Lint%20and%20Unit/badge.svg?branch=master)](https://github.com/aws-cloudformation/cfn-python-lint/actions?query=workflow%3A%22Lint+and+Unit%22+branch%3Amaster)
+[![Testing](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/aws-cloudformation/cfn-python-lint/actions/workflows/test.yaml)
 [![PyPI version](https://badge.fury.io/py/cfn-lint.svg)](https://badge.fury.io/py/cfn-lint)
-[![PyPI downloads](https://img.shields.io/pypi/dw/cfn-lint)](https://pypistats.org/packages/cfn-lint)
-[![PyPI downloads](https://img.shields.io/pypi/dm/cfn-lint)](https://pypistats.org/packages/cfn-lint)
-[![codecov](https://codecov.io/gh/aws-cloudformation/cfn-python-lint/branch/master/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
+[![PyPI downloads](https://pepy.tech/badge/cfn-lint/week)](https://pypistats.org/packages/cfn-lint)
+[![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)
+[![codecov](https://codecov.io/gh/aws-cloudformation/cfn-lint/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
 
 Validate AWS CloudFormation yaml/json templates against the [AWS CloudFormation Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and additional
 checks.  Includes checking valid values for resource properties and best practices.
@@ -28,7 +28,7 @@ _To get information about the [SAM Transformation](https://docs.aws.amazon.com/A
 
 ## Install
 
-Python 2.7+ and 3.4+ are supported.
+Python 2.7+ and 3.5+ are supported.
 
 ### Pip
 
@@ -91,7 +91,8 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 
 - `cfn-lint path/**/*.yaml`
 
-*Note*: Glob in Python 3.5 supports recursive searching `**/*.yaml`.  If you are using an earlier version of Python you will have to handle this manually (`folder1/*.yaml`, `folder2/*.yaml`, etc).
+*Note*: If using sh/bash/zsh, you must enable globbing.
+(`setopt -s globstar` for sh/bash, `setopt extended_glob` for zsh).
 
 ##### Exit Codes
 `cfn-lint` will return a non zero exit if there are any issues with your template. The value is dependent on the sevirity of the issues found.  For each level of discovered error `cfn-lint` will use bitwise OR to determine the final exit code.  This will result in these possibilities.
@@ -140,6 +141,8 @@ ignore_templates:
   - codebuild.yaml
 include_checks:
   - I
+custom_rules:
+  - custom_rules.txt
 ```
 
 ### Parameters
@@ -149,6 +152,7 @@ Optional parameters:
 | Command Line  | Metadata | Options | Description |
 | ------------- | ------------- | ------------- | ------------- |
 | -h, --help  |   | | Get description of cfn-lint |
+| -z, --custom-rules | | filename | Text file containing user-defined custom rules. See [here](#Custom-Rules) for more information |
 | -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
 | -f, --format    | format | quiet, parseable, json, junit, pretty | Output format |
 | -l, --list-rules | | | List all the rules |
@@ -243,6 +247,46 @@ This collection of rules can be extended with custom rules using the `--append-r
 
 More information describing how rules are set up and an overview of all the Rules that are applied by this linter are documented [here](docs/rules.md).
 
+## Custom Rules
+
+The linter supports the creation of custom one-line rules which compare any resource with a property using pre-defined operators. These custom rules take the following format:
+```
+<Resource Type> <Property[*]> <Operator> <Value> [Error Level] [Custom Error Message]
+```
+
+### Example
+A separate custom rule text file must be created.
+
+The example below validates `example_template.yml` does not use any EC2 instances of size `m4.16xlarge`
+
+_custom_rule.txt_
+```
+AWS::EC2::Instance InstanceSize NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
+```
+
+_example_template.yml_
+```
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+        myInstance:
+                Type: AWS::EC2::Instance
+                Properties:
+                        InstanceType: m4.16xlarge
+                        ImageId: ami-asdfef
+```
+
+The custom rule can be added to the [configuration file](#Config-File) or ran as a [command line argument](#Parameters)
+
+The linter will produce the following output, running `cfn-lint example_template.yml -z custom_rules.txt`:
+
+```
+W9001  This is an expensive instance type, don't use it
+mqtemplate.yml:6:17
+```
+
+
+More information describing how custom rules are setup and an overview of all operators available is documented [here](docs/custom_rules.md).
+
 ## Customize specifications
 
 The linter follows the [AWS CloudFormation Resource Specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) by default. However, for your use case specific requirements might exist. For example, within your organisation it might be mandatory to use [Tagging](https://aws.amazon.com/answers/account-management/aws-tagging-strategies/).
@@ -258,7 +302,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-python-lint
-  rev: v0.47.0  # The version of cfn-lint to use
+  rev: v0.51.0  # The version of cfn-lint to use
   hooks:
     - id: cfn-python-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$

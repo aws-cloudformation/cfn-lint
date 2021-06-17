@@ -23,4 +23,4 @@ class TestKeyName(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/mappings/key_name.yaml', 3)
+        self.helper_file_negative('test/fixtures/templates/bad/mappings/key_name.yaml', 4)

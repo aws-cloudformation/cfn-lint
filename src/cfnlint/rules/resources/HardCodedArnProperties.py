@@ -53,7 +53,8 @@ class HardCodedArnProperties(CloudFormationLintRule):
             # Leaf node
             if isinstance(cfnelem, six.string_types):  # and re.match(searchRegex, cfnelem):
                 for variable in re.findall(self.regex, cfnelem):
-                    values.append(path + [variable])
+                    if 'Fn::Sub' in path:
+                        values.append(path + [variable])
 
         return values
 

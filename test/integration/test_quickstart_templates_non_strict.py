@@ -11,8 +11,8 @@ class TestQuickStartTemplates(BaseCliTestCase):
 
     scenarios = [
         {
-            'filename': 'test/fixtures/templates/quickstart/nist_high_master.yaml',
-            'results_filename': 'test/fixtures/results/quickstart/non_strict/nist_high_master.json',
+            'filename': 'test/fixtures/templates/quickstart/nist_high_main.yaml',
+            'results_filename': 'test/fixtures/results/quickstart/non_strict/nist_high_main.json',
             'exit_code': 14,
         },
         {
@@ -28,7 +28,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             'filename': 'test/fixtures/templates/quickstart/cis_benchmark.yaml',
             'results_filename': 'test/fixtures/results/quickstart/non_strict/cis_benchmark.json',
-            'exit_code': 12,
+            'exit_code': 4,
         }
     ]
 

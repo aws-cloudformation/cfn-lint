@@ -24,7 +24,7 @@ class RelationshipConditions(CloudFormationLintRule):
         matches = []
 
         # Start with Ref checks
-        ref_objs = cfn.search_deep_keys('Ref')
+        ref_objs = cfn.search_deep_keys(searchText='Ref', includeGlobals=False)
         for ref_obj in ref_objs:
             value = ref_obj[-1]
             if value not in PSEUDOPARAMS:
@@ -42,7 +42,7 @@ class RelationshipConditions(CloudFormationLintRule):
                                 '/'.join(map(str, ref_obj[:-1])))))
 
         # The do GetAtt
-        getatt_objs = cfn.search_deep_keys('Fn::GetAtt')
+        getatt_objs = cfn.search_deep_keys(searchText='Fn::GetAtt', includeGlobals=False)
         for getatt_obj in getatt_objs:
             value_obj = getatt_obj[-1]
             value = None

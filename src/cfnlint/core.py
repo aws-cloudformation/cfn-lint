@@ -43,6 +43,7 @@ class UnexpectedRuleException(CfnLintExitException):
 def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
     """Process args and run"""
 
+
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
 
@@ -94,7 +95,8 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False, mandatory_rules=None):
+def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
+              mandatory_rules=None, custom_rules=None):
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -104,6 +106,8 @@ def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, i
                 rules.create_from_directory(rules_path)
             else:
                 rules.create_from_module(rules_path)
+
+        rules.create_from_custom_rules_file(custom_rules)
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
     return rules
@@ -205,13 +209,14 @@ def get_template_rules(filename, args):
             args.configure_rules,
             args.include_experimental,
             args.mandatory_checks,
+            args.custom_rules,
         )
 
     return(template, __CACHED_RULES, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None):
-    """Run Checks against the template"""
+    """Run Checks and Custom Rules against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))

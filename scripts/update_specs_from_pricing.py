@@ -23,7 +23,7 @@ region_map = {
     'Africa (Cape Town)': 'af-south-1',
     'Asia Pacific (Hong Kong)': 'ap-east-1',
     'Asia Pacific (Mumbai)': 'ap-south-1',
-    'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
+    'Asia Pacific (Osaka)': 'ap-northeast-3',
     'Asia Pacific (Seoul)': 'ap-northeast-2',
     'Asia Pacific (Singapore)': 'ap-southeast-1',
     'Asia Pacific (Sydney)': 'ap-southeast-2',
@@ -200,6 +200,9 @@ def get_results(service, product_families):
             product = products.get('product', {})
             if product:
                 if product.get('productFamily') in product_families and product.get('attributes').get('locationType') == "AWS Region":
+                    if product.get('attributes').get('location') not in region_map:
+                        LOGGER.warning('Region "%s" not found', product.get('attributes').get('location'))
+                        continue
                     if not results.get(region_map[product.get('attributes').get('location')]):
                         results[region_map[product.get('attributes').get('location')]] = set()
                     results[region_map[product.get('attributes').get('location')]].add(
@@ -227,7 +230,7 @@ def main():
     outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Elastic Search Instance']), outputs)
     outputs = update_outputs('EMRInstanceType', get_results('ElasticMapReduce', ['Elastic Map Reduce Instance']), outputs)
     outputs = update_outputs('BlockchainInstanceType', get_results('AmazonManagedBlockchain', ['Blockchain Instance']), outputs)
-    outputs = update_outputs('GameLiftInstanceType', get_results('AmazonGameLift', ['GameLift EC2 Instance']), outputs)
+    outputs = update_outputs('AWS::GameLift::Fleet.EC2InstanceType', get_results('AmazonGameLift', ['GameLift EC2 Instance']), outputs)
     outputs = update_outputs('AppStreamInstanceType', get_results('AmazonAppStream', ['Streaming Instance']), outputs)
 
     LOGGER.info('Updating spec files')

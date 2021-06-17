@@ -1,0 +1,37 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  DeploymentMode:
+    Type: String
+    AllowedValues:
+    - sandbox
+    - live
+    Default: sandbox
+    ConstraintDescription: Value must be a known deployment mode.
+Conditions:
+  IsLive: !Equals [ !Ref DeploymentMode, live ]
+Globals:
+  Function:
+    Environment:
+      Variables:
+        AppConfig__Environment: !If
+        - IsLive
+        - !Ref ConfigEnvironment
+        - !ImportValue ConfigEnvironment-blah
+Resources:
+  ConfigApplication:
+    Type: AWS::AppConfig::Application
+    Properties:
+      Name: Application-A
+  ConfigEnvironment:
+    Type: AWS::AppConfig::Environment
+    Condition: IsLive
+    Properties:
+      ApplicationId: !Ref ConfigApplication
+      Name: Environment-B
+  FunctionC:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: provided.al2
+      Handler: provided

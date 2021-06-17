@@ -15,6 +15,7 @@ class TestRulesRelationshipConditions(BaseRuleTestCase):
         self.collection.register(RelationshipConditions())
         self.success_templates = [
             'test/fixtures/templates/good/functions/relationship_conditions.yaml',
+            'test/fixtures/templates/good/functions/relationship_conditions_sam.yaml'
         ]
 
     def test_file_positive(self):

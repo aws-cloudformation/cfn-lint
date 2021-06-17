@@ -204,15 +204,32 @@ VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIS
 class RegexDict(dict):
 
     def __getitem__(self, item):
-        possible_items = {k: v for k, v in self.items() if re.match(k, item)}
+        possible_items = {}
+        for k, v  in self.items():
+            if isinstance(v, dict):
+                if v.get('Type') == 'MODULE':
+                    if re.match(k, item):
+                        possible_items[k] = v
+                else:
+                    if k == item:
+                        possible_items[k] = v
+            elif re.match(k, item):
+                possible_items[k] = v
         if not possible_items:
             raise KeyError
         longest_match = sorted(possible_items.keys(), key=len)[-1]
         return possible_items[longest_match]
 
     def __contains__(self, item):
-        for k in self.keys():
-            if re.match(k, item):
+        for k, v in self.items():
+            if isinstance(v, dict):
+                if v.get('Type') == 'MODULE':
+                    if re.match(k, item):
+                        return True
+                else:
+                    if k == item:
+                        return True
+            elif re.match(k, item):
                 return True
         return False
 
@@ -422,6 +439,8 @@ def create_rules(mod):
     from the given module."""
     result = []
     for _, clazz in inspect.getmembers(mod, inspect.isclass):
+        if clazz.__name__ == 'CustomRule' and clazz.__module__ == 'cfnlint.rules.custom':
+            continue
         method_resolution = inspect.getmro(clazz)
         if [clz for clz in method_resolution[1:] if clz.__module__ in ('cfnlint', 'cfnlint.rules') and clz.__name__ == 'CloudFormationLintRule']:
             # create and instance of subclasses of CloudFormationLintRule
