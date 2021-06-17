@@ -113,6 +113,22 @@ def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, i
     return rules
 
 
+def get_matches(filenames, args):
+    for filename in filenames:
+        LOGGER.debug('Begin linting of file: %s', str(filename))
+        (template, rules, errors) = get_template_rules(filename, args)
+        # template matches may be empty but the template is still None
+        # this happens when ignoring bad templates
+        if not errors and template:
+            matches = run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks)
+            for match in matches:
+                yield match
+        else:
+            for match in matches:
+                yield match
+        LOGGER.debug('Completed linting of file: %s', str(filename))
+
+
 def configure_logging(debug_logging):
     """ Backwards compatibility for integrators """
     LOGGER.info('Update your integrations to use "cfnlint.config.configure_logging" instead')
