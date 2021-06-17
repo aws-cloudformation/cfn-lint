@@ -8,7 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRule):
     """Check for RetentionPeriod """
-    id = 'I3012'
+    id = 'I3013'
     shortdesc = 'Check resources with auto expiring content have explicit retention period'
     description = 'The behaviour for data retention is different across AWS Services.'\
                   'If no retention period is specified the default for some services is to delete the data after a period of time.' \
