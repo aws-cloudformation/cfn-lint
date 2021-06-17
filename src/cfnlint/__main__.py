@@ -21,22 +21,8 @@ def main():
 
     try:
         (args, filenames, formatter) = cfnlint.core.get_args_filenames(sys.argv[1:])
-        matches = []
-        rules = None
-        for filename in filenames:
-            LOGGER.debug('Begin linting of file: %s', str(filename))
-            (template, rules, errors) = cfnlint.core.get_template_rules(filename, args)
-            # template matches may be empty but the template is still None
-            # this happens when ignoring bad templates
-            if not errors and template:
-                matches.extend(
-                    cfnlint.core.run_cli(
-                        filename, template, rules,
-                        args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks))
-            else:
-                matches.extend(errors)
-            LOGGER.debug('Completed linting of file: %s', str(filename))
-
+        matches = list(cfnlint.core.get_matches(filenames, args))
+        (_, rules, _) = cfnlint.core.get_template_rules(filenames[-1], args)
         matches_output = formatter.print_matches(matches, rules, filenames)
 
         if matches_output:
