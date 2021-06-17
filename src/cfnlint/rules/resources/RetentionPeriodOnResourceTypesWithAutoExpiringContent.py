@@ -16,6 +16,10 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources', 'retentionperiod']
 
+    def _check_ref(self, value, parameters, resources, path):  # pylint: disable=W0613
+        print('called')
+        print(value)
+
     def match(self, cfn):
         """Check for RetentionPeriod"""
         matches = []
@@ -73,10 +77,27 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
         for r_name, r_values in resources.items():
             if r_values.get('Type') in retention_attributes_by_resource_type:
                 for attr_def in retention_attributes_by_resource_type[r_values.get('Type')]:
-                    properties = r_values.get('Properties')
-                    if not properties or not properties.get(attr_def.get('Attribute')):
-                        path = ['Resources', r_name]
-                        message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(path)
-                        matches.append(RuleMatch(path, message))
+                    property_sets = r_values.get_safe('Properties')
+                    for property_set, path in property_sets:
+                        error_path = ['Resources', r_name] + path
+                        if not property_set:
+                            message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
+                                str(x) for x in error_path)
+                            matches.append(RuleMatch(error_path, message))
+                        else:
+                            value = property_set.get(attr_def.get('Attribute'))
+                            if not value:
+                                message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
+                                    str(x) for x in error_path)
+                                matches.append(RuleMatch(error_path, message))
+                            if isinstance(value, dict):
+                                # pylint: disable=protected-access
+                                refs = cfn._search_deep_keys(
+                                    'Ref', value, error_path + [attr_def.get('Attribute')])
+                                for ref in refs:
+                                    if ref[-1] == 'AWS::NoValue':
+                                        message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
+                                            str(x) for x in ref[0:-1])
+                                        matches.append(RuleMatch(ref[0:-1], message))
 
         return matches

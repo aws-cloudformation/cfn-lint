@@ -24,4 +24,4 @@ class TestRetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseRuleTestCase
     def test_file_negative_alias(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/sqs/retention_period.yaml', 1)
+            'test/fixtures/templates/bad/resources/sqs/retention_period.yaml', 3)
