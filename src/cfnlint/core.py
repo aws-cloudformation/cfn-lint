@@ -9,8 +9,11 @@ import sys
 
 from jsonschema.exceptions import ValidationError
 
+import boto3
+
 import cfnlint.runner
 from cfnlint.template import Template
+from cfnlint.registry import Registry
 from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
@@ -237,6 +240,19 @@ def run_checks(filename, template, rules, regions, validate_registry_types, mand
                 unsupported_registry_types, REGISTRY_TYPES
             )
             raise InvalidRegistryTypesException(msg, 32)
+
+    # MODULE is the only accepted value right now, but eventually other values will be supported such as RESOURCE
+    for registry_type in validate_registry_types:
+        if registry_type == 'MODULE':
+            # Check the presence of modules in the template
+            template_obj = Template(filename, template, regions)
+            modules = template_obj.get_modules()
+            if modules:
+                registry = Registry(filename, template, regions)
+                # For each module extracted from the template, verify if it's already locally cached
+                for module in modules:
+                    registry.check_folders(boto3.client('sts'), modules[module].get('Type'),
+                                           registry_type)
 
     errors = []
 
