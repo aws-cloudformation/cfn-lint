@@ -9,8 +9,6 @@ import sys
 
 from jsonschema.exceptions import ValidationError
 
-import boto3
-
 import cfnlint.runner
 from cfnlint.template import Template
 from cfnlint.schemaManager import SchemaManager
@@ -253,8 +251,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
                 schema_manager = SchemaManager(filename, template, regions)
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
-                    schema_manager.check_folders(boto3.client('sts'), modules[module].get('Type'),
-                                                 registry_type)
+                    schema_manager.check_folders(modules[module].get('Type'), registry_type)
 
     errors = []
 

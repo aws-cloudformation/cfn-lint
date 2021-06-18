@@ -39,12 +39,9 @@ class TestAWSCallRegistry(BaseTestCase):
         stubber.add_client_error("describe_type", service_error_code='CFNRegistryException')
         stubber.activate()
 
-        err = None
-        try:
-            schema_manager.aws_call_registry(stubbed_client, 'AWS::TEST::MODULE', 'MODULE')
-        except botocore.exceptions.ClientError as e:
-            err = e
-        assert (err.response['Error']['Code'] == 'CFNRegistryException')
+        err = schema_manager.aws_call_registry(stubbed_client, 'AWS::TEST::MODULE', 'MODULE')
+        assert (err is None)
+
 
     def test_aws_call_type_not_found(self):
         filename = 'test/fixtures/templates/good/generic.yaml'
@@ -57,12 +54,5 @@ class TestAWSCallRegistry(BaseTestCase):
         stubber.add_client_error("describe_type", service_error_code='TypeNotFoundException')
         stubber.activate()
 
-        err = None
-        try:
-            schema_manager.aws_call_registry(stubbed_client, 'AWS::TEST::MODULE', 'MODULE')
-        except botocore.exceptions.ClientError as e:
-            err = e
-        assert (err.response['Error']['Code'] == 'TypeNotFoundException')
-
-
-
+        err = schema_manager.aws_call_registry(stubbed_client, 'AWS::TEST::MODULE', 'MODULE')
+        assert (err is None)

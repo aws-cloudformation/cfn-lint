@@ -22,10 +22,12 @@ class SchemaManager(object):
         self.filename = filename
         self.regions = regions
         self.template = Template(filename, template, regions)
+        self.boto3_sts = boto3.client('sts')
+        self.boto3_cfn = boto3.client('cloudformation')
 
     # Check if the appropriate folder already exists
-    def check_folders(self, client, name, registry_type):
-        account_id = client.get_caller_identity().get('Account')
+    def check_folders(self, name, registry_type):
+        account_id = self.boto3_sts.get_caller_identity().get('Account')
         username = None
         path_split = os.getcwd().split('/')
         try:
@@ -37,19 +39,24 @@ class SchemaManager(object):
         is_windows = platform.system() == 'win32'
 
         for region in self.regions:
-            if is_windows:
-                path = 'C:/Users/{0}/AppData/cloudformation/{1}/{2}/{3}'.format(username, account_id, region, name)
-            else:
-                path = '/Users/{0}/.cloudformation/{1}/{2}/{3}'.format(username, account_id, region, name)
+            path = self.create_path(is_windows, username, account_id, region, name)
 
             if not os.path.isdir(path):
                 self.create_folder(path, name, registry_type)
 
+    def create_path(self, is_windows, username, account_id, region, name):
+        if is_windows:
+            path = os.path.join(r'C:\Users', username, 'AppData', 'cloudformation', account_id, region, name)
+        else:
+            path = os.path.join('/Users', username, '.cloudformation', account_id, region, name)
+        return path
+
     def create_folder(self, path, name, registry_type):
         try:
-            os.makedirs(path)
-            response = self.aws_call_registry(boto3.client('cloudformation'), name, registry_type)
-            self.save_files(response, path)
+            response = self.aws_call_registry(self.boto3_cfn, name, registry_type)
+            if response:
+                os.makedirs(path)
+                self.save_files(response, path)
         except OSError:
             raise OSError
 
@@ -63,9 +70,9 @@ class SchemaManager(object):
             )
         except botocore.exceptions.ClientError as e:
             if e.response['Error']['Code'] == 'TypeNotFoundException':
-                raise e
+                print(e.response['Error']['Message'])
             if e.response['Error']['Code'] == 'CFNRegistryException':
-                raise e
+                print(e.response['Error']['Message'])
         return response
 
     def save_files(self, response, path):

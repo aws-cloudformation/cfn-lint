@@ -14,10 +14,11 @@ LOGGER = logging.getLogger('cfnlint')
 class TestCheckFolders(BaseTestCase):
     """Test Check Folders """
 
+    @patch('cfnlint.schemaManager.SchemaManager.create_path')
     @patch('cfnlint.schemaManager.SchemaManager.create_folder')
     @patch('os.getcwd')
     # mock the call against cloudformation registry
-    def test_check_folder_existing(self, getcwd, create_folder):
+    def test_check_folder_existing(self, getcwd, create_folder, create_path):
         """Test folder doesn't exist (mac/linux)"""
         getcwd.return_value = 'Users/test_user'
         filename = 'test/fixtures/templates/good/generic.yaml'
@@ -29,15 +30,16 @@ class TestCheckFolders(BaseTestCase):
         stubber = Stubber(stubbed_client)
         stubber.add_response("get_caller_identity", {"Account": "000000000000"})
         stubber.activate()
+        schema_manager.boto3_sts = stubbed_client
+        create_path.return_value = 'new_path'
+        schema_manager.check_folders('TEST', 'MODULE')
+        create_folder.assert_called_with('new_path', 'TEST', 'MODULE')
 
-        schema_manager.check_folders(stubbed_client, 'TEST', 'MODULE')
-        create_folder.assert_called_with('/Users/test_user/.cloudformation/000000000000/us-east-1/TEST',
-                                         'TEST', 'MODULE')
-
+    @patch('cfnlint.schemaManager.SchemaManager.create_path')
     @patch('cfnlint.schemaManager.SchemaManager.create_folder')
     @patch('os.getcwd')
     @patch('platform.system')
-    def test_check_folder_existing_windows(self, system, getcwd, create_folder):
+    def test_check_folder_existing_windows(self, system, getcwd, create_folder, create_path):
         """Test folder doesnt' exist (windows)"""
         getcwd.return_value = 'Users/test_user'
         filename = 'test/fixtures/templates/good/generic.yaml'
@@ -49,10 +51,12 @@ class TestCheckFolders(BaseTestCase):
         stubber = Stubber(stubbed_client)
         stubber.add_response("get_caller_identity", {"Account": "000000000000"})
         stubber.activate()
+        schema_manager.boto3_sts = stubbed_client
         system.return_value = 'win32'
-        schema_manager.check_folders(stubbed_client, 'TEST', 'MODULE')
-        create_folder.assert_called_with('C:/Users/test_user/AppData/cloudformation/000000000000/us-east-1/TEST',
-                                         'TEST', 'MODULE')
+        create_path.return_value = 'new_path'
+        schema_manager.check_folders('TEST', 'MODULE')
+        create_folder.assert_called_with('new_path', 'TEST', 'MODULE')
+
 
     @patch('os.getcwd')
     def test_check_folder_bad_path(self, getcwd):
@@ -67,9 +71,10 @@ class TestCheckFolders(BaseTestCase):
         stubber = Stubber(stubbed_client)
         stubber.add_response("get_caller_identity", {"Account": "000000000000"})
         stubber.activate()
+        schema_manager.boto3_sts = stubbed_client
         err = None
         try:
-            schema_manager.check_folders(stubbed_client, 'TEST', 'MODULE')
+            schema_manager.check_folders('TEST', 'MODULE')
         except ValueError as e:
             err = e
         assert(type(err) == ValueError)
