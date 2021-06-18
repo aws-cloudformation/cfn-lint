@@ -67,5 +67,16 @@ class TestRunChecks(BaseTestCase):
             err = e
         assert(type(err) == cfnlint.core.InvalidRegistryTypesException)
 
+    @patch('boto3.client')
+    @patch('cfnlint.schemaManager.SchemaManager.check_folders')
+    def test_valid_registry_type(self, check_folders, client):
+        """Test valid registry type"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        results = []
+        results.extend(cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], ['MODULE']))
+        assert (results == [])
+
 
 
