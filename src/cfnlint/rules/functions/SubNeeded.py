@@ -18,6 +18,8 @@ class SubNeeded(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
     tags = ['functions', 'sub']
 
+    exceptions = ['TemplateBody']
+
     def __init__(self):
         """Init"""
         super(SubNeeded, self).__init__()
@@ -111,7 +113,7 @@ class SubNeeded(CloudFormationLintRule):
             var_stripped = var[2:-1].strip()
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
-            if not 'Fn::Sub' in parameter_string_path:
+            if not 'Fn::Sub' in parameter_string_path and parameter_string_path[-2] not in self.exceptions:
                 if (var_stripped in refs or var_stripped in getatts) or 'DefinitionString' in parameter_string_path:
                     # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                     path = parameter_string_path[:-1]
