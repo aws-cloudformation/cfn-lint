@@ -13,7 +13,7 @@ import boto3
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.registry import Registry
+from cfnlint.schemaManager import SchemaManager
 from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
@@ -164,14 +164,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return(config, [None], formatter)
+        return (config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return(config, config.templates, formatter)
+    return (config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -196,8 +196,8 @@ def get_template_rules(filename, args):
 
     if errors:
         if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
-            return(template, [], [])
-        return(template, [], errors)
+            return (template, [], [])
+        return (template, [], errors)
 
     args.template_args = template
 
@@ -220,7 +220,7 @@ def get_template_rules(filename, args):
             args.custom_rules,
         )
 
-    return(template, __CACHED_RULES, [])
+    return (template, __CACHED_RULES, [])
 
 
 def run_checks(filename, template, rules, regions, validate_registry_types, mandatory_rules=None):
@@ -248,11 +248,11 @@ def run_checks(filename, template, rules, regions, validate_registry_types, mand
             template_obj = Template(filename, template, regions)
             modules = template_obj.get_modules()
             if modules:
-                registry = Registry(filename, template, regions)
+                schema_manager = SchemaManager(filename, template, regions)
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
-                    registry.check_folders(boto3.client('sts'), modules[module].get('Type'),
-                                           registry_type)
+                    schema_manager.check_folders(boto3.client('sts'), modules[module].get('Type'),
+                                                 registry_type)
 
     errors = []
 
@@ -268,9 +268,9 @@ def run_checks(filename, template, rules, regions, validate_registry_types, mand
 
     if errors:
         if ignore_transform_error:
-            return([])  # if there is a transform error we can't continue
+            return ([])  # if there is a transform error we can't continue
 
-        return(errors)
+        return (errors)
 
     # Only do rule analysis if Transform was successful
     try:
@@ -280,4 +280,4 @@ def run_checks(filename, template, rules, regions, validate_registry_types, mand
         UnexpectedRuleException(msg, 1)
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(errors)
+    return (errors)
