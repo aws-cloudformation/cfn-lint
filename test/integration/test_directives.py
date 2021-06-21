@@ -40,7 +40,7 @@ class TestDirectives(BaseCliTestCase):
                     'Rule': {
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
-                        'ShortDescription': 'Resource properties are valid',
+                        'ShortDescription': 'Resource properties are invalid',
                         'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
@@ -67,7 +67,7 @@ class TestDirectives(BaseCliTestCase):
                     'Rule': {
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
-                        'ShortDescription': 'Resource properties are valid',
+                        'ShortDescription': 'Resource properties are invalid',
                         'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
@@ -120,7 +120,7 @@ class TestDirectives(BaseCliTestCase):
                     'Rule': {
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
-                        'ShortDescription': 'Resource properties are valid',
+                        'ShortDescription': 'Resource properties are invalid',
                         'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
                     }
                 },
