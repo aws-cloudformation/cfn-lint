@@ -124,7 +124,7 @@ def get_matches(filenames, args):
             for match in matches:
                 yield match
         else:
-            for match in matches:
+            for match in errors:
                 yield match
         LOGGER.debug('Completed linting of file: %s', str(filename))
 
