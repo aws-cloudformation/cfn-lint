@@ -92,7 +92,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
     def check_primitive_type(self, value, item_type, path, strict_check):
         """Chec item type"""
         matches = []
-        if isinstance(value, dict) and item_type == 'Json':
+        if isinstance(value, (dict, list)) and item_type == 'Json':
             return matches
         if item_type in ['String']:
             if not isinstance(value, (six.string_types)):
