@@ -1,3 +1,16 @@
+### v0.52.0
+###### Features
+- End support for Python 3.4 (pull #[2048](https://github.com/aws-cloudformation/cfn-lint/pull/2048))
+- New rule [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to validate retention period settings on applicable resources (pull #[2054](https://github.com/aws-cloudformation/cfn-lint/pull/2054))
+###### CloudFormation Specifications
+- Update resource specs to `39.3.0` (pull #[2047](https://github.com/aws-cloudformation/cfn-python-lint/pull/2047))
+###### Fixes
+- Update `ManagedPolicies.json` to include `AWSLambda_FullAccess` and `AWSLambda_ReadOnlyAccess` (pull #[2062](https://github.com/aws-cloudformation/cfn-lint/pull/2062))
+- Fix a warning in setuptools with `description-file` needed to be `description_file` (pull #[2051](https://github.com/aws-cloudformation/cfn-lint/pull/2051))
+- Update the `schema.json` for `.cfnlintrc` files to have the correct format for `custom_rules` (pull #[2055](https://github.com/aws-cloudformation/cfn-lint/pull/2055))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1029) to `not` look at `TemplatyBody` since it can be a nested template (pull #[2057](https://github.com/aws-cloudformation/cfn-lint/pull/2057))
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to think of a list as json (pull #[2067](https://github.com/aws-cloudformation/cfn-lint/pull/2067))
+
 ### v0.51.0
 ###### Features
 - A new sub class to make working with `Fn::Sub` easier (pull #[2003](https://github.com/aws-cloudformation/cfn-lint/pull/2003))
