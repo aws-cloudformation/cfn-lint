@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 import cfnlint.core
 import cfnlint.helpers  # pylint: disable=E0401
+from mock import patch
 
 
 class TestRunChecks(BaseTestCase):
@@ -53,3 +54,18 @@ class TestRunChecks(BaseTestCase):
         except cfnlint.core.InvalidRegionException as e:
             err = e
         assert(type(err) == cfnlint.core.InvalidRegionException)
+
+    def test_bad_registry_type(self):
+        """Test bad registry type"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        err = None
+        try:
+            cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], None, ['not-a-registry-type'])
+        except cfnlint.core.InvalidRegistryTypesException as e:
+            err = e
+        assert(type(err) == cfnlint.core.InvalidRegistryTypesException)
+
+
+
