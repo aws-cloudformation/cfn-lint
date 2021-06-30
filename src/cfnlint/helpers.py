@@ -66,10 +66,6 @@ UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
 FN_PREFIX = 'Fn::'
 CONDITION_FUNCTIONS = ['Fn::If']
 REGIONS = list(SPEC_REGIONS.keys())
-REGISTRY_TYPES = [
-    'MODULE'
-    #     'RESOURCE' #new supported type in the future
-]
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(

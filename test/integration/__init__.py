@@ -83,8 +83,7 @@ class BaseCliTestCase(BaseTestCase):
                 filename,
                 template,
                 rules,
-                regions,
-                []
+                regions
             )
 
             # Only check that the error count matches as the formats are different

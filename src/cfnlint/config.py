@@ -434,15 +434,6 @@ class CliArgs(object):
             '--merge-configs', default=False, action='store_true',
             help='Merges lists between configuration layers'
         )
-        standard.add_argument(
-            '--validate-registry-types', help='Validate private registry type',
-            dest='validate_registry_types', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-        )
-        standard.add_argument(
-            '--update-registry-type-specs', help='Update the CloudFormation Module Information',
-            action='store_true'
-        )
 
         return parser
 
@@ -689,11 +680,3 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def merge_configs(self):
         return self._get_argument_value('merge_configs', True, True)
-
-    @property
-    def update_registry_type_specs(self):
-        return self._get_argument_value('update_registry_type_specs', False, False)
-
-    @property
-    def validate_registry_types(self):
-        return self._get_argument_value('validate_registry_types', False, True)
