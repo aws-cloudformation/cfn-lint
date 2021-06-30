@@ -81,3 +81,12 @@ class TestArgsParser(BaseTestCase):
             ['-x', 'E3012:strict=true', '-x', 'E3012:key=value,E3001:key=value'])
         self.assertEqual(config.cli_args.configure_rules, {
                          'E3012': {'key': 'value', 'strict': 'true'}, 'E3001': {'key': 'value'}})
+
+    def test_create_parser_registry_types(self):
+        """Test success run"""
+
+        config = cfnlint.config.CliArgs(
+            ['--validate-registry-types', 'MODULE', '--update-registry-type-specs', '--', 'template1.yaml']
+        )
+        self.assertEqual(config.cli_args.validate_registry_types, ['MODULE'])
+        self.assertEqual(config.cli_args.update_registry_type_specs, True)
