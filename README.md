@@ -141,8 +141,7 @@ ignore_templates:
   - codebuild.yaml
 include_checks:
   - I
-custom_rules:
-  - custom_rules.txt
+custom_rules: custom_rules.txt
 ```
 
 ### Parameters
