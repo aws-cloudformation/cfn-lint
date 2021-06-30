@@ -42,7 +42,7 @@ class TestResourceProperties(BaseRuleTestCase):
         filename = 'test/fixtures/templates/bad/resource_properties.yaml'
         (args, _, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], [])
+        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
         matched_rule_ids = [r.rule.id for r in results]
         self.assertIn('E3012', matched_rule_ids)
 
@@ -51,7 +51,7 @@ class TestResourceProperties(BaseRuleTestCase):
         filename = 'test/fixtures/templates/bad/resource_properties.yaml'
         (args, _, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], [])
+        results = cfnlint.core.run_checks(filename, template, rules, ['us-east-1'])
         custom_attrs = ['actual_type', 'expected_type']
         for r in results:
             if r.rule.id == 'E3012':
