@@ -14,7 +14,7 @@ class StringSize(CloudFormationLintRule):
     id = 'E3033'
     shortdesc = 'Check if a string has between min and max number of values specified'
     description = 'Check strings for its length between the minimum and maximum'
-    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern'
+    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
     tags = ['resources', 'property', 'string', 'size']
 
     def initialize(self, cfn):

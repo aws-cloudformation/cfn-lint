@@ -1,10 +1,13 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Template containing third-party preprocessor-like variables to test custom ignore filters
+Parameters:
+  Stage:
+    Type: String
 Resources:
   TestRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: TestRole-${self:provider.stage}
+      RoleName: TestRole-${Stage}
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:

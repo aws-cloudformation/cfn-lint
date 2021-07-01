@@ -1,0 +1,22 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Resources: 
+  MyQueue: 
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: "SampleQueue"
+  MyQueue1: 
+    Type: AWS::SQS::Queue
+    Properties: 
+      QueueName: "SampleQueue"
+      MessageRetentionPeriod: !If [IsUsEast1, 60, !Ref 'AWS::NoValue']
+  MyQueue2: 
+    Type: AWS::SQS::Queue
+    Properties: 
+      Fn::If:
+      - IsUsEast1
+      - QueueName: "SampleQueue"
+        MessageRetentionPeriod: 60
+      - QueueName: "SampleQueue"

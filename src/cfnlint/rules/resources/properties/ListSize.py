@@ -13,7 +13,7 @@ class ListSize(CloudFormationLintRule):
     id = 'E3032'
     shortdesc = 'Check if a list has between min and max number of values specified'
     description = 'Check lists for the number of items in the list to validate they are between the minimum and maximum'
-    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/master/docs/cfn-resource-specification.md#allowedpattern'
+    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
     tags = ['resources', 'property', 'list', 'size']
 
     def initialize(self, cfn):

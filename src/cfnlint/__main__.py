@@ -14,29 +14,15 @@ LOGGER = logging.getLogger('cfnlint')
 def main():
     if sys.version_info[:2] == (3, 4):
         warnings.warn('Python 3.4 has reached end of life. '
-                      'cfn-lint will end support for python 3.4 on July 1st, 2020.', Warning, stacklevel=3)
+                      'cfn-lint has ended support for python 3.4 as of July 1st, 2020.', Warning, stacklevel=3)
     elif sys.version_info[:2] == (2, 7):
         warnings.warn('Python 2.7 has reached end of life. '
-                      'cfn-lint will end support for python 2.7 on December 31st, 2020.', Warning, stacklevel=3)
+                      'cfn-lint will end support for python 2.7 on June 1st, 2020.', Warning, stacklevel=3)
 
     try:
         (args, filenames, formatter) = cfnlint.core.get_args_filenames(sys.argv[1:])
-        matches = []
-        rules = None
-        for filename in filenames:
-            LOGGER.debug('Begin linting of file: %s', str(filename))
-            (template, rules, errors) = cfnlint.core.get_template_rules(filename, args)
-            # template matches may be empty but the template is still None
-            # this happens when ignoring bad templates
-            if not errors and template:
-                matches.extend(
-                    cfnlint.core.run_cli(
-                        filename, template, rules,
-                        args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks))
-            else:
-                matches.extend(errors)
-            LOGGER.debug('Completed linting of file: %s', str(filename))
-
+        matches = list(cfnlint.core.get_matches(filenames, args))
+        (_, rules, _) = cfnlint.core.get_template_rules(filenames[-1], args)
         matches_output = formatter.print_matches(matches, rules, filenames)
 
         if matches_output:
