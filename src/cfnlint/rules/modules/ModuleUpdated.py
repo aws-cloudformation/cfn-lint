@@ -15,6 +15,7 @@ class ModuleUpdated(CloudFormationLintRule):
     tags = ['resources', 'modules']
 
     def match(self, cfn):
+        # pylint: disable=unused-argument
         matches = []
         for name in MODULES_TO_UPDATE:
             path = ['Resources', name, 'Type']

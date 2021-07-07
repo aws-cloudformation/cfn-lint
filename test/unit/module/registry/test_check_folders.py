@@ -16,11 +16,9 @@ class TestCheckFolders(BaseTestCase):
 
     @patch('cfnlint.schema_manager.SchemaManager.create_path')
     @patch('cfnlint.schema_manager.SchemaManager.create_folder')
-    @patch('os.getcwd')
     # mock the call against cloudformation registry
-    def test_check_folder_not_existing(self, getcwd, create_folder, create_path):
+    def test_check_folder_not_existing(self, create_folder, create_path):
         """Test folder doesn't exist"""
-        getcwd.return_value = 'Users/test_user'
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
@@ -39,8 +37,7 @@ class TestCheckFolders(BaseTestCase):
     @patch('cfnlint.schema_manager.SchemaManager.create_path')
     @patch('cfnlint.schema_manager.SchemaManager.create_folder')
     @patch('cfnlint.schema_manager.SchemaManager.compare_version_ids')
-    @patch('os.getcwd')
-    def test_check_folder_already_exists(self, get_cwd, compare_version_ids, create_folder, create_path):
+    def test_check_folder_already_exists(self, compare_version_ids, create_folder, create_path):
         """Test folder has a bad path"""
 
         filename = 'test/fixtures/templates/good/generic.yaml'

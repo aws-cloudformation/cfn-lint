@@ -102,9 +102,10 @@ def get_formatter(fmt):
 
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
-              mandatory_rules=None, custom_rules=None):
+              mandatory_rules=None, custom_rules=None, validate_registry_types=None):
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
-                            include_experimental, mandatory_rules)
+                            include_experimental, mandatory_rules, validate_registry_types)
+
     rules_paths = [DEFAULT_RULESDIR] + append_rules
     try:
         for rules_path in rules_paths:
@@ -164,7 +165,9 @@ def get_args_filenames(cli_args):
     if config.update_registry_type_specs:
         schema_manager = SchemaManager(config.regions)
         schema_manager.update_locally_cached_schemas()
-        print('Locally cached registry type information from specified regions is now refreshed.')
+        regions = ', '.join(config.regions)
+        print('Locally cached registry type information from {0} is now refreshed.'
+              .format(regions))
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
@@ -222,8 +225,8 @@ def get_template_rules(filename, args):
             args.include_experimental,
             args.mandatory_checks,
             args.custom_rules,
+            args.validate_registry_types
         )
-
     return (template, __CACHED_RULES, [])
 
 
