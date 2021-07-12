@@ -216,6 +216,50 @@ class TestRulesCollection(BaseTestCase):
         for rule in rules:
             self.assertIn(rule.id, ['E0000', 'E0002', 'W0000'])
 
+    def test_success_filtering_of_rules_module_not_validated(self):
+        """Test extend function"""
+        class rule_e0000(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0000'
+
+        class rule_e0010(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0010'
+
+        class rule_e5002(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E5002'
+
+        rules_to_add = [rule_e0000(), rule_e0010(), rule_e5002()]
+        rules = RulesCollection(validate_registry_types=[])
+        print(rules)
+        rules.extend(rules_to_add)
+        self.assertEqual(len(rules), 2)
+        for rule in rules:
+            self.assertIn(rule.id, ['E0000', 'E0010'])
+
+    def test_success_filtering_of_rules_module_validated(self):
+        """Test extend function"""
+        class rule_e0000(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0000'
+
+        class rule_e0010(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0010'
+
+        class rule_e5002(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E5002'
+
+        rules_to_add = [rule_e0000(), rule_e0010(), rule_e5002()]
+        rules = RulesCollection(validate_registry_types=['MODULE'])
+        print(rules)
+        rules.extend(rules_to_add)
+        self.assertEqual(len(rules), 3)
+        for rule in rules:
+            self.assertIn(rule.id, ['E0000', 'E0010', 'E5002'])
+
 
 class TestCreateFromModule(BaseTestCase):
     """Test loading a rules collection from a module"""
