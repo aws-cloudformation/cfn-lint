@@ -27,12 +27,13 @@ class ModuleSchema(CloudFormationLintRule):
                 properties = resource_values.get('Properties', {})
                 parameters = schema['properties']['Parameters']
                 # ignoring modules with CloudFormation template syntax in PropertiesAdd
-                if not re.match(REGEX_DYN_REF, str(properties)) and not any(x in str(properties) for x in PSEUDOPARAMS + UNCONVERTED_SUFFIXES) and FN_PREFIX not in str(properties):
-                    try:
-                        validate(properties, parameters)
-                    except ValidationError as e:
-                        path = ['Resources', resource_name, 'Properties']
-                        for element in e.path:
-                            path.append(element)
-                        matches.append(RuleMatch(path, e.message))
+                for name, value in properties.items():
+                    if not re.match(REGEX_DYN_REF, str(value)) and not any(x in str(value) for x in PSEUDOPARAMS + UNCONVERTED_SUFFIXES) and FN_PREFIX not in str(value):
+                        try:
+                            validate({name: value}, parameters)
+                        except ValidationError as e:
+                            path = ['Resources', resource_name, 'Properties']
+                            for element in e.path:
+                                path.append(element)
+                            matches.append(RuleMatch(path, e.message))
             return matches
