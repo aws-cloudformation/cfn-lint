@@ -11,7 +11,7 @@ from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.schemaManager import SchemaManager
+from cfnlint.schema_manager import SchemaManager
 from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters

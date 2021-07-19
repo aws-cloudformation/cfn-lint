@@ -1,7 +1,7 @@
 import logging
 
 import cfnlint.core
-import cfnlint.schemaManager
+import cfnlint.schema_manager
 from test.testlib.testcase import BaseTestCase
 
 import botocore.exceptions
@@ -18,7 +18,7 @@ class TestAWSCallRegistry(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schemaManager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
 
         stubbed_client = boto3.client('cloudformation')
         stubber = Stubber(stubbed_client)
@@ -32,7 +32,7 @@ class TestAWSCallRegistry(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schemaManager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
 
         stubbed_client = boto3.client('cloudformation')
         stubber = Stubber(stubbed_client)
@@ -47,7 +47,7 @@ class TestAWSCallRegistry(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schemaManager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
 
         stubbed_client = boto3.client('cloudformation')
         stubber = Stubber(stubbed_client)

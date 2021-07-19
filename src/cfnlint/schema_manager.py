@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 import json
 import logging
 import os
-import platform
 
 import botocore.exceptions
 import boto3
@@ -28,28 +27,13 @@ class SchemaManager(object):
     # Check if the appropriate folder already exists
     def check_folders(self, name, registry_type):
         account_id = self.boto3_sts.get_caller_identity().get('Account')
-        username = None
-        path_split = os.getcwd().split('/')
-        try:
-            index = path_split.index('Users')
-            username = path_split[index + 1]
-        except ValueError:
-            raise ValueError
-
-        is_windows = platform.system() == 'win32'
-
         for region in self.regions:
-            path = self.create_path(is_windows, username, account_id, region, name)
-
+            path = self.create_path(account_id, region, name)
             if not os.path.isdir(path):
                 self.create_folder(path, name, registry_type)
 
-    def create_path(self, is_windows, username, account_id, region, name):
-        if is_windows:
-            path = os.path.join(r'C:\Users', username, 'AppData', 'cloudformation', account_id, region, name)
-        else:
-            path = os.path.join('/Users', username, '.cloudformation', account_id, region, name)
-        return path
+    def create_path(self, account_id, region, name):
+        return os.path.join(os.path.expanduser('~'), '.cloudformation', account_id, region, name)
 
     def create_folder(self, path, name, registry_type):
         try:
