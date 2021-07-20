@@ -160,7 +160,7 @@ class Template(object):  # pylint: disable=R0904
         for pseudoparam in cfnlint.PSEUDOPARAMS:
             element = {}
             element['Type'] = 'Pseudo'
-            element['From'] = 'Pseduo'
+            element['From'] = 'Pseudo'
             results[pseudoparam] = element
         return results
 
