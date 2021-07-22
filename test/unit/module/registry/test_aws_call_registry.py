@@ -4,7 +4,6 @@ import cfnlint.core
 import cfnlint.schema_manager
 from test.testlib.testcase import BaseTestCase
 
-import botocore.exceptions
 from botocore.stub import Stubber
 import boto3
 

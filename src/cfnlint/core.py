@@ -161,6 +161,12 @@ def get_args_filenames(cli_args):
         print(rules)
         sys.exit(0)
 
+    if config.update_registry_type_specs:
+        schema_manager = SchemaManager(config.regions)
+        schema_manager.compare_version_ids(True)
+        print('All locally cached registry type information is now refreshed.')
+        sys.exit(0)
+
     if not sys.stdin.isatty() and not config.templates:
         return (config, [None], formatter)
 
@@ -248,7 +254,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
             template_obj = Template(filename, template, regions)
             modules = template_obj.get_modules()
             if modules:
-                schema_manager = SchemaManager(filename, template, regions)
+                schema_manager = SchemaManager(regions)
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
                     schema_manager.check_folders(modules[module].get('Type'), registry_type)
