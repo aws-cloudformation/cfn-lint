@@ -33,12 +33,16 @@ class TestCheckFolders(BaseTestCase):
         schema_manager.boto3_sts = stubbed_client
         create_path.return_value = 'new_path'
         schema_manager.check_folders('TEST', 'MODULE')
-        create_folder.assert_called_with('new_path', 'TEST', 'MODULE')
+        create_folder.assert_called_with('new_path', 'TEST', 'MODULE', False)
 
-    @patch('cfnlint.schema_manager.SchemaManager.create_path')
-    @patch('cfnlint.schema_manager.SchemaManager.create_folder')
-    def test_check_folder_already_existing(self, create_folder, create_path):
-        """Test folder doesnt' exist (windows)"""
+
+    @patch('cfnlint.schemaManager.SchemaManager.create_path')
+    @patch('cfnlint.schemaManager.SchemaManager.create_folder')
+    @patch('cfnlint.schemaManager.SchemaManager.compare_version_ids')
+    @patch('os.getcwd')
+    def test_check_folder_already_exists(self, compare_version_ids, create_folder, create_path):
+        """Test folder has a bad path"""
+
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
@@ -51,6 +55,7 @@ class TestCheckFolders(BaseTestCase):
         schema_manager.boto3_sts = stubbed_client
 
         create_path.return_value = '/'
+
         schema_manager.check_folders('TEST', 'MODULE')
-        create_folder.assert_not_called()
+        compare_version_ids.assert_called_with(False)
 

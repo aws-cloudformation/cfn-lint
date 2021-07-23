@@ -27,18 +27,19 @@ class SchemaManager(object):
         for region in self.regions:
             path = self.create_path(account_id, region, name)
             if not os.path.isdir(path):
-                self.create_folder(path, name, registry_type)
+                self.create_folder(path, name, registry_type, False)
             else:
                 self.compare_version_ids(False)
 
     def create_path(self, account_id, region, name):
         return os.path.join(os.path.expanduser('~'), '.cloudformation', account_id, region, name)
 
-    def create_folder(self, path, name, registry_type):
+    def create_folder(self, path, name, registry_type, is_update):
         try:
             response = self.aws_call_registry(self.boto3_cfn, name, registry_type)
             if response:
-                os.makedirs(path)
+                if not is_update:
+                    os.makedirs(path)
                 self.save_files(response, path)
         except OSError:
             raise OSError
@@ -97,7 +98,7 @@ class SchemaManager(object):
                     (registry_version_id, registry_type) = self.get_registry_version_id(self.boto3_cfn, module)
                     if local_version_id != registry_version_id:
                         if is_update:
-                            self.create_folder(os.path.join(folder, module), module, registry_type)
+                            self.create_folder(os.path.join(folder, module), module, registry_type, True)
                         else:
                             print('Warning: a new version of your private registry type {0} is available in the '
                                   'CloudFormation registry. Please use --update-registry-type-specs to access the '
