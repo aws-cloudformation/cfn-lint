@@ -252,7 +252,6 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
                     schema_manager.check_folders(modules[module].get('Type'), registry_type)
-
     errors = []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
@@ -267,7 +266,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
 
     if errors:
         if ignore_transform_error:
-            return ([])  # if there is a transform error we can't continue
+            return([])  # if there is a transform error we can't continue
 
         return (errors)
 
