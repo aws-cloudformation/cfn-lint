@@ -95,7 +95,7 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 (`setopt -s globstar` for sh/bash, `setopt extended_glob` for zsh).
 
 ##### Exit Codes
-`cfn-lint` will return a non zero exit if there are any issues with your template. The value is dependent on the sevirity of the issues found.  For each level of discovered error `cfn-lint` will use bitwise OR to determine the final exit code.  This will result in these possibilities.
+`cfn-lint` will return a non zero exit if there are any issues with your template. The value is dependent on the severity of the issues found.  For each level of discovered error `cfn-lint` will use bitwise OR to determine the final exit code.  This will result in these possibilities.
 
 - 0 is no issue was found
 - 2 is an error
