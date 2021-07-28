@@ -11,6 +11,7 @@ from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
+from cfnlint.schema_manager import SchemaManager
 from cfnlint.rules import RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
@@ -161,14 +162,14 @@ def get_args_filenames(cli_args):
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
-        return(config, [None], formatter)
+        return (config, [None], formatter)
 
     if not config.templates:
         # Not specified, print the help
         config.parser.print_help()
         sys.exit(1)
 
-    return(config, config.templates, formatter)
+    return (config, config.templates, formatter)
 
 
 def get_template_rules(filename, args):
@@ -193,8 +194,8 @@ def get_template_rules(filename, args):
 
     if errors:
         if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
-            return(template, [], [])
-        return(template, [], errors)
+            return (template, [], [])
+        return (template, [], errors)
 
     args.template_args = template
 
@@ -217,7 +218,7 @@ def get_template_rules(filename, args):
             args.custom_rules,
         )
 
-    return(template, __CACHED_RULES, [])
+    return (template, __CACHED_RULES, [])
 
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None, validate_registry_types=None):
@@ -240,6 +241,17 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
             )
             raise InvalidRegistryTypesException(msg, 32)
 
+    # MODULE is the only accepted value right now, but eventually other values will be supported such as RESOURCE
+    for registry_type in validate_registry_types:
+        if registry_type == 'MODULE':
+            # Check the presence of modules in the template
+            template_obj = Template(filename, template, regions)
+            modules = template_obj.get_modules()
+            if modules:
+                schema_manager = SchemaManager(filename, template, regions)
+                # For each module extracted from the template, verify if it's already locally cached
+                for module in modules:
+                    schema_manager.check_folders(modules[module].get('Type'), registry_type)
     errors = []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
@@ -256,7 +268,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
         if ignore_transform_error:
             return([])  # if there is a transform error we can't continue
 
-        return(errors)
+        return (errors)
 
     # Only do rule analysis if Transform was successful
     try:
@@ -266,4 +278,4 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
         UnexpectedRuleException(msg, 1)
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(errors)
+    return (errors)

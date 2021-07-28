@@ -67,5 +67,12 @@ class TestRunChecks(BaseTestCase):
             err = e
         assert(type(err) == cfnlint.core.InvalidRegistryTypesException)
 
-
-
+    @patch('cfnlint.schema_manager.SchemaManager.check_folders')
+    def test_valid_registry_type(self, check_folders):
+        """Test valid registry type"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
+        (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+        results = []
+        results.extend(cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], None, ['MODULE']))
+        assert (results == [])
