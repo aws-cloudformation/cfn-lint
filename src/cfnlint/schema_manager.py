@@ -31,7 +31,7 @@ class SchemaManager(object):
             if not os.path.isdir(path):
                 self.create_folder(path, module_logical_id, name, registry_type, False)
             else:
-                self.compare_version_ids(False, module_logical_id, path)
+                self.compare_version_ids(False, path, name, module_logical_id)
 
     def create_path(self, account_id, region, name):
         return os.path.join(os.path.expanduser('~'), '.cloudformation', account_id, region, name)
@@ -56,10 +56,10 @@ class SchemaManager(object):
                 TypeName=name
             )
         except botocore.exceptions.ClientError as e:
-            if e.response['Error']['Code'] == 'TypeNotFoundException':
-                INVALID_MODULES[module_logical_id] = e.response['Error']['Message']
-            if e.response['Error']['Code'] == 'CFNRegistryException':
-                INVALID_MODULES[module_logical_id] = e.response['Error']['Message']
+            if e.response['Error']['Code'] == 'TypeNotFoundException' or e.response['Error']['Code'] \
+                    == 'CFNRegistryException':
+                if module_logical_id:
+                    INVALID_MODULES[module_logical_id] = e.response['Error']['Message']
         return response
 
     def save_files(self, response, path):
@@ -89,28 +89,32 @@ class SchemaManager(object):
         except OSError:
             raise OSError
 
-    def compare_version_ids(self, is_update, module_logical_id, path):
+    def update_locally_cached_schemas(self):
         account_id = self.boto3_sts.get_caller_identity().get('Account')
         folders = []
         for region in self.regions:
             folders.append(os.path.join(os.path.expanduser('~'), '.cloudformation', account_id, region))
         for folder in folders:
             for module in os.listdir(folder):
-                if module.endswith('::MODULE'):
-                    local_version_id = self.get_local_version_id(os.path.join(folder, module))
-                    (registry_version_id, registry_type) = self.get_registry_version_id(self.boto3_cfn,
-                                                                                        module_logical_id, module, path)
-                    if local_version_id != registry_version_id:
-                        if is_update:
-                            self.create_folder(os.path.join(folder, module), module, registry_type, True)
-                        else:
-                            MODULES_TO_UPDATE.append(module_logical_id)
+                self.compare_version_ids(True, os.path.join(folder, module), module)
+
+    def compare_version_ids(self, is_update, path, module, module_logical_id=None):
+        if module.endswith('::MODULE'):
+            local_version_id = self.get_local_version_id(path)
+            (registry_version_id, registry_type) = self.get_registry_version_id(self.boto3_cfn,
+                                                                                module_logical_id, module)
+            MODULE_SCHEMAS.append(path)
+            if local_version_id != registry_version_id:
+                if is_update:
+                    self.create_folder(path, module_logical_id, module, registry_type, is_update)
+                else:
+                    MODULES_TO_UPDATE.append(module_logical_id)
 
     def get_local_version_id(self, path):
         with open(path + '/metadata.json') as f:
             return json.loads(f.read())['DefaultVersionId']
 
-    def get_registry_version_id(self, client, module_logical_id, name, path):
+    def get_registry_version_id(self, client, module_logical_id, name):
         response = None
         try:
             response = client.list_types(
@@ -121,6 +125,5 @@ class SchemaManager(object):
         if response:
             for summary in response['TypeSummaries']:
                 if summary['TypeName'] == name:
-                    MODULE_SCHEMAS.append(path)
                     return summary['DefaultVersionId'], summary['Type']
         return response

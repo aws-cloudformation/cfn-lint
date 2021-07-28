@@ -163,8 +163,8 @@ def get_args_filenames(cli_args):
 
     if config.update_registry_type_specs:
         schema_manager = SchemaManager(config.regions)
-        schema_manager.compare_version_ids(True)
-        print('All locally cached registry type information is now refreshed.')
+        schema_manager.update_locally_cached_schemas()
+        print('Locally cached registry type information from specified regions is now refreshed.')
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:

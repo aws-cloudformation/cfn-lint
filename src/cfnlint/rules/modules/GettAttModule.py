@@ -35,7 +35,7 @@ class GetAttModule(CloudFormationLintRule):
                 if isinstance(getatt[-1][1], six.string_types):
                     resname = getatt[-1][0]
                     restype = '.'.join(getatt[-1][1:])
-                    # if it's a module
+            # if it's a module
             if any(resname.startswith(s) for s in valid_getatts) and any(resname.startswith(m) for m in
                                                                          modules_keys):
                 for module in modules_keys:
