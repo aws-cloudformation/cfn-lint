@@ -42681,7 +42681,7 @@
           "Required": false,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "AWS::IAM::Role.Name"
+            "ValueType": "AWS::IAM::Role.Role.Name"
           }
         },
         "BootstrapActions": {
@@ -42781,7 +42781,7 @@
           "Required": true,
           "UpdateType": "Immutable",
           "Value": {
-            "ValueType": "AWS::IAM::Role.Name"
+            "ValueType": "AWS::IAM::Role.Role.Name"
           }
         },
         "StepConcurrencyLevel": {
@@ -46719,7 +46719,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-rolename",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IAM::Role.RoleName"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-tags",
@@ -48159,7 +48162,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-description",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Description"
+          }
         },
         "Environment": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-environment",
@@ -48178,7 +48184,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-functionname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.FunctionName"
+          }
         },
         "Handler": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-handler",
@@ -58638,6 +58647,18 @@
         ]
       }
     },
+    "AWS::IAM::Role.RoleName": {
+      "GetAtt": {},
+      "Ref": {
+        "Parameters": [
+          "String"
+        ],
+        "Resources": [
+          "AWS::IAM::Role"
+        ]
+      },
+      "StringMax": 64
+    },
     "AWS::IAM::SAMLProvider.Name": {
       "AllowedPatternRegex": "[\\w._-]+",
       "StringMax": 128,
@@ -59171,14 +59192,21 @@
     "AWS::Lambda::Function.DeadLetterConfig.TargetArn": {
       "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
     },
+    "AWS::Lambda::Function.Description": {
+      "StringMax": 256
+    },
     "AWS::Lambda::Function.FileSystemConfig.Arn": {
       "AllowedPatternRegex": "^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}$"
     },
     "AWS::Lambda::Function.FileSystemConfig.LocalMountPath": {
       "AllowedPatternRegex": "^/mnt/[a-zA-Z0-9-_.]+$"
     },
+    "AWS::Lambda::Function.FunctionName": {
+      "StringMax": 64
+    },
     "AWS::Lambda::Function.Handler": {
-      "AllowedPatternRegex": "^[^\\s]+$"
+      "AllowedPatternRegex": "^[^\\s]+$",
+      "StringMax": 128
     },
     "AWS::Lambda::Function.KmsKeyArn": {
       "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
@@ -59205,6 +59233,9 @@
         "Active",
         "PassThrough"
       ]
+    },
+    "AWS::Lambda::LayerVersion.LayerName": {
+      "StringMax": 140
     },
     "AWS::Logs::LogGroup.KmsKeyId": {
       "AllowedPatternRegex": "^arn:[a-z0-9-]+:kms:[a-z0-9-]+:\\d{12}:(key|alias)/.+\\Z"
@@ -59755,6 +59786,10 @@
     },
     "AWS::SES::ContactList.Topic.TopicName": {
       "AllowedPatternRegex": "^[a-zA-Z0-9_-]{1,64}$"
+    },
+    "AWS::SNS::Topic.TopicName": {
+      "StringMax": 256,
+      "StringMin": 1
     },
     "AWS::SQS::Queue.DelaySeconds": {
       "NumberMax": 900,
