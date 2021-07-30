@@ -19,7 +19,7 @@ class TestCreateFiles(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         if six.PY2:
             with patch("__builtin__.open", mock_open(read_data="data")) as builtin:
@@ -37,7 +37,7 @@ class TestCreateFiles(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         if six.PY2:
             with patch("__builtin__.open", mock_open(read_data="data")) as builtin:
@@ -53,7 +53,7 @@ class TestCreateFiles(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         err = None
         if six.PY2:
@@ -74,7 +74,7 @@ class TestCreateFiles(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         err = None
         if six.PY2:

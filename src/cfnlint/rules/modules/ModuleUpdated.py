@@ -7,7 +7,7 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
 
-class ModuleInRegistry(CloudFormationLintRule):
+class ModuleUpdated(CloudFormationLintRule):
     id = 'W5001'
     shortdesc = 'Check that Module is the latest version'
     description = 'Check that Module is the latest version'

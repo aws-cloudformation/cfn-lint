@@ -17,7 +17,7 @@ class TestCreatePath(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
         with patch("os.path.join",
                    MagicMock(return_value='/Users/username/.cloudformation/account_id/region/name')):
             assert schema_manager.create_path('account_id', 'region', 'name') == \

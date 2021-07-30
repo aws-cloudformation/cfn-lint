@@ -10,7 +10,6 @@ import os
 import botocore.exceptions
 import boto3
 from cfnlint.helpers import MODULE_SCHEMAS, INVALID_MODULES, MODULES_TO_UPDATE
-from cfnlint.rules import RuleMatch
 
 LOGGER = logging.getLogger(__name__)
 

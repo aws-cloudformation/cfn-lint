@@ -2,7 +2,7 @@ import logging
 import six
 
 import cfnlint.core
-import cfnlint.schemaManager
+import cfnlint.schema_manager
 from test.testlib.testcase import BaseTestCase
 
 from mock import patch, mock_open
@@ -17,7 +17,7 @@ class TestGetLocalVersionId(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schemaManager.SchemaManager(['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         if six.PY2:
             with patch("__builtin__.open", mock_open(read_data='{\"DefaultVersionId\": \"000001\"}')) as builtin:
