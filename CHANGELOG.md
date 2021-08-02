@@ -1,3 +1,15 @@
+### v0.53.0
+###### Features
+- Update `aws-sam-translator` to `1.38.0` (pull #[2082](https://github.com/aws-cloudformation/cfn-lint/pull/2082))
+- Signal the end of life for Python 3.5 (pull #[2052](https://github.com/aws-cloudformation/cfn-lint/pull/2052))
+- Allow configuration of top level sections in rule [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1001) (pull #[2090](https://github.com/aws-cloudformation/cfn-lint/pull/2090))
+###### CloudFormation Specifications
+- Update resource specs to `39.8.0` (pull #[2087](https://github.com/aws-cloudformation/cfn-python-lint/pull/2087))
+- Add `StringMax` to `AWS::SNS::Topic.TopicName`, `AWS::IAM::Role.Name`, `AWS::SNS::Topic.TopicName`, `AWS::Lambda::Function` properties `Handler`, `Description`, `FunctionName`, and `AWS::Lambda::LayerVersion` properties `LayerName` (pull #[2089](https://github.com/aws-cloudformation/cfn-lint/pull/2089))
+###### Fixes
+- Update `RetentionPeriodHours` for `AWS::Kinesis::Stream` to `8760` (pull #[2071](https://github.com/aws-cloudformation/cfn-lint/pull/2071))
+- Expand `expanding likely_stateful_resource_types` to include `AWS::DynamoDB::GlobalTable` (pull #[2079](https://github.com/aws-cloudformation/cfn-lint/pull/2079))
+
 ### v0.52.0
 ###### Features
 - End support for Python 3.4 (pull #[2048](https://github.com/aws-cloudformation/cfn-lint/pull/2048))
