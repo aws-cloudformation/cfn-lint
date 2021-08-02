@@ -18,6 +18,14 @@ class TestBaseTemplate(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
+    def test_file_positive_configured(self):
+        self.helper_file_rule_config(
+            'test/fixtures/templates/bad/generic.yaml',
+            {
+                'sections': 'Errors',
+            }, 0
+        )
+
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 1)
