@@ -12161,6 +12161,47 @@
         }
       }
     },
+    "AWS::DataBrew::Job.ColumnSelector": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnselector.html",
+      "Properties": {
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnselector.html#cfn-databrew-job-columnselector-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.ColumnSelector.Name"
+          }
+        },
+        "Regex": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnselector.html#cfn-databrew-job-columnselector-regex",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.ColumnSelector.Regex"
+          }
+        }
+      }
+    },
+    "AWS::DataBrew::Job.ColumnStatisticsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnstatisticsconfiguration.html",
+      "Properties": {
+        "Selectors": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnstatisticsconfiguration.html#cfn-databrew-job-columnstatisticsconfiguration-selectors",
+          "ItemType": "ColumnSelector",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "Statistics": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-columnstatisticsconfiguration.html#cfn-databrew-job-columnstatisticsconfiguration-statistics",
+          "Required": true,
+          "Type": "StatisticsConfiguration",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::DataBrew::Job.CsvOutputOptions": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-csvoutputoptions.html",
       "Properties": {
@@ -12222,6 +12263,32 @@
           "Value": {
             "ValueType": "AWS::DataBrew::Job.DataCatalogOutput.TableName"
           }
+        }
+      }
+    },
+    "AWS::DataBrew::Job.DatabaseOutput": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-databaseoutput.html",
+      "Properties": {
+        "DatabaseOptions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-databaseoutput.html#cfn-databrew-job-databaseoutput-databaseoptions",
+          "Required": true,
+          "Type": "DatabaseTableOutputOptions",
+          "UpdateType": "Mutable"
+        },
+        "DatabaseOutputMode": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-databaseoutput.html#cfn-databrew-job-databaseoutput-databaseoutputmode",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.DatabaseOutput.DatabaseOutputMode"
+          }
+        },
+        "GlueConnectionName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-databaseoutput.html#cfn-databrew-job-databaseoutput-glueconnectionname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -12342,6 +12409,34 @@
         }
       }
     },
+    "AWS::DataBrew::Job.ParameterMap": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-parametermap.html"
+    },
+    "AWS::DataBrew::Job.ProfileConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-profileconfiguration.html",
+      "Properties": {
+        "ColumnStatisticsConfigurations": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-profileconfiguration.html#cfn-databrew-job-profileconfiguration-columnstatisticsconfigurations",
+          "ItemType": "ColumnStatisticsConfiguration",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "DatasetStatisticsConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-profileconfiguration.html#cfn-databrew-job-profileconfiguration-datasetstatisticsconfiguration",
+          "Required": false,
+          "Type": "StatisticsConfiguration",
+          "UpdateType": "Mutable"
+        },
+        "ProfileColumns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-profileconfiguration.html#cfn-databrew-job-profileconfiguration-profilecolumns",
+          "ItemType": "ColumnSelector",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::DataBrew::Job.Recipe": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-recipe.html",
       "Properties": {
@@ -12383,6 +12478,48 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-s3tableoutputoptions.html#cfn-databrew-job-s3tableoutputoptions-location",
           "Required": true,
           "Type": "S3Location",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::DataBrew::Job.StatisticOverride": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticoverride.html",
+      "Properties": {
+        "Parameters": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticoverride.html#cfn-databrew-job-statisticoverride-parameters",
+          "Required": true,
+          "Type": "ParameterMap",
+          "UpdateType": "Mutable"
+        },
+        "Statistic": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticoverride.html#cfn-databrew-job-statisticoverride-statistic",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.StatisticOverride.Statistic"
+          }
+        }
+      }
+    },
+    "AWS::DataBrew::Job.StatisticsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticsconfiguration.html",
+      "Properties": {
+        "IncludedStatistics": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticsconfiguration.html#cfn-databrew-job-statisticsconfiguration-includedstatistics",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.StatisticsConfiguration.IncludedStatistics"
+          }
+        },
+        "Overrides": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-statisticsconfiguration.html#cfn-databrew-job-statisticsconfiguration-overrides",
+          "ItemType": "StatisticOverride",
+          "Required": false,
+          "Type": "List",
           "UpdateType": "Mutable"
         }
       }
@@ -13178,7 +13315,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-datasync-locationnfs-mountoptions.html#cfn-datasync-locationnfs-mountoptions-version",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationNFS.MountOptions.Version"
           }
@@ -13193,7 +13330,7 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationNFS.OnPremConfig.AgentArns"
           }
@@ -13221,7 +13358,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-datasync-locationsmb-mountoptions.html#cfn-datasync-locationsmb-mountoptions-version",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationSMB.MountOptions.Version"
           }
@@ -13330,6 +13467,15 @@
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::Task.Options.PreserveDevices"
+          }
+        },
+        "SecurityDescriptorCopyFlags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-datasync-task-options.html#cfn-datasync-task-options-securitydescriptorcopyflags",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataSync::Task.Options.SecurityDescriptorCopyFlags"
           }
         },
         "TaskQueueing": {
@@ -39078,7 +39224,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "39.7.0",
+  "ResourceSpecificationVersion": "39.8.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -39745,6 +39891,7 @@
           "PrimitiveType": "String"
         },
         "AutoSubDomainCreationPatterns": {
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Type": "List"
         },
@@ -39780,6 +39927,7 @@
         },
         "AutoSubDomainCreationPatterns": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amplify-domain.html#cfn-amplify-domain-autosubdomaincreationpatterns",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
@@ -39814,6 +39962,7 @@
         },
         "SubDomainSettings": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-amplify-domain.html#cfn-amplify-domain-subdomainsettings",
+          "DuplicatesAllowed": true,
           "ItemType": "SubDomainSetting",
           "Required": true,
           "Type": "List",
@@ -47026,6 +47175,13 @@
           "Type": "List",
           "UpdateType": "Mutable"
         },
+        "DatabaseOutputs": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-databrew-job.html#cfn-databrew-job-databaseoutputs",
+          "ItemType": "DatabaseOutput",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "DatasetName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-databrew-job.html#cfn-databrew-job-datasetname",
           "PrimitiveType": "String",
@@ -47100,6 +47256,12 @@
           "ItemType": "Output",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "ProfileConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-databrew-job.html#cfn-databrew-job-profileconfiguration",
+          "Required": false,
+          "Type": "ProfileConfiguration",
           "UpdateType": "Mutable"
         },
         "ProjectName": {
@@ -47476,13 +47638,13 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-mountoptions",
           "Required": false,
           "Type": "MountOptions",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "OnPremConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-onpremconfig",
           "Required": true,
           "Type": "OnPremConfig",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "ServerHostname": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-serverhostname",
@@ -47497,7 +47659,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-subdirectory",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-tags",
@@ -47524,7 +47686,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-accesskey",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationObjectStorage.AccessKey"
           }
@@ -47534,7 +47696,7 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationObjectStorage.AgentArns"
           }
@@ -47549,7 +47711,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-secretkey",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationObjectStorage.SecretKey"
           }
@@ -47567,7 +47729,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-serverport",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationObjectStorage.ServerPort"
           }
@@ -47576,7 +47738,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-serverprotocol",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationObjectStorage.ServerProtocol"
           }
@@ -47585,7 +47747,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-subdirectory",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-tags",
@@ -47664,7 +47826,7 @@
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationSMB.AgentArns"
           }
@@ -47673,7 +47835,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-domain",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationSMB.Domain"
           }
@@ -47682,13 +47844,13 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-mountoptions",
           "Required": false,
           "Type": "MountOptions",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Password": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-password",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationSMB.Password"
           }
@@ -47706,7 +47868,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-subdirectory",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-tags",
@@ -47720,7 +47882,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-user",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationSMB.User"
           }
@@ -67427,6 +67589,7 @@
         "AMAZON_COGNITO_USER_POOLS",
         "API_KEY",
         "AWS_IAM",
+        "AWS_LAMBDA",
         "OPENID_CONNECT"
       ]
     },
@@ -68962,6 +69125,14 @@
       "StringMax": 255,
       "StringMin": 1
     },
+    "AWS::DataBrew::Job.ColumnSelector.Name": {
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::DataBrew::Job.ColumnSelector.Regex": {
+      "StringMax": 255,
+      "StringMin": 1
+    },
     "AWS::DataBrew::Job.CsvOutputOptions.Delimiter": {
       "StringMax": 1,
       "StringMin": 1
@@ -68977,6 +69148,11 @@
     "AWS::DataBrew::Job.DataCatalogOutput.TableName": {
       "StringMax": 255,
       "StringMin": 1
+    },
+    "AWS::DataBrew::Job.DatabaseOutput.DatabaseOutputMode": {
+      "AllowedValues": [
+        "NEW_TABLE"
+      ]
     },
     "AWS::DataBrew::Job.DatabaseTableOutputOptions.TableName": {
       "StringMax": 255,
@@ -69038,6 +69214,16 @@
     },
     "AWS::DataBrew::Job.ProjectName": {
       "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::DataBrew::Job.StatisticOverride.Statistic": {
+      "AllowedPatternRegex": "^[A-Z\\_]+$",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::DataBrew::Job.StatisticsConfiguration.IncludedStatistics": {
+      "AllowedPatternRegex": "^[A-Z\\_]+$",
+      "StringMax": 128,
       "StringMin": 1
     },
     "AWS::DataBrew::Job.Type": {
@@ -69269,6 +69455,13 @@
       "AllowedValues": [
         "NONE",
         "PRESERVE"
+      ]
+    },
+    "AWS::DataSync::Task.Options.SecurityDescriptorCopyFlags": {
+      "AllowedValues": [
+        "NONE",
+        "OWNER_DACL",
+        "OWNER_DACL_SACL"
       ]
     },
     "AWS::DataSync::Task.Options.TaskQueueing": {
@@ -73951,6 +74144,13 @@
         "m5.large",
         "m5.metal",
         "m5.xlarge",
+        "m5a.16xlarge",
+        "m5a.24xlarge",
+        "m5a.2xlarge",
+        "m5a.4xlarge",
+        "m5a.8xlarge",
+        "m5a.large",
+        "m5a.xlarge",
         "m5d.12xlarge",
         "m5d.16xlarge",
         "m5d.24xlarge",
@@ -73978,6 +74178,13 @@
         "r5.large",
         "r5.metal",
         "r5.xlarge",
+        "r5a.16xlarge",
+        "r5a.24xlarge",
+        "r5a.2xlarge",
+        "r5a.4xlarge",
+        "r5a.8xlarge",
+        "r5a.large",
+        "r5a.xlarge",
         "r5d.12xlarge",
         "r5d.16xlarge",
         "r5d.24xlarge",
@@ -74012,6 +74219,13 @@
         "t3.nano",
         "t3.small",
         "t3.xlarge",
+        "t3a.2xlarge",
+        "t3a.large",
+        "t3a.medium",
+        "t3a.micro",
+        "t3a.nano",
+        "t3a.small",
+        "t3a.xlarge",
         "t4g.2xlarge",
         "t4g.large",
         "t4g.medium",
