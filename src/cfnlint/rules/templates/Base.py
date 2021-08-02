@@ -18,13 +18,24 @@ class Base(CloudFormationLintRule):
         'Resources'
     ]
 
+    def __init__(self):
+        """Init"""
+        super(Base, self).__init__()
+        self.config_definition = {
+            'sections': {
+                'default': '',
+                'type': 'string'
+            }
+        }
+        self.configure()
+
     def match(self, cfn):
         matches = []
 
         top_level = []
         for x in cfn.template:
             top_level.append(x)
-            if x not in cfn.sections:
+            if x not in cfn.sections and x != self.config['sections']:
                 message = 'Top level template section {0} is not valid'
                 matches.append(RuleMatch([x], message.format(x)))
 
