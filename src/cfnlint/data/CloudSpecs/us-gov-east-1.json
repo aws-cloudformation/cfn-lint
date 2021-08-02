@@ -43676,7 +43676,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-rolename",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IAM::Role.Name"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-role.html#cfn-iam-role-tags",
@@ -45934,7 +45937,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-description",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.Description"
+          }
         },
         "Environment": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-environment",
@@ -45953,7 +45959,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-functionname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::Function.FunctionName"
+          }
         },
         "Handler": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html#cfn-lambda-function-handler",
@@ -46086,7 +46095,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-layername",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::LayerVersion.LayerName"
+          }
         },
         "LicenseInfo": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-licenseinfo",
@@ -49272,7 +49284,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-topic.html#cfn-sns-topic-topicname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SNS::Topic.TopicName"
+          }
         }
       }
     },
@@ -54582,7 +54597,9 @@
         "Resources": [
           "AWS::IAM::Role"
         ]
-      }
+      },
+      "StringMax": 64,
+      "StringMin": 1
     },
     "AWS::IAM::Role.NameOrArn": {
       "GetAtt": {
@@ -55359,14 +55376,24 @@
     "AWS::Lambda::Function.DeadLetterConfig.TargetArn": {
       "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
     },
+    "AWS::Lambda::Function.Description": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
     "AWS::Lambda::Function.FileSystemConfig.Arn": {
       "AllowedPatternRegex": "^arn:aws[a-zA-Z-]*:elasticfilesystem:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:access-point/fsap-[a-f0-9]{17}$"
     },
     "AWS::Lambda::Function.FileSystemConfig.LocalMountPath": {
       "AllowedPatternRegex": "^/mnt/[a-zA-Z0-9-_.]+$"
     },
+    "AWS::Lambda::Function.FunctionName": {
+      "StringMax": 64,
+      "StringMin": 1
+    },
     "AWS::Lambda::Function.Handler": {
-      "AllowedPatternRegex": "^[^\\s]+$"
+      "AllowedPatternRegex": "^[^\\s]+$",
+      "StringMax": 128,
+      "StringMin": 1
     },
     "AWS::Lambda::Function.KmsKeyArn": {
       "AllowedPatternRegex": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
@@ -55393,6 +55420,10 @@
         "Active",
         "PassThrough"
       ]
+    },
+    "AWS::Lambda::LayerVersion.LayerName": {
+      "StringMax": 140,
+      "StringMin": 1
     },
     "AWS::LicenseManager::License.ProductSKU": {
       "StringMax": 1024,
@@ -55650,6 +55681,10 @@
       "AllowedPatternRegex": "^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$",
       "StringMax": 45,
       "StringMin": 3
+    },
+    "AWS::SNS::Topic.TopicName": {
+      "StringMax": 256,
+      "StringMin": 1
     },
     "AWS::SQS::Queue.DelaySeconds": {
       "NumberMax": 900,
