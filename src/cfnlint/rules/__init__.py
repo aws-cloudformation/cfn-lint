@@ -54,11 +54,12 @@ class CloudFormationLintRule(object):
         """Initialize the rule"""
 
     def is_enabled(self, include_experimental=False, ignore_rules=None, include_rules=None,
-                   mandatory_rules=None):
+                   mandatory_rules=None, validate_registry_types=None):
         """ Is the rule enabled based on the configuration """
         ignore_rules = ignore_rules or []
         include_rules = include_rules or []
         mandatory_rules = mandatory_rules or []
+        validate_registry_types = validate_registry_types or []
 
         # Evaluate experimental rules
         if self.experimental and not include_experimental:
@@ -80,6 +81,11 @@ class CloudFormationLintRule(object):
         # Allowing ignoring of rules based on prefix to ignore checks
         for ignore_rule in ignore_rules:
             if self.id.startswith(ignore_rule) and ignore_rule:
+                return False
+
+        # Ignore module rules if validate_registry_types is empty
+        if not validate_registry_types:
+            if self.id.startswith('E5') and self.id != 'E5001':
                 return False
 
         return True
@@ -173,8 +179,9 @@ class CloudFormationLintRule(object):
 
 class RulesCollection(object):
     """Collection of rules"""
-
-    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
+    # pylint: disable=too-many-instance-attributes
+    def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False,
+                 mandatory_rules=None, validate_registry_types=None):
         self.rules = []
         self.all_rules = []
 
@@ -184,9 +191,11 @@ class RulesCollection(object):
             configure_rules=configure_rules,
             include_experimental=include_experimental,
             mandatory_rules=mandatory_rules,
+            validate_registry_types=validate_registry_types
             )
 
-    def configure(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
+    def configure(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False,
+                  mandatory_rules=None, validate_registry_types=None):
         self.rules = []
         # Whether "experimental" rules should be added
         self.include_experimental = include_experimental
@@ -196,6 +205,8 @@ class RulesCollection(object):
         self.include_rules = include_rules or []
         self.mandatory_rules = mandatory_rules or []
         self.configure_rules = configure_rules or []
+        self.validate_registry_types = validate_registry_types or []
+
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         # Have to add W, E here because integrations don't use config
@@ -236,7 +247,7 @@ class RulesCollection(object):
     def is_rule_enabled(self, rule):
         """ Checks if an individual rule is valid """
         return rule.is_enabled(self.include_experimental, self.ignore_rules,
-                               self.include_rules, self.mandatory_rules)
+                               self.include_rules, self.mandatory_rules, self.validate_registry_types)
 
     # pylint: disable=inconsistent-return-statements
     def run_check(self, check, filename, rule_id, *args):
@@ -407,7 +418,6 @@ class RulesCollection(object):
                 matches.extend(
                     self.run_resource(
                         filename, cfn, resource_type, resource_properties, path))
-
         return matches
 
     def create_from_module(self, modpath):

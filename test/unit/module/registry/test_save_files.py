@@ -18,12 +18,10 @@ class TestSaveFiles(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         (args, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
         (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
-        schema_manager = cfnlint.schema_manager.SchemaManager(filename, template, ['us-east-1'])
+        schema_manager = cfnlint.schema_manager.SchemaManager(['us-east-1'])
 
         response = {'Metadata': 'Metadata', 'Schema': 'Schema'}
         schema_manager.save_files(response, 'path-test')
 
         metadata.assert_called_with({'Metadata': 'Metadata'}, 'path-test')
         schema.assert_called_with({'Schema': 'Schema'}, 'path-test')
-
-

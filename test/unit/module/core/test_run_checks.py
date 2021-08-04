@@ -76,3 +76,12 @@ class TestRunChecks(BaseTestCase):
         results = []
         results.extend(cfnlint.core.run_checks(filename, template, rules, ['us-east-1'], None, ['MODULE']))
         assert (results == [])
+
+    @patch('builtins.print')
+    @patch('cfnlint.schema_manager.SchemaManager.update_locally_cached_schemas')
+    def test_update_registry_type_specs(self, update_schemas, print_mock):
+        """Test update registry type specs"""
+        filename = 'test/fixtures/templates/good/generic.yaml'
+        with self.assertRaises(SystemExit) as cm:
+            cfnlint.core.get_args_filenames(['--template', filename, '--update-registry-type-specs'])
+        self.assertEqual(cm.exception.code, 0)

@@ -102,9 +102,10 @@ def get_formatter(fmt):
 
 
 def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
-              mandatory_rules=None, custom_rules=None):
+              mandatory_rules=None, custom_rules=None, validate_registry_types=None):
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
-                            include_experimental, mandatory_rules)
+                            include_experimental, mandatory_rules, validate_registry_types)
+
     rules_paths = [DEFAULT_RULESDIR] + append_rules
     try:
         for rules_path in rules_paths:
@@ -159,6 +160,14 @@ def get_args_filenames(cli_args):
             config.mandatory_checks,
         )
         print(rules)
+        sys.exit(0)
+
+    if config.update_registry_type_specs:
+        schema_manager = SchemaManager(config.regions)
+        schema_manager.update_locally_cached_schemas()
+        regions = ', '.join(config.regions)
+        print('Locally cached registry type information from {0} is now refreshed.'
+              .format(regions))
         sys.exit(0)
 
     if not sys.stdin.isatty() and not config.templates:
@@ -216,10 +225,9 @@ def get_template_rules(filename, args):
             args.include_experimental,
             args.mandatory_checks,
             args.custom_rules,
+            args.validate_registry_types
         )
-
     return (template, __CACHED_RULES, [])
-
 
 def run_checks(filename, template, rules, regions, mandatory_rules=None, validate_registry_types=None):
     """Run Checks and Custom Rules against the template"""
@@ -248,10 +256,10 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
             template_obj = Template(filename, template, regions)
             modules = template_obj.get_modules()
             if modules:
-                schema_manager = SchemaManager(filename, template, regions)
+                schema_manager = SchemaManager(regions)
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
-                    schema_manager.check_folders(modules[module].get('Type'), registry_type)
+                    schema_manager.check_folders(module, modules[module].get('Type'), registry_type)
     errors = []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
@@ -266,7 +274,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
 
     if errors:
         if ignore_transform_error:
-            return([])  # if there is a transform error we can't continue
+            return ([])  # if there is a transform error we can't continue
 
         return (errors)
 
