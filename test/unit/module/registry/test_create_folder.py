@@ -2,6 +2,7 @@ import logging
 
 import cfnlint.core
 import cfnlint.schema_manager
+from cfnlint.helpers import MODULE_SCHEMAS
 from test.testlib.testcase import BaseTestCase
 
 from botocore.stub import Stubber
@@ -33,6 +34,7 @@ class TestCreateFolder(BaseTestCase):
         aws_call.return_value = 'RESPONSE'
         schema_manager.create_folder('/test-path', 'module_id', 'TEST', 'MODULE', False)
         save_files.assert_called_with('RESPONSE', '/test-path')
+        MODULE_SCHEMAS.remove('/test-path')
 
     @patch('cfnlint.schema_manager.SchemaManager.aws_call_registry')
     def test_create_folder_already_existing(self, aws_call):
@@ -48,6 +50,7 @@ class TestCreateFolder(BaseTestCase):
         except OSError as e:
             err = e
         assert (type(err) == OSError)
+        MODULE_SCHEMAS.remove('/')
 
     @patch('cfnlint.schema_manager.SchemaManager.save_files')
     @patch('os.makedirs')

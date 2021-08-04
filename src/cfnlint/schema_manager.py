@@ -16,6 +16,7 @@ LOGGER = logging.getLogger(__name__)
 
 class SchemaManager(object):
     """Download schemas if necessary and validate modules"""
+
     def __init__(
             self, regions):
         self.regions = regions
@@ -26,7 +27,8 @@ class SchemaManager(object):
     def check_folders(self, module_logical_id, name, registry_type):
         account_id = self.boto3_sts.get_caller_identity().get('Account')
         for region in self.regions:
-            path = self.create_path(account_id, region, name)
+            # windows path can't contain ':'
+            path = self.create_path(account_id, region, name.replace(':', '-'))
             if not os.path.isdir(path):
                 self.create_folder(path, module_logical_id, name, registry_type, False)
             else:
@@ -98,14 +100,15 @@ class SchemaManager(object):
                 self.compare_version_ids(True, os.path.join(folder, module), module)
 
     def compare_version_ids(self, is_update, path, module, module_logical_id=None):
-        if module.endswith('::MODULE'):
+        if module.endswith('MODULE'):
             local_version_id = self.get_local_version_id(path)
             (registry_version_id, registry_type) = self.get_registry_version_id(self.boto3_cfn,
-                                                                                module_logical_id, module)
+                                                                                module_logical_id,
+                                                                                module.replace('-', ':'))
             MODULE_SCHEMAS.append(path)
             if local_version_id != registry_version_id:
                 if is_update:
-                    self.create_folder(path, module_logical_id, module, registry_type, is_update)
+                    self.create_folder(path, module_logical_id, module.replace('-', ':'), registry_type, is_update)
                 else:
                     MODULES_TO_UPDATE.append(module_logical_id)
 

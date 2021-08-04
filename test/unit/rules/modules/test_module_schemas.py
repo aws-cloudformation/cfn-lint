@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import os
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.modules.ModuleSchema import ModuleSchema
 from cfnlint.helpers import MODULE_SCHEMAS
@@ -23,5 +24,9 @@ class TestModuleSchemas(BaseRuleTestCase):
         self.helper_file_positive()
 
     def test_file_negative(self):
-        MODULE_SCHEMAS.append('test/fixtures/templates/bad/modules/us-east-1/Some::IAM::Role::MODULE')
+        fileDir = os.path.dirname(os.path.realpath('__file__'))
+        path = os.path.join(fileDir, 'test', 'fixtures', 'templates', 'bad', 'modules', 'us-east-1',
+                            'Some--IAM--Role--MODULE')
+        MODULE_SCHEMAS.append(path)
         self.helper_file_negative('test/fixtures/templates/bad/modules/bad_invalid_schema.yaml', 1)
+        MODULE_SCHEMAS.remove(path)

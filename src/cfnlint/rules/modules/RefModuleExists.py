@@ -34,19 +34,21 @@ class RefModuleExist(CloudFormationLintRule):
                         valid_ref = list(valid_refs.keys())[list(valid_refs.values()).index(valid_refs[ref])]
                         module_logical_resource_id = valid_ref.split('.*')[0]
                         for path in MODULE_SCHEMAS:
-                            if path.endswith(cfn.get_resources()[valid_ref.split('.*')[0]]['Type']) and \
-                                    any(x in str(path) for x in cfn.regions):
-                                with open(path + '/schema.json', 'r') as f:
-                                    schema = json.loads(json.loads(f.read())['Schema'])
-                                    resources = schema['properties']['Resources']
-                                    resource_logical_id = ref.split(module_logical_resource_id)[-1].replace('.', '')
-                                    valid_resources = resources['properties'].keys()
-                                    if resource_logical_id not in valid_resources:
-                                        message = 'Ref {0} is not a valid module resource reference, {1} is not a valid ' \
-                                                  'resource logical id of the module {2}'
-                                        matches.append(RuleMatch(
-                                            reftree[:-2], message.format(ref, resource_logical_id,
-                                                                         module_logical_resource_id)
-                                        ))
+                            self.validate_refs(path, cfn, valid_ref, ref, module_logical_resource_id, matches, reftree)
         return matches
 
+    def validate_refs(self, path, cfn, valid_ref, ref, module_logical_resource_id, matches, reftree):
+        if path.endswith(cfn.get_resources()[valid_ref.split('.*')[0]]['Type'].replace(':', '-')) \
+                and any(x in str(path) for x in cfn.regions):
+            with open(path + '/schema.json', 'r') as f:
+                schema = json.loads(json.loads(f.read())['Schema'])
+                resources = schema['properties']['Resources']
+                resource_logical_id = ref.split(module_logical_resource_id)[-1].replace('.', '')
+                valid_resources = resources['properties'].keys()
+                if resource_logical_id not in valid_resources:
+                    message = 'Ref {0} is not a valid module resource reference, {1} is not a valid ' \
+                              'resource logical id of the module {2}'
+                    matches.append(RuleMatch(
+                        reftree[:-2], message.format(ref, resource_logical_id,
+                                                     module_logical_resource_id)
+                    ))

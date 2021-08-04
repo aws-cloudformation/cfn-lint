@@ -3,7 +3,7 @@ import logging
 
 import cfnlint.core
 import cfnlint.schema_manager
-from cfnlint.helpers import MODULES_TO_UPDATE
+from cfnlint.helpers import MODULES_TO_UPDATE, MODULE_SCHEMAS
 from test.testlib.testcase import BaseTestCase
 
 from botocore.stub import Stubber
@@ -36,8 +36,9 @@ class TestCompareVersionIds(BaseTestCase):
         registry_version.return_value = ('00001', 'MODULE')
 
         with patch('os.listdir', return_value=['AWS::TEST::MODULE']):
-            schema_manager.compare_version_ids(False, '/', 'TEST', 'module_id')
+            schema_manager.compare_version_ids(False, '/', 'AWS::TEST::MODULE', 'module_id')
         create_folder.assert_not_called()
+        MODULE_SCHEMAS.remove('/')
 
     @patch('cfnlint.schema_manager.SchemaManager.get_registry_version_id')
     @patch('cfnlint.schema_manager.SchemaManager.get_local_version_id')
@@ -60,6 +61,7 @@ class TestCompareVersionIds(BaseTestCase):
         with patch('os.listdir', return_value=['AWS::TEST::MODULE']):
             schema_manager.compare_version_ids(True, '/', 'AWS::TEST::MODULE', 'module_id')
         create_folder.assert_called_with('/', 'module_id', 'AWS::TEST::MODULE', 'MODULE', True)
+        MODULE_SCHEMAS.remove('/')
 
     @patch('cfnlint.schema_manager.SchemaManager.get_registry_version_id')
     @patch('cfnlint.schema_manager.SchemaManager.get_local_version_id')
@@ -80,8 +82,9 @@ class TestCompareVersionIds(BaseTestCase):
         registry_version.return_value = ('00001', 'MODULE')
 
         with patch('os.listdir', return_value=['AWS::TEST::MODULE']):
-            schema_manager.compare_version_ids(True, '/', 'TEST', 'module_id')
+            schema_manager.compare_version_ids(True, '/', 'AWS::TEST::MODULE', 'module_id')
         create_folder.assert_not_called()
+        MODULE_SCHEMAS.remove('/')
 
     @patch('cfnlint.schema_manager.SchemaManager.get_registry_version_id')
     @patch('cfnlint.schema_manager.SchemaManager.get_local_version_id')
@@ -105,3 +108,4 @@ class TestCompareVersionIds(BaseTestCase):
             schema_manager.compare_version_ids(False, '/', 'AWS::TEST::MODULE', 'module_id')
         create_folder.assert_not_called()
         MODULES_TO_UPDATE.remove('module_id')
+        MODULE_SCHEMAS.remove('/')

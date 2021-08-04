@@ -162,6 +162,7 @@ def get_args_filenames(cli_args):
         print(rules)
         sys.exit(0)
 
+    # refresh locally cached registry type information
     if config.update_registry_type_specs:
         schema_manager = SchemaManager(config.regions)
         schema_manager.update_locally_cached_schemas()

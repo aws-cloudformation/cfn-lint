@@ -5,6 +5,8 @@ SPDX-License-Identifier: MIT-0
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.modules.ModuleUpdated import ModuleUpdated  # pylint: disable=E0401
 from cfnlint.helpers import MODULES_TO_UPDATE
+
+
 class TestModuleUpdated(BaseRuleTestCase):
     """Test Module updated"""
     def setUp(self):
