@@ -229,7 +229,6 @@ def get_template_rules(filename, args):
         )
     return (template, __CACHED_RULES, [])
 
-
 def run_checks(filename, template, rules, regions, mandatory_rules=None, validate_registry_types=None):
     """Run Checks and Custom Rules against the template"""
     if validate_registry_types is None:
@@ -261,7 +260,6 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None, validat
                 # For each module extracted from the template, verify if it's already locally cached
                 for module in modules:
                     schema_manager.check_folders(module, modules[module].get('Type'), registry_type)
-
     errors = []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
