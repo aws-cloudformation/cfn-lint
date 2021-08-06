@@ -84,3 +84,4 @@ class GetAttModule(CloudFormationLintRule):
                 matches.append(RuleMatch(
                     getatt, message.format(resname, resource_logical_id,
                                            module, restype)))
+                
