@@ -25,5 +25,3 @@ class TestSaveFiles(BaseTestCase):
 
         metadata.assert_called_with({'Metadata': 'Metadata'}, 'path-test')
         schema.assert_called_with({'Schema': 'Schema'}, 'path-test')
-
-

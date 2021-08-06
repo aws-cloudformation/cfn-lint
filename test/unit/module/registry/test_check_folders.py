@@ -55,4 +55,3 @@ class TestCheckFolders(BaseTestCase):
 
         schema_manager.check_folders('module_id', 'TEST', 'MODULE')
         compare_version_ids.assert_called_with(False, '/', 'TEST', 'module_id')
-

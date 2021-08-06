@@ -16,7 +16,6 @@ LOGGER = logging.getLogger(__name__)
 
 class SchemaManager(object):
     """Download schemas if necessary and validate modules"""
-
     def __init__(
             self, regions):
         self.regions = regions
