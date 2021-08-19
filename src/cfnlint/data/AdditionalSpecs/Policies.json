@@ -251,8 +251,8 @@
       "StringPrefix": "amplifybackend"
     },
     "AWS App Mesh": {
-      "ARNFormat": "arn:aws:appmesh:<region>:<account-id>:<resource-type>/<resource_name>",
-      "ARNRegex": "^arn:aws:appmesh:.+:.+:.+",
+      "ARNFormat": "arn:${Partition}:appmesh:${Region}:${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:appmesh:.+:.+:.+",
       "Actions": [
         "CreateGatewayRoute",
         "CreateMesh",
@@ -303,8 +303,8 @@
       ]
     },
     "AWS App Mesh Preview": {
-      "ARNFormat": "arn:aws:appmesh-preview:<region>:<account-id>:<resource-type>/<resource_name>",
-      "ARNRegex": "^arn:aws:appmesh-preview:.+:.+:.+",
+      "ARNFormat": "arn:${Partition}:appmesh-preview:${Region}:${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:appmesh-preview:.+:.+:.+",
       "Actions": [
         "CreateGatewayRoute",
         "CreateMesh",
@@ -813,6 +813,9 @@
         "ListEvents",
         "ListProfilingGroups",
         "ListPullRequests",
+        "ListTagsForResource",
+        "TagResource",
+        "UntagResource",
         "UpdateEvent",
         "UpdateWorkItem",
         "UpdateWorkItemAdmin"
@@ -820,11 +823,13 @@
       "HasResource": true,
       "StringPrefix": "bugbust",
       "conditionKeys": [
-        "aws:ResourceTag/${TagKey}"
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
       ]
     },
     "AWS Certificate Manager": {
-      "ARNFormat": "arn:aws:acm:<region>:<account_ID>:<arn_type>/<resource_id>",
+      "ARNFormat": "arn:aws:acm:${Region}:${AccountId}:${ArnType}/${ResourceId}",
       "ARNRegex": "^arn:aws:acm:.+:[0-9]+:.+",
       "Actions": [
         "AddTagsToCertificate",
@@ -889,13 +894,14 @@
       ]
     },
     "AWS Chatbot": {
-      "ARNFormat": "arn:${Partition}:chatbot::<account>:<resourceType>/<resourceName>",
+      "ARNFormat": "arn:${Partition}:chatbot::<account-id>:<resource-type>/<resource_name>",
       "ARNRegex": "^arn:${Partition}:chatbot:.+",
       "Actions": [
         "CreateChimeWebhookConfiguration",
         "CreateSlackChannelConfiguration",
         "DeleteChimeWebhookConfiguration",
         "DeleteSlackChannelConfiguration",
+        "DeleteSlackWorkspaceAuthorization",
         "DescribeChimeWebhookConfigurations",
         "DescribeSlackChannelConfigurations",
         "DescribeSlackChannels",
@@ -906,7 +912,10 @@
         "UpdateSlackChannelConfiguration"
       ],
       "HasResource": true,
-      "StringPrefix": "chatbot"
+      "StringPrefix": "chatbot",
+      "conditionKeys": [
+        "aws:CalledVia"
+      ]
     },
     "AWS Cloud Map": {
       "ARNFormat": "arn:aws:servicediscovery:<region>:<account-id>:<resource-type>/<resource_name>",
@@ -1252,6 +1261,7 @@
         "StopBuild",
         "StopBuildBatch",
         "UpdateProject",
+        "UpdateProjectVisibility",
         "UpdateReport",
         "UpdateReportGroup",
         "UpdateWebhook"
@@ -1872,6 +1882,7 @@
         "DescribeApplicableIndividualAssessments",
         "DescribeCertificates",
         "DescribeConnections",
+        "DescribeEndpointSettings",
         "DescribeEndpointTypes",
         "DescribeEndpoints",
         "DescribeEventCategories",
@@ -1985,38 +1996,69 @@
       "StringPrefix": "deeplens"
     },
     "AWS DeepRacer": {
-      "ARNFormat": "arn:aws:deepracer:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:deepracer:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:deepracer:.+",
       "Actions": [
+        "AddLeaderboardAccessPermission",
+        "AdminGetAccountConfig",
+        "AdminListAssociatedResources",
+        "AdminListAssociatedUsers",
+        "AdminManageUser",
+        "AdminSetAccountConfig",
         "CloneReinforcementLearningModel",
-        "CreateAccountResources",
+        "CreateCar",
+        "CreateLeaderboard",
+        "CreateLeaderboardAccessToken",
         "CreateLeaderboardSubmission",
         "CreateReinforcementLearningModel",
-        "DeleteAccountResources",
+        "DeleteLeaderboard",
         "DeleteModel",
-        "GetAccountResources",
+        "EditLeaderboard",
+        "GetAccountConfig",
         "GetAlias",
+        "GetAssetUrl",
+        "GetCar",
+        "GetCars",
         "GetEvaluation",
         "GetLatestUserSubmission",
         "GetLeaderboard",
         "GetModel",
+        "GetPrivateLeaderboard",
         "GetRankedUserSubmission",
         "GetTrack",
         "GetTrainingJob",
+        "ImportModel",
         "ListEvaluations",
         "ListLeaderboardSubmissions",
         "ListLeaderboards",
         "ListModels",
+        "ListPrivateLeaderboardParticipants",
+        "ListPrivateLeaderboards",
+        "ListSubscribedPrivateLeaderboards",
+        "ListTagsForResource",
         "ListTracks",
         "ListTrainingJobs",
+        "MigrateModels",
+        "PerformLeaderboardOperation",
+        "RemoveLeaderboardAccessPermission",
         "SetAlias",
         "StartEvaluation",
         "StopEvaluation",
         "StopTrainingReinforcementLearningModel",
-        "TestRewardFunction"
+        "TagResource",
+        "TestRewardFunction",
+        "UntagResource",
+        "UpdateCar"
       ],
       "HasResource": true,
-      "StringPrefix": "deepracer"
+      "StringPrefix": "deepracer",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys",
+        "deepracer:MultiUser",
+        "deepracer:UserToken"
+      ]
     },
     "AWS Device Farm": {
       "ARNFormat": "arn:aws:devicefarm:<region>:<account-id>:<resource-type>:<resource-id>",
@@ -3128,7 +3170,7 @@
       "StringPrefix": "importexport"
     },
     "AWS IoT": {
-      "ARNFormat": "arn:aws:iot:<region>:<account_ID>:<type>/<name>",
+      "ARNFormat": "arn:aws:iot:${Region}:${Account}:${Type}/${Name}",
       "ARNRegex": "^arn:aws:iot:.+:[0-9]+:.+",
       "Actions": [
         "AcceptCertificateTransfer",
@@ -3262,6 +3304,7 @@
         "GetPolicy",
         "GetPolicyVersion",
         "GetRegistrationCode",
+        "GetRetainedMessage",
         "GetStatistics",
         "GetThingShadow",
         "GetTopicRule",
@@ -3301,6 +3344,7 @@
         "ListPrincipalThings",
         "ListProvisioningTemplateVersions",
         "ListProvisioningTemplates",
+        "ListRetainedMessages",
         "ListRoleAliases",
         "ListScheduledAudits",
         "ListSecurityProfiles",
@@ -3334,6 +3378,7 @@
         "RemoveThingFromBillingGroup",
         "RemoveThingFromThingGroup",
         "ReplaceTopicRule",
+        "RetainPublish",
         "SearchIndex",
         "SetDefaultAuthorizer",
         "SetDefaultPolicyVersion",
@@ -4121,7 +4166,7 @@
       ]
     },
     "AWS License Manager": {
-      "ARNFormat": "arn:aws:license-manager:<region>:<account-id>:<resourceType>:<resourceId>",
+      "ARNFormat": "arn:aws:license-manager:${Region}:${Account}:${ResourceType}:${ResourceId}",
       "ARNRegex": "^arn:aws:license-manager:.+:.+:.+",
       "Actions": [
         "AcceptGrant",
@@ -5547,6 +5592,32 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "signer:ProfileVersion"
+      ]
+    },
+    "AWS Snow Device Management": {
+      "ARNFormat": "arn:aws:snow-device-management:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNRegex": "^arn:aws:snow-device-management:.+:.+:.+/.+",
+      "Actions": [
+        "CancelTask",
+        "CreateTask",
+        "DescribeDevice",
+        "DescribeDeviceEc2Instances",
+        "DescribeExecution",
+        "DescribeTask",
+        "ListDeviceResources",
+        "ListDevices",
+        "ListExecutions",
+        "ListTagsForResource",
+        "ListTasks",
+        "TagResource",
+        "UntagResource"
+      ],
+      "HasResource": true,
+      "StringPrefix": "snow-device-management",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
       ]
     },
     "AWS Snowball": {
@@ -7704,7 +7775,9 @@
         "AssociateQueueQuickConnects",
         "AssociateRoutingProfileQueues",
         "AssociateSecurityKey",
+        "CreateAgentStatus",
         "CreateContactFlow",
+        "CreateHoursOfOperation",
         "CreateInstance",
         "CreateIntegrationAssociation",
         "CreateQueue",
@@ -7713,12 +7786,14 @@
         "CreateUseCase",
         "CreateUser",
         "CreateUserHierarchyGroup",
+        "DeleteHoursOfOperation",
         "DeleteInstance",
         "DeleteIntegrationAssociation",
         "DeleteQuickConnect",
         "DeleteUseCase",
         "DeleteUser",
         "DeleteUserHierarchyGroup",
+        "DescribeAgentStatus",
         "DescribeContactFlow",
         "DescribeHoursOfOperation",
         "DescribeInstance",
@@ -7744,6 +7819,7 @@
         "GetFederationToken",
         "GetFederationTokens",
         "GetMetricData",
+        "ListAgentStatuses",
         "ListApprovedOrigins",
         "ListBots",
         "ListContactFlows",
@@ -7778,9 +7854,11 @@
         "SuspendContactRecording",
         "TagResource",
         "UntagResource",
+        "UpdateAgentStatus",
         "UpdateContactAttributes",
         "UpdateContactFlowContent",
         "UpdateContactFlowName",
+        "UpdateHoursOfOperation",
         "UpdateInstanceAttribute",
         "UpdateInstanceStorageConfig",
         "UpdateQueueHoursOfOperation",
@@ -10363,7 +10441,7 @@
       ]
     },
     "Amazon Lex V2": {
-      "ARNFormat": "arn:aws:lex:<region>:<account-id>:<resource-type>/<resourceid>",
+      "ARNFormat": "arn:aws:lex:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:aws:lex:.+:[0-9]+:.+",
       "Actions": [
         "BuildBotLocale",
@@ -10416,8 +10494,8 @@
         "ListSlots",
         "ListTagsForResource",
         "PutSession",
-        "RecognizeSpeech",
         "RecognizeText",
+        "RecognizeUtterance",
         "StartConversation",
         "StartImport",
         "TagResource",
@@ -11227,6 +11305,7 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "nimble:createdBy",
+        "nimble:ownedBy",
         "nimble:principalId",
         "nimble:requesterPrincipalId",
         "nimble:studioId"
@@ -11895,7 +11974,9 @@
       "ARNRegex": "^arn:aws:redshift:.+:.+:.+",
       "Actions": [
         "AcceptReservedNodeExchange",
+        "AssociateDataShareConsumer",
         "AuthorizeClusterSecurityGroupIngress",
+        "AuthorizeDataShare",
         "AuthorizeSnapshotAccess",
         "BatchDeleteClusterSnapshots",
         "BatchModifyClusterSnapshots",
@@ -11918,6 +11999,7 @@
         "CreateSnapshotSchedule",
         "CreateTags",
         "CreateUsageLimit",
+        "DeauthorizeDataShare",
         "DeleteCluster",
         "DeleteClusterParameterGroup",
         "DeleteClusterSecurityGroup",
@@ -11942,6 +12024,9 @@
         "DescribeClusterTracks",
         "DescribeClusterVersions",
         "DescribeClusters",
+        "DescribeDataShares",
+        "DescribeDataSharesForConsumer",
+        "DescribeDataSharesForProducer",
         "DescribeDefaultClusterParameters",
         "DescribeEventCategories",
         "DescribeEventSubscriptions",
@@ -11966,6 +12051,7 @@
         "DescribeUsageLimits",
         "DisableLogging",
         "DisableSnapshotCopy",
+        "DisassociateDataShareConsumer",
         "EnableLogging",
         "EnableSnapshotCopy",
         "ExecuteQuery",
@@ -11995,6 +12081,7 @@
         "PauseCluster",
         "PurchaseReservedNodeOffering",
         "RebootCluster",
+        "RejectDataShare",
         "ResetClusterParameterGroup",
         "ResizeCluster",
         "RestoreFromClusterSnapshot",
@@ -12012,6 +12099,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "redshift:ConsumerIdentifier",
         "redshift:DbName",
         "redshift:DbUser",
         "redshift:DurationSeconds"
@@ -12290,6 +12378,91 @@
       ],
       "HasResource": true,
       "StringPrefix": "route53resolver",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
+    "Amazon Route53 Recovery Cluster": {
+      "ARNFormat": "arn:${Partition}:route53-recovery-control::${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:route53-recovery-control::.+:.+",
+      "Actions": [
+        "GetRoutingControlState",
+        "UpdateRoutingControlState",
+        "UpdateRoutingControlStates"
+      ],
+      "HasResource": true,
+      "StringPrefix": "route53-recovery-cluster"
+    },
+    "Amazon Route53 Recovery Controls": {
+      "ARNFormat": "arn:${Partition}:route53-recovery-control::${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:route53-recovery-control::.+:.+",
+      "Actions": [
+        "CreateCluster",
+        "CreateControlPanel",
+        "CreateRoutingControl",
+        "CreateSafetyRule",
+        "DeleteCluster",
+        "DeleteControlPanel",
+        "DeleteRoutingControl",
+        "DeleteSafetyRule",
+        "DescribeCluster",
+        "DescribeControlPanel",
+        "DescribeRoutingControl",
+        "DescribeRoutingControlByName",
+        "DescribeSafetyRule",
+        "ListAssociatedRoute53HealthChecks",
+        "ListClusters",
+        "ListControlPanels",
+        "ListRoutingControls",
+        "ListSafetyRules",
+        "UpdateControlPanel",
+        "UpdateRoutingControl",
+        "UpdateSafetyRule"
+      ],
+      "HasResource": true,
+      "StringPrefix": "route53-recovery-control-config"
+    },
+    "Amazon Route53 Recovery Readiness": {
+      "ARNFormat": "arn:${Partition}:route53-recovery-readiness::${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:route53-recovery-readiness::.+:.+",
+      "Actions": [
+        "CreateCell",
+        "CreateCrossAccountAuthorization",
+        "CreateReadinessCheck",
+        "CreateRecoveryGroup",
+        "CreateResourceSet",
+        "DeleteCell",
+        "DeleteCrossAccountAuthorization",
+        "DeleteReadinessCheck",
+        "DeleteRecoveryGroup",
+        "DeleteResourceSet",
+        "GetArchitectureRecommendations",
+        "GetCell",
+        "GetCellReadinessSummary",
+        "GetReadinessCheck",
+        "GetReadinessCheckResourceStatus",
+        "GetReadinessCheckStatus",
+        "GetRecoveryGroup",
+        "GetRecoveryGroupReadinessSummary",
+        "GetResourceSet",
+        "ListCells",
+        "ListCrossAccountAuthorizations",
+        "ListReadinessChecks",
+        "ListRecoveryGroups",
+        "ListResourceSets",
+        "ListRules",
+        "ListTagsForResources",
+        "TagResource",
+        "UntagResource",
+        "UpdateCell",
+        "UpdateReadinessCheck",
+        "UpdateRecoveryGroup",
+        "UpdateResourceSet"
+      ],
+      "HasResource": true,
+      "StringPrefix": "route53-recovery-readiness",
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
@@ -13394,10 +13567,13 @@
       "ARNFormat": "arn:${Partition}:transcribe:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:${Partition}:transcribe:.+:.+:.+",
       "Actions": [
+        "CreateCallAnalyticsCategory",
         "CreateLanguageModel",
         "CreateMedicalVocabulary",
         "CreateVocabulary",
         "CreateVocabularyFilter",
+        "DeleteCallAnalyticsCategory",
+        "DeleteCallAnalyticsJob",
         "DeleteLanguageModel",
         "DeleteMedicalTranscriptionJob",
         "DeleteMedicalVocabulary",
@@ -13405,23 +13581,29 @@
         "DeleteVocabulary",
         "DeleteVocabularyFilter",
         "DescribeLanguageModel",
+        "GetCallAnalyticsCategory",
+        "GetCallAnalyticsJob",
         "GetMedicalTranscriptionJob",
         "GetMedicalVocabulary",
         "GetTranscriptionJob",
         "GetVocabulary",
         "GetVocabularyFilter",
+        "ListCallAnalyticsCategories",
+        "ListCallAnalyticsJobs",
         "ListLanguageModels",
         "ListMedicalTranscriptionJobs",
         "ListMedicalVocabularies",
         "ListTranscriptionJobs",
         "ListVocabularies",
         "ListVocabularyFilters",
+        "StartCallAnalyticsJob",
         "StartMedicalStreamTranscription",
         "StartMedicalStreamTranscriptionWebSocket",
         "StartMedicalTranscriptionJob",
         "StartStreamTranscription",
         "StartStreamTranscriptionWebSocket",
         "StartTranscriptionJob",
+        "UpdateCallAnalyticsCategory",
         "UpdateMedicalVocabulary",
         "UpdateVocabulary",
         "UpdateVocabularyFilter"
@@ -13683,7 +13865,8 @@
       "ARNFormat": "arn:${Partition}:workmailmessageflow:${Region}:${Account}:message/${OrganizationId}/${Context}/${MessageId}",
       "ARNRegex": "^arn:${Partition}:workmailmessageflow:.+:.+:.+",
       "Actions": [
-        "GetRawMessageContent"
+        "GetRawMessageContent",
+        "PutRawMessageContent"
       ],
       "HasResource": true,
       "StringPrefix": "workmailmessageflow"
