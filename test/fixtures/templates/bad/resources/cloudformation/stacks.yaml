@@ -1,0 +1,28 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+  IsUsWest2: !Equals [!Ref 'AWS::Region', 'us-west-2']
+Resources:
+  # Doesn't fail on normal process
+  StackNormal:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./stack_nested.yaml
+      Parameters:
+        One: a
+        Three: b
+  # Doesn't fail on scenarios
+  Stack3:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./stack_nested.yaml
+      Parameters:
+        Fn::If:
+        - IsUsEast1
+        - Zero: a
+          One: b
+        - Fn::If:
+          - IsUsWest2
+          - Two: c
+            Three: d
+          - One: e
+            Three: f

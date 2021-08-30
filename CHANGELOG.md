@@ -1,3 +1,10 @@
+### v0.53.1
+###### CloudFormation Specifications
+- Update resource specs to `40.1.0` (pull #[2105](https://github.com/aws-cloudformation/cfn-python-lint/pull/2105))
+- `AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute` `AllowedValues` expansion (pull #[2101](https://github.com/aws-cloudformation/cfn-lint/pull/2101))
+###### Fixes
+- Fix rule message string formatting for [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3013) (pull #[2099](https://github.com/aws-cloudformation/cfn-lint/pull/2099))
+
 ### v0.53.0
 ###### Features
 - Update `aws-sam-translator` to `1.38.0` (pull #[2082](https://github.com/aws-cloudformation/cfn-lint/pull/2082))
