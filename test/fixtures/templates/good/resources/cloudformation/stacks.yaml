@@ -1,0 +1,51 @@
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Resources:
+  # Doesn't fail on normal process
+  StackNormal:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./stack_nested.yaml
+      Parameters:
+        One: a
+        Two: b
+  # Doesn't fail on TemplateURL for web url
+  StackIsWebUrl:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://someurl.com
+      Parameters:
+        One: a
+        Two: b
+  # Doesn't fail on TemplateURL for web url
+  StackUrlIsObject:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub "${AWS::Region}/template.yaml"
+      Parameters:
+        One: a
+        Two: b
+  # Don't fail when template not found
+  StackInvalidPath:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./invalid_stack.yaml
+      Parameters:
+        One: a
+        Two: b
+  # Doesn't fail on scenarios
+  Stack3:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ./stack_nested.yaml
+      Parameters:
+        Fn::If:
+        - IsUsEast1
+        - One: a
+          Two: b
+        - Fn::If:
+          - IsUsEast1
+          - One: c
+            Two: d
+          - One: e
+            Two: f
