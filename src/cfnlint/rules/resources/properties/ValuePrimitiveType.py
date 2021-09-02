@@ -33,7 +33,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         self.property_specs = []
         self.config_definition = {
             'strict': {
-                'default': True,
+                'default': False,
                 'type': 'boolean'
             }
         }

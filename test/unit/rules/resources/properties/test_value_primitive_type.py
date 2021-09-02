@@ -37,19 +37,23 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
 
     def test_file_negative_nist_high_main(self):
         """Generic Test failure"""
-        self.helper_file_negative('test/fixtures/templates/quickstart/nist_high_main.yaml', 6)
+        self.helper_file_rule_config('test/fixtures/templates/quickstart/nist_high_main.yaml', 
+            {'strict': True}, 6)
 
     def test_file_negative_nist_high_app(self):
         """Generic Test failure"""
-        self.helper_file_negative('test/fixtures/templates/quickstart/nist_application.yaml', 53)
+        self.helper_file_rule_config('test/fixtures/templates/quickstart/nist_application.yaml', 
+            {'strict': True}, 53)
 
     def test_file_negative_nist_config_rules(self):
         """Generic Test failure"""
-        self.helper_file_negative('test/fixtures/templates/quickstart/nist_config_rules.yaml', 2)
+        self.helper_file_rule_config('test/fixtures/templates/quickstart/nist_config_rules.yaml',
+            {'strict': True}, 2)
 
     def test_file_negative_generic(self):
         """Generic Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 7)
+        self.helper_file_rule_config('test/fixtures/templates/bad/generic.yaml',
+        {'strict': True}, 7)
 
 
 class TestResourceValuePrimitiveTypeNonStrict(BaseRuleTestCase):

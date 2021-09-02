@@ -17,7 +17,7 @@ class TestFormatters(BaseTestCase):
         # Run a broken template
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'json', '--include-checks', 'I'])
+            '--template', filename, '--format', 'json', '--include-checks', 'I', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         for filename in filenames:
