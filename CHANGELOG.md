@@ -1,3 +1,11 @@
+### v0.54.0
+###### Features
+- Update default configuration on rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to no be strict (pull #[2103](https://github.com/aws-cloudformation/cfn-lint/pull/2103))
+- Add rule [E3043](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3043) to validate nested stack parameters (pull #[2074](https://github.com/aws-cloudformation/cfn-lint/pull/2074))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `41.0.0` (pull #[2111](https://github.com/aws-cloudformation/cfn-python-lint/pull/2111))
+- Add `AWS::KMS::ReplicaKey` as a `Ref`/`GetAtt` for `AWS::KMS::Alias.TargetKeyId` (pull #[2110](https://github.com/aws-cloudformation/cfn-lint/pull/2110))
+
 ### v0.53.1
 ###### CloudFormation Specifications
 - Update resource specs to `40.1.0` (pull #[2105](https://github.com/aws-cloudformation/cfn-python-lint/pull/2105))
