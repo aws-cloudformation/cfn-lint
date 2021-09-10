@@ -1,3 +1,7 @@
+### v0.54.1
+###### Fixes
+- Update `Serverless/ManagedPolicies.json` and create automation to keep it up to date going forward (pull #[2116](https://github.com/aws-cloudformation/cfn-lint/pull/2116))
+
 ### v0.54.0
 ###### Features
 - Update default configuration on rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to no be strict (pull #[2103](https://github.com/aws-cloudformation/cfn-lint/pull/2103))
