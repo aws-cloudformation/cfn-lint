@@ -3622,7 +3622,7 @@
       ]
     },
     "AWS IoT Core for LoRaWAN": {
-      "ARNFormat": "arn:aws:iotwireless:${Region}:${AccountId}:${ResourceType}/${ResourceId}",
+      "ARNFormat": "arn:aws:iotwireless:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:aws:iotwireless:.+:[0-9]+:.+",
       "Actions": [
         "AssociateAwsAccountWithPartnerAccount",
@@ -11091,7 +11091,7 @@
       "StringPrefix": "grafana"
     },
     "Amazon Managed Service for Prometheus": {
-      "ARNFormat": "arn:aws:aps:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:aps:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:aps:.+:.+:.+",
       "Actions": [
         "CreateWorkspace",
@@ -11100,13 +11100,21 @@
         "GetLabels",
         "GetMetricMetadata",
         "GetSeries",
+        "ListTagsForResource",
         "ListWorkspaces",
         "QueryMetrics",
         "RemoteWrite",
+        "TagResource",
+        "UntagResource",
         "UpdateWorkspaceAlias"
       ],
       "HasResource": true,
-      "StringPrefix": "aps"
+      "StringPrefix": "aps",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "Amazon Managed Streaming for Apache Kafka": {
       "ARNFormat": "arn:aws:kafka:<region>:<account>:<resourceType>/<resourceName>/<UUID>",
