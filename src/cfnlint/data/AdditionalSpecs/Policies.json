@@ -2390,6 +2390,7 @@
         "UpdateApplicationVersion",
         "UpdateConfigurationTemplate",
         "UpdateEnvironment",
+        "UpdateTagsForResource",
         "ValidateConfigurationSettings"
       ],
       "HasResource": true,
@@ -5704,6 +5705,7 @@
         "CreateAddress",
         "CreateCluster",
         "CreateJob",
+        "CreateLongTermPricing",
         "CreateReturnShippingLabel",
         "DescribeAddress",
         "DescribeAddresses",
@@ -5718,9 +5720,11 @@
         "ListClusters",
         "ListCompatibleImages",
         "ListJobs",
+        "ListLongTermPricing",
         "UpdateCluster",
         "UpdateJob",
-        "UpdateJobShipmentState"
+        "UpdateJobShipmentState",
+        "UpdateLongTermPricing"
       ],
       "HasResource": false,
       "StringPrefix": "snowball"
@@ -9620,6 +9624,33 @@
         "fsx:StorageVirtualMachineId"
       ]
     },
+    "Amazon FinSpace": {
+      "ARNFormat": "arn:${Partition}:finspace:${Region}:${Account}:${resourceType}/${resourcePath}",
+      "ARNRegex": "^arn:${Partition}:finspace:.+",
+      "Actions": [
+        "CreateEnvironment",
+        "CreateUser",
+        "DeleteEnvironment",
+        "DeleteUser",
+        "GetEnvironment",
+        "GetLoadSampleDataSetGroupIntoEnvironmentStatus",
+        "GetUser",
+        "ListEnvironments",
+        "ListTagsForResource",
+        "ListUsers",
+        "LoadSampleDataSetGroupIntoEnvironment",
+        "TagResource",
+        "UntagResource",
+        "UpdateEnvironment"
+      ],
+      "HasResource": true,
+      "StringPrefix": "finspace",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "Amazon Forecast": {
       "ARNFormat": "arn:aws:forecast:<region>:<account-id>:<resource-type>/<resource_name>",
       "ARNRegex": "^arn:aws:forecast:.+:.+:.+",
@@ -10150,10 +10181,11 @@
       ]
     },
     "Amazon Kendra": {
-      "ARNFormat": "arn:${Partition}:kendra:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNFormat": "arn:${Partition}:kendra:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:${Partition}:kendra:.+:.+:.+",
       "Actions": [
         "BatchDeleteDocument",
+        "BatchGetDocumentStatus",
         "BatchPutDocument",
         "ClearQuerySuggestions",
         "CreateDataSource",
@@ -10996,6 +11028,7 @@
         "ListFindings",
         "ListFindingsFilters",
         "ListInvitations",
+        "ListManagedDataIdentifiers",
         "ListMembers",
         "ListOrganizationAdminAccounts",
         "ListTagsForResource",
@@ -11149,7 +11182,8 @@
         "UpdateClusterConfiguration",
         "UpdateClusterKafkaVersion",
         "UpdateConfiguration",
-        "UpdateMonitoring"
+        "UpdateMonitoring",
+        "UpdateSecurity"
       ],
       "HasResource": true,
       "StringPrefix": "kafka",
@@ -11158,6 +11192,25 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys"
       ]
+    },
+    "Amazon Managed Streaming for Kafka Connect": {
+      "ARNFormat": "arn:aws:kafkaconnect:<region>:<account-id>:<resource-type>/<resource_name>/<UUID>",
+      "ARNRegex": "^arn:aws:kafkaconnect:.+",
+      "Actions": [
+        "CreateConnector",
+        "CreateCustomPlugin",
+        "CreateWorkerConfiguration",
+        "DeleteConnector",
+        "DescribeConnector",
+        "DescribeCustomPlugin",
+        "DescribeWorkerConfiguration",
+        "ListConnectors",
+        "ListCustomPlugins",
+        "ListWorkerConfigurations",
+        "UpdateConnector"
+      ],
+      "HasResource": true,
+      "StringPrefix": "kafkaconnect"
     },
     "Amazon Managed Workflows for Apache Airflow": {
       "ARNFormat": "arn:aws:<serviceName>:<region>:<account>:<resourceType>/<resourceName>",
@@ -13077,15 +13130,13 @@
       ]
     },
     "Amazon SQS": {
-      "ARNFormat": "arn:aws:sqs:<region>:<account_ID>:<queue_name>",
+      "ARNFormat": "arn:aws:sqs:${Region}:${AccountID}:${QueueName}",
       "ARNRegex": "^arn:aws:sqs:.+",
       "Actions": [
         "AddPermission",
         "ChangeMessageVisibility",
-        "ChangeMessageVisibilityBatch",
         "CreateQueue",
         "DeleteMessage",
-        "DeleteMessageBatch",
         "DeleteQueue",
         "GetQueueAttributes",
         "GetQueueUrl",
@@ -13096,7 +13147,6 @@
         "ReceiveMessage",
         "RemovePermission",
         "SendMessage",
-        "SendMessageBatch",
         "SetQueueAttributes",
         "TagQueue",
         "UntagQueue"
@@ -13718,10 +13768,11 @@
       "StringPrefix": "sumerian"
     },
     "Amazon Textract": {
-      "ARNFormat": "arn:<partition>:textract:<region>:<accountID>:<relative-id>",
-      "ARNRegex": "^arn:<partition>:textract::.+",
+      "ARNFormat": "arn:${Partition}:textract:${Region}:${AccountID}:${RelativeId}",
+      "ARNRegex": "^arn:${Partition}:textract:.+",
       "Actions": [
         "AnalyzeDocument",
+        "AnalyzeExpense",
         "DetectDocumentText",
         "GetDocumentAnalysis",
         "GetDocumentTextDetection",
