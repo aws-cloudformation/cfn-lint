@@ -1,3 +1,7 @@
+### v0.54.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `41.2.0` (pull #[2119](https://github.com/aws-cloudformation/cfn-python-lint/pull/2119))
+
 ### v0.54.1
 ###### Fixes
 - Update `Serverless/ManagedPolicies.json` and create automation to keep it up to date going forward (pull #[2116](https://github.com/aws-cloudformation/cfn-lint/pull/2116))
