@@ -5,7 +5,11 @@ SPDX-License-Identifier: MIT-0
 import json
 import xml.etree.ElementTree as ET
 from test.testlib.testcase import BaseTestCase
+
+import jsonschema
+
 import cfnlint.formatters
+import cfnlint.helpers
 
 
 class TestFormatters(BaseTestCase):
@@ -128,3 +132,50 @@ class TestFormatters(BaseTestCase):
         self.assertTrue(found_i3011)
         self.assertTrue(found_w1020)
         self.assertTrue(found_e3012)
+
+    def test_sarif_formatter(self):
+        """ Test the SARIF formatter """
+
+        # Run a broken template
+        filename = 'test/fixtures/templates/bad/formatters.yaml'
+        (args, filenames, formatter) = cfnlint.core.get_args_filenames([
+            '--template', filename, '--format', 'sarif', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+
+        results = []
+        rules = None
+        for filename in filenames:
+            (template, rules, _) = cfnlint.core.get_template_rules(filename, args)
+            results.extend(
+                cfnlint.core.run_checks(
+                    filename, template, rules, ['us-east-1']))
+
+        # Validate Formatter class initiated
+        self.assertEqual('SARIFFormatter', formatter.__class__.__name__)
+
+        # We need 3 errors (Information, Warning, Error)
+        self.assertEqual(len(results), 3)
+        # Check the errors
+        self.assertEqual(results[0].rule.id, 'I3011')
+        self.assertEqual(results[1].rule.id, 'W1020')
+        self.assertEqual(results[2].rule.id, 'E3012')
+
+        # Get the SARIF JSON output
+        sarif = json.loads(formatter.print_matches(results, rules))
+
+        # Fetch the SARIF schema
+        schema = json.loads(cfnlint.helpers.get_url_content(sarif['$schema'], True))
+        jsonschema.validate(sarif, schema)
+
+        sarif_results = sarif['runs'][0]['results']
+        # Check the 3 errors again
+        self.assertEqual(len(sarif_results), 3)
+
+        # Sanity check the errors
+        self.assertEqual(sarif_results[0]['level'], 'note')
+        self.assertEqual(sarif_results[0]['ruleId'], 'I3011')
+        # IMPORTANT: 'warning' is the default level in SARIF (when kind is
+        # absent) and is stripped by serialization
+        self.assertNotIn('level', sarif_results[1].keys())
+        self.assertEqual(sarif_results[1]['ruleId'], 'W1020')
+        self.assertEqual(sarif_results[2]['level'], 'error')
+        self.assertEqual(sarif_results[2]['ruleId'], 'E3012')

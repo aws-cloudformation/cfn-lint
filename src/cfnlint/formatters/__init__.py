@@ -7,7 +7,12 @@ import json
 import operator
 import re
 import sys
-from junit_xml import TestSuite, TestCase, to_xml_report_string
+
+import sarif_om as sarif
+from jschema_to_python.to_json import to_json
+from junit_xml import TestCase, TestSuite, to_xml_report_string
+
+import cfnlint.version
 from cfnlint.rules import Match
 
 
@@ -246,3 +251,93 @@ class PrettyFormatter(BaseFormatter):
             output.append('')  # Newline after each group
 
         return output
+
+
+class SARIFFormatter(BaseFormatter):
+    """
+    SARIF formatter
+
+    This formatter outputs results according to the Static Analysis Results
+    Interchange Format (SARIF) Version 2.1.0.
+
+    https://docs.oasis-open.org/sarif/sarif/v2.1.0/csprd01/sarif-v2.1.0-csprd01.html
+    """
+
+    schema = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0/cos02/schemas/sarif-schema-2.1.0.json'
+    version = '2.1.0'
+
+    # The spec defines error, note, warning, and none, see section 3.27.10.
+    levelMap = {
+        'error': 'error',
+        'informational': 'note',
+        'warning': 'warning',
+    }
+
+    def _to_sarif_level(self, severity):
+        return self.levelMap.get(severity, 'none')
+
+    def print_matches(self, matches, rules=None, filenames=None):
+        """Output all the matches"""
+
+        if not rules:
+            rules = []
+
+        run = sarif.Run(
+            tool=sarif.Tool(
+                driver=sarif.ToolComponent(
+                    name='cfn-lint',
+                    short_description=sarif.MultiformatMessageString(
+                        text=('Validates AWS CloudFormation templates against'
+                              'the resource specification and additional checks')
+                    ),
+                    information_uri='https://github.com/aws-cloudformation/cfn-lint',
+                    rules=[
+                        sarif.ReportingDescriptor(
+                            id=rule.id,
+                            short_description=sarif.MultiformatMessageString(
+                                text=rule.shortdesc
+                            ),
+                            full_description=sarif.MultiformatMessageString(
+                                text=rule.description
+                            ),
+                            help_uri=rule.source_url if rule.source_url else None
+                        )
+                        for rule in rules
+                        if rules.is_rule_enabled(rule)
+                    ],
+                    version=cfnlint.version.__version__,
+                ),
+            ),
+            results=[],
+        )
+
+        for match in matches:
+            run.results.append(
+                sarif.Result(
+                    rule_id=match.rule.id,
+                    message=sarif.Message(text=match.message),
+                    level=self._to_sarif_level(match.rule.severity),
+                    locations=[
+                        sarif.Location(
+                            physical_location=sarif.PhysicalLocation(
+                                artifact_location=sarif.ArtifactLocation(
+                                    uri=match.filename
+                                ),
+                                region=sarif.Region(
+                                    start_column=match.columnnumber,
+                                    start_line=match.linenumber,
+                                    end_column=match.columnnumberend,
+                                    end_line=match.linenumberend,
+                                ),
+                            )
+                        )
+                    ],
+                )
+            )
+
+        log = sarif.SarifLog(version=self.version,
+                             schema_uri=self.schema, runs=[run])
+
+        # IMPORTANT: 'warning' is the default level in SARIF and will be
+        # stripped by serialization.
+        return to_json(log)
