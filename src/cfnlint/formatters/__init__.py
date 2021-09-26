@@ -288,7 +288,8 @@ class SARIFFormatter(BaseFormatter):
                     name='cfn-lint',
                     short_description=sarif.MultiformatMessageString(
                         text=('Validates AWS CloudFormation templates against'
-                              'the resource specification and additional checks')
+                              ' the resource specification and additional'
+                              ' checks.')
                     ),
                     information_uri='https://github.com/aws-cloudformation/cfn-lint',
                     rules=[
