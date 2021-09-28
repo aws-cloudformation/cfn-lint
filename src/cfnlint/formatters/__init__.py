@@ -282,38 +282,9 @@ class SARIFFormatter(BaseFormatter):
         if not rules:
             rules = []
 
-        run = sarif.Run(
-            tool=sarif.Tool(
-                driver=sarif.ToolComponent(
-                    name='cfn-lint',
-                    short_description=sarif.MultiformatMessageString(
-                        text=('Validates AWS CloudFormation templates against'
-                              ' the resource specification and additional'
-                              ' checks.')
-                    ),
-                    information_uri='https://github.com/aws-cloudformation/cfn-lint',
-                    rules=[
-                        sarif.ReportingDescriptor(
-                            id=rule.id,
-                            short_description=sarif.MultiformatMessageString(
-                                text=rule.shortdesc
-                            ),
-                            full_description=sarif.MultiformatMessageString(
-                                text=rule.description
-                            ),
-                            help_uri=rule.source_url if rule.source_url else None
-                        )
-                        for rule in rules
-                        if rules.is_rule_enabled(rule)
-                    ],
-                    version=cfnlint.version.__version__,
-                ),
-            ),
-            results=[],
-        )
-
+        results = []
         for match in matches:
-            run.results.append(
+            results.append(
                 sarif.Result(
                     rule_id=match.rule.id,
                     message=sarif.Message(text=match.message),
@@ -335,6 +306,41 @@ class SARIFFormatter(BaseFormatter):
                     ],
                 )
             )
+
+        # Output only the rules that have matches
+        matched_rules = [r.rule_id for r in results]
+        rules_map = {r.id: r for r in list(rules)}
+
+        rules = [
+            sarif.ReportingDescriptor(
+                id=rule_id,
+                short_description=sarif.MultiformatMessageString(
+                    text=rules_map[rule_id].shortdesc
+                ),
+                full_description=sarif.MultiformatMessageString(
+                    text=rules_map[rule_id].description
+                ),
+                help_uri=rules_map[rule_id].source_url if rules_map[rule_id] else None
+            )
+            for rule_id in matched_rules
+        ]
+
+        run = sarif.Run(
+            tool=sarif.Tool(
+                driver=sarif.ToolComponent(
+                    name='cfn-lint',
+                    short_description=sarif.MultiformatMessageString(
+                        text=('Validates AWS CloudFormation templates against'
+                              ' the resource specification and additional'
+                              ' checks.')
+                    ),
+                    information_uri='https://github.com/aws-cloudformation/cfn-lint',
+                    rules=rules,
+                    version=cfnlint.version.__version__,
+                ),
+            ),
+            results=results,
+        )
 
         log = sarif.SarifLog(version=self.version,
                              schema_uri=self.schema, runs=[run])
