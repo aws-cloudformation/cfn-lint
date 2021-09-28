@@ -273,6 +273,8 @@ class SARIFFormatter(BaseFormatter):
         'warning': 'warning',
     }
 
+    uri_base_id = "EXECUTIONROOT"
+
     def _to_sarif_level(self, severity):
         return self.levelMap.get(severity, 'none')
 
@@ -293,7 +295,8 @@ class SARIFFormatter(BaseFormatter):
                         sarif.Location(
                             physical_location=sarif.PhysicalLocation(
                                 artifact_location=sarif.ArtifactLocation(
-                                    uri=match.filename
+                                    uri=match.filename,
+                                    uri_base_id=self.uri_base_id,
                                 ),
                                 region=sarif.Region(
                                     start_column=match.columnnumber,
@@ -339,6 +342,13 @@ class SARIFFormatter(BaseFormatter):
                     version=cfnlint.version.__version__,
                 ),
             ),
+            original_uri_base_ids={
+                self.uri_base_id: sarif.ArtifactLocation(
+                    description=sarif.MultiformatMessageString(
+                        "The directory in which cfn-lint was run."
+                    )
+                )
+            },
             results=results,
         )
 
