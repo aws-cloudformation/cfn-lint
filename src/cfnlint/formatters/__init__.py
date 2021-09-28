@@ -13,7 +13,8 @@ from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
 import cfnlint.version
-from cfnlint.rules import Match
+from cfnlint.rules import (Match, ParseError, RuleError, RulesCollection,
+                           TransformError)
 
 
 class color(object):
@@ -282,7 +283,10 @@ class SARIFFormatter(BaseFormatter):
         """Output all the matches"""
 
         if not rules:
-            rules = []
+            rules = RulesCollection()
+
+        # These "base" rules are not passed into formatters
+        rules.extend([ParseError(), TransformError(), RuleError()])
 
         results = []
         for match in matches:
@@ -311,7 +315,7 @@ class SARIFFormatter(BaseFormatter):
             )
 
         # Output only the rules that have matches
-        matched_rules = [r.rule_id for r in results]
+        matched_rules = set(r.rule_id for r in results)
         rules_map = {r.id: r for r in list(rules)}
 
         rules = [
