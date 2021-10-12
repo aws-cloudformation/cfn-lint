@@ -274,7 +274,7 @@ class SARIFFormatter(BaseFormatter):
         'warning': 'warning',
     }
 
-    uri_base_id = "EXECUTIONROOT"
+    uri_base_id = 'EXECUTIONROOT'
 
     def _to_sarif_level(self, severity):
         return self.levelMap.get(severity, 'none')
@@ -349,7 +349,7 @@ class SARIFFormatter(BaseFormatter):
             original_uri_base_ids={
                 self.uri_base_id: sarif.ArtifactLocation(
                     description=sarif.MultiformatMessageString(
-                        "The directory in which cfn-lint was run."
+                        'The directory in which cfn-lint was run.'
                     )
                 )
             },
