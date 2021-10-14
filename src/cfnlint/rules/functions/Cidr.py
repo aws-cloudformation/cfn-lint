@@ -18,6 +18,91 @@ class Cidr(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-cidr.html'
     tags = ['functions', 'cidr']
 
+    supported_functions = [
+        'Fn::FindInMap',
+        'Fn::Select',
+        'Ref',
+        'Fn::GetAtt',
+        'Fn::Sub',
+        'Fn::ImportValue',
+    ]
+
+    def check_ip_block(self, value, path):
+        matches = []
+        if isinstance(value, dict):
+            if len(value) == 1:
+                for index_key, _ in value.items():
+                    if index_key not in self.supported_functions:
+                        if index_key == 'Fn::If':
+                            if len(value.get('Fn::If')) == 3 and isinstance(value.get('Fn::If'), list):
+                                matches.extend(self.check_ip_block(value.get('Fn::If')[1], path=path[:] + [index_key , 1]))
+                                matches.extend(self.check_ip_block(value.get('Fn::If')[2], path=path[:] + [index_key , 2]))
+                        else:
+                            message = 'Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}'
+                            matches.append(RuleMatch(
+                                path, message.format('/'.join(map(str, value)))))
+        elif isinstance(value, (six.text_type, six.string_types)):
+            if not re.match(REGEX_CIDR, value):
+                message = 'Cidr ipBlock should be a Cidr Range based string for {0}'
+                matches.append(RuleMatch(
+                    path, message.format('/'.join(map(str, path)))))
+        else:
+            message = 'Cidr ipBlock should be a string for {0}'
+            matches.append(RuleMatch(
+                path, message.format('/'.join(map(str, path)))))
+
+        return matches
+
+    def check_count(self, value, path):
+        matches = []
+        count_parameters = []
+        if isinstance(value, dict):
+            if len(value) == 1:
+                for index_key, index_value in value.items():
+                    if index_key not in self.supported_functions:
+                        if index_key == 'Fn::If':
+                            if len(value.get('Fn::If')) == 3 and isinstance(value.get('Fn::If'), list):
+                                matches.extend(self.check_count(value.get('Fn::If')[1], path=path[:] + [index_key , 1]))
+                                matches.extend(self.check_count(value.get('Fn::If')[2], path=path[:] + [index_key , 2]))
+                        else:
+                            message = 'Cidr count should be Int, Ref, or Select for {0}'
+                            matches.append(RuleMatch(
+                                path, message.format('/'.join(map(str, path)))))
+                    if index_key == 'Ref':
+                        count_parameters.append(index_value)
+        elif not isinstance(value, six.integer_types):
+            message = 'Cidr count should be a int for {0}'
+            extra_args = {'actual_type': type(value).__name__, 'expected_type': six.integer_types[0].__name__}
+            matches.append(RuleMatch(
+                path, message.format('/'.join(map(str, path))), **extra_args))
+
+        return count_parameters, matches
+
+    def check_size_mask(self, value, path):
+        matches = []
+        size_mask_parameters = []
+        if isinstance(value, dict):
+            if len(value) == 1:
+                for index_key, index_value in value.items():
+                    if index_key not in self.supported_functions:
+                        if index_key == 'Fn::If':
+                            if len(value.get('Fn::If')) == 3 and isinstance(value.get('Fn::If'), list):
+                                matches.extend(self.check_size_mask(value.get('Fn::If')[1], path=path[:] + [index_key , 1]))
+                                matches.extend(self.check_size_mask(value.get('Fn::If')[2], path=path[:] + [index_key , 2]))
+                        else:
+                            message = 'Cidr sizeMask should be Int, Ref, or Select for {0}'
+                            matches.append(RuleMatch(
+                                path, message.format('/'.join(map(str, path)))))
+                    if index_key == 'Ref':
+                        size_mask_parameters.append(index_value)
+        elif not isinstance(value, six.integer_types):
+            message = 'Cidr sizeMask should be a int for {0}'
+            extra_args = {'actual_type': type(value).__name__, 'expected_type': six.integer_types[0].__name__}
+            matches.append(RuleMatch(
+                path, message.format('/'.join(map(str, path))), **extra_args))
+
+        return size_mask_parameters, matches
+
     def check_parameter_count(self, cfn, parameter_name):
         """Check Count Parameter if used"""
         matches = []
@@ -75,15 +160,6 @@ class Cidr(CloudFormationLintRule):
 
         cidr_objs = cfn.search_deep_keys('Fn::Cidr')
 
-        supported_functions = [
-            'Fn::FindInMap',
-            'Fn::Select',
-            'Ref',
-            'Fn::GetAtt',
-            'Fn::Sub',
-            'Fn::ImportValue'
-        ]
-
         count_parameters = []
         size_mask_parameters = []
 
@@ -99,52 +175,15 @@ class Cidr(CloudFormationLintRule):
                     else:
                         size_mask_obj = None
 
-                    if isinstance(ip_block_obj, dict):
-                        if len(ip_block_obj) == 1:
-                            for index_key, _ in ip_block_obj.items():
-                                if index_key not in supported_functions:
-                                    message = 'Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}'
-                                    matches.append(RuleMatch(
-                                        tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
-                    elif isinstance(ip_block_obj, (six.text_type, six.string_types)):
-                        if not re.match(REGEX_CIDR, ip_block_obj):
-                            message = 'Cidr ipBlock should be a Cidr Range based string for {0}'
-                            matches.append(RuleMatch(
-                                tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
-                    else:
-                        message = 'Cidr ipBlock should be a string for {0}'
-                        matches.append(RuleMatch(
-                            tree[:] + [0], message.format('/'.join(map(str, tree[:] + [0])))))
+                    matches.extend(self.check_ip_block(ip_block_obj, tree[:] + [0]))
 
-                    if isinstance(count_obj, dict):
-                        if len(count_obj) == 1:
-                            for index_key, index_value in count_obj.items():
-                                if index_key not in supported_functions:
-                                    message = 'Cidr count should be Int, Ref, or Select for {0}'
-                                    matches.append(RuleMatch(
-                                        tree[:] + [1], message.format('/'.join(map(str, tree[:] + [1])))))
-                                if index_key == 'Ref':
-                                    count_parameters.append(index_value)
-                    elif not isinstance(count_obj, six.integer_types):
-                        message = 'Cidr count should be a int for {0}'
-                        extra_args = {'actual_type': type(count_obj).__name__, 'expected_type': six.integer_types[0].__name__}
-                        matches.append(RuleMatch(
-                            tree[:] + [1], message.format('/'.join(map(str, tree[:] + [1]))), **extra_args))
+                    new_count_parameters, new_matches = self.check_count(count_obj, tree[:] + [1])
+                    count_parameters.extend(new_count_parameters)
+                    matches.extend(new_matches)
 
-                    if isinstance(size_mask_obj, dict):
-                        if len(size_mask_obj) == 1:
-                            for index_key, index_value in size_mask_obj.items():
-                                if index_key not in supported_functions:
-                                    message = 'Cidr sizeMask should be Int, Ref, or Select for {0}'
-                                    matches.append(RuleMatch(
-                                        tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2])))))
-                                if index_key == 'Ref':
-                                    size_mask_parameters.append(index_value)
-                    elif not isinstance(size_mask_obj, six.integer_types):
-                        message = 'Cidr sizeMask should be a int for {0}'
-                        extra_args = {'actual_type': type(count_obj).__name__, 'expected_type': six.integer_types[0].__name__}
-                        matches.append(RuleMatch(
-                            tree[:] + [2], message.format('/'.join(map(str, tree[:] + [2]))), **extra_args))
+                    new_size_mask_parameters , new_matches = self.check_size_mask(size_mask_obj, tree[:] + [2])
+                    size_mask_parameters.extend(new_size_mask_parameters)
+                    matches.extend(new_matches)
 
                 else:
                     message = 'Cidr should be a list of 2 or 3 elements for {0}'
