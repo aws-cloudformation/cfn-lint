@@ -1,3 +1,14 @@
+### v0.54.3
+###### Features
+- Add exceptions to rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) (pull #[2143](https://github.com/aws-cloudformation/cfn-lint/pull/2143))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `44.0.0` (pull #[2124](https://github.com/aws-cloudformation/cfn-lint/pull/2124))
+- Update `AllowedValues` for `AWS::CloudTrail::Trail.DataResourceType` (pull #[2134](https://github.com/aws-cloudformation/cfn-lint/pull/2134))
+###### Fixes
+- Add support for `Fn::If` inside rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1024) (pull #[2140](https://github.com/aws-cloudformation/cfn-lint/pull/2140))
+- Update `aws-sam-translator` to `1.39.0` (pull #[2129](https://github.com/aws-cloudformation/cfn-lint/pull/2129))
+
+
 ### v0.54.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `41.2.0` (pull #[2119](https://github.com/aws-cloudformation/cfn-python-lint/pull/2119))
