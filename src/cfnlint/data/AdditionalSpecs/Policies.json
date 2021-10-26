@@ -583,7 +583,7 @@
       "StringPrefix": "artifact"
     },
     "AWS Audit Manager": {
-      "ARNFormat": "arn:aws:auditmanager::${namespace}:${relative-id}",
+      "ARNFormat": "arn:aws:auditmanager::${ResourceType}:${ResourceName}",
       "ARNRegex": "^arn:aws:auditmanager::.+",
       "Actions": [
         "AssociateAssessmentReportEvidenceFolder",
@@ -598,6 +598,7 @@
         "CreateControl",
         "DeleteAssessment",
         "DeleteAssessmentFramework",
+        "DeleteAssessmentFrameworkShare",
         "DeleteAssessmentReport",
         "DeleteControl",
         "DeregisterAccount",
@@ -618,6 +619,7 @@
         "GetOrganizationAdminAccount",
         "GetServicesInScope",
         "GetSettings",
+        "ListAssessmentFrameworkShareRequests",
         "ListAssessmentFrameworks",
         "ListAssessmentReports",
         "ListAssessments",
@@ -627,12 +629,14 @@
         "ListTagsForResource",
         "RegisterAccount",
         "RegisterOrganizationAdminAccount",
+        "StartAssessmentFrameworkShare",
         "TagResource",
         "UntagResource",
         "UpdateAssessment",
         "UpdateAssessmentControl",
         "UpdateAssessmentControlSetStatus",
         "UpdateAssessmentFramework",
+        "UpdateAssessmentFrameworkShare",
         "UpdateAssessmentStatus",
         "UpdateControl",
         "UpdateSettings",
@@ -2531,7 +2535,7 @@
       "StringPrefix": "mediaconnect"
     },
     "AWS Elemental MediaConvert": {
-      "ARNFormat": "arn:${Partition}:mediaconvert:<region>:<account>:<resourceType>/<resourceId>",
+      "ARNFormat": "arn:${Partition}:mediaconvert:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:${Partition}:mediaconvert:.+",
       "Actions": [
         "AssociateCertificate",
@@ -2541,12 +2545,14 @@
         "CreatePreset",
         "CreateQueue",
         "DeleteJobTemplate",
+        "DeletePolicy",
         "DeletePreset",
         "DeleteQueue",
         "DescribeEndpoints",
         "DisassociateCertificate",
         "GetJob",
         "GetJobTemplate",
+        "GetPolicy",
         "GetPreset",
         "GetQueue",
         "ListJobTemplates",
@@ -2554,6 +2560,7 @@
         "ListPresets",
         "ListQueues",
         "ListTagsForResource",
+        "PutPolicy",
         "TagResource",
         "UntagResource",
         "UpdateJobTemplate",
@@ -4380,7 +4387,8 @@
       "StringPrefix": "aws-marketplace",
       "conditionKeys": [
         "aws-marketplace:AgreementType",
-        "aws-marketplace:PartyType"
+        "aws-marketplace:PartyType",
+        "aws-marketplace:ProductId"
       ]
     },
     "AWS Marketplace Catalog": {
@@ -7120,6 +7128,7 @@
         "ActivateUsers",
         "AddDomain",
         "AddOrUpdateGroups",
+        "AssociateChannelFlow",
         "AssociatePhoneNumberWithUser",
         "AssociatePhoneNumbersWithVoiceConnector",
         "AssociatePhoneNumbersWithVoiceConnectorGroup",
@@ -7133,6 +7142,7 @@
         "BatchUnsuspendUser",
         "BatchUpdatePhoneNumber",
         "BatchUpdateUser",
+        "ChannelFlowCallback",
         "Connect",
         "ConnectDirectory",
         "CreateAccount",
@@ -7146,6 +7156,7 @@
         "CreateCDRBucket",
         "CreateChannel",
         "CreateChannelBan",
+        "CreateChannelFlow",
         "CreateChannelMembership",
         "CreateChannelModerator",
         "CreateMediaCapturePipeline",
@@ -7173,6 +7184,7 @@
         "DeleteCDRBucket",
         "DeleteChannel",
         "DeleteChannelBan",
+        "DeleteChannelFlow",
         "DeleteChannelMembership",
         "DeleteChannelMessage",
         "DeleteChannelModerator",
@@ -7201,10 +7213,12 @@
         "DescribeAppInstanceUser",
         "DescribeChannel",
         "DescribeChannelBan",
+        "DescribeChannelFlow",
         "DescribeChannelMembership",
         "DescribeChannelMembershipForAppInstanceUser",
         "DescribeChannelModeratedByAppInstanceUser",
         "DescribeChannelModerator",
+        "DisassociateChannelFlow",
         "DisassociatePhoneNumberFromUser",
         "DisassociatePhoneNumbersFromVoiceConnector",
         "DisassociatePhoneNumbersFromVoiceConnectorGroup",
@@ -7220,6 +7234,7 @@
         "GetBot",
         "GetCDRBucket",
         "GetChannelMessage",
+        "GetChannelMessageStatus",
         "GetDomain",
         "GetEventsConfiguration",
         "GetGlobalSettings",
@@ -7265,11 +7280,13 @@
         "ListCDRBucket",
         "ListCallingRegions",
         "ListChannelBans",
+        "ListChannelFlows",
         "ListChannelMemberships",
         "ListChannelMembershipsForAppInstanceUser",
         "ListChannelMessages",
         "ListChannelModerators",
         "ListChannels",
+        "ListChannelsAssociatedWithChannelFlow",
         "ListChannelsModeratedByAppInstanceUser",
         "ListDelegates",
         "ListDirectories",
@@ -7339,6 +7356,7 @@
         "UpdateBot",
         "UpdateCDRSettings",
         "UpdateChannel",
+        "UpdateChannelFlow",
         "UpdateChannelMessage",
         "UpdateChannelReadMarker",
         "UpdateGlobalSettings",
@@ -7624,7 +7642,8 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "cloudwatch:AlarmActions",
-        "cloudwatch:namespace"
+        "cloudwatch:namespace",
+        "cloudwatch:requestInsightRuleLogGroups"
       ]
     },
     "Amazon CloudWatch Logs": {
@@ -8526,7 +8545,7 @@
       ]
     },
     "Amazon EC2": {
-      "ARNFormat": "arn:aws:ec2:<region>:<account>:<resourceType>/<resourcePath>",
+      "ARNFormat": "arn:aws:ec2:${Region}:${Account}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:aws:ec2:.+",
       "Actions": [
         "AcceptReservedInstancesExchangeQuote",
@@ -8564,6 +8583,7 @@
         "BundleInstance",
         "CancelBundleTask",
         "CancelCapacityReservation",
+        "CancelCapacityReservationFleets",
         "CancelConversionTask",
         "CancelExportTask",
         "CancelImportTask",
@@ -8575,6 +8595,7 @@
         "CopyImage",
         "CopySnapshot",
         "CreateCapacityReservation",
+        "CreateCapacityReservationFleet",
         "CreateCarrierGateway",
         "CreateClientVpnEndpoint",
         "CreateClientVpnRoute",
@@ -8885,6 +8906,8 @@
         "GetTransitGatewayPrefixListReferences",
         "GetTransitGatewayRouteTableAssociations",
         "GetTransitGatewayRouteTablePropagations",
+        "GetVpnConnectionDeviceSampleConfiguration",
+        "GetVpnConnectionDeviceTypes",
         "ImportClientVpnClientCertificateRevocationList",
         "ImportImage",
         "ImportInstance",
@@ -8894,6 +8917,7 @@
         "ModifyAddressAttribute",
         "ModifyAvailabilityZoneGroup",
         "ModifyCapacityReservation",
+        "ModifyCapacityReservationFleet",
         "ModifyClientVpnEndpoint",
         "ModifyDefaultCreditSpecification",
         "ModifyEbsDefaultKmsKeyId",
@@ -8982,6 +9006,7 @@
         "SearchTransitGatewayMulticastGroups",
         "SearchTransitGatewayRoutes",
         "SendDiagnosticInterrupt",
+        "SendSpotInstanceInterruptions",
         "StartInstances",
         "StartNetworkInsightsAnalysis",
         "StartVpcEndpointServicePrivateDnsVerification",
@@ -8999,7 +9024,6 @@
       "StringPrefix": "ec2",
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
-        "aws:ResourceTag/",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "ec2:AccepterVpc",
@@ -9284,7 +9308,7 @@
       ]
     },
     "Amazon ElastiCache": {
-      "ARNFormat": "arn:<partition>:elasticache:<region>:<account-id>:<resource-type>:<resource_name>",
+      "ARNFormat": "arn:${Partition}:elasticache:${Region}:${AccountId}:${ResourceType}:${ResourceName}",
       "ARNRegex": "^arn:.+:elasticache:.+:.+:.+",
       "Actions": [
         "AddTagsToResource",
@@ -9704,6 +9728,7 @@
         "DescribeStep",
         "DescribeStudio",
         "DetachEditor",
+        "GetAutoTerminationPolicy",
         "GetBlockPublicAccessConfiguration",
         "GetManagedScalingPolicy",
         "GetOnClusterAppUIPresignedURL",
@@ -9728,9 +9753,11 @@
         "ModifyInstanceGroups",
         "OpenEditorInConsole",
         "PutAutoScalingPolicy",
+        "PutAutoTerminationPolicy",
         "PutBlockPublicAccessConfiguration",
         "PutManagedScalingPolicy",
         "RemoveAutoScalingPolicy",
+        "RemoveAutoTerminationPolicy",
         "RemoveManagedScalingPolicy",
         "RemoveTags",
         "RunJobFlow",
@@ -12384,6 +12411,7 @@
         "CopyDBSnapshot",
         "CopyOptionGroup",
         "CreateCustomAvailabilityZone",
+        "CreateCustomDBEngineVersion",
         "CreateDBCluster",
         "CreateDBClusterEndpoint",
         "CreateDBClusterParameterGroup",
@@ -12401,6 +12429,7 @@
         "CreateOptionGroup",
         "CrossRegionCommunication",
         "DeleteCustomAvailabilityZone",
+        "DeleteCustomDBEngineVersion",
         "DeleteDBCluster",
         "DeleteDBClusterEndpoint",
         "DeleteDBClusterParameterGroup",
@@ -12468,6 +12497,7 @@
         "ListTagsForResource",
         "ModifyCertificates",
         "ModifyCurrentDBClusterCapacity",
+        "ModifyCustomDBEngineVersion",
         "ModifyDBCluster",
         "ModifyDBClusterEndpoint",
         "ModifyDBClusterParameterGroup",
@@ -13085,7 +13115,6 @@
         "DeleteAccessPointPolicy",
         "DeleteAccessPointPolicyForObjectLambda",
         "DeleteBucket",
-        "DeleteBucketOwnershipControls",
         "DeleteBucketPolicy",
         "DeleteBucketWebsite",
         "DeleteJobTagging",
@@ -14555,6 +14584,14 @@
       ],
       "HasResource": false,
       "StringPrefix": "wam"
+    },
+    "AmazonMediaImport": {
+      "ARNFormat": "arn:aws:mediaimport:${Region}:${Account}/*",
+      "Actions": [
+        "CreateDatabaseBinarySnapshot"
+      ],
+      "HasResource": false,
+      "StringPrefix": "mediaimport"
     },
     "Apache Kafka APIs for Amazon MSK clusters": {
       "ARNFormat": "arn:aws:kafka:<region>:<account>:<ResourceType>/<ResourceDescriptor>",
