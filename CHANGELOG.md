@@ -1,3 +1,12 @@
+### v0.54.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `45.0.0` (pull #[2153](https://github.com/aws-cloudformation/cfn-lint/pull/2153))
+- Add `AWS::DynamoDB::GlobalTable` to `AWS::Lambda::EventSourceMapping.EventSourceArn` (pull #[2151](https://github.com/aws-cloudformation/cfn-lint/pull/2151))
+- Expand stateful resource types to include `AWS::SecretsManager::Secret` (pull #[2154](https://github.com/aws-cloudformation/cfn-lint/pull/2154))
+###### Fixes
+- Add `InstanceRefresh` to allowed values for `SuspendProcesses` in rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3016) (pull #[2160](https://github.com/aws-cloudformation/cfn-lint/pull/2160))
+- Strip conditions completely from `CodePipeline` definitions in rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2541) (pull #[2152](https://github.com/aws-cloudformation/cfn-lint/pull/2152))
+
 ### v0.54.3
 ###### Features
 - Add exceptions to rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) (pull #[2143](https://github.com/aws-cloudformation/cfn-lint/pull/2143))
