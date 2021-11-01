@@ -39,7 +39,7 @@ class Configuration(CloudFormationLintRule):
                     'ValidValues': [
                         'Launch', 'Terminate', 'HealthCheck',
                         'ReplaceUnhealthy', 'AZRebalance', 'AlarmNotification',
-                        'ScheduledActions', 'AddToLoadBalancer'
+                        'ScheduledActions', 'AddToLoadBalancer', 'InstanceRefresh',
                     ]
                 },
                 'WaitOnResourceSignals': {
