@@ -101,6 +101,15 @@ class CloudFormationLintRule(object):
                         self.config[key] = str(value)
                     elif self.config_definition[key]['type'] == 'integer':
                         self.config[key] = int(value)
+                    elif self.config_definition[key]['type'] == 'list':
+                        self.config[key] = []
+                        for l_value in value:
+                            if self.config_definition[key]['itemtype'] == 'boolean':
+                                self.config[key].append(cfnlint.helpers.bool_compare(l_value, True))
+                            elif self.config_definition[key]['itemtype'] == 'string':
+                                self.config[key].append(str(l_value))
+                            elif self.config_definition[key]['itemtype'] == 'integer':
+                                self.config[key].append(int(l_value))
 
     match = None
     match_resource_properties = None
