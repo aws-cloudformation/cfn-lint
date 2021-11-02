@@ -89,6 +89,8 @@ def get_formatter(fmt):
             formatter = cfnlint.formatters.JUnitFormatter()
         elif fmt == 'pretty':
             formatter = cfnlint.formatters.PrettyFormatter()
+        elif fmt == 'sarif':
+            formatter = cfnlint.formatters.SARIFFormatter()
     else:
         formatter = cfnlint.formatters.Formatter()
 
@@ -124,7 +126,7 @@ def get_matches(filenames, args):
             for match in matches:
                 yield match
         else:
-            for match in matches:
+            for match in errors:
                 yield match
         LOGGER.debug('Completed linting of file: %s', str(filename))
 

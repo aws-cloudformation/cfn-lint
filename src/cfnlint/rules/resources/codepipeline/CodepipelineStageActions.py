@@ -126,7 +126,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         'OutputArtifacts': 'OutputArtifactRange',
     }
 
-    def check_artifact_counts(self, action, artifact_type, path):
+    def check_artifact_counts(self, action, artifact_type, path, scenario):
         """Check that artifact counts are within valid ranges."""
         matches = []
 
@@ -158,6 +158,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     a=min_,
                     b=max_
                 )
+                if scenario:
+                    scenario_text = ' and '.join(
+                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + [artifact_type],
                     message
@@ -173,6 +177,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
                     artifact_type=artifact_type,
                     a=constraints[constraint_key]
                 )
+                if scenario:
+                    scenario_text = ' and '.join(
+                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + [artifact_type],
                     message
@@ -180,7 +188,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
 
         return matches
 
-    def check_version(self, action, path):
+    def check_version(self, action, path, scenario):
         """Check that action type version is valid."""
         matches = []
 
@@ -194,33 +202,45 @@ class CodepipelineStageActions(CloudFormationLintRule):
         elif isinstance(version, (six.string_types)):
             if not LENGTH_MIN <= len(version) <= LENGTH_MAX:
                 message = 'Version string ({0}) must be between {1} and {2} characters in length.'
+                if scenario:
+                    scenario_text = ' and '.join(
+                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + ['ActionTypeId', 'Version'],
                     message.format(version, LENGTH_MIN, LENGTH_MAX)))
             elif not re.match(REGEX_VERSION_STRING, version):
                 message = 'Version string must match the pattern [0-9A-Za-z_-]+.'
+                if scenario:
+                    scenario_text = ' and '.join(
+                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + ['ActionTypeId', 'Version'],
                     message
                 ))
         return matches
 
-    def check_names_unique(self, action, path, action_names):
+    def check_names_unique(self, action, path, action_names, scenario):
         """Check that action names are unique."""
         matches = []
 
         action_name = action.get('Name')
         if isinstance(action_name, six.string_types):
             if action.get('Name') in action_names:
-                message = 'All action names within a stage must be unique. ({name})'.format(
+                message = 'All action names within a stage must be unique ({name}).'.format(
                     name=action.get('Name')
                 )
+                if scenario:
+                    scenario_text = ' and '.join(
+                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(path + ['Name'], message))
             action_names.add(action.get('Name'))
 
         return matches
 
-    def check_artifact_names(self, action, path, artifact_names):
+    def check_artifact_names(self, action, path, artifact_names, scenario):
         """Check that output artifact names are unique and inputs are from previous stage outputs."""
         matches = []
 
@@ -230,9 +250,13 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 artifact_name = input_artifact.get('Name')
                 if isinstance(artifact_name, six.string_types):
                     if not artifact_name in artifact_names:
-                        message = 'Every input artifact for an action must match the output artifact of an action earlier in the pipeline. ({name})'.format(
+                        message = 'Every input artifact for an action must match the output artifact of an action earlier in the pipeline ({name}).'.format(
                             name=artifact_name
                         )
+                        if scenario:
+                            scenario_text = ' and '.join(
+                                ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            message = message + ' When ' + scenario_text
                         matches.append(RuleMatch(path + ['InputArtifacts', 'Name'], message))
 
         output_artifacts = action.get('OutputArtifacts')
@@ -254,41 +278,43 @@ class CodepipelineStageActions(CloudFormationLintRule):
         matches = []
 
         resources = cfn.get_resource_properties(['AWS::CodePipeline::Pipeline'])
-        for resource in resources:
-            path = resource['Path']
-            properties = resource['Value']
-            artifact_names = set()
 
-            s_stages = properties.get_safe('Stages', path)
-            for s_stage_v, s_stage_p in s_stages:
-                if not isinstance(s_stage_v, list):
+        for resource in resources:
+            scenarios = cfn.get_object_without_nested_conditions(
+                resource['Value'], resource['Path'])
+            for scenario in scenarios:
+                conditions = scenario.get('Scenario')
+                path = resource['Path'] + ['Stages']
+                properties = scenario.get('Object')
+                artifact_names = set()
+
+                s_stages = properties.get('Stages')
+                if not isinstance(s_stages, list):
                     self.logger.debug(
                         'Stages not list. Should have been caught by generic linting.')
                     return matches
-
-                for l_i_stage, l_i_path in s_stage_v.items_safe(s_stage_p):
+                for s_stage_i, s_stage_v in enumerate(s_stages):
                     action_names = set()
-                    s_actions = l_i_stage.get_safe('Actions', l_i_path)
-                    for s_action_v, s_action_p in s_actions:
-                        if not isinstance(s_action_v, list):
-                            self.logger.debug(
-                                'Actions not list. Should have been caught by generic linting.')
-                            return matches
+                    s_actions = s_stage_v.get('Actions')
+                    if not isinstance(s_actions, list):
+                        self.logger.debug(
+                            'Actions not list. Should have been caught by generic linting.')
+                        return matches
 
-                        for l_i_a_action, l_i_a_path in s_action_v.items_safe(s_action_p):
-                            try:
-                                full_path = path + l_i_path + l_i_a_path
-                                matches.extend(self.check_names_unique(
-                                    l_i_a_action, full_path, action_names))
-                                matches.extend(self.check_version(l_i_a_action, full_path))
-                                matches.extend(self.check_artifact_counts(
-                                    l_i_a_action, 'InputArtifacts', full_path))
-                                matches.extend(self.check_artifact_counts(
-                                    l_i_a_action, 'OutputArtifacts', full_path))
-                                matches.extend(self.check_artifact_names(
-                                    l_i_a_action, full_path, artifact_names))
-                            except AttributeError as err:
-                                self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
-                                                  'Ignoring the error here: %s', str(err))
+                    for s_action_i, s_action_v in enumerate(s_actions):
+                        try:
+                            full_path = path + [s_stage_i, 'Actions', s_action_i]
+                            matches.extend(self.check_names_unique(
+                                s_action_v, full_path, action_names, conditions))
+                            matches.extend(self.check_version(s_action_v, full_path, conditions))
+                            matches.extend(self.check_artifact_counts(
+                                s_action_v, 'InputArtifacts', full_path, conditions))
+                            matches.extend(self.check_artifact_counts(
+                                s_action_v, 'OutputArtifacts', full_path, conditions))
+                            matches.extend(self.check_artifact_names(
+                                s_action_v, full_path, artifact_names, conditions))
+                        except AttributeError as err:
+                            self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
+                                            'Ignoring the error here: %s', str(err))
 
         return matches

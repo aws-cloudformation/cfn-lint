@@ -7,8 +7,14 @@ import json
 import operator
 import re
 import sys
-from junit_xml import TestSuite, TestCase, to_xml_report_string
-from cfnlint.rules import Match
+
+import sarif_om as sarif
+from jschema_to_python.to_json import to_json
+from junit_xml import TestCase, TestSuite, to_xml_report_string
+
+import cfnlint.version
+from cfnlint.rules import (Match, ParseError, RuleError, RulesCollection,
+                           TransformError)
 
 
 class color(object):
@@ -246,3 +252,113 @@ class PrettyFormatter(BaseFormatter):
             output.append('')  # Newline after each group
 
         return output
+
+
+class SARIFFormatter(BaseFormatter):
+    """
+    SARIF formatter
+
+    This formatter outputs results according to the Static Analysis Results
+    Interchange Format (SARIF) Version 2.1.0.
+
+    https://docs.oasis-open.org/sarif/sarif/v2.1.0/csprd01/sarif-v2.1.0-csprd01.html
+    """
+
+    schema = 'https://docs.oasis-open.org/sarif/sarif/v2.1.0/cos02/schemas/sarif-schema-2.1.0.json'
+    version = '2.1.0'
+
+    # The spec defines error, note, warning, and none, see section 3.27.10.
+    levelMap = {
+        'error': 'error',
+        'informational': 'note',
+        'warning': 'warning',
+    }
+
+    uri_base_id = 'EXECUTIONROOT'
+
+    def _to_sarif_level(self, severity):
+        return self.levelMap.get(severity, 'none')
+
+    def print_matches(self, matches, rules=None, filenames=None):
+        """Output all the matches"""
+
+        if not rules:
+            rules = RulesCollection()
+
+        # These "base" rules are not passed into formatters
+        rules.extend([ParseError(), TransformError(), RuleError()])
+
+        results = []
+        for match in matches:
+            results.append(
+                sarif.Result(
+                    rule_id=match.rule.id,
+                    message=sarif.Message(text=match.message),
+                    level=self._to_sarif_level(match.rule.severity),
+                    locations=[
+                        sarif.Location(
+                            physical_location=sarif.PhysicalLocation(
+                                artifact_location=sarif.ArtifactLocation(
+                                    uri=match.filename,
+                                    uri_base_id=self.uri_base_id,
+                                ),
+                                region=sarif.Region(
+                                    start_column=match.columnnumber,
+                                    start_line=match.linenumber,
+                                    end_column=match.columnnumberend,
+                                    end_line=match.linenumberend,
+                                ),
+                            )
+                        )
+                    ],
+                )
+            )
+
+        # Output only the rules that have matches
+        matched_rules = set(r.rule_id for r in results)
+        rules_map = {r.id: r for r in list(rules)}
+
+        rules = [
+            sarif.ReportingDescriptor(
+                id=rule_id,
+                short_description=sarif.MultiformatMessageString(
+                    text=rules_map[rule_id].shortdesc
+                ),
+                full_description=sarif.MultiformatMessageString(
+                    text=rules_map[rule_id].description
+                ),
+                help_uri=rules_map[rule_id].source_url if rules_map[rule_id] else None
+            )
+            for rule_id in matched_rules
+        ]
+
+        run = sarif.Run(
+            tool=sarif.Tool(
+                driver=sarif.ToolComponent(
+                    name='cfn-lint',
+                    short_description=sarif.MultiformatMessageString(
+                        text=('Validates AWS CloudFormation templates against'
+                              ' the resource specification and additional'
+                              ' checks.')
+                    ),
+                    information_uri='https://github.com/aws-cloudformation/cfn-lint',
+                    rules=rules,
+                    version=cfnlint.version.__version__,
+                ),
+            ),
+            original_uri_base_ids={
+                self.uri_base_id: sarif.ArtifactLocation(
+                    description=sarif.MultiformatMessageString(
+                        'The directory in which cfn-lint was run.'
+                    )
+                )
+            },
+            results=results,
+        )
+
+        log = sarif.SarifLog(version=self.version,
+                             schema_uri=self.schema, runs=[run])
+
+        # IMPORTANT: 'warning' is the default level in SARIF and will be
+        # stripped by serialization.
+        return to_json(log)

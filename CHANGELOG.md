@@ -1,3 +1,71 @@
+### v0.54.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `45.0.0` (pull #[2153](https://github.com/aws-cloudformation/cfn-lint/pull/2153))
+- Add `AWS::DynamoDB::GlobalTable` to `AWS::Lambda::EventSourceMapping.EventSourceArn` (pull #[2151](https://github.com/aws-cloudformation/cfn-lint/pull/2151))
+- Expand stateful resource types to include `AWS::SecretsManager::Secret` (pull #[2154](https://github.com/aws-cloudformation/cfn-lint/pull/2154))
+###### Fixes
+- Add `InstanceRefresh` to allowed values for `SuspendProcesses` in rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3016) (pull #[2160](https://github.com/aws-cloudformation/cfn-lint/pull/2160))
+- Strip conditions completely from `CodePipeline` definitions in rule [E2541](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2541) (pull #[2152](https://github.com/aws-cloudformation/cfn-lint/pull/2152))
+
+### v0.54.3
+###### Features
+- Add exceptions to rule [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031) (pull #[2143](https://github.com/aws-cloudformation/cfn-lint/pull/2143))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `44.0.0` (pull #[2124](https://github.com/aws-cloudformation/cfn-lint/pull/2124))
+- Update `AllowedValues` for `AWS::CloudTrail::Trail.DataResourceType` (pull #[2134](https://github.com/aws-cloudformation/cfn-lint/pull/2134))
+###### Fixes
+- Add support for `Fn::If` inside rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1024) (pull #[2140](https://github.com/aws-cloudformation/cfn-lint/pull/2140))
+- Update `aws-sam-translator` to `1.39.0` (pull #[2129](https://github.com/aws-cloudformation/cfn-lint/pull/2129))
+
+
+### v0.54.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `41.2.0` (pull #[2119](https://github.com/aws-cloudformation/cfn-python-lint/pull/2119))
+
+### v0.54.1
+###### Fixes
+- Update `Serverless/ManagedPolicies.json` and create automation to keep it up to date going forward (pull #[2116](https://github.com/aws-cloudformation/cfn-lint/pull/2116))
+
+### v0.54.0
+###### Features
+- Update default configuration on rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to no be strict (pull #[2103](https://github.com/aws-cloudformation/cfn-lint/pull/2103))
+- Add rule [E3043](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3043) to validate nested stack parameters (pull #[2074](https://github.com/aws-cloudformation/cfn-lint/pull/2074))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `41.0.0` (pull #[2111](https://github.com/aws-cloudformation/cfn-python-lint/pull/2111))
+- Add `AWS::KMS::ReplicaKey` as a `Ref`/`GetAtt` for `AWS::KMS::Alias.TargetKeyId` (pull #[2110](https://github.com/aws-cloudformation/cfn-lint/pull/2110))
+
+### v0.53.1
+###### CloudFormation Specifications
+- Update resource specs to `40.1.0` (pull #[2105](https://github.com/aws-cloudformation/cfn-python-lint/pull/2105))
+- `AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute` `AllowedValues` expansion (pull #[2101](https://github.com/aws-cloudformation/cfn-lint/pull/2101))
+###### Fixes
+- Fix rule message string formatting for [E3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3013) (pull #[2099](https://github.com/aws-cloudformation/cfn-lint/pull/2099))
+
+### v0.53.0
+###### Features
+- Update `aws-sam-translator` to `1.38.0` (pull #[2082](https://github.com/aws-cloudformation/cfn-lint/pull/2082))
+- Signal the end of life for Python 3.5 (pull #[2052](https://github.com/aws-cloudformation/cfn-lint/pull/2052))
+- Allow configuration of top level sections in rule [E1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1001) (pull #[2090](https://github.com/aws-cloudformation/cfn-lint/pull/2090))
+###### CloudFormation Specifications
+- Update resource specs to `39.8.0` (pull #[2087](https://github.com/aws-cloudformation/cfn-python-lint/pull/2087))
+- Add `StringMax` to `AWS::SNS::Topic.TopicName`, `AWS::IAM::Role.Name`, `AWS::SNS::Topic.TopicName`, `AWS::Lambda::Function` properties `Handler`, `Description`, `FunctionName`, and `AWS::Lambda::LayerVersion` properties `LayerName` (pull #[2089](https://github.com/aws-cloudformation/cfn-lint/pull/2089))
+###### Fixes
+- Update `RetentionPeriodHours` for `AWS::Kinesis::Stream` to `8760` (pull #[2071](https://github.com/aws-cloudformation/cfn-lint/pull/2071))
+- Expand `expanding likely_stateful_resource_types` to include `AWS::DynamoDB::GlobalTable` (pull #[2079](https://github.com/aws-cloudformation/cfn-lint/pull/2079))
+
+### v0.52.0
+###### Features
+- End support for Python 3.4 (pull #[2048](https://github.com/aws-cloudformation/cfn-lint/pull/2048))
+- New rule [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to validate retention period settings on applicable resources (pull #[2054](https://github.com/aws-cloudformation/cfn-lint/pull/2054))
+###### CloudFormation Specifications
+- Update resource specs to `39.3.0` (pull #[2047](https://github.com/aws-cloudformation/cfn-python-lint/pull/2047))
+###### Fixes
+- Update `ManagedPolicies.json` to include `AWSLambda_FullAccess` and `AWSLambda_ReadOnlyAccess` (pull #[2062](https://github.com/aws-cloudformation/cfn-lint/pull/2062))
+- Fix a warning in setuptools with `description-file` needed to be `description_file` (pull #[2051](https://github.com/aws-cloudformation/cfn-lint/pull/2051))
+- Update the `schema.json` for `.cfnlintrc` files to have the correct format for `custom_rules` (pull #[2055](https://github.com/aws-cloudformation/cfn-lint/pull/2055))
+- Update rule [E1029](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1029) to `not` look at `TemplatyBody` since it can be a nested template (pull #[2057](https://github.com/aws-cloudformation/cfn-lint/pull/2057))
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to think of a list as json (pull #[2067](https://github.com/aws-cloudformation/cfn-lint/pull/2067))
+
 ### v0.51.0
 ###### Features
 - A new sub class to make working with `Fn::Sub` easier (pull #[2003](https://github.com/aws-cloudformation/cfn-lint/pull/2003))

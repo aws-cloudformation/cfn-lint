@@ -18,6 +18,18 @@ class AllowedPattern(CloudFormationLintRule):
     source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
     tags = ['resources', 'property', 'allowed pattern', 'regex']
 
+    def __init__(self):
+        """Init"""
+        super(AllowedPattern, self).__init__()
+        self.config_definition = {
+            'exceptions': {
+                'default': [],
+                'type': 'list',
+                'itemtype': 'string',
+            }
+        }
+        self.configure()
+
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
@@ -46,6 +58,10 @@ class AllowedPattern(CloudFormationLintRule):
                 # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
                 if '{{resolve:' not in value:
                     if not regex.match(value):
+                        for exception in self.config.get('exceptions'):
+                            exception_regex = re.compile(exception)
+                            if exception_regex.match(value):
+                                return matches
                         full_path = ('/'.join(str(x) for x in path))
 
                         message = '{} contains invalid characters (Pattern: {}) at {}'

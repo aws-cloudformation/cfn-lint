@@ -24,7 +24,7 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": 'test/fixtures/templates/quickstart/config-rules.json',
-                "failures": 6
+                "failures": 4
             },
             "iam": {
                 "filename": 'test/fixtures/templates/quickstart/iam.json',
@@ -36,11 +36,11 @@ class TestCfnJson(BaseTestCase):
             },
             "vpc_management": {
                 "filename": 'test/fixtures/templates/quickstart/vpc-management.json',
-                "failures": 23
+                "failures": 8
             },
             "vpc": {
                 "filename": 'test/fixtures/templates/quickstart/vpc.json',
-                "failures": 40
+                "failures": 0
             },
             "poller": {
                 "filename": 'test/fixtures/templates/public/lambda-poller.json',

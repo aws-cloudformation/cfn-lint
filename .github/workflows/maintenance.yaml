@@ -1,6 +1,7 @@
+name: Automated Maintenance
 on:
   schedule:
-    - cron: '*/35 * * * *'
+    - cron: '0 */2 * * *'
   workflow_dispatch: # Enables on-demand/manual triggering: https://docs.github.com/en/free-pro-team@latest/actions/managing-workflow-runs/manually-running-a-workflow
 jobs:
   job:
@@ -17,6 +18,7 @@ jobs:
           cfn-lint --update-documentation
           scripts/update_specs_services_from_ssm.py
           scripts/update_specs_from_pricing.py
+          scripts/update_serverless_aws_policies.py
           cfn-lint --update-specs
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

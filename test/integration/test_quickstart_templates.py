@@ -75,5 +75,9 @@ class TestQuickStartTemplates(BaseCliTestCase):
     def test_templates(self):
         """ Test same templates using integration approach"""
         rules = cfnlint.core.get_rules(
-            [], [], ['I', 'E', 'W'], {}, True)
+            [], [], ['I', 'E', 'W'], {
+                'E3012': {
+                    'strict': True
+                }
+            }, True)
         self.run_module_integration_scenarios(rules)
