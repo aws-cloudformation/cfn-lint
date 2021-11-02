@@ -153,7 +153,7 @@ Optional parameters:
 | -h, --help  |   | | Get description of cfn-lint |
 | -z, --custom-rules | | filename | Text file containing user-defined custom rules. See [here](#Custom-Rules) for more information |
 | -t, --template  |   | filename | Alternative way to specify Template file path to the file that needs to be tested by cfn-lint |
-| -f, --format    | format | quiet, parseable, json, junit, pretty | Output format |
+| -f, --format    | format | quiet, parseable, json, junit, pretty, sarif | Output format |
 | -l, --list-rules | | | List all the rules |
 | -r, --regions | regions | [REGIONS [REGIONS ...]], ALL_REGIONS  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
 | -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |

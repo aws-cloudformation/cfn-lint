@@ -89,6 +89,8 @@ def get_formatter(fmt):
             formatter = cfnlint.formatters.JUnitFormatter()
         elif fmt == 'pretty':
             formatter = cfnlint.formatters.PrettyFormatter()
+        elif fmt == 'sarif':
+            formatter = cfnlint.formatters.SARIFFormatter()
     else:
         formatter = cfnlint.formatters.Formatter()
 
