@@ -1,3 +1,9 @@
+### v0.55.0
+###### Features
+- Adds support for outputting results in SARIF (pull #[2126](https://github.com/aws-cloudformation/cfn-lint/pull/2126))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `46.0.0` (pull #[2158](https://github.com/aws-cloudformation/cfn-lint/pull/2158))
+
 ### v0.54.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `45.0.0` (pull #[2153](https://github.com/aws-cloudformation/cfn-lint/pull/2153))
