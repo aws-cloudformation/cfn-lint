@@ -15,6 +15,8 @@ from cfnlint.data import Serverless
 from cfnlint.rules import Match, TransformError
 LOGGER = logging.getLogger('cfnlint')
 
+samtranslator_logger = logging.getLogger('samtranslator')
+samtranslator_logger.setLevel(logging.CRITICAL)
 
 class Transform(object):
     """
