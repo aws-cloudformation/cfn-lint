@@ -13074,6 +13074,26 @@
         }
       }
     },
+    "AWS::EC2::EC2Fleet.CapacityRebalance": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-capacityrebalance.html",
+      "Properties": {
+        "ReplacementStrategy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-capacityrebalance.html#cfn-ec2-ec2fleet-capacityrebalance-replacementstrategy",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EC2::EC2Fleet.CapacityRebalance.ReplacementStrategy"
+          }
+        },
+        "TerminationDelay": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-capacityrebalance.html#cfn-ec2-ec2fleet-capacityrebalance-terminationdelay",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::EC2::EC2Fleet.CapacityReservationOptionsRequest": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-capacityreservationoptionsrequest.html",
       "Properties": {
@@ -13364,6 +13384,17 @@
         }
       }
     },
+    "AWS::EC2::EC2Fleet.MaintenanceStrategies": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-maintenancestrategies.html",
+      "Properties": {
+        "CapacityRebalance": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-maintenancestrategies.html#cfn-ec2-ec2fleet-maintenancestrategies-capacityrebalance",
+          "Required": false,
+          "Type": "CapacityRebalance",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::EC2::EC2Fleet.MemoryGiBPerVCpuRequest": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-memorygibpervcpurequest.html",
       "Properties": {
@@ -13537,6 +13568,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-spotoptionsrequest.html#cfn-ec2-ec2fleet-spotoptionsrequest-instancepoolstousecount",
           "PrimitiveType": "Integer",
           "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "MaintenanceStrategies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-spotoptionsrequest.html#cfn-ec2-ec2fleet-spotoptionsrequest-maintenancestrategies",
+          "Required": false,
+          "Type": "MaintenanceStrategies",
           "UpdateType": "Immutable"
         },
         "MaxTotalPrice": {
@@ -15731,6 +15768,12 @@
           "Value": {
             "ValueType": "AWS::EC2::SpotFleet.SpotCapacityRebalance.ReplacementStrategy"
           }
+        },
+        "TerminationDelay": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotcapacityrebalance.html#cfn-ec2-spotfleet-spotcapacityrebalance-terminationdelay",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -17810,21 +17853,33 @@
         }
       }
     },
+    "AWS::EKS::Cluster.ClusterLogging": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-clusterlogging.html",
+      "Properties": {
+        "EnabledTypes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-clusterlogging.html#cfn-eks-cluster-clusterlogging-enabledtypes",
+          "ItemType": "LoggingTypeConfig",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::EKS::Cluster.EncryptionConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-encryptionconfig.html",
       "Properties": {
         "Provider": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-encryptionconfig.html#cfn-eks-cluster-encryptionconfig-provider",
+          "PrimitiveType": "Json",
           "Required": false,
-          "Type": "Provider",
-          "UpdateType": "Mutable"
+          "UpdateType": "Immutable"
         },
         "Resources": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-encryptionconfig.html#cfn-eks-cluster-encryptionconfig-resources",
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -17835,37 +17890,70 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-kubernetesnetworkconfig.html#cfn-eks-cluster-kubernetesnetworkconfig-serviceipv4cidr",
           "PrimitiveType": "String",
           "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::EKS::Cluster.Logging": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-logging.html",
+      "Properties": {
+        "ClusterLogging": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-logging.html#cfn-eks-cluster-logging-clusterlogging",
+          "Required": false,
+          "Type": "ClusterLogging",
           "UpdateType": "Mutable"
         }
       }
     },
-    "AWS::EKS::Cluster.Provider": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-provider.html",
+    "AWS::EKS::Cluster.LoggingTypeConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-loggingtypeconfig.html",
       "Properties": {
-        "KeyArn": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-provider.html#cfn-eks-cluster-provider-keyarn",
+        "Type": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-loggingtypeconfig.html#cfn-eks-cluster-loggingtypeconfig-type",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EKS::Cluster.LoggingTypeConfig.Type"
+          }
         }
       }
     },
     "AWS::EKS::Cluster.ResourcesVpcConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html",
       "Properties": {
+        "EndpointPrivateAccess": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-endpointprivateaccess",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EndpointPublicAccess": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-endpointpublicaccess",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PublicAccessCidrs": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-publicaccesscidrs",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "SecurityGroupIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-securitygroupids",
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Immutable"
         },
         "SubnetIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-resourcesvpcconfig.html#cfn-eks-cluster-resourcesvpcconfig-subnetids",
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -27477,19 +27565,28 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-customermanageds3.html#cfn-iotanalytics-channel-customermanageds3-bucket",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Channel.CustomerManagedS3.Bucket"
+          }
         },
         "KeyPrefix": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-customermanageds3.html#cfn-iotanalytics-channel-customermanageds3-keyprefix",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Channel.CustomerManagedS3.KeyPrefix"
+          }
         },
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-customermanageds3.html#cfn-iotanalytics-channel-customermanageds3-rolearn",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Channel.CustomerManagedS3.RoleArn"
+          }
         }
       }
     },
@@ -27500,7 +27597,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-retentionperiod.html#cfn-iotanalytics-channel-retentionperiod-numberofdays",
           "PrimitiveType": "Integer",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Channel.RetentionPeriod.NumberOfDays"
+          }
         },
         "Unlimited": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-retentionperiod.html#cfn-iotanalytics-channel-retentionperiod-unlimited",
@@ -27511,8 +27611,7 @@
       }
     },
     "AWS::IoTAnalytics::Channel.ServiceManagedS3": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-servicemanageds3.html",
-      "Properties": {}
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-channel-servicemanageds3.html"
     },
     "AWS::IoTAnalytics::Dataset.Action": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-action.html",
@@ -27560,6 +27659,7 @@
         },
         "Variables": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-containeraction.html#cfn-iotanalytics-dataset-containeraction-variables",
+          "DuplicatesAllowed": true,
           "ItemType": "Variable",
           "Required": false,
           "Type": "List",
@@ -27602,12 +27702,12 @@
       }
     },
     "AWS::IoTAnalytics::Dataset.DatasetContentVersionValue": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-variable-datasetcontentversionvalue.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-datasetcontentversionvalue.html",
       "Properties": {
         "DatasetName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-variable-datasetcontentversionvalue.html#cfn-iotanalytics-dataset-variable-datasetcontentversionvalue-datasetname",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-datasetcontentversionvalue.html#cfn-iotanalytics-dataset-datasetcontentversionvalue-datasetname",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         }
       }
@@ -27714,12 +27814,12 @@
       }
     },
     "AWS::IoTAnalytics::Dataset.OutputFileUriValue": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-variable-outputfileurivalue.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-outputfileurivalue.html",
       "Properties": {
         "FileName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-variable-outputfileurivalue.html#cfn-iotanalytics-dataset-variable-outputfileurivalue-filename",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-outputfileurivalue.html#cfn-iotanalytics-dataset-outputfileurivalue-filename",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         }
       }
@@ -27729,6 +27829,7 @@
       "Properties": {
         "Filters": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-queryaction.html#cfn-iotanalytics-dataset-queryaction-filters",
+          "DuplicatesAllowed": true,
           "ItemType": "Filter",
           "Required": false,
           "Type": "List",
@@ -27806,10 +27907,10 @@
       }
     },
     "AWS::IoTAnalytics::Dataset.Schedule": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-trigger-schedule.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-schedule.html",
       "Properties": {
         "ScheduleExpression": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-trigger-schedule.html#cfn-iotanalytics-dataset-trigger-schedule-scheduleexpression",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-dataset-schedule.html#cfn-iotanalytics-dataset-schedule-scheduleexpression",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
@@ -27975,6 +28076,7 @@
       "Properties": {
         "Partitions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-datastorepartitions.html#cfn-iotanalytics-datastore-datastorepartitions-partitions",
+          "DuplicatesAllowed": true,
           "ItemType": "DatastorePartition",
           "Required": false,
           "Type": "List",
@@ -28027,15 +28129,14 @@
       "Properties": {
         "CustomerManagedS3Storage": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-iotsitewisemultilayerstorage.html#cfn-iotanalytics-datastore-iotsitewisemultilayerstorage-customermanageds3storage",
-          "Required": true,
+          "Required": false,
           "Type": "CustomerManagedS3Storage",
           "UpdateType": "Mutable"
         }
       }
     },
     "AWS::IoTAnalytics::Datastore.JsonConfiguration": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-jsonconfiguration.html",
-      "Properties": {}
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-jsonconfiguration.html"
     },
     "AWS::IoTAnalytics::Datastore.ParquetConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-parquetconfiguration.html",
@@ -28081,6 +28182,7 @@
       "Properties": {
         "Columns": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-schemadefinition.html#cfn-iotanalytics-datastore-schemadefinition-columns",
+          "DuplicatesAllowed": true,
           "ItemType": "Column",
           "Required": false,
           "Type": "List",
@@ -28089,8 +28191,7 @@
       }
     },
     "AWS::IoTAnalytics::Datastore.ServiceManagedS3": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-servicemanageds3.html",
-      "Properties": {}
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-servicemanageds3.html"
     },
     "AWS::IoTAnalytics::Datastore.TimestampPartition": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-datastore-timestamppartition.html",
@@ -28179,21 +28280,28 @@
       "Properties": {
         "Attributes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-addattributes.html#cfn-iotanalytics-pipeline-addattributes-attributes",
-          "PrimitiveType": "Json",
-          "Required": false,
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-addattributes.html#cfn-iotanalytics-pipeline-addattributes-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.AddAttributes.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-addattributes.html#cfn-iotanalytics-pipeline-addattributes-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.AddAttributes.Next"
+          }
         }
       }
     },
@@ -28203,20 +28311,29 @@
         "ChannelName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-channel.html#cfn-iotanalytics-pipeline-channel-channelname",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Channel.ChannelName"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-channel.html#cfn-iotanalytics-pipeline-channel-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Channel.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-channel.html#cfn-iotanalytics-pipeline-channel-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Channel.Next"
+          }
         }
       }
     },
@@ -28226,14 +28343,20 @@
         "DatastoreName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-datastore.html#cfn-iotanalytics-pipeline-datastore-datastorename",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Datastore.DatastoreName"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-datastore.html#cfn-iotanalytics-pipeline-datastore-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Datastore.Name"
+          }
         }
       }
     },
@@ -28243,32 +28366,47 @@
         "Attribute": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceregistryenrich.html#cfn-iotanalytics-pipeline-deviceregistryenrich-attribute",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Attribute"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceregistryenrich.html#cfn-iotanalytics-pipeline-deviceregistryenrich-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceregistryenrich.html#cfn-iotanalytics-pipeline-deviceregistryenrich-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Next"
+          }
         },
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceregistryenrich.html#cfn-iotanalytics-pipeline-deviceregistryenrich-rolearn",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.RoleArn"
+          }
         },
         "ThingName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceregistryenrich.html#cfn-iotanalytics-pipeline-deviceregistryenrich-thingname",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.ThingName"
+          }
         }
       }
     },
@@ -28278,32 +28416,47 @@
         "Attribute": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceshadowenrich.html#cfn-iotanalytics-pipeline-deviceshadowenrich-attribute",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Attribute"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceshadowenrich.html#cfn-iotanalytics-pipeline-deviceshadowenrich-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceshadowenrich.html#cfn-iotanalytics-pipeline-deviceshadowenrich-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Next"
+          }
         },
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceshadowenrich.html#cfn-iotanalytics-pipeline-deviceshadowenrich-rolearn",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.RoleArn"
+          }
         },
         "ThingName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-deviceshadowenrich.html#cfn-iotanalytics-pipeline-deviceshadowenrich-thingname",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.ThingName"
+          }
         }
       }
     },
@@ -28313,20 +28466,29 @@
         "Filter": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-filter.html#cfn-iotanalytics-pipeline-filter-filter",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Filter.Filter"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-filter.html#cfn-iotanalytics-pipeline-filter-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Filter.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-filter.html#cfn-iotanalytics-pipeline-filter-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Filter.Next"
+          }
         }
       }
     },
@@ -28336,26 +28498,38 @@
         "BatchSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-lambda.html#cfn-iotanalytics-pipeline-lambda-batchsize",
           "PrimitiveType": "Integer",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Lambda.BatchSize"
+          }
         },
         "LambdaName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-lambda.html#cfn-iotanalytics-pipeline-lambda-lambdaname",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Lambda.LambdaName"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-lambda.html#cfn-iotanalytics-pipeline-lambda-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Lambda.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-lambda.html#cfn-iotanalytics-pipeline-lambda-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Lambda.Next"
+          }
         }
       }
     },
@@ -28365,26 +28539,38 @@
         "Attribute": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-math.html#cfn-iotanalytics-pipeline-math-attribute",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Math.Attribute"
+          }
         },
         "Math": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-math.html#cfn-iotanalytics-pipeline-math-math",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Math.Math"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-math.html#cfn-iotanalytics-pipeline-math-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Math.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-math.html#cfn-iotanalytics-pipeline-math-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.Math.Next"
+          }
         }
       }
     },
@@ -28393,22 +28579,32 @@
       "Properties": {
         "Attributes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-removeattributes.html#cfn-iotanalytics-pipeline-removeattributes-attributes",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
-          "Required": false,
+          "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Attributes"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-removeattributes.html#cfn-iotanalytics-pipeline-removeattributes-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-removeattributes.html#cfn-iotanalytics-pipeline-removeattributes-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Next"
+          }
         }
       }
     },
@@ -28417,22 +28613,32 @@
       "Properties": {
         "Attributes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-selectattributes.html#cfn-iotanalytics-pipeline-selectattributes-attributes",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
-          "Required": false,
+          "Required": true,
           "Type": "List",
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.SelectAttributes.Attributes"
+          }
         },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-selectattributes.html#cfn-iotanalytics-pipeline-selectattributes-name",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.SelectAttributes.Name"
+          }
         },
         "Next": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iotanalytics-pipeline-selectattributes.html#cfn-iotanalytics-pipeline-selectattributes-next",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.SelectAttributes.Next"
+          }
         }
       }
     },
@@ -36234,6 +36440,12 @@
           "Type": "CapacitySize",
           "UpdateType": "Mutable"
         },
+        "LinearStepSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpoint-trafficroutingconfig.html#cfn-sagemaker-endpoint-trafficroutingconfig-linearstepsize",
+          "Required": false,
+          "Type": "CapacitySize",
+          "UpdateType": "Mutable"
+        },
         "Type": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpoint-trafficroutingconfig.html#cfn-sagemaker-endpoint-trafficroutingconfig-type",
           "PrimitiveType": "String",
@@ -40132,7 +40344,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "46.0.0",
+  "ResourceSpecificationVersion": "47.0.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -49053,7 +49265,7 @@
         },
         "GroupSet": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-groupset",
-          "DuplicatesAllowed": false,
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
@@ -49087,7 +49299,7 @@
         },
         "PrivateIpAddresses": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-networkinterface.html#cfn-ec2-networkinterface-privateipaddresses",
-          "DuplicatesAllowed": false,
+          "DuplicatesAllowed": true,
           "ItemType": "PrivateIpAddressSpecification",
           "Required": false,
           "Type": "List",
@@ -49277,10 +49489,15 @@
       }
     },
     "AWS::EC2::RouteTable": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route-table.html",
+      "Attributes": {
+        "RouteTableId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html",
       "Properties": {
         "Tags": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route-table.html#cfn-ec2-routetable-tags",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html#cfn-ec2-routetable-tags",
           "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
@@ -49288,7 +49505,7 @@
           "UpdateType": "Mutable"
         },
         "VpcId": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route-table.html#cfn-ec2-routetable-vpcid",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html#cfn-ec2-routetable-vpcid",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable",
@@ -49525,7 +49742,11 @@
         "AvailabilityZone": {
           "PrimitiveType": "String"
         },
+        "Id": {
+          "PrimitiveType": "String"
+        },
         "Ipv6CidrBlocks": {
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Type": "List"
         },
@@ -49592,7 +49813,7 @@
           "UpdateType": "Mutable"
         },
         "VpcId": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html#cfn-awsec2subnet-prop-vpcid",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet.html#cfn-ec2-subnet-vpcid",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable",
@@ -49645,21 +49866,16 @@
       }
     },
     "AWS::EC2::SubnetRouteTableAssociation": {
-      "Attributes": {
-        "Id": {
-          "PrimitiveType": "String"
-        }
-      },
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetroutetableassociation.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html",
       "Properties": {
         "RouteTableId": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetroutetableassociation.html#cfn-ec2-subnetroutetableassociation-routetableid",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html#cfn-ec2-subnetroutetableassociation-routetableid",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
         },
         "SubnetId": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetroutetableassociation.html#cfn-ec2-subnetroutetableassociation-subnetid",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html#cfn-ec2-subnetroutetableassociation-subnetid",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable"
@@ -50291,6 +50507,12 @@
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "PayerResponsibility": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-payerresponsibility",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -51421,17 +51643,26 @@
           "Type": "KubernetesNetworkConfig",
           "UpdateType": "Immutable"
         },
+        "Logging": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-logging",
+          "Required": false,
+          "Type": "Logging",
+          "UpdateType": "Mutable"
+        },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-name",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EKS::Cluster.Name"
+          }
         },
         "ResourcesVpcConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-resourcesvpcconfig",
           "Required": true,
           "Type": "ResourcesVpcConfig",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "RoleArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-rolearn",
@@ -51439,11 +51670,22 @@
           "Required": true,
           "UpdateType": "Immutable"
         },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-tags",
+          "DuplicatesAllowed": false,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "Version": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-version",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EKS::Cluster.Version"
+          }
         }
       }
     },
@@ -57279,6 +57521,38 @@
         }
       }
     },
+    "AWS::IoT::Logging": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-logging.html",
+      "Properties": {
+        "AccountId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-logging.html#cfn-iot-logging-accountid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::Logging.AccountId"
+          }
+        },
+        "DefaultLogLevel": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-logging.html#cfn-iot-logging-defaultloglevel",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::Logging.DefaultLogLevel"
+          }
+        },
+        "RoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-logging.html#cfn-iot-logging-rolearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::Logging.RoleArn"
+          }
+        }
+      }
+    },
     "AWS::IoT::MitigationAction": {
       "Attributes": {
         "MitigationActionArn": {
@@ -57412,6 +57686,43 @@
           "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AWS::IoT::ProvisioningTemplate.TemplateName"
+          }
+        }
+      }
+    },
+    "AWS::IoT::ResourceSpecificLogging": {
+      "Attributes": {
+        "TargetId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-resourcespecificlogging.html",
+      "Properties": {
+        "LogLevel": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-resourcespecificlogging.html#cfn-iot-resourcespecificlogging-loglevel",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::ResourceSpecificLogging.LogLevel"
+          }
+        },
+        "TargetName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-resourcespecificlogging.html#cfn-iot-resourcespecificlogging-targetname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::ResourceSpecificLogging.TargetName"
+          }
+        },
+        "TargetType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-resourcespecificlogging.html#cfn-iot-resourcespecificlogging-targettype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::ResourceSpecificLogging.TargetType"
           }
         }
       }
@@ -57640,13 +57951,21 @@
       }
     },
     "AWS::IoTAnalytics::Channel": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-channel.html",
       "Properties": {
         "ChannelName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-channel.html#cfn-iotanalytics-channel-channelname",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Channel.ChannelName"
+          }
         },
         "ChannelStorage": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-channel.html#cfn-iotanalytics-channel-channelstorage",
@@ -57662,6 +57981,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-channel.html#cfn-iotanalytics-channel-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -57670,10 +57990,16 @@
       }
     },
     "AWS::IoTAnalytics::Dataset": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html",
       "Properties": {
         "Actions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-actions",
+          "DuplicatesAllowed": true,
           "ItemType": "Action",
           "Required": true,
           "Type": "List",
@@ -57681,6 +58007,7 @@
         },
         "ContentDeliveryRules": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-contentdeliveryrules",
+          "DuplicatesAllowed": true,
           "ItemType": "DatasetContentDeliveryRule",
           "Required": false,
           "Type": "List",
@@ -57689,11 +58016,12 @@
         "DatasetName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-datasetname",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Immutable"
         },
         "LateDataRules": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-latedatarules",
+          "DuplicatesAllowed": true,
           "ItemType": "LateDataRule",
           "Required": false,
           "Type": "List",
@@ -57707,6 +58035,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -57714,6 +58043,7 @@
         },
         "Triggers": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-dataset.html#cfn-iotanalytics-dataset-triggers",
+          "DuplicatesAllowed": true,
           "ItemType": "Trigger",
           "Required": false,
           "Type": "List",
@@ -57728,6 +58058,11 @@
       }
     },
     "AWS::IoTAnalytics::Datastore": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-datastore.html",
       "Properties": {
         "DatastoreName": {
@@ -57762,6 +58097,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-datastore.html#cfn-iotanalytics-datastore-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -57770,10 +58106,16 @@
       }
     },
     "AWS::IoTAnalytics::Pipeline": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-pipeline.html",
       "Properties": {
         "PipelineActivities": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-pipeline.html#cfn-iotanalytics-pipeline-pipelineactivities",
+          "DuplicatesAllowed": true,
           "ItemType": "Activity",
           "Required": true,
           "Type": "List",
@@ -57782,11 +58124,15 @@
         "PipelineName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-pipeline.html#cfn-iotanalytics-pipeline-pipelinename",
           "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoTAnalytics::Pipeline.PipelineName"
+          }
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotanalytics-pipeline.html#cfn-iotanalytics-pipeline-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -62964,6 +63310,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "RetainDeploymentConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-endpoint.html#cfn-sagemaker-endpoint-retaindeploymentconfig",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-endpoint.html#cfn-sagemaker-endpoint-tags",
           "ItemType": "Tag",
@@ -67297,6 +67649,12 @@
         "OLD_IMAGE"
       ]
     },
+    "AWS::EC2::EC2Fleet.CapacityRebalance.ReplacementStrategy": {
+      "AllowedValues": [
+        "launch",
+        "launch-before-terminate"
+      ]
+    },
     "AWS::EC2::EC2Fleet.CapacityReservationOptionsRequest.UsageStrategy": {
       "AllowedValues": [
         "use-capacity-reservations-first"
@@ -67907,6 +68265,23 @@
         "NONE",
         "OVERWRITE"
       ]
+    },
+    "AWS::EKS::Cluster.LoggingTypeConfig.Type": {
+      "AllowedValues": [
+        "api",
+        "audit",
+        "authenticator",
+        "controllerManager",
+        "scheduler"
+      ]
+    },
+    "AWS::EKS::Cluster.Name": {
+      "AllowedPatternRegex": "^[0-9A-Za-z][A-Za-z0-9\\-_]*",
+      "StringMax": 100,
+      "StringMin": 1
+    },
+    "AWS::EKS::Cluster.Version": {
+      "AllowedPatternRegex": "1\\.\\d\\d"
     },
     "AWS::ElastiCache::GlobalReplicationGroup.GlobalReplicationGroupMember.Role": {
       "AllowedValues": [
@@ -68777,6 +69152,24 @@
       "StringMax": 64,
       "StringMin": 1
     },
+    "AWS::IoT::Logging.AccountId": {
+      "AllowedPatternRegex": "^[0-9]{12}$",
+      "StringMax": 12,
+      "StringMin": 12
+    },
+    "AWS::IoT::Logging.DefaultLogLevel": {
+      "AllowedValues": [
+        "ERROR",
+        "WARN",
+        "INFO",
+        "DEBUG",
+        "DISABLED"
+      ]
+    },
+    "AWS::IoT::Logging.RoleArn": {
+      "StringMax": 2048,
+      "StringMin": 20
+    },
     "AWS::IoT::MitigationAction.ActionName": {
       "AllowedPatternRegex": "[a-zA-Z0-9:_-]+",
       "StringMax": 128,
@@ -68821,6 +69214,25 @@
       "AllowedPatternRegex": "^[0-9A-Za-z_-]+$",
       "StringMax": 36,
       "StringMin": 1
+    },
+    "AWS::IoT::ResourceSpecificLogging.LogLevel": {
+      "AllowedValues": [
+        "ERROR",
+        "WARN",
+        "INFO",
+        "DEBUG",
+        "DISABLED"
+      ]
+    },
+    "AWS::IoT::ResourceSpecificLogging.TargetName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9:_-]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoT::ResourceSpecificLogging.TargetType": {
+      "AllowedValues": [
+        "THING_GROUP"
+      ]
     },
     "AWS::IoT::ScheduledAudit.DayOfMonth": {
       "AllowedPatternRegex": "^([1-9]|[12][0-9]|3[01])$|^LAST$"
@@ -68943,6 +69355,173 @@
         "IN_PROGRESS",
         "DISABLED"
       ]
+    },
+    "AWS::IoTAnalytics::Channel.ChannelName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Channel.CustomerManagedS3.Bucket": {
+      "AllowedPatternRegex": "[a-zA-Z0-9.\\-_]*",
+      "StringMax": 255,
+      "StringMin": 3
+    },
+    "AWS::IoTAnalytics::Channel.CustomerManagedS3.KeyPrefix": {
+      "AllowedPatternRegex": "[a-zA-Z0-9!_.*'()/{}:-]*/",
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Channel.CustomerManagedS3.RoleArn": {
+      "StringMax": 2048,
+      "StringMin": 20
+    },
+    "AWS::IoTAnalytics::Channel.RetentionPeriod.NumberOfDays": {
+      "NumberMax": 2147483647,
+      "NumberMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.AddAttributes.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.AddAttributes.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Channel.ChannelName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Channel.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Channel.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Datastore.DatastoreName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Datastore.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Attribute": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.RoleArn": {
+      "StringMax": 2048,
+      "StringMin": 20
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceRegistryEnrich.ThingName": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Attribute": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.RoleArn": {
+      "StringMax": 2048,
+      "StringMin": 20
+    },
+    "AWS::IoTAnalytics::Pipeline.DeviceShadowEnrich.ThingName": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Filter.Filter": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Filter.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Filter.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Lambda.BatchSize": {
+      "NumberMax": 1000,
+      "NumberMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Lambda.LambdaName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_-]+",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Lambda.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Lambda.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Math.Attribute": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Math.Math": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Math.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.Math.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.PipelineName": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Attributes": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.RemoveAttributes.Next": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.SelectAttributes.Attributes": {
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.SelectAttributes.Name": {
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoTAnalytics::Pipeline.SelectAttributes.Next": {
+      "StringMax": 128,
+      "StringMin": 1
     },
     "AWS::IoTEvents::DetectorModel.ClearTimer.TimerName": {
       "StringMax": 128,
