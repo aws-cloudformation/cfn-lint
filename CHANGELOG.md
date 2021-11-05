@@ -1,3 +1,11 @@
+### v0.56.0
+###### Features
+- Update `aws-sam-translator` to `1.40.0` (pull #[2165](https://github.com/aws-cloudformation/cfn-lint/pull/2165))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `47.0.0` (pull #[2164](https://github.com/aws-cloudformation/cfn-lint/pull/2164))
+###### Fixes
+- Switching logging level for `samtranslator` to `CRITICAL` (pull #[2168](https://github.com/aws-cloudformation/cfn-lint/pull/2168))
+
 ### v0.55.0
 ###### Features
 - Adds support for outputting results in SARIF (pull #[2126](https://github.com/aws-cloudformation/cfn-lint/pull/2126))
