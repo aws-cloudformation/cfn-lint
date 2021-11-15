@@ -6,6 +6,7 @@ import os
 import logging
 import six
 import samtranslator
+import copy
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
@@ -121,13 +122,20 @@ class Transform(object):
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
             LOGGER.info('Setting AWS_DEFAULT_REGION to %s', self._region)
             os.environ['AWS_DEFAULT_REGION'] = self._region
-
+            _oldtemplate = copy.deepcopy(self._template)
             self._template = convert_dict(
                 sam_translator.translate(sam_template=self._template,
                                          parameter_values=self._parameters))
 
             LOGGER.info('Transformed template: \n%s',
                         format_json_string(self._template))
+
+            #Iterate over resources and copy metadata where it needs to be.
+            for k,v in sam_translator.translated_resource_mapping.items():
+                _metadata = _oldtemplate['Resources'][k].get('Metadata',{}).get('cfn-lint')
+                if _metadata:
+                    for r in v:
+                        self._template['Resources'][r].update({"Metadata":{"cfn-lint":_metadata}})
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'
             for cause in e.causes:
