@@ -7,6 +7,7 @@ import logging
 import six
 import samtranslator
 import copy
+import json
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
@@ -14,6 +15,7 @@ from samtranslator.public.exceptions import InvalidDocumentException
 from cfnlint.helpers import load_resource, convert_dict, format_json_string
 from cfnlint.data import Serverless
 from cfnlint.rules import Match, TransformError
+from cfnlint.decode import cfn_yaml
 LOGGER = logging.getLogger('cfnlint')
 
 samtranslator_logger = logging.getLogger('samtranslator')
@@ -123,19 +125,26 @@ class Transform(object):
             LOGGER.info('Setting AWS_DEFAULT_REGION to %s', self._region)
             os.environ['AWS_DEFAULT_REGION'] = self._region
             _oldtemplate = copy.deepcopy(self._template)
-            self._template = convert_dict(
+            _single_line_template = convert_dict(
                 sam_translator.translate(sam_template=self._template,
-                                         parameter_values=self._parameters))
-
-            LOGGER.info('Transformed template: \n%s',
-                        format_json_string(self._template))
+                                         parameter_values=self._parameters)
+            )
 
             #Iterate over resources and copy metadata where it needs to be.
             for k,v in sam_translator.translated_resource_mapping.items():
                 _metadata = _oldtemplate['Resources'][k].get('Metadata',{}).get('cfn-lint')
                 if _metadata:
                     for r in v:
-                        self._template['Resources'][r].update({"Metadata":{"cfn-lint":_metadata}})
+                        _single_line_template['Resources'][r].update({"Metadata":{"cfn-lint":_metadata}})
+
+            # Pretty-print it, then run it through the loader again to update line numbers
+            self._template = cfn_yaml.loads(json.dumps(_single_line_template, indent=4, default=str))
+
+
+            LOGGER.info('Transformed template: \n%s',
+                        format_json_string(self._template))
+
+
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'
             for cause in e.causes:
