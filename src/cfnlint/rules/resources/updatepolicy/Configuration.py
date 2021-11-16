@@ -94,7 +94,8 @@ class Configuration(CloudFormationLintRule):
             'EnableVersionUpgrade': {
                 'PrimitiveType': 'Boolean',
                 'ResourceTypes': [
-                    'AWS::Elasticsearch::Domain'
+                    'AWS::Elasticsearch::Domain',
+                    'AWS::OpenSearchService::Domain'
                 ]
             },
             'UseOnlineResharding': {
