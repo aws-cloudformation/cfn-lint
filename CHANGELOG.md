@@ -1,3 +1,8 @@
+### v0.56.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `48.0.0` (pull #[2170](https://github.com/aws-cloudformation/cfn-lint/pull/2170))
+- Add `AWS::OpenSearchService::Domain` to be in the list for `EnableVersionUpgrade` (pull #[2174](https://github.com/aws-cloudformation/cfn-lint/pull/2174))
+
 ### v0.56.0
 ###### Features
 - Update `aws-sam-translator` to `1.40.0` (pull #[2165](https://github.com/aws-cloudformation/cfn-lint/pull/2165))
