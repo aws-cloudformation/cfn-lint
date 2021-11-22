@@ -1,3 +1,9 @@
+### v0.56.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `49.0.0` (pull #[2178](https://github.com/aws-cloudformation/cfn-lint/pull/2178))
+- Expand `StatefulResources` to include `AWS::OpenSearchService::Domain` (pull #[2179](https://github.com/aws-cloudformation/cfn-lint/pull/2179))
+- Add `AWS::EKS::Cluster.ClusterSecurityGroupId` to `GetAtt` list of `AWS::EC2::SecurityGroup.NameOrGroupId` (pull #[2177](https://github.com/aws-cloudformation/cfn-lint/pull/2177))
+
 ### v0.56.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `48.0.0` (pull #[2170](https://github.com/aws-cloudformation/cfn-lint/pull/2170))
