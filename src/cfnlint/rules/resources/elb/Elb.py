@@ -76,51 +76,6 @@ HTTPS has certificate HTTP has no certificate'
 
         return matches
 
-    def check_loadbalancer_allowed_attributes(self, properties, path, scenario):
-        """ Validate loadbalancer attributes per loadbalancer type"""
-        matches = []
-
-        allowed_attributes = {
-            'all': [
-                'access_logs.s3.enabled',
-                'access_logs.s3.bucket',
-                'access_logs.s3.prefix',
-                'deletion_protection.enabled'
-            ],
-            'application': [
-                'idle_timeout.timeout_seconds',
-                'routing.http.desync_mitigation_mode',
-                'routing.http.drop_invalid_header_fields.enabled',
-                'routing.http.x_amzn_tls_version_and_cipher_suite.enabled',
-                'routing.http.xff_client_port.enabled',
-                'routing.http2.enabled',
-                'waf.fail_open.enabled'
-            ],
-            'network': [
-                'load_balancing.cross_zone.enabled'
-            ]
-        }
-
-        loadbalancer_attributes = properties.get('LoadBalancerAttributes')
-        if isinstance(loadbalancer_attributes, list):
-            for item in loadbalancer_attributes:
-                key = item.get('Key')
-                value = item.get('Value')
-                if isinstance(key, six.string_types) and isinstance(value, (six.string_types, bool, six.integer_types)):
-                    loadbalancer = self.get_loadbalancer_type(properties)
-                    if loadbalancer:
-                        if key not in allowed_attributes['all'] and key not in allowed_attributes[loadbalancer]:
-                            if scenario:
-                                scenario_text = ' and '.join(
-                                    ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
-                                message = 'Attribute "{0}" not allowed for load balancers with type "{1}" {2}'
-                                matches.append(RuleMatch(path, message.format(
-                                    key, loadbalancer, scenario_text)))
-                            else:
-                                message = 'Attribute "{0}" not allowed for load balancers with type "{1}"'
-                                matches.append(RuleMatch(path, message.format(key, loadbalancer)))
-
-        return matches
 
     def match(self, cfn):
         """Check ELB Resource Parameters"""
@@ -173,7 +128,5 @@ HTTPS has certificate HTTP has no certificate'
                             RuleMatch(path, 'Security groups are not supported for load balancers with type "network"'))
 
             matches.extend(self.check_alb_subnets(properties, path, scenario.get('Scenario')))
-            matches.extend(self.check_loadbalancer_allowed_attributes(
-                properties, path, scenario.get('Scenario')))
 
         return matches
