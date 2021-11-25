@@ -92,55 +92,6 @@ class TestPropertyElb(BaseRuleTestCase):
         rule = Elb()
 
         props = {
-            "Type": "network",
-            "LoadBalancerAttributes": [
-                {
-                    "Key": "load_balancing.cross_zone.enabled",
-                    "Value": "true"
-                }
-            ]
-        }
-
-        matches = rule.check_loadbalancer_allowed_attributes(
-            props, ['Resources', 'NLB', 'Properties'], {})
-        self.assertEqual(len(matches), 0)
-
-        props = {
-            "LoadBalancerAttributes": [
-                {
-                    "Key": "idle_timeout.timeout_seconds",
-                    "Value": 60
-                },
-                {
-                    "Key": "routing.http2.enabled",
-                    "Value": "true"
-                }
-            ]
-        }
-
-        matches = rule.check_loadbalancer_allowed_attributes(
-            props, ['Resources', 'ALB', 'Properties'], {})
-        self.assertEqual(len(matches), 0)
-
-        props = {
-            "Type": "network",
-            "LoadBalancerAttributes": [
-                {
-                    "Key": "idle_timeout.timeout_seconds",
-                    "Value": 60
-                },
-                {
-                    "Key": "routing.http2.enabled",
-                    "Value": "true"
-                }
-            ]
-        }
-
-        matches = rule.check_loadbalancer_allowed_attributes(
-            props, ['Resources', 'LB', 'Properties'], {})
-        self.assertEqual(len(matches), 2)
-
-        props = {
             "Type": "network"
         }
 
