@@ -1,3 +1,9 @@
+### v0.56.3
+###### Features
+- Update `aws-sam-translator` to `1.42.0` (pull #[2183](https://github.com/aws-cloudformation/cfn-lint/pull/2183))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `50.0.0` (pull #[2180](https://github.com/aws-cloudformation/cfn-lint/pull/2180))
+
 ### v0.56.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `49.0.0` (pull #[2178](https://github.com/aws-cloudformation/cfn-lint/pull/2178))
