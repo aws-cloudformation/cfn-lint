@@ -9,7 +9,7 @@ try:
 except:
     pass
 from test.testlib.testcase import BaseTestCase
-from mock import patch, MagicMock
+from unittest.mock import patch, MagicMock
 import cfnlint.helpers
 
 

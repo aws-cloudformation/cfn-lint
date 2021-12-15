@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 from test.testlib.testcase import BaseTestCase
 import jsonschema
-from mock import patch
+from unittest.mock import patch
 import cfnlint.config  # pylint: disable=E0401
 try:  # pragma: no cover
     from pathlib import Path
