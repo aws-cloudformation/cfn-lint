@@ -34,7 +34,7 @@ class Configuration(CloudFormationLintRule):
         'MaxLength': {
             'Type': 'Integer',
             'ValidForTypes': [
-                'String', 
+                'String',
                 'AWS::EC2::AvailabilityZone::Name',
                 'AWS::EC2::Image::Id',
                 'AWS::EC2::Instance::Id',
@@ -54,7 +54,7 @@ class Configuration(CloudFormationLintRule):
         'MinLength': {
             'Type': 'Integer',
             'ValidForTypes': [
-                'String', 
+                'String',
                 'AWS::EC2::AvailabilityZone::Name',
                 'AWS::EC2::Image::Id',
                 'AWS::EC2::Instance::Id',
