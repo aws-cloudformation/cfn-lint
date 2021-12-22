@@ -33,8 +33,19 @@ class Configuration(CloudFormationLintRule):
         },
         'MaxLength': {
             'Type': 'Integer',
-            'ValidForTypes': ['String', 'AWS::EC2::AvailabilityZone::Name', 'AWS::EC2::Image::Id', 'AWS::EC2::Instance::Id', 'AWS::EC2::KeyPair::KeyName', 'AWS::EC2::SecurityGroup::GroupName', 'AWS::EC2::SecurityGroup::Id', 'AWS::EC2::Subnet::Id', 'AWS::EC2::Volume::Id', 'AWS::EC2::VPC::Id', 'AWS::Route53::HostedZone::Id'
-]
+            'ValidForTypes': [
+                'String', 
+                'AWS::EC2::AvailabilityZone::Name',
+                'AWS::EC2::Image::Id',
+                'AWS::EC2::Instance::Id',
+                'AWS::EC2::KeyPair::KeyName',
+                'AWS::EC2::SecurityGroup::GroupName',
+                'AWS::EC2::SecurityGroup::Id',
+                'AWS::EC2::Subnet::Id',
+                'AWS::EC2::Volume::Id',
+                'AWS::EC2::VPC::Id',
+                'AWS::Route53::HostedZone::Id'
+            ]
         },
         'MaxValue': {
             'Type': 'Integer',
@@ -42,8 +53,19 @@ class Configuration(CloudFormationLintRule):
         },
         'MinLength': {
             'Type': 'Integer',
-            'ValidForTypes': ['String', 'AWS::EC2::AvailabilityZone::Name', 'AWS::EC2::Image::Id', 'AWS::EC2::Instance::Id', 'AWS::EC2::KeyPair::KeyName', 'AWS::EC2::SecurityGroup::GroupName', 'AWS::EC2::SecurityGroup::Id', 'AWS::EC2::Subnet::Id', 'AWS::EC2::Volume::Id', 'AWS::EC2::VPC::Id', 'AWS::Route53::HostedZone::Id'
-]
+            'ValidForTypes': [
+                'String', 
+                'AWS::EC2::AvailabilityZone::Name',
+                'AWS::EC2::Image::Id',
+                'AWS::EC2::Instance::Id',
+                'AWS::EC2::KeyPair::KeyName',
+                'AWS::EC2::SecurityGroup::GroupName',
+                'AWS::EC2::SecurityGroup::Id',
+                'AWS::EC2::Subnet::Id',
+                'AWS::EC2::Volume::Id',
+                'AWS::EC2::VPC::Id',
+                'AWS::Route53::HostedZone::Id'
+            ]
         },
         'MinValue': {
             'Type': 'Integer',
