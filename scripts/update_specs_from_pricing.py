@@ -22,6 +22,7 @@ region_map = {
     'AWS GovCloud (US-West)': 'us-gov-west-1',
     'Africa (Cape Town)': 'af-south-1',
     'Asia Pacific (Hong Kong)': 'ap-east-1',
+    'Asia Pacific (Jakarta)': 'ap-southeast-3',
     'Asia Pacific (Mumbai)': 'ap-south-1',
     'Asia Pacific (Osaka)': 'ap-northeast-3',
     'Asia Pacific (Seoul)': 'ap-northeast-2',
