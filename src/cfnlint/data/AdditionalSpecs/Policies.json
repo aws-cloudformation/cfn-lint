@@ -427,7 +427,7 @@
       ]
     },
     "AWS AppConfig": {
-      "ARNFormat": "arn:aws:appconfig:<region>:<account-id>:<relative-id>",
+      "ARNFormat": "arn:aws:appconfig:${Region}:${Account}:${RelativeId}",
       "ARNRegex": "^arn:aws:appconfig:.+",
       "Actions": [
         "CreateApplication",
@@ -447,6 +447,7 @@
         "GetDeploymentStrategy",
         "GetEnvironment",
         "GetHostedConfigurationVersion",
+        "GetLatestConfiguration",
         "ListApplications",
         "ListConfigurationProfiles",
         "ListDeploymentStrategies",
@@ -454,6 +455,7 @@
         "ListEnvironments",
         "ListHostedConfigurationVersions",
         "ListTagsForResource",
+        "StartConfigurationSession",
         "StartDeployment",
         "StopDeployment",
         "TagResource",
@@ -527,6 +529,22 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys"
       ]
+    },
+    "AWS Application Auto Scaling": {
+      "Actions": [
+        "DeleteScalingPolicy",
+        "DeleteScheduledAction",
+        "DeregisterScalableTarget",
+        "DescribeScalableTargets",
+        "DescribeScalingActivities",
+        "DescribeScalingPolicies",
+        "DescribeScheduledActions",
+        "PutScalingPolicy",
+        "PutScheduledAction",
+        "RegisterScalableTarget"
+      ],
+      "HasResource": false,
+      "StringPrefix": "application-autoscaling"
     },
     "AWS Application Cost Profiler Service": {
       "Actions": [
@@ -914,7 +932,7 @@
       "StringPrefix": "budgets"
     },
     "AWS BugBust": {
-      "ARNFormat": "arn:aws:bugbust:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:bugbust:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:bugbust:.+:.+:.+",
       "Actions": [
         "CreateEvent",
@@ -1340,7 +1358,7 @@
       ]
     },
     "AWS CodeArtifact": {
-      "ARNFormat": "arn:${Partition}:codeartifact:<region>:<account_ID>:<resource_type>/<resource_id>",
+      "ARNFormat": "arn:${Partition}:codeartifact:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:${Partition}:codeartifact:.+:[0-9]+:.+/.+",
       "Actions": [
         "AssociateExternalConnection",
@@ -3125,7 +3143,7 @@
       ]
     },
     "AWS Glue": {
-      "ARNFormat": "arn:aws:glue:<region>:<accountID>:<resourceType>/<resourcePath>",
+      "ARNFormat": "arn:aws:glue:${Region}:${AccountID}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:aws:glue:.+:.+",
       "Actions": [
         "BatchCreatePartition",
@@ -3140,7 +3158,9 @@
         "BatchGetTriggers",
         "BatchGetWorkflows",
         "BatchStopJobRun",
+        "BatchUpdatePartition",
         "CancelMLTaskRun",
+        "CancelStatement",
         "CheckSchemaVersionValidity",
         "CreateClassifier",
         "CreateConnection",
@@ -3150,15 +3170,19 @@
         "CreateJob",
         "CreateMLTransform",
         "CreatePartition",
+        "CreatePartitionIndex",
         "CreateRegistry",
         "CreateSchema",
         "CreateScript",
         "CreateSecurityConfiguration",
+        "CreateSession",
         "CreateTable",
         "CreateTrigger",
         "CreateUserDefinedFunction",
         "CreateWorkflow",
         "DeleteClassifier",
+        "DeleteColumnStatisticsForPartition",
+        "DeleteColumnStatisticsForTable",
         "DeleteConnection",
         "DeleteCrawler",
         "DeleteDatabase",
@@ -3166,11 +3190,13 @@
         "DeleteJob",
         "DeleteMLTransform",
         "DeletePartition",
+        "DeletePartitionIndex",
         "DeleteRegistry",
         "DeleteResourcePolicy",
         "DeleteSchema",
         "DeleteSchemaVersions",
         "DeleteSecurityConfiguration",
+        "DeleteSession",
         "DeleteTable",
         "DeleteTableVersion",
         "DeleteTrigger",
@@ -3179,6 +3205,8 @@
         "GetCatalogImportStatus",
         "GetClassifier",
         "GetClassifiers",
+        "GetColumnStatisticsForPartition",
+        "GetColumnStatisticsForTable",
         "GetConnection",
         "GetConnections",
         "GetCrawler",
@@ -3212,6 +3240,8 @@
         "GetSchemaVersionsDiff",
         "GetSecurityConfiguration",
         "GetSecurityConfigurations",
+        "GetSession",
+        "GetStatement",
         "GetTable",
         "GetTableVersion",
         "GetTableVersions",
@@ -3233,6 +3263,8 @@
         "ListRegistries",
         "ListSchemaVersions",
         "ListSchemas",
+        "ListSessions",
+        "ListStatements",
         "ListTriggers",
         "ListWorkflows",
         "NotifyEvent",
@@ -3245,6 +3277,7 @@
         "RemoveSchemaVersionMetadata",
         "ResetJobBookmark",
         "ResumeWorkflowRun",
+        "RunStatement",
         "SearchTables",
         "StartCrawler",
         "StartCrawlerSchedule",
@@ -3257,11 +3290,14 @@
         "StartWorkflowRun",
         "StopCrawler",
         "StopCrawlerSchedule",
+        "StopSession",
         "StopTrigger",
         "StopWorkflowRun",
         "TagResource",
         "UntagResource",
         "UpdateClassifier",
+        "UpdateColumnStatisticsForPartition",
+        "UpdateColumnStatisticsForTable",
         "UpdateConnection",
         "UpdateCrawler",
         "UpdateCrawlerSchedule",
@@ -3908,6 +3944,7 @@
         "DeleteDeviceProfile",
         "DeleteFuotaTask",
         "DeleteMulticastGroup",
+        "DeleteQueuedMessages",
         "DeleteServiceProfile",
         "DeleteWirelessDevice",
         "DeleteWirelessGateway",
@@ -3946,6 +3983,7 @@
         "ListMulticastGroups",
         "ListMulticastGroupsByFuotaTask",
         "ListPartnerAccounts",
+        "ListQueuedMessages",
         "ListServiceProfiles",
         "ListTagsForResource",
         "ListWirelessDevices",
@@ -4613,33 +4651,52 @@
       ]
     },
     "AWS Lake Formation": {
-      "ARNFormat": "arn:aws:lakeformation:${region}:${accountId}:${resourceType}/${resourcePath}",
+      "ARNFormat": "arn:${Partition}:lakeformation:${Region}:${Account}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:aws:lakeformation:.+:.+",
       "Actions": [
         "AddLFTagsToResource",
         "BatchGrantPermissions",
         "BatchRevokePermissions",
+        "CancelTransaction",
+        "CommitTransaction",
+        "CreateDataCellsFilter",
         "CreateLFTag",
+        "DeleteDataCellsFilter",
         "DeleteLFTag",
+        "DeleteObjectsOnCancel",
         "DeregisterResource",
         "DescribeResource",
+        "DescribeTransaction",
+        "ExtendTransaction",
         "GetDataAccess",
         "GetDataLakeSettings",
         "GetEffectivePermissionsForPath",
         "GetLFTag",
+        "GetQueryState",
+        "GetQueryStatistics",
         "GetResourceLFTags",
+        "GetTableObjects",
+        "GetWorkUnitResults",
+        "GetWorkUnits",
         "GrantPermissions",
+        "ListDataCellsFilter",
         "ListLFTags",
         "ListPermissions",
         "ListResources",
+        "ListTableStorageOptimizers",
+        "ListTransactions",
         "PutDataLakeSettings",
         "RegisterResource",
         "RemoveLFTagsFromResource",
         "RevokePermissions",
         "SearchDatabasesByLFTags",
         "SearchTablesByLFTags",
+        "StartQueryPlanning",
+        "StartTransaction",
         "UpdateLFTag",
-        "UpdateResource"
+        "UpdateResource",
+        "UpdateTableObjects",
+        "UpdateTableStorageOptimizer"
       ],
       "HasResource": false,
       "StringPrefix": "lakeformation"
@@ -4808,8 +4865,8 @@
       ]
     },
     "AWS Marketplace Catalog": {
-      "ARNFormat": "arn:aws:aws-marketplace:<region>:<account>:<catalog>/<resource_type>/<resource_id>",
-      "ARNRegex": "^arn:aws:aws-marketplace:::.+",
+      "ARNFormat": "arn:${Partition}:aws-marketplace:${Region}:${Account}:${Catalog}/${ResourceType}/${ResourceId}",
+      "ARNRegex": "^arn:${Partition}:aws-marketplace:.+",
       "Actions": [
         "CancelChangeSet",
         "CompleteTask",
@@ -5036,7 +5093,7 @@
       "StringPrefix": "mobilehub"
     },
     "AWS Network Firewall": {
-      "ARNFormat": "arn:aws:network-firewall:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:network-firewall:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:network-firewall:.+:.+:.+",
       "Actions": [
         "AssociateFirewallPolicy",
@@ -5053,6 +5110,7 @@
         "DescribeLoggingConfiguration",
         "DescribeResourcePolicy",
         "DescribeRuleGroup",
+        "DescribeRuleGroupMetadata",
         "DisassociateSubnets",
         "ListFirewallPolicies",
         "ListFirewalls",
@@ -5253,20 +5311,31 @@
       ]
     },
     "AWS Outposts": {
-      "ARNFormat": "arn:aws:outposts:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:outposts:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:outposts:.+:.+:.+",
       "Actions": [
+        "CancelOrder",
         "CreateOrder",
         "CreateOutpost",
+        "CreateSite",
         "DeleteOutpost",
         "DeleteSite",
+        "GetCatalogItem",
         "GetOutpost",
         "GetOutpostInstanceTypes",
+        "GetSite",
+        "GetSiteAddress",
+        "ListCatalogItems",
+        "ListOrders",
         "ListOutposts",
         "ListSites",
         "ListTagsForResource",
         "TagResource",
-        "UntagResource"
+        "UntagResource",
+        "UpdateOutpost",
+        "UpdateSite",
+        "UpdateSiteAddress",
+        "UpdateSiteRackPhysicalProperties"
       ],
       "HasResource": false,
       "StringPrefix": "outposts"
@@ -5349,12 +5418,15 @@
       ]
     },
     "AWS Performance Insights": {
-      "ARNFormat": "arn:aws:pi:<region>:<account>:<resource-type>/<relative-id>",
+      "ARNFormat": "arn:aws:pi:${Region}:${Account}:${ResourceType}/${RelativeId}",
       "ARNRegex": "^arn:aws:pi:.+",
       "Actions": [
         "DescribeDimensionKeys",
         "GetDimensionKeyDetails",
-        "GetResourceMetrics"
+        "GetResourceMetadata",
+        "GetResourceMetrics",
+        "ListAvailableResourceDimensions",
+        "ListAvailableResourceMetrics"
       ],
       "HasResource": true,
       "StringPrefix": "pi"
@@ -5369,7 +5441,7 @@
       "StringPrefix": "pricing"
     },
     "AWS Proton": {
-      "ARNFormat": "arn:aws:proton:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:${Partition}:proton:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:proton:.+:.+:.+",
       "Actions": [
         "AcceptEnvironmentAccountConnection",
@@ -5382,11 +5454,13 @@
         "CreateEnvironmentTemplateMajorVersion",
         "CreateEnvironmentTemplateMinorVersion",
         "CreateEnvironmentTemplateVersion",
+        "CreateRepository",
         "CreateService",
         "CreateServiceTemplate",
         "CreateServiceTemplateMajorVersion",
         "CreateServiceTemplateMinorVersion",
         "CreateServiceTemplateVersion",
+        "CreateTemplateSyncConfig",
         "DeleteAccountRoles",
         "DeleteEnvironment",
         "DeleteEnvironmentAccountConnection",
@@ -5394,11 +5468,13 @@
         "DeleteEnvironmentTemplateMajorVersion",
         "DeleteEnvironmentTemplateMinorVersion",
         "DeleteEnvironmentTemplateVersion",
+        "DeleteRepository",
         "DeleteService",
         "DeleteServiceTemplate",
         "DeleteServiceTemplateMajorVersion",
         "DeleteServiceTemplateMinorVersion",
         "DeleteServiceTemplateVersion",
+        "DeleteTemplateSyncConfig",
         "GetAccountRoles",
         "GetAccountSettings",
         "GetEnvironment",
@@ -5407,18 +5483,24 @@
         "GetEnvironmentTemplateMajorVersion",
         "GetEnvironmentTemplateMinorVersion",
         "GetEnvironmentTemplateVersion",
+        "GetRepository",
+        "GetRepositorySyncStatus",
         "GetService",
         "GetServiceInstance",
         "GetServiceTemplate",
         "GetServiceTemplateMajorVersion",
         "GetServiceTemplateMinorVersion",
         "GetServiceTemplateVersion",
+        "GetTemplateSyncConfig",
+        "GetTemplateSyncStatus",
         "ListEnvironmentAccountConnections",
         "ListEnvironmentTemplateMajorVersions",
         "ListEnvironmentTemplateMinorVersions",
         "ListEnvironmentTemplateVersions",
         "ListEnvironmentTemplates",
         "ListEnvironments",
+        "ListRepositories",
+        "ListRepositorySyncDefinitions",
         "ListServiceInstances",
         "ListServiceTemplateMajorVersions",
         "ListServiceTemplateMinorVersions",
@@ -5437,13 +5519,15 @@
         "UpdateEnvironmentTemplateMajorVersion",
         "UpdateEnvironmentTemplateMinorVersion",
         "UpdateEnvironmentTemplateVersion",
+        "UpdateRepository",
         "UpdateService",
         "UpdateServiceInstance",
         "UpdateServicePipeline",
         "UpdateServiceTemplate",
         "UpdateServiceTemplateMajorVersion",
         "UpdateServiceTemplateMinorVersion",
-        "UpdateServiceTemplateVersion"
+        "UpdateServiceTemplateVersion",
+        "UpdateTemplateSyncConfig"
       ],
       "HasResource": true,
       "StringPrefix": "proton",
@@ -5687,20 +5771,17 @@
         "GetAccountInfo",
         "GetChart",
         "GetConnection",
-        "GetKMSKey",
         "GetSavedQuery",
         "GetUserInfo",
         "GetUserWorkspaceSettings",
-        "ListBuckets",
         "ListConnections",
         "ListDatabases",
         "ListFiles",
-        "ListKMSKeyAliases",
-        "ListKMSKeys",
         "ListRedshiftClusters",
         "ListSampleDatabases",
         "ListSavedQueryVersions",
         "ListTabs",
+        "ListTaggedResources",
         "ListTagsForResource",
         "PutTab",
         "PutUserWorkspaceSettings",
@@ -6299,7 +6380,7 @@
       ]
     },
     "AWS Shield": {
-      "ARNFormat": "arn:aws:shield::<account_ID>:<resource>/<resource_id>",
+      "ARNFormat": "arn:aws:shield::${Account}:${Resource}/${ResourceId}",
       "ARNRegex": "^arn:aws:shield::[0-9]+:.+/.+",
       "Actions": [
         "AssociateDRTLogBucket",
@@ -6319,10 +6400,12 @@
         "DescribeProtection",
         "DescribeProtectionGroup",
         "DescribeSubscription",
+        "DisableApplicationLayerAutomaticResponse",
         "DisableProactiveEngagement",
         "DisassociateDRTLogBucket",
         "DisassociateDRTRole",
         "DisassociateHealthCheck",
+        "EnableApplicationLayerAutomaticResponse",
         "EnableProactiveEngagement",
         "GetSubscriptionState",
         "ListAttacks",
@@ -6332,6 +6415,7 @@
         "ListTagsForResource",
         "TagResource",
         "UntagResource",
+        "UpdateApplicationLayerAutomaticResponse",
         "UpdateEmergencyContactSettings",
         "UpdateProtectionGroup",
         "UpdateSubscription"
@@ -6703,7 +6787,7 @@
       "StringPrefix": "ssm-incidents"
     },
     "AWS Systems Manager Incident Manager Contacts": {
-      "ARNFormat": "arn:aws:ssm-contacts:<region>:<account-id>:<relative-id>",
+      "ARNFormat": "arn:aws:ssm-contacts:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:aws:ssm-contacts:.+",
       "Actions": [
         "AcceptPage",
@@ -7505,10 +7589,11 @@
       ]
     },
     "Amazon AppStream 2.0": {
-      "ARNFormat": "arn:aws:appstream:${Region}:${Account}:${ResourceType}/${ResourcePath}",
-      "ARNRegex": "^arn:aws:appstream:.+",
+      "ARNFormat": "arn:${Partition}:appstream:${Region}:${Account}:${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:appstream:.+",
       "Actions": [
         "AssociateApplicationFleet",
+        "AssociateApplicatonToEntitlement",
         "AssociateFleet",
         "BatchAssociateUserStack",
         "BatchDisassociateUserStack",
@@ -7516,6 +7601,7 @@
         "CreateAppBlock",
         "CreateApplication",
         "CreateDirectoryConfig",
+        "CreateEntitlement",
         "CreateFleet",
         "CreateImageBuilder",
         "CreateImageBuilderStreamingURL",
@@ -7527,6 +7613,7 @@
         "DeleteAppBlock",
         "DeleteApplication",
         "DeleteDirectoryConfig",
+        "DeleteEntitlement",
         "DeleteFleet",
         "DeleteImage",
         "DeleteImageBuilder",
@@ -7538,6 +7625,7 @@
         "DescribeApplicationFleetAssociations",
         "DescribeApplications",
         "DescribeDirectoryConfigs",
+        "DescribeEntitlements",
         "DescribeFleets",
         "DescribeImageBuilders",
         "DescribeImagePermissions",
@@ -7549,11 +7637,13 @@
         "DescribeUsers",
         "DisableUser",
         "DisassociateApplicationFleet",
+        "DisassociateApplicatonFromEntitlement",
         "DisassociateFleet",
         "EnableUser",
         "ExpireSession",
         "ListAssociatedFleets",
         "ListAssociatedStacks",
+        "ListEntitledApplications",
         "ListTagsForResource",
         "StartFleet",
         "StartImageBuilder",
@@ -7564,6 +7654,7 @@
         "UntagResource",
         "UpdateApplication",
         "UpdateDirectoryConfig",
+        "UpdateEntitlement",
         "UpdateFleet",
         "UpdateImagePermissions",
         "UpdateStack"
@@ -7994,7 +8085,7 @@
       "StringPrefix": "clouddirectory"
     },
     "Amazon CloudFront": {
-      "ARNFormat": "arn:${Partition}:cloudfront::<accountID>:<resource_type>/<resource_id>",
+      "ARNFormat": "arn:${Partition}:cloudfront::${AccountId}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:${Partition}:cloudfront::[0-9]+:.+",
       "Actions": [
         "AssociateAlias",
@@ -8011,6 +8102,7 @@
         "CreateOriginRequestPolicy",
         "CreatePublicKey",
         "CreateRealtimeLogConfig",
+        "CreateResponseHeadersPolicy",
         "CreateStreamingDistribution",
         "CreateStreamingDistributionWithTags",
         "DeleteCachePolicy",
@@ -8024,6 +8116,7 @@
         "DeleteOriginRequestPolicy",
         "DeletePublicKey",
         "DeleteRealtimeLogConfig",
+        "DeleteResponseHeadersPolicy",
         "DeleteStreamingDistribution",
         "DescribeFunction",
         "GetCachePolicy",
@@ -8046,6 +8139,8 @@
         "GetPublicKey",
         "GetPublicKeyConfig",
         "GetRealtimeLogConfig",
+        "GetResponseHeadersPolicy",
+        "GetResponseHeadersPolicyConfig",
         "GetStreamingDistribution",
         "GetStreamingDistributionConfig",
         "ListCachePolicies",
@@ -8057,6 +8152,7 @@
         "ListDistributionsByLambdaFunction",
         "ListDistributionsByOriginRequestPolicyId",
         "ListDistributionsByRealtimeLogConfig",
+        "ListDistributionsByResponseHeadersPolicyId",
         "ListDistributionsByWebACLId",
         "ListFieldLevelEncryptionConfigs",
         "ListFieldLevelEncryptionProfiles",
@@ -8066,6 +8162,7 @@
         "ListOriginRequestPolicies",
         "ListPublicKeys",
         "ListRealtimeLogConfigs",
+        "ListResponseHeadersPolicies",
         "ListStreamingDistributions",
         "ListTagsForResource",
         "PublishFunction",
@@ -8082,6 +8179,7 @@
         "UpdateOriginRequestPolicy",
         "UpdatePublicKey",
         "UpdateRealtimeLogConfig",
+        "UpdateResponseHeadersPolicy",
         "UpdateStreamingDistribution"
       ],
       "HasResource": true,
@@ -8282,7 +8380,7 @@
       ]
     },
     "Amazon CloudWatch Synthetics": {
-      "ARNFormat": "arn:aws:synthetics:<region>:<account-id>:<resource-type>:<resource_name>",
+      "ARNFormat": "arn:aws:synthetics:${Region}:${Account}:${ResourceType}:${ResourceName}",
       "ARNRegex": "^arn:aws:synthetics:.+",
       "Actions": [
         "CreateCanary",
@@ -8972,7 +9070,10 @@
         "CreateMembers",
         "DeleteGraph",
         "DeleteMembers",
+        "DescribeOrganizationConfiguration",
+        "DisableOrganizationAdminAccount",
         "DisassociateMembership",
+        "EnableOrganizationAdminAccount",
         "GetFreeTrialEligibility",
         "GetGraphIngestState",
         "GetMembers",
@@ -8981,12 +9082,14 @@
         "ListGraphs",
         "ListInvitations",
         "ListMembers",
+        "ListOrganizationAdminAccounts",
         "ListTagsForResource",
         "RejectInvitation",
         "SearchGraph",
         "StartMonitoringMember",
         "TagResource",
-        "UntagResource"
+        "UntagResource",
+        "UpdateOrganizationConfiguration"
       ],
       "HasResource": true,
       "StringPrefix": "detective",
@@ -10251,11 +10354,13 @@
         "CreateAccessPoint",
         "CreateFileSystem",
         "CreateMountTarget",
+        "CreateReplicationConfiguration",
         "CreateTags",
         "DeleteAccessPoint",
         "DeleteFileSystem",
         "DeleteFileSystemPolicy",
         "DeleteMountTarget",
+        "DeleteReplicationConfiguration",
         "DeleteTags",
         "DescribeAccessPoints",
         "DescribeAccountPreferences",
@@ -10265,6 +10370,7 @@
         "DescribeLifecycleConfiguration",
         "DescribeMountTargetSecurityGroups",
         "DescribeMountTargets",
+        "DescribeReplicationConfigurations",
         "DescribeTags",
         "ListTagsForResource",
         "ModifyMountTargetSecurityGroups",
@@ -11590,6 +11696,7 @@
         "CreateBotChannel",
         "CreateBotLocale",
         "CreateBotVersion",
+        "CreateCustomVocabulary",
         "CreateExport",
         "CreateIntent",
         "CreateResourcePolicy",
@@ -11601,6 +11708,7 @@
         "DeleteBotChannel",
         "DeleteBotLocale",
         "DeleteBotVersion",
+        "DeleteCustomVocabulary",
         "DeleteExport",
         "DeleteImport",
         "DeleteIntent",
@@ -11615,6 +11723,8 @@
         "DescribeBotLocale",
         "DescribeBotRecommendation",
         "DescribeBotVersion",
+        "DescribeCustomVocabulary",
+        "DescribeCustomVocabularyMetadata",
         "DescribeExport",
         "DescribeImport",
         "DescribeIntent",
@@ -11651,6 +11761,7 @@
         "UpdateBotAlias",
         "UpdateBotLocale",
         "UpdateBotRecommendation",
+        "UpdateCustomVocabulary",
         "UpdateExport",
         "UpdateIntent",
         "UpdateResourcePolicy",
@@ -11877,10 +11988,14 @@
         "ListTrackers",
         "PutGeofence",
         "SearchPlaceIndexForPosition",
+        "SearchPlaceIndexForSuggestions",
         "SearchPlaceIndexForText",
         "TagResource",
         "UntagResource",
         "UpdateGeofenceCollection",
+        "UpdateMap",
+        "UpdatePlaceIndex",
+        "UpdateRouteCalculator",
         "UpdateTracker"
       ],
       "HasResource": true,
@@ -11927,7 +12042,7 @@
       ]
     },
     "Amazon Lookout for Metrics": {
-      "ARNFormat": "arn:aws:lookoutmetrics:<region>:<account-id>:<resource-type>:<resource_name>",
+      "ARNFormat": "arn:${Partition}:lookoutmetrics:${Region}:${AccountId}:${ResourceType}:${ResourceName}",
       "ARNRegex": "^arn:aws:lookoutmetrics:.+:.+:.+",
       "Actions": [
         "ActivateAnomalyDetector",
@@ -11947,6 +12062,7 @@
         "GetSampleData",
         "ListAlerts",
         "ListAnomalyDetectors",
+        "ListAnomalyGroupRelatedMetrics",
         "ListAnomalyGroupSummaries",
         "ListAnomalyGroupTimeSeries",
         "ListMetricSets",
@@ -11977,15 +12093,18 @@
         "DeleteProject",
         "DescribeDataset",
         "DescribeModel",
+        "DescribeModelPackagingJob",
         "DescribeProject",
         "DescribeTrialDetection",
         "DetectAnomalies",
         "ListDatasetEntries",
+        "ListModelPackagingJobs",
         "ListModels",
         "ListProjects",
         "ListTagsForResource",
         "ListTrialDetections",
         "StartModel",
+        "StartModelPackagingJob",
         "StartTrialDetection",
         "StopModel",
         "TagResource",
@@ -13347,7 +13466,7 @@
       "StringPrefix": "rds-db"
     },
     "Amazon Redshift": {
-      "ARNFormat": "arn:aws:redshift:<region>:<accountID>:<relative-id>",
+      "ARNFormat": "arn:aws:redshift:${Region}:${Account}:${RelativeId}",
       "ARNRegex": "^arn:aws:redshift:.+:.+:.+",
       "Actions": [
         "AcceptReservedNodeExchange",
@@ -13361,6 +13480,7 @@
         "CancelQuerySession",
         "CancelResize",
         "CopyClusterSnapshot",
+        "CreateAuthenticationProfile",
         "CreateCluster",
         "CreateClusterParameterGroup",
         "CreateClusterSecurityGroup",
@@ -13377,6 +13497,7 @@
         "CreateTags",
         "CreateUsageLimit",
         "DeauthorizeDataShare",
+        "DeleteAuthenticationProfile",
         "DeleteCluster",
         "DeleteClusterParameterGroup",
         "DeleteClusterSecurityGroup",
@@ -13392,6 +13513,7 @@
         "DeleteTags",
         "DeleteUsageLimit",
         "DescribeAccountAttributes",
+        "DescribeAuthenticationProfiles",
         "DescribeClusterDbRevisions",
         "DescribeClusterParameterGroups",
         "DescribeClusterParameters",
@@ -13441,6 +13563,7 @@
         "ListSchemas",
         "ListTables",
         "ModifyAquaConfiguration",
+        "ModifyAuthenticationProfile",
         "ModifyCluster",
         "ModifyClusterDbRevision",
         "ModifyClusterIamRoles",
@@ -13590,8 +13713,8 @@
       "StringPrefix": "tag"
     },
     "Amazon Route 53": {
-      "ARNFormat": "arn:aws:route53:::<resource>/<id>",
-      "ARNRegex": "^arn:aws:route53:::.+",
+      "ARNFormat": "arn:${Partition}:route53:::${Resource}/{$Id}",
+      "ARNRegex": "^arn:${Partition}:route53:::.+",
       "Actions": [
         "ActivateKeySigningKey",
         "AssociateVPCWithHostedZone",
@@ -13667,6 +13790,7 @@
         "CancelDomainTransferToAnotherAwsAccount",
         "CheckDomainAvailability",
         "CheckDomainTransferability",
+        "DeleteDomain",
         "DeleteTagsForDomain",
         "DisableDomainAutoRenew",
         "DisableDomainTransferLock",
@@ -13678,6 +13802,7 @@
         "GetOperationDetail",
         "ListDomains",
         "ListOperations",
+        "ListPrices",
         "ListTagsForDomain",
         "RegisterDomain",
         "RejectDomainTransferFromAnotherAwsAccount",
@@ -13728,12 +13853,20 @@
         "ListControlPanels",
         "ListRoutingControls",
         "ListSafetyRules",
+        "ListTagsForResource",
+        "TagResource",
+        "UntagResource",
         "UpdateControlPanel",
         "UpdateRoutingControl",
         "UpdateSafetyRule"
       ],
       "HasResource": true,
-      "StringPrefix": "route53-recovery-control-config"
+      "StringPrefix": "route53-recovery-control-config",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "Amazon Route 53 Recovery Readiness": {
       "ARNFormat": "arn:${Partition}:route53-recovery-readiness::${Account}:${ResourceType}/${ResourceName}",
@@ -13947,6 +14080,7 @@
         "PutAccessPointConfigurationForObjectLambda",
         "PutAccessPointPolicy",
         "PutAccessPointPolicyForObjectLambda",
+        "PutAccessPointPublicAccessBlock",
         "PutAccountPublicAccessBlock",
         "PutAnalyticsConfiguration",
         "PutBucketAcl",
@@ -14717,7 +14851,7 @@
       ]
     },
     "Amazon Simple Workflow Service": {
-      "ARNFormat": "arn:aws:swf:<region>:<account>:/<domain>/<domainName>",
+      "ARNFormat": "arn:aws:swf:${Region}:${Account}:/domain/${DomainName}",
       "ARNRegex": "^arn:aws:swf:.+",
       "Actions": [
         "CancelTimer",
@@ -15441,7 +15575,7 @@
       "StringPrefix": "mediaimport"
     },
     "Apache Kafka APIs for Amazon MSK clusters": {
-      "ARNFormat": "arn:aws:kafka:<region>:<account>:<ResourceType>/<ResourceDescriptor>",
+      "ARNFormat": "arn:aws:kafka:${Region}:${Account}:${ResourceType}/${ResourceDescriptor}",
       "ARNRegex": "^arn:aws:kafka:.+",
       "Actions": [
         "AlterCluster",
@@ -15469,22 +15603,6 @@
       "conditionKeys": [
         "aws:ResourceTag/${TagKey}"
       ]
-    },
-    "Application Auto Scaling": {
-      "Actions": [
-        "DeleteScalingPolicy",
-        "DeleteScheduledAction",
-        "DeregisterScalableTarget",
-        "DescribeScalableTargets",
-        "DescribeScalingActivities",
-        "DescribeScalingPolicies",
-        "DescribeScheduledActions",
-        "PutScalingPolicy",
-        "PutScheduledAction",
-        "RegisterScalableTarget"
-      ],
-      "HasResource": false,
-      "StringPrefix": "application-autoscaling"
     },
     "Application Discovery": {
       "Actions": [
