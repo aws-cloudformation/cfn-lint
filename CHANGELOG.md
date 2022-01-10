@@ -1,3 +1,8 @@
+### v0.56.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `52.0.0` (pull #[2188](https://github.com/aws-cloudformation/cfn-lint/pull/2188))
+- Add region `ap-southeast-3` (pull #[2192](https://github.com/aws-cloudformation/cfn-lint/pull/2192))
+
 ### v0.56.3
 ###### Features
 - Update `aws-sam-translator` to `1.42.0` (pull #[2183](https://github.com/aws-cloudformation/cfn-lint/pull/2183))
