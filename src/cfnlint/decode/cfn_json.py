@@ -302,7 +302,7 @@ def find_indexes(s, ch='\n'):
     return [i for i, ltr in enumerate(s) if ltr == ch]
 
 
-def count_occurrences(arr, key): 
+def count_occurrences(arr, key):
     """Binary search indexes to replace str.count """
     n = len(arr)
     left = 0
@@ -325,7 +325,7 @@ def largest_less_than(indexes, line_num, pos):
     return indexes[line_num-1] if indexes and count_occurrences(indexes, pos) else -1
 
 
-def get_beg_end_mark(s, start, end, indexes):
+def get_beg_end_mark(start, end, indexes):
     """Get the Start and End Mark """
     beg_lineno = count_occurrences(indexes, start)
     beg_colno = start - largest_less_than(indexes, beg_lineno, start)
@@ -381,8 +381,8 @@ class CfnJSONDecoder(json.JSONDecoder):
     def JSONArray(self, s_and_end, scan_once, **kwargs):
         """ Convert JSON array to be a list_node object """
         values, end = json.decoder.JSONArray(s_and_end, scan_once, **kwargs)
-        s, start = s_and_end
-        beg_mark, end_mark = get_beg_end_mark(s, start, end, self.newline_indexes)
+        start = s_and_end
+        beg_mark, end_mark = get_beg_end_mark(start, end, self.newline_indexes)
         return list_node(values, beg_mark, end_mark), end
 
     def cfn_json_object(self, s_and_end, strict, scan_once, object_hook, object_pairs_hook,
@@ -408,7 +408,7 @@ class CfnJSONDecoder(json.JSONDecoder):
             if nextchar == '}':
                 if object_pairs_hook is not None:
                     try:
-                        beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1, self.newline_indexes)
+                        beg_mark, end_mark = get_beg_end_mark(orginal_end, end + 1, self.newline_indexes)
                         result = object_pairs_hook(pairs, beg_mark, end_mark)
                         return result, end + 1
                     except DuplicateError as err:
@@ -417,7 +417,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                         raise JSONDecodeError('Null Error {}'.format(err), s, end)
                 pairs = {}
                 if object_hook is not None:
-                    beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end + 1, self.newline_indexes)
+                    beg_mark, end_mark = get_beg_end_mark(orginal_end, end + 1, self.newline_indexes)
                     pairs = object_hook(pairs, beg_mark, end_mark)
                 return pairs, end + 1
 
@@ -446,7 +446,7 @@ class CfnJSONDecoder(json.JSONDecoder):
             except IndexError:
                 pass
 
-            beg_mark, end_mark = get_beg_end_mark(s, begin, begin + len(key), self.newline_indexes)
+            beg_mark, end_mark = get_beg_end_mark(begin, begin + len(key), self.newline_indexes)
             try:
                 value, end = scan_once(s, end)
             except StopIteration as err:
@@ -474,16 +474,16 @@ class CfnJSONDecoder(json.JSONDecoder):
                     'Expecting property name enclosed in double quotes', s, end - 1)
         if object_pairs_hook is not None:
             try:
-                beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end, self.newline_indexes)
+                beg_mark, end_mark = get_beg_end_mark(orginal_end, end, self.newline_indexes)
                 result = object_pairs_hook(pairs, beg_mark, end_mark)
             except DuplicateError as err:
-                raise JSONDecodeError('Duplicate found {}'.format(err), s, begin, key)
+                raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
             except NullError as err:
-                raise JSONDecodeError('Null Error {}'.format(err), s, begin, key)
+                raise JSONDecodeError('Null Error {}'.format(err), s, end)
             return result, end
 
         pairs = dict(pairs)
         if object_hook is not None:
-            beg_mark, end_mark = get_beg_end_mark(s, orginal_end, end, self.newline_indexes)
+            beg_mark, end_mark = get_beg_end_mark(orginal_end, end, self.newline_indexes)
             pairs = object_hook(pairs, beg_mark, end_mark)
         return pairs, end
