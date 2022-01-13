@@ -15,6 +15,12 @@ import re
 import inspect
 import gzip
 from io import BytesIO
+try:
+    import importlib.resources as pkg_resources
+except ImportError:
+    # Try backported to PY<37 `importlib_resources`.
+    import importlib_resources as pkg_resources
+import importlib
 import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
@@ -22,15 +28,8 @@ try:
     from urllib.request import urlopen, Request
 except ImportError:
     from urllib2 import urlopen
-try:
-    import importlib.resources as pkg_resources
-except ImportError:
-    # Try backported to PY<37 `importlib_resources`.
-    import importlib_resources as pkg_resources
-if sys.version_info < (3,):
-    import imp
-else:
-    import importlib  # pylint: disable=ungrouped-imports
+
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -450,43 +449,25 @@ def create_rules(mod):
     return result
 
 
-if sys.version_info < (3,):
-    def import_filename(pluginname, root):
-        """ import_filename imports a module from a file"""
-        fh = None
-        try:
-            fh, filename, desc = imp.find_module(pluginname, [root])
-            mod = imp.load_module(pluginname, fh, filename, desc)
-            return mod
-        finally:
-            if fh:
-                fh.close()
 
-        return None
+loader_details = (
+    importlib.machinery.SourceFileLoader,  # pylint: disable=no-member
+    importlib.machinery.SOURCE_SUFFIXES  # pylint: disable=no-member
+)
 
-else:
-    loader_details = (
-        importlib.machinery.SourceFileLoader,  # pylint: disable=no-member
-        importlib.machinery.SOURCE_SUFFIXES  # pylint: disable=no-member
-    )
+def import_filename(pluginname, root):
+    """ import_filename imports a module from a file"""
+    mod_finder = importlib.machinery.FileFinder(  # pylint: disable=no-member
+        root, loader_details)
 
-    def import_filename(pluginname, root):
-        """ import_filename imports a module from a file"""
-        mod_finder = importlib.machinery.FileFinder(  # pylint: disable=no-member
-            root, loader_details)
+    mod_spec = mod_finder.find_spec(pluginname)
+    if mod_spec is not None:
+        # for python 2.7 disabling pylint checks
+        mod = importlib.util.module_from_spec(mod_spec)  # pylint: disable=no-member
+        mod_spec.loader.exec_module(mod)
+        return mod
 
-        mod_spec = mod_finder.find_spec(pluginname)
-        if mod_spec is not None:
-            if sys.version_info < (3, 5):
-                # for python 2.7 disabling pylint checks
-                mod = mod_spec.loader.load_module()  # pylint: disable=no-member
-                return mod
-            # for python 2.7 disabling pylint checks
-            mod = importlib.util.module_from_spec(mod_spec)  # pylint: disable=no-member
-            mod_spec.loader.exec_module(mod)
-            return mod
-
-        return None
+    return None
 
 
 def load_plugins(directory):

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -74,10 +73,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                             message = 'Property %s should be of type %s' % (
                                 '/'.join(map(str, path)), item_type)
                             matches.append(RuleMatch(path, message, **extra_args))
-                        if sys.version_info < (3,):
-                            long(value)  # pylint: disable=undefined-variable
-                        else:
-                            int(value)
+                        int(value)
                     else:  # has to be a Double
                         float(value)
             except Exception:  # pylint: disable=W0703
@@ -112,10 +108,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
                 matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Long']:
-            if sys.version_info < (3,):
-                integer_types = (int, long,)  # pylint: disable=undefined-variable
-            else:
-                integer_types = (int,)
+            integer_types = (int,)
             if not isinstance(value, integer_types):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([
                     x.__name__ for x in integer_types])}

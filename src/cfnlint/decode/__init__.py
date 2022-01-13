@@ -116,13 +116,8 @@ def create_match_file_error(filename, msg):
 
 def create_match_json_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
-    if sys.version_info[0] == 3:
-        lineno = parser_error.lineno
-        colno = parser_error.colno
-        msg = parser_error.msg
-    elif sys.version_info[0] == 2:
-        lineno = 1
-        colno = 1
-        msg = parser_error.message
+    lineno = parser_error.lineno
+    colno = parser_error.colno
+    msg = parser_error.msg
     return Match(
         lineno, colno, lineno, colno + 1, filename, ParseError(), message=msg)
