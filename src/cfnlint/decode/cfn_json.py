@@ -375,13 +375,14 @@ class CfnJSONDecoder(json.JSONDecoder):
     def decode(self, s):
         """Overridden to retrieve indexes """
         self.newline_indexes = find_indexes(s)
-        obj = super().decode(s)
+        obj = json.JSONDecoder.decode(self, s)
         return obj
 
     def JSONArray(self, s_and_end, scan_once, **kwargs):
         """ Convert JSON array to be a list_node object """
         values, end = json.decoder.JSONArray(s_and_end, scan_once, **kwargs)
-        start = s_and_end
+        s, start = s_and_end
+        print(s)
         beg_mark, end_mark = get_beg_end_mark(start, end, self.newline_indexes)
         return list_node(values, beg_mark, end_mark), end
 
@@ -412,9 +413,34 @@ class CfnJSONDecoder(json.JSONDecoder):
                         result = object_pairs_hook(pairs, beg_mark, end_mark)
                         return result, end + 1
                     except DuplicateError as err:
-                        raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+                        raise JSONDecodeError(
+                            doc=s,
+                            pos=end,
+                            errors=[
+                                build_match_from_node(
+                                    message='Duplicate found {}'.format(err),
+                                    node=err.mapping,
+                                    key=err.key,
+                                ),
+                                build_match(
+                                    message='Duplicate found {}'.format(err),
+                                    doc=s,
+                                    pos=end,
+                                ),
+                            ]
+                        )
                     except NullError as err:
-                        raise JSONDecodeError('Null Error {}'.format(err), s, end)
+                        raise JSONDecodeError(
+                            doc=s,
+                            pos=end,
+                            errors=[
+                                build_match(
+                                    message='Null Error {}'.format(err),
+                                    doc=s,
+                                    pos=end,
+                                ),
+                            ]
+                        )
                 pairs = {}
                 if object_hook is not None:
                     beg_mark, end_mark = get_beg_end_mark(orginal_end, end + 1, self.newline_indexes)
@@ -422,7 +448,17 @@ class CfnJSONDecoder(json.JSONDecoder):
                 return pairs, end + 1
 
             if nextchar != '"':
-                raise JSONDecodeError('Expecting property name enclosed in double quotes', s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match(
+                            message='Expecting property name enclosed in double quotes',
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
         end += 1
         while True:
             begin = end - 1
@@ -435,7 +471,17 @@ class CfnJSONDecoder(json.JSONDecoder):
             if s[end:end + 1] != ':':
                 end = _w(s, end).end()
                 if s[end:end + 1] != ':':
-                    raise JSONDecodeError('Expecting \':\' delimiter', s, end)
+                    raise JSONDecodeError(
+                        doc=s,
+                        pos=end,
+                        errors=[
+                            build_match(
+                                message='Expecting \':\' delimiter',
+                                doc=s,
+                                pos=end,
+                            ),
+                        ]
+                    )
             end += 1
 
             try:
@@ -450,7 +496,17 @@ class CfnJSONDecoder(json.JSONDecoder):
             try:
                 value, end = scan_once(s, end)
             except StopIteration as err:
-                raise JSONDecodeError('Expecting value', s, str(err))
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=str(err),
+                    errors=[
+                        build_match(
+                            message='Expecting value',
+                            doc=s,
+                            pos=str(err),
+                        ),
+                    ]
+                )
             key_str = str_node(key, beg_mark, end_mark)
             pairs_append((key_str, value))
             try:
@@ -465,21 +521,65 @@ class CfnJSONDecoder(json.JSONDecoder):
             if nextchar == '}':
                 break
             if nextchar != ',':
-                raise JSONDecodeError('Expecting \',\' delimiter', s, end - 1)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end - 1,
+                    errors=[
+                        build_match(
+                            message='Expecting \',\' delimiter',
+                            doc=s,
+                            pos=end - 1,
+                        ),
+                    ]
+                )
             end = _w(s, end).end()
             nextchar = s[end:end + 1]
             end += 1
             if nextchar != '"':
                 raise JSONDecodeError(
-                    'Expecting property name enclosed in double quotes', s, end - 1)
+                    doc=s,
+                    pos=end - 1,
+                    errors=[
+                        build_match(
+                            message='Expecting property name enclosed in double quotes',
+                            doc=s,
+                            pos=end - 1,
+                        ),
+                    ]
+                )
         if object_pairs_hook is not None:
             try:
                 beg_mark, end_mark = get_beg_end_mark(orginal_end, end, self.newline_indexes)
                 result = object_pairs_hook(pairs, beg_mark, end_mark)
             except DuplicateError as err:
-                raise JSONDecodeError('Duplicate found {}'.format(err), s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match_from_node(
+                            message='Duplicate found {}'.format(err),
+                            node=err.mapping,
+                            key=err.key,
+                        ),
+                        build_match(
+                            message='Duplicate found {}'.format(err),
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
             except NullError as err:
-                raise JSONDecodeError('Null Error {}'.format(err), s, end)
+                raise JSONDecodeError(
+                    doc=s,
+                    pos=end,
+                    errors=[
+                        build_match(
+                            message='Null Error {}'.format(err),
+                            doc=s,
+                            pos=end,
+                        ),
+                    ]
+                )
             return result, end
 
         pairs = dict(pairs)
