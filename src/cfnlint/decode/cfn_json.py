@@ -372,8 +372,9 @@ class CfnJSONDecoder(json.JSONDecoder):
         self.scan_once = py_make_scanner(self)
         self.newline_indexes = []
 
-    def decode(self, s):
+    def decode(self, s, _w=WHITESPACE.match):
         """Overridden to retrieve indexes """
+        print(_w)
         self.newline_indexes = find_indexes(s)
         obj = json.JSONDecoder.decode(self, s)
         return obj
