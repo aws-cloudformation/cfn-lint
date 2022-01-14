@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -31,11 +30,7 @@ class NumberSize(CloudFormationLintRule):
         number_min = kwargs.get('number_min')
         number_max = kwargs.get('number_max')
 
-        # The Python types considered a "number"
-        if sys.version_info < (3,):
-            number_types = (float, int, long,)  # pylint: disable=undefined-variable
-        else:
-            number_types = (float, int,)
+        number_types = (float, int,)
 
         if isinstance(value, six.string_types):
             try:

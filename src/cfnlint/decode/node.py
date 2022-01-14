@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import sys
 import logging
 from copy import deepcopy
 import six
@@ -32,12 +31,6 @@ def create_str_node_class(cls):
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
-            if sys.version_info >= (3, 0):
-                return cls.__new__(self, x)
-
-            if isinstance(x, six.string_types):
-                return cls.__new__(self, x.encode('ascii', 'ignore'))
-
             return cls.__new__(self, x)
 
         def __getattr__(self, name):

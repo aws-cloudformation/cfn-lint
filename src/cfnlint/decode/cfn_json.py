@@ -199,11 +199,7 @@ def py_scanstring(s, end, strict=True,
                 if 0xdc00 <= uni2 <= 0xdfff:
                     uni = 0x10000 + (((uni - 0xd800) << 10) | (uni2 - 0xdc00))
                     end += 6
-            # pylint: disable=undefined-variable
-            if sys.version_info >= (3, 0):
-                char = chr(uni)
-            else:
-                char = unichr(uni)
+            char = chr(uni)
         _append(char)
     return ''.join(chunks), end
 
