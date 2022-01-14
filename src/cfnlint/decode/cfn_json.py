@@ -370,16 +370,14 @@ class CfnJSONDecoder(json.JSONDecoder):
 
     def decode(self, s, _w=WHITESPACE.match):
         """Overridden to retrieve indexes """
-        print(_w)
         self.newline_indexes = find_indexes(s)
-        obj = json.JSONDecoder.decode(self, s)
+        obj = super().decode(s, _w)
         return obj
 
     def JSONArray(self, s_and_end, scan_once, **kwargs):
         """ Convert JSON array to be a list_node object """
         values, end = json.decoder.JSONArray(s_and_end, scan_once, **kwargs)
-        s, start = s_and_end
-        print(s)
+        start = s_and_end[1]
         beg_mark, end_mark = get_beg_end_mark(start, end, self.newline_indexes)
         return list_node(values, beg_mark, end_mark), end
 
