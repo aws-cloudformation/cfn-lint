@@ -7,7 +7,7 @@ from test.testlib.testcase import BaseTestCase
 from six import StringIO
 import cfnlint.core  # pylint: disable=E0401
 import cfnlint.config  # pylint: disable=E0401
-from mock import patch
+from unittest.mock import patch
 
 
 LOGGER = logging.getLogger('cfnlint')
