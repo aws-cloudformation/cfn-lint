@@ -2122,7 +2122,7 @@
         "Ttl": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appsync-resolver-cachingconfig.html#cfn-appsync-resolver-cachingconfig-ttl",
           "PrimitiveType": "Double",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable"
         }
       }
@@ -2554,6 +2554,18 @@
           "Type": "List",
           "UpdateType": "Mutable"
         },
+        "HAClusterPrometheusExporter": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-configurationdetails.html#cfn-applicationinsights-application-configurationdetails-haclusterprometheusexporter",
+          "Required": false,
+          "Type": "HAClusterPrometheusExporter",
+          "UpdateType": "Mutable"
+        },
+        "HANAPrometheusExporter": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-configurationdetails.html#cfn-applicationinsights-application-configurationdetails-hanaprometheusexporter",
+          "Required": false,
+          "Type": "HANAPrometheusExporter",
+          "UpdateType": "Mutable"
+        },
         "JMXPrometheusExporter": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-configurationdetails.html#cfn-applicationinsights-application-configurationdetails-jmxprometheusexporter",
           "Required": false,
@@ -2597,6 +2609,52 @@
           "Value": {
             "ValueType": "AWS::ApplicationInsights::Application.CustomComponent.ResourceList"
           }
+        }
+      }
+    },
+    "AWS::ApplicationInsights::Application.HAClusterPrometheusExporter": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-haclusterprometheusexporter.html",
+      "Properties": {
+        "PrometheusPort": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-haclusterprometheusexporter.html#cfn-applicationinsights-application-haclusterprometheusexporter-prometheusport",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::ApplicationInsights::Application.HANAPrometheusExporter": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html",
+      "Properties": {
+        "AgreeToInstallHANADBClient": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html#cfn-applicationinsights-application-hanaprometheusexporter-agreetoinstallhanadbclient",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HANAPort": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html#cfn-applicationinsights-application-hanaprometheusexporter-hanaport",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HANASID": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html#cfn-applicationinsights-application-hanaprometheusexporter-hanasid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HANASecretName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html#cfn-applicationinsights-application-hanaprometheusexporter-hanasecretname",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PrometheusPort": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-hanaprometheusexporter.html#cfn-applicationinsights-application-hanaprometheusexporter-prometheusport",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -12176,6 +12234,15 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "BucketOwner": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-outputlocation.html#cfn-databrew-job-outputlocation-bucketowner",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.OutputLocation.BucketOwner"
+          }
+        },
         "Key": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-outputlocation.html#cfn-databrew-job-outputlocation-key",
           "PrimitiveType": "String",
@@ -12243,6 +12310,15 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
+        },
+        "BucketOwner": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-s3location.html#cfn-databrew-job-s3location-bucketowner",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::DataBrew::Job.S3Location.BucketOwner"
+          }
         },
         "Key": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-databrew-job-s3location.html#cfn-databrew-job-s3location-key",
@@ -41986,7 +42062,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "52.0.0",
+  "ResourceSpecificationVersion": "53.0.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -44400,6 +44476,12 @@
           "Required": true,
           "UpdateType": "Mutable"
         },
+        "MaxBatchSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-maxbatchsize",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-functionconfiguration.html#cfn-appsync-functionconfiguration-name",
           "PrimitiveType": "String",
@@ -44580,6 +44662,12 @@
           "Value": {
             "ValueType": "AWS::AppSync::Resolver.Kind"
           }
+        },
+        "MaxBatchSize": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-maxbatchsize",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable"
         },
         "PipelineConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-resolver.html#cfn-appsync-resolver-pipelineconfig",
@@ -50519,6 +50607,11 @@
       }
     },
     "AWS::EC2::Host": {
+      "Attributes": {
+        "HostId": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-host.html",
       "Properties": {
         "AutoPlacement": {
@@ -52527,10 +52620,15 @@
       }
     },
     "AWS::EC2::VPNGatewayRoutePropagation": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gatewayrouteprop.html",
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpngatewayroutepropagation.html",
       "Properties": {
         "RouteTableIds": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gatewayrouteprop.html#cfn-ec2-vpngatewayrouteprop-routetableids",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpngatewayroutepropagation.html#cfn-ec2-vpngatewayroutepropagation-routetableids",
           "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": true,
@@ -52538,7 +52636,7 @@
           "UpdateType": "Mutable"
         },
         "VpnGatewayId": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gatewayrouteprop.html#cfn-ec2-vpngatewayrouteprop-vpngatewayid",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpngatewayroutepropagation.html#cfn-ec2-vpngatewayroutepropagation-vpngatewayid",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
@@ -66543,6 +66641,9 @@
         "Arn": {
           "PrimitiveType": "String"
         },
+        "HostedZoneId": {
+          "PrimitiveType": "String"
+        },
         "Id": {
           "PrimitiveType": "String"
         }
@@ -66585,6 +66686,9 @@
     "AWS::ServiceDiscovery::PublicDnsNamespace": {
       "Attributes": {
         "Arn": {
+          "PrimitiveType": "String"
+        },
+        "HostedZoneId": {
           "PrimitiveType": "String"
         },
         "Id": {
@@ -69259,6 +69363,9 @@
         "AWS::CloudTrail::Trail",
         "AWS::CloudWatch::Alarm",
         "AWS::CodeBuild::Project",
+        "AWS::CodeDeploy::Application",
+        "AWS::CodeDeploy::DeploymentConfig",
+        "AWS::CodeDeploy::DeploymentGroup",
         "AWS::CodePipeline::Pipeline",
         "AWS::Config::ConformancePackCompliance",
         "AWS::Config::ResourceCompliance",
@@ -69277,6 +69384,7 @@
         "AWS::EC2::RouteTable",
         "AWS::EC2::SecurityGroup",
         "AWS::EC2::Subnet",
+        "AWS::EC2::TransitGateway",
         "AWS::EC2::VPC",
         "AWS::EC2::VPCEndpoint",
         "AWS::EC2::VPCEndpointService",
@@ -69302,6 +69410,8 @@
         "AWS::IAM::Role",
         "AWS::IAM::User",
         "AWS::KMS::Key",
+        "AWS::Kinesis::Stream",
+        "AWS::Kinesis::StreamConsumer",
         "AWS::Lambda::Function",
         "AWS::NetworkFirewall::Firewall",
         "AWS::NetworkFirewall::FirewallPolicy",
@@ -69515,9 +69625,17 @@
         "TABLEAUHYPER"
       ]
     },
+    "AWS::DataBrew::Job.OutputLocation.BucketOwner": {
+      "StringMax": 12,
+      "StringMin": 12
+    },
     "AWS::DataBrew::Job.ProjectName": {
       "StringMax": 255,
       "StringMin": 1
+    },
+    "AWS::DataBrew::Job.S3Location.BucketOwner": {
+      "StringMax": 12,
+      "StringMin": 12
     },
     "AWS::DataBrew::Job.StatisticOverride.Statistic": {
       "AllowedPatternRegex": "^[A-Z\\_]+$",
@@ -73993,6 +74111,12 @@
         "Linux with SQL Server Standard",
         "Linux with SQL Server Web",
         "Linux/UNIX",
+        "RHEL with HA",
+        "RHEL with HA and SQL Server Enterprise",
+        "RHEL with HA and SQL Server Standard",
+        "RHEL with SQL Server Enterprise",
+        "RHEL with SQL Server Standard",
+        "RHEL with SQL Server Web",
         "Red Hat Enterprise Linux",
         "SUSE Linux",
         "Windows",
