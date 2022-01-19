@@ -1,3 +1,10 @@
+### v0.57.0
+###### Features
+- EOL of Python 2.7, 3.4, and 3.5 support (pull #[2195](https://github.com/aws-cloudformation/cfn-lint/pull/2195))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `53.0.0` (pull #[2196](https://github.com/aws-cloudformation/cfn-lint/pull/2196))
+- Fix an issue with rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2001) to allow string parameter constraints for all AWS specific types (pull #[2193](https://github.com/aws-cloudformation/cfn-lint/pull/2193))
+
 ### v0.56.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `52.0.0` (pull #[2188](https://github.com/aws-cloudformation/cfn-lint/pull/2188))
