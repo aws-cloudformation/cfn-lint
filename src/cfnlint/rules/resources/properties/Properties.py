@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -90,7 +89,7 @@ class Properties(CloudFormationLintRule):
                                     resource_name = None
                                     if isinstance(d_v, list):
                                         resource_name = d_v[0]
-                                    elif isinstance(d_v, six.string_types):
+                                    elif isinstance(d_v, str):
                                         resource_name = d_v.split('.')[0]
                                     if resource_name:
                                         resource_type = self.cfn.template.get(
@@ -150,7 +149,7 @@ class Properties(CloudFormationLintRule):
                             resource_name = None
                             if isinstance(sub_value, list):
                                 resource_name = sub_value[0]
-                            elif isinstance(sub_value, six.string_types):
+                            elif isinstance(sub_value, str):
                                 resource_name = sub_value.split('.')[0]
                             if resource_name:
                                 resource_type = self.cfn.template.get(
@@ -187,7 +186,7 @@ class Properties(CloudFormationLintRule):
 
         exceptions = templated_exceptions.get(parenttype, [])
         if proptype in exceptions:
-            if isinstance(text, six.string_types):
+            if isinstance(text, str):
                 return True
 
         return False

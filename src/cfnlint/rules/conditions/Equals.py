@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -75,7 +74,7 @@ class Equals(CloudFormationLintRule):
                         if isinstance(element, dict):
                             matches.extend(self._check_equal_values(
                                 element, tree[:-1] + [index], valid_refs))
-                        elif not isinstance(element, (six.string_types, bool, six.integer_types, float)):
+                        elif not isinstance(element, (str, bool, int, float)):
                             message = self.function + \
                                 ' element must be a String, Boolean, Number, or supported function ({0})'
                             matches.append(RuleMatch(

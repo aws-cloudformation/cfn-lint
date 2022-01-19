@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -53,7 +52,7 @@ class ImportValue(CloudFormationLintRule):
                     message = 'ImportValue should have one mapping for {0}'
                     matches.append(RuleMatch(
                         tree, message.format('/'.join(map(str, tree[:-1])))))
-            elif not isinstance(iv_value, six.string_types):
+            elif not isinstance(iv_value, str):
                 message = 'ImportValue should have supported function or string for {0}'
                 matches.append(RuleMatch(
                     tree, message.format('/'.join(map(str, tree)))))

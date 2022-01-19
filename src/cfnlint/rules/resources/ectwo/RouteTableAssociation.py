@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from collections import defaultdict
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -44,7 +43,7 @@ class RouteTableAssociation(CloudFormationLintRule):
                         values.extend(self.get_values(
                             value, resource_condition, property_condition))
                     if key == 'Fn::GetAtt':
-                        if isinstance(value[1], (six.string_types)):
+                        if isinstance(value[1], (str)):
                             sub_value = '.'.join(value)
                             values.append((resource_condition, property_condition, sub_value))
         else:

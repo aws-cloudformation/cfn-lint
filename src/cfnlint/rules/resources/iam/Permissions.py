@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
-import six
 from cfnlint.helpers import convert_dict, load_resource
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -64,7 +63,7 @@ class Permissions(CloudFormationLintRule):
         """Check policy document"""
         matches = []
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             try:
                 value = convert_dict(json.loads(value), start_mark, end_mark)
             except Exception as ex:  # pylint: disable=W0703,W0612
@@ -151,13 +150,13 @@ class Permissions(CloudFormationLintRule):
         actions = []
 
         if 'Action' in effective_permissions:
-            if isinstance(effective_permissions.get('Action'), six.string_types):
+            if isinstance(effective_permissions.get('Action'), str):
                 actions.append(effective_permissions.get('Action'))
             elif isinstance(effective_permissions.get('Action'), list):
                 actions.extend(effective_permissions.get('Action'))
 
         if 'NotAction' in effective_permissions:
-            if isinstance(effective_permissions.get('NotAction'), six.string_types):
+            if isinstance(effective_permissions.get('NotAction'), str):
                 actions.append(effective_permissions.get('NotAction'))
             elif isinstance(effective_permissions.get('Action'), list):
                 actions.extend(effective_permissions.get('NotAction'))

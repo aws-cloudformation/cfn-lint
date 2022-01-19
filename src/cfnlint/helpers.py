@@ -21,7 +21,6 @@ except ImportError:
     # Try backported to PY<37 `importlib_resources`.
     import importlib_resources as pkg_resources
 import importlib
-import six
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 try:
@@ -407,10 +406,10 @@ def is_custom_resource(resource_type):
 def bool_compare(first, second):
     """ Compare strings to boolean values """
 
-    if isinstance(first, six.string_types):
+    if isinstance(first, str):
         first = bool(first.lower() in ['true', 'True'])
 
-    if isinstance(second, six.string_types):
+    if isinstance(second, str):
         second = bool(second.lower() in ['true', 'True'])
 
     return first is second

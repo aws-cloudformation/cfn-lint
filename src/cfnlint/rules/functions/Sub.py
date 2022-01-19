@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import PSEUDOPARAMS, VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -23,7 +22,7 @@ class Sub(CloudFormationLintRule):
         string_params = cfn.get_sub_parameters(sub_string)
 
         for string_param in string_params:
-            if isinstance(string_param, (six.string_types)):
+            if isinstance(string_param, (str)):
                 matches.extend(self._test_parameter(string_param, cfn, parameters, tree))
 
         return matches
@@ -73,13 +72,13 @@ class Sub(CloudFormationLintRule):
                                 # Only test this if all the items are a string
                                 if_all_strings = True
                                 for v in value:
-                                    if not isinstance(v, six.string_types):
+                                    if not isinstance(v, str):
                                         # skip things got too complex
                                         if_all_strings = False
                                 if if_all_strings:
                                     matches.extend(self._test_parameter(
                                         '.'.join(value), cfn, {}, tree))
-                            elif isinstance(value, six.string_types):
+                            elif isinstance(value, str):
                                 matches.extend(self._test_parameter(value, cfn, {}, tree))
                 else:
                     message = 'Sub parameter should be an object of 1 for {0}'
@@ -143,13 +142,13 @@ class Sub(CloudFormationLintRule):
         for sub_obj in sub_objs:
             sub_value_obj = sub_obj[-1]
             tree = sub_obj[:-1]
-            if isinstance(sub_value_obj, six.string_types):
+            if isinstance(sub_value_obj, str):
                 matches.extend(self._test_string(cfn, sub_value_obj, {}, tree))
             elif isinstance(sub_value_obj, list):
                 if len(sub_value_obj) == 2:
                     sub_string = sub_value_obj[0]
                     parameters = sub_value_obj[1]
-                    if not isinstance(sub_string, six.string_types):
+                    if not isinstance(sub_string, str):
                         message = 'Subs first element should be of type string for {0}'
                         matches.append(RuleMatch(
                             tree + [0], message.format('/'.join(map(str, tree)))))

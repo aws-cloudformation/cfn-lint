@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import LIMITS
@@ -29,7 +28,7 @@ class LimitValue(CloudFormationLintRule):
             # Check Default value
             default_value = paramvalue.get('Default')
 
-            if isinstance(default_value, (six.text_type, six.string_types)):
+            if isinstance(default_value, (str)):
                 if len(default_value) > value_limit:
                     path = ['Parameters', paramname, 'Default']
                     message = 'The length of parameter default value ({0}) exceeds the limit ({1})'
@@ -38,14 +37,14 @@ class LimitValue(CloudFormationLintRule):
             # Check MaxLength parameters
             max_length = paramvalue.get('MaxLength', 0)
 
-            if isinstance(max_length, (six.text_type, six.string_types)):
+            if isinstance(max_length, (str)):
                 try:
                     max_length = int(max_length)
                 except ValueError:
                     # Configuration errors are not the responsibility of this rule
                     max_length = 0
 
-            if isinstance(max_length, six.integer_types):
+            if isinstance(max_length, int):
                 if max_length > value_limit:
                     path = ['Parameters', paramname, 'MaxLength']
                     message = 'The MaxLength of parameter ({0}) exceeds the limit ({1})'
@@ -55,7 +54,7 @@ class LimitValue(CloudFormationLintRule):
             allowed_values = paramvalue.get('AllowedValues', [])
 
             for allowed_value in allowed_values:
-                if isinstance(allowed_value, (six.text_type, six.string_types)):
+                if isinstance(allowed_value, (str)):
                     if len(allowed_value) > value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) exceeds the limit ({1})'

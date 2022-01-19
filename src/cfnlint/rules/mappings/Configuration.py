@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -18,7 +17,7 @@ class Configuration(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        valid_map_types = (six.string_types, list, six.integer_types, float)
+        valid_map_types = (str, list, int, float)
 
         mappings = cfn.template.get('Mappings', {})
         if mappings:

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -91,7 +90,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         if isinstance(value, (dict, list)) and item_type == 'Json':
             return matches
         if item_type in ['String']:
-            if not isinstance(value, (six.string_types)):
+            if not isinstance(value, (str)):
                 extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
                 matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif item_type in ['Boolean']:

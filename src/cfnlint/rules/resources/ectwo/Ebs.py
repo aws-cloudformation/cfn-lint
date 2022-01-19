@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -25,7 +24,7 @@ class Ebs(CloudFormationLintRule):
             if volume_types_obj is not None:
                 for volume_type_obj in volume_types_obj:
                     volume_type = volume_type_obj.get('Value')
-                    if isinstance(volume_type, six.string_types):
+                    if isinstance(volume_type, str):
                         if volume_type in ('io1', 'io2'):
                             if iops_obj is None:
                                 pathmessage = path[:] + ['VolumeType']

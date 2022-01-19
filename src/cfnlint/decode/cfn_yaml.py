@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import fileinput
 import logging
 import sys
-import six
 from yaml.composer import Composer
 from yaml.reader import Reader
 from yaml.scanner import Scanner
@@ -129,7 +128,7 @@ class NodeConstructor(SafeConstructor):
 
     def construct_yaml_str(self, node):
         obj = SafeConstructor.construct_yaml_str(self, node)
-        assert isinstance(obj, (six.string_types))
+        assert isinstance(obj, (str))
         return str_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_seq(self, node):
@@ -221,7 +220,7 @@ def construct_getatt(node):
     Reconstruct !GetAtt into a list
     """
 
-    if isinstance(node.value, (six.string_types)):
+    if isinstance(node.value, (str)):
         return list_node(node.value.split('.', 1), node.start_mark, node.end_mark)
     if isinstance(node.value, list):
         return list_node([s.value for s in node.value], node.start_mark, node.end_mark)

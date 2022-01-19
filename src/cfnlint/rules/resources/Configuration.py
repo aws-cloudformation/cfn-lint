@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import REGISTRY_SCHEMAS
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -55,7 +54,7 @@ class Configuration(CloudFormationLintRule):
 
         # validate condition is a string
         condition = resource_values.get('Condition', '')
-        if not isinstance(condition, six.string_types):
+        if not isinstance(condition, str):
             message = 'Condition for resource {0} should be a string'
             matches.append(RuleMatch(
                 ['Resources', resource_name, 'Condition'],
@@ -63,7 +62,7 @@ class Configuration(CloudFormationLintRule):
             ))
 
         resource_type = resource_values.get('Type', '')
-        if not isinstance(resource_type, six.string_types):
+        if not isinstance(resource_type, str):
             message = 'Type has to be a string at {0}'
             matches.append(RuleMatch(
                 ['Resources', resource_name],
@@ -90,7 +89,7 @@ class Configuration(CloudFormationLintRule):
                 ['Resources', resource_name],
                 message.format(resource_name)
             ))
-        elif not isinstance(resource_type, six.string_types):
+        elif not isinstance(resource_type, str):
             message = 'Type has to be a string at {0}'
             matches.append(RuleMatch(
                 ['Resources', resource_name],

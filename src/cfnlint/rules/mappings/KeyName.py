@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import REGEX_ALPHANUMERIC
@@ -20,7 +19,7 @@ class KeyName(CloudFormationLintRule):
     def check_attribute(self, key, path):
         """ Check the key name for string and alphanumeric"""
         matches = []
-        if not isinstance(key, six.string_types):
+        if not isinstance(key, str):
             message = 'Mapping attribute ({0}) has to be a string.'
             matches.append(RuleMatch(path[:], message.format(key)))
         elif not re.match(REGEX_ALPHANUMERIC, key):
@@ -32,7 +31,7 @@ class KeyName(CloudFormationLintRule):
     def check_key(self, key, path):
         """ Check the key name for string and alphanumeric"""
         matches = []
-        if not isinstance(key, six.string_types):
+        if not isinstance(key, str):
             message = 'Mapping key ({0}) has to be a string.'
             matches.append(RuleMatch(path[:], message.format(key)))
         elif not re.match('^[a-zA-Z0-9.-]{1,255}$', key) and key != 'Fn::Transform':

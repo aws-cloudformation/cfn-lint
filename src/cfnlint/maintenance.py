@@ -11,7 +11,6 @@ import subprocess
 import zipfile
 import re
 from io import BytesIO
-import six
 import jsonpatch
 try:
     from urllib.request import urlopen, Request
@@ -397,7 +396,7 @@ def get_schema_value_types():
     with zipfile.ZipFile(BytesIO(res.read())) as z:
         for f in z.namelist():
             with z.open(f) as d:
-                if not isinstance(d, six.string_types):
+                if not isinstance(d, str):
                     data = d.read()
                 else:
                     data = d

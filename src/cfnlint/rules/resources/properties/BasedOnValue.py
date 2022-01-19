@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
@@ -34,7 +33,7 @@ class BasedOnValue(CloudFormationLintRule):
 
     def _check_value(self, value, spec, cfn):
         """ Checks a value to see if it fits in the spec """
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             regex = spec.get('Regex')
             if regex:
                 if re.match(spec.get('Regex'), value):
@@ -45,7 +44,7 @@ class BasedOnValue(CloudFormationLintRule):
                     ref = spec.get('Ref')
                     if ref:
                         if k == 'Ref':
-                            if isinstance(v, six.string_types):
+                            if isinstance(v, str):
                                 return cfn.template.get('Resources').get(v, {}).get('Type') in ref
 
                     getatt = spec.get('GetAtt')

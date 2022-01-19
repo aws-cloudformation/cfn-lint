@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -41,7 +40,7 @@ class Cidr(CloudFormationLintRule):
                             message = 'Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}'
                             matches.append(RuleMatch(
                                 path, message.format('/'.join(map(str, value)))))
-        elif isinstance(value, (six.text_type, six.string_types)):
+        elif isinstance(value, (str)):
             if not re.match(REGEX_CIDR, value):
                 message = 'Cidr ipBlock should be a Cidr Range based string for {0}'
                 matches.append(RuleMatch(
@@ -70,9 +69,9 @@ class Cidr(CloudFormationLintRule):
                                 path, message.format('/'.join(map(str, path)))))
                     if index_key == 'Ref':
                         count_parameters.append(index_value)
-        elif not isinstance(value, six.integer_types):
+        elif not isinstance(value, int):
             message = 'Cidr count should be a int for {0}'
-            extra_args = {'actual_type': type(value).__name__, 'expected_type': six.integer_types[0].__name__}
+            extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
             matches.append(RuleMatch(
                 path, message.format('/'.join(map(str, path))), **extra_args))
 
@@ -95,9 +94,9 @@ class Cidr(CloudFormationLintRule):
                                 path, message.format('/'.join(map(str, path)))))
                     if index_key == 'Ref':
                         size_mask_parameters.append(index_value)
-        elif not isinstance(value, six.integer_types):
+        elif not isinstance(value, int):
             message = 'Cidr sizeMask should be a int for {0}'
-            extra_args = {'actual_type': type(value).__name__, 'expected_type': six.integer_types[0].__name__}
+            extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
             matches.append(RuleMatch(
                 path, message.format('/'.join(map(str, path))), **extra_args))
 

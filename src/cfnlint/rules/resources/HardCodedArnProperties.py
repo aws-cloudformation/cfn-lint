@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -51,7 +50,7 @@ class HardCodedArnProperties(CloudFormationLintRule):
                 values.extend(self._match_values(item, pathprop))
         else:
             # Leaf node
-            if isinstance(cfnelem, six.string_types):  # and re.match(searchRegex, cfnelem):
+            if isinstance(cfnelem, str):  # and re.match(searchRegex, cfnelem):
                 for variable in re.findall(self.regex, cfnelem):
                     if 'Fn::Sub' in path:
                         values.append(path + [variable])
