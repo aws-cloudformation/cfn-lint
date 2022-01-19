@@ -7,10 +7,7 @@ from test.testlib.testcase import BaseTestCase
 import jsonschema
 from unittest.mock import patch
 import cfnlint.config  # pylint: disable=E0401
-try:  # pragma: no cover
-    from pathlib import Path
-except ImportError:  # pragma: no cover
-    from pathlib2 import Path
+from pathlib import Path
 
 
 LOGGER = logging.getLogger('cfnlint')

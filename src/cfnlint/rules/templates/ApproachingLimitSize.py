@@ -3,13 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import os
+from pathlib import Path
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import LIMITS
-try:  # pragma: no cover
-    from pathlib import Path
-except ImportError:  # pragma: no cover
-    from pathlib2 import Path
 
 
 class LimitSize(CloudFormationLintRule):
