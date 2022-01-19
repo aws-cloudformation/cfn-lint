@@ -9,15 +9,13 @@ import glob
 import json
 import os
 import copy
+from pathlib import Path
 import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
 from cfnlint.helpers import REGIONS
-try:  # pragma: no cover
-    from pathlib import Path
-except ImportError:  # pragma: no cover
-    from pathlib2 import Path
+
 
 # pylint: disable=too-many-public-methods
 LOGGER = logging.getLogger('cfnlint')
