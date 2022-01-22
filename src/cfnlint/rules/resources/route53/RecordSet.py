@@ -58,7 +58,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_aaaa_record(self, value, path):
         return self.check_record(value, path, 'AAAA', REGEX_IPV6, 'IPv6 address')
-    
+
     def check_caa_record(self, value, path):
         """Check CAA record Configuration"""
         matches = []
