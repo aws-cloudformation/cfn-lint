@@ -1663,6 +1663,16 @@
         "aws:TagKeys"
       ]
     },
+    "AWS CodeDeploy secure host commands service": {
+      "Actions": [
+        "GetDeploymentSpecification",
+        "PollHostCommand",
+        "PutHostCommandAcknowledgement",
+        "PutHostCommandComplete"
+      ],
+      "HasResource": false,
+      "StringPrefix": "codedeploy-commands-secure"
+    },
     "AWS CodePipeline": {
       "ARNFormat": "arn:aws:codepipeline:<region>:<account_ID>:<path_to_pipeline_resource>",
       "ARNRegex": "arn:aws:codepipeline:.+",
@@ -1998,7 +2008,7 @@
       "StringPrefix": "controltower"
     },
     "AWS Cost Explorer Service": {
-      "ARNFormat": "arn:aws:ce::<account_ID>:ce",
+      "ARNFormat": "arn:${Partition}:ce:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:ce::.+:.+",
       "Actions": [
         "CreateAnomalyMonitor",
@@ -4518,7 +4528,7 @@
       ]
     },
     "AWS IoT Things Graph": {
-      "ARNFormat": "arn:aws:iotthingsgraph:<region>:<account_id>:<type>/<name>",
+      "ARNFormat": "arn:aws:iotthingsgraph:${Region}:${AccountId}:${Type}/${Name}",
       "ARNRegex": "^arn:aws:iotthingsgraph:.+:.+:.+",
       "Actions": [
         "AssociateEntityToThing",
@@ -7567,13 +7577,14 @@
       ]
     },
     "Amazon AppFlow": {
-      "ARNFormat": "arn:aws:appflow:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:appflow:{Region}:{AccountId}:{ResourceType}/{ResourceName}",
       "ARNRegex": "^arn:aws:appflow:.+:.+:.+",
       "Actions": [
         "CreateConnectorProfile",
         "CreateFlow",
         "DeleteConnectorProfile",
         "DeleteFlow",
+        "DescribeConnector",
         "DescribeConnectorEntity",
         "DescribeConnectorFields",
         "DescribeConnectorProfiles",
@@ -7584,12 +7595,15 @@
         "DescribeFlows",
         "ListConnectorEntities",
         "ListConnectorFields",
+        "ListConnectors",
         "ListFlows",
         "ListTagsForResource",
+        "RegisterConnector",
         "RunFlow",
         "StartFlow",
         "StopFlow",
         "TagResource",
+        "UnRegisterConnector",
         "UntagResource",
         "UpdateConnectorProfile",
         "UpdateFlow",
@@ -7640,7 +7654,7 @@
       "ARNRegex": "^arn:${Partition}:appstream:.+",
       "Actions": [
         "AssociateApplicationFleet",
-        "AssociateApplicatonToEntitlement",
+        "AssociateApplicationToEntitlement",
         "AssociateFleet",
         "BatchAssociateUserStack",
         "BatchDisassociateUserStack",
@@ -7684,7 +7698,7 @@
         "DescribeUsers",
         "DisableUser",
         "DisassociateApplicationFleet",
-        "DisassociateApplicatonFromEntitlement",
+        "DisassociateApplicationFromEntitlement",
         "DisassociateFleet",
         "EnableUser",
         "ExpireSession",
@@ -8589,7 +8603,7 @@
       "StringPrefix": "cognito-sync"
     },
     "Amazon Cognito User Pools": {
-      "ARNFormat": "arn:aws:cognito-idp:<region>:<account>:<resourceType>/<resourcePath>:",
+      "ARNFormat": "arn:aws:cognito-idp:${Region}:${Account}:${ResourceType}/${ResourcePath}:",
       "ARNRegex": "^arn:aws:cognito-idp:.+",
       "Actions": [
         "AddCustomAttributes",
@@ -8671,6 +8685,7 @@
         "ListUsersInGroup",
         "ResendConfirmationCode",
         "RespondToAuthChallenge",
+        "RevokeToken",
         "SetRiskConfiguration",
         "SetUICustomization",
         "SetUserMFAPreference",
@@ -10802,13 +10817,12 @@
       ]
     },
     "Amazon FinSpace": {
-      "ARNFormat": "arn:${Partition}:finspace:${Region}:${Account}:${resourceType}/${resourcePath}",
+      "ARNFormat": "arn:${Partition}:finspace:${Region}:${Account}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:${Partition}:finspace:.+",
       "Actions": [
         "CreateEnvironment",
         "CreateUser",
         "DeleteEnvironment",
-        "DeleteUser",
         "GetEnvironment",
         "GetLoadSampleDataSetGroupIntoEnvironmentStatus",
         "GetUser",
@@ -10816,9 +10830,11 @@
         "ListTagsForResource",
         "ListUsers",
         "LoadSampleDataSetGroupIntoEnvironment",
+        "ResetUserPassword",
         "TagResource",
         "UntagResource",
-        "UpdateEnvironment"
+        "UpdateEnvironment",
+        "UpdateUser"
       ],
       "HasResource": true,
       "StringPrefix": "finspace",
@@ -10927,6 +10943,7 @@
         "GetEntityTypes",
         "GetEvent",
         "GetEventPrediction",
+        "GetEventPredictionMetadata",
         "GetEventTypes",
         "GetExternalModels",
         "GetKMSEncryptionKey",
@@ -10936,6 +10953,7 @@
         "GetOutcomes",
         "GetRules",
         "GetVariables",
+        "ListEventPredictions",
         "ListTagsForResource",
         "PutDetector",
         "PutEntityType",
@@ -11634,7 +11652,7 @@
       ]
     },
     "Amazon Kinesis Video Streams": {
-      "ARNFormat": "arn:aws:kinesisvideo:<region>:<account_ID>:<resourceType>/<resourceName>/<creationTime>",
+      "ARNFormat": "arn:aws:kinesisvideo:${Region}:${Account}:${ResourceType}/${ResourceName}/${CreationTime}",
       "ARNRegex": "^arn:aws:kinesisvideo:.+",
       "Actions": [
         "ConnectAsMaster",
@@ -12439,17 +12457,20 @@
         "BatchAssociateScramSecret",
         "BatchDisassociateScramSecret",
         "CreateCluster",
+        "CreateClusterV2",
         "CreateConfiguration",
         "DeleteCluster",
         "DeleteConfiguration",
         "DescribeCluster",
         "DescribeClusterOperation",
+        "DescribeClusterV2",
         "DescribeConfiguration",
         "DescribeConfigurationRevision",
         "GetBootstrapBrokers",
         "GetCompatibleKafkaVersions",
         "ListClusterOperations",
         "ListClusters",
+        "ListClustersV2",
         "ListConfigurationRevisions",
         "ListConfigurations",
         "ListKafkaVersions",
@@ -12736,7 +12757,7 @@
       ]
     },
     "Amazon OpenSearch Service (successor to Amazon Elasticsearch Service)": {
-      "ARNFormat": "arn:aws:es:<region>:<account_ID>:<resource>",
+      "ARNFormat": "arn:aws:es:${Region}:${Account}:${Resource}",
       "ARNRegex": "^arn:aws:es:.+",
       "Actions": [
         "AcceptInboundConnection",
@@ -12762,6 +12783,7 @@
         "DeletePackage",
         "DescribeDomain",
         "DescribeDomainAutoTunes",
+        "DescribeDomainChangeProgress",
         "DescribeDomainConfig",
         "DescribeDomains",
         "DescribeElasticsearchDomain",
@@ -13884,7 +13906,10 @@
         "UpdateRoutingControlStates"
       ],
       "HasResource": true,
-      "StringPrefix": "route53-recovery-cluster"
+      "StringPrefix": "route53-recovery-cluster",
+      "conditionKeys": [
+        "route53-recovery-cluster:AllowSafetyRulesOverrides"
+      ]
     },
     "Amazon Route 53 Recovery Controls": {
       "ARNFormat": "arn:${Partition}:route53-recovery-control::${Account}:${ResourceType}/${ResourceName}",
@@ -14985,8 +15010,8 @@
       ]
     },
     "Amazon SimpleDB": {
-      "ARNFormat": "arn:aws:sdb:<region>:<account_ID>:domain/<domain_name>",
-      "ARNRegex": "^arn:aws:sdb:.+",
+      "ARNFormat": "arn:${Partition}:sdb:${Region}:${Account}:domain/${DomainName}",
+      "ARNRegex": "^arn:${Partition}:sdb:.+",
       "Actions": [
         "BatchDeleteAttributes",
         "BatchPutAttributes",
@@ -15372,6 +15397,7 @@
         "CreateUser",
         "DeleteAccessControlRule",
         "DeleteAlias",
+        "DeleteEmailMonitoringConfiguration",
         "DeleteGroup",
         "DeleteInboundMailFlowRule",
         "DeleteMailDomain",
@@ -15388,6 +15414,7 @@
         "DeregisterFromWorkMail",
         "DeregisterMailDomain",
         "DescribeDirectories",
+        "DescribeEmailMonitoringConfiguration",
         "DescribeGroup",
         "DescribeInboundDmarcSettings",
         "DescribeInboundMailFlowRule",
@@ -15441,6 +15468,7 @@
         "ListTagsForResource",
         "ListUsers",
         "PutAccessControlRule",
+        "PutEmailMonitoringConfiguration",
         "PutInboundDmarcSettings",
         "PutMailboxPermissions",
         "PutMobileDeviceAccessOverride",
