@@ -234,6 +234,9 @@ class RecordSet(CloudFormationLintRule):
                             check_value=self.check_txt_record,
                         )
                     )
+            else:
+                if recordset.get('TTL'):
+                    matches.append(RuleMatch(path + ['TTL'], 'TTL is not allowed for Alias records'))
 
         return matches
 
