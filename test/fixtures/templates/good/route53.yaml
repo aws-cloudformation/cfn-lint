@@ -6,6 +6,12 @@ Parameters:
     Default: "example.com"
   RecordType:
     Type: String
+  AliasTarget:
+    Type: String
+    Default: "a1bcde2f3ghij4.cloudfront.net"
+  CloudFrontStaticZoneId:
+    Type: String
+    Default: "Z2FDTNDATAQYW2" # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-aliastarget-1.html#cfn-route53-aliastarget-hostedzoneid
 Resources:
   MyHostedZone:
     Type: "AWS::Route53::HostedZone"
@@ -134,6 +140,17 @@ Resources:
       TTL: "300"
       ResourceRecords:
         - "hostname.example.com"
+  MyAliasRecordSet:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      Comment: "A valid Alias A Record"
+      HostedZoneId: !Ref "MyHostedZone"
+      Name: "alias.example.com"
+      Type: "A"
+      AliasTarget:
+        DNSName: !Ref "AliasTarget"
+        EvaluateTargetHealth: false
+        HostedZoneId: !Ref "CloudFrontStaticZoneId"
   MyRecordSetGroup:
     Type: "AWS::Route53::RecordSetGroup"
     Properties:
