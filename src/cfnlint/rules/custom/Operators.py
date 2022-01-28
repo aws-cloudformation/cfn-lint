@@ -49,7 +49,7 @@ def CreateCustomRule(rule_id, resourceType, prop, value, error_message, descript
                         cfn=cfn,
                     ))
                 return matches
-            if value:
+            if value is not None:
                 matches.extend(self.rule_func(value, self.property_value, path))
             return matches
 
