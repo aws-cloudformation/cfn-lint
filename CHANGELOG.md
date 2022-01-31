@@ -1,3 +1,13 @@
+### v0.58.0
+###### Features
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3020) to validate that TTL isn't added for Alias records (pull #[2195](https://github.com/aws-cloudformation/cfn-lint/pull/2195))
+- Remove imports to `pathlib2` with deprecation of Python 2.7, 3.4, and 3.5 (pull #[2205](https://github.com/aws-cloudformation/cfn-lint/pull/2205))
+- Improvements to json parsing code (pull #[2199](https://github.com/aws-cloudformation/cfn-lint/pull/2199))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `54.0.0` (pull #[2202](https://github.com/aws-cloudformation/cfn-lint/pull/2202))
+###### Fixes
+- Fix an issue checking values of `false` in custom rules (pull #[2208](https://github.com/aws-cloudformation/cfn-lint/pull/2208))
+
 ### v0.57.0
 ###### Features
 - EOL of Python 2.7, 3.4, and 3.5 support (pull #[2195](https://github.com/aws-cloudformation/cfn-lint/pull/2195))
