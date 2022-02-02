@@ -36,12 +36,13 @@ class ImageId(CloudFormationLintRule):
                     for key, paramname in imageidobj.items():
                         if key == 'Ref':
                             if paramname in valid_refs:
-                                if valid_refs[paramname]['Type'] not in allowed_types:
-                                    message = 'Parameter %s should be of type ' \
-                                              '[%s]' % (paramname, ', '.join(
-                                                  map(str, allowed_types)))
-                                    tree = ['Parameters', paramname]
-                                    matches.append(RuleMatch(tree, message))
+                                if valid_refs[paramname]['From'] == 'Parameters':
+                                    if valid_refs[paramname]['Type'] not in allowed_types:
+                                        message = 'Parameter %s should be of type ' \
+                                                  '[%s]' % (paramname, ', '.join(
+                                                      map(str, allowed_types)))
+                                        tree = ['Parameters', paramname]
+                                        matches.append(RuleMatch(tree, message))
                 else:
                     message = 'Inappropriate map found for ImageId on %s' % (
                         '/'.join(map(str, imageidtree[:-1])))

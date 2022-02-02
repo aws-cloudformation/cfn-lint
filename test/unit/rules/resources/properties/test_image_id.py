@@ -16,6 +16,7 @@ class TestPropertyVpcId(BaseRuleTestCase):
 
     success_templates = [
         'test/fixtures/templates/good/generic.yaml',
+        'test/fixtures/templates/good/properties_imageid.yaml',
     ]
 
     def test_file_positive(self):
