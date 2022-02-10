@@ -228,7 +228,7 @@ def main():
     outputs = update_outputs('DocumentDBInstanceClass', get_results('AmazonDocDB', ['Database Instance']), outputs)
     outputs = update_outputs('NeptuneInstanceClass', get_results('AmazonNeptune', ['Database Instance']), outputs)
     outputs = update_outputs('ElastiCacheInstanceType', get_results('AmazonElastiCache', ['Cache Instance']), outputs)
-    outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Elastic Search Instance']), outputs)
+    outputs = update_outputs('ElasticsearchInstanceType', get_results('AmazonES', ['Amazon OpenSearch Service Instance']), outputs)
     outputs = update_outputs('EMRInstanceType', get_results('ElasticMapReduce', ['Elastic Map Reduce Instance']), outputs)
     outputs = update_outputs('BlockchainInstanceType', get_results('AmazonManagedBlockchain', ['Blockchain Instance']), outputs)
     outputs = update_outputs('AWS::GameLift::Fleet.EC2InstanceType', get_results('AmazonGameLift', ['GameLift EC2 Instance']), outputs)
