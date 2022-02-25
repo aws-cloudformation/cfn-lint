@@ -36,6 +36,7 @@ class JsonSize(CloudFormationLintRule):
         """Check Role.AssumeRolePolicyDocument is within limits"""
         matches = []
 
+        #pylint: disable=too-many-return-statements
         def remove_functions(obj):
             """ Replaces intrinsic functions with string """
             if isinstance(obj, dict):
@@ -48,6 +49,8 @@ class JsonSize(CloudFormationLintRule):
                                     return re.sub(r'\${.*}', '', v)
                                 if isinstance(v, list):
                                     return re.sub(r'\${.*}', '', v[0])
+                            else:
+                                return ''
                         else:
                             new_obj[k] = remove_functions(v)
                             return new_obj
