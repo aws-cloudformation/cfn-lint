@@ -1,3 +1,10 @@
+### v0.58.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `58.0.0` (pull #[2217](https://github.com/aws-cloudformation/cfn-lint/pull/2217))
+###### Fixes
+- [W2506](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2506): Avoid false positives when using a `Ref` against a resource (pull #[2210](https://github.com/aws-cloudformation/cfn-lint/pull/2210))
+- [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3502): Blank out functions in JSON size check to prevent false positives (pull #[2222](https://github.com/aws-cloudformation/cfn-lint/pull/2222))
+
 ### v0.58.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `56.0.0` (pull #[2207](https://github.com/aws-cloudformation/cfn-lint/pull/2207))
