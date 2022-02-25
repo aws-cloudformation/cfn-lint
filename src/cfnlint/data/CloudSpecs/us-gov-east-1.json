@@ -4415,6 +4415,7 @@
         },
         "Ec2Configuration": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-ec2configuration",
+          "DuplicatesAllowed": true,
           "ItemType": "Ec2ConfigurationObject",
           "Required": false,
           "Type": "List",
@@ -4443,6 +4444,7 @@
         },
         "InstanceTypes": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-instancetypes",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
@@ -4474,6 +4476,7 @@
         },
         "SecurityGroupIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-securitygroupids",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
@@ -4494,6 +4497,7 @@
         },
         "Subnets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-subnets",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
@@ -4501,8 +4505,9 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-batch-computeenvironment-computeresources.html#cfn-batch-computeenvironment-computeresources-tags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Immutable"
         },
         "Type": {
@@ -10780,6 +10785,29 @@
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-nodevice.html",
       "Properties": {}
     },
+    "AWS::EC2::Instance.PrivateDnsNameOptions": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-privatednsnameoptions.html",
+      "Properties": {
+        "EnableResourceNameDnsAAAARecord": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-privatednsnameoptions.html#cfn-ec2-instance-privatednsnameoptions-enableresourcenamednsaaaarecord",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EnableResourceNameDnsARecord": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-privatednsnameoptions.html#cfn-ec2-instance-privatednsnameoptions-enableresourcenamednsarecord",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "HostnameType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance-privatednsnameoptions.html#cfn-ec2-instance-privatednsnameoptions-hostnametype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::EC2::Instance.PrivateIpAddressSpecification": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-network-interface-privateipspec.html",
       "Properties": {
@@ -12592,6 +12620,12 @@
         "InstanceType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-launchtemplateoverrides.html#cfn-ec2-spotfleet-launchtemplateoverrides-instancetype",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "Priority": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-launchtemplateoverrides.html#cfn-ec2-spotfleet-launchtemplateoverrides-priority",
+          "PrimitiveType": "Double",
           "Required": false,
           "UpdateType": "Immutable"
         },
@@ -27117,6 +27151,33 @@
         }
       }
     },
+    "AWS::Lambda::EventSourceMapping.Filter": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-filter.html",
+      "Properties": {
+        "Pattern": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-filter.html#cfn-lambda-eventsourcemapping-filter-pattern",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.Filter.Pattern"
+          }
+        }
+      }
+    },
+    "AWS::Lambda::EventSourceMapping.FilterCriteria": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-filtercriteria.html",
+      "Properties": {
+        "Filters": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-filtercriteria.html#cfn-lambda-eventsourcemapping-filtercriteria-filters",
+          "DuplicatesAllowed": false,
+          "ItemType": "Filter",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Lambda::EventSourceMapping.OnFailure": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-onfailure.html",
       "Properties": {
@@ -30642,6 +30703,35 @@
         }
       }
     },
+    "AWS::SSO::InstanceAccessControlAttributeConfiguration.AccessControlAttribute": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattribute.html",
+      "Properties": {
+        "Key": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattribute.html#cfn-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattribute-key",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "Value": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattribute.html#cfn-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattribute-value",
+          "Required": true,
+          "Type": "AccessControlAttributeValue",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::SSO::InstanceAccessControlAttributeConfiguration.AccessControlAttributeValue": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattributevalue.html",
+      "Properties": {
+        "Source": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattributevalue.html#cfn-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattributevalue-source",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::SecretsManager::RotationSchedule.HostedRotationLambda": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html",
       "Properties": {
@@ -33813,7 +33903,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "56.0.0",
+  "ResourceSpecificationVersion": "58.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -37193,6 +37283,11 @@
       }
     },
     "AWS::Batch::ComputeEnvironment": {
+      "Attributes": {
+        "ComputeEnvironmentArn": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-computeenvironment.html",
       "Properties": {
         "ComputeEnvironmentName": {
@@ -37224,8 +37319,9 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-computeenvironment.html#cfn-batch-computeenvironment-tags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Immutable"
         },
         "Type": {
@@ -37315,10 +37411,16 @@
       }
     },
     "AWS::Batch::JobQueue": {
+      "Attributes": {
+        "JobQueueArn": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html",
       "Properties": {
         "ComputeEnvironmentOrder": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-computeenvironmentorder",
+          "DuplicatesAllowed": true,
           "ItemType": "ComputeEnvironmentOrder",
           "Required": true,
           "Type": "List",
@@ -37359,8 +37461,9 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-batch-jobqueue.html#cfn-batch-jobqueue-tags",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Immutable"
         }
       }
@@ -39861,6 +39964,52 @@
         }
       }
     },
+    "AWS::DataSync::LocationFSxLustre": {
+      "Attributes": {
+        "LocationArn": {
+          "PrimitiveType": "String"
+        },
+        "LocationUri": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html",
+      "Properties": {
+        "FsxFilesystemArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-fsxfilesystemarn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::DataSync::LocationFSxLustre.FsxFilesystemArn"
+          }
+        },
+        "SecurityGroupArns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-securitygrouparns",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::DataSync::LocationFSxLustre.SecurityGroupArns"
+          }
+        },
+        "Subdirectory": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-subdirectory",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-tags",
+          "DuplicatesAllowed": false,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::DataSync::LocationFSxWindows": {
       "Attributes": {
         "LocationArn": {
@@ -41659,6 +41808,12 @@
           "Value": {
             "ValueType": "PlacementGroup"
           }
+        },
+        "PrivateDnsNameOptions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-privatednsnameoptions",
+          "Required": false,
+          "Type": "PrivateDnsNameOptions",
+          "UpdateType": "Conditional"
         },
         "PrivateIpAddress": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-instance.html#cfn-ec2-instance-privateipaddress",
@@ -49564,6 +49719,12 @@
             "ValueType": "AWS::IoT::Authorizer.AuthorizerName"
           }
         },
+        "EnableCachingForHttp": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-authorizer.html#cfn-iot-authorizer-enablecachingforhttp",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "SigningDisabled": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-authorizer.html#cfn-iot-authorizer-signingdisabled",
           "PrimitiveType": "Boolean",
@@ -50959,8 +51120,8 @@
         },
         "FilterCriteria": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-filtercriteria",
-          "PrimitiveType": "Json",
           "Required": false,
+          "Type": "FilterCriteria",
           "UpdateType": "Mutable"
         },
         "FunctionName": {
@@ -51057,7 +51218,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingpositiontimestamp",
           "PrimitiveType": "Double",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Immutable"
         },
         "Topics": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-topics",
@@ -55393,6 +55554,161 @@
         }
       }
     },
+    "AWS::SSO::Assignment": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html",
+      "Properties": {
+        "InstanceArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-instancearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.InstanceArn"
+          }
+        },
+        "PermissionSetArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-permissionsetarn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.PermissionSetArn"
+          }
+        },
+        "PrincipalId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-principalid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.PrincipalId"
+          }
+        },
+        "PrincipalType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-principaltype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.PrincipalType"
+          }
+        },
+        "TargetId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-targetid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.TargetId"
+          }
+        },
+        "TargetType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-assignment.html#cfn-sso-assignment-targettype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::Assignment.TargetType"
+          }
+        }
+      }
+    },
+    "AWS::SSO::InstanceAccessControlAttributeConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-instanceaccesscontrolattributeconfiguration.html",
+      "Properties": {
+        "AccessControlAttributes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-instanceaccesscontrolattributeconfiguration.html#cfn-sso-instanceaccesscontrolattributeconfiguration-accesscontrolattributes",
+          "ItemType": "AccessControlAttribute",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "InstanceArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-instanceaccesscontrolattributeconfiguration.html#cfn-sso-instanceaccesscontrolattributeconfiguration-instancearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::InstanceAccessControlAttributeConfiguration.InstanceArn"
+          }
+        }
+      }
+    },
+    "AWS::SSO::PermissionSet": {
+      "Attributes": {
+        "PermissionSetArn": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html",
+      "Properties": {
+        "Description": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "InlinePolicy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-inlinepolicy",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "InstanceArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-instancearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::PermissionSet.InstanceArn"
+          }
+        },
+        "ManagedPolicies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-managedpolicies",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSO::PermissionSet.ManagedPolicies"
+          }
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SSO::PermissionSet.Name"
+          }
+        },
+        "RelayStateType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-relaystatetype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSO::PermissionSet.RelayStateType"
+          }
+        },
+        "SessionDuration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-sessionduration",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSO::PermissionSet.SessionDuration"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sso-permissionset.html#cfn-sso-permissionset-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::SecretsManager::ResourcePolicy": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-resourcepolicy.html",
       "Properties": {
@@ -56627,7 +56943,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinetype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable",
+          "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AWS::StepFunctions::StateMachine.StateMachineType"
           }
@@ -56802,6 +57118,18 @@
         },
         "LoggingRole": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-server.html#cfn-transfer-server-loggingrole",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PostAuthenticationLoginBanner": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-server.html#cfn-transfer-server-postauthenticationloginbanner",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PreAuthenticationLoginBanner": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-server.html#cfn-transfer-server-preauthenticationloginbanner",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable"
@@ -59247,6 +59575,12 @@
     "AWS::DataSync::LocationEFS.EfsFilesystemArn": {
       "AllowedPatternRegex": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):elasticfilesystem:[a-z\\-0-9]*:[0-9]{12}:file-system/fs-.*$"
     },
+    "AWS::DataSync::LocationFSxLustre.FsxFilesystemArn": {
+      "AllowedPatternRegex": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):fsx:[a-z\\-0-9]+:[0-9]{12}:file-system/fs-[0-9a-f]+$"
+    },
+    "AWS::DataSync::LocationFSxLustre.SecurityGroupArns": {
+      "AllowedPatternRegex": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\\-0-9]*:[0-9]{12}:security-group/sg-[a-f0-9]+$"
+    },
     "AWS::DataSync::LocationFSxWindows.Domain": {
       "AllowedPatternRegex": "^([A-Za-z0-9]+[A-Za-z0-9-.]*)*[A-Za-z0-9-]*[A-Za-z0-9]$"
     },
@@ -61452,6 +61786,9 @@
       "StringMax": 1024,
       "StringMin": 12
     },
+    "AWS::Lambda::EventSourceMapping.Filter.Pattern": {
+      "AllowedPatternRegex": ".*"
+    },
     "AWS::Lambda::EventSourceMapping.FunctionName": {
       "AllowedPatternRegex": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?",
       "StringMax": 140,
@@ -61506,7 +61843,7 @@
       "StringMin": 1
     },
     "AWS::Lambda::EventSourceMapping.StartingPosition": {
-      "AllowedPatternRegex": "(LATEST|TRIM_HORIZON)+",
+      "AllowedPatternRegex": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
       "AllowedValues": [
         "AT_TIMESTAMP",
         "LATEST",
@@ -62217,6 +62554,64 @@
     "AWS::SSM::MaintenanceWindow.Duration": {
       "NumberMax": 24,
       "NumberMin": 1
+    },
+    "AWS::SSO::Assignment.InstanceArn": {
+      "AllowedPatternRegex": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+      "StringMax": 1224,
+      "StringMin": 10
+    },
+    "AWS::SSO::Assignment.PermissionSetArn": {
+      "AllowedPatternRegex": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::permissionSet/(sso)?ins-[a-zA-Z0-9-.]{16}/ps-[a-zA-Z0-9-./]{16}",
+      "StringMax": 1224,
+      "StringMin": 10
+    },
+    "AWS::SSO::Assignment.PrincipalId": {
+      "AllowedPatternRegex": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+      "StringMax": 47,
+      "StringMin": 1
+    },
+    "AWS::SSO::Assignment.PrincipalType": {
+      "AllowedValues": [
+        "USER",
+        "GROUP"
+      ]
+    },
+    "AWS::SSO::Assignment.TargetId": {
+      "AllowedPatternRegex": "\\d{12}"
+    },
+    "AWS::SSO::Assignment.TargetType": {
+      "AllowedValues": [
+        "AWS_ACCOUNT"
+      ]
+    },
+    "AWS::SSO::InstanceAccessControlAttributeConfiguration.InstanceArn": {
+      "AllowedPatternRegex": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+      "StringMax": 1224,
+      "StringMin": 10
+    },
+    "AWS::SSO::PermissionSet.InstanceArn": {
+      "AllowedPatternRegex": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+      "StringMax": 1224,
+      "StringMin": 10
+    },
+    "AWS::SSO::PermissionSet.ManagedPolicies": {
+      "StringMax": 2048,
+      "StringMin": 20
+    },
+    "AWS::SSO::PermissionSet.Name": {
+      "AllowedPatternRegex": "[\\w+=,.@-]+",
+      "StringMax": 32,
+      "StringMin": 1
+    },
+    "AWS::SSO::PermissionSet.RelayStateType": {
+      "AllowedPatternRegex": "[a-zA-Z0-9&amp;$@#\\/%?=~\\-_'&quot;|!:,.;*+\\[\\]\\ \\(\\)\\{\\}]+",
+      "StringMax": 240,
+      "StringMin": 1
+    },
+    "AWS::SSO::PermissionSet.SessionDuration": {
+      "AllowedPatternRegex": "^(-?)P(?=\\d|T\\d)(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)([DW]))?(?:T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$",
+      "StringMax": 100,
+      "StringMin": 1
     },
     "AWS::SageMaker::NotebookInstance.VolumeSizeInGB": {
       "NumberMax": 16384,
@@ -63410,6 +63805,7 @@
     },
     "LambdaRuntime": {
       "AllowedValues": [
+        "dotnet6",
         "dotnetcore1.0",
         "dotnetcore2.0",
         "dotnetcore2.1",
