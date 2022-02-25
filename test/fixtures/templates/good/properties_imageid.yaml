@@ -1,0 +1,13 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  ImageId that references a resource, not a property
+Resources:
+  ImageIdResource:
+    Type: Custom::ImageIdResource
+    Properties:
+      ServiceToken: String
+  AWSEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref ImageIdResource
