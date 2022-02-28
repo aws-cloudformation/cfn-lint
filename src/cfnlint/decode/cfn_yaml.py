@@ -103,7 +103,21 @@ class NodeConstructor(SafeConstructor):
                             ),
                         ]
                     )
-            mapping[key] = value
+            try:
+                mapping[key] = value
+            except:
+                raise CfnParseError(
+                        self.filename,
+                        [
+                            build_match(
+                                filename=self.filename,
+                                message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
+                                line_number=key.start_mark.line,
+                                column_number=key.start_mark.column,
+                                key=key
+                            ),
+                        ]
+                    )
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
 
