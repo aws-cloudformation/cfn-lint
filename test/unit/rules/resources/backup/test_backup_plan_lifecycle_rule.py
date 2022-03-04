@@ -7,7 +7,7 @@ from cfnlint.rules.resources.backup.BackupPlanLifecycleRule import BackupPlanLif
 
 
 class TestBackupPlanLifecycleRule(BaseRuleTestCase):
-    """Test ECS Task Definition has at least one essential container defined"""
+    """Check Backup Plan rules with lifecycle has minimum 90 day period between cold and delete"""
 
     def setUp(self):
         """Setup"""
