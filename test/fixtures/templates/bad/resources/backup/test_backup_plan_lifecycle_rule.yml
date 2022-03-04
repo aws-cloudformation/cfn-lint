@@ -1,0 +1,17 @@
+---
+Resources:
+
+  BackupPlan:
+    Type: AWS::Backup::BackupPlan
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      BackupPlan:
+        BackupPlanName: "test-backup-plan"
+        BackupPlanRule:
+          - RuleName: "test-backup-plan-rule"
+            TargetBackupVault: "test-backup-vault"
+            ScheduleExpression: "cron(0 0 ? * MON *)"
+            Lifecycle:
+              MoveToColdStorageAfterDays: 7
+              DeleteAfterDays: 30  # 30 - 7 is less than 90
