@@ -1,3 +1,10 @@
+### v0.58.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `59.0.0` (pull #[2225](https://github.com/aws-cloudformation/cfn-lint/pull/2225))
+- Remove allowed values for `AWS::Config::ConfigurationRecorder.ResourceTypes` (pull #[2231](https://github.com/aws-cloudformation/cfn-lint/pull/2231))
+###### Fixes
+- Wrap creating a YAML map with try/except and create lint error on failure (pull #[2226](https://github.com/aws-cloudformation/cfn-lint/pull/2226))
+
 ### v0.58.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `58.0.0` (pull #[2217](https://github.com/aws-cloudformation/cfn-lint/pull/2217))
