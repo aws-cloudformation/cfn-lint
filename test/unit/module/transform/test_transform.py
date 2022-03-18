@@ -51,3 +51,12 @@ class TestTransform(BaseTestCase):
         transformed_template = Transform(filename, template, region)
         transformed_template.transform_template()
         self.assertDictEqual(transformed_template._parameters, {})
+
+    def test_test_function_using_image_good(self):
+        """Test Parameter is created for autopublish version run"""
+        filename = 'test/fixtures/templates/good/transform/function_using_image.yaml'
+        region = 'us-east-1'
+        template = cfn_yaml.load(filename)
+        transformed_template = Transform(filename, template, region)
+        transformed_template.transform_template()
+        self.assertDictEqual(transformed_template._parameters, {})
