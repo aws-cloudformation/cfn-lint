@@ -76,7 +76,10 @@ class Transform(object):
 
             if resource_type == 'AWS::Serverless::Function':
 
-                Transform._update_to_s3_uri('CodeUri', resource_dict)
+                if resource_dict.get('PackageType') == 'Image':
+                    Transform._update_to_s3_uri('ImageUri', resource_dict)
+                else:
+                    Transform._update_to_s3_uri('CodeUri', resource_dict)
                 auto_publish_alias = resource_dict.get('AutoPublishAlias')
                 if isinstance(auto_publish_alias, dict):
                     if len(auto_publish_alias) == 1:
