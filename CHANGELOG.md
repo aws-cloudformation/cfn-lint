@@ -1,3 +1,9 @@
+### v0.58.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `61.0.0` (pull #[2232](https://github.com/aws-cloudformation/cfn-lint/pull/2232))
+###### Fixes
+- Update SAM Transform pre work to add `ImageUri` when using `Image` as `PackageType` in `AWS::Serverless::Function` (pull #[2236](https://github.com/aws-cloudformation/cfn-lint/pull/2236))
+
 ### v0.58.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `59.0.0` (pull #[2225](https://github.com/aws-cloudformation/cfn-lint/pull/2225))
