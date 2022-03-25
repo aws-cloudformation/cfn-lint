@@ -21,7 +21,8 @@ class BackupPlanLifecycleRule(CloudFormationLintRule):
 
         for result in results:
             backup_rule = result['Value']
-            if 'MoveToColdStorageAfterDays' in backup_rule and 'DeleteAfterDays' in backup_rule:
+            # if 'MoveToColdStorageAfterDays' in backup_rule and 'DeleteAfterDays' in backup_rule:
+            if isinstance(backup_rule.get('MoveToColdStorageAfterDays'), int) and isinstance(backup_rule.get('DeleteAfterDays'), int):
                 if backup_rule['DeleteAfterDays'] - backup_rule['MoveToColdStorageAfterDays'] < 90:
                     message = 'DeleteAfterDays in {0} must be at least 90 days after MoveToColdStorageAfterDays'
                     rule_match = RuleMatch(result['Path'], message.format('/'.join(map(str, result['Path']))))
