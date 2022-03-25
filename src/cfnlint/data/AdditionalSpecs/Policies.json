@@ -933,6 +933,49 @@
       "HasResource": false,
       "StringPrefix": "aws-portal"
     },
+    "AWS Billing Conductor": {
+      "ARNFormat": "^arn:${Partition}:billingconductor::${Account}:${ResourceType}",
+      "ARNRegex": "^arn:${Partition}:billingconductor:.+",
+      "Actions": [
+        "AssociateAccounts",
+        "AssociatePricingRules",
+        "BatchAssociateResourcesToCustomLineItem",
+        "BatchDisassociateResourcesFromCustomLineItem",
+        "CreateBillingGroup",
+        "CreateCustomLineItem",
+        "CreatePricingPlan",
+        "CreatePricingRule",
+        "DeleteBillingGroup",
+        "DeleteCustomLineItem",
+        "DeletePricingPlan",
+        "DeletePricingRule",
+        "DisassociateAccounts",
+        "DisassociatePricingRules",
+        "ListAccountAssociations",
+        "ListBillingGroupCostReports",
+        "ListBillingGroups",
+        "ListCustomLineItems",
+        "ListPricingPlans",
+        "ListPricingPlansAssociatedWithPricingRule",
+        "ListPricingRules",
+        "ListPricingRulesAssociatedToPricingPlan",
+        "ListResourcesAssociatedToCustomLineItem",
+        "ListTagsResource",
+        "TagResource",
+        "UntagResource",
+        "UpdateBillingGroup",
+        "UpdateCustomLineItem",
+        "UpdatePricingPlan",
+        "UpdatePricingRule"
+      ],
+      "HasResource": true,
+      "StringPrefix": "billingconductor",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "AWS Budget Service": {
       "ARNFormat": "arn:aws:budgets::<account_ID>:budget/<budgetname>",
       "ARNRegex": "^arn:aws:budgets::.+:.+",
@@ -1199,7 +1242,7 @@
         "DeregisterType",
         "DescribeAccountLimits",
         "DescribeChangeSet",
-        "DescribeChangeSetHook",
+        "DescribeChangeSetHooks",
         "DescribePublisher",
         "DescribeStackDriftDetectionStatus",
         "DescribeStackEvents",
@@ -1237,6 +1280,7 @@
         "RecordHandlerProgress",
         "RegisterPublisher",
         "RegisterType",
+        "RollbackStack",
         "SetStackPolicy",
         "SetTypeConfiguration",
         "SetTypeDefaultVersion",
@@ -2106,6 +2150,7 @@
         "ListRevisionAssets",
         "ListTagsForResource",
         "PublishDataSet",
+        "RevokeRevision",
         "SendApiAsset",
         "StartJob",
         "TagResource",
@@ -6941,6 +6986,14 @@
       "HasResource": false,
       "StringPrefix": "resource-explorer"
     },
+    "AWS Tax Settings": {
+      "Actions": [
+        "GetExemptions",
+        "UpdateExemptions"
+      ],
+      "HasResource": false,
+      "StringPrefix": "tax"
+    },
     "AWS Tiros": {
       "ARNFormat": "arn:aws:tiros::<namespace>:<relative-id>",
       "ARNRegex": "^arn:aws:tiros::.+",
@@ -7235,9 +7288,11 @@
         "DescribeManagedRuleGroup",
         "DisassociateFirewallManager",
         "DisassociateWebACL",
+        "GenerateMobileSdkReleaseUrl",
         "GetIPSet",
         "GetLoggingConfiguration",
         "GetManagedRuleSet",
+        "GetMobileSdkRelease",
         "GetPermissionPolicy",
         "GetRateBasedStatementManagedKeys",
         "GetRegexPatternSet",
@@ -7250,6 +7305,7 @@
         "ListIPSets",
         "ListLoggingConfigurations",
         "ListManagedRuleSets",
+        "ListMobileSdkReleases",
         "ListRegexPatternSets",
         "ListResourcesForWebACL",
         "ListRuleGroups",
@@ -8135,7 +8191,7 @@
       ]
     },
     "Amazon Cloud Directory": {
-      "ARNFormat": "arn:aws:clouddirectory:<region>:<accountId>:<relative-id>",
+      "ARNFormat": "arn:aws:clouddirectory::${Region}:${Account}:${RelativeId}",
       "ARNRegex": "^arn:${Partition}:clouddirectory:.+:[0-9]+:(directory|schema)/.+",
       "Actions": [
         "AddFacetToObject",
@@ -8163,6 +8219,7 @@
         "DetachTypedLink",
         "DisableDirectory",
         "EnableDirectory",
+        "GetAppliedSchemaVersion",
         "GetDirectory",
         "GetFacet",
         "GetLinkAttributes",
@@ -8200,7 +8257,9 @@
         "UpdateLinkAttributes",
         "UpdateObjectAttributes",
         "UpdateSchema",
-        "UpdateTypedLinkFacet"
+        "UpdateTypedLinkFacet",
+        "UpgradeAppliedSchema",
+        "UpgradePublishedSchema"
       ],
       "HasResource": true,
       "StringPrefix": "clouddirectory"
@@ -8213,7 +8272,6 @@
         "CreateCachePolicy",
         "CreateCloudFrontOriginAccessIdentity",
         "CreateDistribution",
-        "CreateDistributionWithTags",
         "CreateFieldLevelEncryptionConfig",
         "CreateFieldLevelEncryptionProfile",
         "CreateFunction",
@@ -10205,7 +10263,9 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "imagebuilder:CreatedResourceTag/<key>",
-        "imagebuilder:CreatedResourceTagKeys"
+        "imagebuilder:CreatedResourceTagKeys",
+        "imagebuilder:Ec2MetadataHttpTokens",
+        "imagebuilder:StatusTopicArn"
       ]
     },
     "Amazon EC2 Instance Connect": {
@@ -12599,7 +12659,7 @@
       ]
     },
     "Amazon Managed Streaming for Apache Kafka": {
-      "ARNFormat": "arn:aws:kafka:${Region}:${Account}:${ResourceType}/${ResourceName}/${UUID}",
+      "ARNFormat": "arn:aws:kafka:${Region}:${Account}:${ResourceType}/${ResourceName}/${Uuid}",
       "ARNRegex": "^arn:aws:kafka:.+",
       "Actions": [
         "BatchAssociateScramSecret",
@@ -12654,6 +12714,7 @@
         "CreateCustomPlugin",
         "CreateWorkerConfiguration",
         "DeleteConnector",
+        "DeleteCustomPlugin",
         "DescribeConnector",
         "DescribeCustomPlugin",
         "DescribeWorkerConfiguration",
@@ -13285,7 +13346,7 @@
       "StringPrefix": "polly"
     },
     "Amazon QLDB": {
-      "ARNFormat": "arn:${Partition}:qldb:${region}:${account}:${resourceType}/${resourcePath}",
+      "ARNFormat": "arn:${Partition}:qldb:${Region}:${Account}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:${Partition}:qldb:.+",
       "Actions": [
         "CancelJournalKinesisStream",
@@ -13697,6 +13758,15 @@
       ],
       "HasResource": true,
       "StringPrefix": "rds-db"
+    },
+    "Amazon RHEL Knowledgebase Portal": {
+      "ARNFormat": "arn:aws:rhelkb:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:aws:rhelkb:.+",
+      "Actions": [
+        "GetRhelURL"
+      ],
+      "HasResource": false,
+      "StringPrefix": "rhelkb"
     },
     "Amazon Redshift": {
       "ARNFormat": "arn:aws:redshift:${Region}:${Account}:${RelativeId}",
