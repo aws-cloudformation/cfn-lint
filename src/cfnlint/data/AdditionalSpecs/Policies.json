@@ -2065,8 +2065,8 @@
       "StringPrefix": "controltower"
     },
     "AWS Cost Explorer Service": {
-      "ARNFormat": "arn:${Partition}:ce:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
-      "ARNRegex": "^arn:aws:ce::.+:.+",
+      "ARNFormat": "arn:${Partition}:ce::${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:ce::.+:.+",
       "Actions": [
         "CreateAnomalyMonitor",
         "CreateAnomalySubscription",
@@ -2101,7 +2101,10 @@
         "GetTags",
         "GetUsageForecast",
         "ListCostCategoryDefinitions",
+        "ListTagsForResource",
         "ProvideAnomalyFeedback",
+        "TagResource",
+        "UntagResource",
         "UpdateAnomalyMonitor",
         "UpdateAnomalySubscription",
         "UpdateCostCategoryDefinition",
@@ -2109,8 +2112,13 @@
         "UpdatePreferences",
         "UpdateReport"
       ],
-      "HasResource": false,
-      "StringPrefix": "ce"
+      "HasResource": true,
+      "StringPrefix": "ce",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "AWS Cost and Usage Report": {
       "ARNFormat": "arn:aws:cur:<region>:<account_ID>:definition/<reportname>",
@@ -3640,6 +3648,26 @@
       ],
       "HasResource": false,
       "StringPrefix": "identitystore"
+    },
+    "AWS Identity Synchronization Service": {
+      "ARNFormat": "^arn:${Partition}:identity-sync:${Region}:${Account}:${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:identity-sync:.+:.+:.+",
+      "Actions": [
+        "CreateSyncFilter",
+        "CreateSyncProfile",
+        "CreateSyncTarget",
+        "DeleteSyncFilter",
+        "DeleteSyncProfile",
+        "DeleteSyncTarget",
+        "GetSyncProfile",
+        "GetSyncTarget",
+        "ListSyncFilters",
+        "StartSync",
+        "StopSync",
+        "UpdateSyncTarget"
+      ],
+      "HasResource": true,
+      "StringPrefix": "identity-sync"
     },
     "AWS Import Export Disk Service": {
       "Actions": [
@@ -9622,6 +9650,7 @@
         "DeletePlacementGroup",
         "DeletePublicIpv4Pool",
         "DeleteQueuedReservedInstances",
+        "DeleteResourcePolicy",
         "DeleteRoute",
         "DeleteRouteTable",
         "DeleteSecurityGroup",
@@ -9858,6 +9887,7 @@
         "GetNetworkInsightsAccessScopeContent",
         "GetPasswordData",
         "GetReservedInstancesExchangeQuote",
+        "GetResourcePolicy",
         "GetSerialConsoleAccessStatus",
         "GetSpotPlacementScores",
         "GetSubnetCidrReservations",
@@ -9939,6 +9969,7 @@
         "PurchaseHostReservation",
         "PurchaseReservedInstancesOffering",
         "PurchaseScheduledInstances",
+        "PutResourcePolicy",
         "RebootInstances",
         "RegisterImage",
         "RegisterInstanceEventNotificationAttributes",
@@ -11300,6 +11331,53 @@
       ],
       "HasResource": true,
       "StringPrefix": "gamelift",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
+    "Amazon GameSparks": {
+      "ARNFormat": "arn:aws:gamesparks:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:aws:gamesparks:.+:.+:.+",
+      "Actions": [
+        "CreateGame",
+        "CreateSnapshot",
+        "CreateStage",
+        "DeleteGame",
+        "DeleteStage",
+        "DisconnectPlayer",
+        "ExportSnapshot",
+        "GetExtension",
+        "GetExtensionVersion",
+        "GetGame",
+        "GetGameConfiguration",
+        "GetGeneratedCodeJob",
+        "GetPlayerConnectionStatus",
+        "GetSnapshot",
+        "GetStage",
+        "GetStageDeployment",
+        "ImportGameConfiguration",
+        "InvokeBackend",
+        "ListExtensionVersions",
+        "ListExtensions",
+        "ListGames",
+        "ListGeneratedCodeJobs",
+        "ListSnapshots",
+        "ListStageDeployments",
+        "ListStages",
+        "ListTagsForResource",
+        "StartGeneratedCodeJob",
+        "StartStageDeployment",
+        "TagResource",
+        "UntagResource",
+        "UpdateGame",
+        "UpdateGameConfiguration",
+        "UpdateSnapshot",
+        "UpdateStage"
+      ],
+      "HasResource": true,
+      "StringPrefix": "gamesparks",
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
@@ -13457,6 +13535,7 @@
         "DescribeFolderPermissions",
         "DescribeFolderResolvedPermissions",
         "DescribeGroup",
+        "DescribeGroupMembership",
         "DescribeIAMPolicyAssignment",
         "DescribeIngestion",
         "DescribeIpRestriction",
@@ -13507,6 +13586,7 @@
         "SearchDashboards",
         "SearchDirectoryGroups",
         "SearchFolders",
+        "SearchGroups",
         "SetGroupMapping",
         "Subscribe",
         "TagResource",
@@ -14560,6 +14640,7 @@
         "ListEndpoints",
         "ListMultipartUploadParts",
         "ListRegionalBuckets",
+        "ListSharedEndpoints",
         "PutAccessPointPolicy",
         "PutBucketPolicy",
         "PutBucketTagging",
