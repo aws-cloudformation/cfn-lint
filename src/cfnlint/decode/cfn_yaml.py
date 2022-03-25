@@ -136,22 +136,6 @@ class NodeConstructor(SafeConstructor):
         assert isinstance(obj, list)
         return list_node(obj, node.start_mark, node.end_mark)
 
-    def construct_yaml_null_error(self, node):
-        """Throw a null error"""
-        raise CfnParseError(
-            self.filename,
-            [
-                build_match(
-                    filename=self.filename,
-                    message='Null value at line {0} column {1}'.format(
-                        node.start_mark.line + 1, node.start_mark.column + 1),
-                    line_number=node.start_mark.line,
-                    column_number=node.start_mark.column,
-                    key=' ',
-                )
-            ]
-        )
-
 
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:map',
@@ -164,10 +148,6 @@ NodeConstructor.add_constructor(
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:seq',
     NodeConstructor.construct_yaml_seq)
-
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:null',
-    NodeConstructor.construct_yaml_null_error)
 
 
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):
