@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import logging
 import re
 from copy import deepcopy, copy
-import six
 
 import cfnlint.conditions
 import cfnlint.helpers
@@ -70,7 +69,7 @@ class Template(object):  # pylint: disable=R0904
         resources = self.template.get('Resources', {})
         if not isinstance(resources, dict):
             return {}
-        if isinstance(resource_type, six.string_types):
+        if isinstance(resource_type, str):
             resource_type = [resource_type]
 
         results = {}
@@ -180,7 +179,7 @@ class Template(object):  # pylint: disable=R0904
         for name, value in resources.items():
             if 'Type' in value:
                 valtype = value['Type']
-                if isinstance(valtype, six.string_types):
+                if isinstance(valtype, str):
                     if valtype.startswith(astrik_string_types):
                         LOGGER.debug('Cant build an appropriate getatt list from %s', valtype)
                         results[name] = {'*': {'PrimitiveItemType': 'String'}}
@@ -868,7 +867,7 @@ class Template(object):  # pylint: disable=R0904
                     for k, v in value.items():
                         if k == 'Fn::If':
                             if isinstance(v, list) and len(v) == 3:
-                                if isinstance(v[0], six.string_types):
+                                if isinstance(v[0], str):
                                     results.add(v[0])
                                     results = results.union(get_conditions_from_property(v[1]))
                                     results = results.union(get_conditions_from_property(v[2]))

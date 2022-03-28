@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 #pylint: disable=cyclic-import
 import json
-import six
 import cfnlint.rules.custom.Operators
 
 #pylint: disable=too-many-return-statements
@@ -55,7 +54,7 @@ def make_rule(line, lineNumber):
             value = process_sets(line[3])
             value = get_value(line[3])
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             value = value.strip().strip('"')
 
         if operator in ['EQUALS', '==']:

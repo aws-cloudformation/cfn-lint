@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -51,7 +50,7 @@ class AllowedPattern(CloudFormationLintRule):
                 parameter_values = param.get('AllowedValues')
                 default_value = param.get('Default')
                 parameter_type = param.get('Type')
-                if isinstance(parameter_type, six.string_types):
+                if isinstance(parameter_type, str):
                     if ((not parameter_type.startswith('List<')) and
                             (not parameter_type.startswith('AWS::SSM::Parameter::Value<')) and
                             parameter_type not in ['CommaDelimitedList', 'List<String>']):

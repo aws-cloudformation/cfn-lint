@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -26,13 +25,13 @@ class Exists(CloudFormationLintRule):
         iftrees = cfn.search_deep_keys('Fn::If')
         for iftree in iftrees:
             if isinstance(iftree[-1], list):
-                if isinstance(iftree[-1][0], six.string_types):
+                if isinstance(iftree[-1][0], str):
                     ref_conditions[iftree[-1][0]] = iftree
 
         # Get resource's Conditions
         for resource_name, resource_values in cfn.get_resources().items():
             condition = resource_values.get('Condition')
-            if isinstance(condition, six.string_types):  # make sure its a string
+            if isinstance(condition, str):  # make sure its a string
                 path = ['Resources', resource_name, 'Condition']
                 ref_conditions[condition] = path
 
@@ -41,7 +40,7 @@ class Exists(CloudFormationLintRule):
 
         for condtree in condtrees:
             if condtree[0] == 'Conditions':
-                if isinstance(condtree[-1], (str, six.text_type, six.string_types)):
+                if isinstance(condtree[-1], (str)):
                     path = ['Conditions', condtree[-1]]
                     ref_conditions[condtree[-1]] = path
 

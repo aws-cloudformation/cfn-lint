@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.decode.node import list_node
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -27,7 +26,7 @@ class AttributeMismatch(CloudFormationLintRule):
 
         for properties, _ in key_schemas_sets:
             for key in properties:
-                attribute_name = key.get_safe('AttributeName', type_t=six.string_types)
+                attribute_name = key.get_safe('AttributeName', type_t=str)
                 if attribute_name:
                     keys.add(key.get('AttributeName'))
         return keys
@@ -56,7 +55,7 @@ class AttributeMismatch(CloudFormationLintRule):
 
         for attribute in properties.get('AttributeDefinitions', []):
             attribute_name = attribute.get('AttributeName')
-            if isinstance(attribute_name, six.string_types):
+            if isinstance(attribute_name, str):
                 attributes.add(attribute.get('AttributeName'))
             else:
                 self.logger.info('attribute definitions is not using just strings')

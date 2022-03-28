@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import datetime
 import json
 import re
-import six
 import cfnlint.helpers
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -45,7 +44,7 @@ class JsonSize(CloudFormationLintRule):
                     for k, v in obj.items():
                         if k in cfnlint.helpers.FUNCTIONS:
                             if k == 'Fn::Sub':
-                                if isinstance(v, six.string_types):
+                                if isinstance(v, str):
                                     return re.sub(r'\${.*}', '', v)
                                 if isinstance(v, list):
                                     return re.sub(r'\${.*}', '', v[0])
@@ -70,7 +69,7 @@ class JsonSize(CloudFormationLintRule):
         json_max_size = specs.get('JsonMax')
         for scenario in scenarios:
             j = remove_functions(scenario['Object'][prop])
-            if isinstance(j, six.string_types):
+            if isinstance(j, str):
                 try:
                     j = json.loads(j)
                 except:  #pylint: disable=bare-except

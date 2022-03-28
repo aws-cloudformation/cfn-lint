@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 from functools import reduce  # pylint: disable=redefined-builtin
 import re
 import copy
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -47,7 +46,7 @@ class SubNeeded(CloudFormationLintRule):
                 values.extend(self._match_values(item, pathprop))
         else:
             # Leaf node
-            if isinstance(cfnelem, six.string_types):  # and re.match(searchRegex, cfnelem):
+            if isinstance(cfnelem, str):  # and re.match(searchRegex, cfnelem):
                 for variable in re.findall(self.subParameterRegex, cfnelem):
                     values.append(path + [variable])
 

@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 from __future__ import unicode_literals
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -25,7 +24,7 @@ class Used(CloudFormationLintRule):
     def isparaminref(self, subs, parameter):
         """Search sub strings for parameters"""
         for sub in subs:
-            if isinstance(sub, (six.text_type, six.string_types)):
+            if isinstance(sub, (str)):
                 if self.searchstring(sub, parameter):
                     return True
 
@@ -43,7 +42,7 @@ class Used(CloudFormationLintRule):
         for subtree in subtrees:
             if isinstance(subtree[-1], list):
                 subs.extend(cfn.get_sub_parameters(subtree[-1][0]))
-            elif isinstance(subtree[-1], six.string_types):
+            elif isinstance(subtree[-1], str):
                 subs.extend(cfn.get_sub_parameters(subtree[-1]))
 
         for paramname, _ in cfn.get_parameters().items():

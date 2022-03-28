@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -40,7 +39,7 @@ class Split(CloudFormationLintRule):
                 if len(split_value_obj) == 2:
                     split_delimiter = split_value_obj[0]
                     split_string = split_value_obj[1]
-                    if not isinstance(split_delimiter, six.string_types):
+                    if not isinstance(split_delimiter, str):
                         message = 'Split delimiter has to be of type string for {0}'
                         matches.append(RuleMatch(
                             tree + [0], message.format('/'.join(map(str, tree)))))
@@ -55,7 +54,7 @@ class Split(CloudFormationLintRule):
                             message = 'Split list of singular function or string for {0}'
                             matches.append(RuleMatch(
                                 tree, message.format('/'.join(map(str, tree)))))
-                    elif not isinstance(split_string, six.string_types):
+                    elif not isinstance(split_string, str):
                         message = 'Split has to be of type string or valid function for {0}'
                         matches.append(RuleMatch(
                             tree, message.format('/'.join(map(str, tree)))))

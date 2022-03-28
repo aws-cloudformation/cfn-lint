@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -36,7 +35,7 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should be equal to or higher than MinValue'
 
-        if isinstance(allowed_value, six.integer_types) and isinstance(min_value, six.integer_types):
+        if isinstance(allowed_value, int) and isinstance(min_value, int):
             if allowed_value < min_value:
                 return([RuleMatch(path, message)])
 
@@ -48,7 +47,7 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should be less than or equal to MaxValue'
 
-        if isinstance(allowed_value, six.integer_types) and isinstance(max_value, six.integer_types):
+        if isinstance(allowed_value, int) and isinstance(max_value, int):
             if allowed_value > max_value:
                 return([RuleMatch(path, message)])
 
@@ -71,8 +70,8 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should have a length above or equal to MinLength'
 
-        value = allowed_value if isinstance(allowed_value, six.string_types) else str(allowed_value)
-        if isinstance(min_length, six.integer_types):
+        value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
+        if isinstance(min_length, int):
             if len(value) < min_length:
                 return([RuleMatch(path, message)])
 
@@ -84,8 +83,8 @@ class Default(CloudFormationLintRule):
         """
         message = 'Default should have a length below or equal to MaxLength'
 
-        value = allowed_value if isinstance(allowed_value, six.string_types) else str(allowed_value)
-        if isinstance(max_length, six.integer_types):
+        value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
+        if isinstance(max_length, int):
             if len(value) > max_length:
                 return([RuleMatch(path, message)])
 

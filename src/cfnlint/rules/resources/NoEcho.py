@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import bool_compare
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -46,7 +45,7 @@ class NoEcho(CloudFormationLintRule):
         matches = []
         subs = cfn.search_deep_keys('Fn::Sub')
         for sub in subs:
-            if isinstance(sub[-1], six.string_types):
+            if isinstance(sub[-1], str):
                 params = cfn.get_sub_parameters(sub[-1])
                 for param in params:
                     if param in no_echo_params:

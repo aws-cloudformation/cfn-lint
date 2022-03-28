@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS
@@ -57,7 +56,7 @@ class Value(CloudFormationLintRule):
             if ref[0] == 'Outputs':
                 if ref[2] == 'Value':
                     obj = ref[-1]
-                    if isinstance(obj, six.string_types):
+                    if isinstance(obj, str):
                         param = template.get('Parameters', {}).get(obj)
                         if param:
                             paramtype = param.get('Type')
