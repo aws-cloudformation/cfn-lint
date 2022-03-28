@@ -44,7 +44,7 @@ that could potentially be improved'),
     install_requires=[
         'pyyaml>5.4',
         'six>=1.11',
-        'aws-sam-translator>=1.42.0',
+        'aws-sam-translator>=1.43.0',
         'jsonpatch',
         'jsonschema~=3.0',
         'importlib_resources>=1.4,<4;python_version<"3.7"',
