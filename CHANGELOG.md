@@ -1,3 +1,11 @@
+### v0.59.0
+###### Features
+- Update `aws-sam-translator` to `1.45.0` (pull #[2245](https://github.com/aws-cloudformation/cfn-lint/pull/2245))
+- Remove dependency on `six` (pull #[2204](https://github.com/aws-cloudformation/cfn-lint/pull/2204))
+- New rule [E3504](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3504) to validate resources with `AWS::Backup::BackupPlan`. The property `DeleteAfterDays` cannot be less than 90 days from `MoveToColdStorageAfterDays` (pull #[2230](https://github.com/aws-cloudformation/cfn-lint/pull/2230))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `66.0.0` (pull #[2245](https://github.com/aws-cloudformation/cfn-lint/pull/2245))
+
 ### v0.58.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `61.0.0` (pull #[2232](https://github.com/aws-cloudformation/cfn-lint/pull/2232))
