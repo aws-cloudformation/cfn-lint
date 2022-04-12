@@ -395,26 +395,30 @@
       "StringPrefix": "appmesh-preview"
     },
     "AWS App Runner": {
-      "ARNFormat": "arn:aws:apprunner:${Region}:${AccountID}:${ResourceType}/${PathToResource}",
+      "ARNFormat": "arn:aws:apprunner:${Region}:${Account}:${ResourceType}/${PathToResource}",
       "ARNRegex": "^arn:aws:apprunner:.+",
       "Actions": [
         "AssociateCustomDomain",
         "CreateAutoScalingConfiguration",
         "CreateConnection",
+        "CreateObservabilityConfiguration",
         "CreateService",
         "CreateVpcConnector",
         "DeleteAutoScalingConfiguration",
         "DeleteConnection",
+        "DeleteObservabilityConfiguration",
         "DeleteService",
         "DeleteVpcConnector",
         "DescribeAutoScalingConfiguration",
         "DescribeCustomDomains",
+        "DescribeObservabilityConfiguration",
         "DescribeOperation",
         "DescribeService",
         "DescribeVpcConnector",
         "DisassociateCustomDomain",
         "ListAutoScalingConfigurations",
         "ListConnections",
+        "ListObservabilityConfigurations",
         "ListOperations",
         "ListServices",
         "ListTagsForResource",
@@ -431,6 +435,7 @@
       "conditionKeys": [
         "apprunner:AutoScalingConfigurationArn",
         "apprunner:ConnectionArn",
+        "apprunner:ObservabilityConfigurationArn",
         "apprunner:VpcConnectorArn",
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
@@ -2176,6 +2181,40 @@
         "dataexchange:JobType"
       ]
     },
+    "AWS Data Pipeline": {
+      "Actions": [
+        "ActivatePipeline",
+        "AddTags",
+        "CreatePipeline",
+        "DeactivatePipeline",
+        "DeletePipeline",
+        "DescribeObjects",
+        "DescribePipelines",
+        "EvaluateExpression",
+        "GetAccountLimits",
+        "GetPipelineDefinition",
+        "ListPipelines",
+        "PollForTask",
+        "PutAccountLimits",
+        "PutPipelineDefinition",
+        "QueryObjects",
+        "RemoveTags",
+        "ReportTaskProgress",
+        "ReportTaskRunnerHeartbeat",
+        "SetStatus",
+        "SetTaskStatus",
+        "ValidatePipelineDefinition"
+      ],
+      "HasResource": false,
+      "StringPrefix": "datapipeline",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:TagKeys",
+        "datapipeline:PipelineCreator",
+        "datapipeline:Tag",
+        "datapipeline:workerGroup"
+      ]
+    },
     "AWS DataSync": {
       "ARNFormat": "arn:${Partition}:datasync:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:${Partition}:datasync:.+",
@@ -2833,7 +2872,7 @@
       ]
     },
     "AWS Elemental Appliances and Software": {
-      "ARNFormat": "arn:aws:elemental-appliances-software:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:elemental-appliances-software:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:elemental-appliances-software:.+:.+:.+",
       "Actions": [
         "CreateQuote",
@@ -2853,7 +2892,7 @@
       ]
     },
     "AWS Elemental Appliances and Software Activation Service": {
-      "ARNFormat": "arn:aws:elemental-activations:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:elemental-activations:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:elemental-activations:.+:.+:.+",
       "Actions": [
         "CompleteAccountRegistration",
@@ -4012,7 +4051,7 @@
       ]
     },
     "AWS IoT 1-Click": {
-      "ARNFormat": "arn:aws:iot1click:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:iot1click:${Region}:${Account}:${Type}/${Name}",
       "ARNRegex": "^arn:aws:iot1click:.+:[0-9]+:.+",
       "Actions": [
         "AssociateDeviceWithPlacement",
@@ -16198,38 +16237,6 @@
       ],
       "HasResource": false,
       "StringPrefix": "applicationinsights"
-    },
-    "Data Pipeline": {
-      "Actions": [
-        "ActivatePipeline",
-        "AddTags",
-        "CreatePipeline",
-        "DeactivatePipeline",
-        "DeletePipeline",
-        "DescribeObjects",
-        "DescribePipelines",
-        "EvaluateExpression",
-        "GetAccountLimits",
-        "GetPipelineDefinition",
-        "ListPipelines",
-        "PollForTask",
-        "PutAccountLimits",
-        "PutPipelineDefinition",
-        "QueryObjects",
-        "RemoveTags",
-        "ReportTaskProgress",
-        "ReportTaskRunnerHeartbeat",
-        "SetStatus",
-        "SetTaskStatus",
-        "ValidatePipelineDefinition"
-      ],
-      "HasResource": false,
-      "StringPrefix": "datapipeline",
-      "conditionKeys": [
-        "datapipeline:PipelineCreator",
-        "datapipeline:Tag",
-        "datapipeline:workerGroup"
-      ]
     },
     "Database Query Metadata Service": {
       "ARNFormat": "arn:${Partition}:dbqms::",
