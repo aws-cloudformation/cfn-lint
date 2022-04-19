@@ -36,7 +36,7 @@ class Properties(CloudFormationLintRule):
         """
 
         matches = []
-        if isinstance(value, list) or value == {'Ref': 'AWS::NotificationARNs'}:
+        if (isinstance(value, list) and primtype != 'Json') or value == {'Ref': 'AWS::NotificationARNs'}:
             message = 'Property should be of type %s not List at %s' % (
                 primtype, '/'.join(map(str, proppath)))
             matches.append(RuleMatch(proppath, message))
