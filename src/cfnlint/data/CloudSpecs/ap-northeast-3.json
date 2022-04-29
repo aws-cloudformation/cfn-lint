@@ -35468,6 +35468,12 @@
     "AWS::SecretsManager::RotationSchedule.HostedRotationLambda": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html",
       "Properties": {
+        "ExcludeCharacters": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html#cfn-secretsmanager-rotationschedule-hostedrotationlambda-excludecharacters",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "KmsKeyArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html#cfn-secretsmanager-rotationschedule-hostedrotationlambda-kmskeyarn",
           "PrimitiveType": "String",
@@ -38581,7 +38587,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "68.0.0",
+  "ResourceSpecificationVersion": "68.1.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -47950,6 +47956,48 @@
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html#cfn-ec2-internetgateway-tags",
           "DuplicatesAllowed": true,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::EC2::KeyPair": {
+      "Attributes": {
+        "KeyFingerprint": {
+          "PrimitiveType": "String"
+        },
+        "KeyPairId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html",
+      "Properties": {
+        "KeyName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keyname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "KeyType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keytype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EC2::KeyPair.KeyType"
+          }
+        },
+        "PublicKeyMaterial": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-publickeymaterial",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-tags",
+          "DuplicatesAllowed": false,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -63025,6 +63073,83 @@
         }
       }
     },
+    "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation": {
+      "Attributes": {
+        "ApplicationArn": {
+          "PrimitiveType": "String"
+        },
+        "AttributeGroupArn": {
+          "PrimitiveType": "String"
+        },
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-attributegroupassociation.html",
+      "Properties": {
+        "Application": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-attributegroupassociation.html#cfn-servicecatalogappregistry-attributegroupassociation-application",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.Application"
+          }
+        },
+        "AttributeGroup": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-attributegroupassociation.html#cfn-servicecatalogappregistry-attributegroupassociation-attributegroup",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.AttributeGroup"
+          }
+        }
+      }
+    },
+    "AWS::ServiceCatalogAppRegistry::ResourceAssociation": {
+      "Attributes": {
+        "ApplicationArn": {
+          "PrimitiveType": "String"
+        },
+        "Id": {
+          "PrimitiveType": "String"
+        },
+        "ResourceArn": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-resourceassociation.html",
+      "Properties": {
+        "Application": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-resourceassociation.html#cfn-servicecatalogappregistry-resourceassociation-application",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ServiceCatalogAppRegistry::ResourceAssociation.Application"
+          }
+        },
+        "Resource": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-resourceassociation.html#cfn-servicecatalogappregistry-resourceassociation-resource",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ServiceCatalogAppRegistry::ResourceAssociation.Resource"
+          }
+        },
+        "ResourceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalogappregistry-resourceassociation.html#cfn-servicecatalogappregistry-resourceassociation-resourcetype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ServiceCatalogAppRegistry::ResourceAssociation.ResourceType"
+          }
+        }
+      }
+    },
     "AWS::StepFunctions::Activity": {
       "Attributes": {
         "Arn": {
@@ -66380,6 +66505,12 @@
       "AllowedValues": [
         "default",
         "host"
+      ]
+    },
+    "AWS::EC2::KeyPair.KeyType": {
+      "AllowedValues": [
+        "rsa",
+        "ed25519"
       ]
     },
     "AWS::EC2::PrefixList.AddressFamily": {
@@ -69855,6 +69986,29 @@
       "AllowedPatternRegex": "\\w+",
       "StringMax": 256,
       "StringMin": 1
+    },
+    "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.Application": {
+      "AllowedPatternRegex": "\\w+|[a-z0-9]{12}",
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.AttributeGroup": {
+      "AllowedPatternRegex": "\\w+|[a-z0-9]{12}",
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::ServiceCatalogAppRegistry::ResourceAssociation.Application": {
+      "AllowedPatternRegex": "\\w+|[a-z0-9]{12}",
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::ServiceCatalogAppRegistry::ResourceAssociation.Resource": {
+      "AllowedPatternRegex": "\\w+|arn:aws[-a-z]*:cloudformation:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:stack/[a-zA-Z][-A-Za-z0-9]{0,127}/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}"
+    },
+    "AWS::ServiceCatalogAppRegistry::ResourceAssociation.ResourceType": {
+      "AllowedValues": [
+        "CFN_STACK"
+      ]
     },
     "AWS::StepFunctions::Activity.Name": {
       "StringMax": 80,

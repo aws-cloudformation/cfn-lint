@@ -32502,7 +32502,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-key",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.AttachmentsSource.Key"
           }
@@ -32511,14 +32511,14 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-name",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Values": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-attachmentssource.html#cfn-ssm-document-attachmentssource-values",
           "PrimitiveItemType": "String",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.AttachmentsSource.Values"
           }
@@ -32532,7 +32532,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-name",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.DocumentRequires.Name"
           }
@@ -32541,7 +32541,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ssm-document-documentrequires.html#cfn-ssm-document-documentrequires-version",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.DocumentRequires.Version"
           }
@@ -32944,6 +32944,12 @@
     "AWS::SecretsManager::RotationSchedule.HostedRotationLambda": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html",
       "Properties": {
+        "ExcludeCharacters": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html#cfn-secretsmanager-rotationschedule-hostedrotationlambda-excludecharacters",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "KmsKeyArn": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-secretsmanager-rotationschedule-hostedrotationlambda.html#cfn-secretsmanager-rotationschedule-hostedrotationlambda-kmskeyarn",
           "PrimitiveType": "String",
@@ -36112,7 +36118,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "68.0.0",
+  "ResourceSpecificationVersion": "68.1.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -44187,6 +44193,48 @@
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html#cfn-ec2-internetgateway-tags",
           "DuplicatesAllowed": true,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::EC2::KeyPair": {
+      "Attributes": {
+        "KeyFingerprint": {
+          "PrimitiveType": "String"
+        },
+        "KeyPairId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html",
+      "Properties": {
+        "KeyName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keyname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "KeyType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keytype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EC2::KeyPair.KeyType"
+          }
+        },
+        "PublicKeyMaterial": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-publickeymaterial",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-tags",
+          "DuplicatesAllowed": false,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -58060,19 +58108,19 @@
           "ItemType": "AttachmentsSource",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Content": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-content",
           "PrimitiveType": "Json",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "DocumentFormat": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-documentformat",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.DocumentFormat"
           }
@@ -58100,7 +58148,7 @@
           "ItemType": "DocumentRequires",
           "Required": false,
           "Type": "List",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-tags",
@@ -58113,16 +58161,25 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-targettype",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.TargetType"
+          }
+        },
+        "UpdateMethod": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-updatemethod",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Document.UpdateMethod"
           }
         },
         "VersionName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-document.html#cfn-ssm-document-versionname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Document.VersionName"
           }
@@ -62967,6 +63024,12 @@
         "host"
       ]
     },
+    "AWS::EC2::KeyPair.KeyType": {
+      "AllowedValues": [
+        "rsa",
+        "ed25519"
+      ]
+    },
     "AWS::EC2::SecurityGroup.Description": {
       "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
       "StringMax": 255,
@@ -65725,6 +65788,12 @@
     "AWS::SSM::Document.TargetType": {
       "AllowedPatternRegex": "^\\/[\\w\\.\\-\\:\\/]*$"
     },
+    "AWS::SSM::Document.UpdateMethod": {
+      "AllowedValues": [
+        "Replace",
+        "NewVersion"
+      ]
+    },
     "AWS::SSM::Document.VersionName": {
       "AllowedPatternRegex": "^[a-zA-Z0-9_\\-.]{1,128}$"
     },
@@ -66715,6 +66784,16 @@
         "c6g.medium",
         "c6g.metal",
         "c6g.xlarge",
+        "c6i.12xlarge",
+        "c6i.16xlarge",
+        "c6i.24xlarge",
+        "c6i.2xlarge",
+        "c6i.32xlarge",
+        "c6i.4xlarge",
+        "c6i.8xlarge",
+        "c6i.large",
+        "c6i.metal",
+        "c6i.xlarge",
         "d2.2xlarge",
         "d2.4xlarge",
         "d2.8xlarge",
@@ -66797,6 +66876,16 @@
         "m6g.medium",
         "m6g.metal",
         "m6g.xlarge",
+        "m6i.12xlarge",
+        "m6i.16xlarge",
+        "m6i.24xlarge",
+        "m6i.2xlarge",
+        "m6i.32xlarge",
+        "m6i.4xlarge",
+        "m6i.8xlarge",
+        "m6i.large",
+        "m6i.metal",
+        "m6i.xlarge",
         "p3dn.24xlarge",
         "r5.12xlarge",
         "r5.16xlarge",
@@ -66851,6 +66940,16 @@
         "r6g.medium",
         "r6g.metal",
         "r6g.xlarge",
+        "r6i.12xlarge",
+        "r6i.16xlarge",
+        "r6i.24xlarge",
+        "r6i.2xlarge",
+        "r6i.32xlarge",
+        "r6i.4xlarge",
+        "r6i.8xlarge",
+        "r6i.large",
+        "r6i.metal",
+        "r6i.xlarge",
         "t3.2xlarge",
         "t3.large",
         "t3.medium",
