@@ -17245,6 +17245,12 @@
           "Required": false,
           "UpdateType": "Immutable"
         },
+        "Priority": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-launchtemplateoverrides.html#cfn-ec2-spotfleet-launchtemplateoverrides-priority",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
         "SpotPrice": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-launchtemplateoverrides.html#cfn-ec2-spotfleet-launchtemplateoverrides-spotprice",
           "PrimitiveType": "String",
@@ -35452,6 +35458,29 @@
         }
       }
     },
+    "AWS::SageMaker::FeatureGroup.FeatureDefinition": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-featuregroup-featuredefinition.html",
+      "Properties": {
+        "FeatureName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-featuregroup-featuredefinition.html#cfn-sagemaker-featuregroup-featuredefinition-featurename",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.FeatureDefinition.FeatureName"
+          }
+        },
+        "FeatureType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-featuregroup-featuredefinition.html#cfn-sagemaker-featuregroup-featuredefinition-featuretype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.FeatureDefinition.FeatureType"
+          }
+        }
+      }
+    },
     "AWS::SageMaker::Model.ContainerDefinition": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-model-containerdefinition.html",
       "Properties": {
@@ -39468,7 +39497,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "68.0.0",
+  "ResourceSpecificationVersion": "68.1.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -48250,6 +48279,48 @@
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-internetgateway.html#cfn-ec2-internetgateway-tags",
           "DuplicatesAllowed": true,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::EC2::KeyPair": {
+      "Attributes": {
+        "KeyFingerprint": {
+          "PrimitiveType": "String"
+        },
+        "KeyPairId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html",
+      "Properties": {
+        "KeyName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keyname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "KeyType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keytype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EC2::KeyPair.KeyType"
+          }
+        },
+        "PublicKeyMaterial": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-publickeymaterial",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-tags",
+          "DuplicatesAllowed": false,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -61954,6 +62025,81 @@
         }
       }
     },
+    "AWS::SageMaker::FeatureGroup": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html",
+      "Properties": {
+        "Description": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "EventTimeFeatureName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-eventtimefeaturename",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.EventTimeFeatureName"
+          }
+        },
+        "FeatureDefinitions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-featuredefinitions",
+          "DuplicatesAllowed": true,
+          "ItemType": "FeatureDefinition",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        },
+        "FeatureGroupName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-featuregroupname",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.FeatureGroupName"
+          }
+        },
+        "OfflineStoreConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-offlinestoreconfig",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "OnlineStoreConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-onlinestoreconfig",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "RecordIdentifierFeatureName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-recordidentifierfeaturename",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.RecordIdentifierFeatureName"
+          }
+        },
+        "RoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-rolearn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::SageMaker::FeatureGroup.RoleArn"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-featuregroup.html#cfn-sagemaker-featuregroup-tags",
+          "DuplicatesAllowed": true,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::SageMaker::Image": {
       "Attributes": {
         "ImageArn": {
@@ -66599,6 +66745,12 @@
         "host"
       ]
     },
+    "AWS::EC2::KeyPair.KeyType": {
+      "AllowedValues": [
+        "rsa",
+        "ed25519"
+      ]
+    },
     "AWS::EC2::SecurityGroup.Description": {
       "AllowedPatternRegex": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$",
       "StringMax": 255,
@@ -69505,6 +69657,38 @@
     },
     "AWS::SageMaker::Domain.VpcId": {
       "AllowedPatternRegex": "[-0-9a-zA-Z]+"
+    },
+    "AWS::SageMaker::FeatureGroup.EventTimeFeatureName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::SageMaker::FeatureGroup.FeatureDefinition.FeatureName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::SageMaker::FeatureGroup.FeatureDefinition.FeatureType": {
+      "AllowedValues": [
+        "Integral",
+        "Fractional",
+        "String"
+      ]
+    },
+    "AWS::SageMaker::FeatureGroup.FeatureGroupName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::SageMaker::FeatureGroup.RecordIdentifierFeatureName": {
+      "AllowedPatternRegex": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,63}",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::SageMaker::FeatureGroup.RoleArn": {
+      "AllowedPatternRegex": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+      "StringMax": 2048,
+      "StringMin": 20
     },
     "AWS::SageMaker::Image.ImageDescription": {
       "AllowedPatternRegex": ".+",
