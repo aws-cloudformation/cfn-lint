@@ -44,6 +44,18 @@ class Base(CloudFormationLintRule):
                     results.append(RuleMatch(['AWSTemplateFormatVersion'], message.format(valid_version)))
         return results
 
+    def _validate_transform(self, transforms):
+        results = []
+        if not isinstance(transforms, (list, str)):
+            message = 'Transform has to be a list or string'
+            results.append(RuleMatch(['Transform'], message.format()))
+            return results
+
+        if not isinstance(transforms, list):
+            transforms = [transforms]
+
+        return results
+
     def match(self, cfn):
         matches = []
 
@@ -60,5 +72,6 @@ class Base(CloudFormationLintRule):
                 matches.append(RuleMatch([y], message.format(y)))
 
         matches.extend(self._validate_version(cfn.template))
-
+        if 'Transform' in cfn.template:
+            matches.extend(self._validate_transform(cfn.template.get('Transform')))
         return matches
