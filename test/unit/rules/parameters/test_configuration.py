@@ -20,4 +20,4 @@ class TestParameterConfiguration(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/parameters/configuration.yaml', 7)
+        self.helper_file_negative('test/fixtures/templates/bad/parameters/configuration.yaml', 16)

@@ -12,7 +12,7 @@ from cfnlint.graph import Graph
 
 LOGGER = logging.getLogger(__name__)
 
-class Template(object):  # pylint: disable=R0904
+class Template(object):  # pylint: disable=R0904,too-many-lines
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
@@ -88,6 +88,18 @@ class Template(object):  # pylint: disable=R0904
 
         return parameters
 
+    def get_parameters_valid(self):
+        LOGGER.debug('Get parameters from template...')
+        result = {}
+        if isinstance(self.template.get('Parameters'), dict):
+            parameters = self.template.get('Parameters')
+            for parameter_name, parameter_value in parameters.items():
+                if isinstance(parameter_value, dict):
+                    if isinstance(parameter_value.get('Type'), str):
+                        result[parameter_name] = parameter_value
+
+        return result
+
     def get_modules(self):
         """Get Modules"""
         LOGGER.debug('Get modules from template...')
@@ -136,11 +148,12 @@ class Template(object):  # pylint: disable=R0904
         parameters = self.template.get('Parameters', {})
         if parameters:
             for name, value in parameters.items():
-                if 'Type' in value:
-                    element = {}
-                    element['Type'] = value['Type']
-                    element['From'] = 'Parameters'
-                    results[name] = element
+                if isinstance(value, dict):
+                    if 'Type' in value:
+                        element = {}
+                        element['Type'] = value['Type']
+                        element['From'] = 'Parameters'
+                        results[name] = element
         resources = self.template.get('Resources', {})
         if resources:
             for name, value in resources.items():

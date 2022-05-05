@@ -18,10 +18,10 @@ class NoEcho(CloudFormationLintRule):
         """ Get no Echo Params"""
         no_echo_params = []
         for parameter_name, parameter_value in cfn.get_parameters().items():
-            noecho = parameter_value.get('NoEcho', default=False)
-            if bool_compare(noecho, True):
-                no_echo_params.append(parameter_name)
-
+            if isinstance(parameter_value, dict):
+                noecho = parameter_value.get('NoEcho', default=False)
+                if bool_compare(noecho, True):
+                    no_echo_params.append(parameter_name)
         return no_echo_params
 
     def _check_ref(self, cfn, no_echo_params):
