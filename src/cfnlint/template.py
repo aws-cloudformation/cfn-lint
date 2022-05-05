@@ -100,6 +100,18 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
 
         return result
 
+    def get_outputs_valid(self):
+        LOGGER.debug('Get outputs from template...')
+        result = {}
+        if isinstance(self.template.get('Outputs'), dict):
+            parameters = self.template.get('Outputs')
+            for parameter_name, parameter_value in parameters.items():
+                if isinstance(parameter_value, dict):
+                    if isinstance(parameter_value.get('Value'), (str, dict)):
+                        result[parameter_name] = parameter_value
+
+        return result
+
     def get_modules(self):
         """Get Modules"""
         LOGGER.debug('Get modules from template...')

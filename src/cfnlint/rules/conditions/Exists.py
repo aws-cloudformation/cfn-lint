@@ -45,7 +45,7 @@ class Exists(CloudFormationLintRule):
                     ref_conditions[condtree[-1]] = path
 
         # Get Output Conditions
-        for _, output_values in cfn.template.get('Outputs', {}).items():
+        for _, output_values in cfn.get_outputs_valid().items():
             if 'Condition' in output_values:
                 path = ['Outputs', output_values['Condition']]
                 ref_conditions[output_values['Condition']] = path

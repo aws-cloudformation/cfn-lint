@@ -17,7 +17,7 @@ class Description(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        outputs = cfn.template.get('Outputs', {})
+        outputs = cfn.get_outputs_valid()
         if outputs:
             for output_name, output_value in outputs.items():
                 description = output_value.get('Description')
