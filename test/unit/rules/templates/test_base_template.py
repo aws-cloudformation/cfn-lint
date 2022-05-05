@@ -29,3 +29,15 @@ class TestBaseTemplate(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/generic.yaml', 1)
+
+    def test_file_base(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/templates/base.yaml', 1)
+
+    def test_file_base_date(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/templates/base-date.yaml', 1)
+    
+    def test_file_base_null(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/templates/base-null.yaml', 1)

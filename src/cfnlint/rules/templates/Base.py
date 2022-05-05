@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import datetime
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -29,6 +30,20 @@ class Base(CloudFormationLintRule):
         }
         self.configure()
 
+    def _validate_version(self, template):
+        results = []
+        valid_version = '2010-09-09'
+        if 'AWSTemplateFormatVersion' in template:
+            version = template.get('AWSTemplateFormatVersion')
+            if not isinstance(version, (str, datetime.date)):
+                message = 'AWSTemplateFormatVersion only valid value is {0}'
+                results.append(RuleMatch(['AWSTemplateFormatVersion'], message.format(valid_version)))
+            else:
+                if version != valid_version and version != datetime.datetime.strptime(valid_version, '%Y-%m-%d').date():
+                    message = 'AWSTemplateFormatVersion only valid value is {0}'
+                    results.append(RuleMatch(['AWSTemplateFormatVersion'], message.format(valid_version)))
+        return results
+
     def match(self, cfn):
         matches = []
 
@@ -43,5 +58,7 @@ class Base(CloudFormationLintRule):
             if y not in top_level:
                 message = 'Missing top level template section {0}'
                 matches.append(RuleMatch([y], message.format(y)))
+
+        matches.extend(self._validate_version(cfn.template))
 
         return matches
