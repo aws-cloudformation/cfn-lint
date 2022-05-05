@@ -18,9 +18,10 @@ class Description(CloudFormationLintRule):
         matches = []
 
         description = cfn.template.get('Description')
+        if not 'Description' in cfn.template:
+            return matches
 
-        if description:
-            if not isinstance(description, str):
-                message = 'Description can only be a string'
-                matches.append(RuleMatch(['Description'], message))
+        if not isinstance(description, str):
+            message = 'Description can only be a string'
+            matches.append(RuleMatch(['Description'], message))
         return matches
