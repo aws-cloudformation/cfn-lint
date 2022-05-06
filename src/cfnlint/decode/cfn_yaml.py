@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import fileinput
 import logging
 import sys
-import six
 from yaml.composer import Composer
 from yaml.reader import Reader
 from yaml.scanner import Scanner
@@ -103,7 +102,21 @@ class NodeConstructor(SafeConstructor):
                             ),
                         ]
                     )
-            mapping[key] = value
+            try:
+                mapping[key] = value
+            except:
+                raise CfnParseError(
+                        self.filename,
+                        [
+                            build_match(
+                                filename=self.filename,
+                                message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
+                                line_number=key.start_mark.line,
+                                column_number=key.start_mark.column,
+                                key=key
+                            ),
+                        ]
+                    )
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
 
@@ -115,29 +128,13 @@ class NodeConstructor(SafeConstructor):
 
     def construct_yaml_str(self, node):
         obj = SafeConstructor.construct_yaml_str(self, node)
-        assert isinstance(obj, (six.string_types))
+        assert isinstance(obj, (str))
         return str_node(obj, node.start_mark, node.end_mark)
 
     def construct_yaml_seq(self, node):
         obj, = SafeConstructor.construct_yaml_seq(self, node)
         assert isinstance(obj, list)
         return list_node(obj, node.start_mark, node.end_mark)
-
-    def construct_yaml_null_error(self, node):
-        """Throw a null error"""
-        raise CfnParseError(
-            self.filename,
-            [
-                build_match(
-                    filename=self.filename,
-                    message='Null value at line {0} column {1}'.format(
-                        node.start_mark.line + 1, node.start_mark.column + 1),
-                    line_number=node.start_mark.line,
-                    column_number=node.start_mark.column,
-                    key=' ',
-                )
-            ]
-        )
 
 
 NodeConstructor.add_constructor(
@@ -151,10 +148,6 @@ NodeConstructor.add_constructor(
 NodeConstructor.add_constructor(
     u'tag:yaml.org,2002:seq',
     NodeConstructor.construct_yaml_seq)
-
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:null',
-    NodeConstructor.construct_yaml_null_error)
 
 
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):
@@ -207,7 +200,7 @@ def construct_getatt(node):
     Reconstruct !GetAtt into a list
     """
 
-    if isinstance(node.value, (six.string_types)):
+    if isinstance(node.value, (str)):
         return list_node(node.value.split('.', 1), node.start_mark, node.end_mark)
     if isinstance(node.value, list):
         return list_node([s.value for s in node.value], node.start_mark, node.end_mark)

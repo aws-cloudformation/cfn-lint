@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -32,7 +31,7 @@ class NumberSize(CloudFormationLintRule):
 
         number_types = (float, int,)
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             try:
                 value = float(value)
             except ValueError:

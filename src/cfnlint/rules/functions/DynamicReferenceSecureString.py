@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -53,7 +52,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         """Chec item type"""
         matches = []
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
                 message = 'Dynamic Reference secure strings are not supported for this property at %s' % (
                     '/'.join(map(str, path[:])))
@@ -81,7 +80,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         """Check Sub Function Dynamic References"""
         matches = []
         if isinstance(value, list):
-            if isinstance(value[0], six.string_types):
+            if isinstance(value[0], str):
                 matches.extend(self.check_dyn_ref_value(value[0], path[:] + [0]))
         else:
             matches.extend(self.check_dyn_ref_value(value, path[:]))

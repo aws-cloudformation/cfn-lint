@@ -24,6 +24,12 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
         """Test Positive"""
         self.helper_file_positive()
 
+    def test_bad_null_values(self):
+        """Test strict false"""
+        self.helper_file_negative(
+            'test/fixtures/templates/bad/resources/properties/primitive_types.yaml', 1
+        )
+
     def test_template_config(self):
         """Test strict false"""
         self.helper_file_rule_config(

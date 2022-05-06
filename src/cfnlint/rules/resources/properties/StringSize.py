@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -30,7 +29,7 @@ class StringSize(CloudFormationLintRule):
         string_min = kwargs.get('string_min')
         string_max = kwargs.get('string_max')
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if not string_min <= len(value) <= string_max:
                 message = 'String has to have length between {0} and {1} at {2}'
                 matches.append(

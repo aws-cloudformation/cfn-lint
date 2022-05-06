@@ -7,7 +7,6 @@ import logging
 from datetime import datetime
 import importlib
 import traceback
-import six
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
@@ -403,7 +402,7 @@ class RulesCollection(object):
         for resource_name, resource_attributes in cfn.get_resources().items():
             resource_type = resource_attributes.get('Type')
             resource_properties = resource_attributes.get('Properties')
-            if isinstance(resource_type, six.string_types) and isinstance(resource_properties, dict):
+            if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ['Resources', resource_name, 'Properties']
                 for rule in self.rules:
                     matches.extend(

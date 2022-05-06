@@ -36,29 +36,3 @@ class TestNulls(BaseTestCase):
     def test_fail_json_run(self):
         """Test failure run"""
 
-    def test_fail_run(self):
-        """Test failure run"""
-
-        filename = 'test/fixtures/templates/bad/null_values.json'
-
-        try:
-            with open(filename) as fp:
-                json.load(fp, cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
-        except cfnlint.decode.cfn_json.JSONDecodeError as err:
-            self.assertIn("Null Error \"EbsOptimized\"", err.msg)
-            return
-
-        assert(False)
-
-    def test_fail_yaml_run(self):
-        """Test failure run"""
-
-        filename = 'test/fixtures/templates/bad/null_values.yaml'
-
-        try:
-            cfnlint.decode.cfn_yaml.load(filename)
-        except cfnlint.decode.cfn_yaml.CfnParseError:
-            assert(True)
-            return
-
-        assert(False)

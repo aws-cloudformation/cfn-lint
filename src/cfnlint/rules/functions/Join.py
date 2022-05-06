@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS, VALID_PARAMETER_TYPES_LIST
@@ -41,7 +40,7 @@ class Join(CloudFormationLintRule):
 
     def _normalize_getatt(self, getatt):
         """ Normalize getatt into an array"""
-        if isinstance(getatt, six.string_types):
+        if isinstance(getatt, str):
             return getatt.split('.', 1)
         return getatt
 
@@ -131,7 +130,7 @@ class Join(CloudFormationLintRule):
                         message = 'Join list of values should be singular for {0}'
                         matches.append(RuleMatch(
                             path, message.format('/'.join(map(str, path)))))
-                elif not isinstance(string_obj, six.string_types):
+                elif not isinstance(string_obj, str):
                     message = 'Join list of singular function or string for {0}'
                     matches.append(RuleMatch(
                         path, message.format('/'.join(map(str, path)))))
@@ -150,7 +149,7 @@ class Join(CloudFormationLintRule):
                 if len(join_value_obj) == 2:
                     join_string = join_value_obj[0]
                     join_string_objs = join_value_obj[1]
-                    if not isinstance(join_string, six.string_types):
+                    if not isinstance(join_string, str):
                         message = 'Join string has to be of type string for {0}'
                         matches.append(RuleMatch(
                             path, message.format('/'.join(map(str, path)))))

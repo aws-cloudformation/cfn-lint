@@ -6,7 +6,6 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import re
-import six
 import networkx
 
 LOGGER = logging.getLogger('cfnlint.graph')
@@ -28,11 +27,11 @@ class Graph(object):
             graph_label = str.format('{0}\\n<{1}>', resourceId, type_val)
             self.graph.add_node(resourceId, label=graph_label)
             target_ids = resourceVals.get('DependsOn', [])
-            if isinstance(target_ids, (list, six.string_types)):
-                if isinstance(target_ids, (six.string_types)):
+            if isinstance(target_ids, (list, str)):
+                if isinstance(target_ids, (str)):
                     target_ids = [target_ids]
                 for target_id in target_ids:
-                    if isinstance(target_id, six.string_types):
+                    if isinstance(target_id, str):
                         if self._is_resource(cfn, target_id):
                             target_resource_id = target_id
                             self.graph.add_edge(resourceId, target_resource_id, label='DependsOn')
@@ -45,7 +44,7 @@ class Graph(object):
             if not ref_type == 'Resources':
                 continue
 
-            if isinstance(target_id, (six.text_type, six.string_types, int)) and (self._is_resource(cfn, target_id)):
+            if isinstance(target_id, (str, int)) and (self._is_resource(cfn, target_id)):
                 target_resource_id = target_id
                 self.graph.add_edge(source_id, target_resource_id, label='Ref')
 
@@ -62,7 +61,7 @@ class Graph(object):
                 target_resource_id = value[0]
                 self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
-            if isinstance(value, (six.string_types, six.text_type)) and '.' in value:
+            if isinstance(value, (str, str)) and '.' in value:
                 target_resource_id = value.split('.')[0]
                 if self._is_resource(cfn, target_resource_id):
                     self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
@@ -84,7 +83,7 @@ class Graph(object):
                 if len(value) == 2:
                     sub_parameter_values = value[1]
                 sub_parameters = self._find_parameter(value[0])
-            elif isinstance(value, (six.text_type, six.string_types)):
+            elif isinstance(value, (str, str)):
                 sub_parameters = self._find_parameter(value)
 
             for sub_parameter in sub_parameters:

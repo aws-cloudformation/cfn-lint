@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -34,7 +33,7 @@ class RefExist(CloudFormationLintRule):
         # start with the basic ref calls
         for reftree in reftrees:
             ref = reftree[-1]
-            if isinstance(ref, (six.string_types, six.text_type, int)):
+            if isinstance(ref, (str, int)):
                 if ref not in valid_refs:
                     message = 'Ref {0} not found as a resource or parameter'
                     matches.append(RuleMatch(

@@ -61,3 +61,10 @@ class TestYamlParse(BaseTestCase):
                 matches.extend(self.rules.run(filename, cfn))
                 assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(
                     failures, len(matches), values.get('filename'))
+
+
+    def test_map_failure(self):
+        """Test a failure is passed on unhashable map"""
+        filename = 'test/fixtures/templates/bad/core/parse_invalid_map.yaml'
+
+        self.assertRaises(cfnlint.decode.cfn_yaml.CfnParseError, cfnlint.decode.cfn_yaml.load, filename)

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -31,7 +30,7 @@ class If(CloudFormationLintRule):
                     matches.append(RuleMatch(
                         iftree[:-1], message
                     ))
-                if not isinstance(if_condition, six.string_types):
+                if not isinstance(if_condition, str):
                     message = 'Fn::If first element must be a condition and a string.'
                     matches.append(RuleMatch(
                         iftree[:-1] + [0], message

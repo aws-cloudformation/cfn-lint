@@ -6,7 +6,6 @@ import hashlib
 from copy import copy
 import json
 import logging
-import six
 import cfnlint.helpers
 
 LOGGER = logging.getLogger(__name__)
@@ -36,9 +35,9 @@ class EqualsValue(object):
             else:
                 LOGGER.debug('Length of the object needs to be 1')
                 raise ConditionParseError
-        elif isinstance(value, six.string_types):
+        elif isinstance(value, str):
             self.String = value
-        elif isinstance(value, six.integer_types):
+        elif isinstance(value, int):
             self.String = str(value)
         else:
             LOGGER.debug('Equals value has to be string or object')
@@ -241,15 +240,15 @@ class Conditions(object):
                         value_2 = None
                         if isinstance(equals[0], dict):
                             dict_hash_1 = get_hash(equals[0])
-                        elif isinstance(equals[0], six.string_types):
+                        elif isinstance(equals[0], str):
                             value_1 = equals[0]
-                        elif isinstance(equals[0], six.integer_types):
+                        elif isinstance(equals[0], int):
                             value_1 = str(equals[0])
                         if isinstance(equals[1], dict):
                             dict_hash_2 = get_hash(equals[1])
-                        elif isinstance(equals[1], six.string_types):
+                        elif isinstance(equals[1], str):
                             value_2 = equals[1]
-                        elif isinstance(equals[1], six.integer_types):
+                        elif isinstance(equals[1], int):
                             value_2 = str(equals[1])
 
                         if dict_hash_1:
@@ -334,7 +333,7 @@ class Conditions(object):
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
                         # protecting against really badly formatted templates
-                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                        if isinstance(p_value, (int, str)):
                             new = {}
                             # the allowed values could be numbers so force a string
                             new[s_hash] = str(p_value)
@@ -354,7 +353,7 @@ class Conditions(object):
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
                         # protecting against really badly formatted templates
-                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                        if isinstance(p_value, (int, str)):
                             new = copy(current)
                             # the allowed values could be numbers so force a string
                             new[s_hash] = str(p_value)

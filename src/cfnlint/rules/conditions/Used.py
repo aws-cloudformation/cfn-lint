@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -35,7 +34,7 @@ class Used(CloudFormationLintRule):
 
             for condtree in condtrees:
                 if condtree[0] == 'Conditions':
-                    if isinstance(condtree[-1], (str, six.text_type, six.string_types)):
+                    if isinstance(condtree[-1], (str)):
                         ref_conditions.append(condtree[-1])
 
             # Get resource's Conditions

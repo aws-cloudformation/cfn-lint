@@ -24,3 +24,7 @@ class TestDescription(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/templates/description.yaml', 1)
+
+    def test_file_description_null(self):
+        """Test failure"""
+        self.helper_file_negative('test/fixtures/templates/bad/templates/description_null.yaml', 1)

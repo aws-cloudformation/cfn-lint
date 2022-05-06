@@ -7,10 +7,8 @@ import argparse
 import logging
 import glob
 import json
-import os
 import copy
 from pathlib import Path
-import six
 import jsonschema
 import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
@@ -79,10 +77,7 @@ class ConfigFileArgs(object):
             > user_config, project_config = self._find_config()
         """
         config_file_name = '.cfnlintrc'
-        if six.PY34:
-            self.__user_config_file = Path(os.path.expanduser('~')).joinpath(config_file_name)
-        else:
-            self.__user_config_file = Path.home().joinpath(config_file_name)
+        self.__user_config_file = Path.home().joinpath(config_file_name)
 
         self.__project_config_file = Path.cwd().joinpath(config_file_name)
         if self._has_file(config_file_name + '.yaml'):
@@ -448,34 +443,36 @@ class TemplateArgs(object):
     def set_template_args(self, template):
         defaults = {}
         if isinstance(template, dict):
-            configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+            metadata = template.get('Metadata', {})
+            if metadata:
+                configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
 
-            if isinstance(configs, dict):
-                for config_name, config_value in configs.items():
-                    if config_name == 'ignore_checks':
-                        if isinstance(config_value, list):
-                            defaults['ignore_checks'] = config_value
-                    if config_name == 'regions':
-                        if isinstance(config_value, list):
-                            defaults['regions'] = config_value
-                    if config_name == 'append_rules':
-                        if isinstance(config_value, list):
-                            defaults['append_rules'] = config_value
-                    if config_name == 'override_spec':
-                        if isinstance(config_value, (six.string_types)):
-                            defaults['override_spec'] = config_value
-                    if config_name == 'custom_rules':
-                        if isinstance(config_value, (six.string_types)):
-                            defaults['custom_rules'] = config_value
-                    if config_name == 'ignore_bad_template':
-                        if isinstance(config_value, bool):
-                            defaults['ignore_bad_template'] = config_value
-                    if config_name == 'include_checks':
-                        if isinstance(config_value, list):
-                            defaults['include_checks'] = config_value
-                    if config_name == 'configure_rules':
-                        if isinstance(config_value, dict):
-                            defaults['configure_rules'] = config_value
+                if isinstance(configs, dict):
+                    for config_name, config_value in configs.items():
+                        if config_name == 'ignore_checks':
+                            if isinstance(config_value, list):
+                                defaults['ignore_checks'] = config_value
+                        if config_name == 'regions':
+                            if isinstance(config_value, list):
+                                defaults['regions'] = config_value
+                        if config_name == 'append_rules':
+                            if isinstance(config_value, list):
+                                defaults['append_rules'] = config_value
+                        if config_name == 'override_spec':
+                            if isinstance(config_value, (str)):
+                                defaults['override_spec'] = config_value
+                        if config_name == 'custom_rules':
+                            if isinstance(config_value, (str)):
+                                defaults['custom_rules'] = config_value
+                        if config_name == 'ignore_bad_template':
+                            if isinstance(config_value, bool):
+                                defaults['ignore_bad_template'] = config_value
+                        if config_name == 'include_checks':
+                            if isinstance(config_value, list):
+                                defaults['include_checks'] = config_value
+                        if config_name == 'configure_rules':
+                            if isinstance(config_value, dict):
+                                defaults['configure_rules'] = config_value
 
         self._template_args = defaults
 
@@ -572,7 +569,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
             return None
 
         # if only one is specified convert it to array
-        if isinstance(filenames, six.string_types):
+        if isinstance(filenames, str):
             filenames = [filenames]
 
         # handle different shells and Config files
@@ -601,7 +598,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
             return []
 
         # if only one is specified convert it to array
-        if isinstance(filenames, six.string_types):
+        if isinstance(filenames, str):
             filenames = [filenames]
 
         # handle different shells and Config files

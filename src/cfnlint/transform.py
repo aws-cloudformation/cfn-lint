@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 import os
 import logging
-import six
 import samtranslator
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
@@ -76,7 +75,10 @@ class Transform(object):
 
             if resource_type == 'AWS::Serverless::Function':
 
-                Transform._update_to_s3_uri('CodeUri', resource_dict)
+                if resource_dict.get('PackageType') == 'Image':
+                    Transform._update_to_s3_uri('ImageUri', resource_dict)
+                else:
+                    Transform._update_to_s3_uri('CodeUri', resource_dict)
                 auto_publish_alias = resource_dict.get('AutoPublishAlias')
                 if isinstance(auto_publish_alias, dict):
                     if len(auto_publish_alias) == 1:
@@ -161,7 +163,7 @@ class Transform(object):
         bool
             Returns True if the uri given is an S3 uri, otherwise False
         """
-        return isinstance(uri, six.string_types) and uri.startswith('s3://')
+        return isinstance(uri, str) and uri.startswith('s3://')
 
     @staticmethod
     def _update_to_s3_uri(

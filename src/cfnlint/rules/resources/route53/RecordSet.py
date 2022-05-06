@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
@@ -47,7 +46,7 @@ class RecordSet(CloudFormationLintRule):
 
     def check_record(self, value, path, record_type, regex, regex_name):
         matches = []
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if not re.match(regex, value):
                 message = record_type + ' record ({}) is not a valid ' + regex_name
                 matches.append(RuleMatch(path, message.format(value)))
@@ -63,7 +62,7 @@ class RecordSet(CloudFormationLintRule):
         """Check CAA record Configuration"""
         matches = []
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             # Split the record up to the mandatory settings (flags tag "value")
             items = value.split(' ', 2)
             # Check if the 3 settings are given.
@@ -112,7 +111,7 @@ class RecordSet(CloudFormationLintRule):
         """Check MX record Configuration"""
         matches = []
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             # Split the record up to the mandatory settings (priority domainname)
             items = value.split(' ')
 
