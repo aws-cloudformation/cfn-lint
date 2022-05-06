@@ -35,7 +35,8 @@ class Sub(CloudFormationLintRule):
             for param_name, param_values in parameters.items():
                 # This rule isn't here to check the Types but we need
                 # something valid if it doesn't exist
-                results[param_name] = param_values.get('Type', 'String')
+                if isinstance(param_values, dict):
+                    results[param_name] = param_values.get('Type', 'String')
 
         return results
 

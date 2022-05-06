@@ -24,4 +24,4 @@ class TestOr(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/conditions/or.yaml', 7)
+        self.helper_file_negative('test/fixtures/templates/bad/conditions/or.yaml', 8)

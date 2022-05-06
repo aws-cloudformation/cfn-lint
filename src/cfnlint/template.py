@@ -12,7 +12,7 @@ from cfnlint.graph import Graph
 
 LOGGER = logging.getLogger(__name__)
 
-class Template(object):  # pylint: disable=R0904
+class Template(object):  # pylint: disable=R0904,too-many-lines
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
@@ -88,6 +88,30 @@ class Template(object):  # pylint: disable=R0904
 
         return parameters
 
+    def get_parameters_valid(self):
+        LOGGER.debug('Get parameters from template...')
+        result = {}
+        if isinstance(self.template.get('Parameters'), dict):
+            parameters = self.template.get('Parameters')
+            for parameter_name, parameter_value in parameters.items():
+                if isinstance(parameter_value, dict):
+                    if isinstance(parameter_value.get('Type'), str):
+                        result[parameter_name] = parameter_value
+
+        return result
+
+    def get_outputs_valid(self):
+        LOGGER.debug('Get outputs from template...')
+        result = {}
+        if isinstance(self.template.get('Outputs'), dict):
+            parameters = self.template.get('Outputs')
+            for parameter_name, parameter_value in parameters.items():
+                if isinstance(parameter_value, dict):
+                    if isinstance(parameter_value.get('Value'), (str, dict)):
+                        result[parameter_name] = parameter_value
+
+        return result
+
     def get_modules(self):
         """Get Modules"""
         LOGGER.debug('Get modules from template...')
@@ -136,11 +160,12 @@ class Template(object):  # pylint: disable=R0904
         parameters = self.template.get('Parameters', {})
         if parameters:
             for name, value in parameters.items():
-                if 'Type' in value:
-                    element = {}
-                    element['Type'] = value['Type']
-                    element['From'] = 'Parameters'
-                    results[name] = element
+                if isinstance(value, dict):
+                    if 'Type' in value:
+                        element = {}
+                        element['Type'] = value['Type']
+                        element['From'] = 'Parameters'
+                        results[name] = element
         resources = self.template.get('Resources', {})
         if resources:
             for name, value in resources.items():
@@ -567,56 +592,62 @@ class Template(object):  # pylint: disable=R0904
                     check_value=None, check_ref=None, check_get_att=None,
                     check_find_in_map=None, check_split=None, check_join=None,
                     check_import_value=None, check_sub=None,
-                    **kwargs):
+                    pass_if_null=False, **kwargs):
         LOGGER.debug('Check value %s for %s', key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
-        if not values_obj:
+        if values_obj is None and pass_if_null:
+            if check_value:
+                matches.extend(
+                    check_value(
+                        value=values_obj, path=new_path[:], **kwargs))
+        elif not values_obj:
             return matches
-        for value_obj in values_obj:
-            value = value_obj['Value']
-            child_path = value_obj['Path']
-            if not isinstance(value, dict):
-                if check_value:
-                    matches.extend(
-                        check_value(
-                            value=value, path=new_path[:] + child_path, **kwargs))
-            else:
-                if len(value) == 1:
-                    for dict_name, _ in value.items():
-                        # If this is a function we shouldn't fall back to a check_value check
-                        if dict_name in cfnlint.helpers.FUNCTIONS:
-                            # convert the function name from camel case to underscore
-                            # Example: Fn::FindInMap becomes check_find_in_map
-                            function_name = 'check_%s' % camel_to_snake(
-                                dict_name.replace('Fn::', ''))
-                            if function_name == 'check_ref':
-                                if check_ref:
-                                    matches.extend(
-                                        check_ref(
-                                            value=value.get('Ref'), path=new_path[:] + child_path + ['Ref'],
-                                            parameters=self.get_parameters(),
-                                            resources=self.get_resources(),
-                                            **kwargs))
-                            else:
-                                if locals().get(function_name):
-                                    matches.extend(
-                                        locals()[function_name](
-                                            value=value.get(dict_name),
-                                            path=new_path[:] + child_path + [dict_name],
-                                            **kwargs)
-                                    )
-                        else:
-                            if check_value:
-                                matches.extend(
-                                    check_value(
-                                        value=value, path=new_path[:] + child_path, **kwargs))
-                else:
+        else:
+            for value_obj in values_obj:
+                value = value_obj['Value']
+                child_path = value_obj['Path']
+                if not isinstance(value, dict):
                     if check_value:
                         matches.extend(
                             check_value(
                                 value=value, path=new_path[:] + child_path, **kwargs))
+                else:
+                    if len(value) == 1:
+                        for dict_name, _ in value.items():
+                            # If this is a function we shouldn't fall back to a check_value check
+                            if dict_name in cfnlint.helpers.FUNCTIONS:
+                                # convert the function name from camel case to underscore
+                                # Example: Fn::FindInMap becomes check_find_in_map
+                                function_name = 'check_%s' % camel_to_snake(
+                                    dict_name.replace('Fn::', ''))
+                                if function_name == 'check_ref':
+                                    if check_ref:
+                                        matches.extend(
+                                            check_ref(
+                                                value=value.get('Ref'), path=new_path[:] + child_path + ['Ref'],
+                                                parameters=self.get_parameters(),
+                                                resources=self.get_resources(),
+                                                **kwargs))
+                                else:
+                                    if locals().get(function_name):
+                                        matches.extend(
+                                            locals()[function_name](
+                                                value=value.get(dict_name),
+                                                path=new_path[:] + child_path + [dict_name],
+                                                **kwargs)
+                                        )
+                            else:
+                                if check_value:
+                                    matches.extend(
+                                        check_value(
+                                            value=value, path=new_path[:] + child_path, **kwargs))
+                    else:
+                        if check_value:
+                            matches.extend(
+                                check_value(
+                                    value=value, path=new_path[:] + child_path, **kwargs))
 
         return matches
 

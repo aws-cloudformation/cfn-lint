@@ -26,11 +26,6 @@ class DuplicateError(Exception):
         self.mapping = mapping
         self.key = key
 
-class NullError(Exception):
-    """
-    Error thrown when the template contains Nulls
-    """
-
 
 def check_duplicates(ordered_pairs, beg_mark, end_mark):
     """
@@ -40,8 +35,6 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     """
     mapping = dict_node({}, beg_mark, end_mark)
     for key, value in ordered_pairs:
-        if value is None:
-            raise NullError('"{}"'.format(key))
         if key in mapping:
             raise DuplicateError('"{}"'.format(key), mapping, key)
         mapping[key] = value
@@ -424,18 +417,6 @@ class CfnJSONDecoder(json.JSONDecoder):
                                 ),
                             ]
                         )
-                    except NullError as err:
-                        raise JSONDecodeError(
-                            doc=s,
-                            pos=end,
-                            errors=[
-                                build_match(
-                                    message='Null Error {}'.format(err),
-                                    doc=s,
-                                    pos=end,
-                                ),
-                            ]
-                        )
                 pairs = {}
                 if object_hook is not None:
                     beg_mark, end_mark = get_beg_end_mark(orginal_end, end + 1, self.newline_indexes)
@@ -558,18 +539,6 @@ class CfnJSONDecoder(json.JSONDecoder):
                         ),
                         build_match(
                             message='Duplicate found {}'.format(err),
-                            doc=s,
-                            pos=end,
-                        ),
-                    ]
-                )
-            except NullError as err:
-                raise JSONDecodeError(
-                    doc=s,
-                    pos=end,
-                    errors=[
-                        build_match(
-                            message='Null Error {}'.format(err),
                             doc=s,
                             pos=end,
                         ),

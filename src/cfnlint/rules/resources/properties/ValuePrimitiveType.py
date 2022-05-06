@@ -125,7 +125,11 @@ class ValuePrimitiveType(CloudFormationLintRule):
         primitive_type = kwargs.get('primitive_type', {})
         item_type = kwargs.get('item_type', {})
         strict_check = kwargs.get('non_strict', self.config['strict'])
-        if item_type in ['Map']:
+
+        if value is None:
+            message = 'Property value cannot be null %s' % ('/'.join(map(str, path)))
+            matches.append(RuleMatch(path, message))
+        elif item_type in ['Map']:
             if isinstance(value, dict):
                 for map_key, map_value in value.items():
                     if not isinstance(map_value, dict):
@@ -165,6 +169,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                             primitive_type=primitive_type,
                             item_type=item_type,
                             non_strict=strict_check,
+                            pass_if_null=True,
                         )
                     )
 
@@ -183,6 +188,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
         resource_specs = self.resource_specs.get(resource_type, {}).get('Properties', {})
         matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
 

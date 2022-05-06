@@ -17,7 +17,7 @@ class LimitDescription(CloudFormationLintRule):
 
     def match(self, cfn):
         matches = []
-        for output_name, output_value in cfn.template.get('Outputs', {}).items():
+        for output_name, output_value in cfn.get_outputs_valid().items():
             description = output_value.get('Description')
             if description:
                 path = ['Outputs', output_name, 'Description']

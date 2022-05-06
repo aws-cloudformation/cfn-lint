@@ -93,7 +93,7 @@ class Default(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        for paramname, paramvalue in cfn.get_parameters().items():
+        for paramname, paramvalue in cfn.get_parameters_valid().items():
             default_value = paramvalue.get('Default')
             if default_value is not None:
                 path = ['Parameters', paramname, 'Default']
