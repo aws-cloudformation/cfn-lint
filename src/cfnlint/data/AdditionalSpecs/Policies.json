@@ -1058,8 +1058,8 @@
       ]
     },
     "AWS Certificate Manager Private Certificate Authority": {
-      "ARNFormat": "arn:aws:acm-pca:<region>:<account_ID>:<arn_type>/<resource_id>",
-      "ARNRegex": "^arn:aws:acm-pca:.+:[0-9]+:.+",
+      "ARNFormat": "arn:${Partition}:acm-pca:${Region}:${Account}:${ARNType}/${ResourceId}",
+      "ARNRegex": "^arn:${Partition}:acm-pca:.+:[0-9]+:.+",
       "Actions": [
         "CreateCertificateAuthority",
         "CreateCertificateAuthorityAuditReport",
@@ -1562,7 +1562,7 @@
       ]
     },
     "AWS CodeCommit": {
-      "ARNFormat": "arn:aws:codecommit:<region>:<account_ID>:<repository_name>",
+      "ARNFormat": "arn:aws:codecommit:${Region}:${Account}:${RepositoryName}",
       "ARNRegex": "^arn:aws:codecommit:.+",
       "Actions": [
         "AssociateApprovalRuleTemplateWithRepository",
@@ -4001,6 +4001,7 @@
         "RemoveThingFromThingGroup",
         "ReplaceTopicRule",
         "RetainPublish",
+        "RotateTunnelAccessToken",
         "SearchIndex",
         "SetDefaultAuthorizer",
         "SetDefaultPolicyVersion",
@@ -4051,6 +4052,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "iot:ClientMode",
         "iot:Delete",
         "iot:DomainName",
         "iot:ThingGroupArn",
@@ -5667,6 +5669,7 @@
         "GetPrivateConnectivityConfig",
         "GetSite",
         "GetSiteAddress",
+        "ListAssets",
         "ListCatalogItems",
         "ListOrders",
         "ListOutposts",
@@ -5950,8 +5953,8 @@
       ]
     },
     "AWS Resource Access Manager": {
-      "ARNFormat": "arn:aws:ram:${Region}:${AccountId}:resource-share/${ResourceUUID}",
-      "ARNRegex": "^arn:aws:ram:.+:.+:.+",
+      "ARNFormat": "arn:${Partition}:ram:${Region}:${AccountId}:resource-share/${ResourceUUID}",
+      "ARNRegex": "^arn:${Partition}:ram:.+:.+:.+",
       "Actions": [
         "AcceptResourceShareInvitation",
         "AssociateResourceShare",
@@ -6136,6 +6139,7 @@
         "PutUserWorkspaceSettings",
         "TagResource",
         "UntagResource",
+        "UpdateAccountExportSettings",
         "UpdateChart",
         "UpdateConnection",
         "UpdateFileFolder",
@@ -7299,8 +7303,8 @@
       "StringPrefix": "trustedadvisor"
     },
     "AWS WAF": {
-      "ARNFormat": "arn:aws:waf::<account_ID>:<resource>/<resource_id>",
-      "ARNRegex": "^arn:aws:waf::[0-9]+:.+/.+",
+      "ARNFormat": "arn:${Partition}:waf::${Account}:${ResourceId}/${Id}",
+      "ARNRegex": "^arn:${Partition}:waf::[0-9]+:.+/.+",
       "Actions": [
         "CreateByteMatchSet",
         "CreateGeoMatchSet",
@@ -7389,8 +7393,8 @@
       ]
     },
     "AWS WAF Regional": {
-      "ARNFormat": "arn:aws:waf-regional:<region>:<account_ID>:<resource>/<resource_id>",
-      "ARNRegex": "^arn:aws:waf-regional:.+:[0-9]+:.+/.+",
+      "ARNFormat": "arn:${Partition}:waf-regional:${Region}:${Account}:${ResourceId}/${Id}",
+      "ARNRegex": "^arn:${Partition}:waf-regional:.+:[0-9]+:.+/.+",
       "Actions": [
         "AssociateWebACL",
         "CreateByteMatchSet",
@@ -7483,8 +7487,8 @@
       ]
     },
     "AWS WAF V2": {
-      "ARNFormat": "arn:aws:wafv2:${Region}:${Account}:${Scope}/${ResourceType}/${ResourceName}/${ResourceId}",
-      "ARNRegex": "^arn:aws:wafv2:.+:.+:.+/.+/.+/.+",
+      "ARNFormat": "arn:${Partition}:wafv2:${Region}:${Account}:${Scope}/${ResourceType}/${ResourceName}/${ResourceId}",
+      "ARNRegex": "^arn:${Partition}:wafv2:.+:.+:.+/.+/.+/.+",
       "Actions": [
         "AssociateWebACL",
         "CheckCapacity",
@@ -9605,8 +9609,8 @@
       ]
     },
     "Amazon DynamoDB Accelerator (DAX)": {
-      "ARNFormat": "arn:aws:dax:${Region}:${Account}:cache/${ClusterName}",
-      "ARNRegex": "^arn:aws:dax:.+:[0-9]+:cache/[a-zA-Z0-9_.-]+",
+      "ARNFormat": "arn:${Partition}:dax:${Region}:${Account}:cache/${ClusterName}",
+      "ARNRegex": "^arn:${Partition}:dax:.+:[0-9]+:cache/[a-zA-Z0-9_.-]+",
       "Actions": [
         "BatchGetItem",
         "BatchWriteItem",
@@ -12956,8 +12960,8 @@
       "StringPrefix": "kafkaconnect"
     },
     "Amazon Managed Workflows for Apache Airflow": {
-      "ARNFormat": "arn:aws:<serviceName>:<region>:<account>:<resourceType>/<resourceName>",
-      "ARNRegex": "^arn:aws:airflow:.+",
+      "ARNFormat": "arn:aws:airflow:${Region}:${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:aws:airflow:.+:.+:.+",
       "Actions": [
         "CreateCliToken",
         "CreateEnvironment",
@@ -13537,6 +13541,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "ses:ApiVersion",
         "ses:FeedbackAddress",
         "ses:FromAddress",
         "ses:FromDisplayName",
@@ -14924,7 +14929,7 @@
       ]
     },
     "Amazon SES": {
-      "ARNFormat": "arn:${Partition}:ses:${Region}:${Account}:${resourceType}/${resourceId}",
+      "ARNFormat": "arn:${Partition}:ses:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:${Partition}:ses:.+:[0-9]+:.+",
       "Actions": [
         "CloneReceiptRuleSet",
@@ -15002,6 +15007,7 @@
       "HasResource": true,
       "StringPrefix": "ses",
       "conditionKeys": [
+        "ses:ApiVersion",
         "ses:FeedbackAddress",
         "ses:FromAddress",
         "ses:FromDisplayName",
@@ -15503,6 +15509,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "ses:ApiVersion",
         "ses:FeedbackAddress",
         "ses:FromAddress",
         "ses:FromDisplayName",
@@ -15915,53 +15922,6 @@
       ],
       "HasResource": false,
       "StringPrefix": "workdocs"
-    },
-    "Amazon WorkLink": {
-      "ARNFormat": "arn:${Partition}:worklink::${Account}:${ResourceType}/${ResourcePath}",
-      "ARNRegex": "^arn:${Partition}:worklink:.+",
-      "Actions": [
-        "AssociateDomain",
-        "AssociateWebsiteAuthorizationProvider",
-        "AssociateWebsiteCertificateAuthority",
-        "CreateFleet",
-        "DeleteFleet",
-        "DescribeAuditStreamConfiguration",
-        "DescribeCompanyNetworkConfiguration",
-        "DescribeDevice",
-        "DescribeDevicePolicyConfiguration",
-        "DescribeDomain",
-        "DescribeFleetMetadata",
-        "DescribeIdentityProviderConfiguration",
-        "DescribeWebsiteCertificateAuthority",
-        "DisassociateDomain",
-        "DisassociateWebsiteAuthorizationProvider",
-        "DisassociateWebsiteCertificateAuthority",
-        "ListDevices",
-        "ListDomains",
-        "ListFleets",
-        "ListTagsForResource",
-        "ListWebsiteAuthorizationProviders",
-        "ListWebsiteCertificateAuthorities",
-        "RestoreDomainAccess",
-        "RevokeDomainAccess",
-        "SearchEntity",
-        "SignOutUser",
-        "TagResource",
-        "UntagResource",
-        "UpdateAuditStreamConfiguration",
-        "UpdateCompanyNetworkConfiguration",
-        "UpdateDevicePolicyConfiguration",
-        "UpdateDomainMetadata",
-        "UpdateFleetMetadata",
-        "UpdateIdentityProviderConfiguration"
-      ],
-      "HasResource": true,
-      "StringPrefix": "worklink",
-      "conditionKeys": [
-        "aws:RequestTag/${TagKey}",
-        "aws:ResourceTag/${TagKey}",
-        "aws:TagKeys"
-      ]
     },
     "Amazon WorkMail": {
       "ARNFormat": "arn:${Partition}:workmail:${Region}:${Account}:${ResourceType}/${ResourceId}",

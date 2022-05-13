@@ -30690,6 +30690,13 @@
         }
       }
     },
+    "AWS::Rekognition::StreamProcessor.List": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rekognition-streamprocessor.html#cfn-rekognition-streamprocessor-polygonregionsofinterest",
+      "ItemType": "Point",
+      "Required": false,
+      "Type": "List",
+      "UpdateType": "Mutable"
+    },
     "AWS::ResourceGroups::Group.ConfigurationItem": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resourcegroups-group-configurationitem.html",
       "Properties": {
@@ -36118,7 +36125,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "68.1.0",
+  "ResourceSpecificationVersion": "69.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -39922,7 +39929,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-hooktypeconfig.html#cfn-cloudformation-hooktypeconfig-typearn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::CloudFormation::HookTypeConfig.TypeArn"
           }
@@ -58073,6 +58080,15 @@
             "ValueType": "AWS::SSM::Association.ScheduleExpression"
           }
         },
+        "ScheduleOffset": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleoffset",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Association.ScheduleOffset"
+          }
+        },
         "SyncCompliance": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-synccompliance",
           "PrimitiveType": "String",
@@ -59991,6 +60007,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-code",
           "Required": true,
           "Type": "Code",
+          "UpdateType": "Mutable"
+        },
+        "DeleteLambdaResourcesOnCanaryDeletion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-deletelambdaresourcesoncanarydeletion",
+          "PrimitiveType": "Boolean",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "ExecutionRoleArn": {
@@ -64206,13 +64228,16 @@
       ]
     },
     "AWS::IoT::ResourceSpecificLogging.TargetName": {
-      "AllowedPatternRegex": "[a-zA-Z0-9:_-]+",
+      "AllowedPatternRegex": "[a-zA-Z0-9.:_-]+",
       "StringMax": 128,
       "StringMin": 1
     },
     "AWS::IoT::ResourceSpecificLogging.TargetType": {
       "AllowedValues": [
-        "THING_GROUP"
+        "THING_GROUP",
+        "CLIENT_ID",
+        "SOURCE_IP",
+        "PRINCIPAL_ID"
       ]
     },
     "AWS::IoT::ScheduledAudit.DayOfMonth": {
@@ -65731,6 +65756,10 @@
       "StringMax": 256,
       "StringMin": 1
     },
+    "AWS::SSM::Association.ScheduleOffset": {
+      "NumberMax": 6,
+      "NumberMin": 1
+    },
     "AWS::SSM::Association.SyncCompliance": {
       "AllowedValues": [
         "AUTO",
@@ -66804,6 +66833,7 @@
         "g4dn.4xlarge",
         "g4dn.8xlarge",
         "g4dn.xlarge",
+        "hpc6a.48xlarge",
         "i3.16xlarge",
         "i3.2xlarge",
         "i3.4xlarge",
@@ -66985,7 +67015,19 @@
         "x1e.32xlarge",
         "x1e.4xlarge",
         "x1e.8xlarge",
-        "x1e.xlarge"
+        "x1e.xlarge",
+        "x2idn.16xlarge",
+        "x2idn.24xlarge",
+        "x2idn.32xlarge",
+        "x2idn.metal",
+        "x2iedn.16xlarge",
+        "x2iedn.24xlarge",
+        "x2iedn.2xlarge",
+        "x2iedn.32xlarge",
+        "x2iedn.4xlarge",
+        "x2iedn.8xlarge",
+        "x2iedn.metal",
+        "x2iedn.xlarge"
       ],
       "Ref": {
         "Parameters": [
@@ -67100,6 +67142,7 @@
         "nodejs10.x",
         "nodejs12.x",
         "nodejs14.x",
+        "nodejs16.x",
         "nodejs4.3",
         "nodejs4.3-edge",
         "nodejs6.10",

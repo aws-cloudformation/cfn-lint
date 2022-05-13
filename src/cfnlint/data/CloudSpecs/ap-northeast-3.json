@@ -30244,6 +30244,13 @@
         }
       }
     },
+    "AWS::Rekognition::StreamProcessor.List": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rekognition-streamprocessor.html#cfn-rekognition-streamprocessor-polygonregionsofinterest",
+      "ItemType": "Point",
+      "Required": false,
+      "Type": "List",
+      "UpdateType": "Mutable"
+    },
     "AWS::ResourceGroups::Group.ConfigurationItem": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resourcegroups-group-configurationitem.html",
       "Properties": {
@@ -36853,6 +36860,20 @@
         }
       }
     },
+    "AWS::WAFv2::RuleGroup.Body": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-body.html",
+      "Properties": {
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-body.html#cfn-wafv2-rulegroup-body-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.Body.OversizeHandling"
+          }
+        }
+      }
+    },
     "AWS::WAFv2::RuleGroup.ByteMatchStatement": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-bytematchstatement.html",
       "Properties": {
@@ -36903,6 +36924,66 @@
         }
       }
     },
+    "AWS::WAFv2::RuleGroup.CookieMatchPattern": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookiematchpattern.html",
+      "Properties": {
+        "All": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookiematchpattern.html#cfn-wafv2-rulegroup-cookiematchpattern-all",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExcludedCookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookiematchpattern.html#cfn-wafv2-rulegroup-cookiematchpattern-excludedcookies",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.CookieMatchPattern.ExcludedCookies"
+          }
+        },
+        "IncludedCookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookiematchpattern.html#cfn-wafv2-rulegroup-cookiematchpattern-includedcookies",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.CookieMatchPattern.IncludedCookies"
+          }
+        }
+      }
+    },
+    "AWS::WAFv2::RuleGroup.Cookies": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookies.html",
+      "Properties": {
+        "MatchPattern": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookies.html#cfn-wafv2-rulegroup-cookies-matchpattern",
+          "Required": true,
+          "Type": "CookieMatchPattern",
+          "UpdateType": "Mutable"
+        },
+        "MatchScope": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookies.html#cfn-wafv2-rulegroup-cookies-matchscope",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.Cookies.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-cookies.html#cfn-wafv2-rulegroup-cookies-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.Cookies.OversizeHandling"
+          }
+        }
+      }
+    },
     "AWS::WAFv2::RuleGroup.CustomResponseBody": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-customresponsebody.html",
       "Properties": {
@@ -36931,8 +37012,20 @@
         },
         "Body": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-fieldtomatch.html#cfn-wafv2-rulegroup-fieldtomatch-body",
-          "PrimitiveType": "Json",
           "Required": false,
+          "Type": "Body",
+          "UpdateType": "Mutable"
+        },
+        "Cookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-fieldtomatch.html#cfn-wafv2-rulegroup-fieldtomatch-cookies",
+          "Required": false,
+          "Type": "Cookies",
+          "UpdateType": "Mutable"
+        },
+        "Headers": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-fieldtomatch.html#cfn-wafv2-rulegroup-fieldtomatch-headers",
+          "Required": false,
+          "Type": "Headers",
           "UpdateType": "Mutable"
         },
         "JsonBody": {
@@ -37011,6 +37104,66 @@
           "Required": false,
           "Type": "ForwardedIPConfiguration",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::WAFv2::RuleGroup.HeaderMatchPattern": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headermatchpattern.html",
+      "Properties": {
+        "All": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headermatchpattern.html#cfn-wafv2-rulegroup-headermatchpattern-all",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExcludedHeaders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headermatchpattern.html#cfn-wafv2-rulegroup-headermatchpattern-excludedheaders",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.HeaderMatchPattern.ExcludedHeaders"
+          }
+        },
+        "IncludedHeaders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headermatchpattern.html#cfn-wafv2-rulegroup-headermatchpattern-includedheaders",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.HeaderMatchPattern.IncludedHeaders"
+          }
+        }
+      }
+    },
+    "AWS::WAFv2::RuleGroup.Headers": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headers.html",
+      "Properties": {
+        "MatchPattern": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headers.html#cfn-wafv2-rulegroup-headers-matchpattern",
+          "Required": true,
+          "Type": "HeaderMatchPattern",
+          "UpdateType": "Mutable"
+        },
+        "MatchScope": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headers.html#cfn-wafv2-rulegroup-headers-matchscope",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.Headers.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-headers.html#cfn-wafv2-rulegroup-headers-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.Headers.OversizeHandling"
+          }
         }
       }
     },
@@ -37102,6 +37255,15 @@
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::WAFv2::RuleGroup.JsonBody.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-jsonbody.html#cfn-wafv2-rulegroup-jsonbody-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::RuleGroup.JsonBody.OversizeHandling"
           }
         }
       }
@@ -37599,6 +37761,20 @@
         }
       }
     },
+    "AWS::WAFv2::WebACL.Body": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-body.html",
+      "Properties": {
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-body.html#cfn-wafv2-webacl-body-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.Body.OversizeHandling"
+          }
+        }
+      }
+    },
     "AWS::WAFv2::WebACL.ByteMatchStatement": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-bytematchstatement.html",
       "Properties": {
@@ -37657,6 +37833,66 @@
           "Required": false,
           "Type": "ImmunityTimeProperty",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::WAFv2::WebACL.CookieMatchPattern": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookiematchpattern.html",
+      "Properties": {
+        "All": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookiematchpattern.html#cfn-wafv2-webacl-cookiematchpattern-all",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExcludedCookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookiematchpattern.html#cfn-wafv2-webacl-cookiematchpattern-excludedcookies",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.CookieMatchPattern.ExcludedCookies"
+          }
+        },
+        "IncludedCookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookiematchpattern.html#cfn-wafv2-webacl-cookiematchpattern-includedcookies",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.CookieMatchPattern.IncludedCookies"
+          }
+        }
+      }
+    },
+    "AWS::WAFv2::WebACL.Cookies": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookies.html",
+      "Properties": {
+        "MatchPattern": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookies.html#cfn-wafv2-webacl-cookies-matchpattern",
+          "Required": true,
+          "Type": "CookieMatchPattern",
+          "UpdateType": "Mutable"
+        },
+        "MatchScope": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookies.html#cfn-wafv2-webacl-cookies-matchscope",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.Cookies.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-cookies.html#cfn-wafv2-webacl-cookies-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.Cookies.OversizeHandling"
+          }
         }
       }
     },
@@ -37809,8 +38045,20 @@
         },
         "Body": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-fieldtomatch.html#cfn-wafv2-webacl-fieldtomatch-body",
-          "PrimitiveType": "Json",
           "Required": false,
+          "Type": "Body",
+          "UpdateType": "Mutable"
+        },
+        "Cookies": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-fieldtomatch.html#cfn-wafv2-webacl-fieldtomatch-cookies",
+          "Required": false,
+          "Type": "Cookies",
+          "UpdateType": "Mutable"
+        },
+        "Headers": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-fieldtomatch.html#cfn-wafv2-webacl-fieldtomatch-headers",
+          "Required": false,
+          "Type": "Headers",
           "UpdateType": "Mutable"
         },
         "JsonBody": {
@@ -37889,6 +38137,66 @@
           "Required": false,
           "Type": "ForwardedIPConfiguration",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::WAFv2::WebACL.HeaderMatchPattern": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headermatchpattern.html",
+      "Properties": {
+        "All": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headermatchpattern.html#cfn-wafv2-webacl-headermatchpattern-all",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ExcludedHeaders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headermatchpattern.html#cfn-wafv2-webacl-headermatchpattern-excludedheaders",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.HeaderMatchPattern.ExcludedHeaders"
+          }
+        },
+        "IncludedHeaders": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headermatchpattern.html#cfn-wafv2-webacl-headermatchpattern-includedheaders",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.HeaderMatchPattern.IncludedHeaders"
+          }
+        }
+      }
+    },
+    "AWS::WAFv2::WebACL.Headers": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headers.html",
+      "Properties": {
+        "MatchPattern": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headers.html#cfn-wafv2-webacl-headers-matchpattern",
+          "Required": true,
+          "Type": "HeaderMatchPattern",
+          "UpdateType": "Mutable"
+        },
+        "MatchScope": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headers.html#cfn-wafv2-webacl-headers-matchscope",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.Headers.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-headers.html#cfn-wafv2-webacl-headers-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.Headers.OversizeHandling"
+          }
         }
       }
     },
@@ -37980,6 +38288,15 @@
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::WAFv2::WebACL.JsonBody.MatchScope"
+          }
+        },
+        "OversizeHandling": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-jsonbody.html#cfn-wafv2-webacl-jsonbody-oversizehandling",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::WAFv2::WebACL.JsonBody.OversizeHandling"
           }
         }
       }
@@ -38587,7 +38904,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "68.1.0",
+  "ResourceSpecificationVersion": "69.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -43159,7 +43476,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudformation-hooktypeconfig.html#cfn-cloudformation-hooktypeconfig-typearn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
+          "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::CloudFormation::HookTypeConfig.TypeArn"
           }
@@ -49131,6 +49448,7 @@
           "PrimitiveType": "String"
         },
         "CidrBlockAssociations": {
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Type": "List"
         },
@@ -49141,35 +49459,39 @@
           "PrimitiveType": "String"
         },
         "Ipv6CidrBlocks": {
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Type": "List"
+        },
+        "VpcId": {
+          "PrimitiveType": "String"
         }
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html",
       "Properties": {
         "CidrBlock": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-aws-ec2-vpc-cidrblock",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-ec2-vpc-cidrblock",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AwsCidrIp"
           }
         },
         "EnableDnsHostnames": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-aws-ec2-vpc-EnableDnsHostnames",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-ec2-vpc-enablednshostnames",
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
         },
         "EnableDnsSupport": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-aws-ec2-vpc-EnableDnsSupport",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-ec2-vpc-enablednssupport",
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
         },
         "InstanceTenancy": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-aws-ec2-vpc-instancetenancy",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-ec2-vpc-instancetenancy",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Mutable",
@@ -49190,7 +49512,7 @@
           "UpdateType": "Immutable"
         },
         "Tags": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-aws-ec2-vpc-tags",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpc.html#cfn-ec2-vpc-tags",
           "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
@@ -54463,7 +54785,7 @@
         },
         "Roles": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-instanceprofile.html#cfn-iam-instanceprofile-roles",
-          "DuplicatesAllowed": true,
+          "DuplicatesAllowed": false,
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
@@ -60686,6 +61008,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "SqsManagedSseEnabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html#cfn-sqs-queue-sqsmanagedsseenabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sqs-queue.html#cfn-sqs-queue-tags",
           "DuplicatesAllowed": true,
@@ -60837,6 +61165,15 @@
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::SSM::Association.ScheduleExpression"
+          }
+        },
+        "ScheduleOffset": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-association.html#cfn-ssm-association-scheduleoffset",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::SSM::Association.ScheduleOffset"
           }
         },
         "SyncCompliance": {
@@ -63298,6 +63635,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-code",
           "Required": true,
           "Type": "Code",
+          "UpdateType": "Mutable"
+        },
+        "DeleteLambdaResourcesOnCanaryDeletion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-canary.html#cfn-synthetics-canary-deletelambdaresourcesoncanarydeletion",
+          "PrimitiveType": "Boolean",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "ExecutionRoleArn": {
@@ -69285,6 +69628,10 @@
       "StringMax": 256,
       "StringMin": 1
     },
+    "AWS::SSM::Association.ScheduleOffset": {
+      "NumberMax": 6,
+      "NumberMin": 1
+    },
     "AWS::SSM::Association.SyncCompliance": {
       "AllowedValues": [
         "AUTO",
@@ -70111,6 +70458,13 @@
         "REGIONAL"
       ]
     },
+    "AWS::WAFv2::RuleGroup.Body.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
+      ]
+    },
     "AWS::WAFv2::RuleGroup.ByteMatchStatement.PositionalConstraint": {
       "AllowedValues": [
         "EXACTLY",
@@ -70118,6 +70472,30 @@
         "ENDS_WITH",
         "CONTAINS",
         "CONTAINS_WORD"
+      ]
+    },
+    "AWS::WAFv2::RuleGroup.CookieMatchPattern.ExcludedCookies": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 60,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::RuleGroup.CookieMatchPattern.IncludedCookies": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 60,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::RuleGroup.Cookies.MatchScope": {
+      "AllowedValues": [
+        "ALL",
+        "KEY",
+        "VALUE"
+      ]
+    },
+    "AWS::WAFv2::RuleGroup.Cookies.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
       ]
     },
     "AWS::WAFv2::RuleGroup.Description": {
@@ -70132,6 +70510,30 @@
     "AWS::WAFv2::RuleGroup.GeoMatchStatement.CountryCodes": {
       "StringMax": 2,
       "StringMin": 1
+    },
+    "AWS::WAFv2::RuleGroup.HeaderMatchPattern.ExcludedHeaders": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::RuleGroup.HeaderMatchPattern.IncludedHeaders": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::RuleGroup.Headers.MatchScope": {
+      "AllowedValues": [
+        "ALL",
+        "KEY",
+        "VALUE"
+      ]
+    },
+    "AWS::WAFv2::RuleGroup.Headers.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
+      ]
     },
     "AWS::WAFv2::RuleGroup.IPSetForwardedIPConfiguration.FallbackBehavior": {
       "AllowedValues": [
@@ -70166,6 +70568,13 @@
         "ALL",
         "KEY",
         "VALUE"
+      ]
+    },
+    "AWS::WAFv2::RuleGroup.JsonBody.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
       ]
     },
     "AWS::WAFv2::RuleGroup.Label.Name": {
@@ -70252,6 +70661,13 @@
       "StringMax": 128,
       "StringMin": 1
     },
+    "AWS::WAFv2::WebACL.Body.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
+      ]
+    },
     "AWS::WAFv2::WebACL.ByteMatchStatement.PositionalConstraint": {
       "AllowedValues": [
         "EXACTLY",
@@ -70259,6 +70675,30 @@
         "ENDS_WITH",
         "CONTAINS",
         "CONTAINS_WORD"
+      ]
+    },
+    "AWS::WAFv2::WebACL.CookieMatchPattern.ExcludedCookies": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 60,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::WebACL.CookieMatchPattern.IncludedCookies": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 60,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::WebACL.Cookies.MatchScope": {
+      "AllowedValues": [
+        "ALL",
+        "KEY",
+        "VALUE"
+      ]
+    },
+    "AWS::WAFv2::WebACL.Cookies.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
       ]
     },
     "AWS::WAFv2::WebACL.CustomHTTPHeader.Name": {
@@ -70297,6 +70737,30 @@
       "StringMax": 2,
       "StringMin": 1
     },
+    "AWS::WAFv2::WebACL.HeaderMatchPattern.ExcludedHeaders": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::WebACL.HeaderMatchPattern.IncludedHeaders": {
+      "AllowedPatternRegex": ".*\\S.*",
+      "StringMax": 64,
+      "StringMin": 1
+    },
+    "AWS::WAFv2::WebACL.Headers.MatchScope": {
+      "AllowedValues": [
+        "ALL",
+        "KEY",
+        "VALUE"
+      ]
+    },
+    "AWS::WAFv2::WebACL.Headers.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
+      ]
+    },
     "AWS::WAFv2::WebACL.IPSetForwardedIPConfiguration.FallbackBehavior": {
       "AllowedValues": [
         "MATCH",
@@ -70330,6 +70794,13 @@
         "ALL",
         "KEY",
         "VALUE"
+      ]
+    },
+    "AWS::WAFv2::WebACL.JsonBody.OversizeHandling": {
+      "AllowedValues": [
+        "CONTINUE",
+        "MATCH",
+        "NO_MATCH"
       ]
     },
     "AWS::WAFv2::WebACL.Label.Name": {
@@ -71020,6 +71491,7 @@
         "nodejs10.x",
         "nodejs12.x",
         "nodejs14.x",
+        "nodejs16.x",
         "nodejs4.3",
         "nodejs4.3-edge",
         "nodejs6.10",
