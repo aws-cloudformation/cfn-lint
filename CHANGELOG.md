@@ -1,3 +1,12 @@
+### v0.60.0
+###### Features
+- Move null checks from the parsing engine into rules (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Add rule [E4002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E4002) to validate metadata config (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Update rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2001) to error on null values (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to validate for null values in properties (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `69.0.0` (pull #[2261](https://github.com/aws-cloudformation/cfn-lint/pull/2261))
+
 ### v0.59.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `66.1.0` (pull #[2255](https://github.com/aws-cloudformation/cfn-lint/pull/2255))
