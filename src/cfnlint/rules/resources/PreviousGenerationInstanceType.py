@@ -27,8 +27,9 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
           ('AWS::ElastiCache::ReplicationGroup', 'CacheNodeType'),
         ]:
             for resource_name, resource in cfn.get_resources([resource_type]).items():
-                if re.search(r'([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.', resource.get('Properties', {}).get(property_type, '')):
-                    matches.append(RuleMatch(['Resources', resource_name, property_type], 'Upgrade previous generation instance type: ' + resource.get('Properties').get(property_type)))
+                if isinstance(resource.get('Properties', {}).get(property_type, ''), str):
+                    if re.search(r'([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.', resource.get('Properties', {}).get(property_type, '')):
+                        matches.append(RuleMatch(['Resources', resource_name, property_type], 'Upgrade previous generation instance type: ' + resource.get('Properties').get(property_type)))
 
         for resource_type, top_level_property_type, property_type in [
           ('AWS::EC2::EC2Fleet', 'FleetLaunchTemplateOverridesRequest', 'InstanceType'),
@@ -38,6 +39,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
           ('AWS::Elasticsearch::Domain', 'ElasticsearchClusterConfig', 'InstanceType'),
         ]:
             for resource_name, resource in cfn.get_resources([resource_type]).items():
-                if re.search(r'([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.', resource.get('Properties', {}).get(top_level_property_type, {}).get(property_type, '')):
-                    matches.append(RuleMatch(['Resources', resource_name, top_level_property_type, property_type], 'Upgrade previous generation instance type: ' + resource.get('Properties').get(top_level_property_type).get(property_type)))
+                if isinstance(resource.get('Properties', {}).get(top_level_property_type, {}).get(property_type, ''), str):
+                    if re.search(r'([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.', resource.get('Properties', {}).get(top_level_property_type, {}).get(property_type, '')):
+                        matches.append(RuleMatch(['Resources', resource_name, top_level_property_type, property_type], 'Upgrade previous generation instance type: ' + resource.get('Properties').get(top_level_property_type).get(property_type)))
         return matches
