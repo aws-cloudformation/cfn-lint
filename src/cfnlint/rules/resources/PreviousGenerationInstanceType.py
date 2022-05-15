@@ -35,7 +35,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
           ('AWS::EC2::LaunchTemplate', 'LaunchTemplateData', 'InstanceType'),
           ('AWS::EC2::SpotFleet', 'SpotFleetLaunchSpecification', 'InstanceType'),
           ('AWS::OpenSearchService::Domain', 'ClusterConfig', 'InstanceType'),
-          ('AWS::Elasticsearch::Domain', 'ClusterConfig', 'InstanceType'),
+          ('AWS::Elasticsearch::Domain', 'ElasticsearchClusterConfig', 'InstanceType'),
         ]:
             for resource_name, resource in cfn.get_resources([resource_type]).items():
                 if re.search(r'([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.', resource.get('Properties', {}).get(top_level_property_type, {}).get(property_type, '')):
