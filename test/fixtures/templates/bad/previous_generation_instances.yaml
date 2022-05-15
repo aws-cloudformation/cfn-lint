@@ -1,0 +1,23 @@
+Resources:
+  Domain:
+    Type: AWS::Elasticsearch::Domain
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: m1.small
+      ImageId: ami-abc
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.t1.micro
+  CacheCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      CacheNodeType: cache.r3.large
+      Engine: memcached
+      NumCacheNodes: 1
+  Domain2:
+    Type: AWS::Elasticsearch::Domain
+    Properties:
+      ElasticsearchClusterConfig:
+        InstanceType: m3.medium.elasticsearch
