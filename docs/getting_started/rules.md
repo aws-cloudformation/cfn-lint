@@ -51,7 +51,6 @@ from cfnlint.rules import RuleMatch
 
 
 class MyNewRule(CloudFormationLintRule):
-    """Rule description """
     id = '' # New Rule ID
     shortdesc = '' # A short description about the rule
     description = '' # (Longer) description about the rule
@@ -99,16 +98,13 @@ from .. import BaseRuleTestCase
 class TestMyNewRule(BaseRuleTestCase):
     """Test template parameter configurations"""
     def setUp(self):
-        """Setup"""
         super(TestMyNewRule, self).setUp()
         self.collection.register(MyNewRule())
 
     def test_file_positive(self):
-        """Test Positive"""
         self.helper_file_positive() # By default, a set of "correct" templates are checked
 
     def test_file_negative(self):
-        """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/mynewrule.yaml', 1) # Amount of expected matches
 ```
 
