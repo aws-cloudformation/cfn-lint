@@ -20,6 +20,7 @@ class Permissions(CloudFormationLintRule):
 
     IAM_PERMISSION_RESOURCE_TYPES = {
         'AWS::Elasticsearch::Domain': 'AccessPolicies',
+        'AWS::OpenSearchService::Domain': 'AccessPolicies',
         'AWS::IAM::Group': 'Policies',
         'AWS::IAM::ManagedPolicy': 'PolicyDocument',
         'AWS::IAM::Policy': 'PolicyDocument',
