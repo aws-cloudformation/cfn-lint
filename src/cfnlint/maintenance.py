@@ -11,6 +11,7 @@ import subprocess
 import zipfile
 import re
 from io import BytesIO
+import warnings
 import jsonpatch
 try:
     from urllib.request import urlopen, Request
@@ -278,6 +279,7 @@ def get_schema_value_types():
 
     def get_object_details(names, properties, schema):
         results = {}
+        warnings.filterwarnings('error')
         for propname, propdetails in properties.items():
             subname, propdetails = resolve_refs(propdetails, schema)
             t = propdetails.get('type')
