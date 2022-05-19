@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -22,7 +21,7 @@ class GetAz(CloudFormationLintRule):
 
         for getaz_obj in getaz_objs:
             getaz_value = getaz_obj[-1]
-            if isinstance(getaz_value, six.string_types):
+            if isinstance(getaz_value, str):
                 if getaz_value != '' and getaz_value not in cfn.regions:
                     message = 'GetAZs should be of empty or string of valid region for {0}'
                     matches.append(RuleMatch(

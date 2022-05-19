@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import datetime
 import json
 import re
-import six
 import cfnlint.helpers
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -36,6 +35,7 @@ class JsonSize(CloudFormationLintRule):
         """Check Role.AssumeRolePolicyDocument is within limits"""
         matches = []
 
+        #pylint: disable=too-many-return-statements
         def remove_functions(obj):
             """ Replaces intrinsic functions with string """
             if isinstance(obj, dict):
@@ -44,10 +44,12 @@ class JsonSize(CloudFormationLintRule):
                     for k, v in obj.items():
                         if k in cfnlint.helpers.FUNCTIONS:
                             if k == 'Fn::Sub':
-                                if isinstance(v, six.string_types):
+                                if isinstance(v, str):
                                     return re.sub(r'\${.*}', '', v)
                                 if isinstance(v, list):
                                     return re.sub(r'\${.*}', '', v[0])
+                            else:
+                                return ''
                         else:
                             new_obj[k] = remove_functions(v)
                             return new_obj
@@ -67,7 +69,7 @@ class JsonSize(CloudFormationLintRule):
         json_max_size = specs.get('JsonMax')
         for scenario in scenarios:
             j = remove_functions(scenario['Object'][prop])
-            if isinstance(j, six.string_types):
+            if isinstance(j, str):
                 try:
                     j = json.loads(j)
                 except:  #pylint: disable=bare-except

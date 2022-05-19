@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  rIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: {'test': 'test'} 
+  rLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref rIamRole
+      Runtime:
+      Code: 
+        ZipFile: |
+          def handler(event, context):
+            print(event)
+            return

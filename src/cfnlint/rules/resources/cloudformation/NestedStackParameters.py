@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import os
-import six
 from cfnlint.decode import decode
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -77,7 +76,7 @@ class NestedStackParameters(CloudFormationLintRule):
             for parameter_group in parameter_groups:
                 obj = parameter_group.get('Object')
                 template_url = obj.get('TemplateURL')
-                if isinstance(template_url, six.string_types):
+                if isinstance(template_url, str):
                     if not (template_url.startswith('http://') or template_url.startswith('https://') or template_url.startswith('s3://')):
                         template_path = os.path.normpath(os.path.join(base_dir, template_url))
                         nested_parameters = self.__get_template_parameters(template_path)

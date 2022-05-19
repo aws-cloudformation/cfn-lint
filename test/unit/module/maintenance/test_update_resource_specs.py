@@ -6,7 +6,7 @@ import sys
 import logging
 import zipfile
 from test.testlib.testcase import BaseTestCase
-from mock import patch, MagicMock, Mock, ANY
+from unittest.mock import patch, MagicMock, Mock, ANY
 import cfnlint.maintenance
 try:
     from urllib.request import urlopen, Request

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -31,7 +30,7 @@ class DomainValidationOptions(CloudFormationLintRule):
                 scenario = property_set.get('Scenario')
                 domain_name = properties.get('DomainName', None)
                 validation_domain = properties.get('ValidationDomain', None)
-                if isinstance(domain_name, six.string_types) and isinstance(validation_domain, six.string_types):
+                if isinstance(domain_name, str) and isinstance(validation_domain, str):
                     if domain_name == validation_domain:
                         continue
 

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -18,12 +17,12 @@ class Description(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        outputs = cfn.template.get('Outputs', {})
+        outputs = cfn.get_outputs_valid()
         if outputs:
             for output_name, output_value in outputs.items():
                 description = output_value.get('Description')
                 if description:
-                    if not isinstance(description, six.string_types):
+                    if not isinstance(description, str):
                         message = 'Output Description can only be a string'
                         matches.append(RuleMatch(['Outputs', output_name, 'Description'], message))
 

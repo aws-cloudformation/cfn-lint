@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -50,7 +49,7 @@ class AllowedPattern(CloudFormationLintRule):
         if isinstance(value, (int, float)):
             value = str(value)
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if value_pattern_regex:
                 regex = re.compile(value_pattern_regex)
 

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import load_resource
 from cfnlint.data import CloudSpecs
 from test.testlib.testcase import BaseTestCase
@@ -135,13 +134,13 @@ class TestPatchedSpecs(BaseTestCase):
                         if r_name == 'Parameters':
                             for r_list_value in r_value:
                                 self.assertIsInstance(
-                                    r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                    r_list_value, str, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
                                 self.assertIn(r_list_value, self.spec.get(
                                     'ParameterTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
                         elif r_name == 'Resources':
                             for r_list_value in r_value:
                                 self.assertIsInstance(
-                                    r_list_value, six.string_types, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
+                                    r_list_value, str, 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
                                 self.assertIn(r_list_value, self.spec.get(
                                     'ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, r_name))
 
@@ -150,11 +149,11 @@ class TestPatchedSpecs(BaseTestCase):
                         p_values, dict, 'ValueTypes: %s, Type: %s' % (v_name, p_name))
                     for g_name, g_value in p_values.items():
                         self.assertIsInstance(
-                            g_value, (six.string_types, list), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
+                            g_value, (str, list), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
                         self.assertIn(g_name, self.spec.get(
                             'ResourceTypes'), 'ValueTypes: %s, Type: %s, Additional Type: %s' % (v_name, p_name, g_name))
                         values = g_value
-                        if isinstance(values, six.string_types):
+                        if isinstance(values, str):
                             values = [values]
                         for value in values:
                             self.assertIn(value, self.spec.get('ResourceTypes', {}).get(g_name, {}).get(
@@ -162,7 +161,7 @@ class TestPatchedSpecs(BaseTestCase):
                 elif p_name == 'AllowedValues':
                     self.assertIsInstance(p_values, list)
                     for l_value in p_values:
-                        self.assertIsInstance(l_value, six.string_types,
+                        self.assertIsInstance(l_value, str,
                                               'ValueTypes: %s, Type: %s' % (v_name, p_name))
             self.assertIn(list_count, [0, 2], 'Both ListMin and ListMax must be specified')
             self.assertIn(number_count, [0, 2], 'Both NumberMin and NumberMax must be specified')

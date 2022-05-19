@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import logging
 from test.testlib.testcase import BaseTestCase
-from mock import patch
+from unittest.mock import patch
 import cfnlint.maintenance
 
 LOGGER = logging.getLogger('cfnlint.maintenance')

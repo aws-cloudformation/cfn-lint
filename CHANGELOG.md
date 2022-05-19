@@ -1,3 +1,110 @@
+### v0.60.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `72.0.0` (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))
+###### Fixes
+- Don't allow regex expressions that result in a warning (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))
+
+### v0.60.0
+###### Features
+- Move null checks from the parsing engine into rules (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Add rule [E4002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E4002) to validate metadata config (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Update rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2001) to error on null values (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to validate for null values in properties (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `69.0.0` (pull #[2261](https://github.com/aws-cloudformation/cfn-lint/pull/2261))
+
+### v0.59.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `66.1.0` (pull #[2255](https://github.com/aws-cloudformation/cfn-lint/pull/2255))
+###### Fixes
+- Lambda runtime deprecation updates (python3.6) (pull #[2252](https://github.com/aws-cloudformation/cfn-lint/pull/2252))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to consider a list as valid JSON (pull #[2253](https://github.com/aws-cloudformation/cfn-lint/pull/2253))
+
+### v0.59.0
+###### Features
+- Update `aws-sam-translator` to `1.45.0` (pull #[2245](https://github.com/aws-cloudformation/cfn-lint/pull/2245))
+- Remove dependency on `six` (pull #[2204](https://github.com/aws-cloudformation/cfn-lint/pull/2204))
+- New rule [E3504](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3504) to validate resources with `AWS::Backup::BackupPlan`. The property `DeleteAfterDays` cannot be less than 90 days from `MoveToColdStorageAfterDays` (pull #[2230](https://github.com/aws-cloudformation/cfn-lint/pull/2230))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `66.0.0` (pull #[2245](https://github.com/aws-cloudformation/cfn-lint/pull/2245))
+
+### v0.58.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `61.0.0` (pull #[2232](https://github.com/aws-cloudformation/cfn-lint/pull/2232))
+###### Fixes
+- Update SAM Transform pre work to add `ImageUri` when using `Image` as `PackageType` in `AWS::Serverless::Function` (pull #[2236](https://github.com/aws-cloudformation/cfn-lint/pull/2236))
+
+### v0.58.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `59.0.0` (pull #[2225](https://github.com/aws-cloudformation/cfn-lint/pull/2225))
+- Remove allowed values for `AWS::Config::ConfigurationRecorder.ResourceTypes` (pull #[2231](https://github.com/aws-cloudformation/cfn-lint/pull/2231))
+###### Fixes
+- Wrap creating a YAML map with try/except and create lint error on failure (pull #[2226](https://github.com/aws-cloudformation/cfn-lint/pull/2226))
+
+### v0.58.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `58.0.0` (pull #[2217](https://github.com/aws-cloudformation/cfn-lint/pull/2217))
+###### Fixes
+- [W2506](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2506): Avoid false positives when using a `Ref` against a resource (pull #[2210](https://github.com/aws-cloudformation/cfn-lint/pull/2210))
+- [E3502](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3502): Blank out functions in JSON size check to prevent false positives (pull #[2222](https://github.com/aws-cloudformation/cfn-lint/pull/2222))
+
+### v0.58.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `56.0.0` (pull #[2207](https://github.com/aws-cloudformation/cfn-lint/pull/2207))
+
+### v0.58.0
+###### Features
+- Update rule [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3020) to validate that TTL isn't added for Alias records (pull #[2195](https://github.com/aws-cloudformation/cfn-lint/pull/2195))
+- Remove imports to `pathlib2` with deprecation of Python 2.7, 3.4, and 3.5 (pull #[2205](https://github.com/aws-cloudformation/cfn-lint/pull/2205))
+- Improvements to json parsing code (pull #[2199](https://github.com/aws-cloudformation/cfn-lint/pull/2199))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `54.0.0` (pull #[2202](https://github.com/aws-cloudformation/cfn-lint/pull/2202))
+###### Fixes
+- Fix an issue checking values of `false` in custom rules (pull #[2208](https://github.com/aws-cloudformation/cfn-lint/pull/2208))
+
+### v0.57.0
+###### Features
+- EOL of Python 2.7, 3.4, and 3.5 support (pull #[2195](https://github.com/aws-cloudformation/cfn-lint/pull/2195))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `53.0.0` (pull #[2196](https://github.com/aws-cloudformation/cfn-lint/pull/2196))
+- Fix an issue with rule [E2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2001) to allow string parameter constraints for all AWS specific types (pull #[2193](https://github.com/aws-cloudformation/cfn-lint/pull/2193))
+
+### v0.56.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `52.0.0` (pull #[2188](https://github.com/aws-cloudformation/cfn-lint/pull/2188))
+- Add region `ap-southeast-3` (pull #[2192](https://github.com/aws-cloudformation/cfn-lint/pull/2192))
+
+### v0.56.3
+###### Features
+- Update `aws-sam-translator` to `1.42.0` (pull #[2183](https://github.com/aws-cloudformation/cfn-lint/pull/2183))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `50.0.0` (pull #[2180](https://github.com/aws-cloudformation/cfn-lint/pull/2180))
+
+### v0.56.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `49.0.0` (pull #[2178](https://github.com/aws-cloudformation/cfn-lint/pull/2178))
+- Expand `StatefulResources` to include `AWS::OpenSearchService::Domain` (pull #[2179](https://github.com/aws-cloudformation/cfn-lint/pull/2179))
+- Add `AWS::EKS::Cluster.ClusterSecurityGroupId` to `GetAtt` list of `AWS::EC2::SecurityGroup.NameOrGroupId` (pull #[2177](https://github.com/aws-cloudformation/cfn-lint/pull/2177))
+
+### v0.56.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `48.0.0` (pull #[2170](https://github.com/aws-cloudformation/cfn-lint/pull/2170))
+- Add `AWS::OpenSearchService::Domain` to be in the list for `EnableVersionUpgrade` (pull #[2174](https://github.com/aws-cloudformation/cfn-lint/pull/2174))
+
+### v0.56.0
+###### Features
+- Update `aws-sam-translator` to `1.40.0` (pull #[2165](https://github.com/aws-cloudformation/cfn-lint/pull/2165))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `47.0.0` (pull #[2164](https://github.com/aws-cloudformation/cfn-lint/pull/2164))
+###### Fixes
+- Switching logging level for `samtranslator` to `CRITICAL` (pull #[2168](https://github.com/aws-cloudformation/cfn-lint/pull/2168))
+
+### v0.55.0
+###### Features
+- Adds support for outputting results in SARIF (pull #[2126](https://github.com/aws-cloudformation/cfn-lint/pull/2126))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `46.0.0` (pull #[2158](https://github.com/aws-cloudformation/cfn-lint/pull/2158))
+
 ### v0.54.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `45.0.0` (pull #[2153](https://github.com/aws-cloudformation/cfn-lint/pull/2153))

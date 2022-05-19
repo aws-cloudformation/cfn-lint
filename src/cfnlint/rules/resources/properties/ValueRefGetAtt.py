@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS
@@ -114,7 +113,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
                 resource_attribute = value[1].split('.')
             else:
                 resource_attribute = value[1:]
-        elif isinstance(value, six.string_types):
+        elif isinstance(value, str):
             resource_name = value.split('.')[0]
             resource_attribute = value.split('.')[1:]
         is_value_a_list = self.is_value_a_list(path[:-1], property_name)

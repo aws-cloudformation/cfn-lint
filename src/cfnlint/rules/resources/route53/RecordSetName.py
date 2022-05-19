@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -29,7 +28,7 @@ class RecordSetName(CloudFormationLintRule):
             scenario = property_set.get('Scenario')
             name = props.get('Name', None)
             hz_name = props.get('HostedZoneName', None)
-            if isinstance(name, six.string_types) and isinstance(hz_name, six.string_types):
+            if isinstance(name, str) and isinstance(hz_name, str):
                 if hz_name[-1] != '.':
                     message = 'HostedZoneName must end in a dot at {}'
                     if scenario is None:

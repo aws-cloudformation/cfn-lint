@@ -33,7 +33,19 @@ class Configuration(CloudFormationLintRule):
         },
         'MaxLength': {
             'Type': 'Integer',
-            'ValidForTypes': ['String']
+            'ValidForTypes': [
+                'String',
+                'AWS::EC2::AvailabilityZone::Name',
+                'AWS::EC2::Image::Id',
+                'AWS::EC2::Instance::Id',
+                'AWS::EC2::KeyPair::KeyName',
+                'AWS::EC2::SecurityGroup::GroupName',
+                'AWS::EC2::SecurityGroup::Id',
+                'AWS::EC2::Subnet::Id',
+                'AWS::EC2::Volume::Id',
+                'AWS::EC2::VPC::Id',
+                'AWS::Route53::HostedZone::Id'
+            ]
         },
         'MaxValue': {
             'Type': 'Integer',
@@ -41,7 +53,19 @@ class Configuration(CloudFormationLintRule):
         },
         'MinLength': {
             'Type': 'Integer',
-            'ValidForTypes': ['String']
+            'ValidForTypes': [
+                'String',
+                'AWS::EC2::AvailabilityZone::Name',
+                'AWS::EC2::Image::Id',
+                'AWS::EC2::Instance::Id',
+                'AWS::EC2::KeyPair::KeyName',
+                'AWS::EC2::SecurityGroup::GroupName',
+                'AWS::EC2::SecurityGroup::Id',
+                'AWS::EC2::Subnet::Id',
+                'AWS::EC2::Volume::Id',
+                'AWS::EC2::VPC::Id',
+                'AWS::Route53::HostedZone::Id'
+            ]
         },
         'MinValue': {
             'Type': 'Integer',
@@ -63,6 +87,11 @@ class Configuration(CloudFormationLintRule):
         """ Check the type and handle recursion with lists """
         results = []
         prop_type = props.get('Type')
+        if value is None:
+            message = 'Property %s should be of type %s' % (
+                '/'.join(map(str, path)), prop_type)
+            results.append(RuleMatch(path, message))
+            return results
         try:
             if prop_type in ['List']:
                 if isinstance(value, list):
@@ -104,34 +133,41 @@ class Configuration(CloudFormationLintRule):
         matches = []
 
         for paramname, paramvalue in cfn.get_parameters().items():
-            for propname, propvalue in paramvalue.items():
-                if propname not in self.valid_keys:
-                    message = 'Parameter {0} has invalid property {1}'
-                    matches.append(RuleMatch(
-                        ['Parameters', paramname, propname],
-                        message.format(paramname, propname)
-                    ))
-                else:
-                    props = self.valid_keys.get(propname)
-                    prop_path = ['Parameters', paramname, propname]
-                    matches.extend(self.check_type(
-                        propvalue, prop_path, props))
-                    # Check that the property is needed for the current type
-                    valid_for = props.get('ValidForTypes')
-                    if valid_for is not None and paramvalue.get('Type'):
-                        if paramvalue.get('Type') not in valid_for:
-                            message = 'Parameter {0} has property {1} which is only valid for {2}'
-                            matches.append(RuleMatch(
-                                ['Parameters', paramname, propname],
-                                message.format(paramname, propname, valid_for)
-                            ))
+            if isinstance(paramvalue, dict):
+                for propname, propvalue in paramvalue.items():
+                    if propname not in self.valid_keys:
+                        message = 'Parameter {0} has invalid property {1}'
+                        matches.append(RuleMatch(
+                            ['Parameters', paramname, propname],
+                            message.format(paramname, propname)
+                        ))
+                    else:
+                        props = self.valid_keys.get(propname)
+                        prop_path = ['Parameters', paramname, propname]
+                        matches.extend(self.check_type(
+                            propvalue, prop_path, props))
+                        # Check that the property is needed for the current type
+                        valid_for = props.get('ValidForTypes')
+                        if valid_for is not None:
+                            if paramvalue.get('Type') not in valid_for:
+                                message = 'Parameter {0} has property {1} which is only valid for {2}'
+                                matches.append(RuleMatch(
+                                    ['Parameters', paramname, propname],
+                                    message.format(paramname, propname, valid_for)
+                                ))
 
-            for reqname in self.required_keys:
-                if reqname not in paramvalue.keys():
-                    message = 'Parameter {0} is missing required property {1}'
-                    matches.append(RuleMatch(
-                        ['Parameters', paramname],
-                        message.format(paramname, reqname)
-                    ))
+                for reqname in self.required_keys:
+                    if reqname not in paramvalue.keys():
+                        message = 'Parameter {0} is missing required property {1}'
+                        matches.append(RuleMatch(
+                            ['Parameters', paramname],
+                            message.format(paramname, reqname)
+                        ))
+            else:
+                message = 'Parameter {0} is not an object'
+                matches.append(RuleMatch(
+                    ['Parameters', paramname],
+                    message.format(paramname, reqname)
+                ))
 
         return matches

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 import cfnlint.helpers
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -49,9 +48,9 @@ class InstanceSize(CloudFormationLintRule):
                 # Need to get a default license model if none provided
                 # Also need to validate all these values are strings otherwise we cannot
                 # do validation
-                if isinstance(engine, six.string_types) and isinstance(inst_class, six.string_types):
+                if isinstance(engine, str) and isinstance(inst_class, str):
                     license_model = self._get_license_model(engine, license_model)
-                    if isinstance(license_model, six.string_types):
+                    if isinstance(license_model, str):
                         results.append(
                             {
                                 'Engine': engine,

@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -139,7 +138,7 @@ class StateMachine(CloudFormationLintRule):
         matches = []
         if isinstance(value, list):
             matches.extend(self.check_value(value[0], path, False))
-        elif isinstance(value, six.string_types):
+        elif isinstance(value, str):
             matches.extend(self.check_value(value, path, False))
 
         return matches

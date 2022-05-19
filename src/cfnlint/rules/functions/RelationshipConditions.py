@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.helpers import PSEUDOPARAMS
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -48,7 +47,7 @@ class RelationshipConditions(CloudFormationLintRule):
             value = None
             if isinstance(value_obj, list):
                 value = value_obj[0]
-            elif isinstance(value_obj, six.string_types):
+            elif isinstance(value_obj, str):
                 value = value_obj.split('.')[0]
             if value:
                 if value not in PSEUDOPARAMS:

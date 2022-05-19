@@ -88,20 +88,34 @@ class Configuration(CloudFormationLintRule):
         if outputs:
             if isinstance(outputs, dict):
                 for output_name, output_value in outputs.items():
-                    for prop in output_value:
-                        if prop not in self.valid_keys:
-                            message = 'Output {0} has invalid property {1}'
-                            matches.append(RuleMatch(
-                                ['Outputs', output_name, prop],
-                                message.format(output_name, prop)
-                            ))
-                    value = output_value.get('Value')
-                    if value:
-                        matches.extend(self.check_func(value, ['Outputs', output_name, 'Value']))
-                    export = output_value.get('Export')
-                    if export:
-                        matches.extend(self.check_export(
-                            export, ['Outputs', output_name, 'Export']))
+                    if not isinstance(output_value, dict):
+                        message = 'Output {0} is not an object'
+                        matches.append(RuleMatch(
+                            ['Outputs', output_name],
+                            message.format(output_name)
+                        ))
+                    else:
+                        for propname, propvalue in output_value.items():
+                            if propname not in self.valid_keys:
+                                message = 'Output {0} has invalid property {1}'
+                                matches.append(RuleMatch(
+                                    ['Outputs', output_name, propname],
+                                    message.format(output_name, propname)
+                                ))
+                            else:
+                                if propvalue is None:
+                                    message = 'Output {0} has property {1} has invalid type'
+                                    matches.append(RuleMatch(
+                                        ['Outputs', output_name, propname],
+                                        message.format(output_name, propname)
+                                    ))
+                        value = output_value.get('Value')
+                        if value:
+                            matches.extend(self.check_func(value, ['Outputs', output_name, 'Value']))
+                        export = output_value.get('Export')
+                        if export:
+                            matches.extend(self.check_export(
+                                export, ['Outputs', output_name, 'Export']))
             else:
                 matches.append(RuleMatch(['Outputs'], 'Outputs do not follow correct format.'))
 

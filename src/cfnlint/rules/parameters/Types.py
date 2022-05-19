@@ -18,7 +18,7 @@ class Types(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        for paramname, paramvalue in cfn.get_parameters().items():
+        for paramname, paramvalue in cfn.get_parameters_valid().items():
             # If the type isn't found we create a valid one
             # this test isn't about missing required properties for a
             # parameter.

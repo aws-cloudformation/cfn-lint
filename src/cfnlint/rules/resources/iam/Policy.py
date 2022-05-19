@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from datetime import date
-import six
 from cfnlint.helpers import convert_dict, FUNCTIONS_SINGLE
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
@@ -27,6 +26,7 @@ class Policy(CloudFormationLintRule):
         self.resources_and_keys = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
             'AWS::Elasticsearch::Domain': 'AccessPolicies',
+            'AWS::OpenSearchService::Domain': 'AccessPolicies',
             'AWS::KMS::Key': 'KeyPolicy',
             'AWS::S3::BucketPolicy': 'PolicyDocument',
             'AWS::SNS::TopicPolicy': 'PolicyDocument',
@@ -56,7 +56,7 @@ class Policy(CloudFormationLintRule):
         ]
         valid_versions = ['2012-10-17', '2008-10-17', date(2012, 10, 17), date(2008, 10, 17)]
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             try:
                 value = convert_dict(json.loads(value), start_mark, end_mark)
             except Exception as ex:  # pylint: disable=W0703,W0612
@@ -129,7 +129,7 @@ class Policy(CloudFormationLintRule):
                 RuleMatch(branch[:], message))
         else:
             for effect, effect_path in statement.get_safe('Effect'):
-                if isinstance(effect, six.string_types):
+                if isinstance(effect, str):
                     if effect not in ['Allow', 'Deny']:
                         message = 'IAM Policy Effect should be Allow or Deny'
                         matches.append(
@@ -155,7 +155,7 @@ class Policy(CloudFormationLintRule):
                     RuleMatch(branch[:], message))
 
         resources = statement.get('Resource', [])
-        if isinstance(resources, six.string_types):
+        if isinstance(resources, str):
             resources = [resources]
 
         for index, resource in enumerate(resources):

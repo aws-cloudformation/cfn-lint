@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import os
 from test.testlib.testcase import BaseTestCase
-from mock import patch
+from unittest.mock import patch
 import cfnlint.config  # pylint: disable=E0401
 from cfnlint.helpers import REGIONS
 
