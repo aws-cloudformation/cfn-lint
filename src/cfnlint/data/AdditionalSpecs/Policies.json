@@ -2345,7 +2345,7 @@
       ]
     },
     "AWS DeepComposer": {
-      "ARNFormat": "arn:aws:deepcomposer:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:deepcomposer:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:deepcomposer:.+:.+:.+",
       "Actions": [
         "AssociateCoupon",
@@ -4297,6 +4297,7 @@
       "ARNRegex": "^arn:${Partition}:iotevents:.+",
       "Actions": [
         "BatchAcknowledgeAlarm",
+        "BatchDeleteDetector",
         "BatchDisableAlarm",
         "BatchEnableAlarm",
         "BatchPutMessage",
@@ -12824,7 +12825,9 @@
       "Actions": [
         "AssociateLicense",
         "CreateWorkspace",
+        "CreateWorkspaceApiKey",
         "DeleteWorkspace",
+        "DeleteWorkspaceApiKey",
         "DescribeWorkspace",
         "DescribeWorkspaceAuthentication",
         "DisassociateLicense",
@@ -13824,6 +13827,7 @@
         "UpdateGroup",
         "UpdateIAMPolicyAssignment",
         "UpdateIpRestriction",
+        "UpdatePublicSharingSettings",
         "UpdateTemplate",
         "UpdateTemplateAlias",
         "UpdateTemplatePermissions",
@@ -15922,6 +15926,53 @@
       ],
       "HasResource": false,
       "StringPrefix": "workdocs"
+    },
+    "Amazon WorkLink": {
+      "ARNFormat": "arn:${Partition}:worklink::${Account}:${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:worklink:.+",
+      "Actions": [
+        "AssociateDomain",
+        "AssociateWebsiteAuthorizationProvider",
+        "AssociateWebsiteCertificateAuthority",
+        "CreateFleet",
+        "DeleteFleet",
+        "DescribeAuditStreamConfiguration",
+        "DescribeCompanyNetworkConfiguration",
+        "DescribeDevice",
+        "DescribeDevicePolicyConfiguration",
+        "DescribeDomain",
+        "DescribeFleetMetadata",
+        "DescribeIdentityProviderConfiguration",
+        "DescribeWebsiteCertificateAuthority",
+        "DisassociateDomain",
+        "DisassociateWebsiteAuthorizationProvider",
+        "DisassociateWebsiteCertificateAuthority",
+        "ListDevices",
+        "ListDomains",
+        "ListFleets",
+        "ListTagsForResource",
+        "ListWebsiteAuthorizationProviders",
+        "ListWebsiteCertificateAuthorities",
+        "RestoreDomainAccess",
+        "RevokeDomainAccess",
+        "SearchEntity",
+        "SignOutUser",
+        "TagResource",
+        "UntagResource",
+        "UpdateAuditStreamConfiguration",
+        "UpdateCompanyNetworkConfiguration",
+        "UpdateDevicePolicyConfiguration",
+        "UpdateDomainMetadata",
+        "UpdateFleetMetadata",
+        "UpdateIdentityProviderConfiguration"
+      ],
+      "HasResource": true,
+      "StringPrefix": "worklink",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "Amazon WorkMail": {
       "ARNFormat": "arn:${Partition}:workmail:${Region}:${Account}:${ResourceType}/${ResourceId}",

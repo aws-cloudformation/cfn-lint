@@ -2859,10 +2859,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-componentmonitoringsetting.html#cfn-applicationinsights-application-componentmonitoringsetting-tier",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable",
-          "Value": {
-            "ValueType": "AWS::ApplicationInsights::Application.ComponentMonitoringSetting.Tier"
-          }
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -3044,10 +3041,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-log.html#cfn-applicationinsights-application-log-logtype",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable",
-          "Value": {
-            "ValueType": "AWS::ApplicationInsights::Application.Log.LogType"
-          }
+          "UpdateType": "Mutable"
         },
         "PatternSet": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationinsights-application-log.html#cfn-applicationinsights-application-log-patternset",
@@ -36125,7 +36119,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "69.0.0",
+  "ResourceSpecificationVersion": "72.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -38867,6 +38861,12 @@
         "Cooldown": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-cooldown",
           "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DefaultInstanceWarmup": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-as-group.html#cfn-as-group-defaultinstancewarmup",
+          "PrimitiveType": "Integer",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -45279,6 +45279,12 @@
       "Properties": {
         "Description": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-trafficmirrortarget.html#cfn-ec2-trafficmirrortarget-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "GatewayLoadBalancerEndpointId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-trafficmirrortarget.html#cfn-ec2-trafficmirrortarget-gatewayloadbalancerendpointid",
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Immutable"
@@ -52782,6 +52788,50 @@
           "Value": {
             "ValueType": "AWS::IoT::ResourceSpecificLogging.TargetType"
           }
+        }
+      }
+    },
+    "AWS::IoT::RoleAlias": {
+      "Attributes": {
+        "RoleAliasArn": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-rolealias.html",
+      "Properties": {
+        "CredentialDurationSeconds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-rolealias.html#cfn-iot-rolealias-credentialdurationseconds",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::RoleAlias.CredentialDurationSeconds"
+          }
+        },
+        "RoleAlias": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-rolealias.html#cfn-iot-rolealias-rolealias",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::RoleAlias.RoleAlias"
+          }
+        },
+        "RoleArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-rolealias.html#cfn-iot-rolealias-rolearn",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::RoleAlias.RoleArn"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-rolealias.html#cfn-iot-rolealias-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -61267,9 +61317,6 @@
       "StringMax": 128,
       "StringMin": 1
     },
-    "AWS::ApplicationInsights::Application.ComponentMonitoringSetting.Tier": {
-      "AllowedPatternRegex": "^[A-Z][[A-Z]_]*$"
-    },
     "AWS::ApplicationInsights::Application.CustomComponent.ComponentName": {
       "AllowedPatternRegex": "^[\\d\\w\\-_.+]*$",
       "StringMax": 128,
@@ -61296,9 +61343,6 @@
       "AllowedPatternRegex": "^([a-zA-Z]:\\\\[\\\\\\S|*\\S]?.*|/[^\"']*)$",
       "StringMax": 260,
       "StringMin": 1
-    },
-    "AWS::ApplicationInsights::Application.Log.LogType": {
-      "AllowedPatternRegex": "^[A-Z][[A-Z]_]*$"
     },
     "AWS::ApplicationInsights::Application.Log.PatternSet": {
       "AllowedPatternRegex": "[a-zA-Z0-9.-_]*",
@@ -64239,6 +64283,20 @@
         "SOURCE_IP",
         "PRINCIPAL_ID"
       ]
+    },
+    "AWS::IoT::RoleAlias.CredentialDurationSeconds": {
+      "NumberMax": 43200,
+      "NumberMin": 900
+    },
+    "AWS::IoT::RoleAlias.RoleAlias": {
+      "AllowedPatternRegex": "[\\w=,@-]+",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::IoT::RoleAlias.RoleArn": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+      "StringMax": 2048,
+      "StringMin": 20
     },
     "AWS::IoT::ScheduledAudit.DayOfMonth": {
       "AllowedPatternRegex": "^([1-9]|[12][0-9]|3[01])$|^LAST$"
