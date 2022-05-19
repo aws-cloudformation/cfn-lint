@@ -1,3 +1,9 @@
+### v0.60.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `72.0.0` (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))
+###### Fixes
+- Don't allow regex expressions that result in a warning (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))
+
 ### v0.60.0
 ###### Features
 - Move null checks from the parsing engine into rules (pull #[2242](https://github.com/aws-cloudformation/cfn-lint/pull/2242))
