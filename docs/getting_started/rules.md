@@ -16,7 +16,7 @@ When creating a rule for `cfn-lint`, keep the following rules in mind:
 * A rule has to be applicable to *ALL* users of the toolkit by default. If a rule contains specific business logic, create a custom rule.
 * A rule typically covers a single specific use case. It's not an exact science, but create multiple rules if you think it's needed.
 * A rule is an `Error` (blocking) or `Warning` (not blocking). Create multiple specific rules if a rule can be both.
-* A rule should focus on its own requirements. Missing a required property? That's handled by an [existing rule](./rules.md#E3003) already.
+* A rule should focus on its own requirements. Missing a required property? That's handled by an [existing rule](../rules.md#E3003) already.
 
 These rules don't apply to custom rules sets, you're free to build your own rules.
 
@@ -34,10 +34,10 @@ The following steps describe the basics on how to create a new rule.
 *As an example we use `MyNewRule` as the rule to be added.*
 
 ### Select a new Rule ID
-Go to the [rules documentation](./rules.md) and find an appropriate available Rule ID, based on the correct [category](./rules.md#categories).
+Go to the [rules documentation](../rules.md) and find an appropriate available Rule ID, based on the correct [category](../rules.md#categories).
 
 ### Create new Rule
-Based on the use case and [rule category](./rules.md#categories), create a new Python file in the correct namespace of the [rules folder](/src/cfnlint/rules). Use the name of the Rule, so the filename of `MyNewRule` is `mynewrule.py`.
+Based on the use case and [rule category](../rules.md#categories), create a new Python file in the correct namespace of the [rules folder](/src/cfnlint/rules). Use the name of the Rule, so the filename of `MyNewRule` is `mynewrule.py`.
 
 Use the following skeleton code as a starting point of your new rule:
 
@@ -51,7 +51,6 @@ from cfnlint.rules import RuleMatch
 
 
 class MyNewRule(CloudFormationLintRule):
-    """Rule description """
     id = '' # New Rule ID
     shortdesc = '' # A short description about the rule
     description = '' # (Longer) description about the rule
@@ -79,11 +78,11 @@ See the [code snippets](#code_snippets) section below for some examples of an im
 You can test your new rule by just running `cfn-lint`, but preferably your new rule is validated by unit tests.
 
 #### Fixtures
-Fixture templates are created under the [test/templates/good](/test/templates/good) (for templates with valid CloudFormation code) or [test/templates/bad](/test/templates/bad) (for template with invalid CloudFormation code) folders.  
+Fixture templates are created under the [test/fixtures/templates/good](/test/fixtures/templates/good) (for templates with valid CloudFormation code) or [test/fixtures/templates/bad](/test/fixtures/templates/bad) (for template with invalid CloudFormation code) folders.  
 Use `YAML` for the CloudFormation templates for readability and the ability to add comments in the template
 
 #### Test class
-Create a `test_mynewrule.py` at the appropriate location in the [`test/rules/`](/test/rules) folder.
+Create a `test_mynewrule.py` at the appropriate location in the [`test/unit/rules/`](/test/unit/rules) folder.
 
 Use the following skeleton code as a starting point of your new rule:
 
@@ -99,16 +98,13 @@ from .. import BaseRuleTestCase
 class TestMyNewRule(BaseRuleTestCase):
     """Test template parameter configurations"""
     def setUp(self):
-        """Setup"""
         super(TestMyNewRule, self).setUp()
         self.collection.register(MyNewRule())
 
     def test_file_positive(self):
-        """Test Positive"""
         self.helper_file_positive() # By default, a set of "correct" templates are checked
 
     def test_file_negative(self):
-        """Test failure"""
         self.helper_file_negative('test/fixtures/templates/bad/mynewrule.yaml', 1) # Amount of expected matches
 ```
 
