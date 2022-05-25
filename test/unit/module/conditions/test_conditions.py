@@ -27,6 +27,7 @@ class TestConditions(BaseTestCase):
                 'isProduction': {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Prod']},
                 'isPrimary': {'Fn::Equals': ['True', {'Fn::FindInMap': ['location', {'Ref': 'AWS::Region'}, 'primary']}]},
                 'isPrimaryAndProduction': {'Fn::And': [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]},
+                'isPrimaryOrProduction': {'Fn::Or': [{'Condition': 'isProduction'}, {'Condition': 'isPrimary'}]},
                 'isProductionOrStaging': {'Fn::Or': [{'Condition': 'isProduction'}, {'Fn::Equals': [{'Ref': 'myEnvironment'}, 'Stage']}]},
                 'isNotProduction': {'Fn::Not': [{'Condition': 'isProduction'}]},
                 'isDevelopment': {'Fn::Equals': ['Dev', {'Ref': 'myEnvironment'}]},
@@ -46,7 +47,7 @@ class TestConditions(BaseTestCase):
 
     def test_success_size_of_conditions(self):
         """Test success run"""
-        self.assertEqual(len(self.conditions.Conditions), 9)
+        self.assertEqual(len(self.conditions.Conditions), 10)
         self.assertEqual(len(self.conditions.Parameters), 2)
         self.assertListEqual(self.conditions.Parameters['55caa18684cddafa866bdb947fb31ea563b2ea73'], [
                              'None', 'Single NAT', 'High Availability'])
@@ -242,6 +243,16 @@ class TestConditions(BaseTestCase):
                 {'isProduction': False, 'isProductionOrStaging': False},
             ]
         )
+        # Nested OR Logic
+        self.assertEqualListOfDicts(
+            self.conditions.get_scenarios(['isProduction', 'isPrimaryOrProduction']),
+            [
+                {'isProduction': True, 'isPrimaryOrProduction': True},
+                {'isProduction': False, 'isPrimaryOrProduction': True},
+                {'isProduction': False, 'isPrimaryOrProduction': False},
+            ]
+        )
+
         # We cover all the possible scenarios in this case
         self.assertEqualListOfDicts(
             self.conditions.get_scenarios(['isProduction', 'isPrimaryAndProdOrStage']),
