@@ -582,6 +582,38 @@
       "HasResource": false,
       "StringPrefix": "application-cost-profiler"
     },
+    "AWS Application Discovery Service": {
+      "Actions": [
+        "AssociateConfigurationItemsToApplication",
+        "BatchDeleteImportData",
+        "CreateApplication",
+        "CreateTags",
+        "DeleteApplications",
+        "DeleteTags",
+        "DescribeAgents",
+        "DescribeConfigurations",
+        "DescribeContinuousExports",
+        "DescribeExportConfigurations",
+        "DescribeExportTasks",
+        "DescribeImportTasks",
+        "DescribeTags",
+        "DisassociateConfigurationItemsFromApplication",
+        "ExportConfigurations",
+        "GetDiscoverySummary",
+        "GetNetworkConnectionGraph",
+        "ListConfigurations",
+        "ListServerNeighbors",
+        "StartContinuousExport",
+        "StartDataCollectionByAgentIds",
+        "StartExportTask",
+        "StartImportTask",
+        "StopContinuousExport",
+        "StopDataCollectionByAgentIds",
+        "UpdateApplication"
+      ],
+      "HasResource": false,
+      "StringPrefix": "discovery"
+    },
     "AWS Application Migration Service": {
       "ARNFormat": "arn:aws:mgn:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:mgn:.+",
@@ -2797,6 +2829,8 @@
         "AssociateFailbackClientToRecoveryInstanceForDrs",
         "BatchCreateVolumeSnapshotGroupForDrs",
         "BatchDeleteSnapshotRequestForDrs",
+        "CreateConvertedSnapshotForDrs",
+        "CreateExtendedSourceServer",
         "CreateRecoveryInstanceForDrs",
         "CreateReplicationConfigurationTemplate",
         "CreateSessionForDrs",
@@ -2830,6 +2864,8 @@
         "GetSuggestedFailbackClientDeviceMappingForDrs",
         "InitializeService",
         "IssueAgentCertificateForDrs",
+        "ListExtensibleSourceServers",
+        "ListStagingAccounts",
         "ListTagsForResource",
         "NotifyAgentAuthenticationForDrs",
         "NotifyAgentConnectedForDrs",
@@ -2868,6 +2904,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "drs:CreateAction",
         "drs:EC2InstanceARN"
       ]
     },
@@ -8834,8 +8871,8 @@
       ]
     },
     "Amazon Cognito Identity": {
-      "ARNFormat": "arn:aws:cognito-identity:<region>:<account>:<resourceType>/<resourcePath>",
-      "ARNRegex": "^arn:aws:cognito-identity:.+",
+      "ARNFormat": "arn:${Partition}:cognito-identity:${Region}:${Account}:${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:cognito-identity:.+",
       "Actions": [
         "CreateIdentityPool",
         "DeleteIdentities",
@@ -10472,6 +10509,33 @@
         "ec2:osuser"
       ]
     },
+    "Amazon EMR Serverless": {
+      "ARNFormat": "arn:${Partition}:emr-serverless:${Region}:${Account}:/${ResourceType}/${ResourcePath}",
+      "ARNRegex": "^arn:${Partition}:emr-serverless:.+",
+      "Actions": [
+        "CancelJobRun",
+        "CreateApplication",
+        "DeleteApplication",
+        "GetApplication",
+        "GetJobRun",
+        "ListApplications",
+        "ListJobRuns",
+        "ListTagsForResource",
+        "StartApplication",
+        "StartJobRun",
+        "StopApplication",
+        "TagResource",
+        "UntagResource",
+        "UpdateApplication"
+      ],
+      "HasResource": true,
+      "StringPrefix": "emr-serverless",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
+    },
     "Amazon EMR on EKS (EMR Containers)": {
       "ARNFormat": "arn:${Partition}:emr-containers:${region}:${account}:/${resourceType}/${resourcePath}",
       "ARNRegex": "^arn:${Partition}:emr-containers:.+",
@@ -11085,8 +11149,6 @@
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
-        "aws:SourceAccount",
-        "aws:SourceArn",
         "aws:TagKeys",
         "events:EventBusArn",
         "events:ManagedBy",
@@ -16292,37 +16354,6 @@
         "aws:ResourceTag/${TagKey}"
       ]
     },
-    "Application Discovery": {
-      "Actions": [
-        "AssociateConfigurationItemsToApplication",
-        "BatchDeleteImportData",
-        "CreateApplication",
-        "CreateTags",
-        "DeleteApplications",
-        "DeleteTags",
-        "DescribeAgents",
-        "DescribeConfigurations",
-        "DescribeContinuousExports",
-        "DescribeExportConfigurations",
-        "DescribeExportTasks",
-        "DescribeImportTasks",
-        "DescribeTags",
-        "DisassociateConfigurationItemsFromApplication",
-        "ExportConfigurations",
-        "GetDiscoverySummary",
-        "ListConfigurations",
-        "ListServerNeighbors",
-        "StartContinuousExport",
-        "StartDataCollectionByAgentIds",
-        "StartExportTask",
-        "StartImportTask",
-        "StopContinuousExport",
-        "StopDataCollectionByAgentIds",
-        "UpdateApplication"
-      ],
-      "HasResource": false,
-      "StringPrefix": "discovery"
-    },
     "Application Discovery Arsenal": {
       "Actions": [
         "RegisterOnPremisesAgent"
@@ -16786,12 +16817,14 @@
         "ListConnectPeers",
         "ListCoreNetworkPolicyVersions",
         "ListCoreNetworks",
+        "ListOrganizationServiceAccessStatus",
         "ListTagsForResource",
         "PutCoreNetworkPolicy",
         "PutResourcePolicy",
         "RegisterTransitGateway",
         "RejectAttachment",
         "RestoreCoreNetworkPolicyVersion",
+        "StartOrganizationServiceAccessUpdate",
         "StartRouteAnalysis",
         "TagResource",
         "UntagResource",
