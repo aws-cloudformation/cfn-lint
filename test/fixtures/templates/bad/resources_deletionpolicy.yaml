@@ -7,6 +7,12 @@ Parameters:
     Type: String
     Default: 'Retain'
 Resources:
+  WaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    DeletionPolicy: !FindInMap
+      - 'StackIdMap'
+      - Ref: 'AWS::StackId'
+      - 'DeletionPolicy'
   PolicyList:
     Type: AWS::RDS::DBInstance
     Properties:
