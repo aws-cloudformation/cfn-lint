@@ -13,6 +13,8 @@ class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
         """Setup"""
         super(TestResourceUpdateReplacePolicy, self).setUp()
         self.collection.register(UpdateReplacePolicy())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources_lang_extensions_updatereplacepolicy.yaml']
 
     def test_file_positive(self):
         """Test Positive"""
@@ -22,3 +24,8 @@ class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             'test/fixtures/templates/bad/resources_updatereplacepolicy.yaml', 4)
+
+    def test_lang_extensions_file_negative(self):
+        """Test failure"""
+        self.helper_file_negative(
+            'test/fixtures/templates/bad/resources_lang_extensions_updatereplacepolicy.yaml', 3)
