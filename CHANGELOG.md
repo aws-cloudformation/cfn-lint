@@ -1,3 +1,13 @@
+### v0.61.0
+###### Features
+- New rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) to validate new generation instance types are used (pull #[2267](https://github.com/aws-cloudformation/cfn-lint/pull/2267))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `73.1.0` (pull #[2275](https://github.com/aws-cloudformation/cfn-lint/pull/2275))
+- Add `AWS::OpenSearchService::Domain.AccessPolicies` to IAM rules (pull #[2269](https://github.com/aws-cloudformation/cfn-lint/pull/2269))
+###### Fixes
+- Reduce the calculated scenarios used when conditions match and one condition has many variants (pull #[2277](https://github.com/aws-cloudformation/cfn-lint/pull/2277))
+- Update SARIF output to point to the general "Rules" documentation when a rule doesn't specify a `source_url` (pull #[2276](https://github.com/aws-cloudformation/cfn-lint/pull/2276))
+
 ### v0.60.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `72.0.0` (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))
