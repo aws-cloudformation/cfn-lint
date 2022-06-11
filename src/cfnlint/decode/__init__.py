@@ -16,6 +16,52 @@ from cfnlint.rules import Match, ParseError
 LOGGER = logging.getLogger(__name__)
 
 
+def decode_str(s):
+    """Decode the string s into an object."""
+    template = None
+    matches = []
+    try:
+        template = cfn_yaml.loads(s)
+    except cfn_yaml.CfnParseError as err:
+        matches = err.matches
+    except ParserError as err:
+        matches = [create_match_yaml_parser_error(err, None)]
+    except ScannerError as err:
+        if err.problem in [
+                'found character \'\\t\' that cannot start any token',
+                'found unknown escape character'] or err.problem.startswith(
+                    'found unknown escape character'):
+            try:
+                template = cfn_json.loads(s)
+            except cfn_json.JSONDecodeError as json_err:
+                matches = json_err.matches
+            except JSONDecodeError as json_err:
+                if hasattr(json_err, 'message'):
+                    if json_err.message == 'No JSON object could be decoded':  # pylint: disable=no-member
+                        matches = [create_match_yaml_parser_error(err, None)]
+                    else:
+                        matches = [create_match_json_parser_error(json_err, None)]
+                if hasattr(json_err, 'msg'):
+                    if json_err.msg == 'Expecting value':  # pylint: disable=no-member
+                        matches = [create_match_yaml_parser_error(err, None)]
+                    else:
+                        matches = [create_match_json_parser_error(json_err, None)]
+            except Exception as json_err:  # pylint: disable=W0703
+                return (None, [create_match_file_error(
+                    None,
+                    'Tried to parse string as JSON but got error: %s' % str(json_err))])
+        else:
+            matches = [create_match_yaml_parser_error(err, None)]
+    except YAMLError as err:
+        matches = [create_match_file_error(None, err)]
+
+    if not isinstance(template, dict) and not matches:
+        # Template isn't a dict which means nearly nothing will work
+        matches = [Match(1, 1, 1, 1, None, ParseError(),
+                         message='Template needs to be an object.')]
+    return (template, matches)
+
+
 def decode(filename):
     """
         Decode filename into an object
