@@ -10,7 +10,7 @@ class Base64(CloudFormationLintRule):
     """Check if Base64 values are correct"""
     id = 'E1021'
     shortdesc = 'Base64 validation of parameters'
-    description = 'Making sure the function not is of list'
+    description = 'Making sure the Base64 function is properly configured'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html'
     tags = ['functions', 'base64']
 
