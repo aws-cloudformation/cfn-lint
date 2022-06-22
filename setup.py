@@ -43,7 +43,7 @@ that could potentially be improved'),
     zip_safe=False,
     install_requires=[
         'pyyaml>5.4',
-        'aws-sam-translator>=1.45.0',
+        'aws-sam-translator>=1.46.0',
         'jsonpatch',
         'jsonschema~=3.0',
         'importlib_resources>=1.4,<4;python_version<"3.7"',
