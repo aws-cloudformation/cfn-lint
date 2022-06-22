@@ -60,7 +60,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
             LOGGER.error(
                 'Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules.')
 
-    def get_language_extensions_transform(self):
+    def has_language_extensions_transform(self):
         """Check if the template has language extensions transform declared"""
         LOGGER.debug('Check if the template has language extensions transform declaration')
         lang_extensions_transform = 'AWS::LanguageExtensions'

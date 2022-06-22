@@ -79,7 +79,7 @@ class DeletionPolicy(CloudFormationLintRule):
                     message = 'Only one DeletionPolicy allowed per resource at {0}'
                     matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
                 else:
-                    has_lang_exten_transform = cfn.get_language_extensions_transform()
+                    has_lang_exten_transform = cfn.has_language_extensions_transform()
                     matches.extend(self.check_value(deletion_policies, path, res_type, has_lang_exten_transform))
 
         return matches
