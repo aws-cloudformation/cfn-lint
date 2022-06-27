@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::LanguageExtensions
+Resources:
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      KmsMasterKeyId: alias/aws/sqs
+      DelaySeconds:
+        Fn::ToJsonString: {}
+  QueueInvalidType:
+    Type: AWS::SQS::Queue
+    Properties:
+      KmsMasterKeyId: alias/aws/sqs
+      DelaySeconds:
+        Fn::ToJsonString: ""
+  CloudFormationCreatedSecretPseudoParameter:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: MySecret
+      SecretString:
+        Fn::ToJsonString:
+          NotificationARN:
+            Ref: AWS::NotificationARNs

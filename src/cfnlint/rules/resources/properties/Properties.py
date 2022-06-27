@@ -57,7 +57,7 @@ class Properties(CloudFormationLintRule):
                     elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
                                          'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
                                          'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr', 'Fn::Transform',
-                                         'Fn::Length']:
+                                         'Fn::Length', 'Fn::ToJsonString']:
                         message = 'Property %s has an illegal function %s' % (
                             '/'.join(map(str, proppath)), sub_key)
                         matches.append(RuleMatch(proppath, message))
