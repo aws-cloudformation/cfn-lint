@@ -4,9 +4,29 @@ Parameters:
   queues:
     Type: CommaDelimitedList
 Resources:
-  Queue:
+  QueueRef:
     Type: AWS::SQS::Queue
     Properties:
       DelaySeconds:
         Fn::Length:
           Ref: queues
+  QueueRefShort:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: !Ref queues
+  QueueArray:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length:
+          - 1
+          - 2
+  QueueSplit:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length:
+          Fn::Split:
+            - "|"
+            - "1|2|3"
