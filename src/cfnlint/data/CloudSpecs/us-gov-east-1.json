@@ -7664,6 +7664,28 @@
         }
       }
     },
+    "AWS::ConnectCampaigns::Campaign.PredictiveDialerConfig": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connectcampaigns-campaign.html#cfn-connectcampaigns-campaign-dialerconfig",
+      "Properties": {
+        "BandwidthAllocation": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connectcampaigns-campaign.html",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::ConnectCampaigns::Campaign.ProgressiveDialerConfig": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connectcampaigns-campaign.html#cfn-connectcampaigns-campaign-dialerconfig",
+      "Properties": {
+        "BandwidthAllocation": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-connectcampaigns-campaign.html",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::DLM::LifecyclePolicy.Action": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dlm-lifecyclepolicy-action.html",
       "Properties": {
@@ -10107,6 +10129,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-ssespecification",
           "Required": false,
           "Type": "ReplicaSSESpecification",
+          "UpdateType": "Mutable"
+        },
+        "TableClass": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-dynamodb-globaltable-replicaspecification.html#cfn-dynamodb-globaltable-replicaspecification-tableclass",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Tags": {
@@ -18197,7 +18225,7 @@
         "ClientSecret": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listener-authenticateoidcconfig.html#cfn-elasticloadbalancingv2-listener-authenticateoidcconfig-clientsecret",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Issuer": {
@@ -18234,6 +18262,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listener-authenticateoidcconfig.html#cfn-elasticloadbalancingv2-listener-authenticateoidcconfig-tokenendpoint",
           "PrimitiveType": "String",
           "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "UseExistingClientSecret": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listener-authenticateoidcconfig.html#cfn-elasticloadbalancingv2-listener-authenticateoidcconfig-useexistingclientsecret",
+          "PrimitiveType": "Boolean",
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "UserInfoEndpoint": {
@@ -18515,7 +18549,7 @@
         "ClientSecret": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticloadbalancingv2-listenerrule-authenticateoidcconfig.html#cfn-elasticloadbalancingv2-listenerrule-authenticateoidcconfig-clientsecret",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable"
         },
         "Issuer": {
@@ -26637,6 +26671,7 @@
       "Properties": {
         "PropertyGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-environmentproperties.html#cfn-kinesisanalyticsv2-application-environmentproperties-propertygroups",
+          "DuplicatesAllowed": true,
           "ItemType": "PropertyGroup",
           "Required": false,
           "Type": "List",
@@ -26769,6 +26804,7 @@
       "Properties": {
         "RecordColumns": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-inputschema.html#cfn-kinesisanalyticsv2-application-inputschema-recordcolumns",
+          "DuplicatesAllowed": true,
           "ItemType": "RecordColumn",
           "Required": true,
           "Type": "List",
@@ -26960,8 +26996,9 @@
         },
         "PropertyMap": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-propertygroup.html#cfn-kinesisanalyticsv2-application-propertygroup-propertymap",
-          "PrimitiveType": "Json",
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Mutable"
         }
       }
@@ -27024,7 +27061,7 @@
         "BasePath": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-s3contentbaselocation.html#cfn-kinesisanalyticsv2-application-s3contentbaselocation-basepath",
           "PrimitiveType": "String",
-          "Required": true,
+          "Required": false,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::KinesisAnalyticsV2::Application.S3ContentBaseLocation.BasePath"
@@ -27047,7 +27084,7 @@
         "BucketARN": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-s3contentlocation.html#cfn-kinesisanalyticsv2-application-s3contentlocation-bucketarn",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::KinesisAnalyticsV2::Application.S3ContentLocation.BucketARN"
@@ -27056,7 +27093,7 @@
         "FileKey": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-s3contentlocation.html#cfn-kinesisanalyticsv2-application-s3contentlocation-filekey",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::KinesisAnalyticsV2::Application.S3ContentLocation.FileKey"
@@ -27078,6 +27115,7 @@
       "Properties": {
         "Inputs": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisanalyticsv2-application-sqlapplicationconfiguration.html#cfn-kinesisanalyticsv2-application-sqlapplicationconfiguration-inputs",
+          "DuplicatesAllowed": true,
           "ItemType": "Input",
           "Required": false,
           "Type": "List",
@@ -36474,7 +36512,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "76.0.0",
+  "ResourceSpecificationVersion": "78.1.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -38965,6 +39003,15 @@
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        },
+        "GroupingType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationinsights-application.html#cfn-applicationinsights-application-groupingtype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::ApplicationInsights::Application.GroupingType"
+          }
         },
         "LogPatternSets": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationinsights-application.html#cfn-applicationinsights-application-logpatternsets",
@@ -44650,7 +44697,7 @@
       "Properties": {
         "LaunchTemplateData": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-launchtemplate.html#cfn-ec2-launchtemplate-launchtemplatedata",
-          "Required": false,
+          "Required": true,
           "Type": "LaunchTemplateData",
           "UpdateType": "Mutable"
         },
@@ -52675,6 +52722,69 @@
         }
       }
     },
+    "AWS::IoT::CACertificate": {
+      "Attributes": {
+        "Arn": {
+          "PrimitiveType": "String"
+        },
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html",
+      "Properties": {
+        "AutoRegistrationStatus": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-autoregistrationstatus",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::CACertificate.AutoRegistrationStatus"
+          }
+        },
+        "CACertificatePem": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-cacertificatepem",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::CACertificate.CACertificatePem"
+          }
+        },
+        "RegistrationConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-registrationconfig",
+          "PrimitiveType": "Json",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Status": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-status",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::IoT::CACertificate.Status"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-tags",
+          "DuplicatesAllowed": false,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "VerificationCertificatePem": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-cacertificate.html#cfn-iot-cacertificate-verificationcertificatepem",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::IoT::CACertificate.VerificationCertificatePem"
+          }
+        }
+      }
+    },
     "AWS::IoT::Certificate": {
       "Attributes": {
         "Arn": {
@@ -53817,6 +53927,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisanalyticsv2-application.html#cfn-kinesisanalyticsv2-application-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -62028,6 +62139,11 @@
       "StringMax": 300,
       "StringMin": 20
     },
+    "AWS::ApplicationInsights::Application.GroupingType": {
+      "AllowedValues": [
+        "ACCOUNT_BASED"
+      ]
+    },
     "AWS::ApplicationInsights::Application.Log.Encoding": {
       "AllowedValues": [
         "utf-8",
@@ -62460,7 +62576,7 @@
       "StringMin": 1
     },
     "AWS::CloudFormation::StackSet.TemplateURL": {
-      "StringMax": 1024,
+      "StringMax": 5120,
       "StringMin": 1
     },
     "AWS::CloudFormation::WaitCondition.Timeout": {
@@ -64858,6 +64974,28 @@
         "ACTIVE",
         "INACTIVE"
       ]
+    },
+    "AWS::IoT::CACertificate.AutoRegistrationStatus": {
+      "AllowedValues": [
+        "ENABLE",
+        "DISABLE"
+      ]
+    },
+    "AWS::IoT::CACertificate.CACertificatePem": {
+      "AllowedPatternRegex": "[\\s\\S]*",
+      "StringMax": 65536,
+      "StringMin": 1
+    },
+    "AWS::IoT::CACertificate.Status": {
+      "AllowedValues": [
+        "ACTIVE",
+        "INACTIVE"
+      ]
+    },
+    "AWS::IoT::CACertificate.VerificationCertificatePem": {
+      "AllowedPatternRegex": "[\\s\\S]*",
+      "StringMax": 65536,
+      "StringMin": 1
     },
     "AWS::IoT::Certificate.CACertificatePem": {
       "StringMax": 65536,
