@@ -40,7 +40,7 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
+def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, output_transform, mandatory_rules=None):
     """Process args and run"""
 
 
@@ -50,6 +50,10 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, regi
     if build_graph:
         template_obj = Template(filename, template, regions)
         template_obj.build_graph()
+
+    if output_transform:
+        template_obj = Template(filename, template, regions)
+        template_obj.transform_template()
 
     if registry_schemas:
         for path in registry_schemas:
@@ -122,7 +126,7 @@ def get_matches(filenames, args):
         # template matches may be empty but the template is still None
         # this happens when ignoring bad templates
         if not errors and template:
-            matches = run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks)
+            matches = run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.transform, args.mandatory_checks)
             for match in matches:
                 yield match
         else:

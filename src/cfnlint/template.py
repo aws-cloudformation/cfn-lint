@@ -9,6 +9,7 @@ from copy import deepcopy, copy
 import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint.graph import Graph
+from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,6 +60,13 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
         except ImportError:
             LOGGER.error(
                 'Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules.')
+
+    def transform_template(self):
+        t = Transform(self.filename, self.template, self.regions[0])
+        t.transform_template()
+        path = self.filename + '.transform.json'
+        with open(path, 'w') as output_file:
+            output_file.write(cfnlint.helpers.format_json_string(t.template()))
 
     def get_resources(self, resource_type=[]):
         """

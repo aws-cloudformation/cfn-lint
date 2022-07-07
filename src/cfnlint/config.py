@@ -427,6 +427,10 @@ class CliArgs(object):
             '--merge-configs', default=False, action='store_true',
             help='Merges lists between configuration layers'
         )
+        standard.add_argument(
+            '--transform', default=False, action='store_true',
+            help='Creates a file in the same directory as the template that outputs the Transformed Template as JSON'
+        )
 
         return parser
 
@@ -667,3 +671,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
     @property
     def merge_configs(self):
         return self._get_argument_value('merge_configs', True, True)
+
+    @property
+    def transform(self):
+        return self._get_argument_value('transform', False, False)

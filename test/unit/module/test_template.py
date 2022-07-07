@@ -17,6 +17,9 @@ class TestTemplate(BaseTestCase):
         filename = 'test/fixtures/templates/good/generic.yaml'
         template = self.load_template(filename)
         self.template = Template(filename, template)
+        transform_filename = 'test/fixtures/templates/good/transform.yaml'
+        transform_template = self.load_template(filename)
+        self.transform_template = Template(transform_filename, transform_template)
         self.resource_names = [
             'IamPipeline',
             'RootInstanceProfile',
@@ -67,6 +70,308 @@ ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
             assert len(file_contents) == len(expected_content) and sorted(file_contents) == sorted(expected_content)
 
         os.remove(dot)
+
+    def test_transform_template(self):
+        self.transform_template.transform_template()
+
+        transform = 'test/fixtures/templates/good/transform.yaml.transform.json'
+
+        expected_content = cfnlint.helpers.format_json_string({
+            "AWSTemplateFormatVersion": "2010-09-09",
+            "Conditions": {
+                "ProdVolumeSize": {
+                    "Fn::Equals": [
+                        {
+                            "Ref": "pEnvironment"
+                        },
+                        "Prod"
+                    ]
+                }
+            },
+            "Description": "A sample template",
+            "Outputs": {
+                "ElasticIP": {
+                    "Export": {
+                        "Name": "elastic-ip-cidr"
+                    },
+                    "Value": {
+                        "Fn::Sub": "${ElasticIP}/32"
+                    }
+                }
+            },
+            "Parameters": {
+                "Package": {
+                    "Default": "httpd",
+                    "Description": "Package to install",
+                    "Type": "String"
+                },
+                "Package1": {
+                    "Default": "httpd",
+                    "Description": "Package to install",
+                    "Type": "String"
+                },
+                "WebServerPort": {
+                    "Default": 80,
+                    "Description": "Web Server Ports",
+                    "Type": "String"
+                },
+                "pDevVolumeSize": {
+                    "Default": 25,
+                    "Type": "Number"
+                },
+                "pEnvironment": {
+                    "Default": "Prod",
+                    "Type": "String"
+                },
+                "pIops": {
+                    "Default": 60,
+                    "Type": "Number"
+                },
+                "pProdVolumeSize": {
+                    "Default": 50,
+                    "Type": "Number"
+                }
+            },
+            "Resources": {
+                "CustomResource": {
+                    "Properties": {
+                        "ServiceToken": "anArn"
+                    },
+                    "Type": "Custom::Function",
+                    "Version": "1.0"
+                },
+                "ElasticIP": {
+                    "Properties": {
+                        "Domain": "vpc"
+                    },
+                    "Type": "AWS::EC2::EIP"
+                },
+                "ElasticLoadBalancer": {
+                    "Properties": {
+                        "AvailabilityZones": {
+                            "Fn::GetAZs": ""
+                        },
+                        "HealthCheck": {
+                            "HealthyThreshold": "3",
+                            "Interval": "30",
+                            "Target": {
+                                "Fn::Sub": "HTTP:${WebServerPort}/"
+                            },
+                            "Timeout": "5",
+                            "UnhealthyThreshold": "5"
+                        },
+                        "Instances": [
+                            {
+                                "Ref": "MyEC2Instance"
+                            }
+                        ],
+                        "Listeners": [
+                            {
+                                "InstancePort": {
+                                    "Ref": "WebServerPort"
+                                },
+                                "LoadBalancerPort": "80",
+                                "Protocol": "HTTP"
+                            }
+                        ]
+                    },
+                    "Type": "AWS::ElasticLoadBalancing::LoadBalancer"
+                },
+                "IamPipeline": {
+                    "DeletionPolicy": "Delete",
+                    "Properties": {
+                        "Parameters": {
+                            "Deploy": "auto",
+                            "DeploymentName": "iam-pipeline"
+                        },
+                        "TemplateURL": {
+                            "Fn::Sub": "https://s3.${ AWS::Region}.amazonaws.com/ss-vsts-codepipeline-${AWS::Region}/vsts/${AWS::AccountId}/templates/vsts-pipeline/pipeline.yaml"
+                        }
+                    },
+                    "Type": "AWS::CloudFormation::Stack",
+                    "UpdateReplacePolicy": "Delete"
+                },
+                "MyEC2Instance": {
+                    "Properties": {
+                        "BlockDeviceMappings": [
+                            {
+                                "DeviceName": "/dev/sdm",
+                                "Ebs": {
+                                    "DeleteOnTermination": False,
+                                    "Iops": {
+                                        "Ref": "pIops"
+                                    },
+                                    "VolumeSize": 20,
+                                    "VolumeType": "io1"
+                                }
+                            }
+                        ],
+                        "IamInstanceProfile": {
+                            "Ref": "RootInstanceProfile"
+                        },
+                        "ImageId": "ami-2f726546",
+                        "InstanceType": "t3.micro",
+                        "KeyName": "testkey",
+                        "NetworkInterfaces": [
+                            {
+                                "DeviceIndex": "1"
+                            }
+                        ],
+                        "UserData": {
+                            "Fn::Sub": "yum install ${ Package}\n"
+                        }
+                    },
+                    "Type": "AWS::EC2::Instance"
+                },
+                "MyEC2Instance1": {
+                    "Properties": {
+                        "BlockDeviceMappings": [
+                            {
+                                "DeviceName": "/dev/sdm",
+                                "Ebs": {
+                                    "DeleteOnTermination": False,
+                                    "Iops": {
+                                        "Ref": "pIops"
+                                    },
+                                    "VolumeSize": {
+                                        "Fn::If": [
+                                            "ProdVolumeSize",
+                                            {
+                                                "Ref": "pProdVolumeSize"
+                                            },
+                                            {
+                                                "Ref": "pDevVolumeSize"
+                                            }
+                                        ]
+                                    },
+                                    "VolumeType": "io1"
+                                }
+                            }
+                        ],
+                        "ImageId": "ami-2f726546",
+                        "InstanceType": "t3.micro",
+                        "KeyName": "testkey",
+                        "NetworkInterfaces": [
+                            {
+                                "DeviceIndex": "1",
+                                "PrivateIpAddresses": [
+                                    {
+                                        "Primary": True,
+                                        "PrivateIpAddress": "1.1.1.1"
+                                    },
+                                    {
+                                        "Primary": False,
+                                        "PrivateIpAddress": "1.1.1.2"
+                                    }
+                                ]
+                            }
+                        ],
+                        "UserData": {
+                            "Fn::Sub": [
+                                "yum install ${myPackage}",
+                                {
+                                    "myPackage": {
+                                        "Ref": "Package1"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "Type": "AWS::EC2::Instance"
+                },
+                "MyModule": {
+                    "Type": "My::Organization::Custom::MODULE"
+                },
+                "RolePolicies": {
+                    "Properties": {
+                        "PolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": "*",
+                                    "Effect": "Allow",
+                                    "Resource": "*"
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "PolicyName": "root",
+                        "Roles": [
+                            {
+                                "Ref": "RootRole"
+                            }
+                        ]
+                    },
+                    "Type": "AWS::IAM::Policy"
+                },
+                "RootInstanceProfile": {
+                    "Properties": {
+                        "Path": "/",
+                        "Roles": [
+                            {
+                                "Ref": "RootRole"
+                            }
+                        ]
+                    },
+                    "Type": "AWS::IAM::InstanceProfile"
+                },
+                "RootRole": {
+                    "Properties": {
+                        "AssumeRolePolicyDocument": {
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "sts:AssumeRole"
+                                    ],
+                                    "Effect": "Allow",
+                                    "Principal": {
+                                        "Service": [
+                                            "ec2.amazonaws.com"
+                                        ]
+                                    }
+                                }
+                            ],
+                            "Version": "2012-10-17"
+                        },
+                        "Path": "/",
+                        "Policies": [
+                            {
+                                "PolicyDocument": {
+                                    "Statement": [
+                                        {
+                                            "Action": "*",
+                                            "Effect": "Allow",
+                                            "Resource": "*"
+                                        }
+                                    ],
+                                    "Version": "2012-10-17"
+                                },
+                                "PolicyName": "root"
+                            }
+                        ]
+                    },
+                    "Type": "AWS::IAM::Role"
+                },
+                "WaitCondition": {
+                    "CreationPolicy": {
+                        "ResourceSignal": {
+                            "Count": 1,
+                            "Timeout": "PT15M"
+                        }
+                    },
+                    "Type": "AWS::CloudFormation::WaitCondition"
+                },
+                "mySnsTopic": {
+                    "Type": "AWS::SNS::Topic"
+                }
+            }
+        })
+        assert os.path.exists(transform)
+
+        with open(transform, 'r') as file:
+            file_contents = file.read()
+            assert file_contents == expected_content
+
+        os.remove(transform)
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
