@@ -19,7 +19,7 @@ def main():
     policyLoader.load()
 
     filename = 'src/cfnlint/data/Serverless/ManagedPolicies.json'
-    with open(filename, 'w+') as f:
+    with open(filename, 'w+', encoding='utf-8') as f:
         json.dump(policyLoader._policy_map, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 

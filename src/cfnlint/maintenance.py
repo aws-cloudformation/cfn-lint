@@ -134,7 +134,7 @@ def update_resource_spec(region, url, schema_cache):
 
     spec = search_and_replace_botocore_types(spec)
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 
@@ -149,7 +149,7 @@ def update_documentation(rules):
 
     # Read current file up to the Rules part, everything up to that point is
     # static documentation.
-    with open(filename, 'r') as original_file:
+    with open(filename, 'r', encoding='utf-8') as original_file:
 
         line = original_file.readline()
         while line:
@@ -161,7 +161,7 @@ def update_documentation(rules):
             line = original_file.readline()
 
     # Rebuild the file content
-    with open(filename, 'w') as new_file:
+    with open(filename, 'w', encoding='utf-8') as new_file:
 
         # Rewrite the static documentation
         for line in data:
@@ -246,7 +246,7 @@ def update_iam_policies():
         else:
             LOGGER.debug('"%s" was not found in the policies file', k)
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 
