@@ -311,7 +311,7 @@ def load_metadata(filename):
     """Get the contents of the download metadata file"""
     metadata = {}
     if os.path.exists(filename):
-        with open(filename, 'r') as metadata_file:
+        with open(filename, 'r', encoding='utf-8') as metadata_file:
             metadata = json.load(metadata_file)
     return metadata
 
@@ -322,7 +322,7 @@ def save_metadata(metadata, filename):
     if not os.path.exists(dirname):
         os.mkdir(dirname)
 
-    with open(filename, 'w') as metadata_file:
+    with open(filename, 'w', encoding='utf-8') as metadata_file:
         json.dump(metadata, metadata_file)
 
 
@@ -513,7 +513,7 @@ def override_specs(override_spec_file):
     """Override specs file"""
     try:
         filename = override_spec_file
-        with open(filename) as fp:
+        with open(filename, encoding='utf-8') as fp:
             custom_spec_data = json.load(fp)
 
         set_specs(custom_spec_data)

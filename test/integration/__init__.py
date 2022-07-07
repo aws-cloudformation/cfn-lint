@@ -27,7 +27,7 @@ class BaseCliTestCase(BaseTestCase):
             exit_code = scenario.get('exit_code')
 
             if results_filename and not expected_results:
-                with open(results_filename) as json_data:
+                with open(results_filename, encoding='utf-8') as json_data:
                     expected_results = json.load(json_data)
 
             try:
@@ -74,7 +74,7 @@ class BaseCliTestCase(BaseTestCase):
             expected_results = scenario.get('results', [])
 
             if results_filename and not expected_results:
-                with open(results_filename) as json_data:
+                with open(results_filename, encoding='utf-8') as json_data:
                     expected_results = json.load(json_data)
 
             template = cfnlint.decode.cfn_yaml.load(filename)
