@@ -434,7 +434,7 @@ class RulesCollection(object):
         """Create rules from custom rules file """
         custom_rules = []
         if custom_rules_file:
-            with open(custom_rules_file) as customRules:
+            with open(custom_rules_file, encoding='utf-8') as customRules:
                 line_number = 1
                 for line in customRules:
                     LOGGER.debug('Processing Custom Rule Line %d', line_number)
