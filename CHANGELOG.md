@@ -1,3 +1,9 @@
+### v0.61.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `78.1.0` (pull #[2292](https://github.com/aws-cloudformation/cfn-lint/pull/2292))
+###### Fixes
+- Add `utf-8` encoding to all `open` calls (pull #[2298](https://github.com/aws-cloudformation/cfn-lint/pull/2298))
+
 ### v0.61.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `76.0.0` (pull #[2282](https://github.com/aws-cloudformation/cfn-lint/pull/2282))
