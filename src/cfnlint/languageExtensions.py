@@ -13,7 +13,7 @@ class LanguageExtensions(object):
 
     def validate_type(self, fn_object_val, matches, tree, intrinsic_function):
         if not isinstance(fn_object_val, dict) and not isinstance(fn_object_val, list):
-            message = intrinsic_function + ' needs a list or a reference to a list at {0}'
+            message = intrinsic_function + ' needs a map at {0}'
             matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
         elif len(fn_object_val) < 1:
             message = 'Invalid value for '+intrinsic_function+' for {0}'
