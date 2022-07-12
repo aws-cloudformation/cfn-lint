@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule
+from cfnlint.languageExtensions import LanguageExtensions
 from cfnlint.rules import RuleMatch
 
 
@@ -16,12 +17,13 @@ class Length(CloudFormationLintRule):
 
     def match(self, cfn):
         has_language_extensions_transform = cfn.has_language_extensions_transform()
+        intrinsic_function = 'Fn::Length'
         matches = []
 
         fn_length_objects = cfn.search_deep_keys('Fn::Length')
         for fn_length_object in fn_length_objects:
             tree = fn_length_object[:-1]
-            self.validate_transform_is_declared(has_language_extensions_transform, matches, tree)
+            LanguageExtensions.validate_transform_is_declared(self, has_language_extensions_transform, matches, tree, intrinsic_function)
             self.validate_type(fn_length_object, matches, tree)
             self.validate_ref(fn_length_object, matches, tree, cfn)
         return matches
@@ -50,10 +52,4 @@ class Length(CloudFormationLintRule):
         fn_length_value = fn_length_object[-1]
         if not isinstance(fn_length_value, dict) and not isinstance(fn_length_value, list):
             message = 'Fn::Length needs a list or a reference to a list at {0}'
-            matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
-
-    def validate_transform_is_declared(self, has_language_extensions_transform, matches, tree):
-        if not has_language_extensions_transform:
-            message = 'Missing Transform: Declare the AWS::LanguageExtensions Transform globally to enable use' \
-                      ' of the intrinsic function Fn::Length at {0}'
             matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
