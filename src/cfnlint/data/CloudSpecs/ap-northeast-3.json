@@ -6244,6 +6244,15 @@
     "AWS::CloudFormation::StackSet.DeploymentTargets": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudformation-stackset-deploymenttargets.html",
       "Properties": {
+        "AccountFilterType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudformation-stackset-deploymenttargets.html#cfn-cloudformation-stackset-deploymenttargets-accountfiltertype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CloudFormation::StackSet.DeploymentTargets.AccountFilterType"
+          }
+        },
         "Accounts": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudformation-stackset-deploymenttargets.html#cfn-cloudformation-stackset-deploymenttargets-accounts",
           "DuplicatesAllowed": false,
@@ -29222,13 +29231,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricName"
+          }
         },
         "MetricNamespace": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace"
+          }
         },
         "MetricValue": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue",
@@ -31222,6 +31237,43 @@
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::RolesAnywhere::TrustAnchor.Source": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+      "Properties": {
+        "SourceData": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html#cfn-rolesanywhere-trustanchor-source-sourcedata",
+          "Required": false,
+          "Type": "SourceData",
+          "UpdateType": "Mutable"
+        },
+        "SourceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html#cfn-rolesanywhere-trustanchor-source-sourcetype",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RolesAnywhere::TrustAnchor.Source.SourceType"
+          }
+        }
+      }
+    },
+    "AWS::RolesAnywhere::TrustAnchor.SourceData": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+      "Properties": {
+        "AcmPcaArn": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "X509CertificateData": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -41137,7 +41189,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "78.1.0",
+  "ResourceSpecificationVersion": "79.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -48377,7 +48429,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationefs.html#cfn-datasync-locationefs-accesspointarn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable",
+          "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationEFS.AccessPointArn"
           }
@@ -48401,7 +48453,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationefs.html#cfn-datasync-locationefs-filesystemaccessrolearn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable",
+          "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationEFS.FileSystemAccessRoleArn"
           }
@@ -48410,7 +48462,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationefs.html#cfn-datasync-locationefs-intransitencryption",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable",
+          "UpdateType": "Immutable",
           "Value": {
             "ValueType": "AWS::DataSync::LocationEFS.InTransitEncryption"
           }
@@ -59495,7 +59547,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.LogGroupName"
+          }
         },
         "MetricTransformations": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations",
@@ -62136,6 +62191,114 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-resourcegroups-group.html#cfn-resourcegroups-group-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::RolesAnywhere::Profile": {
+      "Attributes": {
+        "ProfileArn": {
+          "PrimitiveType": "String"
+        },
+        "ProfileId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html",
+      "Properties": {
+        "DurationSeconds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-durationseconds",
+          "PrimitiveType": "Double",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RolesAnywhere::Profile.DurationSeconds"
+          }
+        },
+        "Enabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-enabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "ManagedPolicyArns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-managedpolicyarns",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RequireInstanceProperties": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-requireinstanceproperties",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "RoleArns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-rolearns",
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RolesAnywhere::Profile.RoleArns"
+          }
+        },
+        "SessionPolicy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-sessionpolicy",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-profile.html#cfn-rolesanywhere-profile-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::RolesAnywhere::TrustAnchor": {
+      "Attributes": {
+        "TrustAnchorArn": {
+          "PrimitiveType": "String"
+        },
+        "TrustAnchorId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-trustanchor.html",
+      "Properties": {
+        "Enabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-trustanchor.html#cfn-rolesanywhere-trustanchor-enabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-trustanchor.html#cfn-rolesanywhere-trustanchor-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Source": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-trustanchor.html#cfn-rolesanywhere-trustanchor-source",
+          "Required": false,
+          "Type": "Source",
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-trustanchor.html#cfn-rolesanywhere-trustanchor-tags",
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -66760,7 +66923,7 @@
         },
         "DefinitionSubstitutions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
-          "PrimitiveItemType": "String",
+          "PrimitiveItemType": "Json",
           "Required": false,
           "Type": "Map",
           "UpdateType": "Mutable"
@@ -68621,6 +68784,14 @@
         "CAPABILITY_IAM",
         "CAPABILITY_NAMED_IAM",
         "CAPABILITY_AUTO_EXPAND"
+      ]
+    },
+    "AWS::CloudFormation::StackSet.DeploymentTargets.AccountFilterType": {
+      "AllowedValues": [
+        "NONE",
+        "UNION",
+        "INTERSECTION",
+        "DIFFERENCE"
       ]
     },
     "AWS::CloudFormation::StackSet.DeploymentTargets.Accounts": {
@@ -71296,7 +71467,8 @@
         "HMAC_224",
         "HMAC_256",
         "HMAC_384",
-        "HMAC_512"
+        "HMAC_512",
+        "SM2"
       ]
     },
     "AWS::KMS::Key.KeyUsage": {
@@ -72250,8 +72422,25 @@
         "3653"
       ]
     },
+    "AWS::Logs::MetricFilter.LogGroupName": {
+      "AllowedPatternRegex": "^[.\\-_/#A-Za-z0-9]{1,512}",
+      "StringMax": 512,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.MetricTransformation.MetricName": {
+      "AllowedPatternRegex": "^((?![:*$])[\\x00-\\x7F]){1,255}",
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace": {
+      "AllowedPatternRegex": "^[0-9a-zA-Z\\.\\-_\\/#]{1,256}",
+      "StringMax": 256,
+      "StringMin": 1
+    },
     "AWS::Logs::MetricFilter.MetricTransformation.MetricValue": {
-      "AllowedPatternRegex": "^(([0-9]*)|(\\$.*))$"
+      "AllowedPatternRegex": ".{1,100}",
+      "StringMax": 100,
+      "StringMin": 1
     },
     "AWS::Logs::QueryDefinition.LogGroupNames": {
       "AllowedPatternRegex": "[\\.\\-_/#A-Za-z0-9]+",
@@ -72755,6 +72944,21 @@
       "AllowedValues": [
         "TAG_FILTERS_1_0",
         "CLOUDFORMATION_STACK_1_0"
+      ]
+    },
+    "AWS::RolesAnywhere::Profile.DurationSeconds": {
+      "NumberMax": 43200,
+      "NumberMin": 900
+    },
+    "AWS::RolesAnywhere::Profile.RoleArns": {
+      "StringMax": 1011,
+      "StringMin": 1
+    },
+    "AWS::RolesAnywhere::TrustAnchor.Source.SourceType": {
+      "AllowedValues": [
+        "AWS_ACM_PCA",
+        "CERTIFICATE_BUNDLE",
+        "SELF_SIGNED_REPOSITORY"
       ]
     },
     "AWS::Route53::CidrCollection.Location.LocationName": {
@@ -75444,6 +75648,9 @@
         "Parameters": [
           "String",
           "KeyPair"
+        ],
+        "Resources": [
+          "AWS::EC2::KeyPair"
         ]
       }
     },
@@ -75566,7 +75773,9 @@
         "transit-gateway-attachment",
         "transit-gateway-connect-peer",
         "transit-gateway-multicast-domain",
+        "transit-gateway-policy-table",
         "transit-gateway-route-table",
+        "transit-gateway-route-table-announcement",
         "volume",
         "vpc",
         "vpc-endpoint",

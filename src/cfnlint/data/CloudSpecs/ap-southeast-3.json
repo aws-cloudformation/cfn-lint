@@ -19195,13 +19195,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricName"
+          }
         },
         "MetricNamespace": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace"
+          }
         },
         "MetricValue": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue",
@@ -19527,6 +19533,23 @@
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::RolesAnywhere::TrustAnchor.SourceData": {
+      "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+      "Properties": {
+        "AcmPcaArn": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
+        "X509CertificateData": {
+          "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rolesanywhere-trustanchor-source.html",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
         }
       }
     },
@@ -25173,7 +25196,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "78.1.0",
+  "ResourceSpecificationVersion": "79.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -37724,7 +37747,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.LogGroupName"
+          }
         },
         "MetricTransformations": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations",
@@ -41238,7 +41264,7 @@
         },
         "DefinitionSubstitutions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
-          "PrimitiveItemType": "String",
+          "PrimitiveItemType": "Json",
           "Required": false,
           "Type": "Map",
           "UpdateType": "Mutable"
@@ -45319,8 +45345,25 @@
         "3653"
       ]
     },
+    "AWS::Logs::MetricFilter.LogGroupName": {
+      "AllowedPatternRegex": "^[.\\-_/#A-Za-z0-9]{1,512}",
+      "StringMax": 512,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.MetricTransformation.MetricName": {
+      "AllowedPatternRegex": "^((?![:*$])[\\x00-\\x7F]){1,255}",
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace": {
+      "AllowedPatternRegex": "^[0-9a-zA-Z\\.\\-_\\/#]{1,256}",
+      "StringMax": 256,
+      "StringMin": 1
+    },
     "AWS::Logs::MetricFilter.MetricTransformation.MetricValue": {
-      "AllowedPatternRegex": "^(([0-9]*)|(\\$.*))$"
+      "AllowedPatternRegex": ".{1,100}",
+      "StringMax": 100,
+      "StringMin": 1
     },
     "AWS::Logs::QueryDefinition.LogGroupNames": {
       "AllowedPatternRegex": "[\\.\\-_/#A-Za-z0-9]+",
@@ -46949,6 +46992,9 @@
         "Parameters": [
           "String",
           "KeyPair"
+        ],
+        "Resources": [
+          "AWS::EC2::KeyPair"
         ]
       }
     },
@@ -47071,7 +47117,9 @@
         "transit-gateway-attachment",
         "transit-gateway-connect-peer",
         "transit-gateway-multicast-domain",
+        "transit-gateway-policy-table",
         "transit-gateway-route-table",
+        "transit-gateway-route-table-announcement",
         "volume",
         "vpc",
         "vpc-endpoint",
