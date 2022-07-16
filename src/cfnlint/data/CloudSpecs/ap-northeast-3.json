@@ -9864,6 +9864,29 @@
         }
       }
     },
+    "AWS::Config::ConfigRule.CustomPolicyDetails": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-custompolicydetails.html",
+      "Properties": {
+        "EnableDebugLogDelivery": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-custompolicydetails.html#cfn-config-configrule-custompolicydetails-enabledebuglogdelivery",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PolicyRuntime": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-custompolicydetails.html#cfn-config-configrule-custompolicydetails-policyruntime",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "PolicyText": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-custompolicydetails.html#cfn-config-configrule-custompolicydetails-policytext",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Config::ConfigRule.Scope": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-scope.html",
       "Properties": {
@@ -9898,6 +9921,12 @@
     "AWS::Config::ConfigRule.Source": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-source.html",
       "Properties": {
+        "CustomPolicyDetails": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-source.html#cfn-config-configrule-source-custompolicydetails",
+          "Required": false,
+          "Type": "CustomPolicyDetails",
+          "UpdateType": "Mutable"
+        },
         "Owner": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-config-configrule-source.html#cfn-config-configrule-source-owner",
           "PrimitiveType": "String",
@@ -29218,17 +29247,48 @@
         }
       }
     },
+    "AWS::Logs::MetricFilter.Dimension": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-dimension.html",
+      "Properties": {
+        "Key": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-dimension.html#cfn-logs-metricfilter-dimension-key",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.Dimension.Key"
+          }
+        },
+        "Value": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-dimension.html#cfn-logs-metricfilter-dimension-value",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.Dimension.Value"
+          }
+        }
+      }
+    },
     "AWS::Logs::MetricFilter.MetricTransformation": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html",
       "Properties": {
         "DefaultValue": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-defaultvalue",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-defaultvalue",
           "PrimitiveType": "Double",
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "Dimensions": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-dimensions",
+          "DuplicatesAllowed": false,
+          "ItemType": "Dimension",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
         "MetricName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-metricname",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable",
@@ -29237,7 +29297,7 @@
           }
         },
         "MetricNamespace": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-metricnamespace",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable",
@@ -29246,12 +29306,21 @@
           }
         },
         "MetricValue": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-metricvalue",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable",
           "Value": {
             "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricValue"
+          }
+        },
+        "Unit": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-logs-metricfilter-metrictransformation-unit",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.Unit"
           }
         }
       }
@@ -37740,6 +37809,17 @@
         }
       }
     },
+    "AWS::SageMaker::NotebookInstance.InstanceMetadataServiceConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-notebookinstance-instancemetadataserviceconfiguration.html",
+      "Properties": {
+        "MinimumInstanceMetadataServiceVersion": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-notebookinstance-instancemetadataserviceconfiguration.html#cfn-sagemaker-notebookinstance-instancemetadataserviceconfiguration-minimuminstancemetadataserviceversion",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::SageMaker::NotebookInstanceLifecycleConfig.NotebookInstanceLifecycleHook": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-notebookinstancelifecycleconfig-notebookinstancelifecyclehook.html",
       "Properties": {
@@ -41189,7 +41269,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "79.0.0",
+  "ResourceSpecificationVersion": "81.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -51062,6 +51142,12 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html",
       "Properties": {
+        "SpreadLevel": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-spreadlevel",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable"
+        },
         "Strategy": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
           "PrimitiveType": "String",
@@ -59537,14 +59623,23 @@
     "AWS::Logs::MetricFilter": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html",
       "Properties": {
+        "FilterName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-logs-metricfilter-filtername",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Logs::MetricFilter.FilterName"
+          }
+        },
         "FilterPattern": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-logs-metricfilter-filterpattern",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
         },
         "LogGroupName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-logs-metricfilter-loggroupname",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable",
@@ -59553,8 +59648,7 @@
           }
         },
         "MetricTransformations": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations",
-          "DuplicatesAllowed": false,
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-logs-metricfilter-metrictransformations",
           "ItemType": "MetricTransformation",
           "Required": true,
           "Type": "List",
@@ -62195,6 +62289,50 @@
           "Required": false,
           "Type": "List",
           "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::RolesAnywhere::CRL": {
+      "Attributes": {
+        "CrlId": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html",
+      "Properties": {
+        "CrlData": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html#cfn-rolesanywhere-crl-crldata",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Enabled": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html#cfn-rolesanywhere-crl-enabled",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html#cfn-rolesanywhere-crl-name",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html#cfn-rolesanywhere-crl-tags",
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "TrustAnchorArn": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rolesanywhere-crl.html#cfn-rolesanywhere-crl-trustanchorarn",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RolesAnywhere::CRL.TrustAnchorArn"
+          }
         }
       }
     },
@@ -65782,6 +65920,12 @@
           "PrimitiveType": "String",
           "Required": false,
           "UpdateType": "Immutable"
+        },
+        "InstanceMetadataServiceConfiguration": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-notebookinstance.html#cfn-sagemaker-notebookinstance-instancemetadataserviceconfiguration",
+          "Required": false,
+          "Type": "InstanceMetadataServiceConfiguration",
+          "UpdateType": "Mutable"
         },
         "InstanceType": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-notebookinstance.html#cfn-sagemaker-notebookinstance-instancetype",
@@ -72422,6 +72566,19 @@
         "3653"
       ]
     },
+    "AWS::Logs::MetricFilter.Dimension.Key": {
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.Dimension.Value": {
+      "StringMax": 255,
+      "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.FilterName": {
+      "AllowedPatternRegex": "^[^:*]{1,512}",
+      "StringMax": 512,
+      "StringMin": 1
+    },
     "AWS::Logs::MetricFilter.LogGroupName": {
       "AllowedPatternRegex": "^[.\\-_/#A-Za-z0-9]{1,512}",
       "StringMax": 512,
@@ -72441,6 +72598,37 @@
       "AllowedPatternRegex": ".{1,100}",
       "StringMax": 100,
       "StringMin": 1
+    },
+    "AWS::Logs::MetricFilter.MetricTransformation.Unit": {
+      "AllowedValues": [
+        "Seconds",
+        "Microseconds",
+        "Milliseconds",
+        "Bytes",
+        "Kilobytes",
+        "Megabytes",
+        "Gigabytes",
+        "Terabytes",
+        "Bits",
+        "Kilobits",
+        "Megabits",
+        "Gigabits",
+        "Terabits",
+        "Percent",
+        "Count",
+        "Bytes/Second",
+        "Kilobytes/Second",
+        "Megabytes/Second",
+        "Gigabytes/Second",
+        "Terabytes/Second",
+        "Bits/Second",
+        "Kilobits/Second",
+        "Megabits/Second",
+        "Gigabits/Second",
+        "Terabits/Second",
+        "Count/Second",
+        "None"
+      ]
     },
     "AWS::Logs::QueryDefinition.LogGroupNames": {
       "AllowedPatternRegex": "[\\.\\-_/#A-Za-z0-9]+",
@@ -72945,6 +73133,9 @@
         "TAG_FILTERS_1_0",
         "CLOUDFORMATION_STACK_1_0"
       ]
+    },
+    "AWS::RolesAnywhere::CRL.TrustAnchorArn": {
+      "AllowedPatternRegex": "^arn:aws(-[^:]+)?:rolesanywhere(:.*){2}(:trust-anchor.*)$"
     },
     "AWS::RolesAnywhere::Profile.DurationSeconds": {
       "NumberMax": 43200,
