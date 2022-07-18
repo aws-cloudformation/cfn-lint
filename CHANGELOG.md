@@ -1,3 +1,8 @@
+### v0.61.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `81.0.0` (pull #[2306](https://github.com/aws-cloudformation/cfn-lint/pull/2306))
+- Add `AWS::EC2::KeyPair` as a `Ref` for the value type `KeyPair` (pull #[2305](https://github.com/aws-cloudformation/cfn-lint/pull/2305))
+
 ### v0.61.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `78.1.0` (pull #[2292](https://github.com/aws-cloudformation/cfn-lint/pull/2292))
