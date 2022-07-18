@@ -5605,6 +5605,7 @@
         "UntagResource",
         "UpdateFirewallDeleteProtection",
         "UpdateFirewallDescription",
+        "UpdateFirewallEncryptionConfiguration",
         "UpdateFirewallPolicy",
         "UpdateFirewallPolicyChangeProtection",
         "UpdateLoggingConfiguration",
@@ -6041,9 +6042,11 @@
       "ARNRegex": "^arn:aws:proton:.+:.+:.+",
       "Actions": [
         "AcceptEnvironmentAccountConnection",
+        "CancelComponentDeployment",
         "CancelEnvironmentDeployment",
         "CancelServiceInstanceDeployment",
         "CancelServicePipelineDeployment",
+        "CreateComponent",
         "CreateEnvironment",
         "CreateEnvironmentAccountConnection",
         "CreateEnvironmentTemplate",
@@ -6058,6 +6061,7 @@
         "CreateServiceTemplateVersion",
         "CreateTemplateSyncConfig",
         "DeleteAccountRoles",
+        "DeleteComponent",
         "DeleteEnvironment",
         "DeleteEnvironmentAccountConnection",
         "DeleteEnvironmentTemplate",
@@ -6073,6 +6077,7 @@
         "DeleteTemplateSyncConfig",
         "GetAccountRoles",
         "GetAccountSettings",
+        "GetComponent",
         "GetEnvironment",
         "GetEnvironmentAccountConnection",
         "GetEnvironmentTemplate",
@@ -6089,6 +6094,9 @@
         "GetServiceTemplateVersion",
         "GetTemplateSyncConfig",
         "GetTemplateSyncStatus",
+        "ListComponentOutputs",
+        "ListComponentProvisionedResources",
+        "ListComponents",
         "ListEnvironmentAccountConnections",
         "ListEnvironmentOutputs",
         "ListEnvironmentProvisionedResources",
@@ -6116,6 +6124,7 @@
         "UntagResource",
         "UpdateAccountRoles",
         "UpdateAccountSettings",
+        "UpdateComponent",
         "UpdateEnvironment",
         "UpdateEnvironmentAccountConnection",
         "UpdateEnvironmentTemplate",
@@ -7092,6 +7101,34 @@
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
         "signer:ProfileVersion"
+      ]
+    },
+    "AWS SimScape": {
+      "ARNFormat": "arn:aws:simscape:${Region}:${Account}:${ResourceType}/${ResourceId}",
+      "ARNRegex": "^arn:aws:simscape:.+:.+:.+",
+      "Actions": [
+        "DeleteAgent",
+        "DeleteSimulation",
+        "DescribeAgent",
+        "DescribeSimulation",
+        "ListAgents",
+        "ListSimulations",
+        "ListTagsForResource",
+        "StartAgent",
+        "StartClock",
+        "StartSimulation",
+        "StopAgent",
+        "StopClock",
+        "StopSimulation",
+        "TagResource",
+        "UntagResource"
+      ],
+      "HasResource": true,
+      "StringPrefix": "simscape",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
       ]
     },
     "AWS Snow Device Management": {
@@ -9810,8 +9847,10 @@
         "GetCostEstimation",
         "GetResourceCollection",
         "ListAnomaliesForInsight",
+        "ListAnomalousLogGroups",
         "ListEvents",
         "ListInsights",
+        "ListMonitoredResources",
         "ListNotificationChannels",
         "ListOrganizationInsights",
         "ListRecommendations",
@@ -11317,7 +11356,7 @@
       ]
     },
     "Amazon Elastic Transcoder": {
-      "ARNFormat": "arn:aws:elastictranscoder:<region>:<account>:<resourceType>/<resourceId>",
+      "ARNFormat": "arn:aws:elastictranscoder:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:aws:elastictranscoder:.+",
       "Actions": [
         "CancelJob",
