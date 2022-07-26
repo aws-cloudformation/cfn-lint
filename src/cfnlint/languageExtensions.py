@@ -1,4 +1,3 @@
-from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
 class LanguageExtensions(object):
@@ -15,7 +14,7 @@ class LanguageExtensions(object):
         if not isinstance(fn_object_val, dict) and not isinstance(fn_object_val, list):
             message = intrinsic_function + ' needs a map at {0}'
             matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
-        elif len(fn_object_val) < 1:
+        elif len(fn_object_val) == 0:
             message = 'Invalid value for '+intrinsic_function+' for {0}'
             matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
         return matches

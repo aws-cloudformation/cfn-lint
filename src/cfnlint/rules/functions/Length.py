@@ -20,7 +20,7 @@ class Length(CloudFormationLintRule):
         intrinsic_function = 'Fn::Length'
         matches = []
 
-        fn_length_objects = cfn.search_deep_keys('Fn::Length')
+        fn_length_objects = cfn.search_deep_keys(intrinsic_function)
         for fn_length_object in fn_length_objects:
             tree = fn_length_object[:-1]
             LanguageExtensions.validate_transform_is_declared(self, has_language_extensions_transform, matches, tree, intrinsic_function)
@@ -31,16 +31,16 @@ class Length(CloudFormationLintRule):
     def validate_ref(self, fn_length_object, matches, tree, cfn):
         fn_length_value = fn_length_object[-1]
         if isinstance(fn_length_value, dict):
-            if len(fn_length_value.keys()) != 1 or (list(fn_length_value.keys())[0] not in ["Ref", "Fn::Split"]):
+            if len(fn_length_value.keys()) != 1 or (list(fn_length_value.keys())[0] not in ['Ref', 'Fn::Split']):
                 self.addMatch(matches, tree, 'Fn::Length expects either an array, a Ref to an array or Fn::Split, '
                                              'but found unexpected object under Fn::Length at {0}')
                 return
 
-            if "Ref" in fn_length_value:
-                if fn_length_value["Ref"] not in cfn.get_parameter_names():
+            if 'Ref' in fn_length_value:
+                if fn_length_value['Ref'] not in cfn.get_parameter_names():
                     self.addMatch(matches, tree, 'Fn::Length can only reference list parameters at {0}')
                 else:
-                    referenced_parameter = cfn.get_parameters().get(fn_length_value["Ref"])
+                    referenced_parameter = cfn.get_parameters().get(fn_length_value['Ref'])
                     parameter_type = referenced_parameter.get('Type')
                     if 'List' not in parameter_type:
                         self.addMatch(matches, tree, 'Fn::Length can only reference list parameters at {0}')
