@@ -22,7 +22,7 @@ class ToJsonString(CloudFormationLintRule):
 
 		matches = []
 		intrinsic_function = 'Fn::ToJsonString'
-		fn_toJsonString_objects = cfn.search_deep_keys('Fn::ToJsonString')
+		fn_toJsonString_objects = cfn.search_deep_keys(intrinsic_function)
 
 		for fn_toJsonString_object in fn_toJsonString_objects:
 			tree = fn_toJsonString_object[:-1]
