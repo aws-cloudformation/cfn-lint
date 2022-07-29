@@ -1,0 +1,21 @@
+Resources:
+  AuroraInstance:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: !Ref AutoMinorVersionUpgrade
+      DBClusterIdentifier: !Ref AuroraCluster
+      DBInstanceClass: !Ref InstanceClass
+      DBInstanceIdentifier: "MyAuroraInstance"
+      DBParameterGroupName: !Ref ParamGroup
+      DBSubnetGroupName: !Ref SubnetGroup
+      DeleteAutomatedBackups: !Ref DeleteAutomatedBackups
+      EnablePerformanceInsights: !Ref EnablePerformanceInsights
+      Engine: aurora-postgresql
+      EngineVersion: !Ref EngineVersion
+      PerformanceInsightsKMSKeyId: !Ref KmsKey
+      PerformanceInsightsRetentionPeriod: 7
+      PubliclyAccessible: false
+      
