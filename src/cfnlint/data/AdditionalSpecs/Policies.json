@@ -2280,6 +2280,7 @@
         "CreateAgent",
         "CreateLocationEfs",
         "CreateLocationFsxLustre",
+        "CreateLocationFsxOntap",
         "CreateLocationFsxOpenZfs",
         "CreateLocationFsxWindows",
         "CreateLocationHdfs",
@@ -2294,6 +2295,7 @@
         "DescribeAgent",
         "DescribeLocationEfs",
         "DescribeLocationFsxLustre",
+        "DescribeLocationFsxOntap",
         "DescribeLocationFsxOpenZfs",
         "DescribeLocationFsxWindows",
         "DescribeLocationHdfs",
@@ -3896,6 +3898,66 @@
         "aws:TagKeys"
       ]
     },
+    "AWS IAM Identity Center (successor to AWS Single Sign-On) directory": {
+      "ARNFormat": "arn:${Partition}:sso-directory:${Region}:${Account}:${RelativeId}",
+      "ARNRegex": "^arn:${Partition}:sso-directory:${Region}:.+",
+      "Actions": [
+        "AddMemberToGroup",
+        "CompleteVirtualMfaDeviceRegistration",
+        "CompleteWebAuthnDeviceRegistration",
+        "CreateAlias",
+        "CreateBearerToken",
+        "CreateExternalIdPConfigurationForDirectory",
+        "CreateGroup",
+        "CreateProvisioningTenant",
+        "CreateUser",
+        "DeleteBearerToken",
+        "DeleteExternalIdPCertificate",
+        "DeleteExternalIdPConfigurationForDirectory",
+        "DeleteGroup",
+        "DeleteMfaDeviceForUser",
+        "DeleteProvisioningTenant",
+        "DeleteUser",
+        "DescribeDirectory",
+        "DescribeGroup",
+        "DescribeGroups",
+        "DescribeProvisioningTenant",
+        "DescribeUser",
+        "DescribeUserByUniqueAttribute",
+        "DescribeUsers",
+        "DisableExternalIdPConfigurationForDirectory",
+        "DisableUser",
+        "EnableExternalIdPConfigurationForDirectory",
+        "EnableUser",
+        "GetAWSSPConfigurationForDirectory",
+        "GetUserPoolInfo",
+        "ImportExternalIdPCertificate",
+        "IsMemberInGroup",
+        "ListBearerTokens",
+        "ListExternalIdPCertificates",
+        "ListExternalIdPConfigurationsForDirectory",
+        "ListGroupsForMember",
+        "ListGroupsForUser",
+        "ListMembersInGroup",
+        "ListMfaDevicesForUser",
+        "ListProvisioningTenants",
+        "RemoveMemberFromGroup",
+        "SearchGroups",
+        "SearchUsers",
+        "StartVirtualMfaDeviceRegistration",
+        "StartWebAuthnDeviceRegistration",
+        "UpdateExternalIdPConfigurationForDirectory",
+        "UpdateGroup",
+        "UpdateGroupDisplayName",
+        "UpdateMfaDeviceForUser",
+        "UpdatePassword",
+        "UpdateUser",
+        "UpdateUserName",
+        "VerifyEmail"
+      ],
+      "HasResource": false,
+      "StringPrefix": "sso-directory"
+    },
     "AWS IQ": {
       "ARNFormat": "arn:${Partition}:iq:${Region}:${Account}:${ResourceType}/${ResourceName}",
       "ARNRegex": "^arn:aws:iq::.+",
@@ -4759,6 +4821,7 @@
         "CreateDeployment",
         "DeleteComponent",
         "DeleteCoreDevice",
+        "DeleteDeployment",
         "DescribeComponent",
         "DisassociateServiceRoleFromAccount",
         "GetComponent",
@@ -4783,15 +4846,9 @@
       "HasResource": true,
       "StringPrefix": "greengrass",
       "conditionKeys": [
-        "aws:CurrentTime",
-        "aws:EpochTime",
-        "aws:MultiFactorAuthAge",
-        "aws:MultiFactorAuthPresent",
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
-        "aws:SecureTransport",
-        "aws:TagKeys",
-        "aws:UserAgent"
+        "aws:TagKeys"
       ]
     },
     "AWS IoT Jobs DataPlane": {
@@ -4893,6 +4950,7 @@
         "CreateAccessPolicy",
         "CreateAsset",
         "CreateAssetModel",
+        "CreateBulkImportJob",
         "CreateDashboard",
         "CreateGateway",
         "CreatePortal",
@@ -4909,6 +4967,7 @@
         "DescribeAsset",
         "DescribeAssetModel",
         "DescribeAssetProperty",
+        "DescribeBulkImportJob",
         "DescribeDashboard",
         "DescribeDefaultEncryptionConfiguration",
         "DescribeGateway",
@@ -4929,6 +4988,7 @@
         "ListAssetRelationships",
         "ListAssets",
         "ListAssociatedAssets",
+        "ListBulkImportJobs",
         "ListDashboards",
         "ListGateways",
         "ListPortals",
@@ -5288,6 +5348,7 @@
         "lambda:Layer",
         "lambda:Principal",
         "lambda:SecurityGroupIds",
+        "lambda:SourceFunctionArn",
         "lambda:SubnetIds",
         "lambda:VpcIds"
       ]
@@ -5352,6 +5413,22 @@
         "aws:TagKeys",
         "license-manager:ResourceTag/${TagKey}"
       ]
+    },
+    "AWS License Manager User Subscriptions": {
+      "Actions": [
+        "AssociateUser",
+        "DeregisterIdentityProvider",
+        "DisassociateUser",
+        "ListIdentityProviders",
+        "ListInstances",
+        "ListProductSubscriptions",
+        "ListUserAssociations",
+        "RegisterIdentityProvider",
+        "StartProductSubscription",
+        "StopProductSubscription"
+      ],
+      "HasResource": false,
+      "StringPrefix": "license-manager-user-subscriptions"
     },
     "AWS Mainframe Modernization Service": {
       "ARNFormat": "arn:aws:m2:${Region}:${Account}:${ResourceType}/${ResourceId}",
@@ -6589,66 +6666,6 @@
         "aws:TagKeys"
       ]
     },
-    "AWS SSO Directory": {
-      "ARNFormat": "arn:${Partition}:sso-directory:${Region}:${Account}:<relative-id>",
-      "ARNRegex": "^arn:${Partition}:sso-directory:${Region}:.+",
-      "Actions": [
-        "AddMemberToGroup",
-        "CompleteVirtualMfaDeviceRegistration",
-        "CompleteWebAuthnDeviceRegistration",
-        "CreateAlias",
-        "CreateBearerToken",
-        "CreateExternalIdPConfigurationForDirectory",
-        "CreateGroup",
-        "CreateProvisioningTenant",
-        "CreateUser",
-        "DeleteBearerToken",
-        "DeleteExternalIdPCertificate",
-        "DeleteExternalIdPConfigurationForDirectory",
-        "DeleteGroup",
-        "DeleteMfaDeviceForUser",
-        "DeleteProvisioningTenant",
-        "DeleteUser",
-        "DescribeDirectory",
-        "DescribeGroup",
-        "DescribeGroups",
-        "DescribeProvisioningTenant",
-        "DescribeUser",
-        "DescribeUserByUniqueAttribute",
-        "DescribeUsers",
-        "DisableExternalIdPConfigurationForDirectory",
-        "DisableUser",
-        "EnableExternalIdPConfigurationForDirectory",
-        "EnableUser",
-        "GetAWSSPConfigurationForDirectory",
-        "GetUserPoolInfo",
-        "ImportExternalIdPCertificate",
-        "IsMemberInGroup",
-        "ListBearerTokens",
-        "ListExternalIdPCertificates",
-        "ListExternalIdPConfigurationsForDirectory",
-        "ListGroupsForMember",
-        "ListGroupsForUser",
-        "ListMembersInGroup",
-        "ListMfaDevicesForUser",
-        "ListProvisioningTenants",
-        "RemoveMemberFromGroup",
-        "SearchGroups",
-        "SearchUsers",
-        "StartVirtualMfaDeviceRegistration",
-        "StartWebAuthnDeviceRegistration",
-        "UpdateExternalIdPConfigurationForDirectory",
-        "UpdateGroup",
-        "UpdateGroupDisplayName",
-        "UpdateMfaDeviceForUser",
-        "UpdatePassword",
-        "UpdateUser",
-        "UpdateUserName",
-        "VerifyEmail"
-      ],
-      "HasResource": false,
-      "StringPrefix": "sso-directory"
-    },
     "AWS Savings Plans": {
       "ARNFormat": "arn:aws:savingsplans::${Account}:${ResourceType}/${ResourcePath}",
       "ARNRegex": "^arn:aws:savingsplans:.+",
@@ -7621,7 +7638,6 @@
         "DeactivateContactChannel",
         "DeleteContact",
         "DeleteContactChannel",
-        "DeleteContactPolicy",
         "DescribeEngagement",
         "DescribePage",
         "GetContact",
@@ -7641,11 +7657,15 @@
         "TagResource",
         "UntagResource",
         "UpdateContact",
-        "UpdateContactChannel",
-        "UpdateContactPolicy"
+        "UpdateContactChannel"
       ],
       "HasResource": true,
-      "StringPrefix": "ssm-contacts"
+      "StringPrefix": "ssm-contacts",
+      "conditionKeys": [
+        "aws:RequestTag/${TagKey}",
+        "aws:ResourceTag/${TagKey}",
+        "aws:TagKeys"
+      ]
     },
     "AWS Tag Editor": {
       "ARNFormat": "arn:aws:resource-explorer:<region>:<account-id>:<resource-type>/<resource_name>",
@@ -9251,13 +9271,21 @@
       "ARNFormat": "arn:aws:synthetics:${Region}:${Account}:${ResourceType}:${ResourceName}",
       "ARNRegex": "^arn:aws:synthetics:.+",
       "Actions": [
+        "AssociateResource",
         "CreateCanary",
+        "CreateGroup",
         "DeleteCanary",
+        "DeleteGroup",
         "DescribeCanaries",
         "DescribeCanariesLastRun",
         "DescribeRuntimeVersions",
+        "DisassociateResource",
         "GetCanary",
         "GetCanaryRuns",
+        "GetGroup",
+        "ListAssociatedGroups",
+        "ListGroupResources",
+        "ListGroups",
         "ListTagsForResource",
         "StartCanary",
         "StopCanary",
@@ -11556,6 +11584,7 @@
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
         "aws:TagKeys",
+        "elasticmapreduce:ExecutionRoleArn",
         "elasticmapreduce:RequestTag/${TagKey}",
         "elasticmapreduce:ResourceTag/${TagKey}"
       ]
@@ -12558,7 +12587,7 @@
       "StringPrefix": "kinesis"
     },
     "Amazon Kinesis Analytics": {
-      "ARNFormat": "arn:aws:kinesisanalytics:<region>:<account_ID>:application/<applicationname>",
+      "ARNFormat": "arn:aws:kinesisanalytics:${Region}:${Account}:application/${ApplicationName}",
       "ARNRegex": "^arn:aws:kinesisanalytics:.+:[0-9]+:application/[a-zA-Z0-9_.-]+",
       "Actions": [
         "AddApplicationInput",
@@ -12588,7 +12617,7 @@
       ]
     },
     "Amazon Kinesis Analytics V2": {
-      "ARNFormat": "arn:aws:kinesisanalytics:<region>:<account_ID>:application/<applicationname>",
+      "ARNFormat": "arn:aws:kinesisanalytics:${Region}:${Account}:application/${ApplicationName}",
       "ARNRegex": "^arn:aws:kinesisanalytics:.+:[0-9]+:application/[a-zA-Z0-9_.-]+",
       "Actions": [
         "AddApplicationCloudWatchLoggingOption",
@@ -15419,14 +15448,12 @@
         "s3:ExistingJobPriority",
         "s3:ExistingObjectTag/<key>",
         "s3:JobSuspendedCause",
-        "s3:LocationConstraint",
         "s3:RequestJobOperation",
         "s3:RequestJobPriority",
         "s3:RequestObjectTag/<key>",
         "s3:RequestObjectTagKeys",
         "s3:ResourceAccount",
         "s3:TlsVersion",
-        "s3:VersionId",
         "s3:authType",
         "s3:delimiter",
         "s3:locationconstraint",
@@ -15451,6 +15478,7 @@
         "s3:x-amz-object-ownership",
         "s3:x-amz-server-side-encryption",
         "s3:x-amz-server-side-encryption-aws-kms-key-id",
+        "s3:x-amz-server-side-encryption-customer-algorithm",
         "s3:x-amz-storage-class",
         "s3:x-amz-website-redirect-location"
       ]
@@ -16706,8 +16734,8 @@
       "StringPrefix": "workmailmessageflow"
     },
     "Amazon WorkSpaces": {
-      "ARNFormat": "arn:aws:workspaces:*:*",
-      "ARNRegex": "^arn:aws:workspaces:(.*)",
+      "ARNFormat": "arn:aws:workspaces:${Region}:${Account}:*",
+      "ARNRegex": "^arn:aws:workspaces:.*:.*:.*",
       "Actions": [
         "AssociateConnectionAlias",
         "AssociateIpGroups",
@@ -16719,6 +16747,7 @@
         "CreateTags",
         "CreateUpdatedWorkspaceImage",
         "CreateWorkspaceBundle",
+        "CreateWorkspaceImage",
         "CreateWorkspaces",
         "DeleteClientBranding",
         "DeleteConnectClientAddIn",
@@ -16752,6 +16781,7 @@
         "MigrateWorkspace",
         "ModifyAccount",
         "ModifyClientProperties",
+        "ModifySamlProperties",
         "ModifySelfservicePermissions",
         "ModifyWorkspaceAccessProperties",
         "ModifyWorkspaceCreationProperties",
@@ -16764,6 +16794,7 @@
         "RevokeIpRules",
         "StartWorkspaces",
         "StopWorkspaces",
+        "Stream",
         "TerminateWorkspaces",
         "UpdateConnectClientAddIn",
         "UpdateConnectionAliasPermission",
@@ -16776,7 +16807,8 @@
       "conditionKeys": [
         "aws:RequestTag/${TagKey}",
         "aws:ResourceTag/${TagKey}",
-        "aws:TagKeys"
+        "aws:TagKeys",
+        "workspaces:userId"
       ]
     },
     "Amazon WorkSpaces Application Manager": {

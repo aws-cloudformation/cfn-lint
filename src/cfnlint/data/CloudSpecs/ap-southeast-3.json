@@ -16697,6 +16697,12 @@
           "Type": "CFNKubernetesConfiguration",
           "UpdateType": "Mutable"
         },
+        "MalwareProtection": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-malwareprotection",
+          "Required": false,
+          "Type": "CFNMalwareProtectionConfiguration",
+          "UpdateType": "Mutable"
+        },
         "S3Logs": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-s3logs",
           "Required": false,
@@ -16727,11 +16733,33 @@
         }
       }
     },
+    "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html",
+      "Properties": {
+        "ScanEc2InstanceWithFindings": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html#cfn-guardduty-detector-cfnmalwareprotectionconfiguration-scanec2instancewithfindings",
+          "Required": false,
+          "Type": "CFNScanEc2InstanceWithFindingsConfiguration",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html",
       "Properties": {
         "Enable": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html#cfn-guardduty-detector-cfns3logsconfiguration-enable",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html",
+      "Properties": {
+        "EbsVolumes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html#cfn-guardduty-detector-cfnscanec2instancewithfindingsconfiguration-ebsvolumes",
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
@@ -19322,7 +19350,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbinstance-processorfeature.html#cfn-rds-dbinstance-processorfeature-name",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.ProcessorFeature.Name"
+          }
         },
         "Value": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbinstance-processorfeature.html#cfn-rds-dbinstance-processorfeature-value",
@@ -25369,7 +25400,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "81.1.0",
+  "ResourceSpecificationVersion": "83.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -38162,10 +38193,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBCluster.DBClusterIdentifier"
-          }
+          "UpdateType": "Immutable"
         },
         "DBClusterParameterGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-dbclusterparametergroupname",
@@ -38233,10 +38261,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-globalclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional",
-          "Value": {
-            "ValueType": "AWS::RDS::DBCluster.GlobalClusterIdentifier"
-          }
+          "UpdateType": "Conditional"
         },
         "KmsKeyId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-kmskeyid",
@@ -38254,10 +38279,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-masterusername",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBCluster.MasterUsername"
-          }
+          "UpdateType": "Immutable"
         },
         "Port": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-port",
@@ -38451,7 +38473,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBClusterIdentifier"
+          }
         },
         "DBInstanceClass": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbinstanceclass",
@@ -38466,19 +38491,28 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbinstanceidentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBInstanceIdentifier"
+          }
         },
         "DBName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBName"
+          }
         },
         "DBParameterGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbparametergroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional"
+          "UpdateType": "Conditional",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBParameterGroupName"
+          }
         },
         "DBSecurityGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsecuritygroups",
@@ -38492,13 +38526,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsnapshotidentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBSnapshotIdentifier"
+          }
         },
         "DBSubnetGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsubnetgroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.DBSubnetGroupName"
+          }
         },
         "DeleteAutomatedBackups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-deleteautomatedbackups",
@@ -38587,7 +38627,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-masterusername",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.MasterUsername"
+          }
         },
         "MaxAllocatedStorage": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-maxallocatedstorage",
@@ -38641,7 +38684,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-port",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.Port"
+          }
         },
         "PreferredBackupWindow": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-preferredbackupwindow",
@@ -44356,7 +44402,9 @@
       "AllowedValues": [
         "NetworkInterface",
         "Subnet",
-        "VPC"
+        "VPC",
+        "TransitGateway",
+        "TransitGatewayAttachment"
       ]
     },
     "AWS::EC2::FlowLog.TrafficType": {
@@ -45824,20 +45872,12 @@
       "NumberMax": 35,
       "NumberMin": 1
     },
-    "AWS::RDS::DBCluster.DBClusterIdentifier": {
-      "AllowedPatternRegex": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
-      "StringMax": 63,
-      "StringMin": 1
-    },
-    "AWS::RDS::DBCluster.GlobalClusterIdentifier": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
-    },
-    "AWS::RDS::DBCluster.MasterUsername": {
-      "AllowedPatternRegex": "^[a-zA-Z]{1}[a-zA-Z0-9_]*$"
-    },
     "AWS::RDS::DBInstance.BackupRetentionPeriod": {
       "NumberMax": 35,
       "NumberMin": 0
+    },
+    "AWS::RDS::DBInstance.DBClusterIdentifier": {
+      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
     },
     "AWS::RDS::DBInstance.DBInstanceClass": {
       "AllowedValues": [
@@ -45878,9 +45918,38 @@
         "db.t3.xlarge"
       ]
     },
+    "AWS::RDS::DBInstance.DBInstanceIdentifier": {
+      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
+    },
+    "AWS::RDS::DBInstance.DBName": {
+      "AllowedPatternRegex": "^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"
+    },
+    "AWS::RDS::DBInstance.DBParameterGroupName": {
+      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\\.]){0,254}$"
+    },
+    "AWS::RDS::DBInstance.DBSnapshotIdentifier": {
+      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"
+    },
+    "AWS::RDS::DBInstance.DBSubnetGroupName": {
+      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\\.\\s]){0,254}$"
+    },
     "AWS::RDS::DBInstance.Engine": {
       "AllowedPattern": "Has to be one of [aurora, aurora-mysql, aurora-postgresql, mariadb, mysql, oracle-ee, oracle-se2, oracle-se1, oracle-se, postgres, sqlserver-ee, sqlserver-se, sqlserver-ex, sqlserver-web]",
       "AllowedPatternRegex": "(?i)(aurora|aurora-mysql|aurora-postgresql|mariadb|mysql|oracle-ee|oracle-se2|oracle-se1|oracle-se|postgres|sqlserver-ee|sqlserver-se|sqlserver-ex|sqlserver-web)$"
+    },
+    "AWS::RDS::DBInstance.MasterUsername": {
+      "AllowedPatternRegex": "^[a-zA-Z][a-zA-Z0-9_]{0,127}$",
+      "StringMax": 128,
+      "StringMin": 1
+    },
+    "AWS::RDS::DBInstance.Port": {
+      "AllowedPatternRegex": "^\\d*$"
+    },
+    "AWS::RDS::DBInstance.ProcessorFeature.Name": {
+      "AllowedValues": [
+        "coreCount",
+        "threadsPerCore"
+      ]
     },
     "AWS::RDS::DBInstance.PromotionTier": {
       "NumberMax": 15,
@@ -47489,6 +47558,7 @@
     "LaunchTemplateTagSpecificationResourceType": {
       "AllowedValues": [
         "capacity-reservation",
+        "capacity-reservation-fleet",
         "carrier-gateway",
         "client-vpn-endpoint",
         "customer-gateway",
@@ -47541,6 +47611,7 @@
         "subnet",
         "subnet-cidr-reservation",
         "traffic-mirror-filter",
+        "traffic-mirror-filter-rule",
         "traffic-mirror-session",
         "traffic-mirror-target",
         "transit-gateway",
@@ -47553,6 +47624,7 @@
         "volume",
         "vpc",
         "vpc-endpoint",
+        "vpc-endpoint-connection-device-type",
         "vpc-endpoint-service",
         "vpc-flow-log",
         "vpc-peering-connection",
