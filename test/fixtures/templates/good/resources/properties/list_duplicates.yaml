@@ -38,9 +38,3 @@ Resources:
       ManagedPolicyArns:
         - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/AdministratorPolicy', !Ref 'AWS::NoValue']
         - !If ['isPrimaryRegion', 'arn:aws:iam::aws:policy/EC2FullAdmin', !Ref 'AWS::NoValue']
-  InstanceProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Roles:  # Duplicates are allowed even though the list only takes 1 value
-      - !Ref IamRole
-      - !Ref IamRole

@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -37,7 +36,7 @@ class Properties(CloudFormationLintRule):
         """
 
         matches = []
-        if isinstance(value, list) or value == {'Ref': 'AWS::NotificationARNs'}:
+        if (isinstance(value, list) and primtype != 'Json') or value == {'Ref': 'AWS::NotificationARNs'}:
             message = 'Property should be of type %s not List at %s' % (
                 primtype, '/'.join(map(str, proppath)))
             matches.append(RuleMatch(proppath, message))
@@ -90,7 +89,7 @@ class Properties(CloudFormationLintRule):
                                     resource_name = None
                                     if isinstance(d_v, list):
                                         resource_name = d_v[0]
-                                    elif isinstance(d_v, six.string_types):
+                                    elif isinstance(d_v, str):
                                         resource_name = d_v.split('.')[0]
                                     if resource_name:
                                         resource_type = self.cfn.template.get(
@@ -150,7 +149,7 @@ class Properties(CloudFormationLintRule):
                             resource_name = None
                             if isinstance(sub_value, list):
                                 resource_name = sub_value[0]
-                            elif isinstance(sub_value, six.string_types):
+                            elif isinstance(sub_value, str):
                                 resource_name = sub_value.split('.')[0]
                             if resource_name:
                                 resource_type = self.cfn.template.get(
@@ -187,7 +186,7 @@ class Properties(CloudFormationLintRule):
 
         exceptions = templated_exceptions.get(parenttype, [])
         if proptype in exceptions:
-            if isinstance(text, six.string_types):
+            if isinstance(text, str):
                 return True
 
         return False
@@ -304,7 +303,7 @@ class Properties(CloudFormationLintRule):
                                     if ref in parameternames:
                                         param_type = self.cfn.template['Parameters'][ref]['Type']
                                         if param_type:
-                                            if 'List<' not in param_type and '<List' not in param_type and not param_type == 'CommaDelimitedList':
+                                            if 'List<' not in param_type and '<List' not in param_type and '<CommaDelimitedList' not in param_type and not param_type == 'CommaDelimitedList':
                                                 message = 'Property {0} should be of type List or Parameter should ' \
                                                           'be a list for resource {1}'
                                                 matches.append(

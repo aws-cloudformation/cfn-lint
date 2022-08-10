@@ -3,8 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -43,12 +41,12 @@ class GetAtt(CloudFormationLintRule):
                 message = 'Invalid GetAtt for {0}'
                 matches.append(RuleMatch(getatt, message.format('/'.join(map(str, getatt[:-1])))))
                 continue
-            if isinstance(getatt[-1], six.string_types):
+            if isinstance(getatt[-1], str):
                 resname, restype = getatt[-1].split('.', 1)
             else:
                 resname = None
                 restype = None
-                if isinstance(getatt[-1][1], six.string_types):
+                if isinstance(getatt[-1][1], str):
                     resname = getatt[-1][0]
                     restype = '.'.join(getatt[-1][1:])
                 elif isinstance(getatt[-1][1], dict):

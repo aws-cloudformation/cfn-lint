@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -199,7 +198,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         version = action.get('ActionTypeId', {}).get('Version')
         if isinstance(version, dict):
             self.logger.debug('Unable to validate version when an object is used.  Skipping')
-        elif isinstance(version, (six.string_types)):
+        elif isinstance(version, (str)):
             if not LENGTH_MIN <= len(version) <= LENGTH_MAX:
                 message = 'Version string ({0}) must be between {1} and {2} characters in length.'
                 if scenario:
@@ -226,7 +225,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         matches = []
 
         action_name = action.get('Name')
-        if isinstance(action_name, six.string_types):
+        if isinstance(action_name, str):
             if action.get('Name') in action_names:
                 message = 'All action names within a stage must be unique ({name}).'.format(
                     name=action.get('Name')
@@ -248,7 +247,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         if isinstance(input_artifacts, list):
             for input_artifact in input_artifacts:
                 artifact_name = input_artifact.get('Name')
-                if isinstance(artifact_name, six.string_types):
+                if isinstance(artifact_name, str):
                     if not artifact_name in artifact_names:
                         message = 'Every input artifact for an action must match the output artifact of an action earlier in the pipeline ({name}).'.format(
                             name=artifact_name
@@ -263,7 +262,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         if isinstance(output_artifacts, list):
             for output_artifact in output_artifacts:
                 artifact_name = output_artifact.get('Name')
-                if isinstance(artifact_name, six.string_types):
+                if isinstance(artifact_name, str):
                     if artifact_name in artifact_names:
                         message = 'Every output artifact in the pipeline must have a unique name. ({name})'.format(
                             name=artifact_name

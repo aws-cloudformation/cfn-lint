@@ -2,11 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
+import re
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
-from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.helpers import RESOURCE_SPECS, REGEX_DYN_REF
 
 
 class StringSize(CloudFormationLintRule):
@@ -30,7 +30,7 @@ class StringSize(CloudFormationLintRule):
         string_min = kwargs.get('string_min')
         string_max = kwargs.get('string_max')
 
-        if isinstance(value, six.string_types):
+        if isinstance(value, str) and not re.match(REGEX_DYN_REF, value):
             if not string_min <= len(value) <= string_max:
                 message = 'String has to have length between {0} and {1} at {2}'
                 matches.append(

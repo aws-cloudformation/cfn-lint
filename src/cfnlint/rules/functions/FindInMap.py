@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -50,7 +49,7 @@ class FindInMap(CloudFormationLintRule):
     def map_name(self, map_name, mappings, tree):
         """ Check the map name """
         matches = []
-        if isinstance(map_name, (six.string_types, dict)):
+        if isinstance(map_name, (str, dict)):
             if isinstance(map_name, dict):
                 matches.extend(self.check_dict(map_name, tree[:] + [0]))
             else:
@@ -71,7 +70,7 @@ class FindInMap(CloudFormationLintRule):
     def first_key(self, first_key, tree):
         """ Check the validity of the first key """
         matches = []
-        if isinstance(first_key, (six.string_types, int)):
+        if isinstance(first_key, (str, int)):
             return matches
         if isinstance(first_key, (dict)):
             matches.extend(self.check_dict(first_key, tree[:] + [1]))
@@ -88,7 +87,7 @@ class FindInMap(CloudFormationLintRule):
     def second_key(self, second_key, tree):
         """ Check the validity of the second key """
         matches = []
-        if isinstance(second_key, (six.string_types, int)):
+        if isinstance(second_key, (str, int)):
             return matches
 
         if isinstance(second_key, (dict)):

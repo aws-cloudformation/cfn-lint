@@ -3,10 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-import sys
 import logging
 from copy import deepcopy
-import six
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,12 +30,6 @@ def create_str_node_class(cls):
 
         # pylint: disable=bad-classmethod-argument, unused-argument
         def __new__(self, x, start_mark, end_mark):
-            if sys.version_info >= (3, 0):
-                return cls.__new__(self, x)
-
-            if isinstance(x, six.string_types):
-                return cls.__new__(self, x.encode('ascii', 'ignore'))
-
             return cls.__new__(self, x)
 
         def __getattr__(self, name):
@@ -225,7 +217,7 @@ def create_sub_node_class(cls):
 
         def __setup_list(self, v):
             if len(v) == 2:
-                if not isinstance(v[0], six.string_types):
+                if not isinstance(v[0], str):
                     return
                 self.__setup_list_sub_string(v[0])
                 if not isinstance(v[1], dict):
@@ -237,7 +229,7 @@ def create_sub_node_class(cls):
             if len(self) == 1:
                 for k, v in self.items():
                     if k == 'Fn::Sub':
-                        if isinstance(v, six.string_types):
+                        if isinstance(v, str):
                             self.__setup_list_sub_string(v)
                             self.__cache_is_valid = True
                         elif isinstance(v, list):

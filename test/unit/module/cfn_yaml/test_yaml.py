@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 from six import StringIO
-from mock import patch
+from unittest.mock import patch
 from cfnlint.template import Template  # pylint: disable=E0401
 from cfnlint.rules import RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
@@ -61,3 +61,10 @@ class TestYamlParse(BaseTestCase):
                 matches.extend(self.rules.run(filename, cfn))
                 assert len(matches) == failures, 'Expected {} failures, got {} on {}'.format(
                     failures, len(matches), values.get('filename'))
+
+
+    def test_map_failure(self):
+        """Test a failure is passed on unhashable map"""
+        filename = 'test/fixtures/templates/bad/core/parse_invalid_map.yaml'
+
+        self.assertRaises(cfnlint.decode.cfn_yaml.CfnParseError, cfnlint.decode.cfn_yaml.load, filename)

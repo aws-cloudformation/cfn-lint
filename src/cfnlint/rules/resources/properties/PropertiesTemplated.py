@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -30,7 +29,7 @@ class PropertiesTemplated(CloudFormationLintRule):
     def check_value(self, value, path):
         """ Check the value """
         matches = []
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             message = 'This code may only work with `package` cli command as the property (%s) is a string' % (
                 '/'.join(map(str, path)))
             matches.append(RuleMatch(path, message))

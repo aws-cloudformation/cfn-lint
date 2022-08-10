@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import fnmatch
 import json
 import logging
@@ -12,7 +11,7 @@ import subprocess
 import zipfile
 import re
 from io import BytesIO
-import six
+import warnings
 import jsonpatch
 try:
     from urllib.request import urlopen, Request
@@ -135,7 +134,7 @@ def update_resource_spec(region, url, schema_cache):
 
     spec = search_and_replace_botocore_types(spec)
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 
@@ -150,7 +149,7 @@ def update_documentation(rules):
 
     # Read current file up to the Rules part, everything up to that point is
     # static documentation.
-    with open(filename, 'r') as original_file:
+    with open(filename, 'r', encoding='utf-8') as original_file:
 
         line = original_file.readline()
         while line:
@@ -162,7 +161,7 @@ def update_documentation(rules):
             line = original_file.readline()
 
     # Rebuild the file content
-    with open(filename, 'w') as new_file:
+    with open(filename, 'w', encoding='utf-8') as new_file:
 
         # Rewrite the static documentation
         for line in data:
@@ -247,7 +246,7 @@ def update_iam_policies():
         else:
             LOGGER.debug('"%s" was not found in the policies file', k)
 
-    with open(filename, 'w') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
 
 
@@ -280,6 +279,7 @@ def get_schema_value_types():
 
     def get_object_details(names, properties, schema):
         results = {}
+        warnings.filterwarnings('error')
         for propname, propdetails in properties.items():
             subname, propdetails = resolve_refs(propdetails, schema)
             t = propdetails.get('type')
@@ -313,20 +313,12 @@ def get_schema_value_types():
                     if '.'.join(names + [propname]) == 'AWS::OpsWorksCM::Server.CustomPrivateKey':
                         # one off exception to handle a weird parsing issue in python 2.7
                         continue
-                    if sys.version_info[0] == 2:
-                        # for python 2 strings can be unicode
-                        if isinstance(p, unicode):  #pylint: disable=undefined-variable
-                            try:
-                                p = p.decode('ascii')
-                            except:  #pylint: disable=bare-except
-                                continue
-                    else:
-                        # python 3 has the ability to test isascii
-                        # python 3.7 introduces is ascii so switching to encode
-                        try:
-                            p.encode('ascii')
-                        except UnicodeEncodeError:
-                            continue
+                    # python 3 has the ability to test isascii
+                    # python 3.7 introduces is ascii so switching to encode
+                    try:
+                        p.encode('ascii')
+                    except UnicodeEncodeError:
+                        continue
                     try:
                         if '\\p{' in p:
                             continue
@@ -406,7 +398,7 @@ def get_schema_value_types():
     with zipfile.ZipFile(BytesIO(res.read())) as z:
         for f in z.namelist():
             with z.open(f) as d:
-                if not isinstance(d, six.string_types):
+                if not isinstance(d, str):
                     data = d.read()
                 else:
                     data = d

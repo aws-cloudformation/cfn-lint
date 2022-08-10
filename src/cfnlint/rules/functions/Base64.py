@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -11,7 +10,7 @@ class Base64(CloudFormationLintRule):
     """Check if Base64 values are correct"""
     id = 'E1021'
     shortdesc = 'Base64 validation of parameters'
-    description = 'Making sure the function not is of list'
+    description = 'Making sure the Base64 function is properly configured'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-base64.html'
     tags = ['functions', 'base64']
 
@@ -33,7 +32,7 @@ class Base64(CloudFormationLintRule):
                     message = 'Base64 needs a string not a map or list at {0}'
                     matches.append(RuleMatch(
                         tree[:], message.format('/'.join(map(str, tree)))))
-            elif not isinstance(value_obj, six.string_types):
+            elif not isinstance(value_obj, str):
                 message = 'Base64 needs a string at {0}'
                 matches.append(RuleMatch(
                     tree[:], message.format('/'.join(map(str, tree)))))

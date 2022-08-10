@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -21,12 +20,12 @@ class FindInMapKeys(CloudFormationLintRule):
         matches = []
         first_key = keys[0]
         second_key = keys[1]
-        if isinstance(second_key, (six.string_types, int)):
-            if isinstance(map_name, (six.string_types)):
+        if isinstance(second_key, (str, int)):
+            if isinstance(map_name, (str)):
                 mapping = mappings.get(map_name)
                 if mapping:
-                    if isinstance(first_key, (six.string_types, int)):
-                        if isinstance(map_name, (six.string_types)):
+                    if isinstance(first_key, (str, int)):
+                        if isinstance(map_name, (str)):
                             if mapping.get(first_key) is None:
                                 message = 'FindInMap first key "{0}" doesn\'t exist in map "{1}" at {3}'
                                 matches.append(RuleMatch(

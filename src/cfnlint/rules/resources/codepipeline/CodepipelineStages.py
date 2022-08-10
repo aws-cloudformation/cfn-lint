@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -87,7 +86,7 @@ class CodepipelineStages(CloudFormationLintRule):
         stage_names = set()
         for sidx, stage in enumerate(value):
             stage_name = stage.get('Name')
-            if isinstance(stage_name, six.string_types):
+            if isinstance(stage_name, str):
                 if stage_name in stage_names:
                     message = 'All stage names within a pipeline must be unique. ({name})'.format(
                         name=stage_name,

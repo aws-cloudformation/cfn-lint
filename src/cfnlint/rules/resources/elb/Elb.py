@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -26,7 +25,7 @@ HTTPS has certificate HTTP has no certificate'
             Check Protocol Value
         """
         matches = []
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if value.upper() not in kwargs['accepted_protocols']:
                 message = 'Protocol must be {0} is invalid at {1}'
                 matches.append(RuleMatch(path, message.format(
@@ -41,7 +40,7 @@ HTTPS has certificate HTTP has no certificate'
     def get_loadbalancer_type(self, properties):
         """ Check if type is application """
         elb_type = properties.get('Type', 'application')
-        if isinstance(elb_type, six.string_types):
+        if isinstance(elb_type, str):
             if elb_type == 'application':
                 return 'application'
             return 'network'

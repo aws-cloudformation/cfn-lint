@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import sys
 import os
 from test.testlib.testcase import BaseTestCase
-from mock import patch, MagicMock, mock_open
+from unittest.mock import patch, MagicMock, mock_open
 import cfnlint.helpers
 import json
 

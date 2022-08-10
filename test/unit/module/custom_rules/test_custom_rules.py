@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 from six import StringIO
-from mock import patch
+from unittest.mock import patch
 from cfnlint.template import Template  # pylint: disable=E0401
 from cfnlint.rules import RulesCollection
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
@@ -28,6 +28,8 @@ class TestCustomRuleParsing(BaseTestCase):
         }
 
         self.perfect_rule = 'test/fixtures/custom_rules/good/custom_rule_perfect.txt'
+        self.valid_boolean = 'test/fixtures/custom_rules/good/custom_rule_boolean.txt'
+        self.invalid_boolean = 'test/fixtures/custom_rules/bad/custom_rule_invalid_boolean.txt'
         self.invalid_op = 'test/fixtures/custom_rules/bad/custom_rule_invalid_op.txt'
         self.invalid_prop = 'test/fixtures/custom_rules/bad/custom_rule_invalid_prop.txt'
         self.invalid_propkey = 'test/fixtures/custom_rules/bad/custom_rule_invalid_propkey.txt'
@@ -71,6 +73,14 @@ class TestCustomRuleParsing(BaseTestCase):
         """Test Successful Custom_Rule Parsing"""
         assert (self.run_tests(self.invalid_less_than)[0].message.find('Lesser than check') > -1)
 
+    def test_valid_boolean_value(self):
+        """Test Boolean values"""
+        assert (self.run_tests(self.valid_boolean) == [])
+
+    def test_invalid_boolean_value(self):
+        """Test Boolean values"""
+        assert (self.run_tests(self.invalid_boolean)[0].message.find('Must equal check failed') > -1)
+
     def test_invalid_prop(self):
         """Test Successful Custom_Rule Parsing"""
         assert (self.run_tests(self.invalid_prop) == [])
@@ -92,4 +102,3 @@ class TestCustomRuleParsing(BaseTestCase):
             rules.create_from_custom_rules_file(rulename)
             runner = cfnlint.runner.Runner(rules, filename, template, None, None)
             return runner.run()
-

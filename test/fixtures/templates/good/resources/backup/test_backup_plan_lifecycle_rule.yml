@@ -1,0 +1,43 @@
+---
+Resources:
+
+  BackupPlanWithValidLifecycle:
+    Type: AWS::Backup::BackupPlan
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      BackupPlan:
+        BackupPlanName: "test-backup-plan-valid-lifecycle"
+        BackupPlanRule:
+          - RuleName: "test-backup-plan-rule-valid-lifecycle"
+            TargetBackupVault: "test-backup-vault"
+            ScheduleExpression: "cron(0 0 ? * MON *)"
+            Lifecycle:
+              MoveToColdStorageAfterDays: 7
+              DeleteAfterDays: 100  # 100 - 7 is greater than 90
+
+  BackupPlanWithIrrelevantLifecycle:
+    Type: AWS::Backup::BackupPlan
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      BackupPlan:
+        BackupPlanName: "test-backup-plan-irrelevant-lifecycle"
+        BackupPlanRule:
+          - RuleName: "test-backup-plan-rule-irrelevant-lifecycle"
+            TargetBackupVault: "test-backup-vault"
+            ScheduleExpression: "cron(0 0 ? * MON *)"
+            Lifecycle:
+              MoveToColdStorageAfterDays: 7
+
+  BackupPlanWithoutLifecycle:
+    Type: AWS::Backup::BackupPlan
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      BackupPlan:
+        BackupPlanName: "test-backup-plan-no-lifecycle"
+        BackupPlanRule:
+          - RuleName: "test-backup-plan-rule-no-lifecycle"
+            TargetBackupVault: "test-backup-vault"
+            ScheduleExpression: "cron(0 0 ? * MON *)"

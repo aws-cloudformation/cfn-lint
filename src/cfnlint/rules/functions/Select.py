@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -11,7 +10,7 @@ class Select(CloudFormationLintRule):
     """Check if Select values are correct"""
     id = 'E1017'
     shortdesc = 'Select validation of parameters'
-    description = 'Making sure the function not is of list'
+    description = 'Making sure the Select function is properly configured'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-select.html'
     tags = ['functions', 'select']
 
@@ -44,7 +43,7 @@ class Select(CloudFormationLintRule):
                                     message = 'Select index should be an Integer or a function Ref or FindInMap for {0}'
                                     matches.append(RuleMatch(
                                         tree, message.format('/'.join(map(str, tree)))))
-                    elif not isinstance(index_obj, six.integer_types):
+                    elif not isinstance(index_obj, int):
                         try:
                             int(index_obj)
                         except ValueError:

@@ -21,7 +21,7 @@ reported the issue. Please try to include as much information as you can. Detail
 
 ## Development Environment
 
-1. You will need Python 2 >= 2.7 or Python 3 >= 3.5. Verify which version you have by running `python --version`. 
+1. You will need Python 3 >= 3.5. Verify which version you have by running `python --version`. 
 
     > If you don't have it installed, download it [here](https://www.python.org/downloads/). When you do this, `pip` should be installed automatically.
 
@@ -31,11 +31,11 @@ reported the issue. Please try to include as much information as you can. Detail
     # fork the repository
     git clone https://github.com/<YOUR-USERNAME>/cfn-python-lint.git
     cd cfn-python-lint
-    pip install -e . # or "pip3 install -e ." if you are using Python 3.5+
+    pip3 install -e .
     ```
 
-1. Run `pip show cfn-lint` (or `pip3 show cfn-lint` if you are using Python 3). The `Location` printed should be the folder from the step above.
-1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: run `pip install -e .` again to re-install changes).
+1. Run `pip3 show cfn-lint`. The `Location` printed should be the folder from the step above.
+1. You should now be able to modify the source code and see the changes immediately by running any of the `cfn-lint` commands. (Note: run `pip3 install -e .` again to re-install changes).
 
 ## Running the tests
 
@@ -54,10 +54,10 @@ $ tox
 $ tox -e py36 # Run all unit tests again Python 3.6
 ```
 Tox test suites available:
-* **py27**: Unit tests (Python 2.7)
-* **pylint27**: Python syntax check (Python 2.7)
 * **py36**: Unit tests (Python 3.6)
-* **pylint36**: Python syntax check (Python 3.6)
+* **py37**: Unit tests (Python 3.7)
+* **py38**: Unit tests (Python 3.8)
+* **pylint**: Python syntax check
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:

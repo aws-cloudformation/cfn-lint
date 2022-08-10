@@ -163,7 +163,7 @@ class TestFormatters(BaseTestCase):
         sarif = json.loads(formatter.print_matches(results, rules))
 
         # Fetch the SARIF schema
-        schema = json.loads(cfnlint.helpers.get_url_content(sarif['$schema'], True))
+        schema = json.loads(cfnlint.helpers.get_url_content(sarif['$schema'], False))
         jsonschema.validate(sarif, schema)
 
         sarif_results = sarif['runs'][0]['results']

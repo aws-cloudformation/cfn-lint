@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -22,7 +21,7 @@ class SubNotJoin(CloudFormationLintRule):
         for join_obj in join_objs:
             if isinstance(join_obj[-1], list):
                 join_operator = join_obj[-1][0]
-                if isinstance(join_operator, six.string_types):
+                if isinstance(join_operator, str):
                     if join_operator == '':
                         matches.append(RuleMatch(
                             join_obj[0:-1], 'Prefer using Fn::Sub over Fn::Join with an empty delimiter'))

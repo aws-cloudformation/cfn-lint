@@ -1,0 +1,23 @@
+Resources:
+  NodeGroup:
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      DesiredCapacity: !Ref NodeAutoScalingGroupDesiredCapacity
+      LaunchTemplate:
+        LaunchTemplateId: !Ref NodeLaunchTemplate
+        Version: !GetAtt NodeLaunchTemplate.LatestVersionNumber
+      MaxSize: !Ref NodeAutoScalingGroupMaxSize
+      MinSize: !Ref NodeAutoScalingGroupMinSize
+      Tags:
+        - Key: Name
+          PropagateAtLaunch: true
+          Value: !Sub Cluster-Group-Node
+        - Key: !Sub kubernetes.io/cluster/Cluster
+          PropagateAtLaunch: true
+          Value: owned
+      VPCZoneIdentifier: !Join [ ',', [ !ImportValue Fn::Sub: "${NetworkStackName}-SubnetsPrivate01", !ImportValue Fn::Sub: "${NetworkStackName}-SubnetsPrivate02" ] ]
+    UpdatePolicy:
+      AutoScalingRollingUpdate:
+        MaxBatchSize: 1
+        MinInstancesInService: !Ref NodeAutoScalingGroupDesiredCapacity
+        PauseTime: PT5M

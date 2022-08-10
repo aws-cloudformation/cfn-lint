@@ -30,7 +30,7 @@ def main():
 
         if matches_output:
             if args.output_file:
-                with open(args.output_file, 'w') as output_file:
+                with open(args.output_file, 'w', encoding='utf-8') as output_file:
                     output_file.write(matches_output)
             else:
                 print(matches_output)

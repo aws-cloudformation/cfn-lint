@@ -6,7 +6,6 @@ import hashlib
 from copy import copy
 import json
 import logging
-import six
 import cfnlint.helpers
 
 LOGGER = logging.getLogger(__name__)
@@ -36,9 +35,9 @@ class EqualsValue(object):
             else:
                 LOGGER.debug('Length of the object needs to be 1')
                 raise ConditionParseError
-        elif isinstance(value, six.string_types):
+        elif isinstance(value, str):
             self.String = value
-        elif isinstance(value, six.integer_types):
+        elif isinstance(value, int):
             self.String = str(value)
         else:
             LOGGER.debug('Equals value has to be string or object')
@@ -241,15 +240,15 @@ class Conditions(object):
                         value_2 = None
                         if isinstance(equals[0], dict):
                             dict_hash_1 = get_hash(equals[0])
-                        elif isinstance(equals[0], six.string_types):
+                        elif isinstance(equals[0], str):
                             value_1 = equals[0]
-                        elif isinstance(equals[0], six.integer_types):
+                        elif isinstance(equals[0], int):
                             value_1 = str(equals[0])
                         if isinstance(equals[1], dict):
                             dict_hash_2 = get_hash(equals[1])
-                        elif isinstance(equals[1], six.string_types):
+                        elif isinstance(equals[1], str):
                             value_2 = equals[1]
-                        elif isinstance(equals[1], six.integer_types):
+                        elif isinstance(equals[1], int):
                             value_2 = str(equals[1])
 
                         if dict_hash_1:
@@ -303,8 +302,8 @@ class Conditions(object):
     def get_scenarios(self, conditions):
         """Get scenarios for all conditions provided"""
         matched_equals = {}
-        matched_conditions = []
-
+        matched_conditions = set()
+        all_equals = {}
         results = []
 
         # When conditions don't properly get loaded (configuration error)
@@ -316,13 +315,32 @@ class Conditions(object):
             # When one of the conditions don't exist we return an empty result
             if not self.Conditions.get(condition):
                 return []
+
             for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
-                if not matched_equals.get(equal_key):
-                    matched_equals[equal_key] = set()
+                if not equal_key in all_equals:
+                    all_equals[equal_key] = condition
                 else:
-                    matched_conditions.append(condition)
+                    if all_equals[equal_key] not in matched_conditions:
+                        matched_conditions.add(all_equals[equal_key])
+                    matched_conditions.add(condition)
+
+        all_equals = {}
+        for condition in matched_conditions:
+            for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
+                if not equal_key in all_equals:
+                    all_equals[equal_key] = set()
+                else:
+                    if not equal_key in matched_equals:
+                        matched_equals[equal_key] = copy(all_equals[equal_key])
                 for s_v in equal_values:
-                    matched_equals[equal_key].add(s_v)
+                    all_equals[equal_key].add(s_v)
+                    if equal_key in matched_equals:
+                        matched_equals[equal_key].add(s_v)
+
+        diff = set(all_equals.keys()) - set(matched_equals.keys())
+        if diff:
+            diffKey = diff.pop()
+            matched_equals[diffKey] = all_equals[diffKey]
 
         def multiply_equals(currents, s_hash, sets, parameter_values):
             """  Multiply Equals when building scenarios """
@@ -334,7 +352,7 @@ class Conditions(object):
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
                         # protecting against really badly formatted templates
-                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                        if isinstance(p_value, (int, str)):
                             new = {}
                             # the allowed values could be numbers so force a string
                             new[s_hash] = str(p_value)
@@ -354,7 +372,7 @@ class Conditions(object):
                     for p_value in parameter_values:
                         # the allowed value must be an integer or string
                         # protecting against really badly formatted templates
-                        if isinstance(p_value, (six.integer_types, six.string_types)):
+                        if isinstance(p_value, (int, str)):
                             new = copy(current)
                             # the allowed values could be numbers so force a string
                             new[s_hash] = str(p_value)

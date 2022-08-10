@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -24,7 +23,7 @@ class RefInCondition(CloudFormationLintRule):
         for ref_obj in ref_objs:
             if ref_obj[0] == 'Conditions':
                 value = ref_obj[-1]
-                if isinstance(value, (six.string_types, six.text_type, int)):
+                if isinstance(value, (str, int)):
                     if value in resource_names:
                         message = 'Cannot reference resource {0} in the Conditions block of the template at {1}'
                         matches.append(

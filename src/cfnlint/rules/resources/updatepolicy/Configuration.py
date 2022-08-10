@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -106,7 +105,7 @@ class Configuration(CloudFormationLintRule):
             }
         },
         'primitive_types': {
-            'String': six.string_types,
+            'String': str,
             'Integer': int,
             'Boolean': bool,
             'List': list

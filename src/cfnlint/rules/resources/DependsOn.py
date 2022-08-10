@@ -2,7 +2,6 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import six
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -19,7 +18,7 @@ class DependsOn(CloudFormationLintRule):
         """Check resource names for DependsOn"""
         matches = []
 
-        if not isinstance(key, (six.text_type, six.string_types)):
+        if not isinstance(key, (str)):
             message = 'DependsOn values should be of string at {0}'
             matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
             return matches

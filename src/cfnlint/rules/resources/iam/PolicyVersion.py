@@ -21,6 +21,7 @@ class PolicyVersion(CloudFormationLintRule):
         self.resources_and_keys = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
             'AWS::Elasticsearch::Domain': 'AccessPolicies',
+            'AWS::OpenSearchService::Domain': 'AccessPolicies',
             'AWS::KMS::Key': 'KeyPolicy',
             'AWS::S3::BucketPolicy': 'PolicyDocument',
             'AWS::SNS::TopicPolicy': 'PolicyDocument',
