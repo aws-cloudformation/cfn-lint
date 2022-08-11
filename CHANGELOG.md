@@ -1,3 +1,12 @@
+### v0.61.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to `83.0.0` (pull #[2316](https://github.com/aws-cloudformation/cfn-lint/pull/2316))
+###### Fixes
+- Update rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) have proper path to resource (pull #[2309](https://github.com/aws-cloudformation/cfn-lint/pull/2309))
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2503) by removing `AllowedValues` for `AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute` (pull #[2184](https://github.com/aws-cloudformation/cfn-lint/pull/2184))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to include `<CommaDelimitedList` in SSM parameters (pull #[2320](https://github.com/aws-cloudformation/cfn-lint/pull/2320))
+- Update rule [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to not flag on Aurora instances (pull #[2317](https://github.com/aws-cloudformation/cfn-lint/pull/2317))
+
 ### v0.61.4
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `81.1.0` (pull #[2308](https://github.com/aws-cloudformation/cfn-lint/pull/2308))
