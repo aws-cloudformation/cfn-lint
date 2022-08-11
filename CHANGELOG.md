@@ -1,3 +1,26 @@
+### v0.61.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `81.1.0` (pull #[2308](https://github.com/aws-cloudformation/cfn-lint/pull/2308))
+
+### v0.61.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `81.0.0` (pull #[2306](https://github.com/aws-cloudformation/cfn-lint/pull/2306))
+- Add `AWS::EC2::KeyPair` as a `Ref` for the value type `KeyPair` (pull #[2305](https://github.com/aws-cloudformation/cfn-lint/pull/2305))
+
+### v0.61.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `78.1.0` (pull #[2292](https://github.com/aws-cloudformation/cfn-lint/pull/2292))
+###### Fixes
+- Add `utf-8` encoding to all `open` calls (pull #[2298](https://github.com/aws-cloudformation/cfn-lint/pull/2298))
+
+### v0.61.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `76.0.0` (pull #[2282](https://github.com/aws-cloudformation/cfn-lint/pull/2282))
+###### Fixes
+- Suppress `PendingDeprecationWarning` for `pydot` in the `pygraphviz` package (pull #[2289](https://github.com/aws-cloudformation/cfn-lint/pull/2289))
+- Update descriptiosn on rule [E1021](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1021), [E1015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1015), [E1016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1016), [E1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1020), and [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017) (pull #[2284](https://github.com/aws-cloudformation/cfn-lint/pull/2284))
+- Update rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to ignore dynamic references for string length (pull #[2281](https://github.com/aws-cloudformation/cfn-lint/pull/2281)) 
+
 ### v0.61.0
 ###### Features
 - New rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) to validate new generation instance types are used (pull #[2267](https://github.com/aws-cloudformation/cfn-lint/pull/2267))

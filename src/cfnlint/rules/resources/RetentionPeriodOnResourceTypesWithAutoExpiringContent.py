@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import re
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 
@@ -17,7 +18,6 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
     tags = ['resources', 'retentionperiod']
 
     def _check_ref(self, value, parameters, resources, path):  # pylint: disable=W0613
-        print('called')
         print(value)
 
     def match(self, cfn):
@@ -62,7 +62,9 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
             'AWS::RDS::DBInstance': [
                 {
                     'Attribute': 'BackupRetentionPeriod',
-                    'SourceUrl': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod'
+                    'SourceUrl': 'http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-backupretentionperiod',
+                    'CheckAttribute': 'Engine',
+                    'CheckAttributeRegex': re.compile('^((?!aurora).)*$'),
                 }
             ],
             'AWS::RDS::DBCluster': [
@@ -81,23 +83,29 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
                     for property_set, path in property_sets:
                         error_path = ['Resources', r_name] + path
                         if not property_set:
-                            message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
-                                str(x) for x in error_path)
+                            message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in error_path)}'
                             matches.append(RuleMatch(error_path, message))
                         else:
                             value = property_set.get(attr_def.get('Attribute'))
                             if not value:
-                                message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
-                                    str(x) for x in error_path)
-                                matches.append(RuleMatch(error_path, message))
+                                message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in error_path)}'
+                                if attr_def.get('CheckAttribute'):
+                                    if self._validate_property(property_set.get(attr_def.get('CheckAttribute')), attr_def.get('CheckAttributeRegex')):
+                                        matches.append(RuleMatch(error_path, message))
+                                else:
+                                    matches.append(RuleMatch(error_path, message))
                             if isinstance(value, dict):
                                 # pylint: disable=protected-access
                                 refs = cfn._search_deep_keys(
                                     'Ref', value, error_path + [attr_def.get('Attribute')])
                                 for ref in refs:
                                     if ref[-1] == 'AWS::NoValue':
-                                        message = 'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : %s' % '/'.join(
-                                            str(x) for x in ref[0:-1])
+                                        message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in ref[0:-1])}'
                                         matches.append(RuleMatch(ref[0:-1], message))
 
         return matches
+
+    def _validate_property(self, value, regex) -> bool:
+        if regex.match(value):
+            return True
+        return False

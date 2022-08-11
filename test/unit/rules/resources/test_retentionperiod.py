@@ -14,7 +14,8 @@ class TestRetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseRuleTestCase
         super(TestRetentionPeriodOnResourceTypesWithAutoExpiringContent, self).setUp()
         self.collection.register(RetentionPeriodOnResourceTypesWithAutoExpiringContent())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/sqs/retention_period.yaml'
+            'test/fixtures/templates/good/resources/sqs/retention_period.yaml',
+            'test/fixtures/templates/good/resources/rds/retention_period.yaml',
         ]
 
     def test_file_positive(self):
@@ -25,3 +26,8 @@ class TestRetentionPeriodOnResourceTypesWithAutoExpiringContent(BaseRuleTestCase
         """Test failure"""
         self.helper_file_negative(
             'test/fixtures/templates/bad/resources/sqs/retention_period.yaml', 3)
+
+    def test_file_negative_rds(self):
+        """Test failure"""
+        self.helper_file_negative(
+            'test/fixtures/templates/bad/resources/rds/retention_period.yaml', 1)
