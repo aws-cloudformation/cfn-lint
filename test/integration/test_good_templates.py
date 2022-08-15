@@ -139,7 +139,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "LineNumber": 10
                         }
                     },
-                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12. Please consider updating to nodejs14.x",
+                    "Message": "Deprecated runtime (nodejs6.10) specified. Updating disabled since 2019-08-12. Please consider updating to nodejs16.x",
                     "Rule": {
                         "Description": "Check if an EOL Lambda Runtime is specified and give an error if used. ",
                         "Id": "E2531",
