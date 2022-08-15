@@ -10,6 +10,7 @@ import traceback
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
+from ..template import Template
 
 
 LOGGER = logging.getLogger(__name__)
@@ -388,7 +389,7 @@ class RulesCollection(object):
 
         return matches
 
-    def run(self, filename, cfn):
+    def run(self, filename: str, cfn: Template):
         """Run rules"""
         matches = []
         for rule in self.rules:

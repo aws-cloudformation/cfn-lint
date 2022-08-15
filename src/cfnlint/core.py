@@ -6,12 +6,13 @@ import json
 import logging
 import os
 import sys
+from typing import Iterator, Sequence, Optional, Tuple, List
 
 from jsonschema.exceptions import ValidationError
 
 import cfnlint.runner
 from cfnlint.template import Template
-from cfnlint.rules import RulesCollection, ParseError, TransformError
+from cfnlint.rules import Match, RulesCollection, ParseError, TransformError
 import cfnlint.config
 import cfnlint.formatters
 import cfnlint.decode
@@ -22,12 +23,18 @@ LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
 __CACHED_RULES = None
 
+Matches = List[Match]
+ArgsFilename = Tuple[cfnlint.config.ConfigMixIn,
+                     List[str], cfnlint.formatters.BaseFormatter]
+TemplateRules = Tuple[str, RulesCollection, Matches]
+
+
 class CfnLintExitException(Exception):
     """Generic exception used when the cli should exit"""
 
     def __init__(self, msg=None, exit_code=1):
         if msg is None:
-            msg = 'process failed with exit code %s' % exit_code
+            msg = f'process failed with exit code {exit_code}'
         super(CfnLintExitException, self).__init__(msg)
         self.exit_code = exit_code
 
@@ -40,9 +47,16 @@ class UnexpectedRuleException(CfnLintExitException):
     """When processing a rule fails in an unexpected way"""
 
 
-def run_cli(filename, template, rules, regions, override_spec, build_graph, registry_schemas, mandatory_rules=None):
+def run_cli(filename: str,
+            template: str,
+            rules: RulesCollection,
+            regions: Sequence[str],
+            override_spec: dict,
+            build_graph: bool,
+            registry_schemas: Sequence[str],
+            mandatory_rules: Optional[Sequence[str]] = None
+            ) -> Matches:
     """Process args and run"""
-
 
     if override_spec:
         cfnlint.helpers.override_specs(override_spec)
@@ -61,7 +75,7 @@ def run_cli(filename, template, rules, regions, override_spec, build_graph, regi
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
-def get_exit_code(matches):
+def get_exit_code(matches) -> int:
     """ Determine exit code """
     exit_code = 0
     for match in matches:
@@ -75,7 +89,7 @@ def get_exit_code(matches):
     return exit_code
 
 
-def get_formatter(fmt):
+def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
     formatter = {}
     if fmt:
         if fmt == 'quiet':
@@ -97,8 +111,14 @@ def get_formatter(fmt):
     return formatter
 
 
-def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, include_experimental=False,
-              mandatory_rules=None, custom_rules=None):
+def get_rules(append_rules: Sequence[str],
+              ignore_rules: Sequence[str],
+              include_rules: Sequence[str],
+              configure_rules=None,
+              include_experimental: bool = False,
+              mandatory_rules: Sequence[str] = None,
+              custom_rules: str = None
+              ) -> RulesCollection:
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
     rules_paths = [DEFAULT_RULESDIR] + append_rules
@@ -111,18 +131,20 @@ def get_rules(append_rules, ignore_rules, include_rules, configure_rules=None, i
 
         rules.create_from_custom_rules_file(custom_rules)
     except (OSError, ImportError) as e:
-        raise UnexpectedRuleException('Tried to append rules but got an error: %s' % str(e), 1)
+        raise UnexpectedRuleException(
+            f'Tried to append rules but got an error: {str(e)}', 1)
     return rules
 
 
-def get_matches(filenames, args):
+def get_matches(filenames: str, args: Sequence[str]) -> Iterator[Match]:
     for filename in filenames:
         LOGGER.debug('Begin linting of file: %s', str(filename))
         (template, rules, errors) = get_template_rules(filename, args)
         # template matches may be empty but the template is still None
         # this happens when ignoring bad templates
         if not errors and template:
-            matches = run_cli(filename, template, rules, args.regions, args.override_spec, args.build_graph, args.registry_schemas, args.mandatory_checks)
+            matches = run_cli(filename, template, rules, args.regions, args.override_spec,
+                              args.build_graph, args.registry_schemas, args.mandatory_checks)
             for match in matches:
                 yield match
         else:
@@ -133,11 +155,12 @@ def get_matches(filenames, args):
 
 def configure_logging(debug_logging):
     """ Backwards compatibility for integrators """
-    LOGGER.info('Update your integrations to use "cfnlint.config.configure_logging" instead')
+    LOGGER.info(
+        'Update your integrations to use "cfnlint.config.configure_logging" instead')
     cfnlint.config.configure_logging(debug_logging, False)
 
 
-def get_args_filenames(cli_args):
+def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
     """ Get Template Configuration items and set them as default values"""
     try:
         config = cfnlint.config.ConfigMixIn(cli_args)
@@ -154,7 +177,8 @@ def get_args_filenames(cli_args):
 
     if config.update_documentation:
         # Get ALL rules (ignore the CLI settings))
-        documentation_rules = cfnlint.core.get_rules([], [], ['I', 'E', 'W'], {}, True, [])
+        documentation_rules = cfnlint.core.get_rules(
+            [], [], ['I', 'E', 'W'], {}, True, [])
         cfnlint.maintenance.update_documentation(documentation_rules)
         sys.exit(0)
 
@@ -184,17 +208,17 @@ def get_args_filenames(cli_args):
     return(config, config.templates, formatter)
 
 
-def get_used_rules():
+def get_used_rules() -> RulesCollection:
     return __CACHED_RULES
 
-def _reset_rule_cache():
+def _reset_rule_cache() -> None:
     """ Reset the rule cache. Used mostly for testing"""
     global __CACHED_RULES #pylint: disable=global-statement
     __CACHED_RULES = None
 
-def get_template_rules(filename, args):
+def get_template_rules(filename: str, args: Sequence[str]) -> TemplateRules:
     """ Get Template Configuration items and set them as default values"""
-    global __CACHED_RULES  #pylint: disable=global-statement
+    global __CACHED_RULES  # pylint: disable=global-statement
 
     ignore_bad_template = False
     if args.ignore_bad_template:
@@ -241,13 +265,16 @@ def get_template_rules(filename, args):
     return(template, __CACHED_RULES, [])
 
 
-def run_checks(filename, template, rules, regions, mandatory_rules=None):
+def run_checks(filename: str, template: str,
+               rules: RulesCollection,
+               regions: Sequence[str],
+               mandatory_rules: Optional[Sequence[str]] = None
+               ) -> Matches:
     """Run Checks and Custom Rules against the template"""
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
-            msg = 'Regions %s are unsupported. Supported regions are %s' % (
-                unsupported_regions, REGIONS)
+            msg = f'Regions {unsupported_regions} are unsupported. Supported regions are {REGIONS}'
             raise InvalidRegionException(msg, 32)
 
     errors = []
@@ -272,7 +299,7 @@ def run_checks(filename, template, rules, regions, mandatory_rules=None):
     try:
         errors.extend(runner.run())
     except Exception as err:  # pylint: disable=W0703
-        msg = 'Tried to process rules on file %s but got an error: %s' % (filename, str(err))
+        msg = f'Tried to process rules on file {filename} but got an error: {str(err)}'
         UnexpectedRuleException(msg, 1)
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
