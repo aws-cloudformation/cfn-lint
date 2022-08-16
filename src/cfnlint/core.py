@@ -24,9 +24,10 @@ DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
 __CACHED_RULES = None
 
 Matches = List[Match]
+RulesCollectionNone = Optional[RulesCollection]
 ArgsFilename = Tuple[cfnlint.config.ConfigMixIn,
-                     List[str], cfnlint.formatters.BaseFormatter]
-TemplateRules = Tuple[str, RulesCollection, Matches]
+                     List[Optional[str]], cfnlint.formatters.BaseFormatter]
+TemplateRules = Tuple[Optional[str], RulesCollectionNone, Optional[Matches]]
 
 
 class CfnLintExitException(Exception):
@@ -49,7 +50,7 @@ class UnexpectedRuleException(CfnLintExitException):
 
 def run_cli(filename: str,
             template: str,
-            rules: RulesCollection,
+            rules: RulesCollectionNone,
             regions: Sequence[str],
             override_spec: dict,
             build_graph: bool,
@@ -75,7 +76,7 @@ def run_cli(filename: str,
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
-def get_exit_code(matches) -> int:
+def get_exit_code(matches: Matches) -> int:
     """ Determine exit code """
     exit_code = 0
     for match in matches:
@@ -88,30 +89,29 @@ def get_exit_code(matches) -> int:
 
     return exit_code
 
+# pylint: disable=too-many-return-statements
+
 
 def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
-    formatter = {}
     if fmt:
         if fmt == 'quiet':
-            formatter = cfnlint.formatters.QuietFormatter()
-        elif fmt == 'parseable':
+            return cfnlint.formatters.QuietFormatter()
+        if fmt == 'parseable':
             # pylint: disable=bad-option-value
-            formatter = cfnlint.formatters.ParseableFormatter()
-        elif fmt == 'json':
-            formatter = cfnlint.formatters.JsonFormatter()
-        elif fmt == 'junit':
-            formatter = cfnlint.formatters.JUnitFormatter()
-        elif fmt == 'pretty':
-            formatter = cfnlint.formatters.PrettyFormatter()
-        elif fmt == 'sarif':
-            formatter = cfnlint.formatters.SARIFFormatter()
-    else:
-        formatter = cfnlint.formatters.Formatter()
+            return cfnlint.formatters.ParseableFormatter()
+        if fmt == 'json':
+            return cfnlint.formatters.JsonFormatter()
+        if fmt == 'junit':
+            return cfnlint.formatters.JUnitFormatter()
+        if fmt == 'pretty':
+            return cfnlint.formatters.PrettyFormatter()
+        if fmt == 'sarif':
+            return cfnlint.formatters.SARIFFormatter()
 
-    return formatter
+    return cfnlint.formatters.Formatter()
 
 
-def get_rules(append_rules: Sequence[str],
+def get_rules(append_rules: List[str],
               ignore_rules: Sequence[str],
               include_rules: Sequence[str],
               configure_rules=None,
@@ -121,7 +121,7 @@ def get_rules(append_rules: Sequence[str],
               ) -> RulesCollection:
     rules = RulesCollection(ignore_rules, include_rules, configure_rules,
                             include_experimental, mandatory_rules)
-    rules_paths = [DEFAULT_RULESDIR] + append_rules
+    rules_paths: List[str] = [DEFAULT_RULESDIR] + append_rules
     try:
         for rules_path in rules_paths:
             if rules_path and os.path.isdir(os.path.expanduser(rules_path)):
@@ -136,7 +136,7 @@ def get_rules(append_rules: Sequence[str],
     return rules
 
 
-def get_matches(filenames: str, args: Sequence[str]) -> Iterator[Match]:
+def get_matches(filenames: str, args: cfnlint.config.ConfigMixIn) -> Iterator[Match]:
     for filename in filenames:
         LOGGER.debug('Begin linting of file: %s', str(filename))
         (template, rules, errors) = get_template_rules(filename, args)
@@ -148,8 +148,9 @@ def get_matches(filenames: str, args: Sequence[str]) -> Iterator[Match]:
             for match in matches:
                 yield match
         else:
-            for match in errors:
-                yield match
+            if errors:
+                for match in errors:
+                    yield match
         LOGGER.debug('Completed linting of file: %s', str(filename))
 
 
@@ -207,8 +208,7 @@ def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
 
     return(config, config.templates, formatter)
 
-
-def get_used_rules() -> RulesCollection:
+def get_used_rules() -> Optional[RulesCollection]:
     return __CACHED_RULES
 
 def _reset_rule_cache() -> None:
@@ -216,11 +216,11 @@ def _reset_rule_cache() -> None:
     global __CACHED_RULES #pylint: disable=global-statement
     __CACHED_RULES = None
 
-def get_template_rules(filename: str, args: Sequence[str]) -> TemplateRules:
+def get_template_rules(filename: str, args: cfnlint.config.ConfigMixIn) -> TemplateRules:
     """ Get Template Configuration items and set them as default values"""
     global __CACHED_RULES  # pylint: disable=global-statement
 
-    ignore_bad_template = False
+    ignore_bad_template: bool = False
     if args.ignore_bad_template:
         ignore_bad_template = True
     else:
@@ -238,8 +238,8 @@ def get_template_rules(filename: str, args: Sequence[str]) -> TemplateRules:
 
     if errors:
         if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
-            return(template, [], [])
-        return(template, [], errors)
+            return(template, None, [])
+        return(template, None, errors)
 
     args.template_args = template
 
@@ -266,7 +266,7 @@ def get_template_rules(filename: str, args: Sequence[str]) -> TemplateRules:
 
 
 def run_checks(filename: str, template: str,
-               rules: RulesCollection,
+               rules: RulesCollectionNone,
                regions: Sequence[str],
                mandatory_rules: Optional[Sequence[str]] = None
                ) -> Matches:
@@ -277,14 +277,17 @@ def run_checks(filename: str, template: str,
             msg = f'Regions {unsupported_regions} are unsupported. Supported regions are {REGIONS}'
             raise InvalidRegionException(msg, 32)
 
-    errors = []
+    errors: Matches = []
+
+    if not isinstance(rules, RulesCollection):
+        return ([])
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
                                    mandatory_rules=mandatory_rules)
 
     # Transform logic helps with handling serverless templates
-    ignore_transform_error = False
-    if not rules.is_rule_enabled(TransformError()):
+    ignore_transform_error: bool = False
+    if isinstance(rules, RulesCollection) and not rules.is_rule_enabled(TransformError()):
         ignore_transform_error = True
 
     errors.extend(runner.transform())

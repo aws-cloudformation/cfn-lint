@@ -2,14 +2,19 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from .config import configure_logging
-from .core import get_rules
-from .decode import decode_str
-from .helpers import REGIONS
-from .runner import Runner
+from typing import List
+
+from cfnlint.rules import Match, RulesCollection
+from cfnlint.config import configure_logging
+from cfnlint.core import get_rules
+from cfnlint.decode import decode_str
+from cfnlint.helpers import REGIONS
+from cfnlint.runner import Runner
+
+Matches = List[Match]
 
 
-def lint(s, rules, regions):
+def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
     """Validate a string template using the specified rules and regions.
 
     Parameters
@@ -18,7 +23,7 @@ def lint(s, rules, regions):
         the template string
     rules : RulesCollection
         The rules to run against s
-    regions : RulesCollection
+    regions : List[str]
         The regions to test against s
 
     Returns
@@ -28,16 +33,20 @@ def lint(s, rules, regions):
     """
     configure_logging(None, None)
     template, errors = decode_str(s)
-    if not errors:
-        runner = Runner(
-            rules=rules, filename=None, template=template, regions=regions,
-            verbosity=0, mandatory_rules=None
-        )
-        errors = runner.run()
-    return errors
+    if errors:
+        return errors
+
+    if template is None:
+        return []
+
+    runner = Runner(
+        rules=rules, filename=None, template=template, regions=regions,
+        verbosity=0, mandatory_rules=None
+    )
+    return runner.run()
 
 
-def lint_all(s):
+def lint_all(s: str) -> Matches:
     """Validate a string template against all regions and rules.
 
     Parameters

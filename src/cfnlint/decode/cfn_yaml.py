@@ -18,10 +18,10 @@ import cfnlint
 from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
 
 try:
-    from yaml.cyaml import CParser as Parser  # pylint: disable=ungrouped-imports
+    from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,
     cyaml = True
 except ImportError:
-    from yaml.parser import Parser  # pylint: disable=ungrouped-imports
+    from yaml.parser import Parser  # type: ignore # pylint: disable=ungrouped-imports
     cyaml = False
 
 UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
@@ -47,10 +47,12 @@ class CfnParseError(ConstructorError):
         self.filename = filename
         self.matches = errors
 
+
 def build_match(filename, message, line_number, column_number, key):
     return cfnlint.rules.Match(
         line_number + 1, column_number + 1, line_number + 1,
         column_number + 1 + len(key), filename, cfnlint.rules.ParseError(), message=message)
+
 
 class NodeConstructor(SafeConstructor):
     """
@@ -106,17 +108,17 @@ class NodeConstructor(SafeConstructor):
                 mapping[key] = value
             except:
                 raise CfnParseError(
-                        self.filename,
-                        [
-                            build_match(
-                                filename=self.filename,
-                                message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
-                                line_number=key.start_mark.line,
-                                column_number=key.start_mark.column,
-                                key=key
-                            ),
-                        ]
-                    )
+                    self.filename,
+                    [
+                        build_match(
+                            filename=self.filename,
+                            message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
+                            line_number=key.start_mark.line,
+                            column_number=key.start_mark.column,
+                            key=key
+                        ),
+                    ]
+                )
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
 
@@ -137,16 +139,16 @@ class NodeConstructor(SafeConstructor):
         return list_node(obj, node.start_mark, node.end_mark)
 
 
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:map',
+NodeConstructor.add_constructor( # type: ignore
+    'tag:yaml.org,2002:map',
     NodeConstructor.construct_yaml_map)
 
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:str',
+NodeConstructor.add_constructor( # type: ignore
+    'tag:yaml.org,2002:str',
     NodeConstructor.construct_yaml_str)
 
-NodeConstructor.add_constructor(
-    u'tag:yaml.org,2002:seq',
+NodeConstructor.add_constructor( # type: ignore
+    'tag:yaml.org,2002:seq',
     NodeConstructor.construct_yaml_seq)
 
 

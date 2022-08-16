@@ -6,7 +6,7 @@ import fileinput
 import sys
 import logging
 import json
-from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK
+from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK # type: ignore
 from json.scanner import NUMBER_RE
 import cfnlint
 from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
