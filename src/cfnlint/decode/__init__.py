@@ -16,38 +16,44 @@ from cfnlint.rules import Match, ParseError
 LOGGER = logging.getLogger(__name__)
 
 
+def decode_str(s):
+    """Decode the string s into an object."""
+    return _decode(cfn_yaml.loads, cfn_json.loads, s, None)
+
 def decode(filename):
-    """
-        Decode filename into an object
-    """
+    """Decode filename into an object."""
+    return _decode(cfn_yaml.load, cfn_json.load, filename, filename)
+
+def _decode(yaml_f, json_f, payload, filename):
+    """Decode payload using yaml_f and json_f, using filename for log output."""
     template = None
     matches = []
     try:
-        template = cfn_yaml.load(filename)
+        template = yaml_f(payload)
     except IOError as e:
         if e.errno == 2:
             LOGGER.error('Template file not found: %s', filename)
             matches.append(create_match_file_error(
-                filename, 'Template file not found: %s' % filename))
+                filename, f'Template file not found: {filename}'))
         elif e.errno == 21:
             LOGGER.error('Template references a directory, not a file: %s',
                          filename)
             matches.append(create_match_file_error(
                 filename,
-                'Template references a directory, not a file: %s' % filename))
+                'Template references a directory, not a file: {filename}'))
         elif e.errno == 13:
             LOGGER.error('Permission denied when accessing template file: %s',
                          filename)
             matches.append(create_match_file_error(
                 filename,
-                'Permission denied when accessing template file: %s' % filename))
+                'Permission denied when accessing template file: {filename}'))
 
         if matches:
             return(None, matches)
-    except UnicodeDecodeError as err:
+    except UnicodeDecodeError as _:
         LOGGER.error('Cannot read file contents: %s', filename)
         matches.append(create_match_file_error(
-            filename, 'Cannot read file contents: %s' % filename))
+            filename, 'Cannot read file contents: {filename}'))
     except cfn_yaml.CfnParseError as err:
         matches = err.matches
     except ParserError as err:
@@ -58,7 +64,7 @@ def decode(filename):
                 'found unknown escape character'] or err.problem.startswith(
                     'found unknown escape character'):
             try:
-                template = cfn_json.load(filename)
+                template = json_f(payload)
             except cfn_json.JSONDecodeError as json_err:
                 for e in json_err.matches:
                     e.filename = filename
@@ -81,8 +87,7 @@ def decode(filename):
                              filename, str(json_err))
                 return (None, [create_match_file_error(
                     filename,
-                    'Tried to parse %s as JSON but got error: %s' % (
-                        filename, str(json_err)))])
+                    f'Tried to parse {filename} as JSON but got error: {str(json_err)}')])
         else:
             matches = [create_match_yaml_parser_error(err, filename)]
     except YAMLError as err:
@@ -93,7 +98,6 @@ def decode(filename):
         matches = [Match(1, 1, 1, 1, filename, ParseError(),
                          message='Template needs to be an object.')]
     return (template, matches)
-
 
 def create_match_yaml_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
