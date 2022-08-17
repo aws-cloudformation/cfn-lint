@@ -1,3 +1,45 @@
+### v0.61.5
+###### CloudFormation Specifications
+- Update CloudFormation specs to `83.0.0` (pull #[2316](https://github.com/aws-cloudformation/cfn-lint/pull/2316))
+###### Fixes
+- Update rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) have proper path to resource (pull #[2309](https://github.com/aws-cloudformation/cfn-lint/pull/2309))
+- Update rule [E2503](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2503) by removing `AllowedValues` for `AWS::ElasticLoadBalancingV2::LoadBalancer.LoadBalancerAttribute` (pull #[2184](https://github.com/aws-cloudformation/cfn-lint/pull/2184))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to include `<CommaDelimitedList` in SSM parameters (pull #[2320](https://github.com/aws-cloudformation/cfn-lint/pull/2320))
+- Update rule [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to not flag on Aurora instances (pull #[2317](https://github.com/aws-cloudformation/cfn-lint/pull/2317))
+
+### v0.61.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `81.1.0` (pull #[2308](https://github.com/aws-cloudformation/cfn-lint/pull/2308))
+
+### v0.61.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `81.0.0` (pull #[2306](https://github.com/aws-cloudformation/cfn-lint/pull/2306))
+- Add `AWS::EC2::KeyPair` as a `Ref` for the value type `KeyPair` (pull #[2305](https://github.com/aws-cloudformation/cfn-lint/pull/2305))
+
+### v0.61.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `78.1.0` (pull #[2292](https://github.com/aws-cloudformation/cfn-lint/pull/2292))
+###### Fixes
+- Add `utf-8` encoding to all `open` calls (pull #[2298](https://github.com/aws-cloudformation/cfn-lint/pull/2298))
+
+### v0.61.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `76.0.0` (pull #[2282](https://github.com/aws-cloudformation/cfn-lint/pull/2282))
+###### Fixes
+- Suppress `PendingDeprecationWarning` for `pydot` in the `pygraphviz` package (pull #[2289](https://github.com/aws-cloudformation/cfn-lint/pull/2289))
+- Update descriptiosn on rule [E1021](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1021), [E1015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1015), [E1016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1016), [E1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1020), and [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017) (pull #[2284](https://github.com/aws-cloudformation/cfn-lint/pull/2284))
+- Update rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to ignore dynamic references for string length (pull #[2281](https://github.com/aws-cloudformation/cfn-lint/pull/2281)) 
+
+### v0.61.0
+###### Features
+- New rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) to validate new generation instance types are used (pull #[2267](https://github.com/aws-cloudformation/cfn-lint/pull/2267))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `73.1.0` (pull #[2275](https://github.com/aws-cloudformation/cfn-lint/pull/2275))
+- Add `AWS::OpenSearchService::Domain.AccessPolicies` to IAM rules (pull #[2269](https://github.com/aws-cloudformation/cfn-lint/pull/2269))
+###### Fixes
+- Reduce the calculated scenarios used when conditions match and one condition has many variants (pull #[2277](https://github.com/aws-cloudformation/cfn-lint/pull/2277))
+- Update SARIF output to point to the general "Rules" documentation when a rule doesn't specify a `source_url` (pull #[2276](https://github.com/aws-cloudformation/cfn-lint/pull/2276))
+
 ### v0.60.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `72.0.0` (pull #[2272](https://github.com/aws-cloudformation/cfn-lint/pull/2272))

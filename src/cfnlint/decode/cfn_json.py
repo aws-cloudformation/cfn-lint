@@ -339,7 +339,7 @@ def load(filename):
         for line in fileinput.input(files=filename):
             content = content + line
     else:
-        with open(filename) as fp:
+        with open(filename, encoding='utf-8') as fp:
             content = fp.read()
 
     return json.loads(content, cls=CfnJSONDecoder)

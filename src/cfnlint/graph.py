@@ -6,7 +6,9 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import re
+import warnings
 import networkx
+
 
 LOGGER = logging.getLogger('cfnlint.graph')
 
@@ -24,7 +26,7 @@ class Graph(object):
         # add all resources in the template as nodes
         for resourceId, resourceVals in cfn.template.get('Resources', {}).items():
             type_val = resourceVals.get('Type', '')
-            graph_label = str.format('{0}\\n<{1}>', resourceId, type_val)
+            graph_label = str.format('"{0}\\n<{1}>"', resourceId, type_val)
             self.graph.add_node(resourceId, label=graph_label)
             target_ids = resourceVals.get('DependsOn', [])
             if isinstance(target_ids, (list, str)):
@@ -122,7 +124,9 @@ class Graph(object):
             networkx.drawing.nx_agraph.write_dot(self.graph, path)
         except ImportError:
             try:
-                import pydot  # pylint: disable=unused-import
-                networkx.drawing.nx_pydot.write_dot(self.graph, path)
+                with warnings.catch_warnings():
+                    warnings.filterwarnings('ignore', category=PendingDeprecationWarning)
+                    import pydot  # pylint: disable=unused-import
+                    networkx.drawing.nx_pydot.write_dot(self.graph, path)
             except ImportError as e:
                 raise e

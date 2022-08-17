@@ -302,8 +302,8 @@ class Conditions(object):
     def get_scenarios(self, conditions):
         """Get scenarios for all conditions provided"""
         matched_equals = {}
-        matched_conditions = []
-
+        matched_conditions = set()
+        all_equals = {}
         results = []
 
         # When conditions don't properly get loaded (configuration error)
@@ -315,13 +315,32 @@ class Conditions(object):
             # When one of the conditions don't exist we return an empty result
             if not self.Conditions.get(condition):
                 return []
+
             for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
-                if not matched_equals.get(equal_key):
-                    matched_equals[equal_key] = set()
+                if not equal_key in all_equals:
+                    all_equals[equal_key] = condition
                 else:
-                    matched_conditions.append(condition)
+                    if all_equals[equal_key] not in matched_conditions:
+                        matched_conditions.add(all_equals[equal_key])
+                    matched_conditions.add(condition)
+
+        all_equals = {}
+        for condition in matched_conditions:
+            for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
+                if not equal_key in all_equals:
+                    all_equals[equal_key] = set()
+                else:
+                    if not equal_key in matched_equals:
+                        matched_equals[equal_key] = copy(all_equals[equal_key])
                 for s_v in equal_values:
-                    matched_equals[equal_key].add(s_v)
+                    all_equals[equal_key].add(s_v)
+                    if equal_key in matched_equals:
+                        matched_equals[equal_key].add(s_v)
+
+        diff = set(all_equals.keys()) - set(matched_equals.keys())
+        if diff:
+            diffKey = diff.pop()
+            matched_equals[diffKey] = all_equals[diffKey]
 
         def multiply_equals(currents, s_hash, sets, parameter_values):
             """  Multiply Equals when building scenarios """

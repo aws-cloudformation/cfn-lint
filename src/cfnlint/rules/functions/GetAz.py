@@ -10,7 +10,7 @@ class GetAz(CloudFormationLintRule):
     """Check if GetAz values are correct"""
     id = 'E1015'
     shortdesc = 'GetAz validation of parameters'
-    description = 'Making sure the function not is of list'
+    description = 'Making sure the GetAz function is properly configured'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getavailabilityzones.html'
     tags = ['functions', 'getaz']
 
