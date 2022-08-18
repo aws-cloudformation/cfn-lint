@@ -179,6 +179,7 @@ class CloudFormationLintRule(object):
         return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
 
+#pylint: disable=too-many-instance-attributes
 class RulesCollection(object):
     """Collection of rules"""
 
