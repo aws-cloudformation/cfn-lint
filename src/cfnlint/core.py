@@ -184,6 +184,13 @@ def get_args_filenames(cli_args):
     return(config, config.templates, formatter)
 
 
+def get_used_rules():
+    return __CACHED_RULES
+
+def _reset_rule_cache():
+    global __CACHED_RULES
+    __CACHED_RULES = None
+
 def get_template_rules(filename, args):
     """ Get Template Configuration items and set them as default values"""
     global __CACHED_RULES  #pylint: disable=global-statement

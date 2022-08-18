@@ -11,9 +11,12 @@ import jsonschema
 import cfnlint.formatters
 import cfnlint.helpers
 
-
 class TestFormatters(BaseTestCase):
     """Test Formatters """
+
+    def setUp(self) -> None:
+        super().setUp()
+        cfnlint.core._reset_rule_cache()
 
     def test_json_formatter(self):
         """Test JSON formatter"""
@@ -57,7 +60,7 @@ class TestFormatters(BaseTestCase):
         # Test setup
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         rules = None
@@ -80,7 +83,7 @@ class TestFormatters(BaseTestCase):
         # Run a broken template
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         rules = None
@@ -100,7 +103,7 @@ class TestFormatters(BaseTestCase):
         self.assertEqual(results[1].rule.id, 'W1020')
         self.assertEqual(results[2].rule.id, 'E3012')
 
-        root = ET.fromstring(formatter.print_matches(results, rules))
+        root = ET.fromstring(formatter.print_matches(results, cfnlint.core.get_used_rules()))
 
         self.assertEqual(root.tag, 'testsuites')
         self.assertEqual(root[0].tag, 'testsuite')
@@ -126,6 +129,8 @@ class TestFormatters(BaseTestCase):
                     found_e3012 = True
 
             if child.attrib['name'] == name_e1029:
+                print(len(child))
+                print(type(child[0]))
                 self.assertEqual(child[0].tag, 'skipped')
                 self.assertEqual(child[0].attrib['type'], 'skipped')
 

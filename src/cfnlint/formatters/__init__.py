@@ -95,7 +95,7 @@ class JUnitFormatter(BaseFormatter):
 
         test_cases = []
         for rule in rules.all_rules:
-            if not rules.is_rule_enabled(rule):
+            if not rule.id in rules.used_rules:
                 if not rule.id:
                     continue
                 test_case = TestCase(name='{0} {1}'.format(rule.id, rule.shortdesc))
@@ -215,7 +215,7 @@ class PrettyFormatter(BaseFormatter):
 
         results.append('Cfn-lint scanned {} templates against {} rules and found {} errors, {} warnings, and {} informational violations'.format(
             colored(len(filenames), color.bold_reset),
-            colored(len(rules), color.bold_reset),
+            colored(len(rules.used_rules), color.bold_reset),
             colored(len([i for i in matches if i.rule.severity.lower() == 'error']), color.error),
             colored(len([i for i in matches if i.rule.severity.lower() == 'warning']), color.warning),
             colored(len([i for i in matches if i.rule.severity.lower()

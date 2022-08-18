@@ -11,19 +11,23 @@ class TestFormatters(BaseCliTestCase):
 
     def test_junit(self):
         '''Test JUnit formatting'''
-        result = subprocess.check_output(['cfn-lint', '--format', 'junit', '--', 'test/fixtures/templates/good/core/config_only_*.yaml'])
+        result = subprocess.check_output(
+            ['cfn-lint', '--format', 'junit', '--', 'test/fixtures/templates/good/core/config_only_*.yaml'])
 
         if isinstance(result, bytes):
             result = result.decode('utf8')
-        
-        self.assertIn('<testcase name="I1002 Template size limit" url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>', result)
+
+        self.assertIn(
+            '<testcase name="I1002 Template size limit" url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>', result)
         self.assertIn('<testcase name="I1003 Template description limit" url="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"/>', result)
 
     def test_pretty(self):
         '''Test pretty formatting'''
-        result = subprocess.check_output(['cfn-lint', '--format', 'pretty', '--', 'test/fixtures/templates/good/core/config_only_*.yaml'])
+        result = subprocess.check_output(
+            ['cfn-lint', '--format', 'pretty', '--', 'test/fixtures/templates/good/core/config_only_*.yaml'])
 
         if isinstance(result, bytes):
             result = result.decode('utf8')
-        
-        self.assertEqual("Cfn-lint scanned 2 templates against 2 rules and found 0 errors, 0 warnings, and 0 informational violations\n", result)
+
+        self.assertEqual(
+            "Cfn-lint scanned 2 templates against 2 rules and found 0 errors, 0 warnings, and 0 informational violations\n", result)
