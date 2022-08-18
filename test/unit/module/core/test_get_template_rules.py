@@ -2,15 +2,17 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import os
-
 from test.testlib.testcase import BaseTestCase
 import cfnlint.core
 import cfnlint.helpers  # pylint: disable=E0401
 
 
 class TestGetTemplateRules(BaseTestCase):
-    """Test Run Checks """
+    """
+      Validate that the rule configuration is being reset
+      Rules are cached between rules for speed so they need 
+      to be reconfigured between runs
+    """
 
     def test_invalid_rule(self):
         """test invalid rules"""
