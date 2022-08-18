@@ -179,12 +179,14 @@ class CloudFormationLintRule(object):
         return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
 
+#pylint: disable=too-many-instance-attributes
 class RulesCollection(object):
     """Collection of rules"""
 
     def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
         self.rules = []
         self.all_rules = []
+        self.used_rules = set()
 
         self.configure(
             ignore_rules=ignore_rules,
@@ -217,6 +219,7 @@ class RulesCollection(object):
     def __register(self, rule):
         """ Register and configure the rule """
         if self.is_rule_enabled(rule):
+            self.used_rules.add(rule.id)
             self.rules.append(rule)
             if rule.id in self.configure_rules:
                 rule.configure(self.configure_rules[rule.id])

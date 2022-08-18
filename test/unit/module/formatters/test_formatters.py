@@ -15,6 +15,10 @@ import cfnlint.helpers
 class TestFormatters(BaseTestCase):
     """Test Formatters """
 
+    def setUp(self) -> None:
+        super().setUp()
+        cfnlint.core._reset_rule_cache()
+
     def test_json_formatter(self):
         """Test JSON formatter"""
 
@@ -57,7 +61,7 @@ class TestFormatters(BaseTestCase):
         # Test setup
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         rules = None
@@ -73,14 +77,13 @@ class TestFormatters(BaseTestCase):
         # The actual test
         self.assertIsNone(formatter.print_matches([], []))
 
-
     def test_junit_formatter(self):
         """Test JUnit Formatter"""
 
         # Run a broken template
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+            '--template', filename, '--format', 'junit', '--include-checks', 'I', '--ignore-checks', 'E1029', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         rules = None
@@ -100,7 +103,8 @@ class TestFormatters(BaseTestCase):
         self.assertEqual(results[1].rule.id, 'W1020')
         self.assertEqual(results[2].rule.id, 'E3012')
 
-        root = ET.fromstring(formatter.print_matches(results, rules))
+        root = ET.fromstring(formatter.print_matches(
+            results, cfnlint.core.get_used_rules()))
 
         self.assertEqual(root.tag, 'testsuites')
         self.assertEqual(root[0].tag, 'testsuite')
@@ -108,9 +112,12 @@ class TestFormatters(BaseTestCase):
         found_i3011 = False
         found_w1020 = False
         found_e3012 = False
-        name_i3011 = '{0} {1}'.format(results[0].rule.id, results[0].rule.shortdesc)
-        name_w1020 = '{0} {1}'.format(results[1].rule.id, results[1].rule.shortdesc)
-        name_e3012 = '{0} {1}'.format(results[2].rule.id, results[2].rule.shortdesc)
+        name_i3011 = '{0} {1}'.format(
+            results[0].rule.id, results[0].rule.shortdesc)
+        name_w1020 = '{0} {1}'.format(
+            results[1].rule.id, results[1].rule.shortdesc)
+        name_e3012 = '{0} {1}'.format(
+            results[2].rule.id, results[2].rule.shortdesc)
         name_e1029 = 'E1029 Sub is required if a variable is used in a string'
         for child in root[0]:
             self.assertEqual(child.tag, 'testcase')
@@ -139,7 +146,7 @@ class TestFormatters(BaseTestCase):
         # Run a broken template
         filename = 'test/fixtures/templates/bad/formatters.yaml'
         (args, filenames, formatter) = cfnlint.core.get_args_filenames([
-            '--template', filename, '--format', 'sarif', '--include-checks', 'I', '--ignore-checks', 'E1029'])
+            '--template', filename, '--format', 'sarif', '--include-checks', 'I', '--ignore-checks', 'E1029', '--configure-rule', 'E3012:strict=true'])
 
         results = []
         rules = None
@@ -163,7 +170,8 @@ class TestFormatters(BaseTestCase):
         sarif = json.loads(formatter.print_matches(results, rules))
 
         # Fetch the SARIF schema
-        schema = json.loads(cfnlint.helpers.get_url_content(sarif['$schema'], False))
+        schema = json.loads(
+            cfnlint.helpers.get_url_content(sarif['$schema'], False))
         jsonschema.validate(sarif, schema)
 
         sarif_results = sarif['runs'][0]['results']
