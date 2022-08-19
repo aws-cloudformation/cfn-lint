@@ -1,0 +1,26 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Check config level details.  Will fail because WriteCapacityUnits needs to be a number
+Metadata:
+  cfn-lint:
+    config:
+      configure_rules:
+        E3012:
+          strict: True
+Resources:
+  myTable:
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "Table"
+      AttributeDefinitions:
+        - AttributeName: "Id"
+          AttributeType: "S" # Valid AllowedValue
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: "5"

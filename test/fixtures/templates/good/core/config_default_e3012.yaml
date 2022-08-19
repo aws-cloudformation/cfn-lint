@@ -1,0 +1,20 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Check config level details.  Default E3012 should pass this template
+Resources:
+  myTable:
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "Table"
+      AttributeDefinitions:
+        - AttributeName: "Id"
+          AttributeType: "S" # Valid AllowedValue
+      KeySchema:
+        - AttributeName: "Id"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: "5"
