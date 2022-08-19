@@ -345,6 +345,13 @@ def load(filename):
     return json.loads(content, cls=CfnJSONDecoder)
 
 
+def loads(json_string):
+    """
+    Load the given JSON string
+    """
+    return json.loads(json_string, cls=CfnJSONDecoder)
+
+
 class CfnJSONDecoder(json.JSONDecoder):
     """
     Converts a json string, where datetime and timedelta objects were converted

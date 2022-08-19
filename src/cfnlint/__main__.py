@@ -25,7 +25,7 @@ def main():
     try:
         (args, filenames, formatter) = cfnlint.core.get_args_filenames(sys.argv[1:])
         matches = list(cfnlint.core.get_matches(filenames, args))
-        (_, rules, _) = cfnlint.core.get_template_rules(filenames[-1], args)
+        rules = cfnlint.core.get_used_rules()
         matches_output = formatter.print_matches(matches, rules, filenames)
 
         if matches_output:

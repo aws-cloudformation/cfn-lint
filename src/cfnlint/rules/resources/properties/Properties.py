@@ -10,7 +10,7 @@ import cfnlint.helpers
 class Properties(CloudFormationLintRule):
     """Check Base Resource Configuration"""
     id = 'E3002'
-    shortdesc = 'Resource properties are valid'
+    shortdesc = 'Resource properties are invalid'
     description = 'Making sure that resources properties are properly configured'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
     tags = ['resources']
@@ -303,7 +303,7 @@ class Properties(CloudFormationLintRule):
                                     if ref in parameternames:
                                         param_type = self.cfn.template['Parameters'][ref]['Type']
                                         if param_type:
-                                            if 'List<' not in param_type and '<List' not in param_type and not param_type == 'CommaDelimitedList':
+                                            if 'List<' not in param_type and '<List' not in param_type and '<CommaDelimitedList' not in param_type and not param_type == 'CommaDelimitedList':
                                                 message = 'Property {0} should be of type List or Parameter should ' \
                                                           'be a list for resource {1}'
                                                 matches.append(

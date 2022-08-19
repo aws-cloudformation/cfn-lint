@@ -179,12 +179,14 @@ class CloudFormationLintRule(object):
         return self.match_resource_sub_properties(resource_properties, property_type, path, cfn)  # pylint: disable=E1102
 
 
+#pylint: disable=too-many-instance-attributes
 class RulesCollection(object):
     """Collection of rules"""
 
     def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
         self.rules = []
         self.all_rules = []
+        self.used_rules = set()
 
         self.configure(
             ignore_rules=ignore_rules,
@@ -203,7 +205,7 @@ class RulesCollection(object):
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
         self.mandatory_rules = mandatory_rules or []
-        self.configure_rules = configure_rules or []
+        self.configure_rules = configure_rules or {}
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         # Have to add W, E here because integrations don't use config
@@ -217,9 +219,9 @@ class RulesCollection(object):
     def __register(self, rule):
         """ Register and configure the rule """
         if self.is_rule_enabled(rule):
+            self.used_rules.add(rule.id)
             self.rules.append(rule)
-            if rule.id in self.configure_rules:
-                rule.configure(self.configure_rules[rule.id])
+            rule.configure(self.configure_rules.get(rule.id, None))
 
     def register(self, rule):
         """Register rules"""
@@ -474,12 +476,19 @@ class Match(object):  # pylint: disable=R0902
             columnnumberend, filename, rule, message=None, rulematch_obj=None):
         """Init"""
         self.linenumber = linenumber
+        """Starting line number of the region this match spans"""
         self.columnnumber = columnnumber
+        """Starting line number of the region this match spans"""
         self.linenumberend = linenumberend
+        """Ending line number of the region this match spans"""
         self.columnnumberend = columnnumberend
+        """Ending column number of the region this match spans"""
         self.filename = filename
+        """Name of the filename associated with this match, or None if there is no such file"""
         self.rule = rule
+        """The rule of this match"""
         self.message = message  # or rule.shortdesc
+        """The message of this match"""
         if rulematch_obj:
             for k, v in vars(rulematch_obj).items():
                 if not hasattr(self, k):
@@ -487,9 +496,10 @@ class Match(object):  # pylint: disable=R0902
 
     def __repr__(self):
         """Represent"""
-        formatstr = u'[{0}] ({1}) matched {2}:{3}'
+        file_str = self.filename + ':' if self.filename else ''
+        formatstr = u'[{0}] ({1}) matched {2}{3}'
         return formatstr.format(self.rule, self.message,
-                                self.filename, self.linenumber)
+                                file_str, self.linenumber)
 
     def __eq__(self, item):
         """Override equal to compare matches"""
