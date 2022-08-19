@@ -1,3 +1,15 @@
+### v0.62.0
+###### Features
+- Create new API to allow for easier integration of using cfn-lint as a library [docs](https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/getting_started/integration.md) (pull #[2285](https://github.com/aws-cloudformation/cfn-lint/pull/2285))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `85.0.0` (pull #[2324](https://github.com/aws-cloudformation/cfn-lint/pull/2324))
+- Update Lambda deprecation dates (pull #[2327](https://github.com/aws-cloudformation/cfn-lint/pull/2327))
+###### Fixes
+- Fix an issue with `RulesCollection` in which configurations would carry over between templates (pull #[2331](https://github.com/aws-cloudformation/cfn-lint/pull/2331))
+- Add used rules into `RulesCollection` so we can print all the used rules in JUnit and Pretty formatting (pull #[2330](https://github.com/aws-cloudformation/cfn-lint/pull/2330))
+- Update error message on [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) (pull #[2059](https://github.com/aws-cloudformation/cfn-lint/pull/2059))
+- Update error description on [E1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1020) (pull #[2329](https://github.com/aws-cloudformation/cfn-lint/pull/2329))
+
 ### v0.61.5
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `83.0.0` (pull #[2316](https://github.com/aws-cloudformation/cfn-lint/pull/2316))
