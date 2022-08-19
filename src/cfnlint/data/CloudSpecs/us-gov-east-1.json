@@ -23852,6 +23852,12 @@
           "Type": "CFNKubernetesConfiguration",
           "UpdateType": "Mutable"
         },
+        "MalwareProtection": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-malwareprotection",
+          "Required": false,
+          "Type": "CFNMalwareProtectionConfiguration",
+          "UpdateType": "Mutable"
+        },
         "S3Logs": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-s3logs",
           "Required": false,
@@ -23882,11 +23888,33 @@
         }
       }
     },
+    "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html",
+      "Properties": {
+        "ScanEc2InstanceWithFindings": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html#cfn-guardduty-detector-cfnmalwareprotectionconfiguration-scanec2instancewithfindings",
+          "Required": false,
+          "Type": "CFNScanEc2InstanceWithFindingsConfiguration",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html",
       "Properties": {
         "Enable": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html#cfn-guardduty-detector-cfns3logsconfiguration-enable",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html",
+      "Properties": {
+        "EbsVolumes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html#cfn-guardduty-detector-cfnscanec2instancewithfindingsconfiguration-ebsvolumes",
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
@@ -29196,6 +29224,20 @@
         }
       }
     },
+    "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html",
+      "Properties": {
+        "ConsumerGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig-consumergroupid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId"
+          }
+        }
+      }
+    },
     "AWS::Lambda::EventSourceMapping.DestinationConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-destinationconfig.html",
       "Properties": {
@@ -29272,6 +29314,20 @@
           "Required": false,
           "Type": "Endpoints",
           "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html",
+      "Properties": {
+        "ConsumerGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig-consumergroupid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId"
+          }
         }
       }
     },
@@ -31072,6 +31128,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "Throughput": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-ebsoptions.html#cfn-opensearchservice-domain-ebsoptions-throughput",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "VolumeSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-ebsoptions.html#cfn-opensearchservice-domain-ebsoptions-volumesize",
           "PrimitiveType": "Integer",
@@ -31411,73 +31473,16 @@
       }
     },
     "AWS::Redshift::ClusterParameterGroup.Parameter": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html",
       "Properties": {
         "ParameterName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametername",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametername",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
         },
         "ParameterValue": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametervalue",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::Redshift::ScheduledAction.PauseClusterMessage": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-pauseclustermessage.html",
-      "Properties": {
-        "ClusterIdentifier": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-pauseclustermessage.html#cfn-redshift-scheduledaction-pauseclustermessage-clusteridentifier",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::Redshift::ScheduledAction.ResizeClusterMessage": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html",
-      "Properties": {
-        "Classic": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html#cfn-redshift-scheduledaction-resizeclustermessage-classic",
-          "PrimitiveType": "Boolean",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
-        "ClusterIdentifier": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html#cfn-redshift-scheduledaction-resizeclustermessage-clusteridentifier",
-          "PrimitiveType": "String",
-          "Required": true,
-          "UpdateType": "Mutable"
-        },
-        "ClusterType": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html#cfn-redshift-scheduledaction-resizeclustermessage-clustertype",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
-        "NodeType": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html#cfn-redshift-scheduledaction-resizeclustermessage-nodetype",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Mutable"
-        },
-        "NumberOfNodes": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resizeclustermessage.html#cfn-redshift-scheduledaction-resizeclustermessage-numberofnodes",
-          "PrimitiveType": "Integer",
-          "Required": false,
-          "UpdateType": "Mutable"
-        }
-      }
-    },
-    "AWS::Redshift::ScheduledAction.ResumeClusterMessage": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resumeclustermessage.html",
-      "Properties": {
-        "ClusterIdentifier": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-resumeclustermessage.html#cfn-redshift-scheduledaction-resumeclustermessage-clusteridentifier",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametervalue",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
@@ -31486,26 +31491,9 @@
     },
     "AWS::Redshift::ScheduledAction.ScheduledActionType": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-scheduledactiontype.html",
-      "Properties": {
-        "PauseCluster": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-scheduledactiontype.html#cfn-redshift-scheduledaction-scheduledactiontype-pausecluster",
-          "Required": false,
-          "Type": "PauseClusterMessage",
-          "UpdateType": "Mutable"
-        },
-        "ResizeCluster": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-scheduledactiontype.html#cfn-redshift-scheduledaction-scheduledactiontype-resizecluster",
-          "Required": false,
-          "Type": "ResizeClusterMessage",
-          "UpdateType": "Mutable"
-        },
-        "ResumeCluster": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-scheduledaction-scheduledactiontype.html#cfn-redshift-scheduledaction-scheduledactiontype-resumecluster",
-          "Required": false,
-          "Type": "ResumeClusterMessage",
-          "UpdateType": "Mutable"
-        }
-      }
+      "PrimitiveType": "Json",
+      "Required": false,
+      "UpdateType": "Mutable"
     },
     "AWS::Rekognition::StreamProcessor.List": {
       "Documentation": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rekognition-streamprocessor.html#cfn-rekognition-streamprocessor-polygonregionsofinterest",
@@ -37044,7 +37032,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "83.0.0",
+  "ResourceSpecificationVersion": "85.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -55067,6 +55055,12 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
       "Properties": {
+        "AmazonManagedKafkaEventSourceConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
+          "Required": false,
+          "Type": "AmazonManagedKafkaEventSourceConfig",
+          "UpdateType": "Immutable"
+        },
         "BatchSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
           "PrimitiveType": "Integer",
@@ -55180,6 +55174,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
           "Required": false,
           "Type": "SelfManagedEventSource",
+          "UpdateType": "Immutable"
+        },
+        "SelfManagedKafkaEventSourceConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
+          "Required": false,
+          "Type": "SelfManagedKafkaEventSourceConfig",
           "UpdateType": "Immutable"
         },
         "SourceAccessConfigurations": {
@@ -57248,7 +57248,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-allocatedstorage",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.AllocatedStorage"
+          }
         },
         "AllowMajorVersionUpgrade": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-allowmajorversionupgrade",
@@ -57310,10 +57313,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBClusterIdentifier"
-          }
+          "UpdateType": "Immutable"
         },
         "DBInstanceClass": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbinstanceclass",
@@ -57346,10 +57346,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbparametergroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBParameterGroupName"
-          }
+          "UpdateType": "Conditional"
         },
         "DBSecurityGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsecuritygroups",
@@ -57363,19 +57360,13 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsnapshotidentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBSnapshotIdentifier"
-          }
+          "UpdateType": "Immutable"
         },
         "DBSubnetGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsubnetgroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBSubnetGroupName"
-          }
+          "UpdateType": "Immutable"
         },
         "DeleteAutomatedBackups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-deleteautomatedbackups",
@@ -58154,11 +58145,6 @@
       }
     },
     "AWS::Redshift::ClusterParameterGroup": {
-      "Attributes": {
-        "ParameterGroupName": {
-          "PrimitiveType": "String"
-        }
-      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html",
       "Properties": {
         "Description": {
@@ -58243,11 +58229,6 @@
       }
     },
     "AWS::Redshift::ClusterSubnetGroup": {
-      "Attributes": {
-        "ClusterSubnetGroupName": {
-          "PrimitiveType": "String"
-        }
-      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clustersubnetgroup.html",
       "Properties": {
         "Description": {
@@ -58258,6 +58239,7 @@
         },
         "SubnetIds": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clustersubnetgroup.html#cfn-redshift-clustersubnetgroup-subnetids",
+          "DuplicatesAllowed": true,
           "PrimitiveItemType": "String",
           "Required": true,
           "Type": "List",
@@ -58265,6 +58247,7 @@
         },
         "Tags": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clustersubnetgroup.html#cfn-redshift-clustersubnetgroup-tags",
+          "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
           "Type": "List",
@@ -61898,6 +61881,44 @@
         }
       }
     },
+    "AWS::Synthetics::Group": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-group.html",
+      "Properties": {
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-group.html#cfn-synthetics-group-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Synthetics::Group.Name"
+          }
+        },
+        "ResourceArns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-group.html#cfn-synthetics-group-resourcearns",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::Synthetics::Group.ResourceArns"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-synthetics-group.html#cfn-synthetics-group-tags",
+          "DuplicatesAllowed": true,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::Transfer::Server": {
       "Attributes": {
         "Arn": {
@@ -63581,7 +63602,9 @@
     "AWS::CloudFront::Distribution.HttpVersion": {
       "AllowedValues": [
         "http1.1",
-        "http2"
+        "http2",
+        "http2and3",
+        "http3"
       ]
     },
     "AWS::CloudFront::Distribution.Locations": {
@@ -66856,6 +66879,11 @@
       "StringMax": 1024,
       "StringMin": 1
     },
+    "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId": {
+      "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+      "StringMax": 200,
+      "StringMin": 1
+    },
     "AWS::Lambda::EventSourceMapping.BatchSize": {
       "NumberMax": 10000,
       "NumberMin": 1
@@ -66926,6 +66954,11 @@
     "AWS::Lambda::EventSourceMapping.Queues": {
       "AllowedPatternRegex": "[\\s\\S]*",
       "StringMax": 1000,
+      "StringMin": 1
+    },
+    "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId": {
+      "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+      "StringMax": 200,
       "StringMin": 1
     },
     "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.Type": {
@@ -67361,12 +67394,12 @@
       "NumberMax": 35,
       "NumberMin": 1
     },
+    "AWS::RDS::DBInstance.AllocatedStorage": {
+      "AllowedPatternRegex": "^[0-9]*$"
+    },
     "AWS::RDS::DBInstance.BackupRetentionPeriod": {
       "NumberMax": 35,
       "NumberMin": 0
-    },
-    "AWS::RDS::DBInstance.DBClusterIdentifier": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
     },
     "AWS::RDS::DBInstance.DBInstanceClass": {
       "AllowedValues": [
@@ -67466,15 +67499,6 @@
     },
     "AWS::RDS::DBInstance.DBName": {
       "AllowedPatternRegex": "^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"
-    },
-    "AWS::RDS::DBInstance.DBParameterGroupName": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\\.]){0,254}$"
-    },
-    "AWS::RDS::DBInstance.DBSnapshotIdentifier": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"
-    },
-    "AWS::RDS::DBInstance.DBSubnetGroupName": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\\.\\s]){0,254}$"
     },
     "AWS::RDS::DBInstance.Engine": {
       "AllowedPattern": "Has to be one of [aurora, aurora-mysql, aurora-postgresql, mariadb, mysql, oracle-ee, oracle-se2, oracle-se1, oracle-se, postgres, sqlserver-ee, sqlserver-se, sqlserver-ex, sqlserver-web]",
@@ -68349,6 +68373,12 @@
     },
     "AWS::Synthetics::Canary.Name": {
       "AllowedPatternRegex": "^[0-9a-z_\\-]{1,21}$"
+    },
+    "AWS::Synthetics::Group.Name": {
+      "AllowedPatternRegex": "^[0-9a-z_\\-]{1,64}$"
+    },
+    "AWS::Synthetics::Group.ResourceArns": {
+      "AllowedPatternRegex": "arn:(aws[a-zA-Z-]*)?:synthetics:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:canary:[0-9a-z_\\-]"
     },
     "AWS::Transfer::Workflow.Description": {
       "AllowedPatternRegex": "^[\\w\\- ]*$"
