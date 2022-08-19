@@ -205,7 +205,7 @@ class RulesCollection(object):
         self.ignore_rules = ignore_rules or []
         self.include_rules = include_rules or []
         self.mandatory_rules = mandatory_rules or []
-        self.configure_rules = configure_rules or []
+        self.configure_rules = configure_rules or {}
         # by default include 'W' and 'E'
         # 'I' has to be included manually for backwards compabitility
         # Have to add W, E here because integrations don't use config
@@ -221,8 +221,7 @@ class RulesCollection(object):
         if self.is_rule_enabled(rule):
             self.used_rules.add(rule.id)
             self.rules.append(rule)
-            if rule.id in self.configure_rules:
-                rule.configure(self.configure_rules[rule.id])
+            rule.configure(self.configure_rules.get(rule.id, None))
 
     def register(self, rule):
         """Register rules"""
