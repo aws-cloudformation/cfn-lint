@@ -116,6 +116,20 @@ class TestConfigMixIn(BaseTestCase):
         self.assertEqual(config.regions, REGIONS)
 
     @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
+    def test_config_force_with_update_specs(self, yaml_mock):
+        """ Test precedence in  """
+
+        yaml_mock.side_effect = [
+            {},
+            {}
+        ]
+        config = cfnlint.config.ConfigMixIn(['--update-specs', '--force'])
+
+        # test defaults
+        self.assertEqual(config.force, True)
+        self.assertEqual(config.update_specs, True)
+
+    @patch('cfnlint.config.ConfigFileArgs._read_config', create=True)
     def test_config_expand_paths(self, yaml_mock):
         """ Test precedence in  """
 

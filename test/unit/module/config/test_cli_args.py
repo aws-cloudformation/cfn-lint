@@ -50,6 +50,13 @@ class TestArgsParser(BaseTestCase):
         config = cfnlint.config.CliArgs(['-t', 'template1.yaml', '--output-file', 'test_output.txt'])
         self.assertEqual(config.cli_args.output_file, 'test_output.txt')
 
+    def test_force_update_specs(self):
+        """Test success run"""
+
+        config = cfnlint.config.CliArgs(['--update-specs', '--force'])
+        self.assertEqual(config.cli_args.force, True)
+        self.assertEqual(config.cli_args.update_specs, True)
+
     def test_create_parser_exend(self):
         """Test success run"""
 
@@ -57,7 +64,7 @@ class TestArgsParser(BaseTestCase):
         self.assertEqual(config.cli_args.templates, [])
         self.assertEqual(config.cli_args.template_alt, ['template1.yaml', 'template2.yaml'])
 
-    def test_create_parser_config_file(self):
+    def test_create_parser_config_file_regions(self):
         """Test success run"""
 
         config = cfnlint.config.CliArgs(

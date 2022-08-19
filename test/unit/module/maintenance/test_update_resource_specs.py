@@ -19,6 +19,77 @@ LOGGER.addHandler(logging.NullHandler())
 
 class TestUpdateResourceSpecs(BaseTestCase):
     """Used for Testing Resource Specs"""
+
+    side_effect = [
+        {
+            'PropertyTypes': {
+                'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
+                    'Properties': {
+                        'SigningProfileVersionArns': {},
+                    }
+                },
+                'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
+                    'Properties': {
+                        'UntrustedArtifactOnDeployment': {},
+                    }
+                },
+            },
+            'ResourceTypes': {
+                'AWS::Lambda::CodeSigningConfig': {
+                    'Attributes': {
+                        'CodeSigningConfigArn': {
+                            'PrimitiveType': 'String',
+                        },
+                        'CodeSigningConfigId': {
+                            'PrimitiveType': 'String',
+                        }
+                    },
+                    'Properties': {
+                        'AllowedPublishers': {},
+                        'CodeSigningPolicies': {},
+                        'Description': {},
+                    }
+                }
+            },
+            'ValueTypes': {}
+        },
+        {
+            'PropertyTypes': {
+                'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
+                    'Properties': {
+                        'SigningProfileVersionArns': {},
+                    }
+                },
+                'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
+                    'Properties': {
+                        'UntrustedArtifactOnDeployment': {},
+                    }
+                },
+            },
+            'ResourceTypes': {
+                'AWS::Lambda::CodeSigningConfig': {
+                    'Attributes': {
+                        'CodeSigningConfigArn': {
+                            'PrimitiveType': 'String',
+                        },
+                        'CodeSigningConfigId': {
+                            'PrimitiveType': 'String',
+                        }
+                    },
+                    'Properties': {
+                        'AllowedPublishers': {},
+                        'CodeSigningPolicies': {},
+                        'Description': {},
+                    }
+                }
+            },
+            'ValueTypes': {
+                'AWS::EC2::Instance.Types': [
+                    'm2.medium'],
+            }
+        },
+    ]
+
     @patch('cfnlint.maintenance.url_has_newer_version')
     @patch('cfnlint.maintenance.get_url_content')
     @patch('cfnlint.maintenance.json.dump')
@@ -30,75 +101,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = True
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
-        mock_patch_spec.side_effect = [
-            {
-                'PropertyTypes': {
-                    'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
-                        'Properties': {
-                            'SigningProfileVersionArns': {},
-                        }
-                    },
-                    'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
-                        'Properties': {
-                            'UntrustedArtifactOnDeployment': {},
-                        }
-                    },
-                },
-                'ResourceTypes': {
-                    'AWS::Lambda::CodeSigningConfig': {
-                        'Attributes': {
-                            'CodeSigningConfigArn': {
-                                'PrimitiveType': 'String',
-                            },
-                            'CodeSigningConfigId': {
-                                'PrimitiveType': 'String',
-                            }
-                        },
-                        'Properties': {
-                            'AllowedPublishers': {},
-                            'CodeSigningPolicies': {},
-                            'Description': {},
-                        }
-                    }
-                },
-                'ValueTypes': {}
-            },
-            {
-                'PropertyTypes': {
-                    'AWS::Lambda::CodeSigningConfig.AllowedPublishers': {
-                        'Properties': {
-                            'SigningProfileVersionArns': {},
-                        }
-                    },
-                    'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies': {
-                        'Properties': {
-                            'UntrustedArtifactOnDeployment': {},
-                        }
-                    },
-                },
-                'ResourceTypes': {
-                    'AWS::Lambda::CodeSigningConfig': {
-                        'Attributes': {
-                            'CodeSigningConfigArn': {
-                                'PrimitiveType': 'String',
-                            },
-                            'CodeSigningConfigId': {
-                                'PrimitiveType': 'String',
-                            }
-                        },
-                        'Properties': {
-                            'AllowedPublishers': {},
-                            'CodeSigningPolicies': {},
-                            'Description': {},
-                        }
-                    }
-                },
-                'ValueTypes': {
-                    'AWS::EC2::Instance.Types': [
-                        'm2.medium'],
-                }
-            },
-        ]
+        mock_patch_spec.side_effect = self.side_effect
 
         mock_urlresponse = Mock()
         with open("test/fixtures/registry/schema.zip", 'rb') as f:
@@ -114,7 +117,8 @@ class TestUpdateResourceSpecs(BaseTestCase):
             builtin_module_name = '__builtin__'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
-            cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl', schema_cache)
+            cfnlint.maintenance.update_resource_spec(
+                'us-east-1', 'http://foo.badurl', schema_cache)
             mock_json_dump.assert_called_with(
                 {
                     'PropertyTypes': {
@@ -131,7 +135,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
                             'Properties': {
                                 'UntrustedArtifactOnDeployment': {
                                     'Value': {
-                                         'ValueType': 'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment',
+                                        'ValueType': 'AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment',
                                     }
                                 },
                             }
@@ -184,11 +188,45 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = False
 
-        result = cfnlint.maintenance.update_resource_spec('us-east-1', 'http://foo.badurl', ANY)
+        result = cfnlint.maintenance.update_resource_spec(
+            'us-east-1', 'http://foo.badurl', ANY)
         self.assertIsNone(result)
         mock_content.assert_not_called()
         mock_patch_spec.assert_not_called()
         mock_json_dump.assert_not_called()
+
+    @patch('cfnlint.maintenance.url_has_newer_version')
+    @patch('cfnlint.maintenance.get_url_content')
+    @patch('cfnlint.maintenance.json.dump')
+    @patch('cfnlint.maintenance.patch_spec')
+    @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://foo.badurl'})
+    @patch('cfnlint.maintenance.urlopen')
+    def test_update_resource_spec_force(self, mock_urlopen, mock_patch_spec, mock_json_dump, mock_content, mock_url_newer_version):
+        """Success update resource spec"""
+
+        mock_url_newer_version.return_value = False
+        mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
+        mock_patch_spec.side_effect = self.side_effect
+
+        mock_urlresponse = Mock()
+        with open("test/fixtures/registry/schema.zip", 'rb') as f:
+            byte = f.read()
+            mock_urlresponse.read.side_effect = [byte]
+            mock_urlopen.return_value = mock_urlresponse
+
+        schema_cache = cfnlint.maintenance.get_schema_value_types()
+
+        if sys.version_info.major == 3:
+            builtin_module_name = 'builtins'
+        else:
+            builtin_module_name = '__builtin__'
+
+        with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
+            cfnlint.maintenance.update_resource_spec(
+                'us-east-1', 'http://foo.badurl', schema_cache, True)
+            mock_content.assert_called_once()
+            mock_patch_spec.assert_called()
+            mock_json_dump.assert_called_once()
 
     @patch('cfnlint.maintenance.multiprocessing.Pool')
     @patch('cfnlint.maintenance.update_resource_spec')
@@ -208,8 +246,10 @@ class TestUpdateResourceSpecs(BaseTestCase):
     def test_update_resource_specs_python_2(self, mock_update_resource_spec, mock_pool):
 
         fake_pool = MagicMock()
-        mock_pool.return_value.__enter__.return_value = AttributeError('foobar')
+        mock_pool.return_value.__enter__.return_value = AttributeError(
+            'foobar')
 
         cfnlint.maintenance.update_resource_specs()
 
-        mock_update_resource_spec.assert_called_once_with('us-east-1', 'http://foo.badurl', ANY)
+        mock_update_resource_spec.assert_called_once_with(
+            'us-east-1', 'http://foo.badurl', ANY, False)
