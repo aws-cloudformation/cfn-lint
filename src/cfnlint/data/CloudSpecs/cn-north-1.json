@@ -19424,7 +19424,7 @@
         "Image": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-image",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Immutable"
         },
         "Interactive": {
@@ -19476,7 +19476,7 @@
         "Name": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-name",
           "PrimitiveType": "String",
-          "Required": false,
+          "Required": true,
           "UpdateType": "Immutable"
         },
         "PortMappings": {
@@ -28501,6 +28501,12 @@
           "Type": "CFNKubernetesConfiguration",
           "UpdateType": "Mutable"
         },
+        "MalwareProtection": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-malwareprotection",
+          "Required": false,
+          "Type": "CFNMalwareProtectionConfiguration",
+          "UpdateType": "Mutable"
+        },
         "S3Logs": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfndatasourceconfigurations.html#cfn-guardduty-detector-cfndatasourceconfigurations-s3logs",
           "Required": false,
@@ -28531,11 +28537,33 @@
         }
       }
     },
+    "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html",
+      "Properties": {
+        "ScanEc2InstanceWithFindings": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnmalwareprotectionconfiguration.html#cfn-guardduty-detector-cfnmalwareprotectionconfiguration-scanec2instancewithfindings",
+          "Required": false,
+          "Type": "CFNScanEc2InstanceWithFindingsConfiguration",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
     "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html",
       "Properties": {
         "Enable": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfns3logsconfiguration.html#cfn-guardduty-detector-cfns3logsconfiguration-enable",
+          "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html",
+      "Properties": {
+        "EbsVolumes": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-guardduty-detector-cfnscanec2instancewithfindingsconfiguration.html#cfn-guardduty-detector-cfnscanec2instancewithfindingsconfiguration-ebsvolumes",
           "PrimitiveType": "Boolean",
           "Required": false,
           "UpdateType": "Mutable"
@@ -37285,6 +37313,20 @@
         }
       }
     },
+    "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html",
+      "Properties": {
+        "ConsumerGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig-consumergroupid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId"
+          }
+        }
+      }
+    },
     "AWS::Lambda::EventSourceMapping.DestinationConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-destinationconfig.html",
       "Properties": {
@@ -37361,6 +37403,20 @@
           "Required": false,
           "Type": "Endpoints",
           "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html",
+      "Properties": {
+        "ConsumerGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig-consumergroupid",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId"
+          }
         }
       }
     },
@@ -38135,19 +38191,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-advancedsecurityoptionsinput.html#cfn-opensearchservice-domain-advancedsecurityoptionsinput-enabled",
           "PrimitiveType": "Boolean",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "InternalUserDatabaseEnabled": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-advancedsecurityoptionsinput.html#cfn-opensearchservice-domain-advancedsecurityoptionsinput-internaluserdatabaseenabled",
           "PrimitiveType": "Boolean",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "MasterUserOptions": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-advancedsecurityoptionsinput.html#cfn-opensearchservice-domain-advancedsecurityoptionsinput-masteruseroptions",
           "Required": false,
           "Type": "MasterUserOptions",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -38295,6 +38351,12 @@
           "Required": false,
           "UpdateType": "Mutable"
         },
+        "Throughput": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-ebsoptions.html#cfn-opensearchservice-domain-ebsoptions-throughput",
+          "PrimitiveType": "Integer",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
         "VolumeSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-ebsoptions.html#cfn-opensearchservice-domain-ebsoptions-volumesize",
           "PrimitiveType": "Integer",
@@ -38350,19 +38412,19 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-masteruseroptions.html#cfn-opensearchservice-domain-masteruseroptions-masteruserarn",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "MasterUserName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-masteruseroptions.html#cfn-opensearchservice-domain-masteruseroptions-masterusername",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "MasterUserPassword": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-opensearchservice-domain-masteruseroptions.html#cfn-opensearchservice-domain-masteruseroptions-masteruserpassword",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         }
       }
     },
@@ -47179,7 +47241,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "83.0.0",
+  "ResourceSpecificationVersion": "85.0.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -56851,6 +56913,12 @@
           "ItemType": "LaunchTemplateTagSpecification",
           "Required": false,
           "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "VersionDescription": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-launchtemplate.html#cfn-ec2-launchtemplate-versiondescription",
+          "PrimitiveType": "String",
+          "Required": false,
           "UpdateType": "Mutable"
         }
       }
@@ -67723,6 +67791,12 @@
       },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
       "Properties": {
+        "AmazonManagedKafkaEventSourceConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
+          "Required": false,
+          "Type": "AmazonManagedKafkaEventSourceConfig",
+          "UpdateType": "Immutable"
+        },
         "BatchSize": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
           "PrimitiveType": "Integer",
@@ -67836,6 +67910,12 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
           "Required": false,
           "Type": "SelfManagedEventSource",
+          "UpdateType": "Immutable"
+        },
+        "SelfManagedKafkaEventSourceConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
+          "Required": false,
+          "Type": "SelfManagedKafkaEventSourceConfig",
           "UpdateType": "Immutable"
         },
         "SourceAccessConfigurations": {
@@ -68942,7 +69022,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchservice-domain.html#cfn-opensearchservice-domain-advancedsecurityoptions",
           "Required": false,
           "Type": "AdvancedSecurityOptionsInput",
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "ClusterConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchservice-domain.html#cfn-opensearchservice-domain-clusterconfig",
@@ -69541,7 +69621,10 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-allocatedstorage",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Mutable"
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::RDS::DBInstance.AllocatedStorage"
+          }
         },
         "AllowMajorVersionUpgrade": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-allowmajorversionupgrade",
@@ -69603,10 +69686,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbclusteridentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBClusterIdentifier"
-          }
+          "UpdateType": "Immutable"
         },
         "DBInstanceClass": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbinstanceclass",
@@ -69639,10 +69719,7 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbparametergroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Conditional",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBParameterGroupName"
-          }
+          "UpdateType": "Conditional"
         },
         "DBSecurityGroups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsecuritygroups",
@@ -69656,19 +69733,13 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsnapshotidentifier",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBSnapshotIdentifier"
-          }
+          "UpdateType": "Immutable"
         },
         "DBSubnetGroupName": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-dbsubnetgroupname",
           "PrimitiveType": "String",
           "Required": false,
-          "UpdateType": "Immutable",
-          "Value": {
-            "ValueType": "AWS::RDS::DBInstance.DBSubnetGroupName"
-          }
+          "UpdateType": "Immutable"
         },
         "DeleteAutomatedBackups": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-database-instance.html#cfn-rds-dbinstance-deleteautomatedbackups",
@@ -69909,33 +69980,30 @@
       }
     },
     "AWS::RDS::DBParameterGroup": {
-      "Attributes": {
-        "DBParameterGroupName": {
-          "PrimitiveType": "String"
-        }
-      },
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbparametergroup.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html",
       "Properties": {
         "Description": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbparametergroup.html#cfn-rds-dbparametergroup-description",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html#cfn-rds-dbparametergroup-description",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Family": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbparametergroup.html#cfn-rds-dbparametergroup-family",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html#cfn-rds-dbparametergroup-family",
           "PrimitiveType": "String",
           "Required": true,
-          "UpdateType": "Immutable"
+          "UpdateType": "Mutable"
         },
         "Parameters": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbparametergroup.html#cfn-rds-dbparametergroup-parameters",
-          "PrimitiveType": "Json",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html#cfn-rds-dbparametergroup-parameters",
+          "DuplicatesAllowed": false,
+          "PrimitiveItemType": "String",
           "Required": false,
+          "Type": "Map",
           "UpdateType": "Mutable"
         },
         "Tags": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbparametergroup.html#cfn-rds-dbparametergroup-tags",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-rds-dbparametergroup.html#cfn-rds-dbparametergroup-tags",
           "DuplicatesAllowed": true,
           "ItemType": "Tag",
           "Required": false,
@@ -76134,7 +76202,9 @@
     "AWS::CloudFront::Distribution.HttpVersion": {
       "AllowedValues": [
         "http1.1",
-        "http2"
+        "http2",
+        "http2and3",
+        "http3"
       ]
     },
     "AWS::CloudFront::Distribution.Locations": {
@@ -80303,6 +80373,11 @@
       "StringMax": 255,
       "StringMin": 1
     },
+    "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId": {
+      "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+      "StringMax": 200,
+      "StringMin": 1
+    },
     "AWS::Lambda::EventSourceMapping.BatchSize": {
       "NumberMax": 10000,
       "NumberMin": 1
@@ -80373,6 +80448,11 @@
     "AWS::Lambda::EventSourceMapping.Queues": {
       "AllowedPatternRegex": "[\\s\\S]*",
       "StringMax": 1000,
+      "StringMin": 1
+    },
+    "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId": {
+      "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+      "StringMax": 200,
       "StringMin": 1
     },
     "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.Type": {
@@ -80693,12 +80773,12 @@
       "NumberMax": 35,
       "NumberMin": 1
     },
+    "AWS::RDS::DBInstance.AllocatedStorage": {
+      "AllowedPatternRegex": "^[0-9]*$"
+    },
     "AWS::RDS::DBInstance.BackupRetentionPeriod": {
       "NumberMax": 35,
       "NumberMin": 0
-    },
-    "AWS::RDS::DBInstance.DBClusterIdentifier": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$"
     },
     "AWS::RDS::DBInstance.DBInstanceClass": {
       "AllowedValues": [
@@ -80794,15 +80874,6 @@
     },
     "AWS::RDS::DBInstance.DBName": {
       "AllowedPatternRegex": "^$|^[_a-zA-Z][a-zA-Z0-9_]{0,63}$"
-    },
-    "AWS::RDS::DBInstance.DBParameterGroupName": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9\\.]){0,254}$"
-    },
-    "AWS::RDS::DBInstance.DBSnapshotIdentifier": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[:-]?[a-zA-Z0-9]){0,254}$"
-    },
-    "AWS::RDS::DBInstance.DBSubnetGroupName": {
-      "AllowedPatternRegex": "^$|^[a-zA-Z]{1}(?:[-:]?[a-zA-Z0-9_\\.\\s]){0,254}$"
     },
     "AWS::RDS::DBInstance.Engine": {
       "AllowedPattern": "Has to be one of [aurora, aurora-mysql, aurora-postgresql, mariadb, mysql, oracle-ee, oracle-se2, oracle-se1, oracle-se, postgres, sqlserver-ee, sqlserver-se, sqlserver-ex, sqlserver-web]",
@@ -82821,6 +82892,9 @@
         "d2.8xlarge",
         "d2.xlarge",
         "g2.2xlarge",
+        "g3.16xlarge",
+        "g3.4xlarge",
+        "g3.8xlarge",
         "g3s.xlarge",
         "i2.2xlarge",
         "i2.4xlarge",
@@ -82830,6 +82904,7 @@
         "i3.2xlarge",
         "i3.4xlarge",
         "i3.large",
+        "i3.xlarge",
         "m1.large",
         "m1.medium",
         "m1.small",
@@ -82840,6 +82915,7 @@
         "m3.2xlarge",
         "m3.xlarge",
         "m4.10xlarge",
+        "m4.16xlarge",
         "m4.2xlarge",
         "m4.4xlarge",
         "m4.large",
@@ -82984,7 +83060,9 @@
         "c5a.8xlarge",
         "c5a.large",
         "c5a.xlarge",
+        "c5d.12xlarge",
         "c5d.18xlarge",
+        "c5d.24xlarge",
         "c5d.2xlarge",
         "c5d.4xlarge",
         "c5d.9xlarge",
