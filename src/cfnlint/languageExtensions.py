@@ -27,4 +27,4 @@ class LanguageExtensions(object):
                 if ref in pseudo_params:
                     message = intrinsic_function + ' does not support the pseudo parameter ' + ref + ' for {0}'
                     matches.append(RuleMatch(tree[:], message.format('/'.join(map(str, tree)))))
-            return matches
+        return matches
