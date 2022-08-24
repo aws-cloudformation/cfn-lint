@@ -36,6 +36,10 @@ class Properties(CloudFormationLintRule):
         """
 
         matches = []
+        supported_functions = ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
+                               'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
+                               'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr', 'Fn::Transform',
+                               'Fn::Length', 'Fn::ToJsonString']
         if (isinstance(value, list) and primtype != 'Json') or value == {'Ref': 'AWS::NotificationARNs'}:
             message = 'Property should be of type %s not List at %s' % (
                 primtype, '/'.join(map(str, proppath)))
@@ -54,9 +58,7 @@ class Properties(CloudFormationLintRule):
                                     sub_value[1], primtype, proppath + ['Fn::If', 1]))
                                 matches.extend(self.primitivetypecheck(
                                     sub_value[2], primtype, proppath + ['Fn::If', 2]))
-                    elif sub_key not in ['Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
-                                         'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
-                                         'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr', 'Fn::Transform']:
+                    elif sub_key not in supported_functions:
                         message = 'Property %s has an illegal function %s' % (
                             '/'.join(map(str, proppath)), sub_key)
                         matches.append(RuleMatch(proppath, message))

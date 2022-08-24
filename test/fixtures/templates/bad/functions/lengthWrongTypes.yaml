@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::LanguageExtensions
+Parameters:
+  StringParameter:
+    Type: String
+Resources:
+  QueueString:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: This is a string
+  QueueBool:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: true
+  QueueNumber:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: 12
+  QueueRefToResource:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: !Ref QueueNumber
+  QueueRefToStringParameter:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length: !Ref StringParameter
+  QueueUnsupportedFunction:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length:
+          Fn::GetAZs: ""
+  QueueObjectWithMultipleKeys:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds:
+        Fn::Length:
+          key1: "value1"
+          key2: "value2"

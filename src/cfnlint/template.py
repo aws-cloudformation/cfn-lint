@@ -60,6 +60,15 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
             LOGGER.error(
                 'Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules.')
 
+    def has_language_extensions_transform(self):
+        """Check if the template has language extensions transform declared"""
+        LOGGER.debug('Check if the template has language extensions transform declaration')
+        lang_extensions_transform = 'AWS::LanguageExtensions'
+        transform_declaration = self.template.get('Transform', [])
+        transform_type = transform_declaration if isinstance(
+            transform_declaration, list) else [transform_declaration]
+        return bool(lang_extensions_transform in transform_type)
+
     def get_resources(self, resource_type=[]):
         """
             Get Resources
