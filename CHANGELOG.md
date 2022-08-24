@@ -1,3 +1,9 @@
+### v0.63.0
+###### Features
+- support for AWS::LanguageExtensions transform features including DeletionPolicy,  UpdateReplacePolicy, Fn::Length and Fn::ToJsonString [docs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html) (pull #[2339](https://github.com/aws-cloudformation/cfn-lint/pull/2339))
+- Add rule [E1030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1030) to validate Fn::Length is configured correctly (pull #[2339](https://github.com/aws-cloudformation/cfn-lint/pull/2339))
+- Add rule [E1031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1030) to validate Fn::Length is configured correctly (pull #[2339](https://github.com/aws-cloudformation/cfn-lint/pull/2339))
+
 ### v0.62.0
 ###### Features
 - Create new API to allow for easier integration of using cfn-lint as a library [docs](https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/getting_started/integration.md) (pull #[2285](https://github.com/aws-cloudformation/cfn-lint/pull/2285))
