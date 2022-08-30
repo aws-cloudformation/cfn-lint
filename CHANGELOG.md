@@ -1,3 +1,7 @@
+### v0.63.2
+###### CloudFormation Specifications
+- Patch in attributes for `AWS::RDS::DBCluster` (pull #[2344](https://github.com/aws-cloudformation/cfn-lint/pull/2344))
+
 ### v0.63.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `86.0.0` (pull #[2335](https://github.com/aws-cloudformation/cfn-lint/pull/2335))
