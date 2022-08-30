@@ -1,3 +1,7 @@
+### v0.63.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `86.0.0` (pull #[2335](https://github.com/aws-cloudformation/cfn-lint/pull/2335))
+
 ### v0.63.0
 ###### Features
 - support for AWS::LanguageExtensions transform features including DeletionPolicy,  UpdateReplacePolicy, Fn::Length and Fn::ToJsonString [docs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html) (pull #[2339](https://github.com/aws-cloudformation/cfn-lint/pull/2339))
