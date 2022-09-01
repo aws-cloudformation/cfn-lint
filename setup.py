@@ -52,7 +52,7 @@ that could potentially be improved'),
         'jschema_to_python~=1.2.3',
         'sarif-om~=1.0.4'
     ],
-    python_requires='>=3.6, <=4.0, !=4.0',
+    python_requires='>=3.7, <=4.0, !=4.0',
     entry_points={
         'console_scripts': [
             'cfn-lint = cfnlint.__main__:main'
@@ -67,7 +67,6 @@ that could potentially be improved'),
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
