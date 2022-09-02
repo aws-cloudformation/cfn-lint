@@ -60,3 +60,12 @@ class TestTransform(BaseTestCase):
         transformed_template = Transform(filename, template, region)
         transformed_template.transform_template()
         self.assertDictEqual(transformed_template._parameters, {})
+
+    def test_sam_with_language_extension(self):
+        """Test language extension"""
+        filename = 'test/fixtures/templates/good/transform/language_extension.yaml'
+        region = 'us-east-1'
+        template = cfn_yaml.load(filename)
+        transformed_template = Transform(filename, template, region)
+        results = transformed_template.transform_template()
+        self.assertEqual(results, [])

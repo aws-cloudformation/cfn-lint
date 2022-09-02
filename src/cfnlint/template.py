@@ -38,6 +38,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
         self.transform_pre['Ref'] = self.search_deep_keys('Ref')
         self.transform_pre['Fn::Sub'] = self.search_deep_keys('Fn::Sub')
         self.transform_pre['Fn::FindInMap'] = self.search_deep_keys('Fn::FindInMap')
+        self.transform_pre['Transform'] = self.template.get('Transform', [])
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
 
@@ -64,7 +65,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
         """Check if the template has language extensions transform declared"""
         LOGGER.debug('Check if the template has language extensions transform declaration')
         lang_extensions_transform = 'AWS::LanguageExtensions'
-        transform_declaration = self.template.get('Transform', [])
+        transform_declaration = self.transform_pre['Transform']
         transform_type = transform_declaration if isinstance(
             transform_declaration, list) else [transform_declaration]
         return bool(lang_extensions_transform in transform_type)

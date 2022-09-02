@@ -8,6 +8,7 @@ import samtranslator
 from samtranslator.parser import parser
 from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
+from samtranslator.sdk import resource
 
 from cfnlint.helpers import load_resource, convert_dict, format_json_string
 from cfnlint.data import Serverless
@@ -16,6 +17,15 @@ LOGGER = logging.getLogger('cfnlint')
 
 samtranslator_logger = logging.getLogger('samtranslator')
 samtranslator_logger.setLevel(logging.CRITICAL)
+
+# Override SAM validation as cfn-lint does thoese
+# checks already
+#pylint: disable=unused-argument
+def valid_override(self):
+    return resource.SamResourceType.has_value(self.type)
+
+#pylint: disable=redefined-outer-name
+resource.SamResource.valid = valid_override
 
 class Transform(object):
     """
