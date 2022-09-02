@@ -39,6 +39,7 @@ region_map = {
     'EU (Paris)': 'eu-west-3',
     'EU (Stockholm)': 'eu-north-1',
     'Middle East (Bahrain)': 'me-south-1',
+    'Middle East (UAE)': 'me-central-1',
     'South America (Sao Paulo)': 'sa-east-1',
     'US East (N. Virginia)': 'us-east-1',
     'US East (Ohio)': 'us-east-2',
