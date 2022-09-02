@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform:
+  - AWS::LanguageExtensions
+  - AWS::Serverless-2016-10-31
+Conditions:
+  IsUsEast1: !Equals [!Ref 'AWS::Region', 'us-east-1']
+Parameters:
+  DBPolicy:
+    Type: String
+Mappings:
+  StackIdMap01:
+    teststack1:
+      DeletionPolicy: Retain
+    teststack2:
+      DeletionPolicy: Delete
+Resources:
+  WaitHandleRef:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    UpdateReplacePolicy: !Ref DBPolicy
+    DeletionPolicy: "Retain"
+  WaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+    UpdateReplacePolicy:
+      Fn::FindInMap:
+        - "StackIdMap01"
+        - "Ref": "AWS::StackId"
+        - "DeletionPolicy"
+    DeletionPolicy: "Retain"
+  PolicyList:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '5'
+      DBInstanceClass: db.m1.small
+      Engine: MySQL
+    UpdateReplacePolicy:
+      Fn::If:
+        - IsUsEast1
+        - "Retain"
+        - "Delete"
+    DeletionPolicy: "Retain"
