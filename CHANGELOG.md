@@ -1,3 +1,13 @@
+### v0.64.0
+###### Features
+- Update `jsonschema` to be able to use version 3.0 and 4.0 (pull #[2336](https://github.com/aws-cloudformation/cfn-lint/pull/2336))
+- Remove support for python 3.6 and add python 3.9 (pull #[2347](https://github.com/aws-cloudformation/cfn-lint/pull/2347))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `87.0.0` (pull #[2353](https://github.com/aws-cloudformation/cfn-lint/pull/2353))
+- Add support for region `me-central-1` (pull #[2351](https://github.com/aws-cloudformation/cfn-lint/pull/2351))
+###### Fixes
+- Disable the SAM validation checks when transforming a template (pull #[2350](https://github.com/aws-cloudformation/cfn-lint/pull/2350))
+
 ### v0.63.2
 ###### CloudFormation Specifications
 - Patch in attributes for `AWS::RDS::DBCluster` (pull #[2344](https://github.com/aws-cloudformation/cfn-lint/pull/2344))
