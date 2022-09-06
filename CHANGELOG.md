@@ -1,3 +1,7 @@
+### v0.64.1
+###### Fixes
+- Make `me-central-1` `ExtendedSpecs` a module (pull #[2350](https://github.com/aws-cloudformation/cfn-lint/pull/2350))
+
 ### v0.64.0
 ###### Features
 - Update `jsonschema` to be able to use version 3.0 and 4.0 (pull #[2336](https://github.com/aws-cloudformation/cfn-lint/pull/2336))
