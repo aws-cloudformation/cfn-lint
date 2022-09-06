@@ -1,6 +1,6 @@
 ### v0.64.1
 ###### Fixes
-- Make `me-central-1` `ExtendedSpecs` a module (pull #[2350](https://github.com/aws-cloudformation/cfn-lint/pull/2350))
+- Make `me-central-1` `ExtendedSpecs` a module (pull #[2359](https://github.com/aws-cloudformation/cfn-lint/pull/2359))
 
 ### v0.64.0
 ###### Features
