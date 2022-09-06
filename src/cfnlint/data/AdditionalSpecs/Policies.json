@@ -2087,8 +2087,8 @@
       "StringPrefix": "awsconnector"
     },
     "AWS Control Tower": {
-      "ARNFormat": "arn:aws:controltower:<region>:<account-id>:<resource-type>/<resource_name>",
-      "ARNRegex": "^arn:aws:controltower:.+:.+:.+",
+      "ARNFormat": "arn:${Partition}:controltower:${Region}:${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:${Partition}:controltower:.+:.+:.+",
       "Actions": [
         "CreateManagedAccount",
         "DeregisterManagedAccount",
@@ -2100,13 +2100,17 @@
         "DescribeManagedAccount",
         "DescribeManagedOrganizationalUnit",
         "DescribeSingleSignOn",
+        "DisableControl",
         "DisableGuardrail",
+        "EnableControl",
         "EnableGuardrail",
         "GetAvailableUpdates",
+        "GetControlOperation",
         "GetGuardrailComplianceStatus",
         "GetHomeRegion",
         "GetLandingZoneStatus",
         "ListDirectoryGroups",
+        "ListEnabledControls",
         "ListEnabledGuardrails",
         "ListGuardrailViolations",
         "ListGuardrails",
@@ -3977,15 +3981,30 @@
       "StringPrefix": "iq-permission"
     },
     "AWS Identity Store": {
-      "ARNFormat": "arn:${Partition}:identitystore:${Region}:${Account}:<relative-id>",
-      "ARNRegex": "^arn:${Partition}:identitystore:${Region}:.+",
+      "ARNFormat": "arn:aws:identitystore::${AwsAccountId}:${ResourceType}/${ResourceId}",
+      "ARNRegex": "^arn:aws:identitystore:.+",
       "Actions": [
+        "CreateGroup",
+        "CreateGroupMembership",
+        "CreateUser",
+        "DeleteGroup",
+        "DeleteGroupMembership",
+        "DeleteUser",
         "DescribeGroup",
+        "DescribeGroupMembership",
         "DescribeUser",
+        "GetGroupId",
+        "GetGroupMembershipId",
+        "GetUserId",
+        "IsMemberInGroups",
+        "ListGroupMemberships",
+        "ListGroupMembershipsForMember",
         "ListGroups",
-        "ListUsers"
+        "ListUsers",
+        "UpdateGroup",
+        "UpdateUser"
       ],
-      "HasResource": false,
+      "HasResource": true,
       "StringPrefix": "identitystore"
     },
     "AWS Identity Sync": {
@@ -6965,7 +6984,7 @@
       "StringPrefix": "sms"
     },
     "AWS Serverless Application Repository": {
-      "ARNFormat": "arn:aws:serverlessrepo:<region>:<account-id>:<resource-type>/<resource_name>",
+      "ARNFormat": "arn:aws:serverlessrepo:${Region}:${Account}:${ResourceType}/${ResourceId}",
       "ARNRegex": "^arn:aws:serverlessrepo:.+:.+:.+",
       "Actions": [
         "CreateApplication",
@@ -9855,6 +9874,8 @@
         "ReleasePhoneNumber",
         "ResumeContactRecording",
         "SearchAvailablePhoneNumbers",
+        "SearchQueues",
+        "SearchRoutingProfiles",
         "SearchSecurityProfiles",
         "SearchUsers",
         "SearchVocabularies",
@@ -13436,6 +13457,7 @@
       "Actions": [
         "AcceptInvitation",
         "BatchGetCustomDataIdentifiers",
+        "CreateAllowList",
         "CreateClassificationJob",
         "CreateCustomDataIdentifier",
         "CreateFindingsFilter",
@@ -13443,6 +13465,7 @@
         "CreateMember",
         "CreateSampleFindings",
         "DeclineInvitations",
+        "DeleteAllowList",
         "DeleteCustomDataIdentifier",
         "DeleteFindingsFilter",
         "DeleteInvitations",
@@ -13458,6 +13481,7 @@
         "EnableMacie",
         "EnableOrganizationAdminAccount",
         "GetAdministratorAccount",
+        "GetAllowList",
         "GetBucketStatistics",
         "GetClassificationExportConfiguration",
         "GetCustomDataIdentifier",
@@ -13474,6 +13498,7 @@
         "GetSensitiveDataOccurrencesAvailability",
         "GetUsageStatistics",
         "GetUsageTotals",
+        "ListAllowLists",
         "ListClassificationJobs",
         "ListCustomDataIdentifiers",
         "ListFindings",
@@ -13489,6 +13514,7 @@
         "TagResource",
         "TestCustomDataIdentifier",
         "UntagResource",
+        "UpdateAllowList",
         "UpdateClassificationJob",
         "UpdateFindingsFilter",
         "UpdateMacieSession",
@@ -14107,12 +14133,15 @@
         "ListSchemas",
         "ListSolutionVersions",
         "ListSolutions",
+        "ListTagsForResource",
         "PutEvents",
         "PutItems",
         "PutUsers",
         "StartRecommender",
         "StopRecommender",
         "StopSolutionVersionCreation",
+        "TagResource",
+        "UntagResource",
         "UpdateCampaign",
         "UpdateRecommender"
       ],
@@ -14591,6 +14620,7 @@
         "UpdateIAMPolicyAssignment",
         "UpdateIpRestriction",
         "UpdatePublicSharingSettings",
+        "UpdateResourcePermissions",
         "UpdateTemplate",
         "UpdateTemplateAlias",
         "UpdateTemplatePermissions",
@@ -16597,8 +16627,8 @@
       ]
     },
     "Amazon Translate": {
-      "ARNFormat": "arn:${Partition}:translate:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
-      "ARNRegex": "^arn:${Partition}:translate:.+:.+:.+",
+      "ARNFormat": "arn:aws:translate:${Region}:${Account}:${ResourceType}/${ResourceName}",
+      "ARNRegex": "^arn:aws:translate:.+:.+:.+",
       "Actions": [
         "CreateParallelData",
         "DeleteParallelData",
@@ -16607,6 +16637,7 @@
         "GetParallelData",
         "GetTerminology",
         "ImportTerminology",
+        "ListLanguages",
         "ListParallelData",
         "ListTerminologies",
         "ListTextTranslationJobs",
@@ -16615,7 +16646,7 @@
         "TranslateText",
         "UpdateParallelData"
       ],
-      "HasResource": false,
+      "HasResource": true,
       "StringPrefix": "translate"
     },
     "Amazon WorkDocs": {
