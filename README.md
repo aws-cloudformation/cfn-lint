@@ -7,6 +7,7 @@
 [![PyPI downloads](https://pepy.tech/badge/cfn-lint/week)](https://pypistats.org/packages/cfn-lint)
 [![PyPI downloads](https://pepy.tech/badge/cfn-lint/month)](https://pypistats.org/packages/cfn-lint)
 [![codecov](https://codecov.io/gh/aws-cloudformation/cfn-lint/branch/main/graph/badge.svg)](https://codecov.io/gh/aws-cloudformation/cfn-python-lint)
+[![Discord Shield](https://img.shields.io/discord/981586120448020580?logo=discord)](https://discord.gg/KENDm6DHCv)
 
 Validate AWS CloudFormation yaml/json templates against the [AWS CloudFormation Resource Specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and additional
 checks.  Includes checking valid values for resource properties and best practices.
