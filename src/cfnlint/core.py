@@ -149,7 +149,7 @@ def get_args_filenames(cli_args):
     formatter = get_formatter(fmt)
 
     if config.update_specs:
-        cfnlint.maintenance.update_resource_specs()
+        cfnlint.maintenance.update_resource_specs(config.force)
         sys.exit(0)
 
     if config.update_documentation:
