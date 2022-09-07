@@ -29,7 +29,7 @@ LOGGER = logging.getLogger(__name__)
 REGISTRY_SCHEMA_ZIP = 'https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip'
 
 
-def update_resource_specs():
+def update_resource_specs(force: bool=False):
     # Pool() uses cpu count if no number of processors is specified
     # Pool() only implements the Context Manager protocol from Python3.3 onwards,
     # so it will fail Python2.7 style linting, as well as throw AttributeError
@@ -38,25 +38,25 @@ def update_resource_specs():
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             # Patch from registry schema
-            pool_tuple = [(k, v, schema_cache) for k, v in SPEC_REGIONS.items()]
+            pool_tuple = [(k, v, schema_cache, force) for k, v in SPEC_REGIONS.items()]
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
 
         # Do it the long, slow way
         for region, url in SPEC_REGIONS.items():
-            update_resource_spec(region, url, schema_cache)
+            update_resource_spec(region, url, schema_cache, force)
 
 
-def update_resource_spec(region, url, schema_cache):
+def update_resource_spec(region, url, schema_cache, force: bool=False):
     """ Update a single resource spec """
-    filename = os.path.join(os.path.dirname(cfnlint.__file__), 'data/CloudSpecs/%s.json' % region)
+    filename = os.path.join(os.path.dirname(cfnlint.__file__), f'data/CloudSpecs/{region}.json')
 
     multiprocessing_logger = multiprocessing.log_to_stderr()
 
     multiprocessing_logger.debug('Downloading template %s into %s', url, filename)
 
     # Check to see if we already have the latest version, and if so stop
-    if not url_has_newer_version(url):
+    if not (url_has_newer_version(url) or force):
         return
 
     spec_content = get_url_content(url, caching=True)
