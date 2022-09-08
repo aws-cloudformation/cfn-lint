@@ -21,3 +21,17 @@ Resources:
           Fn::Sub: |
             yum install ${myPackage}
             yum install ${myAppPackage}
+  myInstance2:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      UserData:
+        Fn::Base64:
+          Fn::Join:
+            - ""
+            - - Fn::Select:
+                  - 0
+                  - Fn::Split:
+                    - "/"
+                    - "a/path/"
+              - !Sub "yum install ${myAppPackage}"
