@@ -10077,6 +10077,50 @@
         }
       }
     },
+    "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html",
+      "Properties": {
+        "Description": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable"
+        },
+        "OriginAccessControlOriginType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig-originaccesscontrolorigintype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.OriginAccessControlOriginType"
+          }
+        },
+        "SigningBehavior": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig-signingbehavior",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.SigningBehavior"
+          }
+        },
+        "SigningProtocol": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originaccesscontrol-originaccesscontrolconfig.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig-signingprotocol",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.SigningProtocol"
+          }
+        }
+      }
+    },
     "AWS::CloudFront::OriginRequestPolicy.CookiesConfig": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-originrequestpolicy-cookiesconfig.html",
       "Properties": {
@@ -33336,16 +33380,16 @@
       }
     },
     "AWS::Redshift::ClusterParameterGroup.Parameter": {
-      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html",
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html",
       "Properties": {
         "ParameterName": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametername",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametername",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
         },
         "ParameterValue": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-property-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametervalue",
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-redshift-clusterparametergroup-parameter.html#cfn-redshift-clusterparametergroup-parameter-parametervalue",
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Mutable"
@@ -43847,7 +43891,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "87.0.0",
+  "ResourceSpecificationVersion": "88.0.0",
   "ResourceTypes": {
     "AWS::ACMPCA::Certificate": {
       "Attributes": {
@@ -49604,6 +49648,22 @@
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-keygroup.html#cfn-cloudfront-keygroup-keygroupconfig",
           "Required": true,
           "Type": "KeyGroupConfig",
+          "UpdateType": "Mutable"
+        }
+      }
+    },
+    "AWS::CloudFront::OriginAccessControl": {
+      "Attributes": {
+        "Id": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-originaccesscontrol.html",
+      "Properties": {
+        "OriginAccessControlConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudfront-originaccesscontrol.html#cfn-cloudfront-originaccesscontrol-originaccesscontrolconfig",
+          "Required": true,
+          "Type": "OriginAccessControlConfig",
           "UpdateType": "Mutable"
         }
       }
@@ -59285,7 +59345,14 @@
         "DnsName": {
           "PrimitiveType": "String"
         },
+        "DualStackDnsName": {
+          "PrimitiveType": "String"
+        },
         "Ipv4Addresses": {
+          "PrimitiveItemType": "String",
+          "Type": "List"
+        },
+        "Ipv6Addresses": {
           "PrimitiveItemType": "String",
           "Type": "List"
         }
@@ -65123,6 +65190,11 @@
       }
     },
     "AWS::Redshift::ClusterParameterGroup": {
+      "Attributes": {
+        "ParameterGroupName": {
+          "PrimitiveType": "String"
+        }
+      },
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html",
       "Properties": {
         "Description": {
@@ -67028,6 +67100,12 @@
         "ContentBasedDeduplication": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-topic.html#cfn-sns-topic-contentbaseddeduplication",
           "PrimitiveType": "Boolean",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "DataProtectionPolicy": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sns-topic.html#cfn-sns-topic-dataprotectionpolicy",
+          "PrimitiveType": "Json",
           "Required": false,
           "UpdateType": "Mutable"
         },
@@ -72883,6 +72961,15 @@
         "https-only",
         "redirect-to-https"
       ]
+    },
+    "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.OriginAccessControlOriginType": {
+      "AllowedPatternRegex": "^(s3)$"
+    },
+    "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.SigningBehavior": {
+      "AllowedPatternRegex": "^(never|no-override|always)$"
+    },
+    "AWS::CloudFront::OriginAccessControl.OriginAccessControlConfig.SigningProtocol": {
+      "AllowedPatternRegex": "^(sigv4)$"
     },
     "AWS::CloudFront::OriginRequestPolicy.CookiesConfig.CookieBehavior": {
       "AllowedPatternRegex": "^(none|whitelist|all)$"
@@ -79647,6 +79734,7 @@
         "vpc-flow-log",
         "vpc-peering-connection",
         "vpn-connection",
+        "vpn-connection-device-type",
         "vpn-gateway"
       ]
     },
