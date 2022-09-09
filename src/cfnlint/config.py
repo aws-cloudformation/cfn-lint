@@ -9,6 +9,7 @@ import glob
 import json
 import copy
 from pathlib import Path
+from typing import Dict
 import jsonschema
 import cfnlint.decode.cfn_yaml
 from cfnlint.version import __version__
@@ -43,7 +44,7 @@ class ConfigFileArgs(object):
         Config File arguments.
         Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
     """
-    file_args = {}
+    file_args: Dict = {}
     __user_config_file = None
     __project_config_file = None
     __custom_config_file = None
@@ -283,7 +284,7 @@ class RuleConfigurationAction(argparse.Action):
 
 class CliArgs(object):
     """ Base Args class"""
-    cli_args = {}
+    cli_args: Dict = {}
 
     def __init__(self, cli_args):
         self.parser = self.create_parser()

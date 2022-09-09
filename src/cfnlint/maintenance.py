@@ -12,15 +12,11 @@ import zipfile
 import re
 from io import BytesIO
 import warnings
+from urllib.request import urlopen, Request
 import jsonpatch
-try:
-    from urllib.request import urlopen, Request
-except ImportError:
-    from urllib2 import urlopen, Request
 import cfnlint
 from cfnlint.helpers import get_url_content, url_has_newer_version
 from cfnlint.helpers import SPEC_REGIONS
-import cfnlint.data.ExtendedSpecs
 import cfnlint.data.AdditionalSpecs
 
 

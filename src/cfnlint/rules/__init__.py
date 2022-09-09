@@ -7,13 +7,59 @@ import logging
 from datetime import datetime
 import importlib
 import traceback
+from typing import List, Optional
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
+from cfnlint.template import Template
 
 
 LOGGER = logging.getLogger(__name__)
 
+def matching(match_type):
+    """ Does Logging for match functions """
+    def decorator(match_function):
+        """ The Actual Decorator """
+
+        def wrapper(self, filename, cfn, *args, **kwargs):
+            """Wrapper"""
+            matches = []
+
+            if not getattr(self, match_type):
+                return []
+
+            if match_type == 'match_resource_properties':
+                if args[1] not in self.resource_property_types:
+                    return []
+            elif match_type == 'match_resource_sub_properties':
+                if args[1] not in self.resource_sub_property_types:
+                    return []
+
+            start = datetime.now()
+            LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
+            # pylint: disable=E1102
+            results = match_function(self, filename, cfn, *args, **kwargs)
+            LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
+                            self.id, datetime.now(), datetime.now() - start)
+            LOGGER.debug('Results from rule %s are %s: ', self.id, results)
+
+            if results:
+                for result in results:
+                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                    if linenumbers:
+                        matches.append(Match(
+                            linenumbers[0] + 1, linenumbers[1] + 1,
+                            linenumbers[2] + 1, linenumbers[3] + 1,
+                            filename, self, result.message, result))
+                    else:
+                        matches.append(Match(
+                            1, 1,
+                            1, 1,
+                            filename, self, result.message, result))
+
+            return matches
+        return wrapper
+    return decorator
 
 class CloudFormationLintRule(object):
     """CloudFormation linter rules"""
@@ -21,7 +67,7 @@ class CloudFormationLintRule(object):
     shortdesc = ''
     description = ''
     source_url = ''
-    tags = []
+    tags: List[str] = []
     experimental = False
 
     logger = logging.getLogger(__name__)
@@ -113,52 +159,6 @@ class CloudFormationLintRule(object):
     match = None
     match_resource_properties = None
     match_resource_sub_properties = None
-
-    # pylint: disable=E0213
-    def matching(match_type):
-        """ Does Logging for match functions """
-        def decorator(match_function):
-            """ The Actual Decorator """
-
-            def wrapper(self, filename, cfn, *args, **kwargs):
-                """Wrapper"""
-                matches = []
-
-                if not getattr(self, match_type):
-                    return []
-
-                if match_type == 'match_resource_properties':
-                    if args[1] not in self.resource_property_types:
-                        return []
-                elif match_type == 'match_resource_sub_properties':
-                    if args[1] not in self.resource_sub_property_types:
-                        return []
-
-                start = datetime.now()
-                LOGGER.debug('Starting match function for rule %s at %s', self.id, start)
-                # pylint: disable=E1102
-                results = match_function(self, filename, cfn, *args, **kwargs)
-                LOGGER.debug('Complete match function for rule %s at %s.  Ran in %s',
-                             self.id, datetime.now(), datetime.now() - start)
-                LOGGER.debug('Results from rule %s are %s: ', self.id, results)
-
-                if results:
-                    for result in results:
-                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
-                        if linenumbers:
-                            matches.append(Match(
-                                linenumbers[0] + 1, linenumbers[1] + 1,
-                                linenumbers[2] + 1, linenumbers[3] + 1,
-                                filename, self, result.message, result))
-                        else:
-                            matches.append(Match(
-                                1, 1,
-                                1, 1,
-                                filename, self, result.message, result))
-
-                return matches
-            return wrapper
-        return decorator
 
     @matching('match')
     # pylint: disable=W0613
@@ -388,7 +388,7 @@ class RulesCollection(object):
 
         return matches
 
-    def run(self, filename, cfn):
+    def run(self, filename: Optional[str], cfn: Template):
         """Run rules"""
         matches = []
         for rule in self.rules:

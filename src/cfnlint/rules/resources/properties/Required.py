@@ -6,7 +6,6 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 
-
 class Required(CloudFormationLintRule):
     """Check Required Resource Configuration"""
     id = 'E3003'
@@ -14,8 +13,6 @@ class Required(CloudFormationLintRule):
     description = 'Making sure that Resources properties that are required exist'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required'
     tags = ['resources']
-
-    cfn = {}
 
     def __init__(self):
         """Init"""

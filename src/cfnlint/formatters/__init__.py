@@ -7,14 +7,17 @@ import json
 import operator
 import re
 import sys
+from typing import List
 
 import sarif_om as sarif
 from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
-import cfnlint.version
+from cfnlint.version import __version__
 from cfnlint.rules import (Match, ParseError, RuleError, RulesCollection,
-                           TransformError)
+                     TransformError)
+
+Matches = List[Match]
 
 
 class color(object):
@@ -31,7 +34,7 @@ class color(object):
 def colored(s, c):
     """ Takes in string s and outputs it with color """
     if sys.stdout.isatty():
-        return '{}{}{}'.format(c, s, color.reset)
+        return f'{c}{s}{color.reset}'
 
     return s
 
@@ -64,7 +67,7 @@ class Formatter(BaseFormatter):
 
     def _format(self, match):
         """Format output"""
-        formatstr = u'{0} {1}\n{2}:{3}:{4}\n'
+        formatstr = '{0} {1}\n{2}:{3}:{4}\n'
         return formatstr.format(
             match.rule.id,
             match.message,
@@ -79,7 +82,7 @@ class JUnitFormatter(BaseFormatter):
 
     def _failure_format(self, match):
         """Format output of a failure"""
-        formatstr = u'{0} at {1}:{2}:{3}'
+        formatstr = '{0} at {1}:{2}:{3}'
         return formatstr.format(
             match.message,
             match.filename,
@@ -98,16 +101,17 @@ class JUnitFormatter(BaseFormatter):
             if not rule.id in rules.used_rules:
                 if not rule.id:
                     continue
-                test_case = TestCase(name='{0} {1}'.format(rule.id, rule.shortdesc))
+                test_case = TestCase(name=f'{rule.id} {rule.shortdesc}')
 
                 if rule.experimental:
-                    test_case.add_skipped_info(message='Experimental rule - not enabled')
+                    test_case.add_skipped_info(
+                        message='Experimental rule - not enabled')
                 else:
                     test_case.add_skipped_info(message='Ignored rule')
                 test_cases.append(test_case)
             else:
                 test_case = TestCase(
-                    name='{0} {1}'.format(rule.id, rule.shortdesc),
+                    name=f'{rule.id} {rule.shortdesc}',
                     allow_multiple_subelements=True,
                     url=rule.source_url
                 )
@@ -155,7 +159,7 @@ class JsonFormatter(BaseFormatter):
                     'Message': o.message,
                     'Filename': o.filename,
                 }
-            return {'__{}__'.format(o.__class__.__name__): o.__dict__}
+            return {f'__{o.__class__.__name__}__': o.__dict__}
 
     def print_matches(self, matches, rules=None, filenames=None):
         # JSON formatter outputs a single JSON object
@@ -172,7 +176,7 @@ class QuietFormatter(BaseFormatter):
 
     def _format(self, match):
         """Format output"""
-        formatstr = u'{0} {1}:{2}'
+        formatstr = '{0} {1}:{2}'
         return formatstr.format(
             match.rule,
             match.filename,
@@ -185,7 +189,7 @@ class ParseableFormatter(BaseFormatter):
 
     def _format(self, match):
         """Format output"""
-        formatstr = u'{0}:{1}:{2}:{3}:{4}:{5}:{6}'
+        formatstr = '{0}:{1}:{2}:{3}:{4}:{5}:{6}'
         return formatstr.format(
             match.filename,
             match.linenumber,
@@ -203,24 +207,25 @@ class PrettyFormatter(BaseFormatter):
     def _format(self, match):
         """Format output"""
         formatstr = '{0}{1}{2}'
-        pos = '{0}:{1}:'.format(match.linenumber, match.columnnumber)
+        pos = f'{match.linenumber}:{match.columnnumber}:'
         return formatstr.format(
-            colored('{:20}'.format(pos), color.reset),
-            colored('{:10}'.format(match.rule.id), getattr(color, match.rule.severity.lower())),
+            colored(f'{pos:20}', color.reset),
+            colored(f'{match.rule.id:10}', getattr(
+                color, match.rule.severity.lower())),
             match.message,
         )
 
     def print_matches(self, matches, rules=None, filenames=None):
         results = self._format_matches(matches)
 
-        results.append('Cfn-lint scanned {} templates against {} rules and found {} errors, {} warnings, and {} informational violations'.format(
-            colored(len(filenames), color.bold_reset),
-            colored(len(rules.used_rules), color.bold_reset),
-            colored(len([i for i in matches if i.rule.severity.lower() == 'error']), color.error),
-            colored(len([i for i in matches if i.rule.severity.lower() == 'warning']), color.warning),
-            colored(len([i for i in matches if i.rule.severity.lower()
-                         == 'informational']), color.informational),
-        ))
+        results.append(
+            f'Cfn-lint scanned {colored(len(filenames), color.bold_reset)} templates against '
+            f'{colored(len(rules.used_rules), color.bold_reset)} rules and found '
+            f'{colored(len([i for i in matches if i.rule.severity.lower() == "error"]), color.error)} '
+            f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
+            f'warnings, and '
+            f'{colored(len([i for i in matches if i.rule.severity.lower() == "informational"]), color.informational)} '
+            f'informational violations')
         return '\n'.join(results)
 
     def _format_matches(self, matches):
@@ -327,7 +332,8 @@ class SARIFFormatter(BaseFormatter):
                 full_description=sarif.MultiformatMessageString(
                     text=rules_map[rule_id].description
                 ),
-                help_uri=rules_map[rule_id].source_url if rules_map[rule_id] else 'https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md'
+                help_uri=rules_map[rule_id].source_url if rules_map[
+                    rule_id] else 'https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md'
             )
             for rule_id in matched_rules
         ]
@@ -343,7 +349,7 @@ class SARIFFormatter(BaseFormatter):
                     ),
                     information_uri='https://github.com/aws-cloudformation/cfn-lint',
                     rules=rules,
-                    version=cfnlint.version.__version__,
+                    version=__version__,
                 ),
             ),
             original_uri_base_ids={

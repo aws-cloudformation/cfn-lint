@@ -8,10 +8,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python: [ 3.7, 3.8, 3.9]
+        python: [ 3.7, 3.8, 3.9, "3.10" ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -21,6 +21,7 @@ jobs:
       - name: Run Tox
         run: |
           tox -e pylint
+          tox -e type
           tox -e py
       - uses: codecov/codecov-action@v3.1.0
         if: matrix.os == 'ubuntu-latest'
@@ -37,7 +38,7 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python: [3.8]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup Python
         uses: actions/setup-python@v4
         with:

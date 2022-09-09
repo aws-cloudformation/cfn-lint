@@ -3,8 +3,11 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+from typing import List, Optional, Sequence
 from cfnlint.template import Template
 from cfnlint.transform import Transform
+from .rules import Match, RulesCollection
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -13,7 +16,7 @@ class Runner(object):
     """Run all the rules"""
 
     def __init__(
-            self, rules, filename, template, regions, verbosity=0, mandatory_rules=None):
+            self, rules: RulesCollection, filename: Optional[str], template: str, regions: Sequence[str], verbosity=0, mandatory_rules: Sequence[str]=None):
 
         self.rules = rules
         self.filename = filename
@@ -41,7 +44,7 @@ class Runner(object):
         self.cfn.template = transform.template()
         return matches
 
-    def run(self):
+    def run(self) -> List[Match]:
         """Run rules"""
         LOGGER.info('Run scan of template %s', self.filename)
         matches = []
@@ -51,10 +54,10 @@ class Runner(object):
                     self.filename, self.cfn))
         return self.check_metadata_directives(matches)
 
-    def check_metadata_directives(self, matches):
+    def check_metadata_directives(self, matches: Sequence[Match]) -> List[Match]:
         # uniq the list of incidents and filter out exceptions from the template
         directives = self.cfn.get_directives()
-        return_matches = []
+        return_matches: List[Match] = []
         for match in matches:
             if not any(match == u for u in return_matches):
                 if match.rule.id not in directives:
