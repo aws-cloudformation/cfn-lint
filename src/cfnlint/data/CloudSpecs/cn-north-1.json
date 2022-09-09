@@ -20634,6 +20634,24 @@
         }
       }
     },
+    "AWS::EKS::Cluster.OutpostConfig": {
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html",
+      "Properties": {
+        "ControlPlaneInstanceType": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-controlplaneinstancetype",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable"
+        },
+        "OutpostArns": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-outpostarns",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Immutable"
+        }
+      }
+    },
     "AWS::EKS::Cluster.Provider": {
       "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-provider.html",
       "Properties": {
@@ -47397,7 +47415,7 @@
       }
     }
   },
-  "ResourceSpecificationVersion": "87.0.0",
+  "ResourceSpecificationVersion": "88.0.0",
   "ResourceTypes": {
     "AWS::AccessAnalyzer::Analyzer": {
       "Attributes": {
@@ -57114,12 +57132,6 @@
           "Required": false,
           "UpdateType": "Immutable"
         },
-        "PrivateIpAddress": {
-          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-privateipaddress",
-          "PrimitiveType": "String",
-          "Required": false,
-          "UpdateType": "Immutable"
-        },
         "SubnetId": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-subnetid",
           "PrimitiveType": "String",
@@ -59780,6 +59792,9 @@
         "Endpoint": {
           "PrimitiveType": "String"
         },
+        "Id": {
+          "PrimitiveType": "String"
+        },
         "KubernetesNetworkConfig.ServiceIpv6Cidr": {
           "PrimitiveType": "String"
         },
@@ -59816,6 +59831,12 @@
           "Value": {
             "ValueType": "AWS::EKS::Cluster.Name"
           }
+        },
+        "OutpostConfig": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-outpostconfig",
+          "Required": false,
+          "Type": "OutpostConfig",
+          "UpdateType": "Immutable"
         },
         "ResourcesVpcConfig": {
           "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-eks-cluster.html#cfn-eks-cluster-resourcesvpcconfig",
@@ -60410,6 +60431,133 @@
           "PrimitiveType": "String",
           "Required": true,
           "UpdateType": "Immutable"
+        }
+      }
+    },
+    "AWS::EMR::Studio": {
+      "Attributes": {
+        "Arn": {
+          "PrimitiveType": "String"
+        },
+        "StudioId": {
+          "PrimitiveType": "String"
+        },
+        "Url": {
+          "PrimitiveType": "String"
+        }
+      },
+      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html",
+      "Properties": {
+        "AuthMode": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-authmode",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.AuthMode"
+          }
+        },
+        "DefaultS3Location": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-defaults3location",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.DefaultS3Location"
+          }
+        },
+        "Description": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-description",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "EngineSecurityGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-enginesecuritygroupid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.EngineSecurityGroupId"
+          }
+        },
+        "IdpAuthUrl": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idpauthurl",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.IdpAuthUrl"
+          }
+        },
+        "IdpRelayStateParameterName": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-idprelaystateparametername",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Mutable"
+        },
+        "Name": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-name",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.Name"
+          }
+        },
+        "ServiceRole": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-servicerole",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.ServiceRole"
+          }
+        },
+        "SubnetIds": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-subnetids",
+          "PrimitiveItemType": "String",
+          "Required": true,
+          "Type": "List",
+          "UpdateType": "Mutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.SubnetIds"
+          }
+        },
+        "Tags": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-tags",
+          "DuplicatesAllowed": false,
+          "ItemType": "Tag",
+          "Required": false,
+          "Type": "List",
+          "UpdateType": "Mutable"
+        },
+        "UserRole": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-userrole",
+          "PrimitiveType": "String",
+          "Required": false,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.UserRole"
+          }
+        },
+        "VpcId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-vpcid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.VpcId"
+          }
+        },
+        "WorkspaceSecurityGroupId": {
+          "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-emr-studio.html#cfn-emr-studio-workspacesecuritygroupid",
+          "PrimitiveType": "String",
+          "Required": true,
+          "UpdateType": "Immutable",
+          "Value": {
+            "ValueType": "AWS::EMR::Studio.WorkspaceSecurityGroupId"
+          }
         }
       }
     },
@@ -78204,6 +78352,45 @@
       "NumberMax": 100,
       "NumberMin": 1
     },
+    "AWS::EMR::Studio.AuthMode": {
+      "AllowedValues": [
+        "SSO",
+        "IAM"
+      ]
+    },
+    "AWS::EMR::Studio.DefaultS3Location": {
+      "AllowedPatternRegex": "^s3://.*",
+      "StringMax": 10280,
+      "StringMin": 6
+    },
+    "AWS::EMR::Studio.EngineSecurityGroupId": {
+      "AllowedPatternRegex": "^sg-[a-zA-Z0-9\\-._]+$",
+      "StringMax": 256,
+      "StringMin": 4
+    },
+    "AWS::EMR::Studio.IdpAuthUrl": {
+      "AllowedPatternRegex": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$"
+    },
+    "AWS::EMR::Studio.Name": {
+      "AllowedPatternRegex": "[a-zA-Z0-9_-]+",
+      "StringMax": 256,
+      "StringMin": 1
+    },
+    "AWS::EMR::Studio.ServiceRole": {
+      "AllowedPatternRegex": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"
+    },
+    "AWS::EMR::Studio.SubnetIds": {
+      "AllowedPatternRegex": "^(subnet-[a-f0-9]{13})|(subnet-[a-f0-9]{8})\\Z"
+    },
+    "AWS::EMR::Studio.UserRole": {
+      "AllowedPatternRegex": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$"
+    },
+    "AWS::EMR::Studio.VpcId": {
+      "AllowedPatternRegex": "^(vpc-[0-9a-f]{8}|vpc-[0-9a-f]{17})$"
+    },
+    "AWS::EMR::Studio.WorkspaceSecurityGroupId": {
+      "AllowedPatternRegex": "^sg-[a-zA-Z0-9\\-._]+$"
+    },
     "AWS::ElastiCache::GlobalReplicationGroup.GlobalReplicationGroupMember.Role": {
       "AllowedValues": [
         "PRIMARY",
@@ -83767,6 +83954,7 @@
         "vpc-flow-log",
         "vpc-peering-connection",
         "vpn-connection",
+        "vpn-connection-device-type",
         "vpn-gateway"
       ]
     },
