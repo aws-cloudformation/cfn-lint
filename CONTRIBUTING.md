@@ -57,6 +57,7 @@ Tox test suites available:
 * **py37**: Unit tests (Python 3.7)
 * **py38**: Unit tests (Python 3.8)
 * **py39**: Unit tests (Python 3.9)
+* **py310**: Unit tests (Python 3.10)
 * **pylint**: Python syntax check
 
 ## Contributing via Pull Requests
