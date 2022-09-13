@@ -1,3 +1,14 @@
+### v0.65.0
+###### Features
+- Add `--force` option on `--update-specs` so cache isn't used (pull #[2334](https://github.com/aws-cloudformation/cfn-lint/pull/2334))
+- Add support for Python 3.10 (pull #[2365](https://github.com/aws-cloudformation/cfn-lint/pull/2365))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `88.0.0` (pull #[2361](https://github.com/aws-cloudformation/cfn-lint/pull/2361))
+###### Fixes
+- Add in `mypy` testing and do a bunch of cleanup based on the results (pull #[2328](https://github.com/aws-cloudformation/cfn-lint/pull/2328))
+- Update rule [I1022](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I1022) to not suggest `Fn::Sub` on complext `Fn::Join`s (pull #[2364](https://github.com/aws-cloudformation/cfn-lint/pull/2364))
+
+
 ### v0.64.1
 ###### Fixes
 - Make `me-central-1` `ExtendedSpecs` a module (pull #[2359](https://github.com/aws-cloudformation/cfn-lint/pull/2359))
