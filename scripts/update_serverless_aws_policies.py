@@ -20,7 +20,7 @@ def main():
 
     filename = 'src/cfnlint/data/Serverless/ManagedPolicies.json'
     with open(filename, 'w+', encoding='utf-8') as f:
-        json.dump(policyLoader._policy_map, f, indent=2, sort_keys=True, separators=(',', ': '))
+        json.dump(policyLoader._policy_map, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 if __name__ == '__main__':

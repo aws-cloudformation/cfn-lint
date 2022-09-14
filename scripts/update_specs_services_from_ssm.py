@@ -160,7 +160,7 @@ def add_spec_patch(region, services):
 
     filename = 'src/cfnlint/data/ExtendedSpecs/%s/06_ssm_service_removal.json' % region
     with open(filename, 'w+', encoding='utf-8') as f:
-        json.dump(patches, f, indent=2, sort_keys=True, separators=(',', ': '))
+        json.dump(patches, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 def add_spec_missing_services_patch(region, services):
@@ -199,7 +199,7 @@ def add_spec_missing_services_patch(region, services):
     if patches:
         filename = 'src/cfnlint/data/ExtendedSpecs/%s/07_ssm_service_addition.json' % region
         with open(filename, 'w+', encoding='utf-8') as f:
-            json.dump(patches, f, indent=2, sort_keys=True, separators=(',', ': '))
+            json.dump(patches, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 def main():

@@ -167,7 +167,7 @@ class JsonFormatter(BaseFormatter):
         del rules
 
         return json.dumps(
-            matches, indent=4, cls=self.CustomEncoder,
+            matches, indent=1, cls=self.CustomEncoder,
             sort_keys=True, separators=(',', ': '))
 
 
