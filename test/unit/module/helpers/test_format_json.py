@@ -22,15 +22,15 @@ class TestFormatJson(BaseTestCase):
             ]
         }
         success = """{
-  "Key": {
-    "Date": "2010-09-09 00:00:00",
-    "SubKey": "Value"
-  },
-  "List": [
-    {
-      "SubKey": "AnotherValue"
-    }
-  ]
+ "Key": {
+  "Date": "2010-09-09 00:00:00",
+  "SubKey": "Value"
+ },
+ "List": [
+  {
+   "SubKey": "AnotherValue"
+  }
+ ]
 }"""
         results = format_json_string(obj)
         self.assertEqual(success, results)
