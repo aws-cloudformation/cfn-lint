@@ -173,7 +173,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
                     }
                 },
                 mock_builtin_open.return_value.__enter__.return_value,
-                indent=2,
+                indent=1,
                 separators=(',', ': '),
                 sort_keys=True
             )

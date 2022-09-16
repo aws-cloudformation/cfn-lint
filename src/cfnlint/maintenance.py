@@ -131,7 +131,7 @@ def update_resource_spec(region, url, schema_cache, force: bool=False):
     spec = search_and_replace_botocore_types(spec)
 
     with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(spec, f, indent=2, sort_keys=True, separators=(',', ': '))
+        json.dump(spec, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 def update_documentation(rules):
@@ -243,7 +243,7 @@ def update_iam_policies():
             LOGGER.debug('"%s" was not found in the policies file', k)
 
     with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(content, f, indent=2, sort_keys=True, separators=(',', ': '))
+        json.dump(content, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 def get_schema_value_types():
