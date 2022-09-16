@@ -190,7 +190,7 @@ def get_rds_pricing():
     LOGGER.info('Updating RDS Spec files')
     filename = 'src/cfnlint/data/AdditionalSpecs/RdsProperties.json'
     with open(filename, 'w+', encoding='utf-8') as f:
-        json.dump(rds_specs, f, indent=2, sort_keys=True, separators=(',', ': '))
+        json.dump(rds_specs, f, indent=1, sort_keys=True, separators=(',', ': '))
     return results
 
 
@@ -239,7 +239,7 @@ def main():
     for region, patches in outputs.items():
         filename = 'src/cfnlint/data/ExtendedSpecs/%s/05_pricing_property_values.json' % region
         with open(filename, 'w+', encoding='utf-8') as f:
-            json.dump(patches, f, indent=2, sort_keys=True, separators=(',', ': '))
+            json.dump(patches, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
 if __name__ == '__main__':
