@@ -1,3 +1,10 @@
+### v0.65.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `89.0.0` (pull #[2366](https://github.com/aws-cloudformation/cfn-lint/pull/2366))
+- Add support for `custom` RDS `Engine` types on resource type `AWS::RDS::DBInstance` (pull #[2370](https://github.com/aws-cloudformation/cfn-lint/pull/2370))
+- Remove extra spacing in specs reducing overall size (pull #[2371](https://github.com/aws-cloudformation/cfn-lint/pull/2371))
+- Update `AllowedValues` for `RetentionInDays` on resource type `AWS::Logs::LogGroup` (pull #[2372](https://github.com/aws-cloudformation/cfn-lint/pull/2372))
+
 ### v0.65.0
 ###### Features
 - Add `--force` option on `--update-specs` so cache isn't used (pull #[2334](https://github.com/aws-cloudformation/cfn-lint/pull/2334))
