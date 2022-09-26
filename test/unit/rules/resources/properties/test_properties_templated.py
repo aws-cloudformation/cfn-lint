@@ -13,6 +13,9 @@ class TestPropertiesTemplated(BaseRuleTestCase):
         """Setup"""
         super(TestPropertiesTemplated, self).setUp()
         self.collection.register(PropertiesTemplated())
+        self.success_templates = [
+            'test/fixtures/templates/good/resources/properties/templated_code.yaml'
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
