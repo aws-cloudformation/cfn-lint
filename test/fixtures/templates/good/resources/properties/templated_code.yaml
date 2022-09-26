@@ -1,12 +1,11 @@
----
-AWSTemplateFormatVersion: "2010-09-09"
 Resources:
-  SampleLambda:
-    Type: AWS::Lambda::Function
+  AppSync:
+    Type: AWS::AppSync::GraphQLApi
     Properties:
-      Role: role:arn
-      Runtime: python2.7
-      Handler: lambda_sample.handler
-      # Templatable property
-      Code: ./sample.zip
-      Timeout: 300
+      Name: Test
+      AuthenticationType: AWS_IAM
+  AppSyncSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !Ref AppSync
+      DefinitionS3Location: s3://bucket/74859289ff9c76c3837181bc6196bc7c
