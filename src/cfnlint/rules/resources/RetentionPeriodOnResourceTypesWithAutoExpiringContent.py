@@ -106,6 +106,8 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
         return matches
 
     def _validate_property(self, value, regex) -> bool:
-        if regex.match(value):
-            return True
-        return False
+        if isinstance(value, str):
+            if regex.match(value):
+                return True
+            return False
+        return True
