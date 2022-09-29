@@ -13,8 +13,9 @@ class TestDeprecatedRuntimeEol(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestDeprecatedRuntimeEol, self).setUp()
-        self.collection.register(DeprecatedRuntimeEol())
-        self.collection.rules[0].current_date = datetime(2019, 6, 29)
+        rule = DeprecatedRuntimeEol()
+        self.collection.register(rule)
+        self.collection.rules[rule.id].current_date = datetime(2019, 6, 29)
 
     def test_file_positive(self):
         """Test Positive"""
