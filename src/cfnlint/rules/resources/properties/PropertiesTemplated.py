@@ -15,24 +15,32 @@ class PropertiesTemplated(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html'
     tags = ['resources']
 
+    templated_exceptions = {
+        'AWS::ApiGateway::RestApi': ['BodyS3Location'],
+        'AWS::Lambda::Function': ['Code'],
+        'AWS::Lambda::LayerVersion': ['Content'],
+        'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
+        'AWS::StepFunctions::StateMachine': ['DefinitionS3Location'],
+        'AWS::AppSync::GraphQLSchema': ['DefinitionS3Location'],
+        'AWS::AppSync::Resolver': ['RequestMappingTemplateS3Location', 'ResponseMappingTemplateS3Location'],
+        'AWS::AppSync::FunctionConfiguration': ['RequestMappingTemplateS3Location', 'ResponseMappingTemplateS3Location'],
+        'AWS::CloudFormation::Stack': ['TemplateURL'],
+        'AWS::CodeCommit::Repository': ['S3'],
+    }
+
     def __init__(self):
         """Init"""
         super(PropertiesTemplated, self).__init__()
-        self.resource_property_types.extend([
-            'AWS::ApiGateway::RestApi',
-            'AWS::Lambda::Function',
-            'AWS::Lambda::LayerVersion',
-            'AWS::ElasticBeanstalk::ApplicationVersion',
-            'AWS::StepFunctions::StateMachine',
-        ])
+        self.resource_property_types.extend(self.templated_exceptions.keys())
 
     def check_value(self, value, path):
         """ Check the value """
         matches = []
         if isinstance(value, str):
-            message = 'This code may only work with `package` cli command as the property (%s) is a string' % (
-                '/'.join(map(str, path)))
-            matches.append(RuleMatch(path, message))
+            if not value.startswith('s3://'):
+                message = 'This code may only work with `package` cli command as the property (%s) is a string' % (
+                    '/'.join(map(str, path)))
+                matches.append(RuleMatch(path, message))
 
         return matches
 
@@ -40,15 +48,7 @@ class PropertiesTemplated(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        templated_exceptions = {
-            'AWS::ApiGateway::RestApi': ['BodyS3Location'],
-            'AWS::Lambda::Function': ['Code'],
-            'AWS::Lambda::LayerVersion': ['Content'],
-            'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
-            'AWS::StepFunctions::StateMachine': ['DefinitionS3Location'],
-        }
-
-        for key in templated_exceptions.get(resourcetype, []):
+        for key in self.templated_exceptions.get(resourcetype, []):
             matches.extend(
                 cfn.check_value(
                     obj=properties, key=key,
