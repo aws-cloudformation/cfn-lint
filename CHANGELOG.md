@@ -1,3 +1,14 @@
+### v0.66.0
+###### Features
+- Update [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to provide a suggestion if the wrong value is close to a correct value (pull #[2387](https://github.com/aws-cloudformation/cfn-lint/pull/2387))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `90.0.0` (pull #[2376](https://github.com/aws-cloudformation/cfn-lint/pull/2376))
+- Add in allowed values for oracle cdb engine types to `AWS::RDS::DBInstance.Engine` (pull #[2381](https://github.com/aws-cloudformation/cfn-lint/pull/2381))
+- Add in allowd value `PredictiveScaling` to `AWS::AutoScaling::ScalingPolicy.PolicyType` (pull #[2378](https://github.com/aws-cloudformation/cfn-lint/pull/2378))
+###### Fixes
+- Update [W3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W3002) to validate values aren't already S3 paths (pull #[2382](https://github.com/aws-cloudformation/cfn-lint/pull/2382))
+- Update [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to not regex check if a function (pull #[2386](https://github.com/aws-cloudformation/cfn-lint/pull/2386))
+
 ### v0.65.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `89.0.0` (pull #[2366](https://github.com/aws-cloudformation/cfn-lint/pull/2366))
