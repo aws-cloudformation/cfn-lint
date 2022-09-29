@@ -54,6 +54,7 @@ class Sub(CloudFormationLintRule):
             'Fn::Select',
             'Fn::Sub',
             'Ref',
+            'Fn::ToJsonString',
         ]
 
         matches = []
