@@ -4678,7 +4678,7 @@
    "ARNFormat": "arn:aws:iotfleetwise:${Region}:${Account}:${Type}/${Name}",
    "ARNRegex": "^arn:aws:iotfleetwise:.+:[0-9]+:.+",
    "Actions": [
-    "AssociateVehicle",
+    "AssociateVehicleFleet",
     "CreateCampaign",
     "CreateDecoderManifest",
     "CreateFleet",
@@ -4691,10 +4691,11 @@
     "DeleteModelManifest",
     "DeleteSignalCatalog",
     "DeleteVehicle",
-    "DisassociateVehicle",
+    "DisassociateVehicleFleet",
     "GetCampaign",
     "GetDecoderManifest",
     "GetFleet",
+    "GetLoggingOptions",
     "GetModelManifest",
     "GetRegisterAccountStatus",
     "GetSignalCatalog",
@@ -4712,9 +4713,13 @@
     "ListModelManifests",
     "ListSignalCatalogNodes",
     "ListSignalCatalogs",
+    "ListTagsForResource",
     "ListVehicles",
     "ListVehiclesInFleet",
+    "PutLoggingOptions",
     "RegisterAccount",
+    "TagResource",
+    "UntagResource",
     "UpdateCampaign",
     "UpdateDecoderManifest",
     "UpdateFleet",
@@ -4725,6 +4730,9 @@
    "HasResource": true,
    "StringPrefix": "iotfleetwise",
    "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
     "iotfleetwise:UpdateToDecoderManifestArn",
     "iotfleetwise:UpdateToModelManifestArn"
    ]
@@ -5770,7 +5778,7 @@
    ]
   },
   "AWS Migration Hub Strategy Recommendations": {
-   "ARNFormat": "arn:${Partition}:iam::${Account}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:${Partition}:iam:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:${Partition}:${ServiceName}:.+:.+:.+",
    "Actions": [
     "GetAntiPattern",
@@ -5778,6 +5786,7 @@
     "GetApplicationComponentStrategies",
     "GetAssessment",
     "GetImportFileTask",
+    "GetLatestAssessmentId",
     "GetMessage",
     "GetPortfolioPreferences",
     "GetPortfolioSummary",
@@ -5798,6 +5807,7 @@
     "StartRecommendationReportGeneration",
     "StopAssessment",
     "UpdateApplicationComponentConfig",
+    "UpdateCollectorConfiguration",
     "UpdateServerConfig"
    ],
    "HasResource": false,
@@ -6877,7 +6887,7 @@
    ]
   },
   "AWS Security Token Service": {
-   "ARNFormat": "arn:aws:iam::${Namespace}:${RelativeId}",
+   "ARNFormat": "arn:aws:iam::${Account}:${RelativeId}",
    "ARNRegex": "^arn:aws:iam::.+",
    "Actions": [
     "AssumeRole",
@@ -6898,11 +6908,8 @@
     "accounts.google.com:aud",
     "accounts.google.com:oaud",
     "accounts.google.com:sub",
-    "aws:FederatedProvider",
-    "aws:PrincipalTag/${TagKey}",
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
-    "aws:SourceIdentity",
     "aws:TagKeys",
     "cognito-identity.amazonaws.com:amr",
     "cognito-identity.amazonaws.com:aud",
@@ -7451,6 +7458,17 @@
    ],
    "HasResource": false,
    "StringPrefix": "support"
+  },
+  "AWS Support Plans": {
+   "ARNFormat": "^arn:${Partition}:supportplans::${Account}:${ResourceType}/${ResourcePath}",
+   "ARNRegex": "^arn:${Partition}:supportplans::.+:.+",
+   "Actions": [
+    "GetSupportPlan",
+    "GetSupportPlanUpdateStatus",
+    "StartSupportPlanUpdate"
+   ],
+   "HasResource": false,
+   "StringPrefix": "supportplans"
   },
   "AWS Sustainability": {
    "ARNFormat": "arn:aws:sustainability:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
@@ -9666,7 +9684,7 @@
    ]
   },
   "Amazon Comprehend": {
-   "ARNFormat": "arn:aws:comprehend:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:aws:comprehend:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:comprehend:.+:.+:.+",
    "Actions": [
     "BatchDetectDominantLanguage",
@@ -9674,6 +9692,7 @@
     "BatchDetectKeyPhrases",
     "BatchDetectSentiment",
     "BatchDetectSyntax",
+    "BatchDetectTargetedSentiment",
     "ClassifyDocument",
     "ContainsPiiEntities",
     "CreateDocumentClassifier",
@@ -9702,6 +9721,7 @@
     "DetectPiiEntities",
     "DetectSentiment",
     "DetectSyntax",
+    "DetectTargetedSentiment",
     "ImportModel",
     "ListDocumentClassificationJobs",
     "ListDocumentClassifierSummaries",
@@ -10814,6 +10834,7 @@
     "ModifyIpamResourceCidr",
     "ModifyIpamScope",
     "ModifyLaunchTemplate",
+    "ModifyLocalGatewayRoute",
     "ModifyManagedPrefixList",
     "ModifyNetworkInterfaceAttribute",
     "ModifyPrivateDnsNameOptions",
@@ -12542,6 +12563,7 @@
     "DisassociateMember",
     "Enable",
     "EnableDelegatedAdminAccount",
+    "GetConfiguration",
     "GetDelegatedAdminAccount",
     "GetFindingsReportStatus",
     "GetMember",
@@ -12557,6 +12579,7 @@
     "ListUsageTotals",
     "TagResource",
     "UntagResource",
+    "UpdateConfiguration",
     "UpdateFilter",
     "UpdateOrganizationConfiguration"
    ],
@@ -13218,6 +13241,7 @@
     "UpdateDistribution",
     "UpdateDistributionBundle",
     "UpdateDomainEntry",
+    "UpdateInstanceMetadataOptions",
     "UpdateLoadBalancerAttribute",
     "UpdateRelationalDatabase",
     "UpdateRelationalDatabaseParameters"
@@ -13921,7 +13945,7 @@
    ]
   },
   "Amazon Neptune": {
-   "ARNFormat": "arn:aws:neptune-db:${Region}:${AccountId}:${Id}/*",
+   "ARNFormat": "arn:aws:neptune-db:${Region}:${Account}:${Id}/*",
    "ARNRegex": "^arn:aws:neptune-db:.+",
    "Actions": [
     "CancelLoaderJob",
@@ -13954,7 +13978,8 @@
     "StartMLDataProcessingJob",
     "StartMLModelTrainingJob",
     "StartMLModelTransformJob",
-    "WriteDataViaQuery"
+    "WriteDataViaQuery",
+    "connect"
    ],
    "HasResource": true,
    "StringPrefix": "neptune-db",
@@ -15294,7 +15319,12 @@
     "UpdateTrafficPolicyInstance"
    ],
    "HasResource": true,
-   "StringPrefix": "route53"
+   "StringPrefix": "route53",
+   "conditionKeys": [
+    "route53:ChangeResourceRecordSetsActions",
+    "route53:ChangeResourceRecordSetsNormalizedRecordNames",
+    "route53:ChangeResourceRecordSetsRecordTypes"
+   ]
   },
   "Amazon Route 53 Domains": {
    "Actions": [
