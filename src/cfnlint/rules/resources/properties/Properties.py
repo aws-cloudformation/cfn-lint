@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from difflib import SequenceMatcher
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
@@ -264,8 +265,16 @@ class Properties(CloudFormationLintRule):
                 elif len(text) == 1 and prop in 'Ref' and text.get(prop) == 'AWS::NoValue':
                     pass
                 elif not supports_additional_properties:
-                    message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
-                    matches.append(RuleMatch(proppath, message))
+                    close_match = False
+                    for key in resourcespec.keys():
+                        if SequenceMatcher(a=prop,b=key).ratio() > 0.8:
+                            message = 'Invalid Property %s. Did you mean %s?' % ('/'.join(map(str, proppath)), key)
+                            matches.append(RuleMatch(proppath, message))
+                            close_match = True
+                            break
+                    if not close_match:
+                        message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
+                        matches.append(RuleMatch(proppath, message))
             else:
                 if 'Type' in resourcespec[prop]:
                     if resourcespec[prop]['Type'] == 'List':

@@ -36,7 +36,7 @@ class TestDirectives(BaseCliTestCase):
                             'LineNumber': 17
                         }
                     },
-                    'Message': 'Invalid Property Resources/myBucketFail/Properties/BucketName1',
+                    'Message': 'Invalid Property Resources/myBucketFail/Properties/BucketName1. Did you mean BucketName?',
                     'Rule': {
                         'Description': 'Making sure that resources properties are properly configured',
                         'Id': 'E3002',
