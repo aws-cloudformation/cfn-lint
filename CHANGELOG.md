@@ -1,3 +1,10 @@
+### v0.66.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `91.0.0` (pull #[2392](https://github.com/aws-cloudformation/cfn-lint/pull/2392))
+###### Fixes
+- Update [E8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E8003), [E1018](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1018), [E1019](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1019) to allow `Fn::ToJsonString` inside `Equals`, `Split`, and `Sub` (pull #[2397](https://github.com/aws-cloudformation/cfn-lint/pull/2397))
+- Update [I3013](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3013) to allow https and s3 (pull #[2394](https://github.com/aws-cloudformation/cfn-lint/pull/2394))
+
 ### v0.66.0
 ###### Features
 - Update [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to provide a suggestion if the wrong value is close to a correct value (pull #[2387](https://github.com/aws-cloudformation/cfn-lint/pull/2387))
