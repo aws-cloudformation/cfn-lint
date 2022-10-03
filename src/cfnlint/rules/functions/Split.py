@@ -30,6 +30,7 @@ class Split(CloudFormationLintRule):
             'Fn::Select',
             'Fn::Sub',
             'Ref',
+            'Fn::ToJsonString',
         ]
 
         for split_obj in split_objs:

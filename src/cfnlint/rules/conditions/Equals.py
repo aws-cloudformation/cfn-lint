@@ -15,8 +15,16 @@ class Equals(CloudFormationLintRule):
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-equals'
     tags = ['functions', 'equals']
 
-    allowed_functions = ['Ref', 'Fn::FindInMap',
-                         'Fn::Sub', 'Fn::Join', 'Fn::Select', 'Fn::Split']
+    allowed_functions = [
+        'Ref',
+        'Fn::FindInMap',
+        'Fn::Sub',
+        'Fn::Join',
+        'Fn::Select',
+        'Fn::Split',
+        'Fn::Length',
+        'Fn::ToJsonString',
+    ]
     function = 'Fn::Equals'
 
     def _check_equal_values(self, element, path, valid_refs):
