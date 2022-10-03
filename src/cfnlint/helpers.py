@@ -73,9 +73,22 @@ REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/
 
 
 FUNCTIONS = [
-    'Fn::Base64', 'Fn::GetAtt', 'Fn::GetAZs', 'Fn::ImportValue',
-    'Fn::Join', 'Fn::Split', 'Fn::FindInMap', 'Fn::Select', 'Ref',
-    'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr']
+    'Fn::Base64',
+    'Fn::GetAtt',
+    'Fn::GetAZs',
+    'Fn::ImportValue',
+    'Fn::Join',
+    'Fn::Split',
+    'Fn::FindInMap',
+    'Fn::Select',
+    'Ref',
+    'Fn::If',
+    'Fn::Contains',
+    'Fn::Sub',
+    'Fn::Cidr',
+    'Fn::Length',
+    'Fn::ToJsonString',
+]
 
 FUNCTIONS_MULTIPLE = ['Fn::GetAZs', 'Fn::Split']
 
