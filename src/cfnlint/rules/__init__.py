@@ -8,6 +8,7 @@ from datetime import datetime
 import importlib
 import traceback
 from typing import Any, Dict, List, Optional
+from cfnlint.exceptions import DuplicateRuleError
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
@@ -229,8 +230,13 @@ class RulesCollection(object):
 
     def register(self, rule: CloudFormationLintRule):
         """Register rules"""
-        self.all_rules[rule.id] = rule
-        self.__register(rule)
+        # Some rules are inheritited to limit code re-use.
+        # These rules have no rule ID so we filter this out
+        if rule.id != '':
+            if rule.id in self.all_rules:
+                raise DuplicateRuleError(rule_id=rule.id)
+            self.all_rules[rule.id] = rule
+            self.__register(rule)
 
     def __iter__(self):
         return iter(self.rules.values())
