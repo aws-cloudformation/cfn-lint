@@ -7,7 +7,8 @@ import logging
 from datetime import datetime
 import importlib
 import traceback
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
+from cfnlint.exceptions import DuplicateRuleError
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
@@ -45,17 +46,20 @@ def matching(match_type):
 
             if results:
                 for result in results:
+                    error_rule = self
+                    if hasattr(result, 'rule'):
+                        error_rule = result.rule
                     linenumbers = cfn.get_location_yaml(cfn.template, result.path)
                     if linenumbers:
                         matches.append(Match(
                             linenumbers[0] + 1, linenumbers[1] + 1,
                             linenumbers[2] + 1, linenumbers[3] + 1,
-                            filename, self, result.message, result))
+                            filename, error_rule, result.message, result))
                     else:
                         matches.append(Match(
                             1, 1,
                             1, 1,
-                            filename, self, result.message, result))
+                            filename, error_rule, result.message, result))
 
             return matches
         return wrapper
@@ -63,12 +67,13 @@ def matching(match_type):
 
 class CloudFormationLintRule(object):
     """CloudFormation linter rules"""
-    id = ''
-    shortdesc = ''
-    description = ''
-    source_url = ''
+    id: str = ''
+    shortdesc: str = ''
+    description: str = ''
+    source_url: str = ''
     tags: List[str] = []
-    experimental = False
+    experimental: bool = False
+    child_rules: Dict[str, Any] = {}
 
     logger = logging.getLogger(__name__)
 
@@ -184,8 +189,8 @@ class RulesCollection(object):
     """Collection of rules"""
 
     def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
-        self.rules = []
-        self.all_rules = []
+        self.rules: Dict[str, CloudFormationLintRule] = {}
+        self.all_rules: Dict[str, CloudFormationLintRule] = {}
         self.used_rules = set()
 
         self.configure(
@@ -197,7 +202,7 @@ class RulesCollection(object):
             )
 
     def configure(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
-        self.rules = []
+        self.rules: Dict[str, CloudFormationLintRule] = {}
         # Whether "experimental" rules should be added
         self.include_experimental = include_experimental
 
@@ -213,26 +218,31 @@ class RulesCollection(object):
             if default_rule not in self.include_rules:
                 self.include_rules.extend([default_rule])
 
-        for rule in self.all_rules:
+        for rule in self.all_rules.values():
             self.__register(rule)
 
-    def __register(self, rule):
+    def __register(self, rule: CloudFormationLintRule):
         """ Register and configure the rule """
         if self.is_rule_enabled(rule):
             self.used_rules.add(rule.id)
-            self.rules.append(rule)
+            self.rules[rule.id] = rule
             rule.configure(self.configure_rules.get(rule.id, None))
 
-    def register(self, rule):
+    def register(self, rule: CloudFormationLintRule):
         """Register rules"""
-        self.all_rules.append(rule)
-        self.__register(rule)
+        # Some rules are inheritited to limit code re-use.
+        # These rules have no rule ID so we filter this out
+        if rule.id != '':
+            if rule.id in self.all_rules:
+                raise DuplicateRuleError(rule_id=rule.id)
+            self.all_rules[rule.id] = rule
+            self.__register(rule)
 
     def __iter__(self):
-        return iter(self.rules)
+        return iter(self.rules.values())
 
     def __len__(self):
-        return len(self.rules)
+        return len(self.rules.keys())
 
     def extend(self, more):
         """Extend rules"""
@@ -243,7 +253,7 @@ class RulesCollection(object):
         return '\n'.join([rule.verbose()
                           for rule in sorted(self.rules, key=lambda x: x.id)])
 
-    def is_rule_enabled(self, rule):
+    def is_rule_enabled(self, rule: CloudFormationLintRule):
         """ Checks if an individual rule is valid """
         return rule.is_enabled(self.include_experimental, self.ignore_rules,
                                self.include_rules, self.mandatory_rules)
@@ -279,7 +289,7 @@ class RulesCollection(object):
             property_spec_name = '%s.%s' % (resource_type, property_type)
 
         if property_spec_name in property_spec:
-            for rule in self.rules:
+            for rule in self.rules.values():
                 if isinstance(properties, dict):
                     if len(properties) == 1:
                         for k, _ in properties.items():
@@ -391,10 +401,14 @@ class RulesCollection(object):
     def run(self, filename: Optional[str], cfn: Template):
         """Run rules"""
         matches = []
-        for rule in self.rules:
+        for rule in self.rules.values():
             rule.initialize(cfn)
 
-        for rule in self.rules:
+        for rule in self.rules.values():
+            for key in rule.child_rules.keys():
+                rule.child_rules[key] = self.rules.get(key)
+
+        for rule in self.rules.values():
             matches.extend(
                 self.run_check(
                     rule.matchall, filename, rule.id, filename, cfn
@@ -406,7 +420,7 @@ class RulesCollection(object):
             resource_properties = resource_attributes.get('Properties')
             if isinstance(resource_type, str) and isinstance(resource_properties, dict):
                 path = ['Resources', resource_name, 'Properties']
-                for rule in self.rules:
+                for rule in self.rules.values():
                     matches.extend(
                         self.run_check(
                             rule.matchall_resource_properties, filename, rule.id,

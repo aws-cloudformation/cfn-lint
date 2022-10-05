@@ -97,7 +97,7 @@ class JUnitFormatter(BaseFormatter):
             return None
 
         test_cases = []
-        for rule in rules.all_rules:
+        for rule in rules.all_rules.values():
             if not rule.id in rules.used_rules:
                 if not rule.id:
                     continue

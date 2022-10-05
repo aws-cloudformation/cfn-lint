@@ -29,13 +29,14 @@ class BaseRuleTestCase(BaseTestCase):
     def helper_file_rule_config(self, filename, config, err_count):
         """Success test with rule config included"""
         template = self.load_template(filename)
-        self.collection.rules[0].configure(config)
+        rule_id = list(self.collection.rules.keys())[0]
+        self.collection.rules[rule_id].configure(config)
         good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
         good_runner.transform()
         failures = good_runner.run()
         self.assertEqual(err_count, len(failures), 'Expected {} failures but got {} on {}'.format(
             err_count, failures, filename))
-        self.collection.rules[0].configure(config)
+        self.collection.rules[rule_id].configure(config)
 
     def helper_file_positive_template(self, filename):
         """Success test with template parameter"""
