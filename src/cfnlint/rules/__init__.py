@@ -55,18 +55,23 @@ def matching(match_type: Any):
                     error_rule = self
                     if hasattr(result, 'rule'):
                         error_rule = result.rule
-                    start_mark = None
-                    end_mark = None
-                    for p in reversed(list(result.path)):
-                        if hasattr(p, 'start_mark'):
-                            start_mark = p.start_mark
-                            end_mark = p.end_mark
-                            break
-                    if start_mark is not None and end_mark is not None:
-                        linenumbers = [start_mark.line, start_mark.column, end_mark.line, end_mark.column]
-                    else:
-                        # fall back to the legacy method
-                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                    linenumbers, error =  cfn.get_location_yaml(cfn.template, result.path)
+                    # if we get a key or attribute error try to get the location from path values
+                    # this is probably rhe result of eliminating Fn::Ifs from complex objects
+                    # resulting the paths being harder to track
+                    if error:
+                        start_mark = None
+                        end_mark = None
+                        for p in reversed(list(result.path)):
+                            if hasattr(p, 'start_mark'):
+                                start_mark = p.start_mark
+                                end_mark = p.end_mark
+                                break
+                        if start_mark is not None and end_mark is not None:
+                            path_linenumbers = [start_mark.line, start_mark.column, end_mark.line, end_mark.column]
+                            # only replace if the path result is deeper into the document
+                            if path_linenumbers[0] >= linenumbers[0] and path_linenumbers[1] > linenumbers[1]:
+                                linenumbers = path_linenumbers
                     if linenumbers:
                         matches.append(
                             Match(

@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import re
 from copy import deepcopy, copy
+from typing import Any, List, Tuple, Union
 
 import cfnlint.conditions
 import cfnlint.helpers
@@ -569,7 +570,7 @@ class Template:  # pylint: disable=R0904,too-many-lines
 
         return matches
 
-    def _loc(self, obj):
+    def _loc(self, obj: Any) -> Tuple[int, int, int, int]:
         """Return location of object"""
         LOGGER.debug('Get location of object...')
         return (
@@ -590,19 +591,20 @@ class Template:  # pylint: disable=R0904,too-many-lines
 
         return results
 
-    def get_location_yaml(self, text, path):
+    def get_location_yaml(self, text: Any, path: List[str]) -> Tuple[Union[Tuple[int, int, int, int], None], bool]:
         """
         Get the location information
         """
         LOGGER.debug('Get location of path %s', path)
-        result = None
+        result: Union[Tuple[int, int, int, int], None] = None
+        error = False
         if not path:
             result = self._loc(text)
         elif len(path) > 1:
             try:
-                result = self.get_location_yaml(text[path[0]], path[1:])
+                result, error = self.get_location_yaml(text[path[0]], path[1:])
             except KeyError:
-                pass
+                error = True
             # TypeError will help catch string indices must be integers for when
             # we parse JSON string and get a path inside that json string
             except TypeError:
@@ -621,6 +623,7 @@ class Template:  # pylint: disable=R0904,too-many-lines
                 try:
                     result = self._loc(text[path[0]])
                 except AttributeError as err:
+                    error = True
                     LOGGER.debug(err)
             else:
                 try:
@@ -628,9 +631,10 @@ class Template:  # pylint: disable=R0904,too-many-lines
                         if key == path[0]:
                             result = self._loc(key)
                 except AttributeError as err:
+                    error = True
                     LOGGER.debug(err)
 
-        return result
+        return result, error
 
     def check_resource_property(
         self,
