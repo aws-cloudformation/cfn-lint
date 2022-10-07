@@ -55,7 +55,18 @@ def matching(match_type: Any):
                     error_rule = self
                     if hasattr(result, 'rule'):
                         error_rule = result.rule
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                    start_mark = None
+                    end_mark = None
+                    for p in reversed(list(result.path)):
+                        if hasattr(p, 'start_mark'):
+                            start_mark = p.start_mark
+                            end_mark = p.end_mark
+                            break
+                    if start_mark is not None and end_mark is not None:
+                        linenumbers = [start_mark.line, start_mark.column, end_mark.line, end_mark.column]
+                    else:
+                        # fall back to the legacy method
+                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
                     if linenumbers:
                         matches.append(
                             Match(
