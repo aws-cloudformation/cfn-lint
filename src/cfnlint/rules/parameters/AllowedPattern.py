@@ -59,7 +59,7 @@ class AllowedPattern(CloudFormationLintRule):
                             for index, allowed_value in enumerate(parameter_values):
                                 if not re.match(allowed_pattern_regex, str(allowed_value)):
                                     param_path = ['Parameters', value, 'AllowedValues', index]
-                                    description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
+                                    description = allowed_pattern_description or f'Valid values must match pattern {allowed_pattern}'
                                     message = 'You must specify a valid allowed value for {0} ({1}). {2}'
                                     matches.append(RuleMatch(param_path, message.format(
                                         value, allowed_value, description)))
@@ -67,7 +67,7 @@ class AllowedPattern(CloudFormationLintRule):
                             # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
                             if not re.match(allowed_pattern_regex, str(default_value)):
                                 param_path = ['Parameters', value, 'Default']
-                                description = allowed_pattern_description or 'Valid values must match pattern {0}'.format(allowed_pattern)
+                                description = allowed_pattern_description or f'Valid values must match pattern {allowed_pattern}'
                                 message = 'You must specify a valid Default value for {0} ({1}). {2}'
                                 matches.append(RuleMatch(param_path, message.format(
                                     value, default_value, description)))
@@ -76,7 +76,7 @@ class AllowedPattern(CloudFormationLintRule):
 
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
@@ -98,7 +98,7 @@ class AllowedPattern(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -109,7 +109,7 @@ class AllowedPattern(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

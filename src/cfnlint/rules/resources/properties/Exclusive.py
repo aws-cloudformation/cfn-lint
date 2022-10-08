@@ -45,8 +45,7 @@ class Exclusive(CloudFormationLintRule):
                                     message.format(excl_property, prop, '/'.join(map(str, path)))
                                 ))
                             else:
-                                scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                    k, v) for (k, v) in property_set['Scenario'].items()])
+                                scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                                 message = 'Property {0} should NOT exist with {1} {2} for {3}'
                                 matches.append(RuleMatch(
                                     path + [prop],

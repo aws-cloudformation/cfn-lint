@@ -84,7 +84,7 @@ class CloudFormationLintRule(object):
         self.config_definition = {}
 
     def __repr__(self):
-        return '%s: %s' % (self.id, self.shortdesc)
+        return f'{self.id}: {self.shortdesc}'
 
     @property
     def severity(self):
@@ -98,7 +98,7 @@ class CloudFormationLintRule(object):
 
     def verbose(self):
         """Verbose output"""
-        return '%s: %s\n%s' % (self.id, self.shortdesc, self.description)
+        return f'{self.id}: {self.shortdesc}\n{self.description}'
 
     def initialize(self, cfn):
         """Initialize the rule"""
@@ -286,7 +286,7 @@ class RulesCollection(object):
         if property_type == 'Tag':
             property_spec_name = 'Tag'
         else:
-            property_spec_name = '%s.%s' % (resource_type, property_type)
+            property_spec_name = f'{resource_type}.{property_type}'
 
         if property_spec_name in property_spec:
             for rule in self.rules.values():
@@ -511,9 +511,7 @@ class Match(object):  # pylint: disable=R0902
     def __repr__(self):
         """Represent"""
         file_str = self.filename + ':' if self.filename else ''
-        formatstr = u'[{0}] ({1}) matched {2}{3}'
-        return formatstr.format(self.rule, self.message,
-                                file_str, self.linenumber)
+        return f'[{self.rule}] ({self.message}) matched {file_str}{self.linenumber}'
 
     def __eq__(self, item):
         """Override equal to compare matches"""

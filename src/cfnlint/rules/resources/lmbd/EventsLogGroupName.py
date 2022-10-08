@@ -21,14 +21,14 @@ class EventsLogGroupName(CloudFormationLintRule):
     def check_events_subscription_duplicated(self, cfn):
         """Check if Lambda Events Subscription is duplicated"""
         matches = []
-        message = 'You can only have {} Subscription Filters per CloudWatch Log Group'.format(self.limit)
+        message = f'You can only have {self.limit} Subscription Filters per CloudWatch Log Group'
 
         log_group_paths = self.__get_log_group_name_list(cfn)
         for _, c in log_group_paths.items():
             if len(c) > self.limit:
                 matches.append(
                     RuleMatch(
-                        ['Resources', c[2]], message.format()
+                        ['Resources', c[2]], message
                     )
                 )
 

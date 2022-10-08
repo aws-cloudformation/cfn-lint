@@ -54,7 +54,7 @@ class ConfigFileArgs(object):
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath(
             'data/CfnLintCli/config/schema.json')
-        with self.default_schema_file.open() as f:
+        with self.default_schema_file.open(encoding='utf-8') as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
 
@@ -297,7 +297,7 @@ class CliArgs(object):
 
             def error(self, message):
                 self.print_help(sys.stderr)
-                self.exit(32, '%s: error: %s\n' % (self.prog, message))
+                self.exit(32, f'{self.prog}: error: {message}\n')
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can be specified multiple times."""
@@ -406,7 +406,7 @@ class CliArgs(object):
         )
         standard.add_argument(
             '-v', '--version', help='Version of cfn-lint', action='version',
-            version='%(prog)s {version}'.format(version=__version__)
+            version=f'%(prog)s {__version__}'
         )
         advanced.add_argument(
             '-u', '--update-specs', help='Update the CloudFormation Specs',

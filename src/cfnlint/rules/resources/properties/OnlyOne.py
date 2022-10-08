@@ -51,8 +51,7 @@ class OnlyOne(CloudFormationLintRule):
                                                '/'.join(map(str, safe_path)))
                             ))
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                             message = 'Only one of [{0}] should be specified {1} at {2}'
                             matches.append(RuleMatch(
                                 path,

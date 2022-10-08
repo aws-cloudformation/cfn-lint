@@ -39,12 +39,10 @@ class Password(CloudFormationLintRule):
                 if isinstance(obj, (str)):
                     if re.match(REGEX_DYN_REF, obj):
                         if re.match(REGEX_DYN_REF_SSM, obj):
-                            message = 'Password should use a secure dynamic reference for %s' % (
-                                '/'.join(map(str, tree[:-1])))
+                            message = f'Password should use a secure dynamic reference for {"/".join(map(str, tree[:-1]))}'
                             matches.append(RuleMatch(tree[:-1], message))
                     else:
-                        message = 'Password shouldn\'t be hardcoded for %s' % (
-                            '/'.join(map(str, tree[:-1])))
+                        message = f'Password shouldn\'t be hardcoded for {"/".join(map(str, tree[:-1]))}'
                         matches.append(RuleMatch(tree[:-1], message))
                 elif isinstance(obj, dict):
                     if len(obj) == 1:
@@ -59,13 +57,11 @@ class Password(CloudFormationLintRule):
                                     else:
                                         fix_params.append({'Name': value, 'Use': password_property})
                     else:
-                        message = 'Inappropriate map found for password on %s' % (
-                            '/'.join(map(str, tree[:-1])))
+                        message = f'Inappropriate map found for password on {"/".join(map(str, tree[:-1]))}'
                         matches.append(RuleMatch(tree[:-1], message))
 
         for paramname in fix_params:
-            message = 'Parameter {} used as {}, therefore NoEcho should be True'.format(
-                paramname['Name'], paramname['Use'])
+            message = f'Parameter {paramname["Name"]} used as {paramname["Use"]}, therefore NoEcho should be True'
             tree = ['Parameters', paramname['Name']]
             matches.append(RuleMatch(tree, message))
         return matches

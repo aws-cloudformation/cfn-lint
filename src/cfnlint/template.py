@@ -184,7 +184,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
                     element = {}
                     element['Type'] = 'MODULE'
                     element['From'] = 'Resources'
-                    results['{}.*'.format(name)] = element
+                    results[f'{name}.*'] = element
                 elif resource_type:
                     element = {}
                     element['Type'] = resource_type
@@ -544,11 +544,11 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
         elif len(path) > 1:
             try:
                 result = self.get_location_yaml(text[path[0]], path[1:])
-            except KeyError as err:
+            except KeyError:
                 pass
             # TypeError will help catch string indices must be integers for when
             # we parse JSON string and get a path inside that json string
-            except TypeError as err:
+            except TypeError:
                 pass
             if not result:
                 try:
@@ -630,8 +630,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
                             if dict_name in cfnlint.helpers.FUNCTIONS:
                                 # convert the function name from camel case to underscore
                                 # Example: Fn::FindInMap becomes check_find_in_map
-                                function_name = 'check_%s' % camel_to_snake(
-                                    dict_name.replace('Fn::', ''))
+                                function_name = f'check_{camel_to_snake(dict_name.replace("Fn::", ""))}'
                                 if function_name == 'check_ref':
                                     if check_ref:
                                         matches.extend(

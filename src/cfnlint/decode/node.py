@@ -33,7 +33,7 @@ def create_str_node_class(cls):
             return cls.__new__(self, x)
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
 
         def __deepcopy__(self, memo):
             result = str_node(self, self.start_mark, self.end_mark)
@@ -43,7 +43,7 @@ def create_str_node_class(cls):
         def __copy__(self):
             return self
 
-    node_class.__name__ = '%s_node' % cls.__name__
+    node_class.__name__ = f'{cls.__name__}_node'
     return node_class
 
 
@@ -173,9 +173,9 @@ def create_dict_node_class(cls):
                     yield self.clean(), path[:]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
 
-    node_class.__name__ = '%s_node' % cls.__name__
+    node_class.__name__ = f'{cls.__name__}_node'
     return node_class
 
 
@@ -188,7 +188,7 @@ def create_intrinsic_node_class(cls):
         def is_valid(self):
             raise TemplateAttributeError('intrisnic class shouldn\'t be directly used')
 
-    intrinsic_class.__name__ = '%s_intrinsic' % cls.__name__
+    intrinsic_class.__name__ = f'{cls.__name__}_intrinsic'
     return intrinsic_class
 
 
@@ -261,7 +261,7 @@ def create_sub_node_class(cls):
             return self.__cache_is_valid
 
 
-    sub_class.__name__ = '%s_sub' % cls.__name__
+    sub_class.__name__ = f'{cls.__name__}_sub'
     return sub_class
 
 def create_dict_list_class(cls):
@@ -304,9 +304,9 @@ def create_dict_list_class(cls):
                         yield v, path[:] + [i]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
 
-    node_class.__name__ = '%s_node' % cls.__name__
+    node_class.__name__ = f'{cls.__name__}_node'
     return node_class
 
 

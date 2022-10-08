@@ -36,7 +36,7 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     mapping = dict_node({}, beg_mark, end_mark)
     for key, value in ordered_pairs:
         if key in mapping:
-            raise DuplicateError('"{}"'.format(key), mapping, key)
+            raise DuplicateError(f'"{key}"', mapping, key)
         mapping[key] = value
 
     if len(mapping) == 1:
@@ -60,7 +60,7 @@ class JSONDecodeError(ValueError):
         if isinstance(errors, cfnlint.rules.Match):
             errors = [errors]
 
-        errmsg = '%s: line %d column %d (char %d)' % (errors[0].message, errors[0].linenumber, errors[0].linenumber, pos)
+        errmsg = f'{errors[0].message}: line {errors[0].linenumber} column {errors[0].linenumber} (char {pos})'
         ValueError.__init__(self, errmsg)
         self.msg = errors[0].message
         self.doc = doc
@@ -138,7 +138,7 @@ def py_scanstring(s, end, strict=True,
             break
         if terminator != '\\':
             if strict:
-                msg = 'Invalid control character {0!r} at'.format(terminator)
+                msg = f'Invalid control character {terminator!r} at'
                 raise JSONDecodeError(
                     doc=s,
                     pos=end,
@@ -171,7 +171,7 @@ def py_scanstring(s, end, strict=True,
             try:
                 char = _b[esc]
             except KeyError:
-                msg = 'Invalid \\escape: {0!r}'.format(esc)
+                msg = f'Invalid \\escape: {esc!r}'
                 raise JSONDecodeError(
                     doc=s,
                     pos=end,
@@ -413,12 +413,12 @@ class CfnJSONDecoder(json.JSONDecoder):
                             pos=end,
                             errors=[
                                 build_match_from_node(
-                                    message='Duplicate found {}'.format(err),
+                                    message=f'Duplicate found {err}',
                                     node=err.mapping,
                                     key=err.key,
                                 ),
                                 build_match(
-                                    message='Duplicate found {}'.format(err),
+                                    message=f'Duplicate found {err}',
                                     doc=s,
                                     pos=end,
                                 ),
@@ -540,12 +540,12 @@ class CfnJSONDecoder(json.JSONDecoder):
                     pos=end,
                     errors=[
                         build_match_from_node(
-                            message='Duplicate found {}'.format(err),
+                            message=f'Duplicate found {err}',
                             node=err.mapping,
                             key=err.key,
                         ),
                         build_match(
-                            message='Duplicate found {}'.format(err),
+                            message=f'Duplicate found {err}',
                             doc=s,
                             pos=end,
                         ),

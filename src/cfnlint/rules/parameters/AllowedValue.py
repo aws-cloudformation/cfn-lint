@@ -43,7 +43,7 @@ class AllowedValue(CloudFormationLintRule):
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
 
         if allowed_value_specs:
-            description = 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
+            description = f'Valid values are {json.dumps(allowed_value_specs)}'
             if value in cfn.template.get('Parameters', {}):
                 param = cfn.template.get('Parameters').get(value, {})
                 parameter_values = param.get('AllowedValues')
@@ -73,7 +73,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
@@ -95,7 +95,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -106,7 +106,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

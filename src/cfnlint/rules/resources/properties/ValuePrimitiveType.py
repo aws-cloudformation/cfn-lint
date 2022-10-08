@@ -56,30 +56,27 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     str(value)
                 elif item_type in ['Boolean']:
                     if value not in ['True', 'true', 'False', 'false']:
-                        message = 'Property %s should be of type %s' % (
-                            '/'.join(map(str, path)), item_type)
+                        message = f'Property {"/".join(map(str, path))} should be of type {item_type}'
                         matches.append(RuleMatch(path, message, **extra_args))
                 elif item_type in ['Integer', 'Long', 'Double']:
                     if isinstance(value, bool):
-                        message = 'Property %s should be of type %s' % (
-                            '/'.join(map(str, path)), item_type)
+                        message = f'Property {"/".join(map(str, path))} should be of type {item_type}'
                         matches.append(RuleMatch(path, message, **extra_args))
                     elif item_type in ['Integer']:
                         int(value)
                     elif item_type in ['Long']:
                         # Some times python will strip the decimals when doing a conversion
                         if isinstance(value, float):
-                            message = 'Property %s should be of type %s' % (
-                                '/'.join(map(str, path)), item_type)
+                            message = f'Property {"/".join(map(str, path))} should be of type {item_type}'
                             matches.append(RuleMatch(path, message, **extra_args))
                         int(value)
                     else:  # has to be a Double
                         float(value)
             except Exception:  # pylint: disable=W0703
-                message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                message = f'Property {"/".join(map(str, path))} should be of type {item_type}'
                 matches.append(RuleMatch(path, message, **extra_args))
         else:
-            message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+            message = f'Property {"/".join(map(str, path))} should be of type {item_type}'
             matches.append(RuleMatch(path, message, **extra_args))
 
         return matches
@@ -113,7 +110,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     x.__name__ for x in integer_types])}
                 matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
         elif isinstance(value, list):
-            message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
+            message = f'Property should be of type {item_type} at {"/".join(map(str, path))}'
             extra_args = {'actual_type': type(value).__name__, 'expected_type': list.__name__}
             matches.append(RuleMatch(path, message, **extra_args))
 
@@ -127,7 +124,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         strict_check = kwargs.get('non_strict', self.config['strict'])
 
         if value is None:
-            message = 'Property value cannot be null %s' % ('/'.join(map(str, path)))
+            message = f'Property value cannot be null {"/".join(map(str, path))}'
             matches.append(RuleMatch(path, message))
         elif item_type in ['Map']:
             if isinstance(value, dict):

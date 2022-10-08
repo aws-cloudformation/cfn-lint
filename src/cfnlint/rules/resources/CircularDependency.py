@@ -20,8 +20,7 @@ class CircularDependency(CloudFormationLintRule):
         graph = Graph(cfn)
         for cycle in graph.get_cycles(cfn):
             source, target = cycle[:2]
-            message = 'Circular Dependencies for resource {0}. Circular dependency with [{1}]'.format(source,
-                                                                                                      target)
+            message = f'Circular Dependencies for resource {source}. Circular dependency with [{target}]'
             path = ['Resources', source]
             matches.append(RuleMatch(path, message))
 

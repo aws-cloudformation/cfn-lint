@@ -31,7 +31,7 @@ class RuleTargetsLimit(CloudFormationLintRule):
         resource_name = path[1]
         if len(path) > 4:
             if path[4] == 'Fn::If':
-                resource_name = '%s.%s' % (path[1], path[5])
+                resource_name = f'{path[1]}.{path[5]}'
 
         if resource_name not in self.limits:
             self.limits[resource_name] = {

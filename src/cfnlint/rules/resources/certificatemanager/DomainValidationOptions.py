@@ -41,7 +41,7 @@ class DomainValidationOptions(CloudFormationLintRule):
                                 RuleMatch(path[:] + ['DomainName'], message.format('/'.join(map(str, path)))))
                         else:
                             scenario_text = ' and '.join(
-                                ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                                [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                             matches.append(
                                 RuleMatch(path[:] + ['DomainName'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
         return matches

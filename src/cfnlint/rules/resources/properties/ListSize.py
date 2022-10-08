@@ -46,8 +46,7 @@ class ListSize(CloudFormationLintRule):
                                 )
                             )
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                             message = '{0} has to have between {1} and {2} items specified when {3}'
                             matches.append(
                                 RuleMatch(
@@ -81,7 +80,7 @@ class ListSize(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -91,7 +90,7 @@ class ListSize(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

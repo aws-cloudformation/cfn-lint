@@ -38,7 +38,7 @@ class RecordSet(CloudFormationLintRule):
                 else:
                     message = 'A CNAME recordset can only contain 1 value {0} at {1}'
                     scenario_text = ' and '.join(
-                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                     matches.append(
                         RuleMatch(path, message.format(scenario_text, '/'.join(map(str, path)))))
 

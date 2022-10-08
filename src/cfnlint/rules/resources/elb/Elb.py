@@ -56,7 +56,7 @@ HTTPS has certificate HTTP has no certificate'
                     if scenario:
                         message = 'You must specify at least two Subnets for load balancers with type "application" {0}'
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         matches.append(RuleMatch(path, message.format(scenario_text)))
                     else:
                         matches.append(RuleMatch(
@@ -67,7 +67,7 @@ HTTPS has certificate HTTP has no certificate'
                     if scenario:
                         message = 'You must specify at least two SubnetMappings for load balancers with type "application" {0}'
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         matches.append(RuleMatch(path, message.format(scenario_text)))
                     else:
                         matches.append(RuleMatch(
@@ -117,10 +117,9 @@ HTTPS has certificate HTTP has no certificate'
             if self.get_loadbalancer_type(properties) == 'network':
                 if properties.get('SecurityGroups'):
                     if scenario.get('Scenario'):
-                        scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                            k, v) for (k, v) in scenario.get('Scenario').items()])
-                        message = 'Security groups are not supported for load balancers with type "network" {0}'
-                        matches.append(RuleMatch(path, message.format(scenario_text)))
+                        scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in scenario.get('Scenario').items()])
+                        message = f'Security groups are not supported for load balancers with type "network" {scenario_text}'
+                        matches.append(RuleMatch(path, message))
                     else:
                         path = path + ['SecurityGroups']
                         matches.append(

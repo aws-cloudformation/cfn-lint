@@ -42,8 +42,7 @@ class Properties(CloudFormationLintRule):
                                'Fn::If', 'Fn::Contains', 'Fn::Sub', 'Fn::Cidr', 'Fn::Transform',
                                'Fn::Length', 'Fn::ToJsonString']
         if (isinstance(value, list) and primtype != 'Json') or value == {'Ref': 'AWS::NotificationARNs'}:
-            message = 'Property should be of type %s not List at %s' % (
-                primtype, '/'.join(map(str, proppath)))
+            message = f'Property should be of type {primtype} not List at {"/".join(map(str, proppath))}'
             matches.append(RuleMatch(proppath, message))
         if isinstance(value, dict) and primtype == 'Json':
             return matches
@@ -60,12 +59,10 @@ class Properties(CloudFormationLintRule):
                                 matches.extend(self.primitivetypecheck(
                                     sub_value[2], primtype, proppath + ['Fn::If', 2]))
                     elif sub_key not in supported_functions:
-                        message = 'Property %s has an illegal function %s' % (
-                            '/'.join(map(str, proppath)), sub_key)
+                        message = f'Property {"/".join(map(str, proppath))} has an illegal function {sub_key}'
                         matches.append(RuleMatch(proppath, message))
             else:
-                message = 'Property is an object instead of %s at %s' % (
-                    primtype, '/'.join(map(str, proppath)))
+                message = f'Property is an object instead of {primtype} at {"/".join(map(str, proppath))}'
                 matches.append(RuleMatch(proppath, message))
 
         return matches
@@ -128,8 +125,7 @@ class Properties(CloudFormationLintRule):
                             message.format(prop, resourcename, ('/'.join(str(x) for x in condition_path)))))
 
         else:
-            message = 'Invalid !If condition specified at %s' % (
-                '/'.join(map(str, path)))
+            message = f'Invalid !If condition specified at {"/".join(map(str, path))}'
             matches.append(RuleMatch(path, message))
 
         return matches
@@ -158,18 +154,16 @@ class Properties(CloudFormationLintRule):
                                 resource_type = self.cfn.template.get(
                                     'Resources', {}).get(resource_name, {}).get('Type')
                                 if not (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::')):
-                                    message = 'Property is an object instead of List at %s' % (
-                                        '/'.join(map(str, path)))
+                                    message = f'Property is an object instead of List at {"/".join(map(str, path))}'
                                     matches.append(RuleMatch(path, message))
                         elif not (sub_key == 'Ref' and sub_value == 'AWS::NoValue'):
-                            message = 'Property is an object instead of List at %s' % (
-                                '/'.join(map(str, path)))
+                            message = f'Property is an object instead of List at {"/".join(map(str, path))}'
                             matches.append(RuleMatch(path, message))
                     else:
                         self.logger.debug(
                             'Too much logic to handle whats actually in the map "%s" so skipping any more validation.', sub_value)
         else:
-            message = 'Property is an object instead of List at %s' % ('/'.join(map(str, path)))
+            message = f'Property is an object instead of List at {"/".join(map(str, path))}'
             matches.append(RuleMatch(path, message))
 
         return matches
@@ -232,7 +226,7 @@ class Properties(CloudFormationLintRule):
             return matches
         if not isinstance(text, dict):
             if not self.check_exceptions(parenttype, proptype, text):
-                message = 'Expecting an object at %s' % ('/'.join(map(str, path)))
+                message = f'Expecting an object at {"/".join(map(str, path))}'
                 matches.append(RuleMatch(path, message))
             return matches
 
@@ -268,12 +262,12 @@ class Properties(CloudFormationLintRule):
                     close_match = False
                     for key in resourcespec.keys():
                         if SequenceMatcher(a=prop,b=key).ratio() > 0.8:
-                            message = 'Invalid Property %s. Did you mean %s?' % ('/'.join(map(str, proppath)), key)
+                            message = f'Invalid Property {"/".join(map(str, proppath))}. Did you mean {key}?'
                             matches.append(RuleMatch(proppath, message))
                             close_match = True
                             break
                     if not close_match:
-                        message = 'Invalid Property %s' % ('/'.join(map(str, proppath)))
+                        message = f'Invalid Property {"/".join(map(str, proppath))}'
                         matches.append(RuleMatch(proppath, message))
             else:
                 if 'Type' in resourcespec[prop]:

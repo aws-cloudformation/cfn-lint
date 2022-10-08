@@ -29,7 +29,7 @@ class JsonSize(CloudFormationLintRule):
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
-        raise TypeError('Object of type {} is not JSON serializable'.format(obj.__class__.__name__))
+        raise TypeError(f'Object of type {obj.__class__.__name__} is not JSON serializable')
 
     def check_value(self, value, path, prop, cfn, specs):
         """Check Role.AssumeRolePolicyDocument is within limits"""
@@ -77,8 +77,7 @@ class JsonSize(CloudFormationLintRule):
             if len(json.dumps(j, separators=(',', ':'), default=self._serialize_date)) > json_max_size:
                 if scenario['Scenario']:
                     message = '{0} JSON text cannot be longer than {1} characters when {2}'
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                        k, v) for (k, v) in scenario['Scenario'].items()])
+                    scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in scenario['Scenario'].items()])
                     matches.append(
                         RuleMatch(path + [prop], message.format(prop, json_max_size, scenario_text)))
                 else:
@@ -114,7 +113,7 @@ class JsonSize(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -124,7 +123,7 @@ class JsonSize(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

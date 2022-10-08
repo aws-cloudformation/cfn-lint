@@ -42,7 +42,7 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
                             RuleMatch(path + [index], message.format('/'.join(map(str, path + [index])))))
                     else:
                         scenario_text = ' and '.join(
-                            ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                         message = 'List has a duplicate value at {0} when {1}'
                         matches.append(RuleMatch(path, message.format(
                             '/'.join(map(str, path)), scenario_text)))
@@ -67,7 +67,7 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
 
     def check(self, cfn, properties, value_specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
@@ -85,7 +85,7 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -95,7 +95,7 @@ class ListDuplicatesAllowed(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

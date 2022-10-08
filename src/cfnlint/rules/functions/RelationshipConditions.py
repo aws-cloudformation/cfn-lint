@@ -29,6 +29,7 @@ class RelationshipConditions(CloudFormationLintRule):
             if value not in PSEUDOPARAMS:
                 scenarios = cfn.is_resource_available(ref_obj, value)
                 for scenario in scenarios:
+                    #pylint: disable=consider-using-f-string
                     scenario_text = ' and '.join(
                         ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
                     message = 'Ref to resource "{0}" that may not be available {1} at {2}'
@@ -54,7 +55,7 @@ class RelationshipConditions(CloudFormationLintRule):
                     scenarios = cfn.is_resource_available(getatt_obj, value)
                     for scenario in scenarios:
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         message = 'GetAtt to resource "{0}" that may not be available {1} at {2}'
                         matches.append(
                             RuleMatch(

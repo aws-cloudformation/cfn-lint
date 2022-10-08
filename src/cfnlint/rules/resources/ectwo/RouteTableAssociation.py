@@ -68,8 +68,8 @@ class RouteTableAssociation(CloudFormationLintRule):
                 resource_condition = resource.get('Condition')
                 subnetid = properties.get('SubnetId')
                 self.check_values(subnetid, resource_condition, resource_name)
-        for resource_name in self.resource_values:
-            for value in self.resource_values[resource_name]:
+        for resource_name, resource_values in self.resource_values.items():
+            for value in resource_values:
                 bare_value = (None, None, value[2])
                 other_resources = []
 

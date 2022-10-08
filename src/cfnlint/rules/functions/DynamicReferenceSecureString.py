@@ -54,8 +54,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
 
         if isinstance(value, str):
             if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
-                message = 'Dynamic Reference secure strings are not supported for this property at %s' % (
-                    '/'.join(map(str, path[:])))
+                message = f'Dynamic Reference secure strings are not supported for this property at {"/".join(map(str, path[:]))}'
                 matches.append(RuleMatch(path[:], message))
 
         return matches
