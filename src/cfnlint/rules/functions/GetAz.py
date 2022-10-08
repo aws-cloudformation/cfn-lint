@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class GetAz(CloudFormationLintRule):
     """Check if GetAz values are correct"""
+
     id = 'E1015'
     shortdesc = 'GetAz validation of parameters'
     description = 'Making sure the GetAz function is properly configured'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getavailabilityzones.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getavailabilityzones.html'  # noqa: E501
     tags = ['functions', 'getaz']
 
     def match(self, cfn):
@@ -23,23 +24,45 @@ class GetAz(CloudFormationLintRule):
             getaz_value = getaz_obj[-1]
             if isinstance(getaz_value, str):
                 if getaz_value != '' and getaz_value not in cfn.regions:
-                    message = 'GetAZs should be of empty or string of valid region for {0}'
-                    matches.append(RuleMatch(
-                        getaz_obj[:-1], message.format('/'.join(map(str, getaz_obj[:-1])))))
+                    message = (
+                        'GetAZs should be of empty or string of valid region for {0}'
+                    )
+                    matches.append(
+                        RuleMatch(
+                            getaz_obj[:-1],
+                            message.format('/'.join(map(str, getaz_obj[:-1]))),
+                        ),
+                    )
             elif isinstance(getaz_value, dict):
                 if len(getaz_value) == 1:
                     if isinstance(getaz_value, dict):
                         for key, value in getaz_value.items():
                             if key != 'Ref' or value != 'AWS::Region':
-                                message = 'GetAZs should be of Ref to AWS::Region for {0}'
-                                matches.append(RuleMatch(
-                                    getaz_obj[:-1], message.format('/'.join(map(str, getaz_obj[:-1])))))
+                                message = (
+                                    'GetAZs should be of Ref to AWS::Region for {0}'
+                                )
+                                matches.append(
+                                    RuleMatch(
+                                        getaz_obj[:-1],
+                                        message.format(
+                                            '/'.join(map(str, getaz_obj[:-1])),
+                                        ),
+                                    ),
+                                )
                     else:
                         message = 'GetAZs should be of Ref to AWS::Region for {0}'
-                        matches.append(RuleMatch(
-                            getaz_obj[:-1], message.format('/'.join(map(str, getaz_obj[:-1])))))
+                        matches.append(
+                            RuleMatch(
+                                getaz_obj[:-1],
+                                message.format('/'.join(map(str, getaz_obj[:-1]))),
+                            ),
+                        )
                 else:
                     message = 'GetAZs should be of Ref to AWS::Region for {0}'
-                    matches.append(RuleMatch(
-                        getaz_obj[:-1], message.format('/'.join(map(str, getaz_obj[:-1])))))
+                    matches.append(
+                        RuleMatch(
+                            getaz_obj[:-1],
+                            message.format('/'.join(map(str, getaz_obj[:-1]))),
+                        ),
+                    )
         return matches

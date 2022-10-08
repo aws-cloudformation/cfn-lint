@@ -9,10 +9,11 @@ from cfnlint.rules import RuleMatch
 
 class Types(CloudFormationLintRule):
     """Check if Parameters are typed"""
+
     id = 'E2002'
     shortdesc = 'Parameters have appropriate type'
     description = 'Making sure the parameters have a correct type'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'  # noqa: E501
     tags = ['parameters']
 
     def match(self, cfn):
@@ -25,9 +26,11 @@ class Types(CloudFormationLintRule):
             paramtype = paramvalue.get('Type', 'String')
             if paramtype not in VALID_PARAMETER_TYPES:
                 message = 'Parameter {0} has invalid type {1}'
-                matches.append(RuleMatch(
-                    ['Parameters', paramname, 'Type'],
-                    message.format(paramname, paramtype)
-                ))
+                matches.append(
+                    RuleMatch(
+                        ['Parameters', paramname, 'Type'],
+                        message.format(paramname, paramtype),
+                    ),
+                )
 
         return matches

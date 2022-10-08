@@ -8,10 +8,13 @@ from cfnlint.rules.common import name_limit
 
 class LimitName(CloudFormationLintRule):
     """Check if maximum Output name size limit is exceeded"""
+
     id = 'E6011'
     shortdesc = 'Output name limit not exceeded'
-    description = 'Check the size of Output names in the template is less than the upper limit'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+    description = (
+        'Check the size of Output names in the template is less than the upper limit'
+    )
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'  # noqa: E501
     tags = ['outputs', 'limits']
 
     def match(self, cfn):

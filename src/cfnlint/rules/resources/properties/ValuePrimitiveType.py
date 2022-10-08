@@ -9,19 +9,19 @@ import cfnlint.helpers
 
 class ValuePrimitiveType(CloudFormationLintRule):
     """Check if Resource PrimitiveTypes are correct"""
+
     id = 'E3012'
     shortdesc = 'Check resource properties values'
-    description = 'Checks resource property values with Primitive Types for values that match those types.'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype'
+    description = (
+        'Checks resource property values with Primitive Types for '
+        'values that match those types.'
+    )
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype'  # noqa: E501
     tags = ['resources']
 
     strict_exceptions = {
-        'AWS::CloudFormation::Stack': [
-            'Parameters'
-        ],
-        'AWS::Lambda::Function.Environment': [
-            'Variables'
-        ]
+        'AWS::CloudFormation::Stack': ['Parameters'],
+        'AWS::Lambda::Function.Environment': ['Variables'],
     }
 
     def __init__(self):
@@ -29,12 +29,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         super(ValuePrimitiveType, self).__init__()
         self.resource_specs = []
         self.property_specs = []
-        self.config_definition = {
-            'strict': {
-                'default': False,
-                'type': 'boolean'
-            }
-        }
+        self.config_definition = {'strict': {'default': False, 'type': 'boolean'}}
         self.configure()
 
     def initialize(self, cfn):
@@ -48,7 +43,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
             self.resource_sub_property_types.append(property_spec)
 
     def _value_check(self, value, path, item_type, strict_check, extra_args):
-        """ Checks non strict """
+        """Checks non strict"""
         matches = []
         if not strict_check:
             try:
@@ -57,12 +52,16 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 elif item_type in ['Boolean']:
                     if value not in ['True', 'true', 'False', 'false']:
                         message = 'Property %s should be of type %s' % (
-                            '/'.join(map(str, path)), item_type)
+                            '/'.join(map(str, path)),
+                            item_type,
+                        )
                         matches.append(RuleMatch(path, message, **extra_args))
                 elif item_type in ['Integer', 'Long', 'Double']:
                     if isinstance(value, bool):
                         message = 'Property %s should be of type %s' % (
-                            '/'.join(map(str, path)), item_type)
+                            '/'.join(map(str, path)),
+                            item_type,
+                        )
                         matches.append(RuleMatch(path, message, **extra_args))
                     elif item_type in ['Integer']:
                         int(value)
@@ -70,16 +69,24 @@ class ValuePrimitiveType(CloudFormationLintRule):
                         # Some times python will strip the decimals when doing a conversion
                         if isinstance(value, float):
                             message = 'Property %s should be of type %s' % (
-                                '/'.join(map(str, path)), item_type)
+                                '/'.join(map(str, path)),
+                                item_type,
+                            )
                             matches.append(RuleMatch(path, message, **extra_args))
                         int(value)
                     else:  # has to be a Double
                         float(value)
             except Exception:  # pylint: disable=W0703
-                message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+                message = 'Property %s should be of type %s' % (
+                    '/'.join(map(str, path)),
+                    item_type,
+                )
                 matches.append(RuleMatch(path, message, **extra_args))
         else:
-            message = 'Property %s should be of type %s' % ('/'.join(map(str, path)), item_type)
+            message = 'Property %s should be of type %s' % (
+                '/'.join(map(str, path)),
+                item_type,
+            )
             matches.append(RuleMatch(path, message, **extra_args))
 
         return matches
@@ -91,30 +98,59 @@ class ValuePrimitiveType(CloudFormationLintRule):
             return matches
         if item_type in ['String']:
             if not isinstance(value, (str)):
-                extra_args = {'actual_type': type(value).__name__, 'expected_type': str.__name__}
-                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
+                extra_args = {
+                    'actual_type': type(value).__name__,
+                    'expected_type': str.__name__,
+                }
+                matches.extend(
+                    self._value_check(value, path, item_type, strict_check, extra_args),
+                )
         elif item_type in ['Boolean']:
             if not isinstance(value, (bool)):
-                extra_args = {'actual_type': type(value).__name__, 'expected_type': bool.__name__}
-                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
+                extra_args = {
+                    'actual_type': type(value).__name__,
+                    'expected_type': bool.__name__,
+                }
+                matches.extend(
+                    self._value_check(value, path, item_type, strict_check, extra_args),
+                )
         elif item_type in ['Double']:
             if not isinstance(value, (float, int)):
-                extra_args = {'actual_type': type(value).__name__, 'expected_type': [
-                    float.__name__, int.__name__]}
-                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
+                extra_args = {
+                    'actual_type': type(value).__name__,
+                    'expected_type': [float.__name__, int.__name__],
+                }
+                matches.extend(
+                    self._value_check(value, path, item_type, strict_check, extra_args),
+                )
         elif item_type in ['Integer']:
             if not isinstance(value, (int)):
-                extra_args = {'actual_type': type(value).__name__, 'expected_type': int.__name__}
-                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
+                extra_args = {
+                    'actual_type': type(value).__name__,
+                    'expected_type': int.__name__,
+                }
+                matches.extend(
+                    self._value_check(value, path, item_type, strict_check, extra_args),
+                )
         elif item_type in ['Long']:
             integer_types = (int,)
             if not isinstance(value, integer_types):
-                extra_args = {'actual_type': type(value).__name__, 'expected_type': ' or '.join([
-                    x.__name__ for x in integer_types])}
-                matches.extend(self._value_check(value, path, item_type, strict_check, extra_args))
+                extra_args = {
+                    'actual_type': type(value).__name__,
+                    'expected_type': ' or '.join([x.__name__ for x in integer_types]),
+                }
+                matches.extend(
+                    self._value_check(value, path, item_type, strict_check, extra_args),
+                )
         elif isinstance(value, list):
-            message = 'Property should be of type %s at %s' % (item_type, '/'.join(map(str, path)))
-            extra_args = {'actual_type': type(value).__name__, 'expected_type': list.__name__}
+            message = 'Property should be of type %s at %s' % (
+                item_type,
+                '/'.join(map(str, path)),
+            )
+            extra_args = {
+                'actual_type': type(value).__name__,
+                'expected_type': list.__name__,
+            }
             matches.append(RuleMatch(path, message, **extra_args))
 
         return matches
@@ -133,14 +169,22 @@ class ValuePrimitiveType(CloudFormationLintRule):
             if isinstance(value, dict):
                 for map_key, map_value in value.items():
                     if not isinstance(map_value, dict):
-                        matches.extend(self.check_primitive_type(
-                            map_value, primitive_type, path + [map_key], strict_check))
+                        matches.extend(
+                            self.check_primitive_type(
+                                map_value,
+                                primitive_type,
+                                path + [map_key],
+                                strict_check,
+                            ),
+                        )
         else:
             # some properties support primitive types and objects
             # skip in the case it could be an object and the value is a object
             if (item_type or primitive_type) and isinstance(value, dict):
                 return matches
-            matches.extend(self.check_primitive_type(value, primitive_type, path, strict_check))
+            matches.extend(
+                self.check_primitive_type(value, primitive_type, path, strict_check),
+            )
 
         return matches
 
@@ -164,13 +208,15 @@ class ValuePrimitiveType(CloudFormationLintRule):
                             strict_check = False
                     matches.extend(
                         cfn.check_value(
-                            properties, prop, path,
+                            properties,
+                            prop,
+                            path,
                             check_value=self.check_value,
                             primitive_type=primitive_type,
                             item_type=item_type,
                             non_strict=strict_check,
                             pass_if_null=True,
-                        )
+                        ),
                     )
 
         return matches
@@ -180,8 +226,13 @@ class ValuePrimitiveType(CloudFormationLintRule):
         matches = []
 
         if self.property_specs.get(property_type, {}).get('Properties'):
-            property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
-            matches.extend(self.check(cfn, properties, property_specs, property_type, path))
+            property_specs = self.property_specs.get(property_type, {}).get(
+                'Properties',
+                {},
+            )
+            matches.extend(
+                self.check(cfn, properties, property_specs, property_type, path),
+            )
 
         return matches
 
@@ -189,7 +240,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        resource_specs = self.resource_specs.get(resource_type, {}).get('Properties', {})
+        resource_specs = self.resource_specs.get(resource_type, {}).get(
+            'Properties',
+            {},
+        )
         matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
 
         return matches

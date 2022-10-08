@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class RuleScheduleExpression(CloudFormationLintRule):
     """Validate AWS Events Schedule expression format"""
+
     id = 'E3027'
     shortdesc = 'Validate AWS Event ScheduleExpression format'
     description = 'Validate the formation of the AWS::Event ScheduleExpression'
@@ -22,24 +23,33 @@ class RuleScheduleExpression(CloudFormationLintRule):
         """Check Rate configuration"""
         matches = []
         # Extract the expression from rate(XXX)
-        rate_expression = value[value.find('(')+1:value.find(')')]
+        rate_expression = value[value.find('(') + 1 : value.find(')')]  # noqa: E203
 
         if not rate_expression:
-            matches.append(RuleMatch(path, 'Rate value of ScheduleExpression cannot be empty'))
+            matches.append(
+                RuleMatch(path, 'Rate value of ScheduleExpression cannot be empty'),
+            )
         else:
             # Rate format: rate(Value Unit)
             items = rate_expression.split(' ')
 
             if len(items) != 2:
-                message = 'Rate expression must contain 2 elements (Value Unit), rate contains {} elements'
+                message = (
+                    'Rate expression must contain 2 elements (Value Unit), '
+                    'rate contains {} elements'
+                )
                 matches.append(RuleMatch(path, message.format(len(items))))
             else:
                 # Check the Value
                 if not items[0].isdigit():
                     message = 'Rate Value ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(
-                        items[0]).__name__, 'expected_type': int.__name__}
-                    matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
+                    extra_args = {
+                        'actual_type': type(items[0]).__name__,
+                        'expected_type': int.__name__,
+                    }
+                    matches.append(
+                        RuleMatch(path, message.format(items[0]), **extra_args),
+                    )
 
         return matches
 
@@ -47,23 +57,35 @@ class RuleScheduleExpression(CloudFormationLintRule):
         """Check Cron configuration"""
         matches = []
         # Extract the expression from cron(XXX)
-        cron_expression = value[value.find('(')+1:value.find(')')]
+        cron_expression = value[value.find('(') + 1 : value.find(')')]  # noqa: E203
 
         if not cron_expression:
-            matches.append(RuleMatch(path, 'Cron value of ScheduleExpression cannot be empty'))
+            matches.append(
+                RuleMatch(path, 'Cron value of ScheduleExpression cannot be empty'),
+            )
         else:
             # Rate format: cron(Minutes Hours Day-of-month Month Day-of-week Year)
             items = cron_expression.split(' ')
 
             if len(items) != 6:
-                message = 'Cron expression must contain 6 elements (Minutes Hours Day-of-month Month Day-of-week Year), cron contains {} elements'
+                message = (
+                    'Cron expression must contain 6 elements (Minutes Hours '
+                    'Day-of-month Month Day-of-week Year), cron contains {} elements'
+                )
                 matches.append(RuleMatch(path, message.format(len(items))))
                 return matches
 
             _, _, day_of_month, _, day_of_week, _ = cron_expression.split(' ')
             if day_of_month != '?' and day_of_week != '?':
-                matches.append(RuleMatch(
-                    path, 'Don\'t specify the Day-of-month and Day-of-week fields in the same cron expression'))
+                matches.append(
+                    RuleMatch(
+                        path,
+                        (
+                            "Don't specify the Day-of-month and Day-of-week fields "
+                            'in the same cron expression'
+                        ),
+                    ),
+                )
 
         return matches
 
@@ -77,7 +99,10 @@ class RuleScheduleExpression(CloudFormationLintRule):
         elif value.startswith('cron(') and value.endswith(')'):
             matches.extend(self.check_cron(value, path))
         else:
-            message = 'Invalid ScheduledExpression specified ({}). Value has to be either cron() or rate()'
+            message = (
+                'Invalid ScheduledExpression specified ({}). '
+                'Value has to be either cron() or rate()'
+            )
             matches.append(RuleMatch(path, message.format(value)))
 
         return matches
@@ -88,9 +113,11 @@ class RuleScheduleExpression(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                obj=properties, key='ScheduleExpression',
+                obj=properties,
+                key='ScheduleExpression',
                 path=path[:],
-                check_value=self.check_value
-            ))
+                check_value=self.check_value,
+            ),
+        )
 
         return matches

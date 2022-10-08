@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class Required(CloudFormationLintRule):
     """Check if Outputs have required properties"""
+
     id = 'E6002'
     shortdesc = 'Outputs have required properties'
     description = 'Making sure the outputs have required properties'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'  # noqa: E501
     tags = ['outputs']
 
     def match(self, cfn):
@@ -23,9 +24,11 @@ class Required(CloudFormationLintRule):
                 if isinstance(output_value, dict):
                     if 'Value' not in output_value:
                         message = 'Output {0} is missing property {1}'
-                        matches.append(RuleMatch(
-                            ['Outputs', output_name, 'Value'],
-                            message.format(output_name, 'Value')
-                        ))
+                        matches.append(
+                            RuleMatch(
+                                ['Outputs', output_name, 'Value'],
+                                message.format(output_name, 'Value'),
+                            ),
+                        )
 
         return matches

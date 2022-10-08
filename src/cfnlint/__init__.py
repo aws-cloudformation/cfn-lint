@@ -3,13 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import cfnlint.helpers
+import cfnlint.helpers  # noqa: F401
 import cfnlint.conditions
 from cfnlint.decorators.refactored import refactored
-from cfnlint.graph import Graph
-from cfnlint.transform import Transform
-from cfnlint.decode.node import TemplateAttributeError
-from cfnlint.helpers import PSEUDOPARAMS
+from cfnlint.graph import Graph  # noqa: F401
+from cfnlint.transform import Transform  # noqa: F401
+from cfnlint.decode.node import TemplateAttributeError  # noqa: F401
+from cfnlint.helpers import PSEUDOPARAMS  # noqa: F401
 from cfnlint.rules import RuleMatch as _RuleMatch
 from cfnlint.rules import Match as _Match
 from cfnlint.rules import RulesCollection as _RulesCollection
@@ -21,50 +21,67 @@ from cfnlint.runner import Runner as _Runner
 from cfnlint.template import Template as _Template
 
 
-from cfnlint.decode.node import dict_node
-import cfnlint.rules
+from cfnlint.decode.node import dict_node  # noqa: F401
+import cfnlint.rules  # noqa: F401
 
 LOGGER = logging.getLogger(__name__)
 
 
-@refactored('RuleMatch is refactored and deprecated. Please use cfnlint.rules.RuleMatch')
+@refactored(
+    'RuleMatch is refactored and deprecated. Please use cfnlint.rules.RuleMatch',
+)
 class RuleMatch(_RuleMatch):
-    """ Refactored class RuleMatch """
+    """Refactored class RuleMatch"""
 
 
 @refactored('Match is refactored and deprecated. Please use cfnlint.rules.Match')
 class Match(_Match):
-    """ Refactored class Match """
+    """Refactored class Match"""
 
 
-@refactored('RulesCollection is refactored and deprecated. Please use cfnlint.rules.RulesCollection')
+@refactored(
+    'RulesCollection is refactored and deprecated. Please use cfnlint.rules.RulesCollection',
+)
 class RulesCollection(_RulesCollection):
-    """ Refactored class Rules Collection """
+    """Refactored class Rules Collection"""
 
 
-@refactored('CloudFormationLintRule is refactored and deprecated. Please use cfnlint.rules.CloudFormationLintRule')
+@refactored(
+    'CloudFormationLintRule is refactored and deprecated. Please use '
+    'cfnlint.rules.CloudFormationLintRule',
+)
 class CloudFormationLintRule(_CloudFormationLintRule):
-    """ Refactored class Rules CloudFormationLintRule """
+    """Refactored class Rules CloudFormationLintRule"""
 
 
-@refactored('ParseError is refactored and deprecated. Please use cfnlint.rules.ParseError')
+@refactored(
+    'ParseError is refactored and deprecated. Please use cfnlint.rules.ParseError',
+)
 class ParseError(_ParseError):
-    """ Refactored class Rules ParseError """
+    """Refactored class Rules ParseError"""
 
 
-@refactored('TransformError is refactored and deprecated. Please use cfnlint.rules.TransformError')
+@refactored(
+    'TransformError is refactored and deprecated. Please use cfnlint.rules.TransformError',
+)
 class TransformError(_TransformError):
-    """ Refactored class Rules TransformError """
+    """Refactored class Rules TransformError"""
 
 
-@refactored('RuleError is refactored and deprecated. Please use cfnlint.rules.RuleError')
+@refactored(
+    'RuleError is refactored and deprecated. Please use cfnlint.rules.RuleError',
+)
 class RuleError(_RuleError):
-    """ Refactored class Rules RuleError """
+    """Refactored class Rules RuleError"""
 
-@refactored('Template is refactored and deprecated. Please use Template in cfnlint.template')
+
+@refactored(
+    'Template is refactored and deprecated. Please use Template in cfnlint.template',
+)
 class Template(_Template):
-    """ Refactored class Template """
+    """Refactored class Template"""
+
 
 @refactored('Runner is refactored and deprecated. Please use Runner in cfnlint.runner')
 class Runner(_Runner):
-    """ Refactored class Runner """
+    """Refactored class Runner"""

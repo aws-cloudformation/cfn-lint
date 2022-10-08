@@ -11,10 +11,11 @@ from cfnlint.helpers import LIMITS
 
 class LimitSize(CloudFormationLintRule):
     """Check Template Size"""
+
     id = 'I1002'
     shortdesc = 'Template size limit'
     description = 'Check the size of the template is approaching the upper limit'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'  # noqa: E501
     tags = ['limits']
 
     def match(self, cfn):
@@ -23,7 +24,22 @@ class LimitSize(CloudFormationLintRule):
         if cfn.filename:
             if Path(cfn.filename).is_file():
                 statinfo = os.stat(cfn.filename)
-                if LIMITS['threshold'] * LIMITS['template']['body'] < statinfo.st_size <= LIMITS['template']['body']:
-                    message = 'The template file size ({0} bytes) is approaching the limit ({1} bytes)'
-                    matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
+                if (
+                    LIMITS['threshold'] * LIMITS['template']['body']
+                    < statinfo.st_size
+                    <= LIMITS['template']['body']
+                ):
+                    message = (
+                        'The template file size ({0} bytes) is approaching '
+                        'the limit ({1} bytes)'
+                    )
+                    matches.append(
+                        RuleMatch(
+                            ['Template'],
+                            message.format(
+                                statinfo.st_size,
+                                LIMITS['template']['body'],
+                            ),
+                        ),
+                    )
         return matches

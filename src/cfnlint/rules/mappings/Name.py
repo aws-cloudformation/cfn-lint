@@ -8,10 +8,11 @@ from cfnlint.rules.common import alphanumeric_name
 
 class Name(CloudFormationLintRule):
     """Check if Mappings are named correctly"""
+
     id = 'E7002'
     shortdesc = 'Mappings have appropriate names'
     description = 'Check if Mappings are properly named (A-Za-z0-9)'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/mappings-section-structure.html'  # noqa: E501
     tags = ['mappings']
 
     def match(self, cfn):

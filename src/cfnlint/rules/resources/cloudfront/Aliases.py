@@ -10,10 +10,11 @@ from cfnlint.helpers import FUNCTIONS
 
 class Aliases(CloudFormationLintRule):
     """Check if CloudFront Aliases are valid domain names"""
+
     id = 'E3013'
     shortdesc = 'CloudFront Aliases'
     description = 'CloudFront aliases should contain valid domain names'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudfront-distribution-distributionconfig.html#cfn-cloudfront-distribution-distributionconfig-aliases'  # noqa: E501
     tags = ['properties', 'cloudfront']
 
     def match(self, cfn):
@@ -22,10 +23,12 @@ class Aliases(CloudFormationLintRule):
         matches = []
 
         valid_domain = re.compile(
-            r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$')
+            r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$',
+        )
 
         results = cfn.get_resource_properties(
-            ['AWS::CloudFront::Distribution', 'DistributionConfig'])
+            ['AWS::CloudFront::Distribution', 'DistributionConfig'],
+        )
         for result in results:
             aliases = result['Value'].get('Aliases')
             if aliases:
@@ -34,11 +37,17 @@ class Aliases(CloudFormationLintRule):
                         wildcard = alias.split('.')
                         if '*' in wildcard[1:]:
                             path = result['Path'] + ['Aliases']
-                            message = 'Invalid use of wildcards: {} at {}'.format(alias, '/'.join(result['Path']))
+                            message = 'Invalid use of wildcards: {} at {}'.format(
+                                alias,
+                                '/'.join(result['Path']),
+                            )
                             matches.append(RuleMatch(path, message))
                         if not re.match(valid_domain, alias):
                             path = result['Path'] + ['Aliases']
-                            message = 'Invalid alias found: {} at {}'.format(alias, '/'.join(result['Path']))
+                            message = 'Invalid alias found: {} at {}'.format(
+                                alias,
+                                '/'.join(result['Path']),
+                            )
                             matches.append(RuleMatch(path, message))
 
         return matches

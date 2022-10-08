@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class RuleTargetsLimit(CloudFormationLintRule):
     """Check State Machine Definition"""
+
     id = 'E3021'
     shortdesc = 'Check Events Rule Targets are less than or equal to 5'
     description = 'CloudWatch Events Rule can only support up to 5 targets'
-    source_url = 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/cloudwatch_limits_cwe.html'
+    source_url = 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/cloudwatch_limits_cwe.html'  # noqa: E501
     tags = ['resources', 'events']
     max_count = 5
 
@@ -26,7 +27,7 @@ class RuleTargetsLimit(CloudFormationLintRule):
 
     # pylint: disable=W0613
     def check_value(self, value, path):
-        """Count them up """
+        """Count them up"""
 
         resource_name = path[1]
         if len(path) > 4:
@@ -34,10 +35,7 @@ class RuleTargetsLimit(CloudFormationLintRule):
                 resource_name = '%s.%s' % (path[1], path[5])
 
         if resource_name not in self.limits:
-            self.limits[resource_name] = {
-                'count': 0,
-                'path': path[:-1]
-            }
+            self.limits[resource_name] = {'count': 0, 'path': path[:-1]}
 
         self.limits[resource_name]['count'] += 1
         return []
@@ -47,10 +45,12 @@ class RuleTargetsLimit(CloudFormationLintRule):
         matches = []
         matches.extend(
             cfn.check_value(
-                obj=properties, key='Targets',
+                obj=properties,
+                key='Targets',
                 path=path[:],
-                check_value=self.check_value
-            ))
+                check_value=self.check_value,
+            ),
+        )
 
         for _, limit in self.limits.items():
             if limit['count'] > self.max_count:

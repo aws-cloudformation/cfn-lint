@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class Description(CloudFormationLintRule):
     """Check if Outputs Descriptions are only string values"""
+
     id = 'E6005'
     shortdesc = 'Outputs descriptions can only be strings'
     description = 'Outputs descriptions can only be strings'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html'  # noqa: E501
     tags = ['outputs']
 
     def match(self, cfn):
@@ -24,6 +25,8 @@ class Description(CloudFormationLintRule):
                 if description:
                     if not isinstance(description, str):
                         message = 'Output Description can only be a string'
-                        matches.append(RuleMatch(['Outputs', output_name, 'Description'], message))
+                        matches.append(
+                            RuleMatch(['Outputs', output_name, 'Description'], message),
+                        )
 
         return matches

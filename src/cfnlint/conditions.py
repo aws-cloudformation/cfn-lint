@@ -18,12 +18,13 @@ class ConditionParseError(Exception):
 
 
 def get_hash(obj):
-    """ Return a hash of an object """
+    """Return a hash of an object"""
     return hashlib.sha1(json.dumps(obj, sort_keys=True).encode('utf-8')).hexdigest()
 
 
 class EqualsValue(object):
-    """ holds the values of a equals """
+    """holds the values of a equals"""
+
     Function = None
     String = None
 
@@ -48,7 +49,8 @@ class EqualsValue(object):
 
 
 class Equals(object):
-    """ Equals operator """
+    """Equals operator"""
+
     Left = None
     Right = None
 
@@ -65,7 +67,7 @@ class Equals(object):
             raise ConditionParseError
 
     def test(self, scenarios):
-        """ Do an equals based on the provided scenario """
+        """Do an equals based on the provided scenario"""
         for scenario, value in scenarios.items():
             if scenario == self.Left:
                 return value == self.Right
@@ -76,7 +78,8 @@ class Equals(object):
 
 
 class Condition(object):
-    """ Individual condition """
+    """Individual condition"""
+
     And = None
     Or = None
     Not = None
@@ -103,7 +106,7 @@ class Condition(object):
                 self.Equals = None
 
     def test(self, scenarios):
-        """ Test a condition based on a scenario """
+        """Test a condition based on a scenario"""
         if self.And:
             for a in self.And:
                 if not a.test(scenarios):
@@ -120,7 +123,7 @@ class Condition(object):
         return self.Equals.test(scenarios)
 
     def process_influenced_equal(self, equal):
-        """ Get influenced equals from sub conditions """
+        """Get influenced equals from sub conditions"""
         if equal.Left.Function:
             if not self.Influenced_Equals.get(equal.Left.Function):
                 self.Influenced_Equals[equal.Left.Function] = set()
@@ -194,7 +197,8 @@ class Condition(object):
 
 
 class Conditions(object):
-    """ All the conditions """
+    """All the conditions"""
+
     Conditions = None
     Equals = None
     Parameters = None
@@ -205,11 +209,18 @@ class Conditions(object):
         self.Parameters = {}
         try:
             self.Equals = self._get_condition_equals(
-                cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS))
+                cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS),
+            )
             for condition_name in cfn.template.get('Conditions', {}):
-                self.Conditions[condition_name] = Condition(cfn.template, condition_name)
+                self.Conditions[condition_name] = Condition(
+                    cfn.template,
+                    condition_name,
+                )
             # Configure parameters Allowed Values if they have them
-            for parameter_name, parameter_values in cfn.template.get('Parameters', {}).items():
+            for parameter_name, parameter_values in cfn.template.get(
+                'Parameters',
+                {},
+            ).items():
                 # ALlowed Values must be a list so validate they are
                 if isinstance(parameter_values.get('AllowedValues'), list):
                     # Any parameter in a condition could be used but would have to be done by
@@ -222,9 +233,9 @@ class Conditions(object):
 
     def _get_condition_equals(self, equals):
         """
-            Get Conditions based on Condition definitions
-            Input: Cfn (Template)
-            Output: List of hashes of Equal dict objects (Ref or FindInMap)
+        Get Conditions based on Condition definitions
+        Input: Cfn (Template)
+        Output: List of hashes of Equal dict objects (Ref or FindInMap)
         """
         results = {}
 
@@ -255,36 +266,44 @@ class Conditions(object):
                             if dict_hash_1 not in results:
                                 results[dict_hash_1] = []
                             if dict_hash_2:
-                                results[dict_hash_1].append({
-                                    'Condition': condition_name,
-                                    'Type': 'dict',
-                                    'Value': dict_hash_2
-                                })
+                                results[dict_hash_1].append(
+                                    {
+                                        'Condition': condition_name,
+                                        'Type': 'dict',
+                                        'Value': dict_hash_2,
+                                    },
+                                )
                             else:
-                                results[dict_hash_1].append({
-                                    'Condition': condition_name,
-                                    'Type': 'string',
-                                    'Value': value_2
-                                })
+                                results[dict_hash_1].append(
+                                    {
+                                        'Condition': condition_name,
+                                        'Type': 'string',
+                                        'Value': value_2,
+                                    },
+                                )
                         if dict_hash_2:
                             if dict_hash_2 not in results:
                                 results[dict_hash_2] = []
                             if dict_hash_1:
-                                results[dict_hash_2].append({
-                                    'Condition': condition_name,
-                                    'Type': 'dict',
-                                    'Value': dict_hash_1
-                                })
+                                results[dict_hash_2].append(
+                                    {
+                                        'Condition': condition_name,
+                                        'Type': 'dict',
+                                        'Value': dict_hash_1,
+                                    },
+                                )
                             else:
-                                results[dict_hash_2].append({
-                                    'Condition': condition_name,
-                                    'Type': 'string',
-                                    'Value': value_1
-                                })
+                                results[dict_hash_2].append(
+                                    {
+                                        'Condition': condition_name,
+                                        'Type': 'string',
+                                        'Value': value_1,
+                                    },
+                                )
         return results
 
     def multiply_conditions(self, currents, condition, values):
-        """ Build out scenarios for when conditions don't match """
+        """Build out scenarios for when conditions don't match"""
         results = []
         if not currents:
             for value in values:
@@ -316,8 +335,10 @@ class Conditions(object):
             if not self.Conditions.get(condition):
                 return []
 
-            for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
-                if not equal_key in all_equals:
+            for equal_key, _equal_values in self.Conditions.get(
+                condition,
+            ).Influenced_Equals.items():
+                if equal_key not in all_equals:
                     all_equals[equal_key] = condition
                 else:
                     if all_equals[equal_key] not in matched_conditions:
@@ -326,11 +347,13 @@ class Conditions(object):
 
         all_equals = {}
         for condition in matched_conditions:
-            for equal_key, equal_values in self.Conditions.get(condition).Influenced_Equals.items():
-                if not equal_key in all_equals:
+            for equal_key, equal_values in self.Conditions.get(
+                condition,
+            ).Influenced_Equals.items():
+                if equal_key not in all_equals:
                     all_equals[equal_key] = set()
                 else:
-                    if not equal_key in matched_equals:
+                    if equal_key not in matched_equals:
                         matched_equals[equal_key] = copy(all_equals[equal_key])
                 for s_v in equal_values:
                     all_equals[equal_key].add(s_v)
@@ -343,7 +366,7 @@ class Conditions(object):
             matched_equals[diffKey] = all_equals[diffKey]
 
         def multiply_equals(currents, s_hash, sets, parameter_values):
-            """  Multiply Equals when building scenarios """
+            """Multiply Equals when building scenarios"""
             results = []
             false_case = ''
             if not currents:
@@ -394,25 +417,43 @@ class Conditions(object):
             # At this point this value is completely arbitrary and not configurable
             if len(conditions) > 4:
                 LOGGER.info(
-                    'Found %s conditions.  Limiting results to protect against heavy cpu time', len(conditions))
+                    'Found %s conditions.  Limiting results to protect against heavy cpu time',
+                    len(conditions),
+                )
                 true_results = []
                 false_results = []
                 for condition in conditions:
-                    true_results = self.multiply_conditions(true_results, condition, [True])
-                    false_results = self.multiply_conditions(false_results, condition, [False])
+                    true_results = self.multiply_conditions(
+                        true_results,
+                        condition,
+                        [True],
+                    )
+                    false_results = self.multiply_conditions(
+                        false_results,
+                        condition,
+                        [False],
+                    )
                 results.extend(true_results)
                 results.extend(false_results)
             else:
                 for condition in conditions:
-                    results = self.multiply_conditions(results, condition, [True, False])
+                    results = self.multiply_conditions(
+                        results,
+                        condition,
+                        [True, False],
+                    )
 
             return results
 
         if matched_conditions:
             scenarios = []
             for con_hash, sets in matched_equals.items():
-                scenarios = multiply_equals(scenarios, con_hash, sets,
-                                            self.Parameters.get(con_hash))
+                scenarios = multiply_equals(
+                    scenarios,
+                    con_hash,
+                    sets,
+                    self.Parameters.get(con_hash),
+                )
 
         for scenario in scenarios:
             r_condition = {}
@@ -422,4 +463,4 @@ class Conditions(object):
             if r_condition not in results:
                 results.append(r_condition)
 
-        return(results)
+        return results

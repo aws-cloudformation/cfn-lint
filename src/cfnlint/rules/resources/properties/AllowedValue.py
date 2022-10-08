@@ -11,17 +11,22 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 class AllowedValue(CloudFormationLintRule):
     """Check if properties have a valid value"""
+
     id = 'E3030'
     shortdesc = 'Check if properties have a valid value'
     description = 'Check if properties have a valid value in case of an enumator'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue'  # noqa: E501
     tags = ['resources', 'property', 'allowed value']
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes',
+        ):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes',
+        ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def check_value(self, value, path, property_name, **kwargs):
@@ -33,14 +38,21 @@ class AllowedValue(CloudFormationLintRule):
         if allowed_value_specs:
 
             # Ignore values with dynamic references. Simple check to prevent false-positives
-            # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
+            # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html  # noqa: E501
             if '{{resolve:' not in str(value):
-                # Always compare the allowed value as a string, strict typing is not of concern for this rule
+                # Always compare the allowed value as a string, strict typing
+                # is not of concern for this rule
                 if str(value) not in allowed_value_specs:
                     message = 'You must specify a valid value for {0} ({1}). {2}'
-                    description = 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
-                    matches.append(RuleMatch(path, message.format(
-                        property_name, value, description)))
+                    description = 'Valid values are {0}'.format(
+                        json.dumps(allowed_value_specs),
+                    )
+                    matches.append(
+                        RuleMatch(
+                            path,
+                            message.format(property_name, value, description),
+                        ),
+                    )
 
         return matches
 
@@ -53,15 +65,22 @@ class AllowedValue(CloudFormationLintRule):
                     value = value_specs.get(prop).get('Value', {})
                     if value:
                         value_type = value.get('ValueType', '')
-                        property_type = property_specs.get('Properties').get(prop).get('Type')
+                        property_type = (
+                            property_specs.get('Properties').get(prop).get('Type')
+                        )
                         matches.extend(
                             cfn.check_value(
-                                p_value, prop, p_path,
+                                p_value,
+                                prop,
+                                p_path,
                                 check_value=self.check_value,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
-                                    'ValueTypes').get(value_type, {}),
-                                cfn=cfn, property_type=property_type, property_name=prop
-                            )
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0])
+                                .get('ValueTypes')
+                                .get(value_type, {}),
+                                cfn=cfn,
+                                property_type=property_type,
+                                property_name=prop,
+                            ),
                         )
 
         return matches
@@ -70,9 +89,15 @@ class AllowedValue(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes').get(property_type, {}).get('Properties', {})
-        property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('PropertyTypes')
+            .get(property_type, {})
+            .get('Properties', {})
+        )
+        property_specs = (
+            RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
+        )
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
         return matches
@@ -81,9 +106,15 @@ class AllowedValue(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes').get(resource_type, {}).get('Properties', {})
-        resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('ResourceTypes')
+            .get(resource_type, {})
+            .get('Properties', {})
+        )
+        resource_specs = (
+            RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
+        )
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
         return matches

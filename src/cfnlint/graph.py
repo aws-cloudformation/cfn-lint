@@ -17,7 +17,8 @@ class Graph(object):
     """Models a template as a directed graph of resources"""
 
     def __init__(self, cfn):
-        """Builds a graph where resources are nodes and edges are explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
+        """Builds a graph where resources are nodes and edges are
+        explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
         relationships between resources"""
 
         # Directed graph that allows self loops and parallel edges
@@ -36,7 +37,11 @@ class Graph(object):
                     if isinstance(target_id, str):
                         if self._is_resource(cfn, target_id):
                             target_resource_id = target_id
-                            self.graph.add_edge(resourceId, target_resource_id, label='DependsOn')
+                            self.graph.add_edge(
+                                resourceId,
+                                target_resource_id,
+                                label='DependsOn',
+                            )
 
         # add edges for "Ref" tags. { "Ref" : "logicalNameOfResource" }
         refs_paths = cfn.search_deep_keys('Ref')
@@ -46,12 +51,15 @@ class Graph(object):
             if not ref_type == 'Resources':
                 continue
 
-            if isinstance(target_id, (str, int)) and (self._is_resource(cfn, target_id)):
+            if isinstance(target_id, (str, int)) and (
+                self._is_resource(cfn, target_id)
+            ):
                 target_resource_id = target_id
                 self.graph.add_edge(source_id, target_resource_id, label='Ref')
 
         # add edges for "Fn::GetAtt" tags.
-        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] } or { "!GetAtt" : "logicalNameOfResource.attributeName" }
+        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] } or
+        # { "!GetAtt" : "logicalNameOfResource.attributeName" }
         getatt_paths = cfn.search_deep_keys('Fn::GetAtt')
         for getatt_path in getatt_paths:
             ref_type, source_id = getatt_path[:2]
@@ -59,7 +67,11 @@ class Graph(object):
             if not ref_type == 'Resources':
                 continue
 
-            if isinstance(value, list) and len(value) == 2 and (self._is_resource(cfn, value[0])):
+            if (
+                isinstance(value, list)
+                and len(value) == 2
+                and (self._is_resource(cfn, value[0]))
+            ):
                 target_resource_id = value[0]
                 self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
@@ -68,7 +80,8 @@ class Graph(object):
                 if self._is_resource(cfn, target_resource_id):
                     self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
-        # add edges for "Fn::Sub" tags. E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
+        # add edges for "Fn::Sub" tags.
+        # E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
         sub_objs = cfn.search_deep_keys('Fn::Sub')
         for sub_obj in sub_objs:
             sub_parameters = []
@@ -116,17 +129,21 @@ class Graph(object):
         regex = re.compile(r'\${([a-zA-Z0-9.]*)}')
         return regex.findall(string)
 
-    # pylint: disable=import-outside-toplevel,unused-variable
     def to_dot(self, path):
         """Export the graph to a file with DOT format"""
         try:
-            import pygraphviz  # pylint: disable=unused-import
+            import pygraphviz  # noqa: F401
+
             networkx.drawing.nx_agraph.write_dot(self.graph, path)
         except ImportError:
             try:
                 with warnings.catch_warnings():
-                    warnings.filterwarnings('ignore', category=PendingDeprecationWarning)
-                    import pydot  # pylint: disable=unused-import
+                    warnings.filterwarnings(
+                        'ignore',
+                        category=PendingDeprecationWarning,
+                    )
+                    import pydot  # noqa: F401
+
                     networkx.drawing.nx_pydot.write_dot(self.graph, path)
             except ImportError as e:
                 raise e

@@ -15,23 +15,26 @@ class DeprecatedRuntime(CloudFormationLintRule):
         """Init"""
         super(DeprecatedRuntime, self).__init__()
         self.resource_property_types.append('AWS::Lambda::Function')
-        self.deprecated_runtimes = load_resource(AdditionalSpecs, 'LmbdRuntimeLifecycle.json')
+        self.deprecated_runtimes = load_resource(
+            AdditionalSpecs,
+            'LmbdRuntimeLifecycle.json',
+        )
 
     current_date = datetime.today()
 
     def check_runtime(self, runtime_value, path):
-        """ Check if the given runtime is valid"""
+        """Check if the given runtime is valid"""
         self.logger.debug(runtime_value, path)
         return []
 
     def check_value(self, value, path):
-        """Check Lambda Runtime value """
+        """Check Lambda Runtime value"""
         matches = []
         matches.extend(self.check_runtime(value, path))
         return matches
 
     def check_ref(self, value, path, parameters, resources):  # pylint: disable=W0613
-        """Check Lambda Runtime Ref value """
+        """Check Lambda Runtime Ref value"""
         matches = []
         if value in parameters:
             parameter = parameters.get(value, {})
@@ -46,7 +49,9 @@ class DeprecatedRuntime(CloudFormationLintRule):
             if isinstance(allowed_values, list):
                 param_path = param_path + ['AllowedValues']
                 for index, allowed_value in enumerate(allowed_values):
-                    matches.extend(self.check_runtime(allowed_value, param_path + [index]))
+                    matches.extend(
+                        self.check_runtime(allowed_value, param_path + [index]),
+                    )
 
         return matches
 
@@ -56,10 +61,12 @@ class DeprecatedRuntime(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                obj=properties, key='Runtime',
+                obj=properties,
+                key='Runtime',
                 path=path[:],
                 check_value=self.check_value,
-                check_ref=self.check_ref
-            ))
+                check_ref=self.check_ref,
+            ),
+        )
 
         return matches

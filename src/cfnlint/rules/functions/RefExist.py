@@ -11,7 +11,7 @@ class RefExist(CloudFormationLintRule):
     id = 'E1012'
     shortdesc = 'Check if Refs exist'
     description = 'Making sure the refs exist'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html'  # noqa: E501
     tags = ['functions', 'ref']
 
     def searchstring(self, string):
@@ -36,8 +36,6 @@ class RefExist(CloudFormationLintRule):
             if isinstance(ref, (str, int)):
                 if ref not in valid_refs:
                     message = 'Ref {0} not found as a resource or parameter'
-                    matches.append(RuleMatch(
-                        reftree[:-2], message.format(ref)
-                    ))
+                    matches.append(RuleMatch(reftree[:-2], message.format(ref)))
 
         return matches

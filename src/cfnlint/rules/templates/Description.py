@@ -8,17 +8,18 @@ from cfnlint.rules import RuleMatch
 
 class Description(CloudFormationLintRule):
     """Check Template Description is only a String"""
+
     id = 'E1004'
     shortdesc = 'Template description can only be a string'
     description = 'Template description can only be a string'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-description-structure.html'  # noqa: E501
     tags = ['description']
 
     def match(self, cfn):
         matches = []
 
         description = cfn.template.get('Description')
-        if not 'Description' in cfn.template:
+        if 'Description' not in cfn.template:
             return matches
 
         if not isinstance(description, str):

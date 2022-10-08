@@ -6,12 +6,14 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 
+
 class Required(CloudFormationLintRule):
     """Check Required Resource Configuration"""
+
     id = 'E3003'
     shortdesc = 'Required Resource properties are missing'
-    description = 'Making sure that Resources properties that are required exist'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required'
+    description = 'Making sure that Resources properties that are ' 'required exist'
+    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required'  # noqa: E501
     tags = ['resources']
 
     def __init__(self):
@@ -47,11 +49,15 @@ class Required(CloudFormationLintRule):
             for required_attribute in required_attributes:
                 if required_attribute not in safe_obj:
                     message = 'Property {0} missing at {1}'
-                    matches.append(RuleMatch(
-                        safe_path,
-                        message.format(required_attribute,
-                                       '/'.join(map(str, safe_path)))
-                    ))
+                    matches.append(
+                        RuleMatch(
+                            safe_path,
+                            message.format(
+                                required_attribute,
+                                '/'.join(map(str, safe_path)),
+                            ),
+                        ),
+                    )
 
         return matches
 
@@ -60,15 +66,17 @@ class Required(CloudFormationLintRule):
         matches = []
 
         if properties is None:
-            # covered under rule E3001.  If there are required properties properties is required first
+            # covered under rule E3001.  If there are required properties
+            # properties is required first
             return matches
 
         matches.extend(
             self.check_obj(
                 properties,
-                self._get_required_attrs_specs(
-                    self.resourcetypes.get(resource_type)),
-                path, cfn)
+                self._get_required_attrs_specs(self.resourcetypes.get(resource_type)),
+                path,
+                cfn,
+            ),
         )
 
         return matches
@@ -79,9 +87,10 @@ class Required(CloudFormationLintRule):
         matches.extend(
             self.check_obj(
                 properties,
-                self._get_required_attrs_specs(
-                    self.propertytypes.get(property_type)),
-                path, cfn)
+                self._get_required_attrs_specs(self.propertytypes.get(property_type)),
+                path,
+                cfn,
+            ),
         )
 
         return matches
@@ -93,14 +102,20 @@ class Required(CloudFormationLintRule):
         for resourcename, resourcevalue in cfn.get_resources().items():
             if 'Properties' in resourcevalue and 'Type' in resourcevalue:
                 resource_type = resourcevalue['Type']
-                if resource_type.startswith('Custom::') and resource_type not in self.resourcetypes:
+                if (
+                    resource_type.startswith('Custom::')
+                    and resource_type not in self.resourcetypes
+                ):
                     resource_type = 'AWS::CloudFormation::CustomResource'
                     matches.extend(
                         self.check_obj(
                             resourcevalue['Properties'],
                             self._get_required_attrs_specs(
-                                self.resourcetypes.get(resource_type)),
-                            ['Resources', resourcename, 'Properties'], cfn)
+                                self.resourcetypes.get(resource_type),
+                            ),
+                            ['Resources', resourcename, 'Properties'],
+                            cfn,
+                        ),
                     )
 
         return matches

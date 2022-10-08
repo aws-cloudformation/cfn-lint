@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class RefInCondition(CloudFormationLintRule):
     """Check if Ref value is a string"""
+
     id = 'E1026'
     shortdesc = 'Cannot reference resources in the Conditions block of the template'
     description = 'Check that any Refs in the Conditions block uses no resources'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#w2ab2c21c28c21c45'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#w2ab2c21c28c21c45'  # noqa: E501
     tags = ['conditions', 'functions', 'ref']
 
     def match(self, cfn):
@@ -25,8 +26,15 @@ class RefInCondition(CloudFormationLintRule):
                 value = ref_obj[-1]
                 if isinstance(value, (str, int)):
                     if value in resource_names:
-                        message = 'Cannot reference resource {0} in the Conditions block of the template at {1}'
+                        message = (
+                            'Cannot reference resource {0} in the Conditions '
+                            'block of the template at {1}'
+                        )
                         matches.append(
-                            RuleMatch(ref_obj[:-1], message.format(value, '/'.join(map(str, ref_obj[:-1])))))
+                            RuleMatch(
+                                ref_obj[:-1],
+                                message.format(value, '/'.join(map(str, ref_obj[:-1]))),
+                            ),
+                        )
 
         return matches

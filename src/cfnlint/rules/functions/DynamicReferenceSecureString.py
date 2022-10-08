@@ -10,17 +10,20 @@ import cfnlint.helpers
 
 class DynamicReferenceSecureString(CloudFormationLintRule):
     """Check if Dynamic Reference Secure Strings are only used in the correct locations"""
+
     id = 'E1027'
     shortdesc = 'Check dynamic references secure strings are in supported locations'
-    description = 'Dynamic References Secure Strings are only supported for a small set of resource properties.  ' \
-                  'Validate that they are being used in the correct location when checking values ' \
-                  'and Fn::Sub in resource properties. Currently doesn\'t check outputs, maps, conditions, '\
-                  'parameters, and descriptions.'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html'
+    description = (
+        'Dynamic References Secure Strings are only supported for a small set of resource '
+        'properties. Validate that they are being used in the correct location when checking '
+        "values and Fn::Sub in resource properties. Currently doesn't check outputs, "
+        'maps, conditions, parameters, and descriptions.'
+    )
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html'  # noqa: E501
     tags = ['functions', 'dynamic reference']
 
     def __init__(self):
-        """Init """
+        """Init"""
         super(DynamicReferenceSecureString, self).__init__()
         self.property_specs = []
         self.resource_specs = []
@@ -39,7 +42,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         }
 
     def initialize(self, cfn):
-        """Init """
+        """Init"""
         specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
         self.property_specs = specs.get('PropertyTypes')
         self.resource_specs = specs.get('ResourceTypes')
@@ -54,8 +57,10 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
 
         if isinstance(value, str):
             if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
-                message = 'Dynamic Reference secure strings are not supported for this property at %s' % (
-                    '/'.join(map(str, path[:])))
+                message = (
+                    'Dynamic Reference secure strings are not supported for this property at %s'
+                    % ('/'.join(map(str, path[:])))
+                )
                 matches.append(RuleMatch(path[:], message))
 
         return matches
@@ -68,7 +73,9 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
             if isinstance(value, dict):
                 for map_key, map_value in value.items():
                     if not isinstance(map_value, dict):
-                        matches.extend(self.check_dyn_ref_value(map_value, path[:] + [map_key]))
+                        matches.extend(
+                            self.check_dyn_ref_value(map_value, path[:] + [map_key]),
+                        )
         else:
             matches.extend(self.check_dyn_ref_value(value, path[:]))
 
@@ -106,12 +113,14 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
                 if primitive_type:
                     matches.extend(
                         cfn.check_value(
-                            properties, prop, path[:],
+                            properties,
+                            prop,
+                            path[:],
                             check_value=self.check_value,
                             check_sub=self.check_sub,
                             primitive_type=primitive_type,
-                            item_type=item_type
-                        )
+                            item_type=item_type,
+                        ),
                     )
 
         return matches
@@ -121,15 +130,23 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
         matches = []
 
         if self.property_specs.get(property_type, {}).get('Properties'):
-            property_specs = self.property_specs.get(property_type, {}).get('Properties', {})
-            matches.extend(self.check(cfn, properties, property_specs, property_type, path))
+            property_specs = self.property_specs.get(property_type, {}).get(
+                'Properties',
+                {},
+            )
+            matches.extend(
+                self.check(cfn, properties, property_specs, property_type, path),
+            )
 
         return matches
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
-        resource_specs = self.resource_specs.get(resource_type, {}).get('Properties', {})
+        resource_specs = self.resource_specs.get(resource_type, {}).get(
+            'Properties',
+            {},
+        )
         matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
 
         return matches

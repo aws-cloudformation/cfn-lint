@@ -13,7 +13,7 @@ class SubNotJoin(CloudFormationLintRule):
     description = (
         'Prefer a sub instead of Join when using a join delimiter that is empty'
     )
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'  # noqa: E501
     tags = ['functions', 'sub', 'join']
 
     def _check_element(self, element):
@@ -51,7 +51,8 @@ class SubNotJoin(CloudFormationLintRule):
                                 matches.append(
                                     RuleMatch(
                                         join_obj[0:-1],
-                                        'Prefer using Fn::Sub over Fn::Join with an empty delimiter',
-                                    )
+                                        'Prefer using Fn::Sub over Fn::Join '
+                                        'with an empty delimiter',
+                                    ),
                                 )
         return matches

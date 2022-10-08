@@ -8,10 +8,11 @@ from cfnlint.rules import RuleMatch
 
 class DependsOn(CloudFormationLintRule):
     """Check Base Resource Configuration"""
+
     id = 'E3005'
     shortdesc = 'Check DependsOn values for Resources'
     description = 'Check that the DependsOn values are valid'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-dependson.html'  # noqa: E501
     tags = ['resources', 'dependson']
 
     def check_value(self, key, path, resources, cfn):
@@ -28,10 +29,23 @@ class DependsOn(CloudFormationLintRule):
         else:
             for scenario in cfn.is_resource_available(path, key):
                 if scenario:
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, scenario[k]) for k in sorted(scenario)])
+                    scenario_text = ' and '.join(
+                        [
+                            'when condition "%s" is %s' % (k, scenario[k])
+                            for k in sorted(scenario)
+                        ],
+                    )
                     message = 'DependsOn {0} may not exist when condition {1} at {2}'
-                    matches.append(RuleMatch(path, message.format(key, scenario_text, '/'.join(map(str, path)))))
-
+                    matches.append(
+                        RuleMatch(
+                            path,
+                            message.format(
+                                key,
+                                scenario_text,
+                                '/'.join(map(str, path)),
+                            ),
+                        ),
+                    )
 
         return matches
 
@@ -44,10 +58,20 @@ class DependsOn(CloudFormationLintRule):
             depends_ons = resource_values.get('DependsOn')
             if depends_ons:
                 path = ['Resources', resource_name, 'DependsOn']
-                self.logger.debug('Validating DependsOn for %s base configuration', resource_name)
+                self.logger.debug(
+                    'Validating DependsOn for %s base configuration',
+                    resource_name,
+                )
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
-                        matches.extend(self.check_value(depends_on, path[:] + [index], resources, cfn))
+                        matches.extend(
+                            self.check_value(
+                                depends_on,
+                                path[:] + [index],
+                                resources,
+                                cfn,
+                            ),
+                        )
                 else:
                     matches.extend(self.check_value(depends_ons, path, resources, cfn))
 

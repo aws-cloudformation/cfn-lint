@@ -10,13 +10,14 @@ LOGGER = logging.getLogger(__name__)
 
 
 class TemplateAttributeError(AttributeError):
-    """ Custom error to capture Attribute Errors in the Template """
+    """Custom error to capture Attribute Errors in the Template"""
 
 
 def create_str_node_class(cls):
     """
     Create string node class
     """
+
     class node_class(cls):
         """Node class created based on the input class"""
 
@@ -33,7 +34,9 @@ def create_str_node_class(cls):
             return cls.__new__(self, x)
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(
+                '%s.%s is invalid' % (self.__class__.__name__, name),
+            )
 
         def __deepcopy__(self, memo):
             result = str_node(self, self.start_mark, self.end_mark)
@@ -51,6 +54,7 @@ def create_dict_node_class(cls):
     """
     Create dynamic node class
     """
+
     class node_class(cls):
         """Node class created based on the input class"""
 
@@ -76,12 +80,12 @@ def create_dict_node_class(cls):
 
         def is_function_returning_object(self, mappings=None):
             """
-                Check if an object is using a function that could return an object
-                Return True when
-                    Fn::Select:
-                    - 0  # or any number
-                    - !FindInMap [mapname, key, value] # or any mapname, key, value
-                Otherwise False
+            Check if an object is using a function that could return an object
+            Return True when
+                Fn::Select:
+                - 0  # or any number
+                - !FindInMap [mapname, key, value] # or any mapname, key, value
+            Otherwise False
             """
             mappings = mappings or {}
             if len(self) == 1:
@@ -99,14 +103,14 @@ def create_dict_node_class(cls):
             return False
 
         def get(self, key, default=None):
-            """ Override the default get """
+            """Override the default get"""
             if isinstance(default, dict):
                 default = dict_node(default, self.start_mark, self.end_mark)
             return super(node_class, self).get(key, default)
 
         def get_safe(self, key, default=None, path=None, type_t=()):
             """
-                Get values in format
+            Get values in format
             """
             path = path or []
 
@@ -117,7 +121,8 @@ def create_dict_node_class(cls):
                 # if default is None and value is None return empty list
                 return []
 
-            # if the value is the default make sure that the default value is of type_t when specified
+            # if the value is the default make sure that the default
+            # value is of type_t when specified
             if bool(type_t) and value == default and not isinstance(default, type_t):
                 raise ValueError('"default" type should be of "type_t"')
 
@@ -143,7 +148,6 @@ def create_dict_node_class(cls):
                 result[k] = v
             return result
 
-
         def items_safe(self, path=None, type_t=()):
             """Get items while handling IFs"""
             path = path or []
@@ -156,7 +160,9 @@ def create_dict_node_class(cls):
                                     if isinstance(if_v, dict):
                                         # yield from if_v.items_safe(path[:] + [k, i - 1])
                                         # Python 2.7 support
-                                        for items, p in if_v.items_safe(path[:] + [k, i + 1]):
+                                        for items, p in if_v.items_safe(
+                                            path[:] + [k, i + 1],
+                                        ):
                                             if isinstance(items, type_t) or not type_t:
                                                 yield items, p
                                     elif isinstance(if_v, list):
@@ -173,7 +179,9 @@ def create_dict_node_class(cls):
                     yield self.clean(), path[:]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(
+                '%s.%s is invalid' % (self.__class__.__name__, name),
+            )
 
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class
@@ -183,10 +191,12 @@ def create_intrinsic_node_class(cls):
     """
     Create dynamic sub class
     """
+
     class intrinsic_class(cls):
         """Node class created based on the input class"""
+
         def is_valid(self):
-            raise TemplateAttributeError('intrisnic class shouldn\'t be directly used')
+            raise TemplateAttributeError("intrisnic class shouldn't be directly used")
 
     intrinsic_class.__name__ = '%s_intrinsic' % cls.__name__
     return intrinsic_class
@@ -196,6 +206,7 @@ def create_sub_node_class(cls):
     """
     Create dynamic sub class
     """
+
     class sub_class(cls):
         """Node class created based on the input class"""
 
@@ -260,14 +271,15 @@ def create_sub_node_class(cls):
         def is_valid(self):
             return self.__cache_is_valid
 
-
     sub_class.__name__ = '%s_sub' % cls.__name__
     return sub_class
+
 
 def create_dict_list_class(cls):
     """
     Create dynamic list class
     """
+
     class node_class(cls):
         """Node class created based on the input class"""
 
@@ -304,7 +316,9 @@ def create_dict_list_class(cls):
                         yield v, path[:] + [i]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError('%s.%s is invalid' % (self.__class__.__name__, name))
+            raise TemplateAttributeError(
+                '%s.%s is invalid' % (self.__class__.__name__, name),
+            )
 
     node_class.__name__ = '%s_node' % cls.__name__
     return node_class

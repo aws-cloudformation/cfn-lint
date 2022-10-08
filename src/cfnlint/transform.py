@@ -13,6 +13,7 @@ from samtranslator.sdk import resource
 from cfnlint.helpers import load_resource, convert_dict, format_json_string
 from cfnlint.data import Serverless
 from cfnlint.rules import Match, TransformError
+
 LOGGER = logging.getLogger('cfnlint')
 
 samtranslator_logger = logging.getLogger('samtranslator')
@@ -20,12 +21,16 @@ samtranslator_logger.setLevel(logging.CRITICAL)
 
 # Override SAM validation as cfn-lint does thoese
 # checks already
-#pylint: disable=unused-argument
+# pylint: disable=unused-argument
+
+
 def valid_override(self):
     return resource.SamResourceType.has_value(self.type)
 
-#pylint: disable=redefined-outer-name
+
+# pylint: disable=redefined-outer-name
 resource.SamResource.valid = valid_override
+
 
 class Transform(object):
     """
@@ -69,7 +74,9 @@ class Transform(object):
         all_resources = self._template.get('Resources', {})
 
         template_globals = self._template.get('Globals', {})
-        auto_publish_alias = template_globals.get('Function', {}).get('AutoPublishAlias')
+        auto_publish_alias = template_globals.get('Function', {}).get(
+            'AutoPublishAlias',
+        )
         if isinstance(auto_publish_alias, dict):
             if len(auto_publish_alias) == 1:
                 for k, v in auto_publish_alias.items():
@@ -77,11 +84,10 @@ class Transform(object):
                         if v in self._template.get('Parameters'):
                             self._parameters[v] = 'Alias'
 
+        for _, res in all_resources.items():
 
-        for _, resource in all_resources.items():
-
-            resource_type = resource.get('Type')
-            resource_dict = resource.get('Properties')
+            resource_type = res.get('Type')
+            resource_dict = res.get('Properties')
 
             if resource_type == 'AWS::Serverless::Function':
 
@@ -104,12 +110,17 @@ class Transform(object):
                     resource_dict['Location'] = ''
                     Transform._update_to_s3_uri('Location', resource_dict)
             if resource_type == 'AWS::Serverless::Api':
-                if ('DefinitionBody' not in resource_dict and
-                        'Auth' not in resource_dict and 'Cors' not in resource_dict):
+                if (
+                    'DefinitionBody' not in resource_dict
+                    and 'Auth' not in resource_dict
+                    and 'Cors' not in resource_dict
+                ):
                     Transform._update_to_s3_uri('DefinitionUri', resource_dict)
                 else:
                     resource_dict['DefinitionBody'] = ''
-            if resource_type == 'AWS::Serverless::StateMachine' and resource_dict.get('DefinitionUri'):
+            if resource_type == 'AWS::Serverless::StateMachine' and resource_dict.get(
+                'DefinitionUri',
+            ):
                 Transform._update_to_s3_uri('DefinitionUri', resource_dict)
 
     def transform_template(self):
@@ -124,7 +135,8 @@ class Transform(object):
 
             sam_translator = Translator(
                 managed_policy_map=self._managed_policy_map,
-                sam_parser=self._sam_parser)
+                sam_parser=self._sam_parser,
+            )
 
             self._replace_local_codeuri()
 
@@ -135,28 +147,45 @@ class Transform(object):
             os.environ['AWS_DEFAULT_REGION'] = self._region
 
             self._template = convert_dict(
-                sam_translator.translate(sam_template=self._template,
-                                         parameter_values=self._parameters))
+                sam_translator.translate(
+                    sam_template=self._template,
+                    parameter_values=self._parameters,
+                ),
+            )
 
-            LOGGER.info('Transformed template: \n%s',
-                        format_json_string(self._template))
+            LOGGER.info(
+                'Transformed template: \n%s',
+                format_json_string(self._template),
+            )
         except InvalidDocumentException as e:
             message = 'Error transforming template: {0}'
             for cause in e.causes:
-                matches.append(Match(
-                    1, 1,
-                    1, 1,
-                    self._filename,
-                    TransformError(), message.format(cause.message)))
+                matches.append(
+                    Match(
+                        1,
+                        1,
+                        1,
+                        1,
+                        self._filename,
+                        TransformError(),
+                        message.format(cause.message),
+                    ),
+                )
         except Exception as e:  # pylint: disable=W0703
             LOGGER.debug('Error transforming template: %s', str(e))
             LOGGER.debug('Stack trace: %s', e, exc_info=True)
             message = 'Error transforming template: {0}'
-            matches.append(Match(
-                1, 1,
-                1, 1,
-                self._filename,
-                TransformError(), message.format(str(e))))
+            matches.append(
+                Match(
+                    1,
+                    1,
+                    1,
+                    1,
+                    self._filename,
+                    TransformError(),
+                    message.format(str(e)),
+                ),
+            )
 
         return matches
 
@@ -177,8 +206,10 @@ class Transform(object):
 
     @staticmethod
     def _update_to_s3_uri(
-            property_key, resource_property_dict,
-            s3_uri_value='s3://bucket/value'):
+        property_key,
+        resource_property_dict,
+        s3_uri_value='s3://bucket/value',
+    ):
         """
         Updates the 'property_key' in the 'resource_property_dict' to the
         value of 's3_uri_value'

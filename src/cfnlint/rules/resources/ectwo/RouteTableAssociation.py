@@ -10,10 +10,11 @@ import cfnlint.helpers
 
 class RouteTableAssociation(CloudFormationLintRule):
     """Check only one route table association defined per subnet"""
+
     id = 'E3022'
     shortdesc = 'Resource SubnetRouteTableAssociation Properties'
     description = 'Validate there is only one SubnetRouteTableAssociation per subnet'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'  # noqa: E501
     tags = ['resources', 'ec2', 'subnet', 'route table']
 
     def __init__(self):
@@ -35,17 +36,34 @@ class RouteTableAssociation(CloudFormationLintRule):
                         if isinstance(value, list):
                             if len(value) == 3:
                                 property_condition = value[0]
-                                values.extend(self.get_values(
-                                    value[1], resource_condition, property_condition))
-                                values.extend(self.get_values(
-                                    value[2], resource_condition, property_condition))
+                                values.extend(
+                                    self.get_values(
+                                        value[1],
+                                        resource_condition,
+                                        property_condition,
+                                    ),
+                                )
+                                values.extend(
+                                    self.get_values(
+                                        value[2],
+                                        resource_condition,
+                                        property_condition,
+                                    ),
+                                )
                     if key == 'Ref':
-                        values.extend(self.get_values(
-                            value, resource_condition, property_condition))
+                        values.extend(
+                            self.get_values(
+                                value,
+                                resource_condition,
+                                property_condition,
+                            ),
+                        )
                     if key == 'Fn::GetAtt':
                         if isinstance(value[1], (str)):
                             sub_value = '.'.join(value)
-                            values.append((resource_condition, property_condition, sub_value))
+                            values.append(
+                                (resource_condition, property_condition, sub_value),
+                            )
         else:
             values.append((resource_condition, property_condition, subnetid))
         return values
@@ -85,6 +103,10 @@ class RouteTableAssociation(CloudFormationLintRule):
                     path = ['Resources', resource_name, 'Properties', 'SubnetId']
                     message = 'SubnetId in {0} is also associated with {1}'
                     matches.append(
-                        RuleMatch(path, message.format(resource_name, ', '.join(other_resources))))
+                        RuleMatch(
+                            path,
+                            message.format(resource_name, ', '.join(other_resources)),
+                        ),
+                    )
 
         return matches

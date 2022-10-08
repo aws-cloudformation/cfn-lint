@@ -9,10 +9,13 @@ from cfnlint.rules import RuleMatch
 
 class AttributeMismatch(CloudFormationLintRule):
     """Check DynamoDB Attributes"""
+
     id = 'E3039'
     shortdesc = 'AttributeDefinitions / KeySchemas mismatch'
-    description = 'Verify the set of Attributes in AttributeDefinitions and KeySchemas match'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html'
+    description = (
+        'Verify the set of Attributes in AttributeDefinitions and KeySchemas match'
+    )
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html'  # noqa: E501
     tags = ['resources', 'dynamodb']
 
     def __init__(self):
@@ -21,7 +24,7 @@ class AttributeMismatch(CloudFormationLintRule):
         self.resource_property_types = ['AWS::DynamoDB::Table']
 
     def _get_key_schema_attributes(self, key_schemas_sets):
-        """ Get Key Schema attributes """
+        """Get Key Schema attributes"""
         keys = set()
 
         for properties, _ in key_schemas_sets:
@@ -32,21 +35,26 @@ class AttributeMismatch(CloudFormationLintRule):
         return keys
 
     def _get_attribute_secondary(self, property_sets):
-        """ Get the key schemas from secondary indexes """
+        """Get the key schemas from secondary indexes"""
         keys = set()
 
         for properties, _ in property_sets:
             for index in properties:
                 keys = keys.union(
                     self._get_key_schema_attributes(
-                        index.get_safe('KeySchema', list_node([], None, None), [], list)
-                    )
+                        index.get_safe(
+                            'KeySchema',
+                            list_node([], None, None),
+                            [],
+                            list,
+                        ),
+                    ),
                 )
 
         return keys
 
     def check_property_set(self, property_set, path):
-        """ Check a property set """
+        """Check a property set"""
         matches = []
         properties = property_set.get('Object')
 
@@ -62,23 +70,45 @@ class AttributeMismatch(CloudFormationLintRule):
                 return matches
         keys = keys.union(
             self._get_key_schema_attributes(
-                properties.get_safe('KeySchema', list_node([], None, None), [], list)
-            )
+                properties.get_safe('KeySchema', list_node([], None, None), [], list),
+            ),
         )
-        keys = keys.union(self._get_attribute_secondary(
-            properties.get_safe('GlobalSecondaryIndexes', list_node([], None, None), path, list
-                                )))  # pylint: disable=bad-continuation
-        keys = keys.union(self._get_attribute_secondary(
-            properties.get_safe('LocalSecondaryIndexes', list_node([], None, None), path, list
-                                )))  # pylint: disable=bad-continuation
+        keys = keys.union(
+            self._get_attribute_secondary(
+                properties.get_safe(
+                    'GlobalSecondaryIndexes',
+                    list_node([], None, None),
+                    path,
+                    list,
+                ),
+            ),
+        )  # pylint: disable=bad-continuation
+        keys = keys.union(
+            self._get_attribute_secondary(
+                properties.get_safe(
+                    'LocalSecondaryIndexes',
+                    list_node([], None, None),
+                    path,
+                    list,
+                ),
+            ),
+        )  # pylint: disable=bad-continuation
 
         if attributes != keys:
-            message = 'The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}'
-            matches.append(RuleMatch(
-                path,
-                message.format(sorted(list(attributes)), sorted(
-                    list(keys)), '/'.join(map(str, path)))
-            ))
+            message = (
+                'The set of Attributes in AttributeDefinitions: {0} and '
+                'KeySchemas: {1} must match at {2}'
+            )
+            matches.append(
+                RuleMatch(
+                    path,
+                    message.format(
+                        sorted(list(attributes)),
+                        sorted(list(keys)),
+                        '/'.join(map(str, path)),
+                    ),
+                ),
+            )
 
         return matches
 
@@ -87,7 +117,14 @@ class AttributeMismatch(CloudFormationLintRule):
         matches = []
 
         property_sets = cfn.get_object_without_conditions(
-            properties, ['AttributeDefinitions', 'KeySchema', 'GlobalSecondaryIndexes', 'LocalSecondaryIndexes'])
+            properties,
+            [
+                'AttributeDefinitions',
+                'KeySchema',
+                'GlobalSecondaryIndexes',
+                'LocalSecondaryIndexes',
+            ],
+        )
         for property_set in property_sets:
             matches.extend(self.check_property_set(property_set, path))
         return matches

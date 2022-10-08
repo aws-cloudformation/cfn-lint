@@ -7,12 +7,15 @@ from cfnlint.rules import RuleMatch
 
 
 class LambdaMemorySize(CloudFormationLintRule):
-    """Check Lambda Memory Size """
+    """Check Lambda Memory Size"""
+
     id = 'W2510'
     shortdesc = 'Parameter Memory Size attributes should have max and min'
-    description = 'Check if a parameter that is used for Lambda memory size ' \
-                  ' should have a min and max size that matches Lambda constraints'
-    source_url = 'https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize'
+    description = (
+        'Check if a parameter that is used for Lambda memory size '
+        ' should have a min and max size that matches Lambda constraints'
+    )
+    source_url = 'https://docs.aws.amazon.com/lambda/latest/dg/API_CreateFunction.html#SSS-CreateFunction-request-MemorySize'  # noqa: E501
     tags = ['parameters', 'lambda']
 
     def __init__(self):
@@ -36,12 +39,13 @@ class LambdaMemorySize(CloudFormationLintRule):
             allowed_values = parameter.get('AllowedValues')
             if (not min_value or not max_value) and (not allowed_values):
                 param_path = ['Parameters', value]
-                message = 'Lambda Memory Size parameters should use MinValue, MaxValue ' \
-                          'or AllowedValues at {0}'
+                message = (
+                    'Lambda Memory Size parameters should use MinValue, MaxValue '
+                    'or AllowedValues at {0}'
+                )
                 matches.append(
-                    RuleMatch(
-                        param_path,
-                        message.format(('/'.join(param_path)))))
+                    RuleMatch(param_path, message.format(('/'.join(param_path)))),
+                )
 
         return matches
 
@@ -51,10 +55,15 @@ class LambdaMemorySize(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                properties, 'MemorySize', path,
-                check_value=None, check_ref=self.check_lambda_memory_size_ref,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
+                properties,
+                'MemorySize',
+                path,
+                check_value=None,
+                check_ref=self.check_lambda_memory_size_ref,
+                check_find_in_map=None,
+                check_split=None,
+                check_join=None,
+            ),
         )
 
         return matches

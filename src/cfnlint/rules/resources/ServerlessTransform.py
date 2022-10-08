@@ -12,7 +12,8 @@ class ServerlessTransform(CloudFormationLintRule):
     id = 'E3038'
     shortdesc = 'Check if Serverless Resources have Serverless Transform'
     description = (
-        'Check that a template with Serverless Resources also includes the Serverless Transform'
+        'Check that a template with Serverless Resources also '
+        'includes the Serverless Transform'
     )
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources', 'transform']
@@ -33,9 +34,14 @@ class ServerlessTransform(CloudFormationLintRule):
             resource_type = resource_values['Type']
             if isinstance(resource_type, str):
                 if resource_type.startswith('AWS::Serverless::'):
-                    message = 'Serverless Transform required for Type {0} for resource {1}'
+                    message = (
+                        'Serverless Transform required for Type {0} for resource {1}'
+                    )
                     matches.append(
-                        RuleMatch(['Transform'], message.format(resource_type, resource_name))
+                        RuleMatch(
+                            ['Transform'],
+                            message.format(resource_type, resource_name),
+                        ),
                     )
                     break
         return matches

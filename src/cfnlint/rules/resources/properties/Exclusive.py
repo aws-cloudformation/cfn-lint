@@ -10,9 +10,12 @@ from cfnlint.data import AdditionalSpecs
 
 class Exclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
+
     id = 'E2520'
     shortdesc = 'Check Properties that are mutually exclusive'
-    description = 'Making sure CloudFormation properties that are exclusive are not defined'
+    description = (
+        'Making sure CloudFormation properties that are exclusive are not defined'
+    )
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 
@@ -39,20 +42,40 @@ class Exclusive(CloudFormationLintRule):
                     for excl_property in exclusions[prop]:
                         if excl_property in obj:
                             if property_set['Scenario'] is None:
-                                message = 'Property {0} should NOT exist with {1} for {2}'
-                                matches.append(RuleMatch(
-                                    path + [prop],
-                                    message.format(excl_property, prop, '/'.join(map(str, path)))
-                                ))
+                                message = (
+                                    'Property {0} should NOT exist with {1} for {2}'
+                                )
+                                matches.append(
+                                    RuleMatch(
+                                        path + [prop],
+                                        message.format(
+                                            excl_property,
+                                            prop,
+                                            '/'.join(map(str, path)),
+                                        ),
+                                    ),
+                                )
                             else:
-                                scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                    k, v) for (k, v) in property_set['Scenario'].items()])
-                                message = 'Property {0} should NOT exist with {1} {2} for {3}'
-                                matches.append(RuleMatch(
-                                    path + [prop],
-                                    message.format(excl_property, prop, scenario_text,
-                                                   '/'.join(map(str, path)))
-                                ))
+                                scenario_text = ' and '.join(
+                                    [
+                                        'when condition "%s" is %s' % (k, v)
+                                        for (k, v) in property_set['Scenario'].items()
+                                    ],
+                                )
+                                message = (
+                                    'Property {0} should NOT exist with {1} {2} for {3}'
+                                )
+                                matches.append(
+                                    RuleMatch(
+                                        path + [prop],
+                                        message.format(
+                                            excl_property,
+                                            prop,
+                                            scenario_text,
+                                            '/'.join(map(str, path)),
+                                        ),
+                                    ),
+                                )
 
         return matches
 

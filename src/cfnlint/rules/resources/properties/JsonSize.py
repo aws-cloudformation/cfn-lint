@@ -13,31 +13,41 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 class JsonSize(CloudFormationLintRule):
     """Check if JSON Object Size is within the specified length"""
+
     id = 'E3502'
     shortdesc = 'Check if a JSON Object is within size limits'
-    description = 'Validate properties that are JSON values so that their length is within the limits'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
+    description = (
+        'Validate properties that are JSON values so that their '
+        'length is within the limits'
+    )
+    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'  # noqa: E501
     tags = ['resources', 'limits', 'json']
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes',
+        ):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes',
+        ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
-        raise TypeError('Object of type {} is not JSON serializable'.format(obj.__class__.__name__))
+        raise TypeError(
+            'Object of type {} is not JSON serializable'.format(obj.__class__.__name__),
+        )
 
     def check_value(self, value, path, prop, cfn, specs):
         """Check Role.AssumeRolePolicyDocument is within limits"""
         matches = []
 
-        #pylint: disable=too-many-return-statements
+        # pylint: disable=too-many-return-statements
         def remove_functions(obj):
-            """ Replaces intrinsic functions with string """
+            """Replaces intrinsic functions with string"""
             if isinstance(obj, dict):
                 new_obj = {}
                 if len(obj) == 1:
@@ -72,22 +82,35 @@ class JsonSize(CloudFormationLintRule):
             if isinstance(j, str):
                 try:
                     j = json.loads(j)
-                except:  #pylint: disable=bare-except
+                except BaseException:
                     continue
-            if len(json.dumps(j, separators=(',', ':'), default=self._serialize_date)) > json_max_size:
+            if (
+                len(json.dumps(j, separators=(',', ':'), default=self._serialize_date))
+                > json_max_size
+            ):
                 if scenario['Scenario']:
-                    message = '{0} JSON text cannot be longer than {1} characters when {2}'
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                        k, v) for (k, v) in scenario['Scenario'].items()])
+                    message = (
+                        '{0} JSON text cannot be longer than {1} characters when {2}'
+                    )
+                    scenario_text = ' and '.join(
+                        [
+                            'when condition "%s" is %s' % (k, v)
+                            for (k, v) in scenario['Scenario'].items()
+                        ],
+                    )
                     matches.append(
-                        RuleMatch(path + [prop], message.format(prop, json_max_size, scenario_text)))
+                        RuleMatch(
+                            path + [prop],
+                            message.format(prop, json_max_size, scenario_text),
+                        ),
+                    )
                 else:
                     message = '{0} JSON text cannot be longer than {1} characters'
                     matches.append(
                         RuleMatch(
                             path + [prop],
                             message.format(prop, json_max_size),
-                        )
+                        ),
                     )
 
         return matches
@@ -105,10 +128,14 @@ class JsonSize(CloudFormationLintRule):
                         if primitive_type == 'Json':
                             matches.extend(
                                 self.check_value(
-                                    p_value, p_path, prop, cfn,
-                                    RESOURCE_SPECS.get(cfn.regions[0]).get(
-                                        'ValueTypes').get(value_type, {})
-                                )
+                                    p_value,
+                                    p_path,
+                                    prop,
+                                    cfn,
+                                    RESOURCE_SPECS.get(cfn.regions[0])
+                                    .get('ValueTypes')
+                                    .get(value_type, {}),
+                                ),
                             )
         return matches
 
@@ -116,8 +143,12 @@ class JsonSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('PropertyTypes')
+            .get(property_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -126,8 +157,12 @@ class JsonSize(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('ResourceTypes')
+            .get(resource_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches

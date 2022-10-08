@@ -30,7 +30,9 @@ def configure_logging(debug_logging, info_logging):
         LOGGER.setLevel(logging.INFO)
     else:
         LOGGER.setLevel(logging.NOTSET)
-    log_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    log_formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    )
     ch.setFormatter(log_formatter)
 
     # make sure all other log handlers are removed before adding it back
@@ -41,9 +43,10 @@ def configure_logging(debug_logging, info_logging):
 
 class ConfigFileArgs(object):
     """
-        Config File arguments.
-        Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
+    Config File arguments.
+    Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
     """
+
     file_args: Dict = {}
     __user_config_file = None
     __project_config_file = None
@@ -53,7 +56,8 @@ class ConfigFileArgs(object):
         # self.file_args = self.get_config_file_defaults()
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath(
-            'data/CfnLintCli/config/schema.json')
+            'data/CfnLintCli/config/schema.json',
+        )
         with self.default_schema_file.open() as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
@@ -188,12 +192,18 @@ class ConfigFileArgs(object):
         for key in user_config:
             if key in project_config:
                 # If both keys are the same, let's check whether they have nested keys
-                if isinstance(user_config[key], dict) and isinstance(project_config[key], dict):
+                if isinstance(user_config[key], dict) and isinstance(
+                    project_config[key],
+                    dict,
+                ):
                     self.merge_config(user_config[key], project_config[key])
                 else:
                     user_config[key] = project_config[key]
                     LOGGER.debug(
-                        'Overriding User\'s key %s with Project\'s specific value %s.', key, project_config[key])
+                        "Overriding User's key %s with Project's specific value %s.",
+                        key,
+                        project_config[key],
+                    )
 
         # Project may have unique config we need to copy over too
         # so that we can have user+project config available as one
@@ -224,7 +234,7 @@ class ConfigFileArgs(object):
 
 
 def comma_separated_arg(string):
-    """ Split a comma separated string """
+    """Split a comma separated string"""
     return string.split(',')
 
 
@@ -235,10 +245,21 @@ def _ensure_value(namespace, name, value):
 
 
 class RuleConfigurationAction(argparse.Action):
-    """ Override the default Action """
+    """Override the default Action"""
 
-    def __init__(self, option_strings, dest, nargs=None, const=None, default=None,
-                 type=None, choices=None, required=False, help=None, metavar=None):  # pylint: disable=W0622
+    def __init__(
+        self,
+        option_strings,
+        dest,
+        nargs=None,
+        const=None,
+        default=None,
+        type=None,
+        choices=None,
+        required=False,
+        help=None,
+        metavar=None,
+    ):  # pylint: disable=W0622
         super(RuleConfigurationAction, self).__init__(
             option_strings=option_strings,
             dest=dest,
@@ -249,10 +270,11 @@ class RuleConfigurationAction(argparse.Action):
             choices=choices,
             required=required,
             help=help,
-            metavar=metavar)
+            metavar=metavar,
+        )
 
     def _parse_rule_configuration(self, string):
-        """ Parse the config rule structure """
+        """Parse the config rule structure"""
         configs = comma_separated_arg(string)
         results = {}
         for config in configs:
@@ -283,7 +305,8 @@ class RuleConfigurationAction(argparse.Action):
 
 
 class CliArgs(object):
-    """ Base Args class"""
+    """Base Args class"""
+
     cli_args: Dict = {}
 
     def __init__(self, cli_args):
@@ -292,8 +315,9 @@ class CliArgs(object):
 
     def create_parser(self):
         """Do first round of parsing parameters to set options"""
+
         class ArgumentParser(argparse.ArgumentParser):
-            """ Override Argument Parser so we can control the exit code"""
+            """Override Argument Parser so we can control the exit code"""
 
             def error(self, message):
                 self.print_help(sys.stderr)
@@ -319,9 +343,7 @@ class CliArgs(object):
             'Lint all yaml files in a folder: cfn-lint dir/**/*.yaml'
         )
 
-        parser = ArgumentParser(
-            description='CloudFormation Linter',
-            usage=usage)
+        parser = ArgumentParser(description='CloudFormation Linter', usage=usage)
         parser.register('action', 'extend', ExtendAction)
 
         standard = parser.add_argument_group('Standard')
@@ -329,115 +351,203 @@ class CliArgs(object):
 
         # Allow the template to be passes as an optional or a positional argument
         standard.add_argument(
-            'templates', metavar='TEMPLATE', nargs='*', help='The CloudFormation template to be linted')
-        standard.add_argument(
-            '-t', '--template', metavar='TEMPLATE', dest='template_alt',
-            help='The CloudFormation template to be linted', nargs='+', default=[], action='extend')
-        standard.add_argument(
-            '-b', '--ignore-bad-template', help='Ignore failures with Bad template',
-            action='store_true'
+            'templates',
+            metavar='TEMPLATE',
+            nargs='*',
+            help='The CloudFormation template to be linted',
         )
         standard.add_argument(
-            '--ignore-templates', dest='ignore_templates',
-            help='Ignore templates', nargs='+', default=[], action='extend'
+            '-t',
+            '--template',
+            metavar='TEMPLATE',
+            dest='template_alt',
+            help='The CloudFormation template to be linted',
+            nargs='+',
+            default=[],
+            action='extend',
+        )
+        standard.add_argument(
+            '-b',
+            '--ignore-bad-template',
+            help='Ignore failures with Bad template',
+            action='store_true',
+        )
+        standard.add_argument(
+            '--ignore-templates',
+            dest='ignore_templates',
+            help='Ignore templates',
+            nargs='+',
+            default=[],
+            action='extend',
         )
         advanced.add_argument(
-            '-D', '--debug', help='Enable debug logging', action='store_true'
+            '-D',
+            '--debug',
+            help='Enable debug logging',
+            action='store_true',
         )
         advanced.add_argument(
-            '-I', '--info', help='Enable information logging', action='store_true'
+            '-I',
+            '--info',
+            help='Enable information logging',
+            action='store_true',
         )
         standard.add_argument(
-            '-f', '--format', help='Output Format', choices=['quiet', 'parseable', 'json', 'junit', 'pretty', 'sarif']
+            '-f',
+            '--format',
+            help='Output Format',
+            choices=['quiet', 'parseable', 'json', 'junit', 'pretty', 'sarif'],
         )
         standard.add_argument(
-            '-l', '--list-rules', dest='listrules', default=False,
-            action='store_true', help='list all the rules'
+            '-l',
+            '--list-rules',
+            dest='listrules',
+            default=False,
+            action='store_true',
+            help='list all the rules',
         )
         standard.add_argument(
-            '-r', '--regions', dest='regions', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-            help='list the regions to validate against.'
+            '-r',
+            '--regions',
+            dest='regions',
+            nargs='+',
+            default=[],
+            type=comma_separated_arg,
+            action='extend',
+            help='list the regions to validate against.',
         )
         advanced.add_argument(
-            '-a', '--append-rules', dest='append_rules', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
+            '-a',
+            '--append-rules',
+            dest='append_rules',
+            nargs='+',
+            default=[],
+            type=comma_separated_arg,
+            action='extend',
             help='specify one or more rules directories using '
-                 'one or more --append-rules arguments. '
+            'one or more --append-rules arguments. ',
         )
         standard.add_argument(
-            '-i', '--ignore-checks', dest='ignore_checks', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-            help='only check rules whose id do not match these values'
+            '-i',
+            '--ignore-checks',
+            dest='ignore_checks',
+            nargs='+',
+            default=[],
+            type=comma_separated_arg,
+            action='extend',
+            help='only check rules whose id do not match these values',
         )
         standard.add_argument(
-            '-c', '--include-checks', dest='include_checks', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-            help='include rules whose id match these values'
+            '-c',
+            '--include-checks',
+            dest='include_checks',
+            nargs='+',
+            default=[],
+            type=comma_separated_arg,
+            action='extend',
+            help='include rules whose id match these values',
         )
         standard.add_argument(
-            '-m', '--mandatory-checks', dest='mandatory_checks', nargs='+', default=[],
-            type=comma_separated_arg, action='extend',
-            help='always check rules whose id match these values, regardless of template exclusions'
+            '-m',
+            '--mandatory-checks',
+            dest='mandatory_checks',
+            nargs='+',
+            default=[],
+            type=comma_separated_arg,
+            action='extend',
+            help='always check rules whose id match these values, '
+            'regardless of template exclusions',
         )
         standard.add_argument(
-            '-e', '--include-experimental', help='Include experimental rules', action='store_true'
+            '-e',
+            '--include-experimental',
+            help='Include experimental rules',
+            action='store_true',
         )
         standard.add_argument(
-            '-x', '--configure-rule', dest='configure_rules', nargs='+', default={},
+            '-x',
+            '--configure-rule',
+            dest='configure_rules',
+            nargs='+',
+            default={},
             action=RuleConfigurationAction,
-            help='Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false'
-        )
-        standard.add_argument('--config-file', dest='config_file',
-                              help='Specify the cfnlintrc file to use')
-        standard.add_argument(
-            '-z', '--custom-rules', dest='custom_rules',
-            help='Allows specification of a custom rule file.'
-        )
-        advanced.add_argument(
-            '-o', '--override-spec', dest='override_spec',
-            help='A CloudFormation Spec override file that allows customization'
-        )
-        advanced.add_argument(
-            '-g', '--build-graph', help='Creates a file in the same directory as the template that models the template\'s resources in DOT format', action='store_true'
-        )
-        advanced.add_argument(
-            '-s', '--registry-schemas', help='one or more directories of CloudFormation Registry Schemas', action='extend', type=comma_separated_arg, nargs='+'
+            help='Provide configuration for a rule. Format '
+            'RuleId:key=value. Example: E3012:strict=false',
         )
         standard.add_argument(
-            '-v', '--version', help='Version of cfn-lint', action='version',
-            version='%(prog)s {version}'.format(version=__version__)
-        )
-        advanced.add_argument(
-            '-u', '--update-specs', help='Update the CloudFormation Specs',
-            action='store_true'
-        )
-        advanced.add_argument(
-            '--update-documentation', help=argparse.SUPPRESS,
-            action='store_true'
-        )
-        advanced.add_argument(
-            '--update-iam-policies', help=argparse.SUPPRESS,
-            action='store_true'
+            '--config-file',
+            dest='config_file',
+            help='Specify the cfnlintrc file to use',
         )
         standard.add_argument(
-            '--output-file', type=str, default=None,
-            help='Writes the output to the specified file, ideal for producing reports'
-        )
-        standard.add_argument(
-            '--merge-configs', default=False, action='store_true',
-            help='Merges lists between configuration layers'
+            '-z',
+            '--custom-rules',
+            dest='custom_rules',
+            help='Allows specification of a custom rule file.',
         )
         advanced.add_argument(
-            '--force', help=argparse.SUPPRESS,
-            action='store_true'
+            '-o',
+            '--override-spec',
+            dest='override_spec',
+            help='A CloudFormation Spec override file that allows customization',
         )
+        advanced.add_argument(
+            '-g',
+            '--build-graph',
+            help='Creates a file in the same directory as the template that models '
+            "the template's resources in DOT format",
+            action='store_true',
+        )
+        advanced.add_argument(
+            '-s',
+            '--registry-schemas',
+            help='one or more directories of CloudFormation Registry Schemas',
+            action='extend',
+            type=comma_separated_arg,
+            nargs='+',
+        )
+        standard.add_argument(
+            '-v',
+            '--version',
+            help='Version of cfn-lint',
+            action='version',
+            version='%(prog)s {version}'.format(version=__version__),
+        )
+        advanced.add_argument(
+            '-u',
+            '--update-specs',
+            help='Update the CloudFormation Specs',
+            action='store_true',
+        )
+        advanced.add_argument(
+            '--update-documentation',
+            help=argparse.SUPPRESS,
+            action='store_true',
+        )
+        advanced.add_argument(
+            '--update-iam-policies',
+            help=argparse.SUPPRESS,
+            action='store_true',
+        )
+        standard.add_argument(
+            '--output-file',
+            type=str,
+            default=None,
+            help='Writes the output to the specified file, ideal for producing reports',
+        )
+        standard.add_argument(
+            '--merge-configs',
+            default=False,
+            action='store_true',
+            help='Merges lists between configuration layers',
+        )
+        advanced.add_argument('--force', help=argparse.SUPPRESS, action='store_true')
 
         return parser
 
 
 class TemplateArgs(object):
-    """ Per Template Args """
+    """Per Template Args"""
 
     def __init__(self, template_args):
         self.set_template_args(template_args)
@@ -450,7 +560,9 @@ class TemplateArgs(object):
         if isinstance(template, dict):
             metadata = template.get('Metadata', {})
             if metadata:
-                configs = template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+                configs = (
+                    template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+                )
 
                 if isinstance(configs, dict):
                     for config_name, config_value in configs.items():
@@ -486,7 +598,7 @@ class TemplateArgs(object):
 
 # pylint: disable=too-many-public-methods
 class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
-    """ Mixin for the Configs """
+    """Mixin for the Configs"""
 
     def __init__(self, cli_args):
         CliArgs.__init__(self, cli_args)
@@ -494,7 +606,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
         configure_logging(self.cli_args.debug, self.cli_args.info)
         TemplateArgs.__init__(self, {})
         ConfigFileArgs.__init__(
-            self, config_file=self._get_argument_value('config_file', False, False))
+            self,
+            config_file=self._get_argument_value('config_file', False, False),
+        )
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
         cli_value = getattr(self.cli_args, arg_name)
@@ -630,7 +744,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
 
     @property
     def custom_rules(self):
-        """ custom_rules_spec """
+        """custom_rules_spec"""
         return self._get_argument_value('custom_rules', False, True)
 
     @property

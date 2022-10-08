@@ -8,11 +8,16 @@ from cfnlint.rules import RuleMatch
 
 class DependsOnObsolete(CloudFormationLintRule):
     """Check unneeded DepensOn Resource Configuration"""
+
     id = 'W3005'
     shortdesc = 'Check obsolete DependsOn configuration for Resources'
-    description = 'Check if DependsOn is specified if not needed. ' \
-                  'A Ref or a Fn::GetAtt already is an implicit dependency.'
-    source_url = 'https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/'
+    description = (
+        'Check if DependsOn is specified if not needed. '
+        'A Ref or a Fn::GetAtt already is an implicit dependency.'
+    )
+    source_url = (
+        'https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/'
+    )
     tags = ['resources', 'dependson', 'ref', 'getatt']
 
     def get_resource_references(self, cfn, ref_function, resource):
@@ -39,8 +44,13 @@ class DependsOnObsolete(CloudFormationLintRule):
 
         for tree in trees:
             if tree[-1] == key:
-                message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Ref" at {1}'
-                matches.append(RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1])))))
+                message = (
+                    'Obsolete DependsOn on resource ({0}), dependency '
+                    'already enforced by a "Ref" at {1}'
+                )
+                matches.append(
+                    RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1])))),
+                )
 
         # Get the GetAtt
         trees = self.get_resource_references(cfn, 'Fn::GetAtt', resource)
@@ -48,8 +58,13 @@ class DependsOnObsolete(CloudFormationLintRule):
         for tree in trees:
             # GettAtt formation is "resource : Attribute", just check the resource
             if tree[-1][0] == key:
-                message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Fn:GetAtt" at {1}'
-                matches.append(RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1])))))
+                message = (
+                    'Obsolete DependsOn on resource ({0}), dependency already '
+                    'enforced by a "Fn:GetAtt" at {1}'
+                )
+                matches.append(
+                    RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1])))),
+                )
 
         return matches
 
@@ -65,9 +80,17 @@ class DependsOnObsolete(CloudFormationLintRule):
                 self.logger.debug('Validating unneeded DependsOn for %s', resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
-                        matches.extend(self.check_depends_on(
-                            cfn, resource_name, depends_on, path[:] + [index]))
+                        matches.extend(
+                            self.check_depends_on(
+                                cfn,
+                                resource_name,
+                                depends_on,
+                                path[:] + [index],
+                            ),
+                        )
                 else:
-                    matches.extend(self.check_depends_on(cfn, resource_name, depends_ons, path))
+                    matches.extend(
+                        self.check_depends_on(cfn, resource_name, depends_ons, path),
+                    )
 
         return matches

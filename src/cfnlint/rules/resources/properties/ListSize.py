@@ -10,17 +10,25 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 class ListSize(CloudFormationLintRule):
     """Check if List has a size within the limit"""
+
     id = 'E3032'
     shortdesc = 'Check if a list has between min and max number of values specified'
-    description = 'Check lists for the number of items in the list to validate they are between the minimum and maximum'
-    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
+    description = (
+        'Check lists for the number of items in the list to validate '
+        'they are between the minimum and maximum'
+    )
+    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'  # noqa: E501
     tags = ['resources', 'property', 'list', 'size']
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes',
+        ):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes',
+        ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def check_value(self, properties, path, property_name, cfn, value_specs):
@@ -38,23 +46,33 @@ class ListSize(CloudFormationLintRule):
                 if isinstance(prop, list):
                     if not list_min <= len(prop) <= list_max:
                         if property_set['Scenario'] is None:
-                            message = '{0} has to have between {1} and {2} items specified'
+                            message = (
+                                '{0} has to have between {1} and {2} items specified'
+                            )
                             matches.append(
                                 RuleMatch(
                                     path + [property_name],
                                     message.format(property_name, list_min, list_max),
-                                )
+                                ),
                             )
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join(
+                                [
+                                    'when condition "%s" is %s' % (k, v)
+                                    for (k, v) in property_set['Scenario'].items()
+                                ],
+                            )
                             message = '{0} has to have between {1} and {2} items specified when {3}'
                             matches.append(
                                 RuleMatch(
                                     path + [property_name],
-                                    message.format(property_name, list_min,
-                                                   list_max, scenario_text),
-                                )
+                                    message.format(
+                                        property_name,
+                                        list_min,
+                                        list_max,
+                                        scenario_text,
+                                    ),
+                                ),
                             )
 
         return matches
@@ -72,10 +90,14 @@ class ListSize(CloudFormationLintRule):
                         if property_type == 'List':
                             matches.extend(
                                 self.check_value(
-                                    p_value, p_path, prop, cfn,
-                                    RESOURCE_SPECS.get(cfn.regions[0]).get(
-                                        'ValueTypes').get(value_type, {})
-                                )
+                                    p_value,
+                                    p_path,
+                                    prop,
+                                    cfn,
+                                    RESOURCE_SPECS.get(cfn.regions[0])
+                                    .get('ValueTypes')
+                                    .get(value_type, {}),
+                                ),
                             )
         return matches
 
@@ -83,8 +105,12 @@ class ListSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('PropertyTypes')
+            .get(property_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -93,8 +119,12 @@ class ListSize(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = list()
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('ResourceTypes')
+            .get(resource_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches

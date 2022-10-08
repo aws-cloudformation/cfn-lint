@@ -9,9 +9,12 @@ from cfnlint.rules import RuleMatch
 
 class PolicyVersion(CloudFormationLintRule):
     """Check if IAM Policy Version is correct"""
+
     id = 'W2511'
     shortdesc = 'Check IAM Resource Policies syntax'
-    description = 'See if the elements inside an IAM Resource policy are configured correctly.'
+    description = (
+        'See if the elements inside an IAM Resource policy are configured correctly.'
+    )
     source_url = 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements.html'
     tags = ['properties', 'iam']
 
@@ -51,9 +54,10 @@ class PolicyVersion(CloudFormationLintRule):
                 version = p_vs.get('Version')
                 if version:
                     if version in ['2008-10-17', date(2008, 10, 17)]:
-                        message = 'IAM Policy Version should be updated to \'2012-10-17\'.'
-                        matches.append(
-                            RuleMatch(p_p + ['Version'], message))
+                        message = (
+                            "IAM Policy Version should be updated to '2012-10-17'."
+                        )
+                        matches.append(RuleMatch(p_p + ['Version'], message))
         return matches
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):
@@ -70,16 +74,20 @@ class PolicyVersion(CloudFormationLintRule):
             for index, policy in enumerate(properties.get(key, [])):
                 matches.extend(
                     cfn.check_value(
-                        obj=policy, key='PolicyDocument',
+                        obj=policy,
+                        key='PolicyDocument',
                         path=path[:] + ['Policies', index],
                         check_value=self.check_policy_document,
-                    ))
+                    ),
+                )
         else:
             matches.extend(
                 cfn.check_value(
-                    obj=properties, key=key,
+                    obj=properties,
+                    key=key,
                     path=path[:],
-                    check_value=self.check_policy_document
-                ))
+                    check_value=self.check_policy_document,
+                ),
+            )
 
         return matches

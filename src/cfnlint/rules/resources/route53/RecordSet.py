@@ -10,20 +10,22 @@ from cfnlint.helpers import REGEX_IPV4, REGEX_IPV6, REGEX_ALPHANUMERIC
 
 class RecordSet(CloudFormationLintRule):
     """Check Route53 Recordset Configuration"""
+
     id = 'E3020'
     shortdesc = 'Validate Route53 RecordSets'
     description = 'Check if all RecordSets are correctly configured'
-    source_url = 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html'
+    source_url = 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/ResourceRecordTypes.html'  # noqa: E501
     tags = ['resources', 'route53', 'record_set']
 
-    # Regex generated from https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DomainNameFormat.html
+    # Regex generated from https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/DomainNameFormat.html  # noqa: E501
     REGEX_DOMAINNAME = re.compile(
-        r'^[a-zA-Z0-9\!\"\#\$\%\&\'\(\)\*\+\,-\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~\.]+$')
+        r'^[a-zA-Z0-9\!\"\#\$\%\&\'\(\)\*\+\,-\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~\.]+$',
+    )
     REGEX_TXT = re.compile(r'^("[^"]{1,255}" *)*"[^"]{1,255}"$')
     REGEX_CNAME_VALIDATIONS = re.compile(r'^.*\.acm-validations\.aws\.?$')
 
     def count_c_names(self, records, path, cfn):
-        """ Count C Names """
+        """Count C Names"""
         matches = []
 
         scenarios = cfn.get_object_without_nested_conditions(records, path)
@@ -34,13 +36,22 @@ class RecordSet(CloudFormationLintRule):
                 if scenario is None:
                     message = 'A CNAME recordset can only contain 1 value'
                     matches.append(
-                        RuleMatch(path, message.format('/'.join(map(str, message)))))
+                        RuleMatch(path, message.format('/'.join(map(str, message)))),
+                    )
                 else:
                     message = 'A CNAME recordset can only contain 1 value {0} at {1}'
                     scenario_text = ' and '.join(
-                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [
+                            'when condition "%s" is %s' % (k, v)
+                            for (k, v) in scenario.items()
+                        ],
+                    )
                     matches.append(
-                        RuleMatch(path, message.format(scenario_text, '/'.join(map(str, path)))))
+                        RuleMatch(
+                            path,
+                            message.format(scenario_text, '/'.join(map(str, path))),
+                        ),
+                    )
 
         return matches
 
@@ -67,15 +78,22 @@ class RecordSet(CloudFormationLintRule):
             items = value.split(' ', 2)
             # Check if the 3 settings are given.
             if len(items) != 3:
-                message = 'CAA record must contain 3 settings (flags tag "value"), record contains {} settings.'
+                message = (
+                    'CAA record must contain 3 settings (flags tag "value"), '
+                    'record contains {} settings.'
+                )
                 matches.append(RuleMatch(path, message.format(len(items))))
             else:
                 # Check the flag value
                 if not items[0].isdigit():
                     message = 'CAA record flag setting ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(
-                        items[0]).__name__, 'expected_type': int.__name__}
-                    matches.append(RuleMatch(path, message.format(items[0]), **extra_args))
+                    extra_args = {
+                        'actual_type': type(items[0]).__name__,
+                        'expected_type': int.__name__,
+                    }
+                    matches.append(
+                        RuleMatch(path, message.format(items[0]), **extra_args),
+                    )
                 else:
                     if int(items[0]) not in [0, 128]:
                         message = 'Invalid CAA record flag setting ({}) given, must be 0 or 128.'
@@ -88,7 +106,10 @@ class RecordSet(CloudFormationLintRule):
 
                 # Check the value
                 if not items[2].startswith('"') or not items[2].endswith('"'):
-                    message = 'CAA record value setting has to be enclosed in double quotation marks (").'
+                    message = (
+                        'CAA record value setting has to be enclosed in '
+                        'double quotation marks (").'
+                    )
                     matches.append(RuleMatch(path, message))
 
         return matches
@@ -98,8 +119,10 @@ class RecordSet(CloudFormationLintRule):
         matches = []
 
         if not isinstance(value, dict):
-            if (not re.match(self.REGEX_DOMAINNAME, value) and
-                    not re.match(self.REGEX_CNAME_VALIDATIONS, value)):
+            if not re.match(self.REGEX_DOMAINNAME, value) and not re.match(
+                self.REGEX_CNAME_VALIDATIONS,
+                value,
+            ):
                 # ACM Route 53 validation uses invalid CNAMEs starting with `_`,
                 # special-case them rather than complicate the regex.
                 message = 'CNAME record ({}) does not contain a valid domain name'
@@ -117,18 +140,30 @@ class RecordSet(CloudFormationLintRule):
 
             # Check if the 3 settings are given.
             if len(items) != 2:
-                message = 'MX record must contain 2 settings (priority domainname), record contains {} settings.'
+                message = (
+                    'MX record must contain 2 settings (priority domainname), '
+                    'record contains {} settings.'
+                )
                 matches.append(RuleMatch(path, message.format(len(items), value)))
             else:
                 # Check the priority value
                 if not items[0].isdigit():
-                    message = 'MX record priority setting ({}) should be of type Integer.'
-                    extra_args = {'actual_type': type(
-                        items[0]).__name__, 'expected_type': int.__name__}
-                    matches.append(RuleMatch(path, message.format(items[0], value), **extra_args))
+                    message = (
+                        'MX record priority setting ({}) should be of type Integer.'
+                    )
+                    extra_args = {
+                        'actual_type': type(items[0]).__name__,
+                        'expected_type': int.__name__,
+                    }
+                    matches.append(
+                        RuleMatch(path, message.format(items[0], value), **extra_args),
+                    )
                 else:
                     if not 0 <= int(items[0]) <= 65535:
-                        message = 'Invalid MX record priority setting ({}) given, must be between 0 and 65535.'
+                        message = (
+                            'Invalid MX record priority setting ({}) given, '
+                            'must be between 0 and 65535.'
+                        )
                         matches.append(RuleMatch(path, message.format(items[0], value)))
 
                 # Check the domainname value
@@ -138,24 +173,38 @@ class RecordSet(CloudFormationLintRule):
         return matches
 
     def check_ns_record(self, value, path):
-        return self.check_record(value, path, 'NS', self.REGEX_DOMAINNAME, 'domain name')
+        return self.check_record(
+            value,
+            path,
+            'NS',
+            self.REGEX_DOMAINNAME,
+            'domain name',
+        )
 
     def check_ptr_record(self, value, path):
-        return self.check_record(value, path, 'PTR', self.REGEX_DOMAINNAME, 'domain name')
+        return self.check_record(
+            value,
+            path,
+            'PTR',
+            self.REGEX_DOMAINNAME,
+            'domain name',
+        )
 
     def check_txt_record(self, value, path):
         """Check TXT record Configuration"""
         matches = []
 
         if not isinstance(value, dict) and not re.match(self.REGEX_TXT, value):
-            message = 'TXT record is not structured as one or more items up to 255 characters ' \
-                      'enclosed in double quotation marks at {0}'
-            matches.append(RuleMatch(
-                path,
-                (
-                    message.format('/'.join(map(str, path)))
+            message = (
+                'TXT record is not structured as one or more items up to 255 characters '
+                'enclosed in double quotation marks at {0}'
+            )
+            matches.append(
+                RuleMatch(
+                    path,
+                    (message.format('/'.join(map(str, path)))),
                 ),
-            ))
+            )
 
         return matches
 
@@ -175,67 +224,90 @@ class RecordSet(CloudFormationLintRule):
                 if recordset_type == 'A':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_a_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'AAAA':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_aaaa_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'CAA':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_caa_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'CNAME':
                     matches.extend(
                         self.count_c_names(
-                            recordset.get('ResourceRecords'), path[:] + ['ResourceRecords'], cfn
-                        )
+                            recordset.get('ResourceRecords'),
+                            path[:] + ['ResourceRecords'],
+                            cfn,
+                        ),
                     )
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_cname_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'MX':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_mx_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'NS':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_ns_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'PTR':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_ptr_record,
-                        )
+                        ),
                     )
                 elif recordset_type == 'TXT':
                     matches.extend(
                         cfn.check_value(
-                            recordset, 'ResourceRecords', path[:],
+                            recordset,
+                            'ResourceRecords',
+                            path[:],
                             check_value=self.check_txt_record,
-                        )
+                        ),
                     )
             else:
                 if recordset.get('TTL'):
-                    matches.append(RuleMatch(path + ['TTL'], 'TTL is not allowed for Alias records'))
+                    matches.append(
+                        RuleMatch(
+                            path + ['TTL'],
+                            'TTL is not allowed for Alias records',
+                        ),
+                    )
 
         return matches
 
@@ -255,7 +327,8 @@ class RecordSet(CloudFormationLintRule):
                     matches.extend(self.check_recordset(path, props, cfn))
 
         recordsetgroups = cfn.get_resource_properties(
-            ['AWS::Route53::RecordSetGroup', 'RecordSets'])
+            ['AWS::Route53::RecordSetGroup', 'RecordSets'],
+        )
 
         for recordsetgroup in recordsetgroups:
             path = recordsetgroup['Path']

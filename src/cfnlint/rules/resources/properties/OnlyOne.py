@@ -10,11 +10,14 @@ from cfnlint.data import AdditionalSpecs
 
 class OnlyOne(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
+
     id = 'E2523'
     shortdesc = 'Check Properties that need only one of a list of properties'
-    description = 'Making sure CloudFormation properties ' + \
-                  'that require only one property from a list. ' + \
-                  'One has to be specified.'
+    description = (
+        'Making sure CloudFormation properties '
+        + 'that require only one property from a list. '
+        + 'One has to be specified.'
+    )
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources']
 
@@ -35,7 +38,10 @@ class OnlyOne(CloudFormationLintRule):
 
         for onlyoneprop in onlyoneprops:
             for (safe_properties, safe_path) in properties.items_safe(path):
-                property_sets = cfn.get_object_without_conditions(safe_properties, onlyoneprop)
+                property_sets = cfn.get_object_without_conditions(
+                    safe_properties,
+                    onlyoneprop,
+                )
                 for property_set in property_sets:
                     count = 0
                     for prop in onlyoneprop:
@@ -45,20 +51,33 @@ class OnlyOne(CloudFormationLintRule):
                     if count != 1:
                         if property_set['Scenario'] is None:
                             message = 'Only one of [{0}] should be specified for {1}'
-                            matches.append(RuleMatch(
-                                path,
-                                message.format(', '.join(map(str, onlyoneprop)),
-                                               '/'.join(map(str, safe_path)))
-                            ))
+                            matches.append(
+                                RuleMatch(
+                                    path,
+                                    message.format(
+                                        ', '.join(map(str, onlyoneprop)),
+                                        '/'.join(map(str, safe_path)),
+                                    ),
+                                ),
+                            )
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join(
+                                [
+                                    'when condition "%s" is %s' % (k, v)
+                                    for (k, v) in property_set['Scenario'].items()
+                                ],
+                            )
                             message = 'Only one of [{0}] should be specified {1} at {2}'
-                            matches.append(RuleMatch(
-                                path,
-                                message.format(', '.join(map(str, onlyoneprop)),
-                                               scenario_text, '/'.join(map(str, safe_path)))
-                            ))
+                            matches.append(
+                                RuleMatch(
+                                    path,
+                                    message.format(
+                                        ', '.join(map(str, onlyoneprop)),
+                                        scenario_text,
+                                        '/'.join(map(str, safe_path)),
+                                    ),
+                                ),
+                            )
 
         return matches
 

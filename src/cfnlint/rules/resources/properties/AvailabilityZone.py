@@ -7,7 +7,8 @@ from cfnlint.rules import RuleMatch
 
 
 class AvailabilityZone(CloudFormationLintRule):
-    """Check Availibility Zone parameter checks """
+    """Check Availibility Zone parameter checks"""
+
     id = 'W3010'
     shortdesc = 'Availability Zone Parameters should not be hardcoded'
     description = 'Check if an Availability Zone property is hardcoded.'
@@ -53,7 +54,7 @@ class AvailabilityZone(CloudFormationLintRule):
         # value of `all` is a valide exception in AWS::ElasticLoadBalancingV2::TargetGroup
         if value not in ['all']:
             if path[-1] != ['Fn::GetAZs']:
-                message = 'Don\'t hardcode {0} for AvailabilityZones'
+                message = "Don't hardcode {0} for AvailabilityZones"
                 matches.append(RuleMatch(path, message.format(value)))
 
         return matches
@@ -64,17 +65,27 @@ class AvailabilityZone(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                properties, 'AvailabilityZone', path,
-                check_value=self.check_az_value, check_ref=None,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
+                properties,
+                'AvailabilityZone',
+                path,
+                check_value=self.check_az_value,
+                check_ref=None,
+                check_find_in_map=None,
+                check_split=None,
+                check_join=None,
+            ),
         )
         matches.extend(
             cfn.check_value(
-                properties, 'AvailabilityZones', path,
-                check_value=self.check_az_value, check_ref=None,
-                check_find_in_map=None, check_split=None, check_join=None
-            )
+                properties,
+                'AvailabilityZones',
+                path,
+                check_value=self.check_az_value,
+                check_ref=None,
+                check_find_in_map=None,
+                check_split=None,
+                check_join=None,
+            ),
         )
 
         return matches
