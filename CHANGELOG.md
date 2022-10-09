@@ -1,3 +1,9 @@
+### v0.67.0
+###### Features
+- Support child rules allowing rules to add another rule in their match responses (pull #[2393](https://github.com/aws-cloudformation/cfn-lint/pull/2393))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `92.0.0` (pull #[2399](https://github.com/aws-cloudformation/cfn-lint/pull/2399))
+
 ### v0.66.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `91.0.0` (pull #[2392](https://github.com/aws-cloudformation/cfn-lint/pull/2392))
