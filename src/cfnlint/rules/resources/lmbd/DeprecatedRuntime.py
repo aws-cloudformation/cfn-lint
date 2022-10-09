@@ -13,7 +13,7 @@ class DeprecatedRuntime(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(DeprecatedRuntime, self).__init__()
+        super().__init__()
         self.resource_property_types.append('AWS::Lambda::Function')
         self.deprecated_runtimes = load_resource(AdditionalSpecs, 'LmbdRuntimeLifecycle.json')
 

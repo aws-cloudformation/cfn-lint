@@ -34,7 +34,7 @@ class Permissions(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Permissions, self).__init__()
+        super().__init__()
         self.service_map = self.load_service_map()
         for resource_type in self.IAM_PERMISSION_RESOURCE_TYPES:
             self.resource_property_types.append(resource_type)

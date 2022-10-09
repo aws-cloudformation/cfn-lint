@@ -17,7 +17,7 @@ class RouteTableAssociation(CloudFormationLintRule):
     tags = ['resources', 'ec2', 'subnet', 'route table']
 
     def __init__(self):
-        super(RouteTableAssociation, self).__init__()
+        super().__init__()
         self.resource_values = {}
         self.associated_resources = defaultdict(list)
 

@@ -207,6 +207,7 @@ VALID_PARAMETER_TYPES_LIST = [
 
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
 
+# pylint: disable=missing-class-docstring
 class RegexDict(dict):
 
     def __getitem__(self, item):

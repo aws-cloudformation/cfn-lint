@@ -21,7 +21,7 @@ def CreateCustomRule(rule_id, resourceType, prop, value, error_message, descript
     class CustomRule(cfnlint.rules.CloudFormationLintRule):
 
         def __init__(self, rule_id, resourceType, prop, value, error_message, description, shortdesc, rule_func):
-            super(CustomRule, self).__init__()
+            super().__init__()
             self.resource_property_types.append(resourceType)
             self.id = rule_id
             self.property_chain = prop.split('.')
@@ -178,7 +178,7 @@ def CreateInvalidRule(rule_id, operator):
     class InvalidRule(cfnlint.rules.CloudFormationLintRule):
 
         def __init__(self, rule_id, operator):
-            super(InvalidRule, self).__init__()
+            super().__init__()
             self.id = rule_id
             self.operator = operator
             self.description = 'Created from the custom rule parameter. This rule is the result of an invalid configuration of a custom rule.'

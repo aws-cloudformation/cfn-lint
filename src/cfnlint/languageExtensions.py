@@ -1,6 +1,6 @@
 from cfnlint.rules import RuleMatch
 
-class LanguageExtensions(object):
+class LanguageExtensions():
     """Class for a CloudFormation languageExtensions"""
 
     def validate_transform_is_declared(self, has_language_extensions_transform, matches, tree, intrinsic_function):

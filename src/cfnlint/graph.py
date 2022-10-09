@@ -13,7 +13,7 @@ import networkx
 LOGGER = logging.getLogger('cfnlint.graph')
 
 
-class Graph(object):
+class Graph():
     """Models a template as a directed graph of resources"""
 
     def __init__(self, cfn):

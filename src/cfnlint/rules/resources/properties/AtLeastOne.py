@@ -20,7 +20,7 @@ class AtLeastOne(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(AtLeastOne, self).__init__()
+        super().__init__()
         atleastonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'AtLeastOne.json')
         self.resource_types_specs = atleastonespec['ResourceTypes']
         self.property_types_specs = atleastonespec['PropertyTypes']

@@ -39,7 +39,7 @@ def configure_logging(debug_logging, info_logging):
     LOGGER.addHandler(ch)
 
 
-class ConfigFileArgs(object):
+class ConfigFileArgs():
     """
         Config File arguments.
         Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
@@ -239,7 +239,7 @@ class RuleConfigurationAction(argparse.Action):
 
     def __init__(self, option_strings, dest, nargs=None, const=None, default=None,
                  type=None, choices=None, required=False, help=None, metavar=None):  # pylint: disable=W0622
-        super(RuleConfigurationAction, self).__init__(
+        super().__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=nargs,
@@ -282,7 +282,7 @@ class RuleConfigurationAction(argparse.Action):
             parser.exit()
 
 
-class CliArgs(object):
+class CliArgs():
     """ Base Args class"""
     cli_args: Dict = {}
 
@@ -436,7 +436,7 @@ class CliArgs(object):
         return parser
 
 
-class TemplateArgs(object):
+class TemplateArgs():
     """ Per Template Args """
 
     def __init__(self, template_args):
@@ -485,7 +485,7 @@ class TemplateArgs(object):
 
 
 # pylint: disable=too-many-public-methods
-class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
+class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     """ Mixin for the Configs """
 
     def __init__(self, cli_args):

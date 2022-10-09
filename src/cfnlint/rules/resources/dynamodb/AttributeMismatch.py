@@ -17,7 +17,7 @@ class AttributeMismatch(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(AttributeMismatch, self).__init__()
+        super().__init__()
         self.resource_property_types = ['AWS::DynamoDB::Table']
 
     def _get_key_schema_attributes(self, key_schemas_sets):
@@ -67,10 +67,10 @@ class AttributeMismatch(CloudFormationLintRule):
         )
         keys = keys.union(self._get_attribute_secondary(
             properties.get_safe('GlobalSecondaryIndexes', list_node([], None, None), path, list
-                                )))  # pylint: disable=bad-continuation
+                                )))
         keys = keys.union(self._get_attribute_secondary(
             properties.get_safe('LocalSecondaryIndexes', list_node([], None, None), path, list
-                                )))  # pylint: disable=bad-continuation
+                                )))
 
         if attributes != keys:
             message = 'The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}'

@@ -21,7 +21,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
 
     def __init__(self):
         """Init """
-        super(DynamicReferenceSecureString, self).__init__()
+        super().__init__()
         self.property_specs = []
         self.resource_specs = []
         self.exceptions = {

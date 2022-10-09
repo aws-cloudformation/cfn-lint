@@ -12,7 +12,7 @@ from .rules import Match, RulesCollection
 LOGGER = logging.getLogger(__name__)
 
 
-class Runner(object):
+class Runner():
     """Run all the rules"""
 
     def __init__(

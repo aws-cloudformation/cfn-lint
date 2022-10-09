@@ -102,7 +102,7 @@ def create_dict_node_class(cls):
             """ Override the default get """
             if isinstance(default, dict):
                 default = dict_node(default, self.start_mark, self.end_mark)
-            return super(node_class, self).get(key, default)
+            return super().get(key, default)
 
         def get_safe(self, key, default=None, path=None, type_t=()):
             """

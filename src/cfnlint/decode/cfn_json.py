@@ -21,7 +21,7 @@ class DuplicateError(Exception):
     """
 
     def __init__(self, message, mapping, key):
-        super(DuplicateError, self).__init__(message)
+        super().__init__(message)
 
         self.mapping = mapping
         self.key = key
@@ -89,7 +89,7 @@ def build_match_from_node(message, node, key):
         node[key].start_mark.line, node[key].start_mark.column + 1, node[key].end_mark.line,
         node[key].end_mark.column + 1 + len(key), '', cfnlint.rules.ParseError(), message=message)
 
-class Mark(object):
+class Mark():
     """Mark of line and column"""
     line = 1
     column = 1
@@ -154,7 +154,7 @@ def py_scanstring(s, end, strict=True,
             continue
         try:
             esc = s[end]
-        except IndexError:
+        except IndexError as exc:
             raise JSONDecodeError(
                 doc=s,
                 pos=begin,
@@ -165,12 +165,12 @@ def py_scanstring(s, end, strict=True,
                         pos=begin,
                     ),
                 ]
-            )
+            ) from exc
         # If not a unicode escape sequence, must be in the lookup table
         if esc != 'u':
             try:
                 char = _b[esc]
-            except KeyError:
+            except KeyError as exc:
                 msg = f'Invalid \\escape: {esc!r}'
                 raise JSONDecodeError(
                     doc=s,
@@ -182,7 +182,7 @@ def py_scanstring(s, end, strict=True,
                             pos=end,
                         ),
                     ]
-                )
+                ) from exc
             end += 1
         else:
             uni = _decode_uXXXX(s, end)
@@ -241,8 +241,8 @@ def py_make_scanner(context):
         """ Scan once internal function """
         try:
             nextchar = string[idx]
-        except IndexError:
-            raise StopIteration(idx)
+        except IndexError as exc:
+            raise StopIteration(idx) from exc
 
         if nextchar == '"':
             return parse_string(string, idx + 1, strict)
@@ -298,10 +298,10 @@ def count_occurrences(arr, key):
     right = n - 1
     count = 0
 
-    while (left <= right):
+    while left <= right:
         mid = int((right + left) / 2)
 
-        if (arr[mid] <= key):
+        if arr[mid] <= key:
             count = mid + 1
             left = mid + 1
         else:
@@ -423,7 +423,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                                     pos=end,
                                 ),
                             ]
-                        )
+                        ) from err
                 pairs = {}
                 if object_hook is not None:
                     beg_mark, end_mark = get_beg_end_mark(orginal_end, end + 1, self.newline_indexes)
@@ -489,7 +489,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                             pos=str(err),
                         ),
                     ]
-                )
+                ) from err
             key_str = str_node(key, beg_mark, end_mark)
             pairs_append((key_str, value))
             try:
@@ -550,7 +550,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                             pos=end,
                         ),
                     ]
-                )
+                ) from err
             return result, end
 
         pairs = dict(pairs)

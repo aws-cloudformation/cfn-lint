@@ -17,7 +17,7 @@ class PolicyVersion(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(PolicyVersion, self).__init__()
+        super().__init__()
         self.resources_and_keys = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
             'AWS::Elasticsearch::Domain': 'AccessPolicies',

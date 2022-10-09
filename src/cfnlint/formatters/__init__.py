@@ -20,7 +20,7 @@ from cfnlint.rules import (Match, ParseError, RuleError, RulesCollection,
 Matches = List[Match]
 
 
-class color(object):
+class color():
     error = '\033[31m'
     warning = '\033[33m'
     informational = '\033[34m'
@@ -39,7 +39,7 @@ def colored(s, c):
     return s
 
 
-class BaseFormatter(object):
+class BaseFormatter():
     """Base Formatter class"""
 
     def _format(self, match):

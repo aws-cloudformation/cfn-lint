@@ -30,7 +30,7 @@ class PropertiesTemplated(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(PropertiesTemplated, self).__init__()
+        super().__init__()
         self.resource_property_types.extend(self.templated_exceptions.keys())
 
     def check_value(self, value, path):

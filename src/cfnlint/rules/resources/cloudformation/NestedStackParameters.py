@@ -19,7 +19,7 @@ class NestedStackParameters(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(NestedStackParameters, self).__init__()
+        super().__init__()
         self.resource_property_types.append('AWS::CloudFormation::Stack')
 
 

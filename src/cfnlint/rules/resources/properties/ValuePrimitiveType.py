@@ -26,7 +26,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(ValuePrimitiveType, self).__init__()
+        super().__init__()
         self.resource_specs = []
         self.property_specs = []
         self.config_definition = {

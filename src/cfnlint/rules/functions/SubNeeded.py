@@ -21,7 +21,7 @@ class SubNeeded(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(SubNeeded, self).__init__()
+        super().__init__()
         self.config_definition = {
             'custom_excludes': {
                 'default': '',

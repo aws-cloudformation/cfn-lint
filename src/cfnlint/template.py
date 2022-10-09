@@ -12,7 +12,7 @@ from cfnlint.graph import Graph
 
 LOGGER = logging.getLogger(__name__)
 
-class Template(object):  # pylint: disable=R0904,too-many-lines
+class Template():  # pylint: disable=R0904,too-many-lines
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
@@ -251,6 +251,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
                         })
         return results
 
+    #pylint: disable=too-many-locals
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
         LOGGER.debug('Get Sub Resource Properties from %s', keys)
@@ -597,7 +598,7 @@ class Template(object):  # pylint: disable=R0904,too-many-lines
                 )
         return matches
 
-    # pylint: disable=W0613
+    # pylint: disable=W0613,too-many-locals
     def check_value(self, obj, key, path,
                     check_value=None, check_ref=None, check_get_att=None,
                     check_find_in_map=None, check_split=None, check_join=None,

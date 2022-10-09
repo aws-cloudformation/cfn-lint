@@ -65,7 +65,7 @@ def matching(match_type):
         return wrapper
     return decorator
 
-class CloudFormationLintRule(object):
+class CloudFormationLintRule():
     """CloudFormation linter rules"""
     id: str = ''
     shortdesc: str = ''
@@ -185,7 +185,7 @@ class CloudFormationLintRule(object):
 
 
 #pylint: disable=too-many-instance-attributes
-class RulesCollection(object):
+class RulesCollection():
     """Collection of rules"""
 
     def __init__(self, ignore_rules=None, include_rules=None, configure_rules=None, include_experimental=False, mandatory_rules=None):
@@ -462,7 +462,7 @@ class RulesCollection(object):
         self.extend(custom_rules)
 
 
-class RuleMatch(object):
+class RuleMatch():
     """Rules Error"""
 
     def __init__(self, path, message, **kwargs):
@@ -475,14 +475,14 @@ class RuleMatch(object):
 
     def __eq__(self, item):
         """Override unique"""
-        return ((self.path, self.message) == (item.path, item.message))
+        return (self.path, self.message) == (item.path, item.message)
 
     def __hash__(self):
         """Hash for comparisons"""
         return hash((self.path, self.message))
 
 
-class Match(object):  # pylint: disable=R0902
+class Match():  # pylint: disable=R0902
     """Match Classes"""
 
     def __init__(
@@ -490,19 +490,19 @@ class Match(object):  # pylint: disable=R0902
             columnnumberend, filename, rule, message=None, rulematch_obj=None):
         """Init"""
         self.linenumber = linenumber
-        """Starting line number of the region this match spans"""
+        '''Starting line number of the region this match spans'''
         self.columnnumber = columnnumber
-        """Starting line number of the region this match spans"""
+        '''Starting line number of the region this match spans'''
         self.linenumberend = linenumberend
-        """Ending line number of the region this match spans"""
+        '''Ending line number of the region this match spans'''
         self.columnnumberend = columnnumberend
-        """Ending column number of the region this match spans"""
+        '''Ending column number of the region this match spans'''
         self.filename = filename
-        """Name of the filename associated with this match, or None if there is no such file"""
+        '''Name of the filename associated with this match, or None if there is no such file'''
         self.rule = rule
-        """The rule of this match"""
+        '''The rule of this match'''
         self.message = message  # or rule.shortdesc
-        """The message of this match"""
+        '''The message of this match'''
         if rulematch_obj:
             for k, v in vars(rulematch_obj).items():
                 if not hasattr(self, k):

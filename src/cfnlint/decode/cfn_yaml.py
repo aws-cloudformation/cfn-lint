@@ -41,7 +41,7 @@ class CfnParseError(ConstructorError):
             errors = [errors]
 
         # Call the base class constructor with the parameters it needs
-        super(CfnParseError, self).__init__(errors[0].message)
+        super().__init__(errors[0].message)
 
         # Now for your custom code...
         self.filename = filename
@@ -61,7 +61,7 @@ class NodeConstructor(SafeConstructor):
 
     def __init__(self, filename):
         # Call the base class constructor
-        super(NodeConstructor, self).__init__()
+        super().__init__()
 
         self.filename = filename
 
@@ -104,7 +104,7 @@ class NodeConstructor(SafeConstructor):
                     )
             try:
                 mapping[key] = value
-            except:
+            except Exception as exc:
                 raise CfnParseError(
                     self.filename,
                     [
@@ -116,7 +116,7 @@ class NodeConstructor(SafeConstructor):
                             key=key
                         ),
                     ]
-                )
+                ) from exc
 
         obj, = SafeConstructor.construct_yaml_map(self, node)
 
@@ -149,7 +149,7 @@ NodeConstructor.add_constructor( # type: ignore
     'tag:yaml.org,2002:seq',
     NodeConstructor.construct_yaml_seq)
 
-
+# pylint: disable=too-many-ancestors
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):
     """
     Class for marked loading YAML

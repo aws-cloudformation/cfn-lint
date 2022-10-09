@@ -15,7 +15,7 @@ class BasedOnValue(CloudFormationLintRule):
     message = ''
 
     def __init__(self):
-        super(BasedOnValue, self).__init__()
+        super().__init__()
         basedonvalue = cfnlint.helpers.load_resource(
             AdditionalSpecs, 'BasedOnValue.json')
         self.resource_types_specs = basedonvalue['ResourceTypes']

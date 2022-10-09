@@ -19,7 +19,7 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
 
     def __init__(self):
         """Init"""
-        super(UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes, self).__init__()
+        super().__init__()
 
         spec = cfnlint.helpers.load_resource(AdditionalSpecs, 'StatefulResources.json')
 

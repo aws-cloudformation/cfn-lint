@@ -18,7 +18,7 @@ class Properties(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Properties, self).__init__()
+        super().__init__()
         self.cfn = {}
         self.resourcetypes = {}
         self.propertytypes = {}
@@ -94,7 +94,7 @@ class Properties(CloudFormationLintRule):
                                     if resource_name:
                                         resource_type = self.cfn.template.get(
                                             'Resources', {}).get(resource_name, {}).get('Type')
-                                        if not (resource_type.startswith('Custom::')):
+                                        if not resource_type.startswith('Custom::'):
                                             message = 'Property {0} should be of type List for resource {1} at {2}'
                                             matches.append(
                                                 RuleMatch(
@@ -280,7 +280,7 @@ class Properties(CloudFormationLintRule):
                                     matches.extend(self.propertycheck(
                                         item, resourcespec[prop]['ItemType'],
                                         parenttype, resourcename, arrproppath, False))
-                            elif (isinstance(text[prop], dict)):
+                            elif isinstance(text[prop], dict):
                                 # A list can be be specific as a Conditional
                                 matches.extend(
                                     self.check_list_for_condition(

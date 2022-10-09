@@ -19,7 +19,7 @@ class GetAtt(CloudFormationLintRule):
 
     def __init__(self):
         """Init """
-        super(GetAtt, self).__init__()
+        super().__init__()
         self.propertytypes = []
         self.resourcetypes = []
 

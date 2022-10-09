@@ -19,7 +19,7 @@ class Policy(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Policy, self).__init__()
+        super().__init__()
         self.resource_exceptions = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
         }
@@ -170,7 +170,7 @@ class Policy(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(branch[:] + ['Resource', index], message))
 
-        return(matches)
+        return matches
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):
         """Check CloudFormation Properties"""

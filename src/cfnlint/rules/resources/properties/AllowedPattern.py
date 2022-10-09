@@ -19,7 +19,7 @@ class AllowedPattern(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(AllowedPattern, self).__init__()
+        super().__init__()
         self.config_definition = {
             'exceptions': {
                 'default': [],

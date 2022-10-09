@@ -17,7 +17,7 @@ class RefWithPath(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(RefWithPath, self).__init__()
+        super().__init__()
         self.resources_and_keys = {
             'AWS::CodeBuild::Project': 'ServiceRole',
         }

@@ -17,7 +17,7 @@ HTTPS has certificate HTTP has no certificate'
 
     def __init__(self):
         """ Init """
-        super(Elb, self).__init__()
+        super().__init__()
         self.resource_property_types = ['AWS::ElasticLoadBalancingV2::LoadBalancer']
 
     def check_protocol_value(self, value, path, **kwargs):

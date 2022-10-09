@@ -146,7 +146,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
         constraint_key = self.KEY_MAP[artifact_type]
         if isinstance(constraints[constraint_key], tuple):
             min_, max_ = constraints[constraint_key]
-            if not (min_ <= artifact_count <= max_):
+            if not min_ <= artifact_count <= max_:
                 message = (
                     f'Action "{action["Name"]}" declares {artifact_count} {artifact_type} which is not in '
                     f'expected range [{min_}, {max_}].'

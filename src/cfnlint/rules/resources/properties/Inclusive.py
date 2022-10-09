@@ -18,7 +18,7 @@ class Inclusive(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Inclusive, self).__init__()
+        super().__init__()
         inclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Inclusive.json')
         self.resource_types_specs = inclusivespec['ResourceTypes']
         self.property_types_specs = inclusivespec['PropertyTypes']

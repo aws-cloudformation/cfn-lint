@@ -73,7 +73,7 @@ class CodepipelineStages(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(path + [sidx, 'Actions', aidx], self._format_error_message(message, scenario)))
 
-        if not (categories - set(['Source'])):
+        if not categories - set(['Source']):
             message = 'At least one stage in pipeline must contain an action that is not a source action.'
             matches.append(RuleMatch(path, self._format_error_message(message, scenario)))
 

@@ -16,7 +16,7 @@ class RecordSetName(CloudFormationLintRule):
 
     def __init__(self):
         """ Init """
-        super(RecordSetName, self).__init__()
+        super().__init__()
         self.resource_property_types = ['AWS::Route53::RecordSet']
 
     def match_resource_properties(self, properties, _, path, cfn):

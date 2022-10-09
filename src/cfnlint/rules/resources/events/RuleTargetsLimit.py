@@ -17,7 +17,7 @@ class RuleTargetsLimit(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(RuleTargetsLimit, self).__init__()
+        super().__init__()
         self.resource_property_types = ['AWS::Events::Rule']
         self.limits = {}
 

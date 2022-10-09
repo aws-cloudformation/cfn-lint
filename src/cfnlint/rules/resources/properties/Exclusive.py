@@ -18,7 +18,7 @@ class Exclusive(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Exclusive, self).__init__()
+        super().__init__()
         exclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Exclusive.json')
         self.resource_types_specs = exclusivespec['ResourceTypes']
         self.property_types_specs = exclusivespec['PropertyTypes']
