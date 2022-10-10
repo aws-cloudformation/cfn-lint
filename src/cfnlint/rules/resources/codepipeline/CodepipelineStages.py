@@ -18,7 +18,7 @@ class CodepipelineStages(CloudFormationLintRule):
         """Format error message with scenario text"""
         if scenario:
             scenario_text = ' When ' + \
-                ' and '.join(['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                ' and '.join([f'condition "{k}" is {v}' for (k, v) in scenario.items()])
             return message + scenario_text
 
         return message
@@ -28,8 +28,7 @@ class CodepipelineStages(CloudFormationLintRule):
         matches = []
 
         if len(stages) < 2:
-            message = 'CodePipeline has {} stages. There must be at least two stages.'.format(
-                len(stages))
+            message = f'CodePipeline has {len(stages)} stages. There must be at least two stages.'
             matches.append(RuleMatch(path, self._format_error_message(message, scenario)))
 
         return matches
@@ -74,7 +73,7 @@ class CodepipelineStages(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(path + [sidx, 'Actions', aidx], self._format_error_message(message, scenario)))
 
-        if not (categories - set(['Source'])):
+        if not categories - set(['Source']):
             message = 'At least one stage in pipeline must contain an action that is not a source action.'
             matches.append(RuleMatch(path, self._format_error_message(message, scenario)))
 
@@ -88,9 +87,7 @@ class CodepipelineStages(CloudFormationLintRule):
             stage_name = stage.get('Name')
             if isinstance(stage_name, str):
                 if stage_name in stage_names:
-                    message = 'All stage names within a pipeline must be unique. ({name})'.format(
-                        name=stage_name,
-                    )
+                    message = f'All stage names within a pipeline must be unique. ({stage_name})'
                     matches.append(RuleMatch(path + [sidx, 'Name'],
                                              self._format_error_message(message, scenario)))
                 stage_names.add(stage_name)

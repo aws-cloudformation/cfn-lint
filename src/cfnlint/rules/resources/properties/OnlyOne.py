@@ -20,7 +20,7 @@ class OnlyOne(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(OnlyOne, self).__init__()
+        super().__init__()
         onlyonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'OnlyOne.json')
         self.resource_types_specs = onlyonespec['ResourceTypes']
         self.property_types_specs = onlyonespec['PropertyTypes']
@@ -51,8 +51,7 @@ class OnlyOne(CloudFormationLintRule):
                                                '/'.join(map(str, safe_path)))
                             ))
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                             message = 'Only one of [{0}] should be specified {1} at {2}'
                             matches.append(RuleMatch(
                                 path,

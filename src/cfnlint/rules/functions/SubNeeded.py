@@ -21,7 +21,7 @@ class SubNeeded(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(SubNeeded, self).__init__()
+        super().__init__()
         self.config_definition = {
             'custom_excludes': {
                 'default': '',
@@ -116,8 +116,7 @@ class SubNeeded(CloudFormationLintRule):
                 if (var_stripped in refs or var_stripped in getatts) or 'DefinitionString' in parameter_string_path:
                     # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                     path = parameter_string_path[:-1]
-                    message = 'Found an embedded parameter "{}" outside of an "Fn::Sub" at {}'.format(
-                        var, '/'.join(map(str, path)))
+                    message = f'Found an embedded parameter "{var}" outside of an "Fn::Sub" at {"/".join(map(str, path))}'
                     matches.append(RuleMatch(path, message))
 
         return matches

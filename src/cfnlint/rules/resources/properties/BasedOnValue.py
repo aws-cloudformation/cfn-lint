@@ -15,7 +15,7 @@ class BasedOnValue(CloudFormationLintRule):
     message = ''
 
     def __init__(self):
-        super(BasedOnValue, self).__init__()
+        super().__init__()
         basedonvalue = cfnlint.helpers.load_resource(
             AdditionalSpecs, 'BasedOnValue.json')
         self.resource_types_specs = basedonvalue['ResourceTypes']
@@ -82,8 +82,7 @@ class BasedOnValue(CloudFormationLintRule):
                                                            self.message, '/'.join(map(str, path)))
                                         ))
                                     else:
-                                        scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                            k, v) for (k, v) in scenario['Scenario'].items()])
+                                        scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in scenario['Scenario'].items()])
                                         message = 'When property \'{0}\' has its current value property \'{1}\' {2} when {3}'
                                         matches.append(RuleMatch(
                                             path,

@@ -22,7 +22,7 @@ def get_hash(obj):
     return hashlib.sha1(json.dumps(obj, sort_keys=True).encode('utf-8')).hexdigest()
 
 
-class EqualsValue(object):
+class EqualsValue():
     """ holds the values of a equals """
     Function = None
     String = None
@@ -47,7 +47,7 @@ class EqualsValue(object):
         return other in [self.Function, self.String]
 
 
-class Equals(object):
+class Equals():
     """ Equals operator """
     Left = None
     Right = None
@@ -75,7 +75,7 @@ class Equals(object):
         return None
 
 
-class Condition(object):
+class Condition():
     """ Individual condition """
     And = None
     Or = None
@@ -193,7 +193,7 @@ class Condition(object):
         return results
 
 
-class Conditions(object):
+class Conditions():
     """ All the conditions """
     Conditions = None
     Equals = None
@@ -422,4 +422,4 @@ class Conditions(object):
             if r_condition not in results:
                 results.append(r_condition)
 
-        return(results)
+        return results

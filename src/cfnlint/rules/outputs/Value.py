@@ -17,7 +17,7 @@ class Value(CloudFormationLintRule):
 
     def __init__(self):
         """Init """
-        super(Value, self).__init__()
+        super().__init__()
         self.resourcetypes = []
 
     def initialize(self, cfn):

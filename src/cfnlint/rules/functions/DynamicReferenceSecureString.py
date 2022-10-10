@@ -21,7 +21,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
 
     def __init__(self):
         """Init """
-        super(DynamicReferenceSecureString, self).__init__()
+        super().__init__()
         self.property_specs = []
         self.resource_specs = []
         self.exceptions = {
@@ -54,8 +54,7 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
 
         if isinstance(value, str):
             if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
-                message = 'Dynamic Reference secure strings are not supported for this property at %s' % (
-                    '/'.join(map(str, path[:])))
+                message = f'Dynamic Reference secure strings are not supported for this property at {"/".join(map(str, path[:]))}'
                 matches.append(RuleMatch(path[:], message))
 
         return matches

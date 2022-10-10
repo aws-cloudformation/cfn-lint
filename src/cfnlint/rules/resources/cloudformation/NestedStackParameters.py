@@ -19,7 +19,7 @@ class NestedStackParameters(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(NestedStackParameters, self).__init__()
+        super().__init__()
         self.resource_property_types.append('AWS::CloudFormation::Stack')
 
 
@@ -45,7 +45,7 @@ class NestedStackParameters(CloudFormationLintRule):
             else:
                 message = 'Specified parameter "{0}" doesn\'t exist in nested stack template {1}'
                 scenario_text = ' and '.join(
-                    ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                    [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                 matches.append(
                     RuleMatch(path, message.format(key, scenario_text)))
         for key in set(nested_parameters.keys())- set(template_parameters.keys()):
@@ -57,7 +57,7 @@ class NestedStackParameters(CloudFormationLintRule):
                 else:
                     message = 'Nested stack template parameter "{0}" is not specified {1}'
                     scenario_text = ' and '.join(
-                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                     matches.append(
                         RuleMatch(path, message.format(key, scenario_text)))
 

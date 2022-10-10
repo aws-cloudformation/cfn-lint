@@ -38,7 +38,7 @@ class AllowedValue(CloudFormationLintRule):
                 # Always compare the allowed value as a string, strict typing is not of concern for this rule
                 if str(value) not in allowed_value_specs:
                     message = 'You must specify a valid value for {0} ({1}). {2}'
-                    description = 'Valid values are {0}'.format(json.dumps(allowed_value_specs))
+                    description = f'Valid values are {json.dumps(allowed_value_specs)}'
                     matches.append(RuleMatch(path, message.format(
                         property_name, value, description)))
 
@@ -46,7 +46,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
@@ -68,7 +68,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -79,7 +79,7 @@ class AllowedValue(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

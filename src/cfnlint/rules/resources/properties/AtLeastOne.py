@@ -20,7 +20,7 @@ class AtLeastOne(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(AtLeastOne, self).__init__()
+        super().__init__()
         atleastonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'AtLeastOne.json')
         self.resource_types_specs = atleastonespec['ResourceTypes']
         self.property_types_specs = atleastonespec['PropertyTypes']
@@ -51,8 +51,7 @@ class AtLeastOne(CloudFormationLintRule):
                                                '/'.join(map(str, safe_path)))
                             ))
                         else:
-                            scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                k, v) for (k, v) in property_set['Scenario'].items()])
+                            scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                             message = 'At least one of [{0}] should be specified {1} at {2}'
                             matches.append(RuleMatch(
                                 path,

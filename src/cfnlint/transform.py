@@ -27,7 +27,7 @@ def valid_override(self):
 #pylint: disable=redefined-outer-name
 resource.SamResource.valid = valid_override
 
-class Transform(object):
+class Transform():
     """
     Application Serverless Module tranform Wrapper.
     Based on code from AWS SAM CLI:

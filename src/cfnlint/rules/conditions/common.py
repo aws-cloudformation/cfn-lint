@@ -25,7 +25,7 @@ def check_condition_list(cfn, function):
                     tree[:-1],
                     message.format()
                 ))
-            elif function != 'Fn::Not' and not (2 <= len(value) <= 10):
+            elif function != 'Fn::Not' and not 2 <= len(value) <= 10:
                 message = function + ' must be a list of between 2 to 10 conditions'
                 matches.append(RuleMatch(
                     tree[:-1],

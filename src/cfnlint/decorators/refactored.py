@@ -9,11 +9,11 @@ def refactored(message):
     """ Decorator for refactoring classes """
     def cls_wrapper(cls):
         """ Wrapper Class """
-        class Wrapped(cls, object):
+        class Wrapped(cls):
             """ Wrapped Class """
 
             def __init__(self, *args, **kwargs):
                 warnings.warn(message, FutureWarning)
-                super(Wrapped, self).__init__(*args, **kwargs)
+                super().__init__(*args, **kwargs)
         return Wrapped
     return cls_wrapper

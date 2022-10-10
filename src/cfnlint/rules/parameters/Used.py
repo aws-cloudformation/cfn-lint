@@ -18,7 +18,7 @@ class Used(CloudFormationLintRule):
 
     def searchstring(self, string, parameter):
         """Search string for tokenized fields"""
-        regex = re.compile(r'\${(%s)}' % parameter)
+        regex = re.compile(fr'\${({parameter})}')
         return regex.findall(string)
 
     def isparaminref(self, subs, parameter):

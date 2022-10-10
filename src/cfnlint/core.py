@@ -36,7 +36,7 @@ class CfnLintExitException(Exception):
     def __init__(self, msg=None, exit_code=1):
         if msg is None:
             msg = f'process failed with exit code {exit_code}'
-        super(CfnLintExitException, self).__init__(msg)
+        super().__init__(msg)
         self.exit_code = exit_code
 
 
@@ -132,7 +132,7 @@ def get_rules(append_rules: List[str],
         rules.create_from_custom_rules_file(custom_rules)
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException(
-            f'Tried to append rules but got an error: {str(e)}', 1)
+            f'Tried to append rules but got an error: {str(e)}', 1) from e
     return rules
 
 
@@ -280,7 +280,7 @@ def run_checks(filename: str, template: str,
     errors: Matches = []
 
     if not isinstance(rules, RulesCollection):
-        return ([])
+        return []
 
     runner = cfnlint.runner.Runner(rules, filename, template, regions,
                                    mandatory_rules=mandatory_rules)
@@ -294,9 +294,9 @@ def run_checks(filename: str, template: str,
 
     if errors:
         if ignore_transform_error:
-            return([])   # if there is a transform error we can't continue
+            return []   # if there is a transform error we can't continue
 
-        return(errors)
+        return errors
 
     # Only do rule analysis if Transform was successful
     try:
@@ -306,4 +306,4 @@ def run_checks(filename: str, template: str,
         UnexpectedRuleException(msg, 1)
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
-    return(errors)
+    return errors

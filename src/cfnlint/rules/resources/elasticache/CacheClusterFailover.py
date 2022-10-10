@@ -18,7 +18,7 @@ class CacheClusterFailover(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(CacheClusterFailover, self).__init__()
+        super().__init__()
         self.resource_property_types.append('AWS::ElastiCache::ReplicationGroup')
 
     def is_cluster_enabled(self, properties):
@@ -53,7 +53,7 @@ class CacheClusterFailover(CloudFormationLintRule):
                 else:
                     message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster when {0} at {1}'
                     scenario_text = ' and '.join(
-                        ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                     results.append(
                         RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
             num_node_groups = c_props.get('NumNodeGroups')
@@ -69,7 +69,7 @@ class CacheClusterFailover(CloudFormationLintRule):
                     else:
                         message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         results.append(
                             RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
 

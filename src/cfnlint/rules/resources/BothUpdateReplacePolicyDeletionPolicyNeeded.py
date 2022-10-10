@@ -23,7 +23,7 @@ class UpdateReplacePolicyDeletionPolicy(CloudFormationLintRule):
                 # pylint: disable=too-many-boolean-expressions
                 if r_values.get('DeletionPolicy') and r_values.get('DeletionPolicy') != 'Delete' and not r_values.get('UpdateReplacePolicy') or not r_values.get('DeletionPolicy') and r_values.get('UpdateReplacePolicy') and r_values.get('UpdateReplacePolicy') != 'Delete':
                     path = ['Resources', r_name]
-                    message = 'Both UpdateReplacePolicy and DeletionPolicy are needed to protect %s from deletion' % '/'.join(path)
+                    message = f'Both UpdateReplacePolicy and DeletionPolicy are needed to protect {"/".join(path)} from deletion'
                     matches.append(RuleMatch(path, message))
 
         return matches

@@ -207,6 +207,7 @@ VALID_PARAMETER_TYPES_LIST = [
 
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
 
+# pylint: disable=missing-class-docstring
 class RegexDict(dict):
 
     def __getitem__(self, item):
@@ -274,18 +275,17 @@ def url_has_newer_version(url):
     try:
         # Make an initial HEAD request
         req = Request(url, method='HEAD')
-        res = urlopen(req)
+        with urlopen(req) as res:
+            # If we have an ETag value stored and it matches the returned one,
+            # then we already have a copy of the most recent version of the
+            # resource, so don't bother fetching it again
+            if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
+                LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
+                return False
 
     except NameError:
         # We should force an update
         return True
-
-    # If we have an ETag value stored and it matches the returned one,
-    # then we already have a copy of the most recent version of the
-    # resource, so don't bother fetching it again
-    if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
-        LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
-        return False
 
     # The ETag value of the remote resource does not match the local one, so a newer version is available
     return True
@@ -293,23 +293,22 @@ def url_has_newer_version(url):
 def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
 
-    res = urlopen(url)
+    with urlopen(url) as res:
+        if caching and res.info().get('ETag'):
+            metadata_filename = get_metadata_filename(url)
+            # Load in all existing values
+            metadata = load_metadata(metadata_filename)
+            metadata['etag'] = res.info().get('ETag')
+            metadata['url'] = url # To make it obvious which url the Tag relates to
+            save_metadata(metadata, metadata_filename)
 
-    if caching and res.info().get('ETag'):
-        metadata_filename = get_metadata_filename(url)
-        # Load in all existing values
-        metadata = load_metadata(metadata_filename)
-        metadata['etag'] = res.info().get('ETag')
-        metadata['url'] = url # To make it obvious which url the Tag relates to
-        save_metadata(metadata, metadata_filename)
-
-    # Continue to handle the file download normally
-    if res.info().get('Content-Encoding') == 'gzip':
-        buf = BytesIO(res.read())
-        f = gzip.GzipFile(fileobj=buf)
-        content = f.read().decode('utf-8')
-    else:
-        content = res.read().decode('utf-8')
+        # Continue to handle the file download normally
+        if res.info().get('Content-Encoding') == 'gzip':
+            buf = BytesIO(res.read())
+            f = gzip.GzipFile(fileobj=buf)
+            content = f.read().decode('utf-8')
+        else:
+            content = res.read().decode('utf-8')
 
     return content
 
@@ -425,7 +424,7 @@ def bool_compare(first, second):
 def initialize_specs():
     """ Reload Resource Specs """
     for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=('%s.json' % reg))
+        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=(f'{reg}.json'))
 
 
 initialize_specs()
@@ -436,7 +435,7 @@ def format_json_string(json_string):
     def converter(o):  # pylint: disable=R1710
         """ Help convert date/time into strings """
         if isinstance(o, datetime.datetime):
-            return o.__str__()
+            return o.__str__()  #pylint: disable=unnecessary-dunder-call
     return json.dumps(json_string, indent=1, sort_keys=True, separators=(',', ': '), default=converter)
 
 

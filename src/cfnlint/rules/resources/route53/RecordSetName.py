@@ -16,7 +16,7 @@ class RecordSetName(CloudFormationLintRule):
 
     def __init__(self):
         """ Init """
-        super(RecordSetName, self).__init__()
+        super().__init__()
         self.resource_property_types = ['AWS::Route53::RecordSet']
 
     def match_resource_properties(self, properties, _, path, cfn):
@@ -36,7 +36,7 @@ class RecordSetName(CloudFormationLintRule):
                             RuleMatch(path[:] + ['HostedZoneName'], message.format('/'.join(map(str, path)))))
                     else:
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         matches.append(
                             RuleMatch(path[:] + ['HostedZoneName'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
                 if hz_name[-1] == '.':
@@ -51,7 +51,7 @@ class RecordSetName(CloudFormationLintRule):
                             RuleMatch(path[:] + ['Name'], message.format('/'.join(map(str, path)))))
                     else:
                         scenario_text = ' and '.join(
-                            ['when condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
                         matches.append(
                             RuleMatch(path[:] + ['Name'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
 

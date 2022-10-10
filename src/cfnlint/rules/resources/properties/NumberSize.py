@@ -44,7 +44,7 @@ class NumberSize(CloudFormationLintRule):
                 )
 
         if isinstance(value, number_types):
-            if not (number_min <= value <= number_max):
+            if not number_min <= value <= number_max:
                 message = 'Value has to be between {0} and {1} at {2}'
                 matches.append(
                     RuleMatch(

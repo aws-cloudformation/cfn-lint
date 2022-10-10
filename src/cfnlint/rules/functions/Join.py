@@ -17,7 +17,7 @@ class Join(CloudFormationLintRule):
 
     def __init__(self):
         """Initialize the rule"""
-        super(Join, self).__init__()
+        super().__init__()
         self.list_supported_functions = []
         self.singular_supported_functions = []
         for intrinsic_type, intrinsic_value in RESOURCE_SPECS.get('us-east-1').get('IntrinsicTypes').items():

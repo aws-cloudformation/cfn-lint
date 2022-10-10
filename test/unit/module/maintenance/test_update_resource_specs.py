@@ -103,12 +103,15 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
         mock_patch_spec.side_effect = self.side_effect
 
-        mock_urlresponse = Mock()
+        cm = MagicMock()
+        cm.getcode.return_value = 200
+        cm.__enter__.return_value = cm
+        
         with open("test/fixtures/registry/schema.zip", 'rb') as f:
             byte = f.read()
-            mock_urlresponse.read.side_effect = [byte]
-            mock_urlopen.return_value = mock_urlresponse
+            cm.read.return_value = byte
 
+        mock_urlopen.return_value = cm
         schema_cache = cfnlint.maintenance.get_schema_value_types()
 
         if sys.version_info.major == 3:
@@ -209,11 +212,15 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_patch_spec.side_effect = self.side_effect
 
         mock_urlresponse = Mock()
+        cm = MagicMock()
+        cm.getcode.return_value = 200
+        cm.__enter__.return_value = cm
+
         with open("test/fixtures/registry/schema.zip", 'rb') as f:
             byte = f.read()
-            mock_urlresponse.read.side_effect = [byte]
-            mock_urlopen.return_value = mock_urlresponse
+            cm.read.return_value = byte
 
+        mock_urlopen.return_value = cm
         schema_cache = cfnlint.maintenance.get_schema_value_types()
 
         if sys.version_info.major == 3:

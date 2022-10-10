@@ -30,7 +30,7 @@ class PropertiesTemplated(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(PropertiesTemplated, self).__init__()
+        super().__init__()
         self.resource_property_types.extend(self.templated_exceptions.keys())
 
     def check_value(self, value, path):
@@ -38,8 +38,7 @@ class PropertiesTemplated(CloudFormationLintRule):
         matches = []
         if isinstance(value, str):
             if not value.startswith('s3://') and not value.startswith('https://'):
-                message = 'This code may only work with `package` cli command as the property (%s) is a string' % (
-                    '/'.join(map(str, path)))
+                message = f'This code may only work with `package` cli command as the property ({"/".join(map(str, path))}) is a string'
                 matches.append(RuleMatch(path, message))
 
         return matches

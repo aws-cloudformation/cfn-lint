@@ -28,7 +28,7 @@ class DependsOn(CloudFormationLintRule):
         else:
             for scenario in cfn.is_resource_available(path, key):
                 if scenario:
-                    scenario_text = ' and '.join(['when condition "%s" is %s' % (k, scenario[k]) for k in sorted(scenario)])
+                    scenario_text = ' and '.join([f'when condition "{k}" is {scenario[k]}' for k in sorted(scenario)])
                     message = 'DependsOn {0} may not exist when condition {1} at {2}'
                     matches.append(RuleMatch(path, message.format(key, scenario_text, '/'.join(map(str, path)))))
 

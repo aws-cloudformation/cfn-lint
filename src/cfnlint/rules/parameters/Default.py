@@ -22,7 +22,7 @@ class Default(CloudFormationLintRule):
         message = 'Default should be allowed by AllowedPattern'
         try:
             if not re.match(allowed_pattern, str(allowed_value)):
-                return([RuleMatch(path, message)])
+                return [RuleMatch(path, message)]
         except re.error as ex:
             self.logger.debug('Regex pattern "%s" isn\'t supported by Python: %s',
                               allowed_pattern, ex)
@@ -37,7 +37,7 @@ class Default(CloudFormationLintRule):
 
         if isinstance(allowed_value, int) and isinstance(min_value, int):
             if allowed_value < min_value:
-                return([RuleMatch(path, message)])
+                return [RuleMatch(path, message)]
 
         return []
 
@@ -49,7 +49,7 @@ class Default(CloudFormationLintRule):
 
         if isinstance(allowed_value, int) and isinstance(max_value, int):
             if allowed_value > max_value:
-                return([RuleMatch(path, message)])
+                return [RuleMatch(path, message)]
 
         return []
 
@@ -60,7 +60,7 @@ class Default(CloudFormationLintRule):
         message = 'Default should be a value within AllowedValues'
 
         if allowed_value not in allowed_values:
-            return([RuleMatch(path, message)])
+            return [RuleMatch(path, message)]
 
         return []
 
@@ -73,7 +73,7 @@ class Default(CloudFormationLintRule):
         value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
         if isinstance(min_length, int):
             if len(value) < min_length:
-                return([RuleMatch(path, message)])
+                return [RuleMatch(path, message)]
 
         return []
 
@@ -86,7 +86,7 @@ class Default(CloudFormationLintRule):
         value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
         if isinstance(max_length, int):
             if len(value) > max_length:
-                return([RuleMatch(path, message)])
+                return [RuleMatch(path, message)]
 
         return []
 

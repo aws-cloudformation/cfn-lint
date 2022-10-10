@@ -34,11 +34,11 @@ class Aliases(CloudFormationLintRule):
                         wildcard = alias.split('.')
                         if '*' in wildcard[1:]:
                             path = result['Path'] + ['Aliases']
-                            message = 'Invalid use of wildcards: {} at {}'.format(alias, '/'.join(result['Path']))
+                            message = f'Invalid use of wildcards: {alias} at {"/".join(result["Path"])}'
                             matches.append(RuleMatch(path, message))
                         if not re.match(valid_domain, alias):
                             path = result['Path'] + ['Aliases']
-                            message = 'Invalid alias found: {} at {}'.format(alias, '/'.join(result['Path']))
+                            message = f'Invalid alias found: {alias} at {"/".join(result["Path"])}'
                             matches.append(RuleMatch(path, message))
 
         return matches

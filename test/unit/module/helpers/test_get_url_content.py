@@ -24,6 +24,7 @@ class TestGetUrlContent(BaseTestCase):
         cm = MagicMock()
         cm.getcode.return_value = 200
         cm.read.return_value = input_buffer.encode('utf-8')
+        cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
 
         url = 'http://foo.com'
@@ -49,6 +50,7 @@ class TestGetUrlContent(BaseTestCase):
         cm.info.return_value = {
             'Content-Encoding': 'gzip'
         }
+        cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
 
         url = 'http://foo.com'
@@ -83,6 +85,7 @@ class TestGetUrlContent(BaseTestCase):
             gzip_file.close()
             cm.read.return_value = string_buffer.getvalue()
 
+        cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
         
         result = cfnlint.helpers.get_url_content(url, caching=True)
@@ -112,6 +115,7 @@ class TestGetUrlContent(BaseTestCase):
             'ETag': etag
         }
 
+        cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
 
         result = cfnlint.helpers.url_has_newer_version(url)
@@ -143,6 +147,7 @@ class TestGetUrlContent(BaseTestCase):
             'Content-Encoding': 'gzip',
             'ETag': etag2
         }
+        cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
 
         result = cfnlint.helpers.url_has_newer_version(url)

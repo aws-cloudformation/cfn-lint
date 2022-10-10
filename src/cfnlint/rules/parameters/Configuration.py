@@ -88,8 +88,7 @@ class Configuration(CloudFormationLintRule):
         results = []
         prop_type = props.get('Type')
         if value is None:
-            message = 'Property %s should be of type %s' % (
-                '/'.join(map(str, path)), prop_type)
+            message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
             results.append(RuleMatch(path, message))
             return results
         try:
@@ -100,31 +99,26 @@ class Configuration(CloudFormationLintRule):
                             'Type': props.get('ItemType')
                         }))
                 else:
-                    message = 'Property %s should be of type %s' % (
-                        '/'.join(map(str, path)), prop_type)
+                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
             if prop_type in ['String']:
                 if isinstance(value, (dict, list)):
-                    message = 'Property %s should be of type %s' % (
-                        '/'.join(map(str, path)), prop_type)
+                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
                 str(value)
             elif prop_type in ['Boolean']:
                 if not isinstance(value, bool):
                     if value not in ['True', 'true', 'False', 'false']:
-                        message = 'Property %s should be of type %s' % (
-                            '/'.join(map(str, path)), prop_type)
+                        message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                         results.append(RuleMatch(path, message))
             elif prop_type in ['Integer']:
                 if isinstance(value, bool):
-                    message = 'Property %s should be of type %s' % (
-                        '/'.join(map(str, path)), prop_type)
+                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
                 else:  # has to be a Double
                     int(value)
         except Exception:  # pylint: disable=W0703
-            message = 'Property %s should be of type %s' % (
-                '/'.join(map(str, path)), prop_type)
+            message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
             results.append(RuleMatch(path, message,))
 
         return results

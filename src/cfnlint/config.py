@@ -39,7 +39,7 @@ def configure_logging(debug_logging, info_logging):
     LOGGER.addHandler(ch)
 
 
-class ConfigFileArgs(object):
+class ConfigFileArgs():
     """
         Config File arguments.
         Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
@@ -54,7 +54,7 @@ class ConfigFileArgs(object):
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath(
             'data/CfnLintCli/config/schema.json')
-        with self.default_schema_file.open() as f:
+        with self.default_schema_file.open(encoding='utf-8') as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
 
@@ -239,7 +239,7 @@ class RuleConfigurationAction(argparse.Action):
 
     def __init__(self, option_strings, dest, nargs=None, const=None, default=None,
                  type=None, choices=None, required=False, help=None, metavar=None):  # pylint: disable=W0622
-        super(RuleConfigurationAction, self).__init__(
+        super().__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=nargs,
@@ -282,7 +282,7 @@ class RuleConfigurationAction(argparse.Action):
             parser.exit()
 
 
-class CliArgs(object):
+class CliArgs():
     """ Base Args class"""
     cli_args: Dict = {}
 
@@ -297,7 +297,7 @@ class CliArgs(object):
 
             def error(self, message):
                 self.print_help(sys.stderr)
-                self.exit(32, '%s: error: %s\n' % (self.prog, message))
+                self.exit(32, f'{self.prog}: error: {message}\n')
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can be specified multiple times."""
@@ -406,7 +406,7 @@ class CliArgs(object):
         )
         standard.add_argument(
             '-v', '--version', help='Version of cfn-lint', action='version',
-            version='%(prog)s {version}'.format(version=__version__)
+            version=f'%(prog)s {__version__}'
         )
         advanced.add_argument(
             '-u', '--update-specs', help='Update the CloudFormation Specs',
@@ -436,7 +436,7 @@ class CliArgs(object):
         return parser
 
 
-class TemplateArgs(object):
+class TemplateArgs():
     """ Per Template Args """
 
     def __init__(self, template_args):
@@ -485,7 +485,7 @@ class TemplateArgs(object):
 
 
 # pylint: disable=too-many-public-methods
-class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs, object):
+class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     """ Mixin for the Configs """
 
     def __init__(self, cli_args):

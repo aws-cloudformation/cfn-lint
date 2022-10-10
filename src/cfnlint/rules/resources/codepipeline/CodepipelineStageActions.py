@@ -146,20 +146,14 @@ class CodepipelineStageActions(CloudFormationLintRule):
         constraint_key = self.KEY_MAP[artifact_type]
         if isinstance(constraints[constraint_key], tuple):
             min_, max_ = constraints[constraint_key]
-            if not (min_ <= artifact_count <= max_):
+            if not min_ <= artifact_count <= max_:
                 message = (
-                    'Action "{action}" declares {number} {artifact_type} which is not in '
-                    'expected range [{a}, {b}].'
-                ).format(
-                    action=action['Name'],
-                    number=artifact_count,
-                    artifact_type=artifact_type,
-                    a=min_,
-                    b=max_
+                    f'Action "{action["Name"]}" declares {artifact_count} {artifact_type} which is not in '
+                    f'expected range [{min_}, {max_}].'
                 )
                 if scenario:
                     scenario_text = ' and '.join(
-                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                     message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + [artifact_type],
@@ -168,17 +162,12 @@ class CodepipelineStageActions(CloudFormationLintRule):
         else:
             if artifact_count != constraints[constraint_key]:
                 message = (
-                    'Action "{action}" declares {number} {artifact_type} which is not the '
-                    'expected number [{a}].'
-                ).format(
-                    action=action['Name'],
-                    number=artifact_count,
-                    artifact_type=artifact_type,
-                    a=constraints[constraint_key]
+                    f'Action "{action["Name"]}" declares {artifact_count} {artifact_type} which is not the '
+                    f'expected number [{constraints[constraint_key]}].'
                 )
                 if scenario:
                     scenario_text = ' and '.join(
-                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                     message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + [artifact_type],
@@ -203,7 +192,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 message = 'Version string ({0}) must be between {1} and {2} characters in length.'
                 if scenario:
                     scenario_text = ' and '.join(
-                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                     message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + ['ActionTypeId', 'Version'],
@@ -212,7 +201,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 message = 'Version string must match the pattern [0-9A-Za-z_-]+.'
                 if scenario:
                     scenario_text = ' and '.join(
-                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                     message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(
                     path + ['ActionTypeId', 'Version'],
@@ -227,12 +216,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
         action_name = action.get('Name')
         if isinstance(action_name, str):
             if action.get('Name') in action_names:
-                message = 'All action names within a stage must be unique ({name}).'.format(
-                    name=action.get('Name')
-                )
+                message = f'All action names within a stage must be unique ({action.get("Name")}).'
                 if scenario:
                     scenario_text = ' and '.join(
-                        ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                        [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                     message = message + ' When ' + scenario_text
                 matches.append(RuleMatch(path + ['Name'], message))
             action_names.add(action.get('Name'))
@@ -249,12 +236,10 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 artifact_name = input_artifact.get('Name')
                 if isinstance(artifact_name, str):
                     if not artifact_name in artifact_names:
-                        message = 'Every input artifact for an action must match the output artifact of an action earlier in the pipeline ({name}).'.format(
-                            name=artifact_name
-                        )
+                        message = f'Every input artifact for an action must match the output artifact of an action earlier in the pipeline ({artifact_name}).'
                         if scenario:
                             scenario_text = ' and '.join(
-                                ['condition "%s" is %s' % (k, v) for (k, v) in scenario.items()])
+                                [f'condition "{k}" is {v}' for (k, v) in scenario.items()])
                             message = message + ' When ' + scenario_text
                         matches.append(RuleMatch(path + ['InputArtifacts', 'Name'], message))
 
@@ -264,9 +249,7 @@ class CodepipelineStageActions(CloudFormationLintRule):
                 artifact_name = output_artifact.get('Name')
                 if isinstance(artifact_name, str):
                     if artifact_name in artifact_names:
-                        message = 'Every output artifact in the pipeline must have a unique name. ({name})'.format(
-                            name=artifact_name
-                        )
+                        message = f'Every output artifact in the pipeline must have a unique name. ({artifact_name})'
                         matches.append(RuleMatch(path + ['OutputArtifacts', 'Name'], message))
                     artifact_names.add(artifact_name)
 

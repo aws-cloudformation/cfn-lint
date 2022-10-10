@@ -20,12 +20,8 @@ class DependsOnObsolete(CloudFormationLintRule):
         trees = cfn.search_deep_keys(ref_function)
 
         # Filter only resoureces
-        # Disable pylint for Pylint 2
-        # pylint: disable=W0110
         trees = filter(lambda x: x[0] == 'Resources', trees)
         # Filter on the given resource only
-        # Disable pylint for Pylint 2
-        # pylint: disable=W0110
         trees = filter(lambda x: x[1] == resource, trees)
 
         return trees

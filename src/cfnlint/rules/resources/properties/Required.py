@@ -16,7 +16,7 @@ class Required(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Required, self).__init__()
+        super().__init__()
         self.resourcetypes = []
         self.propertytypes = []
 

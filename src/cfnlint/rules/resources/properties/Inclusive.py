@@ -18,7 +18,7 @@ class Inclusive(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Inclusive, self).__init__()
+        super().__init__()
         inclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Inclusive.json')
         self.resource_types_specs = inclusivespec['ResourceTypes']
         self.property_types_specs = inclusivespec['PropertyTypes']
@@ -41,14 +41,12 @@ class Inclusive(CloudFormationLintRule):
                     for incl_property in inclusions[prop]:
                         if incl_property not in obj:
                             if property_set['Scenario'] is None:
-                                message = 'Property {0} should exist with {1} for {2}'
                                 matches.append(RuleMatch(
                                     path,
-                                    message.format(incl_property, prop, '/'.join(map(str, path)))
+                                    f'Property {incl_property} should exist with {prop} for {"/".join(map(str, path))}'
                                 ))
                             else:
-                                scenario_text = ' and '.join(['when condition "%s" is %s' % (
-                                    k, v) for (k, v) in property_set['Scenario'].items()])
+                                scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
                                 message = 'Property {0} should exist with {1} {2} for {3}'
                                 matches.append(RuleMatch(
                                     path,

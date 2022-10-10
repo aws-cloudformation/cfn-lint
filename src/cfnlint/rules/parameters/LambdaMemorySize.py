@@ -17,7 +17,7 @@ class LambdaMemorySize(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(LambdaMemorySize, self).__init__()
+        super().__init__()
         resource_type_specs = [
             'AWS::Lambda::Function',
         ]

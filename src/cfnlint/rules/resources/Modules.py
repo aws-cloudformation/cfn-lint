@@ -37,7 +37,7 @@ class Modules(CloudFormationLintRule):
         matches = []
         if resource_values.get(policy, {}):
             path = ['Resources', resource_name, policy]
-            matches.append(RuleMatch(path, '{} is not permitted within Modules'.format(policy)))
+            matches.append(RuleMatch(path, f'{policy} is not permitted within Modules'))
 
         return matches
 
@@ -60,5 +60,5 @@ class Modules(CloudFormationLintRule):
         for ref in refs:
             if (ref[1] in modules) and (len(ref) > 3):
                 if ref[0] == 'Resources' and ref[2] == 'Metadata':
-                    matches.append(RuleMatch(ref, 'The Metadata key {} is reserved'.format(reserved_key)))
+                    matches.append(RuleMatch(ref, f'The Metadata key {reserved_key} is reserved'))
         return matches

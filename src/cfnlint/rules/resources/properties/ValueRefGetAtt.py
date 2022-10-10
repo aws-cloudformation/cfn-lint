@@ -41,7 +41,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
     def check_value_ref(self, value, path, **kwargs):
         """Check Ref"""
-        matches = list()
+        matches = []
         cfn = kwargs.get('cfn')
         value_specs = kwargs.get('value_specs', {}).get('Ref')
         list_value_specs = kwargs.get('list_value_specs', {}).get('Ref')
@@ -185,7 +185,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
-        matches = list()
+        matches = []
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
@@ -211,7 +211,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'PropertyTypes').get(property_type, {}).get('Properties', {})
@@ -222,7 +222,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
-        matches = list()
+        matches = []
 
         specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
             'ResourceTypes').get(resource_type, {}).get('Properties', {})

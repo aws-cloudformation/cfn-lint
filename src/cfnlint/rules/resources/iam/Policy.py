@@ -19,7 +19,7 @@ class Policy(CloudFormationLintRule):
 
     def __init__(self):
         """Init"""
-        super(Policy, self).__init__()
+        super().__init__()
         self.resource_exceptions = {
             'AWS::ECR::Repository': 'RepositoryPolicyText',
         }
@@ -73,13 +73,12 @@ class Policy(CloudFormationLintRule):
         for p_vs, p_p in value.items_safe(path[:], (dict)):
             for parent_key, parent_value in p_vs.items():
                 if parent_key not in valid_keys:
-                    message = 'IAM Policy key %s doesn\'t exist.' % (parent_key)
+                    message = f'IAM Policy key {parent_key} doesn\'t exist.'
                     matches.append(
                         RuleMatch(path[:] + p_p + [parent_key], message))
                 if parent_key == 'Version':
                     if parent_value not in valid_versions:
-                        message = 'IAM Policy Version needs to be one of (%s).' % (
-                            ', '.join(map(str, ['2012-10-17', '2008-10-17'])))
+                        message = f'IAM Policy Version needs to be one of ({", ".join(map(str, ["2012-10-17", "2008-10-17"]))}).'
                         matches.append(
                             RuleMatch(p_p + [parent_key], message))
                 if parent_key == 'Statement':
@@ -120,7 +119,7 @@ class Policy(CloudFormationLintRule):
 
         for key, _ in statement.items():
             if key not in statement_valid_keys:
-                message = 'IAM Policy statement key %s isn\'t valid' % (key)
+                message = f'IAM Policy statement key {key} isn\'t valid'
                 matches.append(
                     RuleMatch(branch[:] + [key], message))
         if 'Effect' not in statement:
@@ -171,7 +170,7 @@ class Policy(CloudFormationLintRule):
                     matches.append(
                         RuleMatch(branch[:] + ['Resource', index], message))
 
-        return(matches)
+        return matches
 
     def match_resource_properties(self, properties, resourcetype, path, cfn):
         """Check CloudFormation Properties"""
