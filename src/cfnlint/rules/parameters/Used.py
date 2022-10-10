@@ -10,6 +10,7 @@ from cfnlint.rules import RuleMatch
 
 class Used(CloudFormationLintRule):
     """Check if Parameters are used"""
+
     id = 'W2001'
     shortdesc = 'Check if Parameters are Used'
     description = 'Making sure the parameters defined are used'
@@ -49,9 +50,8 @@ class Used(CloudFormationLintRule):
             if paramname not in refs:
                 if paramname not in subs:
                     message = 'Parameter {0} not used.'
-                    matches.append(RuleMatch(
-                        ['Parameters', paramname],
-                        message.format(paramname)
-                    ))
+                    matches.append(
+                        RuleMatch(['Parameters', paramname], message.format(paramname))
+                    )
 
         return matches

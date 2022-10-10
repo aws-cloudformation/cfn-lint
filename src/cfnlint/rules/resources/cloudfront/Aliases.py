@@ -10,6 +10,7 @@ from cfnlint.helpers import FUNCTIONS
 
 class Aliases(CloudFormationLintRule):
     """Check if CloudFront Aliases are valid domain names"""
+
     id = 'E3013'
     shortdesc = 'CloudFront Aliases'
     description = 'CloudFront aliases should contain valid domain names'
@@ -22,10 +23,12 @@ class Aliases(CloudFormationLintRule):
         matches = []
 
         valid_domain = re.compile(
-            r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$')
+            r'^(?:[a-z0-9\*](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$'
+        )
 
         results = cfn.get_resource_properties(
-            ['AWS::CloudFront::Distribution', 'DistributionConfig'])
+            ['AWS::CloudFront::Distribution', 'DistributionConfig']
+        )
         for result in results:
             aliases = result['Value'].get('Aliases')
             if aliases:

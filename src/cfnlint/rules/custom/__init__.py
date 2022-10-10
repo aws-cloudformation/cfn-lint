@@ -2,13 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-#pylint: disable=cyclic-import
+# pylint: disable=cyclic-import
 import json
 import cfnlint.rules.custom.Operators
 
-#pylint: disable=too-many-return-statements
+# pylint: disable=too-many-return-statements
 def make_rule(line, lineNumber):
-    """ Object Maker Function """
+    """Object Maker Function"""
+
     def get_value(value):
         raw_value = value.strip()
         try:
@@ -25,7 +26,11 @@ def make_rule(line, lineNumber):
         return value, error_message
 
     def process_sets(raw_value):
-        if len(raw_value) > 1 and raw_value[0] == '[' and (raw_value[-2] == ']' or raw_value[-1] == ']'):
+        if (
+            len(raw_value) > 1
+            and raw_value[0] == '['
+            and (raw_value[-2] == ']' or raw_value[-1] == ']')
+        ):
             raw_value = raw_value[1:-2]
             raw_value = raw_value.split(',')
             for x in raw_value:
@@ -58,16 +63,30 @@ def make_rule(line, lineNumber):
             value = value.strip().strip('"')
 
         if operator in ['EQUALS', '==']:
-            return cfnlint.rules.custom.Operators.CreateEqualsRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateEqualsRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator in ['NOT_EQUALS', '!=']:
-            return cfnlint.rules.custom.Operators.CreateNotEqualsRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateNotEqualsRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator == 'IN':
-            return cfnlint.rules.custom.Operators.CreateInSetRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateInSetRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator == 'NOT_IN':
-            return cfnlint.rules.custom.Operators.CreateNotInSetRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateNotInSetRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator == '>=':
-            return cfnlint.rules.custom.Operators.CreateGreaterRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateGreaterRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator == '<=':
-            return cfnlint.rules.custom.Operators.CreateLesserRule(error_level + str(rule_id), resourceType, prop, value, error_message)
+            return cfnlint.rules.custom.Operators.CreateLesserRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
 
-    return cfnlint.rules.custom.Operators.CreateInvalidRule('E' + str(rule_id), operator)
+    return cfnlint.rules.custom.Operators.CreateInvalidRule(
+        'E' + str(rule_id), operator
+    )

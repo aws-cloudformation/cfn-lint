@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class CodepipelineStages(CloudFormationLintRule):
     """Check if CodePipeline Stages are set up properly."""
+
     id = 'E2540'
     shortdesc = 'CodePipeline Stages'
     description = 'See if CodePipeline stages are set correctly'
@@ -17,8 +18,9 @@ class CodepipelineStages(CloudFormationLintRule):
     def _format_error_message(self, message, scenario):
         """Format error message with scenario text"""
         if scenario:
-            scenario_text = ' When ' + \
-                ' and '.join([f'condition "{k}" is {v}' for (k, v) in scenario.items()])
+            scenario_text = ' When ' + ' and '.join(
+                [f'condition "{k}" is {v}' for (k, v) in scenario.items()]
+            )
             return message + scenario_text
 
         return message
@@ -29,7 +31,9 @@ class CodepipelineStages(CloudFormationLintRule):
 
         if len(stages) < 2:
             message = f'CodePipeline has {len(stages)} stages. There must be at least two stages.'
-            matches.append(RuleMatch(path, self._format_error_message(message, scenario)))
+            matches.append(
+                RuleMatch(path, self._format_error_message(message, scenario))
+            )
 
         return matches
 
@@ -38,20 +42,32 @@ class CodepipelineStages(CloudFormationLintRule):
         matches = []
 
         if len(stages) < 1:  # pylint: disable=C1801
-            self.logger.debug('Stages was empty. Should have been caught by generic linting.')
+            self.logger.debug(
+                'Stages was empty. Should have been caught by generic linting.'
+            )
             return matches
 
         # pylint: disable=R1718
-        first_stage = set([a.get('ActionTypeId').get('Category') for a in stages[0]['Actions']])
+        first_stage = set(
+            [a.get('ActionTypeId').get('Category') for a in stages[0]['Actions']]
+        )
         if first_stage and 'Source' not in first_stage:
-            message = 'The first stage of a pipeline must contain at least one source action.'
-            matches.append(RuleMatch(path + [0, 'Name'],
-                                     self._format_error_message(message, scenario)))
+            message = (
+                'The first stage of a pipeline must contain at least one source action.'
+            )
+            matches.append(
+                RuleMatch(
+                    path + [0, 'Name'], self._format_error_message(message, scenario)
+                )
+            )
 
         if len(first_stage) != 1:
             message = 'The first stage of a pipeline must contain only source actions.'
-            matches.append(RuleMatch(path + [0, 'Name'],
-                                     self._format_error_message(message, scenario)))
+            matches.append(
+                RuleMatch(
+                    path + [0, 'Name'], self._format_error_message(message, scenario)
+                )
+            )
 
         return matches
 
@@ -61,7 +77,9 @@ class CodepipelineStages(CloudFormationLintRule):
         categories = set()
 
         if len(stages) < 1:  # pylint: disable=C1801
-            self.logger.debug('Stages was empty. Should have been caught by generic linting.')
+            self.logger.debug(
+                'Stages was empty. Should have been caught by generic linting.'
+            )
             return matches
 
         for sidx, stage in enumerate(stages):
@@ -69,13 +87,21 @@ class CodepipelineStages(CloudFormationLintRule):
                 action_type_id = action.get('ActionTypeId')
                 categories.add(action_type_id.get('Category'))
                 if sidx > 0 and action_type_id.get('Category') == 'Source':
-                    message = 'Only the first stage of a pipeline may contain source actions.'
+                    message = (
+                        'Only the first stage of a pipeline may contain source actions.'
+                    )
                     matches.append(
-                        RuleMatch(path + [sidx, 'Actions', aidx], self._format_error_message(message, scenario)))
+                        RuleMatch(
+                            path + [sidx, 'Actions', aidx],
+                            self._format_error_message(message, scenario),
+                        )
+                    )
 
         if not categories - set(['Source']):
             message = 'At least one stage in pipeline must contain an action that is not a source action.'
-            matches.append(RuleMatch(path, self._format_error_message(message, scenario)))
+            matches.append(
+                RuleMatch(path, self._format_error_message(message, scenario))
+            )
 
         return matches
 
@@ -88,8 +114,12 @@ class CodepipelineStages(CloudFormationLintRule):
             if isinstance(stage_name, str):
                 if stage_name in stage_names:
                     message = f'All stage names within a pipeline must be unique. ({stage_name})'
-                    matches.append(RuleMatch(path + [sidx, 'Name'],
-                                             self._format_error_message(message, scenario)))
+                    matches.append(
+                        RuleMatch(
+                            path + [sidx, 'Name'],
+                            self._format_error_message(message, scenario),
+                        )
+                    )
                 stage_names.add(stage_name)
             else:
                 self.logger.debug('Found non string for stage name: %s', stage_name)
@@ -104,13 +134,16 @@ class CodepipelineStages(CloudFormationLintRule):
             path = resource['Path'] + ['Stages']
             properties = resource['Value']
 
-            s_stages = cfn.get_object_without_nested_conditions(properties.get('Stages'), path)
+            s_stages = cfn.get_object_without_nested_conditions(
+                properties.get('Stages'), path
+            )
             for s_stage in s_stages:
                 s_stage_obj = s_stage.get('Object')
                 s_scenario = s_stage.get('Scenario')
                 if not isinstance(s_stage_obj, list):
                     self.logger.debug(
-                        'Stages not list. Should have been caught by generic linting.')
+                        'Stages not list. Should have been caught by generic linting.'
+                    )
                     continue
 
                 try:
@@ -127,7 +160,10 @@ class CodepipelineStages(CloudFormationLintRule):
                         self.check_names_unique(s_stage_obj, path, s_scenario)
                     )
                 except AttributeError as err:
-                    self.logger.debug('Got AttributeError. Should have been caught by generic linting. '
-                                      'Ignoring the error here: %s', str(err))
+                    self.logger.debug(
+                        'Got AttributeError. Should have been caught by generic linting. '
+                        'Ignoring the error here: %s',
+                        str(err),
+                    )
 
         return matches

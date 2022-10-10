@@ -9,25 +9,19 @@ from cfnlint.rules import RuleMatch
 
 class Base(CloudFormationLintRule):
     """Check Base Template Settings"""
+
     id = 'E1001'
     shortdesc = 'Basic CloudFormation Template Configuration'
     description = 'Making sure the basic CloudFormation template components are properly configured'
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['base']
 
-    required_keys = [
-        'Resources'
-    ]
+    required_keys = ['Resources']
 
     def __init__(self):
         """Init"""
         super().__init__()
-        self.config_definition = {
-            'sections': {
-                'default': '',
-                'type': 'string'
-            }
-        }
+        self.config_definition = {'sections': {'default': '', 'type': 'string'}}
         self.configure()
 
     def _validate_version(self, template):
@@ -37,11 +31,23 @@ class Base(CloudFormationLintRule):
             version = template.get('AWSTemplateFormatVersion')
             if not isinstance(version, (str, datetime.date)):
                 message = 'AWSTemplateFormatVersion only valid value is {0}'
-                results.append(RuleMatch(['AWSTemplateFormatVersion'], message.format(valid_version)))
+                results.append(
+                    RuleMatch(
+                        ['AWSTemplateFormatVersion'], message.format(valid_version)
+                    )
+                )
             else:
-                if version != valid_version and version != datetime.datetime.strptime(valid_version, '%Y-%m-%d').date():
+                if (
+                    version != valid_version
+                    and version
+                    != datetime.datetime.strptime(valid_version, '%Y-%m-%d').date()
+                ):
                     message = 'AWSTemplateFormatVersion only valid value is {0}'
-                    results.append(RuleMatch(['AWSTemplateFormatVersion'], message.format(valid_version)))
+                    results.append(
+                        RuleMatch(
+                            ['AWSTemplateFormatVersion'], message.format(valid_version)
+                        )
+                    )
         return results
 
     def _validate_transform(self, transforms):

@@ -11,6 +11,7 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 class AllowedValue(CloudFormationLintRule):
     """Check if parameters have a valid value"""
+
     id = 'W2030'
     shortdesc = 'Check if parameters have a valid value'
     description = 'Check if parameters have a valid value in case of an enumator. The Parameter\'s allowed values is based on the usages in property (Ref)'
@@ -19,9 +20,13 @@ class AllowedValue(CloudFormationLintRule):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes'
+        ):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes'
+        ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def check_value_ref(self, value, path, **kwargs):
@@ -31,13 +36,16 @@ class AllowedValue(CloudFormationLintRule):
         cfn = kwargs.get('cfn')
         if 'Fn::If' in path:
             self.logger.debug(
-                'Not able to guarentee that the default value hasn\'t been conditioned out')
+                'Not able to guarentee that the default value hasn\'t been conditioned out'
+            )
             return matches
-        if path[0] == 'Resources' and 'Condition' in cfn.template.get(
-                path[0], {}).get(path[1]):
+        if path[0] == 'Resources' and 'Condition' in cfn.template.get(path[0], {}).get(
+            path[1]
+        ):
             self.logger.debug(
                 'Not able to guarentee that the default value '
-                'hasn\'t been conditioned out')
+                'hasn\'t been conditioned out'
+            )
             return matches
 
         allowed_value_specs = kwargs.get('value_specs', {}).get('AllowedValues', {})
@@ -50,24 +58,45 @@ class AllowedValue(CloudFormationLintRule):
                 default_value = param.get('Default')
                 parameter_type = param.get('Type')
                 if isinstance(parameter_type, str):
-                    if ((not parameter_type.startswith('List<')) and
-                            (not parameter_type.startswith('AWS::SSM::Parameter::Value<')) and
-                            parameter_type not in ['CommaDelimitedList', 'List<String>']):
+                    if (
+                        (not parameter_type.startswith('List<'))
+                        and (
+                            not parameter_type.startswith('AWS::SSM::Parameter::Value<')
+                        )
+                        and parameter_type not in ['CommaDelimitedList', 'List<String>']
+                    ):
                         # Check Allowed Values
                         if parameter_values:
                             for index, allowed_value in enumerate(parameter_values):
                                 if str(allowed_value) not in allowed_value_specs:
-                                    param_path = ['Parameters', value, 'AllowedValues', index]
+                                    param_path = [
+                                        'Parameters',
+                                        value,
+                                        'AllowedValues',
+                                        index,
+                                    ]
                                     message = 'You must specify a valid allowed value for {0} ({1}). {2}'
-                                    matches.append(RuleMatch(param_path, message.format(
-                                        value, allowed_value, description)))
+                                    matches.append(
+                                        RuleMatch(
+                                            param_path,
+                                            message.format(
+                                                value, allowed_value, description
+                                            ),
+                                        )
+                                    )
                         if default_value:
                             # Check Default, only if no allowed Values are specified in the parameter (that's covered by E2015)
                             if str(default_value) not in allowed_value_specs:
                                 param_path = ['Parameters', value, 'Default']
                                 message = 'You must specify a valid Default value for {0} ({1}). {2}'
-                                matches.append(RuleMatch(param_path, message.format(
-                                    value, default_value, description)))
+                                matches.append(
+                                    RuleMatch(
+                                        param_path,
+                                        message.format(
+                                            value, default_value, description
+                                        ),
+                                    )
+                                )
 
         return matches
 
@@ -80,14 +109,21 @@ class AllowedValue(CloudFormationLintRule):
                     value = value_specs.get(prop).get('Value', {})
                     if value:
                         value_type = value.get('ValueType', '')
-                        property_type = property_specs.get('Properties').get(prop).get('Type')
+                        property_type = (
+                            property_specs.get('Properties').get(prop).get('Type')
+                        )
                         matches.extend(
                             cfn.check_value(
-                                p_value, prop, p_path,
+                                p_value,
+                                prop,
+                                p_path,
                                 check_ref=self.check_value_ref,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0]).get(
-                                    'ValueTypes').get(value_type, {}),
-                                cfn=cfn, property_type=property_type, property_name=prop
+                                value_specs=RESOURCE_SPECS.get(cfn.regions[0])
+                                .get('ValueTypes')
+                                .get(value_type, {}),
+                                cfn=cfn,
+                                property_type=property_type,
+                                property_name=prop,
                             )
                         )
 
@@ -97,9 +133,15 @@ class AllowedValue(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes').get(property_type, {}).get('Properties', {})
-        property_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('PropertyTypes')
+            .get(property_type, {})
+            .get('Properties', {})
+        )
+        property_specs = (
+            RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
+        )
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
         return matches
@@ -108,9 +150,15 @@ class AllowedValue(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes').get(resource_type, {}).get('Properties', {})
-        resource_specs = RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('ResourceTypes')
+            .get(resource_type, {})
+            .get('Properties', {})
+        )
+        resource_specs = (
+            RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
+        )
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 
         return matches

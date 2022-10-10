@@ -7,7 +7,8 @@ from cfnlint.rules import RuleMatch
 
 
 class AvailabilityZone(CloudFormationLintRule):
-    """Check Availibility Zone parameter checks """
+    """Check Availibility Zone parameter checks"""
+
     id = 'W3010'
     shortdesc = 'Availability Zone Parameters should not be hardcoded'
     description = 'Check if an Availability Zone property is hardcoded.'
@@ -64,16 +65,26 @@ class AvailabilityZone(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                properties, 'AvailabilityZone', path,
-                check_value=self.check_az_value, check_ref=None,
-                check_find_in_map=None, check_split=None, check_join=None
+                properties,
+                'AvailabilityZone',
+                path,
+                check_value=self.check_az_value,
+                check_ref=None,
+                check_find_in_map=None,
+                check_split=None,
+                check_join=None,
             )
         )
         matches.extend(
             cfn.check_value(
-                properties, 'AvailabilityZones', path,
-                check_value=self.check_az_value, check_ref=None,
-                check_find_in_map=None, check_split=None, check_join=None
+                properties,
+                'AvailabilityZones',
+                path,
+                check_value=self.check_az_value,
+                check_ref=None,
+                check_find_in_map=None,
+                check_split=None,
+                check_join=None,
             )
         )
 

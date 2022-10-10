@@ -36,8 +36,6 @@ class RefExist(CloudFormationLintRule):
             if isinstance(ref, (str, int)):
                 if ref not in valid_refs:
                     message = 'Ref {0} not found as a resource or parameter'
-                    matches.append(RuleMatch(
-                        reftree[:-2], message.format(ref)
-                    ))
+                    matches.append(RuleMatch(reftree[:-2], message.format(ref)))
 
         return matches

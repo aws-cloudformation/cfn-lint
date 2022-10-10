@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Used(CloudFormationLintRule):
     """Check if Mappings are used anywhere in the template"""
+
     id = 'W7001'
     shortdesc = 'Check if Mappings are Used'
     description = 'Making sure the mappings defined are used'
@@ -31,7 +32,8 @@ class Used(CloudFormationLintRule):
                     if isinstance(map_name, dict):
                         self.logger.debug(
                             'Mapping Name has a function that can have too many variations. '
-                            'Disabling check %s', self.id
+                            'Disabling check %s',
+                            self.id,
                         )
                         return matches
 
@@ -43,9 +45,8 @@ class Used(CloudFormationLintRule):
             for mapname, _ in mappings.items():
                 if mapname not in findinmap_mappings:
                     message = 'Mapping \'{0}\' is defined but not used'
-                    matches.append(RuleMatch(
-                        ['Mappings', mapname],
-                        message.format(mapname)
-                    ))
+                    matches.append(
+                        RuleMatch(['Mappings', mapname], message.format(mapname))
+                    )
 
         return matches

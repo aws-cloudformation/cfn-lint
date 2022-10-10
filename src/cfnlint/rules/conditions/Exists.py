@@ -7,10 +7,13 @@ from cfnlint.rules import RuleMatch
 
 
 class Exists(CloudFormationLintRule):
-    """Check if used Conditions are defined """
+    """Check if used Conditions are defined"""
+
     id = 'E8002'
     shortdesc = 'Check if the referenced Conditions are defined'
-    description = 'Making sure the used conditions are actually defined in the Conditions section'
+    description = (
+        'Making sure the used conditions are actually defined in the Conditions section'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html'
     tags = ['conditions']
 
@@ -54,9 +57,6 @@ class Exists(CloudFormationLintRule):
         for ref_condition, ref_path in ref_conditions.items():
             if ref_condition not in conditions:
                 message = 'Condition {0} is not defined.'
-                matches.append(RuleMatch(
-                    ref_path,
-                    message.format(ref_condition)
-                ))
+                matches.append(RuleMatch(ref_path, message.format(ref_condition)))
 
         return matches

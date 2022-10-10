@@ -9,6 +9,7 @@ from cfnlint.rules import RuleMatch
 
 class Sub(CloudFormationLintRule):
     """Check if Sub values are correct"""
+
     id = 'E1019'
     shortdesc = 'Sub validation of parameters'
     description = 'Making sure the sub function is properly configured'
@@ -23,7 +24,9 @@ class Sub(CloudFormationLintRule):
 
         for string_param in string_params:
             if isinstance(string_param, (str)):
-                matches.extend(self._test_parameter(string_param, cfn, parameters, tree))
+                matches.extend(
+                    self._test_parameter(string_param, cfn, parameters, tree)
+                )
 
         return matches
 
@@ -64,9 +67,14 @@ class Sub(CloudFormationLintRule):
                 if len(parameter_value_obj) == 1:
                     for key, value in parameter_value_obj.items():
                         if key not in supported_functions:
-                            message = 'Sub parameter should use a valid function for {0}'
-                            matches.append(RuleMatch(
-                                param_tree, message.format('/'.join(map(str, tree)))))
+                            message = (
+                                'Sub parameter should use a valid function for {0}'
+                            )
+                            matches.append(
+                                RuleMatch(
+                                    param_tree, message.format('/'.join(map(str, tree)))
+                                )
+                            )
                         elif key in ['Ref']:
                             matches.extend(self._test_parameter(value, cfn, {}, tree))
                         elif key in ['Fn::GetAtt']:
@@ -78,23 +86,30 @@ class Sub(CloudFormationLintRule):
                                         # skip things got too complex
                                         if_all_strings = False
                                 if if_all_strings:
-                                    matches.extend(self._test_parameter(
-                                        '.'.join(value), cfn, {}, tree))
+                                    matches.extend(
+                                        self._test_parameter(
+                                            '.'.join(value), cfn, {}, tree
+                                        )
+                                    )
                             elif isinstance(value, str):
-                                matches.extend(self._test_parameter(value, cfn, {}, tree))
+                                matches.extend(
+                                    self._test_parameter(value, cfn, {}, tree)
+                                )
                 else:
                     message = 'Sub parameter should be an object of 1 for {0}'
-                    matches.append(RuleMatch(
-                        param_tree, message.format('/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(param_tree, message.format('/'.join(map(str, tree))))
+                    )
             elif isinstance(parameter_value_obj, list):
                 message = 'Sub parameter value should be a string for {0}'
-                matches.append(RuleMatch(
-                    param_tree, message.format('/'.join(map(str, tree)))))
+                matches.append(
+                    RuleMatch(param_tree, message.format('/'.join(map(str, tree))))
+                )
 
         return matches
 
     def _test_parameter(self, parameter, cfn, parameters, tree):
-        """ Test a parameter """
+        """Test a parameter"""
 
         matches = []
         get_atts = cfn.get_valid_getatts()
@@ -112,8 +127,11 @@ class Sub(CloudFormationLintRule):
                 found = True
                 if template_parameters.get(parameter) in VALID_PARAMETER_TYPES_LIST:
                     message = 'Fn::Sub cannot use list {0} at {1}'
-                    matches.append(RuleMatch(
-                        tree, message.format(parameter, '/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(
+                            tree, message.format(parameter, '/'.join(map(str, tree)))
+                        )
+                    )
             for resource, attributes in get_atts.items():
                 for attribute_name, attribute_values in attributes.items():
                     if resource == parameter.split('.')[0]:
@@ -122,17 +140,27 @@ class Sub(CloudFormationLintRule):
                         elif attribute_name == '.'.join(parameter.split('.')[1:]):
                             if attribute_values.get('Type') == 'List':
                                 message = 'Fn::Sub cannot use list {0} at {1}'
-                                matches.append(RuleMatch(
-                                    tree, message.format(parameter, '/'.join(map(str, tree)))))
+                                matches.append(
+                                    RuleMatch(
+                                        tree,
+                                        message.format(
+                                            parameter, '/'.join(map(str, tree))
+                                        ),
+                                    )
+                                )
                             found = True
                         else:
-                            if attribute_name == parameter.split('.')[1] and attribute_values.get('Type') == 'Map':
+                            if (
+                                attribute_name == parameter.split('.')[1]
+                                and attribute_values.get('Type') == 'Map'
+                            ):
                                 found = True
 
             if not found:
                 message = 'Parameter {0} for Fn::Sub not found at {1}'
-                matches.append(RuleMatch(
-                    tree, message.format(parameter, '/'.join(map(str, tree)))))
+                matches.append(
+                    RuleMatch(tree, message.format(parameter, '/'.join(map(str, tree))))
+                )
 
         return matches
 
@@ -152,33 +180,49 @@ class Sub(CloudFormationLintRule):
                     parameters = sub_value_obj[1]
                     if not isinstance(sub_string, str):
                         message = 'Subs first element should be of type string for {0}'
-                        matches.append(RuleMatch(
-                            tree + [0], message.format('/'.join(map(str, tree)))))
+                        matches.append(
+                            RuleMatch(
+                                tree + [0], message.format('/'.join(map(str, tree)))
+                            )
+                        )
                     if not isinstance(parameters, dict):
                         message = 'Subs second element should be an object for {0}'
-                        matches.append(RuleMatch(
-                            tree + [1], message.format('/'.join(map(str, tree)))))
+                        matches.append(
+                            RuleMatch(
+                                tree + [1], message.format('/'.join(map(str, tree)))
+                            )
+                        )
                     else:
-                        matches.extend(self._test_string(cfn, sub_string, parameters, tree + [0]))
+                        matches.extend(
+                            self._test_string(cfn, sub_string, parameters, tree + [0])
+                        )
                         matches.extend(self._test_parameters(parameters, cfn, tree))
                 else:
                     message = 'Sub should be an array of 2 for {0}'
-                    matches.append(RuleMatch(
-                        tree, message.format('/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                    )
             elif isinstance(sub_value_obj, dict):
                 if len(sub_value_obj) == 1:
                     for key, _ in sub_value_obj.items():
                         if not key == 'Fn::Transform':
-                            message = 'Sub should be a string or array of 2 items for {0}'
-                            matches.append(RuleMatch(
-                                tree, message.format('/'.join(map(str, tree)))))
+                            message = (
+                                'Sub should be a string or array of 2 items for {0}'
+                            )
+                            matches.append(
+                                RuleMatch(
+                                    tree, message.format('/'.join(map(str, tree)))
+                                )
+                            )
                 else:
                     message = 'Sub should be a string or array of 2 items for {0}'
-                    matches.append(RuleMatch(
-                        tree, message.format('/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                    )
             else:
                 message = 'Sub should be a string or array of 2 items for {0}'
-                matches.append(RuleMatch(
-                    tree, message.format('/'.join(map(str, tree)))))
+                matches.append(
+                    RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                )
 
         return matches

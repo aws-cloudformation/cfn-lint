@@ -9,6 +9,7 @@ from cfnlint.helpers import RESOURCE_SPECS
 
 class Value(CloudFormationLintRule):
     """Check if Outputs have string values"""
+
     id = 'E6003'
     shortdesc = 'Outputs have values of strings'
     description = 'Making sure the outputs have strings as values'
@@ -16,7 +17,7 @@ class Value(CloudFormationLintRule):
     tags = ['outputs']
 
     def __init__(self):
-        """Init """
+        """Init"""
         super().__init__()
         self.resourcetypes = []
 
@@ -38,17 +39,25 @@ class Value(CloudFormationLintRule):
                 if getatt[2] == 'Value':
                     obj = getatt[-1]
                     if isinstance(obj, list):
-                        objtype = template.get('Resources', {}).get(obj[0], {}).get('Type')
+                        objtype = (
+                            template.get('Resources', {}).get(obj[0], {}).get('Type')
+                        )
                         if objtype:
-                            attribute = self.resourcetypes.get(
-                                objtype, {}).get('Attributes', {}).get(obj[1], {}).get('Type')
+                            attribute = (
+                                self.resourcetypes.get(objtype, {})
+                                .get('Attributes', {})
+                                .get(obj[1], {})
+                                .get('Type')
+                            )
                             if attribute == 'List':
                                 if getatt[-4] != 'Fn::Join' and getatt[-3] != 1:
                                     message = 'Output {0} value {1} is of type list'
-                                    matches.append(RuleMatch(
-                                        getatt,
-                                        message.format(getatt[1], '/'.join(obj))
-                                    ))
+                                    matches.append(
+                                        RuleMatch(
+                                            getatt,
+                                            message.format(getatt[1], '/'.join(obj)),
+                                        )
+                                    )
 
         # If using a ref for an output make sure it isn't a
         # Parameter of Type List
@@ -64,9 +73,8 @@ class Value(CloudFormationLintRule):
                                 if paramtype.startswith('List<'):
                                     if ref[-4] != 'Fn::Join' and ref[-3] != 1:
                                         message = 'Output {0} value {1} is of type list'
-                                        matches.append(RuleMatch(
-                                            ref,
-                                            message.format(ref[1], obj)
-                                        ))
+                                        matches.append(
+                                            RuleMatch(ref, message.format(ref[1], obj))
+                                        )
 
         return matches

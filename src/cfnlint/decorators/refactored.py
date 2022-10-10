@@ -5,15 +5,20 @@ SPDX-License-Identifier: MIT-0
 
 import warnings
 
+
 def refactored(message):
-    """ Decorator for refactoring classes """
+    """Decorator for refactoring classes"""
+
     def cls_wrapper(cls):
-        """ Wrapper Class """
+        """Wrapper Class"""
+
         class Wrapped(cls):
-            """ Wrapped Class """
+            """Wrapped Class"""
 
             def __init__(self, *args, **kwargs):
                 warnings.warn(message, FutureWarning)
                 super().__init__(*args, **kwargs)
+
         return Wrapped
+
     return cls_wrapper

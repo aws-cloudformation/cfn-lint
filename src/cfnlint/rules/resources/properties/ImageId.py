@@ -9,9 +9,11 @@ from cfnlint.rules import RuleMatch
 class ImageId(CloudFormationLintRule):
     id = 'W2506'
     shortdesc = 'Check if ImageId Parameters have the correct type'
-    description = 'See if there are any refs for ImageId to a parameter ' + \
-                  'of inappropriate type. Appropriate Types are ' + \
-                  '[AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>]'
+    description = (
+        'See if there are any refs for ImageId to a parameter '
+        + 'of inappropriate type. Appropriate Types are '
+        + '[AWS::EC2::Image::Id, AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>]'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#parmtypes'
     tags = ['parameters', 'ec2', 'imageid']
 
@@ -25,7 +27,7 @@ class ImageId(CloudFormationLintRule):
         valid_refs = cfn.get_valid_refs()
         allowed_types = [
             'AWS::EC2::Image::Id',
-            'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+            'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>',
         ]
         # Filter only resoureces
         imageidtrees = [x for x in imageidtrees if x[0] == 'Resources']
@@ -37,9 +39,14 @@ class ImageId(CloudFormationLintRule):
                         if key == 'Ref':
                             if paramname in valid_refs:
                                 if valid_refs[paramname]['From'] == 'Parameters':
-                                    if valid_refs[paramname]['Type'] not in allowed_types:
-                                        message = f'Parameter {paramname} should be of type ' \
-                                                  f'[{", ".join(map(str, allowed_types))}]'
+                                    if (
+                                        valid_refs[paramname]['Type']
+                                        not in allowed_types
+                                    ):
+                                        message = (
+                                            f'Parameter {paramname} should be of type '
+                                            f'[{", ".join(map(str, allowed_types))}]'
+                                        )
                                         tree = ['Parameters', paramname]
                                         matches.append(RuleMatch(tree, message))
                 else:

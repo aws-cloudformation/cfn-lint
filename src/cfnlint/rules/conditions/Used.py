@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Used(CloudFormationLintRule):
     """Check if Conditions are configured correctly"""
+
     id = 'W8001'
     shortdesc = 'Check if Conditions are Used'
     description = 'Making sure the conditions defined are used'
@@ -51,9 +52,8 @@ class Used(CloudFormationLintRule):
             for condname, _ in conditions.items():
                 if condname not in ref_conditions:
                     message = 'Condition {0} not used'
-                    matches.append(RuleMatch(
-                        ['Conditions', condname],
-                        message.format(condname)
-                    ))
+                    matches.append(
+                        RuleMatch(['Conditions', condname], message.format(condname))
+                    )
 
         return matches

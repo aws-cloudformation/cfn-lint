@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Base64(CloudFormationLintRule):
     """Check if Base64 values are correct"""
+
     id = 'E1021'
     shortdesc = 'Base64 validation of parameters'
     description = 'Making sure the Base64 function is properly configured'
@@ -26,15 +27,20 @@ class Base64(CloudFormationLintRule):
                     for key, _ in value_obj.items():
                         if key == 'Fn::Split':
                             message = 'Base64 needs a string at {0}'
-                            matches.append(RuleMatch(
-                                tree[:], message.format('/'.join(map(str, tree)))))
+                            matches.append(
+                                RuleMatch(
+                                    tree[:], message.format('/'.join(map(str, tree)))
+                                )
+                            )
                 else:
                     message = 'Base64 needs a string not a map or list at {0}'
-                    matches.append(RuleMatch(
-                        tree[:], message.format('/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(tree[:], message.format('/'.join(map(str, tree))))
+                    )
             elif not isinstance(value_obj, str):
                 message = 'Base64 needs a string at {0}'
-                matches.append(RuleMatch(
-                    tree[:], message.format('/'.join(map(str, tree)))))
+                matches.append(
+                    RuleMatch(tree[:], message.format('/'.join(map(str, tree))))
+                )
 
         return matches

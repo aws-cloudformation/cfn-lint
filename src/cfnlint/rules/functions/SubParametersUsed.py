@@ -6,8 +6,10 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules import RuleMatch
 from cfnlint.decode.node import sub_node
 
+
 class SubParametersUsed(CloudFormationLintRule):
     """Check if Sub Parameters are used"""
+
     id = 'W1019'
     shortdesc = 'Sub validation of parameters'
     description = 'Validate that Fn::Sub Parameters are used'
@@ -27,7 +29,13 @@ class SubParametersUsed(CloudFormationLintRule):
             for sub_var in sub_vars:
                 if sub_var not in sub_string_vars:
                     message = 'Parameter {0} not used in Fn::Sub at {1}'
-                    matches.append(RuleMatch(
-                        result_path + [sub_var], message.format(sub_var, '/'.join(map(str, result_path + [sub_var])))))
+                    matches.append(
+                        RuleMatch(
+                            result_path + [sub_var],
+                            message.format(
+                                sub_var, '/'.join(map(str, result_path + [sub_var]))
+                            ),
+                        )
+                    )
 
         return matches

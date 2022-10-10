@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Required(CloudFormationLintRule):
     """Check if Outputs have required properties"""
+
     id = 'E6002'
     shortdesc = 'Outputs have required properties'
     description = 'Making sure the outputs have required properties'
@@ -23,9 +24,11 @@ class Required(CloudFormationLintRule):
                 if isinstance(output_value, dict):
                     if 'Value' not in output_value:
                         message = 'Output {0} is missing property {1}'
-                        matches.append(RuleMatch(
-                            ['Outputs', output_name, 'Value'],
-                            message.format(output_name, 'Value')
-                        ))
+                        matches.append(
+                            RuleMatch(
+                                ['Outputs', output_name, 'Value'],
+                                message.format(output_name, 'Value'),
+                            )
+                        )
 
         return matches

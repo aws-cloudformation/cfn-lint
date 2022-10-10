@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Configuration(CloudFormationLintRule):
     """Check if Conditions are configured correctly"""
+
     id = 'E8001'
     shortdesc = 'Conditions have appropriate properties'
     description = 'Check if Conditions are properly configured'
@@ -30,24 +31,26 @@ class Configuration(CloudFormationLintRule):
             for condname, condobj in conditions.items():
                 if not isinstance(condobj, dict):
                     message = 'Condition {0} has invalid property'
-                    matches.append(RuleMatch(
-                        ['Conditions', condname],
-                        message.format(condname)
-                    ))
+                    matches.append(
+                        RuleMatch(['Conditions', condname], message.format(condname))
+                    )
                 else:
                     if len(condobj) != 1:
                         message = 'Condition {0} has too many intrinsic conditions'
-                        matches.append(RuleMatch(
-                            ['Conditions', condname],
-                            message.format(condname)
-                        ))
+                        matches.append(
+                            RuleMatch(
+                                ['Conditions', condname], message.format(condname)
+                            )
+                        )
                     else:
                         for k, _ in condobj.items():
                             if k not in self.condition_keys:
                                 message = 'Condition {0} has invalid property {1}'
-                                matches.append(RuleMatch(
-                                    ['Conditions', condname] + [k],
-                                    message.format(condname, k)
-                                ))
+                                matches.append(
+                                    RuleMatch(
+                                        ['Conditions', condname] + [k],
+                                        message.format(condname, k),
+                                    )
+                                )
 
         return matches

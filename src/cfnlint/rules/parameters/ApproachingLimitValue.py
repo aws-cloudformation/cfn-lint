@@ -9,6 +9,7 @@ from cfnlint.helpers import LIMITS
 
 class LimitValue(CloudFormationLintRule):
     """Check maximum Parameter value size limit"""
+
     id = 'I2012'
     shortdesc = 'Parameter value limit'
     description = 'Check if the size of Parameter values in the template is approaching the upper limit'
@@ -28,10 +29,16 @@ class LimitValue(CloudFormationLintRule):
             default_value = paramvalue.get('Default')
 
             if isinstance(default_value, (str)):
-                if LIMITS['threshold'] * value_limit < len(default_value) <= value_limit:
+                if (
+                    LIMITS['threshold'] * value_limit
+                    < len(default_value)
+                    <= value_limit
+                ):
                     path = ['Parameters', paramname, 'Default']
                     message = 'The length of parameter default value ({0}) is approaching the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(len(default_value), value_limit)))
+                    matches.append(
+                        RuleMatch(path, message.format(len(default_value), value_limit))
+                    )
 
             # Check MaxLength parameters
             max_length = paramvalue.get('MaxLength', 0)
@@ -47,16 +54,26 @@ class LimitValue(CloudFormationLintRule):
                 if LIMITS['threshold'] * value_limit < max_length <= value_limit:
                     path = ['Parameters', paramname, 'MaxLength']
                     message = 'The MaxLength of parameter ({0}) is approaching the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(max_length, value_limit)))
+                    matches.append(
+                        RuleMatch(path, message.format(max_length, value_limit))
+                    )
 
             # Check AllowedValues
             allowed_values = paramvalue.get('AllowedValues', [])
 
             for allowed_value in allowed_values:
                 if isinstance(allowed_value, str):
-                    if LIMITS['threshold'] * value_limit < len(allowed_value) <= value_limit:
+                    if (
+                        LIMITS['threshold'] * value_limit
+                        < len(allowed_value)
+                        <= value_limit
+                    ):
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) is approaching the limit ({1})'
-                        matches.append(RuleMatch(path, message.format(len(allowed_value), value_limit)))
+                        matches.append(
+                            RuleMatch(
+                                path, message.format(len(allowed_value), value_limit)
+                            )
+                        )
 
         return matches

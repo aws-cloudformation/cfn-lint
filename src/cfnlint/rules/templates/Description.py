@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Description(CloudFormationLintRule):
     """Check Template Description is only a String"""
+
     id = 'E1004'
     shortdesc = 'Template description can only be a string'
     description = 'Template description can only be a string'

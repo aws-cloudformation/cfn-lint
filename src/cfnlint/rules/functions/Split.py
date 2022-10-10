@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Split(CloudFormationLintRule):
     """Check if Split values are correct"""
+
     id = 'E1018'
     shortdesc = 'Split validation of parameters'
     description = 'Making sure the split function is properly configured'
@@ -42,29 +43,48 @@ class Split(CloudFormationLintRule):
                     split_string = split_value_obj[1]
                     if not isinstance(split_delimiter, str):
                         message = 'Split delimiter has to be of type string for {0}'
-                        matches.append(RuleMatch(
-                            tree + [0], message.format('/'.join(map(str, tree)))))
+                        matches.append(
+                            RuleMatch(
+                                tree + [0], message.format('/'.join(map(str, tree)))
+                            )
+                        )
                     if isinstance(split_string, dict):
                         if len(split_string) == 1:
                             for key, _ in split_string.items():
                                 if key not in supported_functions:
                                     message = 'Fn::Split doesn\'t support the function {0} at {1}'
-                                    matches.append(RuleMatch(
-                                        tree + [key], message.format(key, '/'.join(map(str, tree)))))
+                                    matches.append(
+                                        RuleMatch(
+                                            tree + [key],
+                                            message.format(
+                                                key, '/'.join(map(str, tree))
+                                            ),
+                                        )
+                                    )
                         else:
-                            message = 'Split list of singular function or string for {0}'
-                            matches.append(RuleMatch(
-                                tree, message.format('/'.join(map(str, tree)))))
+                            message = (
+                                'Split list of singular function or string for {0}'
+                            )
+                            matches.append(
+                                RuleMatch(
+                                    tree, message.format('/'.join(map(str, tree)))
+                                )
+                            )
                     elif not isinstance(split_string, str):
-                        message = 'Split has to be of type string or valid function for {0}'
-                        matches.append(RuleMatch(
-                            tree, message.format('/'.join(map(str, tree)))))
+                        message = (
+                            'Split has to be of type string or valid function for {0}'
+                        )
+                        matches.append(
+                            RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                        )
                 else:
                     message = 'Split should be an array of 2 for {0}'
-                    matches.append(RuleMatch(
-                        tree, message.format('/'.join(map(str, tree)))))
+                    matches.append(
+                        RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                    )
             else:
                 message = 'Split should be an array of 2 for {0}'
-                matches.append(RuleMatch(
-                    tree, message.format('/'.join(map(str, tree)))))
+                matches.append(
+                    RuleMatch(tree, message.format('/'.join(map(str, tree))))
+                )
         return matches

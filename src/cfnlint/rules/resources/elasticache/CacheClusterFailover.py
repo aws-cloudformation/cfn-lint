@@ -9,10 +9,13 @@ from cfnlint.rules import RuleMatch
 
 class CacheClusterFailover(CloudFormationLintRule):
     """Check automatic failover on a cache cluster"""
+
     id = 'E3026'
     shortdesc = 'Check Elastic Cache Redis Cluster settings'
-    description = 'Evaluate Redis Cluster groups to make sure automatic failover is ' \
-                  'enabled when cluster mode is enabled'
+    description = (
+        'Evaluate Redis Cluster groups to make sure automatic failover is '
+        'enabled when cluster mode is enabled'
+    )
     source_url = 'https://github.com/awslabs/cfn-python-lint'
     tags = ['resources', 'elasticcache']
 
@@ -22,7 +25,7 @@ class CacheClusterFailover(CloudFormationLintRule):
         self.resource_property_types.append('AWS::ElastiCache::ReplicationGroup')
 
     def is_cluster_enabled(self, properties):
-        """Test if cluster is enabled """
+        """Test if cluster is enabled"""
         if isinstance(properties, dict):
             for property_name, property_value in properties.items():
                 if property_name == 'cluster-enabled' and property_value == 'yes':
@@ -30,8 +33,10 @@ class CacheClusterFailover(CloudFormationLintRule):
 
         return False
 
-    def _test_cluster_settings(self, properties, path, pg_properties, pg_path, cfn, scenario):
-        """ test for each scenario """
+    def _test_cluster_settings(
+        self, properties, path, pg_properties, pg_path, cfn, scenario
+    ):
+        """test for each scenario"""
         results = []
         pg_conditions = cfn.get_conditions_from_path(cfn.template, pg_path)
         # test to make sure that any condition that may apply to the path for the Ref
@@ -41,7 +46,9 @@ class CacheClusterFailover(CloudFormationLintRule):
                 if c_name in pg_conditions:
                     if c_value not in pg_conditions.get(c_name):
                         return results
-        if self.is_cluster_enabled(cfn.get_value_from_scenario(pg_properties, scenario)):
+        if self.is_cluster_enabled(
+            cfn.get_value_from_scenario(pg_properties, scenario)
+        ):
             c_props = cfn.get_value_from_scenario(properties, scenario)
             automatic_failover = c_props.get('AutomaticFailoverEnabled')
             if bool_compare(automatic_failover, False):
@@ -49,13 +56,23 @@ class CacheClusterFailover(CloudFormationLintRule):
                 if scenario is None:
                     message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster at {0}'
                     results.append(
-                        RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
+                        RuleMatch(
+                            pathmessage, message.format('/'.join(map(str, pathmessage)))
+                        )
+                    )
                 else:
                     message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster when {0} at {1}'
                     scenario_text = ' and '.join(
-                        [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
+                        [f'when condition "{k}" is {v}' for (k, v) in scenario.items()]
+                    )
                     results.append(
-                        RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
+                        RuleMatch(
+                            pathmessage,
+                            message.format(
+                                scenario_text, '/'.join(map(str, pathmessage))
+                            ),
+                        )
+                    )
             num_node_groups = c_props.get('NumNodeGroups')
             if not num_node_groups:
                 # only test cache nodes if num node groups aren't specified
@@ -65,32 +82,55 @@ class CacheClusterFailover(CloudFormationLintRule):
                     if scenario is None:
                         message = '"NumCacheClusters" must be greater than one when creating a cluster at {0}'
                         results.append(
-                            RuleMatch(pathmessage, message.format('/'.join(map(str, pathmessage)))))
+                            RuleMatch(
+                                pathmessage,
+                                message.format('/'.join(map(str, pathmessage))),
+                            )
+                        )
                     else:
                         message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
                         scenario_text = ' and '.join(
-                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
+                            [
+                                f'when condition "{k}" is {v}'
+                                for (k, v) in scenario.items()
+                            ]
+                        )
                         results.append(
-                            RuleMatch(pathmessage, message.format(scenario_text, '/'.join(map(str, pathmessage)))))
+                            RuleMatch(
+                                pathmessage,
+                                message.format(
+                                    scenario_text, '/'.join(map(str, pathmessage))
+                                ),
+                            )
+                        )
 
         return results
 
     def test_cluster_settings(self, properties, path, pg_resource_name, pg_path, cfn):
-        """ Test cluster settings for the parameter group and Replication Group """
+        """Test cluster settings for the parameter group and Replication Group"""
         results = []
-        pg_properties = cfn.template.get('Resources', {}).get(
-            pg_resource_name, {}).get('Properties', {}).get('Properties', {})
-        scenarios = cfn.get_conditions_scenarios_from_object([
-            properties,
-            pg_properties
-        ])
+        pg_properties = (
+            cfn.template.get('Resources', {})
+            .get(pg_resource_name, {})
+            .get('Properties', {})
+            .get('Properties', {})
+        )
+        scenarios = cfn.get_conditions_scenarios_from_object(
+            [properties, pg_properties]
+        )
         if scenarios:
             for scenario in scenarios:
                 results.extend(
-                    self._test_cluster_settings(properties, path, pg_properties, pg_path, cfn, scenario))
+                    self._test_cluster_settings(
+                        properties, path, pg_properties, pg_path, cfn, scenario
+                    )
+                )
         else:
             results.extend(
-                self._test_cluster_settings(properties, path, pg_properties, pg_path, cfn, None))
+                self._test_cluster_settings(
+                    properties, path, pg_properties, pg_path, cfn, None
+                )
+            )
         return results
 
     def match_resource_properties(self, properties, _, path, cfn):
@@ -106,9 +146,8 @@ class CacheClusterFailover(CloudFormationLintRule):
                     if pg_key == 'Ref' and pg_resource in cfn.get_resources():
                         matches.extend(
                             self.test_cluster_settings(
-                                properties, path,
-                                pg_resource, pg_path,
-                                cfn
-                            ))
+                                properties, path, pg_resource, pg_path, cfn
+                            )
+                        )
 
         return matches

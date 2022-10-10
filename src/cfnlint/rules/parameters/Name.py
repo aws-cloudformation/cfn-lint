@@ -8,6 +8,7 @@ from cfnlint.rules.common import alphanumeric_name
 
 class Name(CloudFormationLintRule):
     """Check if Parameters are named correctly"""
+
     id = 'E2003'
     shortdesc = 'Parameters have appropriate names'
     description = 'Check if Parameters are properly named (A-Za-z0-9)'

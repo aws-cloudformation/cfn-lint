@@ -40,8 +40,12 @@ def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
         return []
 
     runner = Runner(
-        rules=rules, filename=None, template=template, regions=regions,
-        verbosity=0, mandatory_rules=None
+        rules=rules,
+        filename=None,
+        template=template,
+        regions=regions,
+        verbosity=0,
+        mandatory_rules=None,
     )
     return runner.run()
 
@@ -62,5 +66,5 @@ def lint_all(s: str) -> Matches:
     return lint(
         s=s,
         rules=get_rules([], [], ['I', 'W', 'E'], include_experimental=True),
-        regions=REGIONS
+        regions=REGIONS,
     )

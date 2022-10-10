@@ -8,6 +8,7 @@ from cfnlint.rules.conditions.common import check_condition_list
 
 class And(CloudFormationLintRule):
     """Check And Condition Function Logic"""
+
     id = 'E8004'
     shortdesc = 'Check Fn::And structure for validity'
     description = 'Check Fn::And is a list of two elements'

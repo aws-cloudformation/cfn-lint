@@ -11,6 +11,7 @@ from cfnlint.helpers import LIMITS
 
 class LimitSize(CloudFormationLintRule):
     """Check Template Size"""
+
     id = 'E1002'
     shortdesc = 'Template size limit'
     description = 'Check the size of the template is less than the upper limit'
@@ -25,5 +26,12 @@ class LimitSize(CloudFormationLintRule):
                 statinfo = os.stat(cfn.filename)
                 if statinfo.st_size > LIMITS['template']['body']:
                     message = 'The template file size ({0} bytes) exceeds the limit ({1} bytes)'
-                    matches.append(RuleMatch(['Template'], message.format(statinfo.st_size, LIMITS['template']['body'])))
+                    matches.append(
+                        RuleMatch(
+                            ['Template'],
+                            message.format(
+                                statinfo.st_size, LIMITS['template']['body']
+                            ),
+                        )
+                    )
         return matches

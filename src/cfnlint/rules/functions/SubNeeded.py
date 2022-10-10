@@ -11,6 +11,7 @@ from cfnlint.rules import RuleMatch
 
 class SubNeeded(CloudFormationLintRule):
     """Check if a substitution string exists without a substitution function"""
+
     id = 'E1029'
     shortdesc = 'Sub is required if a variable is used in a string'
     description = 'If a substitution variable exists in a string but isn\'t wrapped with the Fn::Sub function the deployment will fail.'
@@ -22,12 +23,7 @@ class SubNeeded(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super().__init__()
-        self.config_definition = {
-            'custom_excludes': {
-                'default': '',
-                'type': 'string'
-            }
-        }
+        self.config_definition = {'custom_excludes': {'default': '', 'type': 'string'}}
         self.configure()
         self.subParameterRegex = re.compile(r'(\$\{[A-Za-z0-9_:\.]+\})')
 
@@ -54,7 +50,7 @@ class SubNeeded(CloudFormationLintRule):
 
     def match_values(self, cfn):
         """
-            Search for values in all parts of the templates that match the searchRegex
+        Search for values in all parts of the templates that match the searchRegex
         """
         results = []
         results.extend(self._match_values(cfn.template, []))
@@ -63,12 +59,12 @@ class SubNeeded(CloudFormationLintRule):
         return results
 
     def _api_exceptions(self, value):
-        """ Key value exceptions """
+        """Key value exceptions"""
         parameter_search = re.compile(r'^\$\{stageVariables\..*\}$')
         return re.match(parameter_search, value)
 
     def _variable_custom_excluded(self, value):
-        """ User-defined exceptions for variables, anywhere in the file """
+        """User-defined exceptions for variables, anywhere in the file"""
         custom_excludes = self.config['custom_excludes']
         if custom_excludes:
             custom_search = re.compile(custom_excludes)
@@ -95,9 +91,15 @@ class SubNeeded(CloudFormationLintRule):
                 modified_parameter_string_path = copy.copy(parameter_string_path)
                 index = parameter_string_path.index('DefinitionString')
                 modified_parameter_string_path[index] = 'DefinitionSubstitutions'
-                modified_parameter_string_path = modified_parameter_string_path[:index+1]
+                modified_parameter_string_path = modified_parameter_string_path[
+                    : index + 1
+                ]
                 modified_parameter_string_path.append(var[2:-1])
-                if reduce(lambda c, k: c.get(k, {}), modified_parameter_string_path, cfn.template):
+                if reduce(
+                    lambda c, k: c.get(k, {}),
+                    modified_parameter_string_path,
+                    cfn.template,
+                ):
                     continue
 
             # Exclude variables that match custom exclude filters, if configured
@@ -112,8 +114,13 @@ class SubNeeded(CloudFormationLintRule):
             var_stripped = var[2:-1].strip()
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
-            if not 'Fn::Sub' in parameter_string_path and parameter_string_path[-2] not in self.exceptions:
-                if (var_stripped in refs or var_stripped in getatts) or 'DefinitionString' in parameter_string_path:
+            if (
+                not 'Fn::Sub' in parameter_string_path
+                and parameter_string_path[-2] not in self.exceptions
+            ):
+                if (
+                    var_stripped in refs or var_stripped in getatts
+                ) or 'DefinitionString' in parameter_string_path:
                     # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                     path = parameter_string_path[:-1]
                     message = f'Found an embedded parameter "{var}" outside of an "Fn::Sub" at {"/".join(map(str, path))}'

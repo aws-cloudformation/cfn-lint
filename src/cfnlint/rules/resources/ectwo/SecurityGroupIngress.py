@@ -8,11 +8,14 @@ from cfnlint.rules import RuleMatch
 
 class SecurityGroupIngress(CloudFormationLintRule):
     """Check if EC2 Security Group Ingress Properties"""
+
     id = 'E2506'
     shortdesc = 'Resource EC2 Security Group Ingress Properties'
-    description = 'See if EC2 Security Group Ingress Properties are set correctly. ' \
-                  'Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are ' \
-                  ' are exclusive and using the type of Ref or GetAtt '
+    description = (
+        'See if EC2 Security Group Ingress Properties are set correctly. '
+        'Check that "SourceSecurityGroupId" or "SourceSecurityGroupName" are '
+        ' are exclusive and using the type of Ref or GetAtt '
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-ingress.html'
     tags = ['resources', 'ec2', 'securitygroup']
 
@@ -25,19 +28,29 @@ class SecurityGroupIngress(CloudFormationLintRule):
             # Check that SourceSecurityGroupName isn't specified
             if properties.get('SourceSecurityGroupName', None):
                 path_error = path[:] + ['SourceSecurityGroupName']
-                message = 'SourceSecurityGroupName shouldn\'t be specified for ' \
-                          'Vpc Security Group at {0}'
+                message = (
+                    'SourceSecurityGroupName shouldn\'t be specified for '
+                    'Vpc Security Group at {0}'
+                )
                 matches.append(
-                    RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
+                    RuleMatch(
+                        path_error, message.format('/'.join(map(str, path_error)))
+                    )
+                )
 
         else:
 
             if properties.get('SourceSecurityGroupId', None):
                 path_error = path[:] + ['SourceSecurityGroupId']
-                message = 'SourceSecurityGroupId shouldn\'t be specified for ' \
-                          'Non-Vpc Security Group at {0}'
+                message = (
+                    'SourceSecurityGroupId shouldn\'t be specified for '
+                    'Non-Vpc Security Group at {0}'
+                )
                 matches.append(
-                    RuleMatch(path_error, message.format('/'.join(map(str, path_error)))))
+                    RuleMatch(
+                        path_error, message.format('/'.join(map(str, path_error)))
+                    )
+                )
 
         return matches
 
@@ -55,14 +68,15 @@ class SecurityGroupIngress(CloudFormationLintRule):
                 if isinstance(ingress_rules, list):
                     for index, ingress_rule in enumerate(ingress_rules):
                         path = [
-                            'Resources', resource_name, 'Properties',
-                            'SecurityGroupIngress', index
+                            'Resources',
+                            resource_name,
+                            'Properties',
+                            'SecurityGroupIngress',
+                            index,
                         ]
                         matches.extend(
                             self.check_ingress_rule(
-                                vpc_id=vpc_id,
-                                properties=ingress_rule,
-                                path=path
+                                vpc_id=vpc_id, properties=ingress_rule, path=path
                             )
                         )
 
@@ -81,9 +95,7 @@ class SecurityGroupIngress(CloudFormationLintRule):
                 path = ['Resources', resource_name, 'Properties']
                 matches.extend(
                     self.check_ingress_rule(
-                        vpc_id=vpc_id,
-                        properties=properties,
-                        path=path
+                        vpc_id=vpc_id, properties=properties, path=path
                     )
                 )
         return matches

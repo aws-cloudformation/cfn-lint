@@ -11,6 +11,7 @@ from cfnlint.rules import RuleMatch
 
 class Policy(CloudFormationLintRule):
     """Check if IAM Policy JSON is correct"""
+
     id = 'E2507'
     shortdesc = 'Check if IAM Policies are properly configured'
     description = 'See if there elements inside an IAM policy are correct'
@@ -45,7 +46,9 @@ class Policy(CloudFormationLintRule):
         for resource_type in self.idp_and_keys:
             self.resource_property_types.append(resource_type)
 
-    def check_policy_document(self, value, path, is_identity_policy, resource_exceptions, start_mark, end_mark):
+    def check_policy_document(
+        self, value, path, is_identity_policy, resource_exceptions, start_mark, end_mark
+    ):
         """Check policy document"""
         matches = []
 
@@ -54,7 +57,12 @@ class Policy(CloudFormationLintRule):
             'Id',
             'Statement',
         ]
-        valid_versions = ['2012-10-17', '2008-10-17', date(2012, 10, 17), date(2008, 10, 17)]
+        valid_versions = [
+            '2012-10-17',
+            '2008-10-17',
+            date(2012, 10, 17),
+            date(2008, 10, 17),
+        ]
 
         if isinstance(value, str):
             try:
@@ -66,43 +74,51 @@ class Policy(CloudFormationLintRule):
 
         if not isinstance(value, dict):
             message = 'IAM Policy Documents needs to be JSON'
-            matches.append(
-                RuleMatch(path[:], message))
+            matches.append(RuleMatch(path[:], message))
             return matches
 
         for p_vs, p_p in value.items_safe(path[:], (dict)):
             for parent_key, parent_value in p_vs.items():
                 if parent_key not in valid_keys:
                     message = f'IAM Policy key {parent_key} doesn\'t exist.'
-                    matches.append(
-                        RuleMatch(path[:] + p_p + [parent_key], message))
+                    matches.append(RuleMatch(path[:] + p_p + [parent_key], message))
                 if parent_key == 'Version':
                     if parent_value not in valid_versions:
                         message = f'IAM Policy Version needs to be one of ({", ".join(map(str, ["2012-10-17", "2008-10-17"]))}).'
-                        matches.append(
-                            RuleMatch(p_p + [parent_key], message))
+                        matches.append(RuleMatch(p_p + [parent_key], message))
                 if parent_key == 'Statement':
                     if isinstance(parent_value, list):
-                        for i_s_v, i_s_p in parent_value.items_safe(p_p + ['Statement'], (dict)):
+                        for i_s_v, i_s_p in parent_value.items_safe(
+                            p_p + ['Statement'], (dict)
+                        ):
                             matches.extend(
                                 self._check_policy_statement(
-                                    i_s_p, i_s_v, is_identity_policy, resource_exceptions
+                                    i_s_p,
+                                    i_s_v,
+                                    is_identity_policy,
+                                    resource_exceptions,
                                 )
                             )
                     elif isinstance(parent_value, dict):
-                        for i_s_v, i_s_p in parent_value.items_safe(p_p + ['Statement']):
+                        for i_s_v, i_s_p in parent_value.items_safe(
+                            p_p + ['Statement']
+                        ):
                             matches.extend(
                                 self._check_policy_statement(
-                                    i_s_p, i_s_v, is_identity_policy, resource_exceptions
+                                    i_s_p,
+                                    i_s_v,
+                                    is_identity_policy,
+                                    resource_exceptions,
                                 )
                             )
                     else:
                         message = 'IAM Policy statement should be of list.'
-                        matches.append(
-                            RuleMatch(p_p + [parent_key], message))
+                        matches.append(RuleMatch(p_p + [parent_key], message))
         return matches
 
-    def _check_policy_statement(self, branch, statement, is_identity_policy, resource_exceptions):
+    def _check_policy_statement(
+        self, branch, statement, is_identity_policy, resource_exceptions
+    ):
         """Check statements"""
         matches = []
         statement_valid_keys = [
@@ -120,38 +136,31 @@ class Policy(CloudFormationLintRule):
         for key, _ in statement.items():
             if key not in statement_valid_keys:
                 message = f'IAM Policy statement key {key} isn\'t valid'
-                matches.append(
-                    RuleMatch(branch[:] + [key], message))
+                matches.append(RuleMatch(branch[:] + [key], message))
         if 'Effect' not in statement:
             message = 'IAM Policy statement missing Effect'
-            matches.append(
-                RuleMatch(branch[:], message))
+            matches.append(RuleMatch(branch[:], message))
         else:
             for effect, effect_path in statement.get_safe('Effect'):
                 if isinstance(effect, str):
                     if effect not in ['Allow', 'Deny']:
                         message = 'IAM Policy Effect should be Allow or Deny'
-                        matches.append(
-                            RuleMatch(branch[:] + effect_path, message))
+                        matches.append(RuleMatch(branch[:] + effect_path, message))
         if 'Action' not in statement and 'NotAction' not in statement:
             message = 'IAM Policy statement missing Action or NotAction'
-            matches.append(
-                RuleMatch(branch[:], message))
+            matches.append(RuleMatch(branch[:], message))
         if is_identity_policy:
             if 'Principal' in statement or 'NotPrincipal' in statement:
                 message = 'IAM Resource Policy statement shouldn\'t have Principal or NotPrincipal'
-                matches.append(
-                    RuleMatch(branch[:], message))
+                matches.append(RuleMatch(branch[:], message))
         else:
             if 'Principal' not in statement and 'NotPrincipal' not in statement:
                 message = 'IAM Resource Policy statement should have Principal or NotPrincipal'
-                matches.append(
-                    RuleMatch(branch[:] + ['Principal'], message))
+                matches.append(RuleMatch(branch[:] + ['Principal'], message))
         if not resource_exceptions:
             if 'Resource' not in statement and 'NotResource' not in statement:
                 message = 'IAM Policy statement missing Resource or NotResource'
-                matches.append(
-                    RuleMatch(branch[:], message))
+                matches.append(RuleMatch(branch[:], message))
 
         resources = statement.get('Resource', [])
         if isinstance(resources, str):
@@ -162,13 +171,15 @@ class Policy(CloudFormationLintRule):
                 if len(resource) == 1:
                     for k in resource.keys():
                         if k not in FUNCTIONS_SINGLE:
-                            message = 'IAM Policy statement Resource incorrectly formatted'
+                            message = (
+                                'IAM Policy statement Resource incorrectly formatted'
+                            )
                             matches.append(
-                                RuleMatch(branch[:] + ['Resource', index], message))
+                                RuleMatch(branch[:] + ['Resource', index], message)
+                            )
                 else:
                     message = 'IAM Policy statement Resource incorrectly formatted'
-                    matches.append(
-                        RuleMatch(branch[:] + ['Resource', index], message))
+                    matches.append(RuleMatch(branch[:] + ['Resource', index], message))
 
         return matches
 
@@ -207,22 +218,34 @@ class Policy(CloudFormationLintRule):
                 for index, policy in enumerate(properties.get(key, [])):
                     matches.extend(
                         cfn.check_value(
-                            obj=policy, key='PolicyDocument',
+                            obj=policy,
+                            key='PolicyDocument',
                             path=path[:] + ['Policies', index],
                             check_value=self.check_policy_document,
                             is_identity_policy=is_identity_policy,
                             resource_exceptions=resource_exceptions,
-                            start_mark=key.start_mark, end_mark=key.end_mark,
-                        ))
-            elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies', 'InlinePolicy']:
+                            start_mark=key.start_mark,
+                            end_mark=key.end_mark,
+                        )
+                    )
+            elif key in [
+                'KeyPolicy',
+                'PolicyDocument',
+                'RepositoryPolicyText',
+                'AccessPolicies',
+                'InlinePolicy',
+            ]:
                 matches.extend(
                     cfn.check_value(
-                        obj=properties, key=key,
+                        obj=properties,
+                        key=key,
                         path=path[:],
                         check_value=self.check_policy_document,
                         is_identity_policy=is_identity_policy,
                         resource_exceptions=resource_exceptions,
-                        start_mark=key.start_mark, end_mark=key.end_mark,
-                    ))
+                        start_mark=key.start_mark,
+                        end_mark=key.end_mark,
+                    )
+                )
 
         return matches

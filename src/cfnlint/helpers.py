@@ -62,14 +62,20 @@ REGIONS = list(SPEC_REGIONS.keys())
 
 REGEX_ALPHANUMERIC = re.compile('^[a-zA-Z0-9]*$')
 REGEX_CIDR = re.compile(
-    r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$')
+    r'^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$'
+)
 REGEX_IPV4 = re.compile(
-    r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$')
+    r'^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$'
+)
 REGEX_IPV6 = re.compile(
-    r'^(((?=.*(::))(?!.*\3.+\3))\3?|[\dA-F]{1,4}:)([\dA-F]{1,4}(\3|:\b)|\2){5}(([\dA-F]{1,4}(\3|:\b|$)|\2){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})\Z', re.I | re.S)
+    r'^(((?=.*(::))(?!.*\3.+\3))\3?|[\dA-F]{1,4}:)([\dA-F]{1,4}(\3|:\b)|\2){5}(([\dA-F]{1,4}(\3|:\b|$)|\2){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})\Z',
+    re.I | re.S,
+)
 REGEX_DYN_REF = re.compile(r'^.*{{resolve:.+}}.*$')
 REGEX_DYN_REF_SSM = re.compile(r'^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
-REGEX_DYN_REF_SSM_SECURE = re.compile(r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$')
+REGEX_DYN_REF_SSM_SECURE = re.compile(
+    r'^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$'
+)
 
 
 FUNCTIONS = [
@@ -109,33 +115,23 @@ PSEUDOPARAMS = [
     'AWS::Region',
     'AWS::StackId',
     'AWS::StackName',
-    'AWS::URLSuffix'
+    'AWS::URLSuffix',
 ]
 
 LIMITS = {
-    'Mappings': {
-        'number': 200,
-        'attributes': 200,
-        'name': 255  # in characters
-    },
+    'Mappings': {'number': 200, 'attributes': 200, 'name': 255},  # in characters
     'Outputs': {
         'number': 200,
         'name': 255,  # in characters
-        'description': 1024  # in bytes
+        'description': 1024,  # in bytes
     },
     'Parameters': {
         'number': 200,
         'name': 255,  # in characters
-        'value': 4096  # in bytes
+        'value': 4096,  # in bytes
     },
-    'Resources': {
-        'number': 500,
-        'name': 255  # in characters
-    },
-    'template': {
-        'body': 1000000,  # in bytes
-        'description': 1024  # in bytes
-    },
+    'Resources': {'number': 500, 'name': 255},  # in characters
+    'template': {'body': 1000000, 'description': 1024},  # in bytes  # in bytes
     'threshold': 0.9,  # for rules about approaching the other limit values
 }
 
@@ -146,7 +142,7 @@ valid_snapshot_types = [
     'AWS::Neptune::DBCluster',
     'AWS::RDS::DBCluster',
     'AWS::RDS::DBInstance',
-    'AWS::Redshift::Cluster'
+    'AWS::Redshift::Cluster',
 ]
 
 VALID_PARAMETER_TYPES_SINGLE = [
@@ -209,10 +205,9 @@ VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIS
 
 # pylint: disable=missing-class-docstring
 class RegexDict(dict):
-
     def __getitem__(self, item):
         possible_items = {}
-        for k, v  in self.items():
+        for k, v in self.items():
             if isinstance(v, dict):
                 if v.get('Type') == 'MODULE':
                     if re.match(k, item):
@@ -246,6 +241,7 @@ class RegexDict(dict):
         except KeyError:
             return default
 
+
 def get_metadata_filename(url):
     """Returns the filename for a metadata file associated with a remote resource"""
     caching_dir = os.path.join(os.path.dirname(__file__), 'data', 'DownloadsMetadata')
@@ -253,6 +249,7 @@ def get_metadata_filename(url):
     metadata_filename = os.path.join(caching_dir, encoded_url + '.meta.json')
 
     return metadata_filename
+
 
 def url_has_newer_version(url):
     """Checks to see if a newer version of the resource at the URL is available
@@ -279,8 +276,16 @@ def url_has_newer_version(url):
             # If we have an ETag value stored and it matches the returned one,
             # then we already have a copy of the most recent version of the
             # resource, so don't bother fetching it again
-            if cached_etag and res.info().get('ETag') and cached_etag == res.info().get('ETag'):
-                LOGGER.debug('We already have a cached version of url %s with ETag value of %s', url, cached_etag)
+            if (
+                cached_etag
+                and res.info().get('ETag')
+                and cached_etag == res.info().get('ETag')
+            ):
+                LOGGER.debug(
+                    'We already have a cached version of url %s with ETag value of %s',
+                    url,
+                    cached_etag,
+                )
                 return False
 
     except NameError:
@@ -289,6 +294,7 @@ def url_has_newer_version(url):
 
     # The ETag value of the remote resource does not match the local one, so a newer version is available
     return True
+
 
 def get_url_content(url, caching=False):
     """Get the contents of a spec file"""
@@ -299,7 +305,7 @@ def get_url_content(url, caching=False):
             # Load in all existing values
             metadata = load_metadata(metadata_filename)
             metadata['etag'] = res.info().get('ETag')
-            metadata['url'] = url # To make it obvious which url the Tag relates to
+            metadata['url'] = url  # To make it obvious which url the Tag relates to
             save_metadata(metadata, metadata_filename)
 
         # Continue to handle the file download normally
@@ -334,8 +340,8 @@ def save_metadata(metadata, filename):
 
 def load_resource(package, filename='us-east-1.json'):
     """Load CloudSpec resources
-        :param filename: filename to load
-        :return: Json output of the resource laoded
+    :param filename: filename to load
+    :return: Json output of the resource laoded
     """
     return json.loads(pkg_resources.read_text(package, filename, encoding='utf-8'))
 
@@ -343,8 +349,9 @@ def load_resource(package, filename='us-east-1.json'):
 RESOURCE_SPECS: Dict[str, dict] = {}
 REGISTRY_SCHEMAS: List[dict] = []
 
+
 def merge_spec(source, destination):
-    """ Recursive merge spec dict """
+    """Recursive merge spec dict"""
 
     for key, value in source.items():
         if isinstance(value, dict):
@@ -357,7 +364,7 @@ def merge_spec(source, destination):
 
 
 def set_specs(override_spec_data):
-    """ Override Resource Specs """
+    """Override Resource Specs"""
 
     excludes = []
     includes = []
@@ -383,7 +390,9 @@ def set_specs(override_spec_data):
         if includes:
             for include in includes:
                 regex = re.compile(include.replace('*', '(.*)') + '$')
-                matches = [string for string in all_resources if re.match(regex, string)]
+                matches = [
+                    string for string in all_resources if re.match(regex, string)
+                ]
 
                 resources.extend(matches)
         else:
@@ -405,12 +414,15 @@ def set_specs(override_spec_data):
 
 
 def is_custom_resource(resource_type):
-    """ Return True if resource_type is a custom resource """
-    return resource_type and (resource_type == 'AWS::CloudFormation::CustomResource' or resource_type.startswith('Custom::'))
+    """Return True if resource_type is a custom resource"""
+    return resource_type and (
+        resource_type == 'AWS::CloudFormation::CustomResource'
+        or resource_type.startswith('Custom::')
+    )
 
 
 def bool_compare(first, second):
-    """ Compare strings to boolean values """
+    """Compare strings to boolean values"""
 
     if isinstance(first, str):
         first = bool(first.lower() in ['true', 'True'])
@@ -422,7 +434,7 @@ def bool_compare(first, second):
 
 
 def initialize_specs():
-    """ Reload Resource Specs """
+    """Reload Resource Specs"""
     for reg in REGIONS:
         RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=(f'{reg}.json'))
 
@@ -431,12 +443,16 @@ initialize_specs()
 
 
 def format_json_string(json_string):
-    """ Format the given JSON string"""
+    """Format the given JSON string"""
+
     def converter(o):  # pylint: disable=R1710
-        """ Help convert date/time into strings """
+        """Help convert date/time into strings"""
         if isinstance(o, datetime.datetime):
-            return o.__str__()  #pylint: disable=unnecessary-dunder-call
-    return json.dumps(json_string, indent=1, sort_keys=True, separators=(',', ': '), default=converter)
+            return o.__str__()  # pylint: disable=unnecessary-dunder-call
+
+    return json.dumps(
+        json_string, indent=1, sort_keys=True, separators=(',', ': '), default=converter
+    )
 
 
 def create_rules(mod):
@@ -444,26 +460,35 @@ def create_rules(mod):
     from the given module."""
     result = []
     for _, clazz in inspect.getmembers(mod, inspect.isclass):
-        if clazz.__name__ == 'CustomRule' and clazz.__module__ == 'cfnlint.rules.custom':
+        if (
+            clazz.__name__ == 'CustomRule'
+            and clazz.__module__ == 'cfnlint.rules.custom'
+        ):
             continue
         method_resolution = inspect.getmro(clazz)
-        if [clz for clz in method_resolution[1:] if clz.__module__ in ('cfnlint', 'cfnlint.rules') and clz.__name__ == 'CloudFormationLintRule']:
+        if [
+            clz
+            for clz in method_resolution[1:]
+            if clz.__module__ in ('cfnlint', 'cfnlint.rules')
+            and clz.__name__ == 'CloudFormationLintRule'
+        ]:
             # create and instance of subclasses of CloudFormationLintRule
             obj = clazz()
             result.append(obj)
     return result
 
 
-
 loader_details = (
     importlib.machinery.SourceFileLoader,  # pylint: disable=no-member
-    importlib.machinery.SOURCE_SUFFIXES  # pylint: disable=no-member
+    importlib.machinery.SOURCE_SUFFIXES,  # pylint: disable=no-member
 )
 
+
 def import_filename(pluginname, root):
-    """ import_filename imports a module from a file"""
+    """import_filename imports a module from a file"""
     mod_finder = importlib.machinery.FileFinder(  # pylint: disable=no-member
-        root, loader_details)
+        root, loader_details
+    )
 
     mod_spec = mod_finder.find_spec(pluginname)
     if mod_spec is not None:
@@ -528,10 +553,14 @@ def override_specs(override_spec_file):
             LOGGER.error('Override spec file not found: %s', filename)
             sys.exit(1)
         elif e.errno == 21:
-            LOGGER.error('Override spec file references a directory, not a file: %s', filename)
+            LOGGER.error(
+                'Override spec file references a directory, not a file: %s', filename
+            )
             sys.exit(1)
         elif e.errno == 13:
-            LOGGER.error('Permission denied when accessing override spec file: %s', filename)
+            LOGGER.error(
+                'Permission denied when accessing override spec file: %s', filename
+            )
             sys.exit(1)
     except (ValueError) as err:
         LOGGER.error('Override spec file %s is malformed: %s', filename, err)
