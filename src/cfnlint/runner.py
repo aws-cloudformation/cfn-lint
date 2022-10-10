@@ -12,11 +12,18 @@ from .rules import Match, RulesCollection
 LOGGER = logging.getLogger(__name__)
 
 
-class Runner():
+class Runner:
     """Run all the rules"""
 
     def __init__(
-            self, rules: RulesCollection, filename: Optional[str], template: str, regions: Sequence[str], verbosity=0, mandatory_rules: Sequence[str]=None):
+        self,
+        rules: RulesCollection,
+        filename: Optional[str],
+        template: str,
+        regions: Sequence[str],
+        verbosity=0,
+        mandatory_rules: Sequence[str] = None,
+    ):
 
         self.rules = rules
         self.filename = filename
@@ -30,8 +37,11 @@ class Runner():
         sam_transform = 'AWS::Serverless-2016-10-31'
         matches = []
         transform_declaration = self.cfn.template.get('Transform', [])
-        transform_type = transform_declaration if isinstance(
-            transform_declaration, list) else [transform_declaration]
+        transform_type = (
+            transform_declaration
+            if isinstance(transform_declaration, list)
+            else [transform_declaration]
+        )
         # Don't call transformation if Transform is not specified to prevent
         # useless execution of the transformation.
         # Currently locked in to SAM specific
@@ -49,9 +59,7 @@ class Runner():
         LOGGER.info('Run scan of template %s', self.filename)
         matches = []
         if self.cfn.template is not None:
-            matches.extend(
-                self.rules.run(
-                    self.filename, self.cfn))
+            matches.extend(self.rules.run(self.filename, self.cfn))
         return self.check_metadata_directives(matches)
 
     def check_metadata_directives(self, matches: Sequence[Match]) -> List[Match]:
@@ -73,9 +81,15 @@ class Runner():
                             end = directive.get('end')
                             if start[0] < match.linenumber < end[0]:
                                 break
-                            if start[0] == match.linenumber and start[1] <= match.columnnumber:
+                            if (
+                                start[0] == match.linenumber
+                                and start[1] <= match.columnnumber
+                            ):
                                 break
-                            if end[0] == match.linenumber and end[1] >= match.columnnumberend:
+                            if (
+                                end[0] == match.linenumber
+                                and end[1] >= match.columnnumberend
+                            ):
                                 break
                         else:
                             return_matches.append(match)

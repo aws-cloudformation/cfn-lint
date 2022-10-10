@@ -8,9 +8,12 @@ from cfnlint.rules import RuleMatch
 
 class TaskDefinitionEssentialContainer(CloudFormationLintRule):
     """Check ECS TaskDefinition ContainerDefinitions Property Specifies at least one Essential Container"""
+
     id = 'E3042'
     shortdesc = 'Check at least one essential container is specified'
-    description = 'Check that every TaskDefinition specifies at least one essential container'
+    description = (
+        'Check that every TaskDefinition specifies at least one essential container'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-essential'
     tags = ['properties', 'ecs', 'task', 'container', 'fargate']
 
@@ -19,7 +22,9 @@ class TaskDefinitionEssentialContainer(CloudFormationLintRule):
 
         matches = []
 
-        results = cfn.get_resource_properties(['AWS::ECS::TaskDefinition', 'ContainerDefinitions'])
+        results = cfn.get_resource_properties(
+            ['AWS::ECS::TaskDefinition', 'ContainerDefinitions']
+        )
 
         for result in results:
             path = result['Path']

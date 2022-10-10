@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class DefaultRef(CloudFormationLintRule):
     """Check if Parameter defaults don't use Refs"""
+
     id = 'E2014'
     shortdesc = 'Default value cannot use Refs'
     description = 'Check if Refs are not used in Parameter Defaults'

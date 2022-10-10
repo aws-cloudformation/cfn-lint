@@ -8,6 +8,7 @@ from cfnlint.rules.common import alphanumeric_name
 
 class Name(CloudFormationLintRule):
     """Check if Resources are named correctly"""
+
     id = 'E3006'
     shortdesc = 'Resources have appropriate names'
     description = 'Check if Resources are properly named (A-Za-z0-9)'

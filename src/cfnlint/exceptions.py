@@ -1,5 +1,3 @@
-
-
 class CfnLintError(Exception):
     """
     The base exception class for cfn-lint exceptions.

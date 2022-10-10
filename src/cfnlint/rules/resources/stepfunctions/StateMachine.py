@@ -9,10 +9,13 @@ from cfnlint.rules import RuleMatch
 
 class StateMachine(CloudFormationLintRule):
     """Check State Machine Definition"""
+
     id = 'E2532'
     shortdesc = 'Check State Machine Definition for proper syntax'
-    description = 'Check the State Machine String Definition to make sure its JSON. ' \
+    description = (
+        'Check the State Machine String Definition to make sure its JSON. '
         'Validate basic syntax of the file to determine validity.'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html'
     tags = ['resources', 'stepfunctions']
 
@@ -39,15 +42,38 @@ class StateMachine(CloudFormationLintRule):
         ]
         state_key_types = {
             'Pass': ['Result', 'ResultPath', 'Parameters'],
-            'Task': ['Resource', 'ResultPath', 'ResultSelector', 'Retry', 'Catch',
-                     'TimeoutSeconds', 'Parameters', 'HeartbeatSeconds'],
-            'Map': ['MaxConcurrency', 'Iterator', 'ItemsPath', 'ResultPath',
-                    'ResultSelector', 'Retry', 'Catch', 'Parameters'],
+            'Task': [
+                'Resource',
+                'ResultPath',
+                'ResultSelector',
+                'Retry',
+                'Catch',
+                'TimeoutSeconds',
+                'Parameters',
+                'HeartbeatSeconds',
+            ],
+            'Map': [
+                'MaxConcurrency',
+                'Iterator',
+                'ItemsPath',
+                'ResultPath',
+                'ResultSelector',
+                'Retry',
+                'Catch',
+                'Parameters',
+            ],
             'Choice': ['Choices', 'Default'],
             'Wait': ['Seconds', 'Timestamp', 'SecondsPath', 'TimestampPath'],
             'Succeed': [],
             'Fail': ['Cause', 'Error'],
-            'Parallel': ['Branches', 'ResultPath', 'ResultSelector', 'Parameters', 'Retry', 'Catch']
+            'Parallel': [
+                'Branches',
+                'ResultPath',
+                'ResultSelector',
+                'Parameters',
+                'Retry',
+                'Catch',
+            ],
         }
         state_required_types = {
             'Pass': [],
@@ -56,7 +82,7 @@ class StateMachine(CloudFormationLintRule):
             'Wait': [],
             'Succeed': [],
             'Fail': [],
-            'Parallel': ['Branches']
+            'Parallel': ['Branches'],
         }
 
         for req_key in common_state_required_keys:
@@ -69,10 +95,14 @@ class StateMachine(CloudFormationLintRule):
 
         if state_type in state_key_types:
             for state_key, _ in def_json.items():
-                if state_key not in common_state_keys + state_key_types.get(state_type, []):
+                if state_key not in common_state_keys + state_key_types.get(
+                    state_type, []
+                ):
                     message = f'State Machine Definition key ({state_key}) for State ({state_name}) of Type ({state_type}) is not valid'
                     matches.append(RuleMatch(path, message))
-            for req_key in common_state_required_keys + state_required_types.get(state_type, []):
+            for req_key in common_state_required_keys + state_required_types.get(
+                state_type, []
+            ):
                 if req_key not in def_json:
                     message = f'State Machine Definition required key ({req_key}) for State ({state_name}) of Type ({state_type}) is missing'
                     matches.append(RuleMatch(path, message))
@@ -87,17 +117,8 @@ class StateMachine(CloudFormationLintRule):
         """Check JSON Definition"""
         matches = []
 
-        top_level_keys = [
-            'Comment',
-            'StartAt',
-            'TimeoutSeconds',
-            'Version',
-            'States'
-        ]
-        top_level_required_keys = [
-            'StartAt',
-            'States'
-        ]
+        top_level_keys = ['Comment', 'StartAt', 'TimeoutSeconds', 'Version', 'States']
+        top_level_required_keys = ['StartAt', 'States']
         for top_key, _ in def_json.items():
             if top_key not in top_level_keys:
                 message = f'State Machine Definition key ({top_key}) is not valid'
@@ -105,7 +126,9 @@ class StateMachine(CloudFormationLintRule):
 
         for req_key in top_level_required_keys:
             if req_key not in def_json:
-                message = f'State Machine Definition required key ({req_key}) is missing'
+                message = (
+                    f'State Machine Definition required key ({req_key}) is missing'
+                )
                 matches.append(RuleMatch(path, message))
 
         for state_name, state_value in def_json.get('States', {}).items():
@@ -146,10 +169,12 @@ class StateMachine(CloudFormationLintRule):
 
         matches.extend(
             cfn.check_value(
-                obj=properties, key='DefinitionString',
+                obj=properties,
+                key='DefinitionString',
                 path=path[:],
                 check_value=self.check_value,
-                check_sub=self.check_sub
-            ))
+                check_sub=self.check_sub,
+            )
+        )
 
         return matches

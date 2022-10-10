@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class Not(CloudFormationLintRule):
     """Check if Not values are correct"""
+
     id = 'E1023'
     shortdesc = 'Validation NOT function configuration'
     description = 'Making sure that NOT functions are list'
@@ -21,6 +22,8 @@ class Not(CloudFormationLintRule):
         for fnnot in fnnots:
             if not isinstance(fnnot[-1], list):
                 message = 'Function Not {0} should be a list'
-                matches.append(RuleMatch(fnnot, message.format('/'.join(map(str, fnnot[:-2])))))
+                matches.append(
+                    RuleMatch(fnnot, message.format('/'.join(map(str, fnnot[:-2]))))
+                )
 
         return matches

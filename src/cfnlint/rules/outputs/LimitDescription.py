@@ -9,6 +9,7 @@ from cfnlint.helpers import LIMITS
 
 class LimitDescription(CloudFormationLintRule):
     """Check if maximum Output description size limit is exceeded"""
+
     id = 'E6012'
     shortdesc = 'Output description limit not exceeded'
     description = 'Check the size of Output description in the template is less than the upper limit'
@@ -22,6 +23,15 @@ class LimitDescription(CloudFormationLintRule):
             if description:
                 path = ['Outputs', output_name, 'Description']
                 if len(description) > LIMITS['Outputs']['description']:
-                    message = 'The length of output description ({0}) exceeds the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(len(description), LIMITS['Outputs']['description'])))
+                    message = (
+                        'The length of output description ({0}) exceeds the limit ({1})'
+                    )
+                    matches.append(
+                        RuleMatch(
+                            path,
+                            message.format(
+                                len(description), LIMITS['Outputs']['description']
+                            ),
+                        )
+                    )
         return matches

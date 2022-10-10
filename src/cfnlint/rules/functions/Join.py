@@ -9,6 +9,7 @@ from cfnlint.helpers import RESOURCE_SPECS, VALID_PARAMETER_TYPES_LIST
 
 class Join(CloudFormationLintRule):
     """Check if Join values are correct"""
+
     id = 'E1022'
     shortdesc = 'Join validation of parameters'
     description = 'Making sure the join function is properly configured'
@@ -20,7 +21,9 @@ class Join(CloudFormationLintRule):
         super().__init__()
         self.list_supported_functions = []
         self.singular_supported_functions = []
-        for intrinsic_type, intrinsic_value in RESOURCE_SPECS.get('us-east-1').get('IntrinsicTypes').items():
+        for intrinsic_type, intrinsic_value in (
+            RESOURCE_SPECS.get('us-east-1').get('IntrinsicTypes').items()
+        ):
             if 'List' in intrinsic_value.get('ReturnTypes', []):
                 self.list_supported_functions.append(intrinsic_type)
             if 'Singular' in intrinsic_value.get('ReturnTypes', []):
@@ -39,13 +42,13 @@ class Join(CloudFormationLintRule):
         return results
 
     def _normalize_getatt(self, getatt):
-        """ Normalize getatt into an array"""
+        """Normalize getatt into an array"""
         if isinstance(getatt, str):
             return getatt.split('.', 1)
         return getatt
 
     def _is_ref_a_list(self, parameter, template_parameters):
-        """ Is a Ref a list """
+        """Is a Ref a list"""
         list_params = [
             'AWS::NotificationARNs',
         ]
@@ -58,7 +61,7 @@ class Join(CloudFormationLintRule):
         return False
 
     def _is_getatt_a_list(self, parameter, get_atts):
-        """ Is a GetAtt a List """
+        """Is a GetAtt a List"""
 
         for resource, attributes in get_atts.items():
             for attribute_name, attribute_values in attributes.items():
@@ -75,7 +78,7 @@ class Join(CloudFormationLintRule):
         return 'FALSE'
 
     def _match_string_objs(self, join_string_objs, cfn, path):
-        """ Check join list """
+        """Check join list"""
 
         matches = []
 
@@ -87,26 +90,38 @@ class Join(CloudFormationLintRule):
                 for key, value in join_string_objs.items():
                     if key not in self.list_supported_functions:
                         message = 'Fn::Join unsupported function for {0}'
-                        matches.append(RuleMatch(
-                            path, message.format('/'.join(map(str, path)))))
+                        matches.append(
+                            RuleMatch(path, message.format('/'.join(map(str, path))))
+                        )
                     elif key in ['Ref']:
                         if not self._is_ref_a_list(value, template_parameters):
                             message = 'Fn::Join must use a list at {0}'
-                            matches.append(RuleMatch(
-                                path, message.format('/'.join(map(str, path)))))
+                            matches.append(
+                                RuleMatch(
+                                    path, message.format('/'.join(map(str, path)))
+                                )
+                            )
                     elif key in ['Fn::GetAtt']:
-                        if self._is_getatt_a_list(self._normalize_getatt(value), get_atts) == 'FALSE':
+                        if (
+                            self._is_getatt_a_list(
+                                self._normalize_getatt(value), get_atts
+                            )
+                            == 'FALSE'
+                        ):
                             message = 'Fn::Join must use a list at {0}'
-                            matches.append(RuleMatch(
-                                path, message.format('/'.join(map(str, path)))))
+                            matches.append(
+                                RuleMatch(
+                                    path, message.format('/'.join(map(str, path)))
+                                )
+                            )
             else:
                 message = 'Join list of values should be singular for {0}'
-                matches.append(RuleMatch(
-                    path, message.format('/'.join(map(str, path)))))
+                matches.append(
+                    RuleMatch(path, message.format('/'.join(map(str, path))))
+                )
         elif not isinstance(join_string_objs, list):
             message = 'Join list of values for {0}'
-            matches.append(RuleMatch(
-                path, message.format('/'.join(map(str, path)))))
+            matches.append(RuleMatch(path, message.format('/'.join(map(str, path)))))
         else:
             for string_obj in join_string_objs:
                 if isinstance(string_obj, dict):
@@ -114,26 +129,44 @@ class Join(CloudFormationLintRule):
                         for key, value in string_obj.items():
                             if key not in self.singular_supported_functions:
                                 message = 'Join unsupported function for {0}'
-                                matches.append(RuleMatch(
-                                    path, message.format('/'.join(map(str, path)))))
+                                matches.append(
+                                    RuleMatch(
+                                        path, message.format('/'.join(map(str, path)))
+                                    )
+                                )
                             elif key in ['Ref']:
                                 if self._is_ref_a_list(value, template_parameters):
                                     message = 'Fn::Join must not be a list at {0}'
-                                    matches.append(RuleMatch(
-                                        path, message.format('/'.join(map(str, path)))))
+                                    matches.append(
+                                        RuleMatch(
+                                            path,
+                                            message.format('/'.join(map(str, path))),
+                                        )
+                                    )
                             elif key in ['Fn::GetAtt']:
-                                if self._is_getatt_a_list(self._normalize_getatt(value), get_atts) == 'TRUE':
+                                if (
+                                    self._is_getatt_a_list(
+                                        self._normalize_getatt(value), get_atts
+                                    )
+                                    == 'TRUE'
+                                ):
                                     message = 'Fn::Join must not be a list at {0}'
-                                    matches.append(RuleMatch(
-                                        path, message.format('/'.join(map(str, path)))))
+                                    matches.append(
+                                        RuleMatch(
+                                            path,
+                                            message.format('/'.join(map(str, path))),
+                                        )
+                                    )
                     else:
                         message = 'Join list of values should be singular for {0}'
-                        matches.append(RuleMatch(
-                            path, message.format('/'.join(map(str, path)))))
+                        matches.append(
+                            RuleMatch(path, message.format('/'.join(map(str, path))))
+                        )
                 elif not isinstance(string_obj, str):
                     message = 'Join list of singular function or string for {0}'
-                    matches.append(RuleMatch(
-                        path, message.format('/'.join(map(str, path)))))
+                    matches.append(
+                        RuleMatch(path, message.format('/'.join(map(str, path))))
+                    )
 
         return matches
 
@@ -151,16 +184,19 @@ class Join(CloudFormationLintRule):
                     join_string_objs = join_value_obj[1]
                     if not isinstance(join_string, str):
                         message = 'Join string has to be of type string for {0}'
-                        matches.append(RuleMatch(
-                            path, message.format('/'.join(map(str, path)))))
+                        matches.append(
+                            RuleMatch(path, message.format('/'.join(map(str, path))))
+                        )
                     matches.extend(self._match_string_objs(join_string_objs, cfn, path))
                 else:
                     message = 'Join should be an array of 2 for {0}'
-                    matches.append(RuleMatch(
-                        path, message.format('/'.join(map(str, path)))))
+                    matches.append(
+                        RuleMatch(path, message.format('/'.join(map(str, path))))
+                    )
             else:
                 message = 'Join should be an array of 2 for {0}'
-                matches.append(RuleMatch(
-                    path, message.format('/'.join(map(str, path)))))
+                matches.append(
+                    RuleMatch(path, message.format('/'.join(map(str, path))))
+                )
 
         return matches

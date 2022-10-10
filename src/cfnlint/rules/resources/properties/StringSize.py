@@ -11,6 +11,7 @@ from cfnlint.helpers import RESOURCE_SPECS, REGEX_DYN_REF
 
 class StringSize(CloudFormationLintRule):
     """Check if a String has a length within the limit"""
+
     id = 'E3033'
     shortdesc = 'Check if a string has between min and max number of values specified'
     description = 'Check strings for its length between the minimum and maximum'
@@ -19,9 +20,13 @@ class StringSize(CloudFormationLintRule):
 
     def initialize(self, cfn):
         """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes'):
+        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'ResourceTypes'
+        ):
             self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes'):
+        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
+            'PropertyTypes'
+        ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def _check_string_length(self, value, path, **kwargs):
@@ -36,7 +41,9 @@ class StringSize(CloudFormationLintRule):
                 matches.append(
                     RuleMatch(
                         path,
-                        message.format(string_min, string_max, '/'.join(map(str, path))),
+                        message.format(
+                            string_min, string_max, '/'.join(map(str, path))
+                        ),
                     )
                 )
 
@@ -55,17 +62,24 @@ class StringSize(CloudFormationLintRule):
                         else:
                             property_type = specs.get(prop).get('PrimitiveType')
 
-                        value_specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-                            'ValueTypes').get(value_type, {})
+                        value_specs = (
+                            RESOURCE_SPECS.get(cfn.regions[0])
+                            .get('ValueTypes')
+                            .get(value_type, {})
+                        )
 
-                        if value_specs.get('StringMax') and value_specs.get('StringMin'):
+                        if value_specs.get('StringMax') and value_specs.get(
+                            'StringMin'
+                        ):
                             if property_type == 'String':
                                 matches.extend(
                                     cfn.check_value(
-                                        properties, prop, p_path,
+                                        properties,
+                                        prop,
+                                        p_path,
                                         check_value=self._check_string_length,
                                         string_max=value_specs.get('StringMax'),
-                                        string_min=value_specs.get('StringMin')
+                                        string_min=value_specs.get('StringMin'),
                                     )
                                 )
         return matches
@@ -74,8 +88,12 @@ class StringSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes').get(property_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('PropertyTypes')
+            .get(property_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches
@@ -84,8 +102,12 @@ class StringSize(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
-        specs = RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes').get(resource_type, {}).get('Properties', {})
+        specs = (
+            RESOURCE_SPECS.get(cfn.regions[0])
+            .get('ResourceTypes')
+            .get(resource_type, {})
+            .get('Properties', {})
+        )
         matches.extend(self.check(cfn, properties, specs, path))
 
         return matches

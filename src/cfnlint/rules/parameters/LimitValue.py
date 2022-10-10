@@ -9,6 +9,7 @@ from cfnlint.helpers import LIMITS
 
 class LimitValue(CloudFormationLintRule):
     """Check if maximum Parameter value size limit is exceeded"""
+
     id = 'E2012'
     shortdesc = 'Parameter value limit not exceeded'
     description = 'Check if the size of Parameter values in the template is less than the upper limit'
@@ -32,7 +33,9 @@ class LimitValue(CloudFormationLintRule):
                 if len(default_value) > value_limit:
                     path = ['Parameters', paramname, 'Default']
                     message = 'The length of parameter default value ({0}) exceeds the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(len(default_value), value_limit)))
+                    matches.append(
+                        RuleMatch(path, message.format(len(default_value), value_limit))
+                    )
 
             # Check MaxLength parameters
             max_length = paramvalue.get('MaxLength', 0)
@@ -48,7 +51,9 @@ class LimitValue(CloudFormationLintRule):
                 if max_length > value_limit:
                     path = ['Parameters', paramname, 'MaxLength']
                     message = 'The MaxLength of parameter ({0}) exceeds the limit ({1})'
-                    matches.append(RuleMatch(path, message.format(max_length, value_limit)))
+                    matches.append(
+                        RuleMatch(path, message.format(max_length, value_limit))
+                    )
 
             # Check AllowedValues
             allowed_values = paramvalue.get('AllowedValues', [])
@@ -58,6 +63,10 @@ class LimitValue(CloudFormationLintRule):
                     if len(allowed_value) > value_limit:
                         path = ['Parameters', paramname, 'AllowedValues']
                         message = 'The length of parameter allowed value ({0}) exceeds the limit ({1})'
-                        matches.append(RuleMatch(path, message.format(len(allowed_value), value_limit)))
+                        matches.append(
+                            RuleMatch(
+                                path, message.format(len(allowed_value), value_limit)
+                            )
+                        )
 
         return matches

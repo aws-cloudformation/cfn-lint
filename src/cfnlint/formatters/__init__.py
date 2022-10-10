@@ -14,13 +14,12 @@ from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
 from cfnlint.version import __version__
-from cfnlint.rules import (Match, ParseError, RuleError, RulesCollection,
-                     TransformError)
+from cfnlint.rules import Match, ParseError, RuleError, RulesCollection, TransformError
 
 Matches = List[Match]
 
 
-class color():
+class color:
     error = '\033[31m'
     warning = '\033[33m'
     informational = '\033[34m'
@@ -32,14 +31,14 @@ class color():
 
 
 def colored(s, c):
-    """ Takes in string s and outputs it with color """
+    """Takes in string s and outputs it with color"""
     if sys.stdout.isatty():
         return f'{c}{s}{color.reset}'
 
     return s
 
 
-class BaseFormatter():
+class BaseFormatter:
     """Base Formatter class"""
 
     def _format(self, match):
@@ -73,7 +72,7 @@ class Formatter(BaseFormatter):
             match.message,
             match.filename,
             match.linenumber,
-            match.columnnumber
+            match.columnnumber,
         )
 
 
@@ -84,10 +83,7 @@ class JUnitFormatter(BaseFormatter):
         """Format output of a failure"""
         formatstr = '{0} at {1}:{2}:{3}'
         return formatstr.format(
-            match.message,
-            match.filename,
-            match.linenumber,
-            match.columnnumber
+            match.message, match.filename, match.linenumber, match.columnnumber
         )
 
     def print_matches(self, matches, rules=None, filenames=None):
@@ -105,7 +101,8 @@ class JUnitFormatter(BaseFormatter):
 
                 if rule.experimental:
                     test_case.add_skipped_info(
-                        message='Experimental rule - not enabled')
+                        message='Experimental rule - not enabled'
+                    )
                 else:
                     test_case.add_skipped_info(message='Ignored rule')
                 test_cases.append(test_case)
@@ -113,13 +110,13 @@ class JUnitFormatter(BaseFormatter):
                 test_case = TestCase(
                     name=f'{rule.id} {rule.shortdesc}',
                     allow_multiple_subelements=True,
-                    url=rule.source_url
+                    url=rule.source_url,
                 )
                 for match in matches:
                     if match.rule.id == rule.id:
                         test_case.add_failure_info(
                             message=self._failure_format(match),
-                            failure_type=match.message
+                            failure_type=match.message,
                         )
                 test_cases.append(test_case)
 
@@ -133,6 +130,7 @@ class JsonFormatter(BaseFormatter):
 
     class CustomEncoder(json.JSONEncoder):
         """Custom Encoding for the Match Object"""
+
         # pylint: disable=E0202
 
         def default(self, o):
@@ -142,7 +140,7 @@ class JsonFormatter(BaseFormatter):
                         'Id': o.rule.id,
                         'Description': o.rule.description,
                         'ShortDescription': o.rule.shortdesc,
-                        'Source': o.rule.source_url
+                        'Source': o.rule.source_url,
                     },
                     'Location': {
                         'Start': {
@@ -167,8 +165,12 @@ class JsonFormatter(BaseFormatter):
         del rules
 
         return json.dumps(
-            matches, indent=4, cls=self.CustomEncoder,
-            sort_keys=True, separators=(',', ': '))
+            matches,
+            indent=4,
+            cls=self.CustomEncoder,
+            sort_keys=True,
+            separators=(',', ': '),
+        )
 
 
 class QuietFormatter(BaseFormatter):
@@ -177,11 +179,7 @@ class QuietFormatter(BaseFormatter):
     def _format(self, match):
         """Format output"""
         formatstr = '{0} {1}:{2}'
-        return formatstr.format(
-            match.rule,
-            match.filename,
-            match.linenumber
-        )
+        return formatstr.format(match.rule, match.filename, match.linenumber)
 
 
 class ParseableFormatter(BaseFormatter):
@@ -197,7 +195,7 @@ class ParseableFormatter(BaseFormatter):
             match.linenumberend,
             match.columnnumberend,
             match.rule.id,
-            re.sub(r'(\r*\n)+', ' ', match.message)
+            re.sub(r'(\r*\n)+', ' ', match.message),
         )
 
 
@@ -210,8 +208,7 @@ class PrettyFormatter(BaseFormatter):
         pos = f'{match.linenumber}:{match.columnnumber}:'
         return formatstr.format(
             colored(f'{pos:20}', color.reset),
-            colored(f'{match.rule.id:10}', getattr(
-                color, match.rule.severity.lower())),
+            colored(f'{match.rule.id:10}', getattr(color, match.rule.severity.lower())),
             match.message,
         )
 
@@ -225,7 +222,8 @@ class PrettyFormatter(BaseFormatter):
             f'errors, {colored(len([i for i in matches if i.rule.severity.lower() == "warning"]), color.warning)} '
             f'warnings, and '
             f'{colored(len([i for i in matches if i.rule.severity.lower() == "informational"]), color.informational)} '
-            f'informational violations')
+            f'informational violations'
+        )
         return '\n'.join(results)
 
     def _format_matches(self, matches):
@@ -234,15 +232,9 @@ class PrettyFormatter(BaseFormatter):
 
         # This better be sorted
         for filename, file_matches in itertools.groupby(
-                matches,
-                key=operator.attrgetter('filename')
+            matches, key=operator.attrgetter('filename')
         ):
-            levels = {
-                'error': [],
-                'warning': [],
-                'informational': [],
-                'unknown': []
-            }
+            levels = {'error': [], 'warning': [], 'informational': [], 'unknown': []}
 
             output.append(colored(filename, color.underline_reset))
             for match in file_matches:
@@ -332,8 +324,9 @@ class SARIFFormatter(BaseFormatter):
                 full_description=sarif.MultiformatMessageString(
                     text=rules_map[rule_id].description
                 ),
-                help_uri=rules_map[rule_id].source_url if rules_map[
-                    rule_id] else 'https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md'
+                help_uri=rules_map[rule_id].source_url
+                if rules_map[rule_id]
+                else 'https://github.com/aws-cloudformation/cfn-lint/blob/main/docs/rules.md',
             )
             for rule_id in matched_rules
         ]
@@ -343,9 +336,11 @@ class SARIFFormatter(BaseFormatter):
                 driver=sarif.ToolComponent(
                     name='cfn-lint',
                     short_description=sarif.MultiformatMessageString(
-                        text=('Validates AWS CloudFormation templates against'
-                              ' the resource specification and additional'
-                              ' checks.')
+                        text=(
+                            'Validates AWS CloudFormation templates against'
+                            ' the resource specification and additional'
+                            ' checks.'
+                        )
                     ),
                     information_uri='https://github.com/aws-cloudformation/cfn-lint',
                     rules=rules,
@@ -362,8 +357,7 @@ class SARIFFormatter(BaseFormatter):
             results=results,
         )
 
-        log = sarif.SarifLog(version=self.version,
-                             schema_uri=self.schema, runs=[run])
+        log = sarif.SarifLog(version=self.version, schema_uri=self.schema, runs=[run])
 
         # IMPORTANT: 'warning' is the default level in SARIF and will be
         # stripped by serialization.

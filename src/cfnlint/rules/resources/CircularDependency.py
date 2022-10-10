@@ -6,8 +6,10 @@ from cfnlint.rules import CloudFormationLintRule
 from cfnlint.graph import Graph
 from cfnlint.rules import RuleMatch
 
+
 class CircularDependency(CloudFormationLintRule):
     """Check if Resources have a circular dependency"""
+
     id = 'E3004'
     shortdesc = 'Resource dependencies are not circular'
     description = 'Check that Resources are not circularly dependent by DependsOn, Ref, Sub, or GetAtt'

@@ -10,9 +10,12 @@ from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF
 
 class Password(CloudFormationLintRule):
     """Check if Password Properties are properly configured"""
+
     id = 'W2501'
     shortdesc = 'Check if Password Properties are correctly configured'
-    description = 'Password properties should not be strings and if parameter using NoEcho'
+    description = (
+        'Password properties should not be strings and if parameter using NoEcho'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/best-practices.html#creds'
     tags = ['parameters', 'passwords', 'security', 'dynamic reference']
 
@@ -20,8 +23,17 @@ class Password(CloudFormationLintRule):
         """Check CloudFormation Password Parameters"""
 
         matches = []
-        password_properties = ['AccountPassword', 'AdminPassword', 'ADDomainJoinPassword', 'CrossRealmTrustPrincipalPassword',
-                               'KdcAdminPassword', 'Password', 'DbPassword', 'MasterUserPassword', 'PasswordParam']
+        password_properties = [
+            'AccountPassword',
+            'AdminPassword',
+            'ADDomainJoinPassword',
+            'CrossRealmTrustPrincipalPassword',
+            'KdcAdminPassword',
+            'Password',
+            'DbPassword',
+            'MasterUserPassword',
+            'PasswordParam',
+        ]
 
         parameters = cfn.get_parameter_names()
         fix_params = []
@@ -53,9 +65,15 @@ class Password(CloudFormationLintRule):
                                     if 'NoEcho' in param:
                                         if not param['NoEcho']:
                                             fix_params.append(
-                                                {'Name': value, 'Use': password_property})
+                                                {
+                                                    'Name': value,
+                                                    'Use': password_property,
+                                                }
+                                            )
                                     else:
-                                        fix_params.append({'Name': value, 'Use': password_property})
+                                        fix_params.append(
+                                            {'Name': value, 'Use': password_property}
+                                        )
                     else:
                         message = f'Inappropriate map found for password on {"/".join(map(str, tree[:-1]))}'
                         matches.append(RuleMatch(tree[:-1], message))

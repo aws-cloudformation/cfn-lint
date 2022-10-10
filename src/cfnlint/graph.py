@@ -13,7 +13,7 @@ import networkx
 LOGGER = logging.getLogger('cfnlint.graph')
 
 
-class Graph():
+class Graph:
     """Models a template as a directed graph of resources"""
 
     def __init__(self, cfn):
@@ -36,7 +36,9 @@ class Graph():
                     if isinstance(target_id, str):
                         if self._is_resource(cfn, target_id):
                             target_resource_id = target_id
-                            self.graph.add_edge(resourceId, target_resource_id, label='DependsOn')
+                            self.graph.add_edge(
+                                resourceId, target_resource_id, label='DependsOn'
+                            )
 
         # add edges for "Ref" tags. { "Ref" : "logicalNameOfResource" }
         refs_paths = cfn.search_deep_keys('Ref')
@@ -46,7 +48,9 @@ class Graph():
             if not ref_type == 'Resources':
                 continue
 
-            if isinstance(target_id, (str, int)) and (self._is_resource(cfn, target_id)):
+            if isinstance(target_id, (str, int)) and (
+                self._is_resource(cfn, target_id)
+            ):
                 target_resource_id = target_id
                 self.graph.add_edge(source_id, target_resource_id, label='Ref')
 
@@ -59,7 +63,11 @@ class Graph():
             if not ref_type == 'Resources':
                 continue
 
-            if isinstance(value, list) and len(value) == 2 and (self._is_resource(cfn, value[0])):
+            if (
+                isinstance(value, list)
+                and len(value) == 2
+                and (self._is_resource(cfn, value[0]))
+            ):
                 target_resource_id = value[0]
                 self.graph.add_edge(source_id, target_resource_id, label='GetAtt')
 
@@ -121,12 +129,16 @@ class Graph():
         """Export the graph to a file with DOT format"""
         try:
             import pygraphviz  # pylint: disable=unused-import
+
             networkx.drawing.nx_agraph.write_dot(self.graph, path)
         except ImportError:
             try:
                 with warnings.catch_warnings():
-                    warnings.filterwarnings('ignore', category=PendingDeprecationWarning)
+                    warnings.filterwarnings(
+                        'ignore', category=PendingDeprecationWarning
+                    )
                     import pydot  # pylint: disable=unused-import
+
                     networkx.drawing.nx_pydot.write_dot(self.graph, path)
             except ImportError as e:
                 raise e

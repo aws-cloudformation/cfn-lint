@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class RecordSetName(CloudFormationLintRule):
     """Check if a Route53 Resoruce Records Name is valid with a HostedZoneName"""
+
     id = 'E3041'
     shortdesc = 'RecordSet HostedZoneName is a superdomain of Name'
     description = 'In a RecordSet, the HostedZoneName must be a superdomain of the Name being validated'
@@ -15,14 +16,16 @@ class RecordSetName(CloudFormationLintRule):
     tags = ['resource', 'properties', 'route53']
 
     def __init__(self):
-        """ Init """
+        """Init"""
         super().__init__()
         self.resource_property_types = ['AWS::Route53::RecordSet']
 
     def match_resource_properties(self, properties, _, path, cfn):
         matches = []
 
-        property_sets = cfn.get_object_without_conditions(properties, ['Name', 'HostedZoneName'])
+        property_sets = cfn.get_object_without_conditions(
+            properties, ['Name', 'HostedZoneName']
+        )
         for property_set in property_sets:
             props = property_set.get('Object')
             scenario = property_set.get('Scenario')
@@ -33,26 +36,54 @@ class RecordSetName(CloudFormationLintRule):
                     message = 'HostedZoneName must end in a dot at {}'
                     if scenario is None:
                         matches.append(
-                            RuleMatch(path[:] + ['HostedZoneName'], message.format('/'.join(map(str, path)))))
+                            RuleMatch(
+                                path[:] + ['HostedZoneName'],
+                                message.format('/'.join(map(str, path))),
+                            )
+                        )
                     else:
                         scenario_text = ' and '.join(
-                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
+                            [
+                                f'when condition "{k}" is {v}'
+                                for (k, v) in scenario.items()
+                            ]
+                        )
                         matches.append(
-                            RuleMatch(path[:] + ['HostedZoneName'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
+                            RuleMatch(
+                                path[:] + ['HostedZoneName'],
+                                message.format(
+                                    '/'.join(map(str, path)) + ' ' + scenario_text
+                                ),
+                            )
+                        )
                 if hz_name[-1] == '.':
                     hz_name = hz_name[:-1]
                 if name[-1] == '.':
                     name = name[:-1]
 
-                if hz_name not in [name, name[-len(hz_name):]]:
+                if hz_name not in [name, name[-len(hz_name) :]]:
                     message = 'Name must be a superdomain of HostedZoneName at {}'
                     if scenario is None:
                         matches.append(
-                            RuleMatch(path[:] + ['Name'], message.format('/'.join(map(str, path)))))
+                            RuleMatch(
+                                path[:] + ['Name'],
+                                message.format('/'.join(map(str, path))),
+                            )
+                        )
                     else:
                         scenario_text = ' and '.join(
-                            [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
+                            [
+                                f'when condition "{k}" is {v}'
+                                for (k, v) in scenario.items()
+                            ]
+                        )
                         matches.append(
-                            RuleMatch(path[:] + ['Name'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
+                            RuleMatch(
+                                path[:] + ['Name'],
+                                message.format(
+                                    '/'.join(map(str, path)) + ' ' + scenario_text
+                                ),
+                            )
+                        )
 
         return matches

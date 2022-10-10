@@ -8,6 +8,7 @@ from cfnlint.rules.common import approaching_name_limit
 
 class LimitName(CloudFormationLintRule):
     """Check maximum Resource name size limit"""
+
     id = 'I3012'
     shortdesc = 'Resource name limit'
     description = 'Check the size of Resource names in the template is approaching the upper limit'

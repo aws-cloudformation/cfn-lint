@@ -15,7 +15,7 @@ class NoEcho(CloudFormationLintRule):
     tags = ['resources', 'NoEcho']
 
     def _get_no_echo_params(self, cfn):
-        """ Get no Echo Params"""
+        """Get no Echo Params"""
         no_echo_params = []
         for parameter_name, parameter_value in cfn.get_parameters().items():
             if isinstance(parameter_value, dict):
@@ -25,23 +25,28 @@ class NoEcho(CloudFormationLintRule):
         return no_echo_params
 
     def _check_ref(self, cfn, no_echo_params):
-        """ Check Refs """
+        """Check Refs"""
         matches = []
         refs = cfn.search_deep_keys('Ref')
         for ref in refs:
             if ref[-1] in no_echo_params:
                 if len(ref) > 3:
                     if ref[0] == 'Resources' and ref[2] == 'Metadata':
-                        matches.append(RuleMatch(ref, 'As the resource "metadata" section contains ' +
-                                                 'reference to a "NoEcho" parameter ' +
-                                                 str(ref[-1]) +
-                                                 ', CloudFormation will display the parameter value in ' +
-                                                 'plaintext'))
+                        matches.append(
+                            RuleMatch(
+                                ref,
+                                'As the resource "metadata" section contains '
+                                + 'reference to a "NoEcho" parameter '
+                                + str(ref[-1])
+                                + ', CloudFormation will display the parameter value in '
+                                + 'plaintext',
+                            )
+                        )
 
         return matches
 
     def _check_sub(self, cfn, no_echo_params):
-        """ Check Subs """
+        """Check Subs"""
         matches = []
         subs = cfn.search_deep_keys('Fn::Sub')
         for sub in subs:
@@ -52,11 +57,16 @@ class NoEcho(CloudFormationLintRule):
                         if len(sub) > 2:
                             if sub[0] == 'Resources' and sub[2] == 'Metadata':
 
-                                matches.append(RuleMatch(sub[:-1], 'As the resource "metadata" section contains ' +
-                                                         'reference to a "NoEcho" parameter ' +
-                                                         str(param) +
-                                                         ', CloudFormation will display the parameter value in ' +
-                                                         'plaintext'))
+                                matches.append(
+                                    RuleMatch(
+                                        sub[:-1],
+                                        'As the resource "metadata" section contains '
+                                        + 'reference to a "NoEcho" parameter '
+                                        + str(param)
+                                        + ', CloudFormation will display the parameter value in '
+                                        + 'plaintext',
+                                    )
+                                )
 
         return matches
 

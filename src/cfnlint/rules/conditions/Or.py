@@ -8,6 +8,7 @@ from cfnlint.rules.conditions.common import check_condition_list
 
 class Or(CloudFormationLintRule):
     """Check Or Condition Function Logic"""
+
     id = 'E8006'
     shortdesc = 'Check Fn::Or structure for validity'
     description = 'Check Fn::Or is a list of two elements'

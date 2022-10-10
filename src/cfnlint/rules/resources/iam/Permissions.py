@@ -11,6 +11,7 @@ from cfnlint.data import AdditionalSpecs
 
 class Permissions(CloudFormationLintRule):
     """Check IAM Permission configuration"""
+
     id = 'W3037'
     shortdesc = 'Check IAM Permission configuration'
     description = 'Check for valid IAM Permissions'
@@ -92,8 +93,11 @@ class Permissions(CloudFormationLintRule):
                                 actions.extend(self.get_actions(effective_permission))
 
                         for action in actions:
-                            matches.extend(self.check_permissions(
-                                action, p_p + ['Statement', index]))
+                            matches.extend(
+                                self.check_permissions(
+                                    action, p_p + ['Statement', index]
+                                )
+                            )
 
         return matches
 
@@ -115,33 +119,27 @@ class Permissions(CloudFormationLintRule):
                 pass
             elif permission_value.endswith('*'):
                 wilcarded_permission = permission_value.split('*')[0]
-                if not any(wilcarded_permission in action for action in self.service_map[service_value]):
+                if not any(
+                    wilcarded_permission in action
+                    for action in self.service_map[service_value]
+                ):
                     message = 'Invalid permission "{}" for "{}" found in permissions'
-                    matches.append(
-                        RuleMatch(
-                            path,
-                            message.format(permission, service)))
+                    matches.append(RuleMatch(path, message.format(permission, service)))
 
             elif permission_value.startswith('*'):
                 wilcarded_permission = permission_value.split('*')[1]
-                if not any(wilcarded_permission in action for action in self.service_map[service_value]):
+                if not any(
+                    wilcarded_permission in action
+                    for action in self.service_map[service_value]
+                ):
                     message = 'Invalid permission "{}" for "{}" found in permissions'
-                    matches.append(
-                        RuleMatch(
-                            path,
-                            message.format(permission, service)))
+                    matches.append(RuleMatch(path, message.format(permission, service)))
             elif permission_value not in self.service_map[service_value]:
                 message = 'Invalid permission "{}" for "{}" found in permissions'
-                matches.append(
-                    RuleMatch(
-                        path,
-                        message.format(permission, service)))
+                matches.append(RuleMatch(path, message.format(permission, service)))
         else:
             message = 'Invalid service "{}" found in permissions'
-            matches.append(
-                RuleMatch(
-                    path,
-                    message.format(service)))
+            matches.append(RuleMatch(path, message.format(service)))
 
         return matches
 
@@ -174,18 +172,29 @@ class Permissions(CloudFormationLintRule):
                 for index, policy in enumerate(properties.get(key, [])):
                     matches.extend(
                         cfn.check_value(
-                            obj=policy, key='PolicyDocument',
+                            obj=policy,
+                            key='PolicyDocument',
                             path=path[:] + ['Policies', index],
                             check_value=self.check_policy_document,
-                            start_mark=key.start_mark, end_mark=key.end_mark,
-                        ))
-            elif key in ['KeyPolicy', 'PolicyDocument', 'RepositoryPolicyText', 'AccessPolicies']:
+                            start_mark=key.start_mark,
+                            end_mark=key.end_mark,
+                        )
+                    )
+            elif key in [
+                'KeyPolicy',
+                'PolicyDocument',
+                'RepositoryPolicyText',
+                'AccessPolicies',
+            ]:
                 matches.extend(
                     cfn.check_value(
-                        obj=properties, key=key,
+                        obj=properties,
+                        key=key,
                         path=path[:],
                         check_value=self.check_policy_document,
-                        start_mark=key.start_mark, end_mark=key.end_mark,
-                    ))
+                        start_mark=key.start_mark,
+                        end_mark=key.end_mark,
+                    )
+                )
 
         return matches

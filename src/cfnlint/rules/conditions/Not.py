@@ -8,6 +8,7 @@ from cfnlint.rules.conditions.common import check_condition_list
 
 class Not(CloudFormationLintRule):
     """Check Not Condition Function Logic"""
+
     id = 'E8005'
     shortdesc = 'Check Fn::Not structure for validity'
     description = 'Check Fn::Not is a list of one element'

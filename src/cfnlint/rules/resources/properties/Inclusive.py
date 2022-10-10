@@ -10,6 +10,7 @@ from cfnlint.data import AdditionalSpecs
 
 class Inclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
+
     id = 'E2521'
     shortdesc = 'Check Properties that are required together'
     description = 'Make sure CloudFormation resource properties are included together when required'
@@ -41,18 +42,33 @@ class Inclusive(CloudFormationLintRule):
                     for incl_property in inclusions[prop]:
                         if incl_property not in obj:
                             if property_set['Scenario'] is None:
-                                matches.append(RuleMatch(
-                                    path,
-                                    f'Property {incl_property} should exist with {prop} for {"/".join(map(str, path))}'
-                                ))
+                                matches.append(
+                                    RuleMatch(
+                                        path,
+                                        f'Property {incl_property} should exist with {prop} for {"/".join(map(str, path))}',
+                                    )
+                                )
                             else:
-                                scenario_text = ' and '.join([f'when condition "{k}" is {v}' for (k, v) in property_set['Scenario'].items()])
-                                message = 'Property {0} should exist with {1} {2} for {3}'
-                                matches.append(RuleMatch(
-                                    path,
-                                    message.format(incl_property, prop, scenario_text,
-                                                   '/'.join(map(str, path)))
-                                ))
+                                scenario_text = ' and '.join(
+                                    [
+                                        f'when condition "{k}" is {v}'
+                                        for (k, v) in property_set['Scenario'].items()
+                                    ]
+                                )
+                                message = (
+                                    'Property {0} should exist with {1} {2} for {3}'
+                                )
+                                matches.append(
+                                    RuleMatch(
+                                        path,
+                                        message.format(
+                                            incl_property,
+                                            prop,
+                                            scenario_text,
+                                            '/'.join(map(str, path)),
+                                        ),
+                                    )
+                                )
 
         return matches
 

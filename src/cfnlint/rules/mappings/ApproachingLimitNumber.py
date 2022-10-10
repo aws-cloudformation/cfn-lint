@@ -8,9 +8,12 @@ from cfnlint.rules.common import approaching_number_limit
 
 class LimitNumber(CloudFormationLintRule):
     """Check maximum Mapping limit"""
+
     id = 'I7010'
     shortdesc = 'Mapping limit'
-    description = 'Check the number of Mappings in the template is approaching the upper limit'
+    description = (
+        'Check the number of Mappings in the template is approaching the upper limit'
+    )
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
     tags = ['mappings', 'limits']
 

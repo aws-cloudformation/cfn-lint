@@ -8,6 +8,7 @@ from cfnlint.rules.common import approaching_name_limit
 
 class LimitName(CloudFormationLintRule):
     """Check maximum Parameter name size limit"""
+
     id = 'I2011'
     shortdesc = 'Parameter name limit'
     description = 'Check the size of Parameter names in the template is approaching the upper limit'

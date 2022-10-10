@@ -8,6 +8,7 @@ from cfnlint.rules import RuleMatch
 
 class RefInCondition(CloudFormationLintRule):
     """Check if Ref value is a string"""
+
     id = 'E1026'
     shortdesc = 'Cannot reference resources in the Conditions block of the template'
     description = 'Check that any Refs in the Conditions block uses no resources'
@@ -27,6 +28,10 @@ class RefInCondition(CloudFormationLintRule):
                     if value in resource_names:
                         message = 'Cannot reference resource {0} in the Conditions block of the template at {1}'
                         matches.append(
-                            RuleMatch(ref_obj[:-1], message.format(value, '/'.join(map(str, ref_obj[:-1])))))
+                            RuleMatch(
+                                ref_obj[:-1],
+                                message.format(value, '/'.join(map(str, ref_obj[:-1]))),
+                            )
+                        )
 
         return matches

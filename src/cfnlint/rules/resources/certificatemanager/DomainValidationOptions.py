@@ -8,19 +8,25 @@ from cfnlint.rules import RuleMatch
 
 class DomainValidationOptions(CloudFormationLintRule):
     """Check if a certificate's domain validation options are set up correctly"""
+
     id = 'E3503'
     shortdesc = 'ValidationDomain is superdomain of DomainName'
     description = 'In ValidationDomainOptions, the ValidationDomain must be a superdomain of the DomainName being validated'
     source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-certificatemanager-certificate-domainvalidationoption.html#cfn-certificatemanager-certificate-domainvalidationoption-validationdomain'
-    tags = ['certificate', 'certificatemanager', 'domainvalidationoptions', 'validationdomain']
+    tags = [
+        'certificate',
+        'certificatemanager',
+        'domainvalidationoptions',
+        'validationdomain',
+    ]
 
     def __init__(self):
-        """ Init """
+        """Init"""
         super().__init__()
         self.resource_property_types = ['AWS::CertificateManager::Certificate']
 
     def check_value(self, value, path, **kwargs):
-        """ Check value inside the list of DomainValidationOptions"""
+        """Check value inside the list of DomainValidationOptions"""
         matches = []
         cfn = kwargs.get('cfn')
         if isinstance(value, dict):
@@ -35,23 +41,43 @@ class DomainValidationOptions(CloudFormationLintRule):
                         continue
 
                     if not domain_name.endswith('.' + validation_domain):
-                        message = 'ValidationDomain must be a superdomain of DomainName at {}'
+                        message = (
+                            'ValidationDomain must be a superdomain of DomainName at {}'
+                        )
                         if scenario is None:
                             matches.append(
-                                RuleMatch(path[:] + ['DomainName'], message.format('/'.join(map(str, path)))))
+                                RuleMatch(
+                                    path[:] + ['DomainName'],
+                                    message.format('/'.join(map(str, path))),
+                                )
+                            )
                         else:
                             scenario_text = ' and '.join(
-                                [f'when condition "{k}" is {v}' for (k, v) in scenario.items()])
+                                [
+                                    f'when condition "{k}" is {v}'
+                                    for (k, v) in scenario.items()
+                                ]
+                            )
                             matches.append(
-                                RuleMatch(path[:] + ['DomainName'], message.format('/'.join(map(str, path)) + ' ' + scenario_text)))
+                                RuleMatch(
+                                    path[:] + ['DomainName'],
+                                    message.format(
+                                        '/'.join(map(str, path)) + ' ' + scenario_text
+                                    ),
+                                )
+                            )
         return matches
 
     def match_resource_properties(self, properties, _, path, cfn):
         matches = []
-        matches.extend(cfn.check_value(
-            properties, 'DomainValidationOptions', path[:],
-            check_value=self.check_value,
-            cfn=cfn,
-        ))
+        matches.extend(
+            cfn.check_value(
+                properties,
+                'DomainValidationOptions',
+                path[:],
+                check_value=self.check_value,
+                cfn=cfn,
+            )
+        )
 
         return matches
