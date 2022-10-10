@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 import importlib
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Union
 from cfnlint.exceptions import DuplicateRuleError
 import cfnlint.helpers
 import cfnlint.rules.custom
@@ -55,7 +55,11 @@ def matching(match_type: Any):
                     error_rule = self
                     if hasattr(result, 'rule'):
                         error_rule = result.rule
-                    linenumbers = cfn.get_location_yaml(cfn.template, result.path)
+                    linenumbers: Union[Tuple[int, int, int, int], None] = None
+                    if hasattr(result, 'location'):
+                        linenumbers = result.location
+                    else:
+                        linenumbers = cfn.get_location_yaml(cfn.template, result.path)
                     if linenumbers:
                         matches.append(
                             Match(
