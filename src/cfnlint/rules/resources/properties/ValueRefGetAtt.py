@@ -221,7 +221,6 @@ class ValueRefGetAtt(CloudFormationLintRule):
                     )
                 )
         elif '.'.join(map(str, resource_attribute)) != specs[resource_type]:
-            print(resource_type)
             message = (
                 'Property "{0}" can Fn::GetAtt to a resource attribute "{1}" at {2}'
             )
