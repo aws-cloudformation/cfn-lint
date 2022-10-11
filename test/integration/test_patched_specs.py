@@ -84,7 +84,6 @@ class TestPatchedSpecs(BaseTestCase):
             if resource_name:
                 v_value_properties = v_values.get('Properties', {})
                 if v_value_properties is None:
-                    print(v_values)
                     self._test_sub_properties(resource_name, '', v_values)
                 else:
                     for p_name, p_values in v_value_properties.items():

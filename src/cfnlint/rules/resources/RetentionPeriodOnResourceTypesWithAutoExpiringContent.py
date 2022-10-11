@@ -22,9 +22,6 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
     source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
     tags = ['resources', 'retentionperiod']
 
-    def _check_ref(self, value, parameters, resources, path):  # pylint: disable=W0613
-        print(value)
-
     def match(self, cfn):
         """Check for RetentionPeriod"""
         matches = []
