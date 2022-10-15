@@ -5340,9 +5340,32 @@
     }
    }
   },
+  "AWS::Budgets::Budget.AutoAdjustData": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-autoadjustdata.html",
+   "Properties": {
+    "AutoAdjustType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-autoadjustdata.html#cfn-budgets-budget-autoadjustdata-autoadjusttype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "HistoricalOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-autoadjustdata.html#cfn-budgets-budget-autoadjustdata-historicaloptions",
+     "Required": false,
+     "Type": "HistoricalOptions",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Budgets::Budget.BudgetData": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-budgetdata.html",
    "Properties": {
+    "AutoAdjustData": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-budgetdata.html#cfn-budgets-budget-budgetdata-autoadjustdata",
+     "Required": false,
+     "Type": "AutoAdjustData",
+     "UpdateType": "Immutable"
+    },
     "BudgetLimit": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-budgetdata.html#cfn-budgets-budget-budgetdata-budgetlimit",
      "Required": false,
@@ -5466,6 +5489,17 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-costtypes.html#cfn-budgets-budget-costtypes-useblended",
      "PrimitiveType": "Boolean",
      "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Budgets::Budget.HistoricalOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-historicaloptions.html",
+   "Properties": {
+    "BudgetAdjustmentPeriod": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-budgets-budget-historicaloptions.html#cfn-budgets-budget-historicaloptions-budgetadjustmentperiod",
+     "PrimitiveType": "Integer",
+     "Required": true,
      "UpdateType": "Mutable"
     }
    }
@@ -48205,7 +48239,7 @@
    }
   }
  },
- "ResourceSpecificationVersion": "92.0.0",
+ "ResourceSpecificationVersion": "93.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": {
    "Attributes": {
@@ -54705,6 +54739,11 @@
    }
   },
   "AWS::Cognito::UserPoolDomain": {
+   "Attributes": {
+    "CloudFrontDistribution": {
+     "PrimitiveType": "String"
+    }
+   },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cognito-userpooldomain.html",
    "Properties": {
     "CustomDomainConfig": {
@@ -59332,15 +59371,10 @@
      "PrimitiveType": "String"
     },
     "DnsEntries": {
-     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Type": "List"
     },
-    "Id": {
-     "PrimitiveType": "String"
-    },
     "NetworkInterfaceIds": {
-     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Type": "List"
     }
@@ -59393,10 +59427,7 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::VPCEndpoint.VpcEndpointType"
-     }
+     "UpdateType": "Immutable"
     },
     "VpcId": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcid",
@@ -69836,6 +69867,12 @@
      "Type": "OpenMonitoring",
      "UpdateType": "Mutable"
     },
+    "StorageMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-storagemode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-msk-cluster.html#cfn-msk-cluster-tags",
      "PrimitiveItemType": "String",
@@ -70577,6 +70614,9 @@
   },
   "AWS::RDS::DBCluster": {
    "Attributes": {
+    "DBClusterResourceId": {
+     "PrimitiveType": "String"
+    },
     "Endpoint.Address": {
      "PrimitiveType": "String"
     },
@@ -70687,6 +70727,18 @@
      "Required": false,
      "UpdateType": "Mutable"
     },
+    "Domain": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-domain",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DomainIAMRoleName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-domainiamrolename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
     "EnableCloudwatchLogsExports": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-enablecloudwatchlogsexports",
      "DuplicatesAllowed": false,
@@ -70769,6 +70821,12 @@
     },
     "MonitoringRoleArn": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-monitoringrolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NetworkType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbcluster.html#cfn-rds-dbcluster-networktype",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable"
@@ -71194,6 +71252,12 @@
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Immutable"
+    },
+    "NetworkType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-networktype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
     },
     "OptionGroupName": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbinstance.html#cfn-rds-dbinstance-optiongroupname",
@@ -75979,6 +76043,90 @@
     }
    }
   },
+  "AWS::Transfer::Agreement": {
+   "Attributes": {
+    "AgreementId": {
+     "PrimitiveType": "String"
+    },
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html",
+   "Properties": {
+    "AccessRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-accessrole",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.AccessRole"
+     }
+    },
+    "BaseDirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-basedirectory",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.BaseDirectory"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.Description"
+     }
+    },
+    "LocalProfileId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-localprofileid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.LocalProfileId"
+     }
+    },
+    "PartnerProfileId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-partnerprofileid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.PartnerProfileId"
+     }
+    },
+    "ServerId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-serverid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.ServerId"
+     }
+    },
+    "Status": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-status",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Agreement.Status"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-agreement.html#cfn-transfer-agreement-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Transfer::Certificate": {
    "Attributes": {
     "Arn": {
@@ -76060,6 +76208,106 @@
      "Value": {
       "ValueType": "AWS::Transfer::Certificate.Usage"
      }
+    }
+   }
+  },
+  "AWS::Transfer::Connector": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "ConnectorId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html",
+   "Properties": {
+    "AccessRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-accessrole",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Connector.AccessRole"
+     }
+    },
+    "As2Config": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-as2config",
+     "PrimitiveType": "Json",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "LoggingRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-loggingrole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Connector.LoggingRole"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Url": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-connector.html#cfn-transfer-connector-url",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Transfer::Profile": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "ProfileId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-profile.html",
+   "Properties": {
+    "As2Id": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-profile.html#cfn-transfer-profile-as2id",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Profile.As2Id"
+     }
+    },
+    "CertificateIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-profile.html#cfn-transfer-profile-certificateids",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Profile.CertificateIds"
+     }
+    },
+    "ProfileType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-profile.html#cfn-transfer-profile-profiletype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Profile.ProfileType"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-transfer-profile.html#cfn-transfer-profile-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
     }
    }
   },
@@ -78129,7 +78377,7 @@
    ]
   },
   "AWS::CloudWatch::Alarm.MetricDataQuery.Id": {
-   "AllowedPatternRegex": "^([a-z])([A-Za-z0-9\\_]+)$"
+   "AllowedPatternRegex": "^([a-z])([A-Za-z0-9\\_]*)$"
   },
   "AWS::CloudWatch::Alarm.Statistic": {
    "AllowedValues": [
@@ -79294,13 +79542,6 @@
      "AWS::EC2::VPC"
     ]
    }
-  },
-  "AWS::EC2::VPCEndpoint.VpcEndpointType": {
-   "AllowedValues": [
-    "Interface",
-    "Gateway",
-    "GatewayLoadBalancer"
-   ]
   },
   "AWS::ECR::Repository.EncryptionConfiguration.EncryptionType": {
    "AllowedValues": [
@@ -83921,6 +84162,40 @@
   "AWS::Synthetics::Canary.Name": {
    "AllowedPatternRegex": "^[0-9a-z_\\-]{1,21}$"
   },
+  "AWS::Transfer::Agreement.AccessRole": {
+   "AllowedPatternRegex": "arn:.*role/.*",
+   "StringMax": 2048,
+   "StringMin": 20
+  },
+  "AWS::Transfer::Agreement.BaseDirectory": {
+   "AllowedPatternRegex": "^$|/.*"
+  },
+  "AWS::Transfer::Agreement.Description": {
+   "AllowedPatternRegex": "^[\\w\\- ]*$",
+   "StringMax": 200,
+   "StringMin": 1
+  },
+  "AWS::Transfer::Agreement.LocalProfileId": {
+   "AllowedPatternRegex": "^p-([0-9a-f]{17})$",
+   "StringMax": 19,
+   "StringMin": 19
+  },
+  "AWS::Transfer::Agreement.PartnerProfileId": {
+   "AllowedPatternRegex": "^p-([0-9a-f]{17})$",
+   "StringMax": 19,
+   "StringMin": 19
+  },
+  "AWS::Transfer::Agreement.ServerId": {
+   "AllowedPatternRegex": "^s-([0-9a-f]{17})$",
+   "StringMax": 19,
+   "StringMin": 19
+  },
+  "AWS::Transfer::Agreement.Status": {
+   "AllowedValues": [
+    "ACTIVE",
+    "INACTIVE"
+   ]
+  },
   "AWS::Transfer::Certificate.Description": {
    "AllowedPatternRegex": "^[\\w\\- ]*$",
    "StringMax": 200,
@@ -83930,6 +84205,31 @@
    "AllowedValues": [
     "SIGNING",
     "ENCRYPTION"
+   ]
+  },
+  "AWS::Transfer::Connector.AccessRole": {
+   "AllowedPatternRegex": "arn:.*role/.*",
+   "StringMax": 2048,
+   "StringMin": 20
+  },
+  "AWS::Transfer::Connector.LoggingRole": {
+   "AllowedPatternRegex": "arn:.*role/.*",
+   "StringMax": 2048,
+   "StringMin": 20
+  },
+  "AWS::Transfer::Profile.As2Id": {
+   "StringMax": 128,
+   "StringMin": 1
+  },
+  "AWS::Transfer::Profile.CertificateIds": {
+   "AllowedPatternRegex": "^cert-([0-9a-f]{17})$",
+   "StringMax": 22,
+   "StringMin": 22
+  },
+  "AWS::Transfer::Profile.ProfileType": {
+   "AllowedValues": [
+    "LOCAL",
+    "PARTNER"
    ]
   },
   "AWS::Transfer::Workflow.Description": {
@@ -85204,7 +85504,8 @@
   },
   "KmsKey.Arn": {
    "GetAtt": {
-    "AWS::KMS::Key": "Arn"
+    "AWS::KMS::Key": "Arn",
+    "AWS::KMS::ReplicaKey": "Arn"
    },
    "Ref": {
     "Parameters": [

@@ -4589,8 +4589,8 @@
    ]
   },
   "AWS IoT Device Tester": {
-   "ARNFormat": "arn:aws:iot-device-tester:<region>:<account-id>:<resource-type>/<resource_name>",
-   "ARNRegex": "^arn:aws:iot-device-tester:.+:.+:.+",
+   "ARNFormat": "arn:${Partition}:iot-device-tester:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:.+:iot-device-tester:.+:.+:.+",
    "Actions": [
     "CheckVersion",
     "DownloadTestSuite",
@@ -9048,8 +9048,8 @@
    "StringPrefix": "clouddirectory"
   },
   "Amazon CloudFront": {
-   "ARNFormat": "arn:aws:cloudfront::${AccountId}:${ResourceType}/${ResourceId}",
-   "ARNRegex": "^arn:aws:cloudfront::[0-9]+:.+",
+   "ARNFormat": "arn:aws:cloudfront:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:cloudfront:.+:[0-9]+:.+",
    "Actions": [
     "AssociateAlias",
     "CreateCachePolicy",
@@ -9430,8 +9430,8 @@
    ]
   },
   "Amazon CodeGuru": {
-   "ARNFormat": "arn:aws:codeguru:<region>:<account-id>:<resource-type>/<resource_name>",
-   "ARNRegex": "^arn:aws:codeguru:.+:.+:.+",
+   "ARNFormat": "arn:${Partition}:codeguru:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:${Partition}:codeguru:.+:.+:.+",
    "Actions": [
     "GetCodeGuruFreeTrialSummary"
    ],
@@ -11059,7 +11059,7 @@
    ]
   },
   "Amazon EC2 Auto Scaling": {
-   "ARNFormat": "arn:aws:autoscaling:<region>:<account>:<relative-id>",
+   "ARNFormat": "arn:aws:autoscaling:${Region}:${Account}:${RelativeId}",
    "ARNRegex": "^arn:aws:autoscaling:.+:.+:.+",
    "Actions": [
     "AttachInstances",
@@ -13339,7 +13339,7 @@
   },
   "Amazon Lookout for Equipment": {
    "ARNFormat": "arn:aws:lookoutequipment:${Region}:${Account}:${ResourceType}/${ResourceName}/${ResourceId}",
-   "ARNRegex": "^arn:aws:lookoutequipment:.+",
+   "ARNRegex": "^arn:aws:lookoutequipment:.+:.+:.+",
    "Actions": [
     "CreateDataset",
     "CreateInferenceScheduler",
@@ -13359,6 +13359,7 @@
     "Describelabel",
     "ListDataIngestionJobs",
     "ListDatasets",
+    "ListInferenceEvents",
     "ListInferenceExecutions",
     "ListInferenceSchedulers",
     "ListLabelGroups",
@@ -16746,15 +16747,23 @@
     "ImportTerminology",
     "ListLanguages",
     "ListParallelData",
+    "ListTagsForResource",
     "ListTerminologies",
     "ListTextTranslationJobs",
     "StartTextTranslationJob",
     "StopTextTranslationJob",
+    "TagResource",
     "TranslateText",
+    "UntagResource",
     "UpdateParallelData"
    ],
    "HasResource": true,
-   "StringPrefix": "translate"
+   "StringPrefix": "translate",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "Amazon WorkDocs": {
    "Actions": [
