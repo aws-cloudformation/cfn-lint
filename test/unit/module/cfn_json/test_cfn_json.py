@@ -24,7 +24,7 @@ class TestCfnJson(BaseTestCase):
         self.filenames = {
             "config_rule": {
                 "filename": 'test/fixtures/templates/quickstart/config-rules.json',
-                "failures": 4
+                "failures": 5
             },
             "iam": {
                 "filename": 'test/fixtures/templates/quickstart/iam.json',
