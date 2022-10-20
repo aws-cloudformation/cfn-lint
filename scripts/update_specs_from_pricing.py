@@ -178,7 +178,7 @@ def get_rds_pricing():
                         if not rds_specs.get(license_name).get(product_name):
                             rds_specs[license_name][product_name] = {}
                         if not rds_specs.get(license_name).get(product_name).get(product_region):
-                            rds_specs[license_name][product_name][product_region] = set()
+                            rds_specs[license_name][product_name][product_region] = set(['db.serverless'])
 
                         rds_specs[license_name][product_name][product_region].add(instance_type)
 
