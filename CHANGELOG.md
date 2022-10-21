@@ -1,3 +1,8 @@
+### v0.68.1
+###### CloudFormation Specifications
+- Patch in `db.serverless` into `AWS::RDS::DBInstance.DBInstanceClass` (pull #[2424](https://github.com/aws-cloudformation/cfn-lint/pull/2424))
+- Update CloudFormation specs to `94.0.0` (pull #[2420](https://github.com/aws-cloudformation/cfn-lint/pull/2420))
+
 ### v0.68.0
 ###### Features
 - Ability to override location of the finding (pull #[2410](https://github.com/aws-cloudformation/cfn-lint/pull/2410))
