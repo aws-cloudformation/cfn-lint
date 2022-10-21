@@ -42,10 +42,9 @@ class TestDuplicate(BaseTestCase):
         filename = 'test/fixtures/templates/bad/duplicate.json'
 
         try:
-            with open(filename) as fp:
-                json.load(fp, cls=cfnlint.decode.cfn_json.CfnJSONDecoder)
+            cfnlint.decode.cfn_json.load(filename)
         except cfnlint.decode.cfn_json.JSONDecodeError as e:
-            self.assertEqual(len(e.matches), 2)
+            self.assertEqual(len(e.matches), 3)
             return
 
         assert(False)
@@ -58,7 +57,7 @@ class TestDuplicate(BaseTestCase):
         try:
             cfnlint.decode.cfn_yaml.load(filename)
         except cfnlint.decode.cfn_yaml.CfnParseError as e:
-            self.assertEqual(len(e.matches), 2)
+            self.assertEqual(len(e.matches), 3)
             return
 
         assert(False)
