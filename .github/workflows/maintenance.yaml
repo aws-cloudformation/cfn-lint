@@ -24,8 +24,8 @@ jobs:
           scripts/update_specs_from_pricing.py
           scripts/update_serverless_aws_policies.py
           cfn-lint --update-specs
-          echo "specversion=$(jq -r .ResourceSpecificationVersion src/cfnlint/data/CloudSpecs/us-east-1.json)" >> $GITHUB_ENV
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "specversion=$(jq -r .ResourceSpecificationVersion src/cfnlint/data/CloudSpecs/us-east-1.json)" >> $GITHUB_OUTPUT
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
