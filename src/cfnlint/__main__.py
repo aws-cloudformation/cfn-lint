@@ -47,7 +47,7 @@ def main():
             else:
                 print(matches_output)
 
-        return cfnlint.core.get_exit_code(matches)
+        return cfnlint.core.get_exit_code(matches, args.non_zero_exit_code)
     except cfnlint.core.CfnLintExitException as e:
         LOGGER.error(str(e))
         return e.exit_code
