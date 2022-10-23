@@ -105,8 +105,9 @@ class Transform:
                     Transform._update_to_s3_uri('ContentUri', resource_dict)
             if resource_type == 'AWS::Serverless::Application':
                 if resource_dict.get('Location'):
-                    resource_dict['Location'] = ''
-                    Transform._update_to_s3_uri('Location', resource_dict)
+                    if isinstance(resource_dict.get('Location'), dict):
+                        resource_dict['Location'] = ''
+                        Transform._update_to_s3_uri('Location', resource_dict)
             if resource_type == 'AWS::Serverless::Api':
                 if (
                     'DefinitionBody' not in resource_dict
