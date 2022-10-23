@@ -42,7 +42,7 @@ class TestLint(TestCase):
     def test_duplicate_json_template(self):
         filename = 'test/fixtures/templates/bad/duplicate.json'
         matches = self.helper_lint_string_from_file(filename)
-        self.assertEqual(['E0000', 'E0000'], [match.rule.id for match in matches])
+        self.assertEqual(['E0000', 'E0000', 'E0000'], [match.rule.id for match in matches])
 
     def test_invalid_yaml_template(self):
         filename = 'test/fixtures/templates/bad/core/config_invalid_yaml.yaml'

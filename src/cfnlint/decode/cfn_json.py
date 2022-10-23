@@ -20,11 +20,13 @@ class DuplicateError(Exception):
     Error thrown when the template contains duplicates
     """
 
-    def __init__(self, message, mapping, key):
+    def __init__(self, message, key):
         super().__init__(message)
+        self.duplicates = []
+        self.append(key)
 
-        self.mapping = mapping
-        self.key = key
+    def append(self, key):
+        self.duplicates.append(key)
 
 
 def check_duplicates(ordered_pairs, beg_mark, end_mark):
@@ -33,11 +35,21 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
     because a dict does not support this. It overwrites it with the last
     occurrence, which can give unexpected results
     """
+    err = None
     mapping = dict_node({}, beg_mark, end_mark)
     for key, value in ordered_pairs:
-        if key in mapping:
-            raise DuplicateError(f'"{key}"', mapping, key)
-        mapping[key] = value
+        for m_key in mapping:
+            if m_key == key:
+                if err is None:
+                    err = DuplicateError(f'"{key}"', key)
+                    err.append(m_key)
+                else:
+                    err.append(key)
+        if key not in mapping:
+            mapping[key] = value
+
+    if err is not None:
+        raise err
 
     if len(mapping) == 1:
         if 'Fn::Sub' in mapping:
@@ -90,13 +102,12 @@ def build_match(message, doc, pos, key=' '):
     )
 
 
-def build_match_from_node(message, node, key):
-
+def build_match_from_key(message, key):
     return cfnlint.rules.Match(
-        node[key].start_mark.line,
-        node[key].start_mark.column + 1,
-        node[key].end_mark.line,
-        node[key].end_mark.column + 1 + len(key),
+        key.start_mark.line,
+        key.start_mark.column + 1,
+        key.end_mark.line,
+        key.end_mark.column + 1 + len(key),
         '',
         cfnlint.rules.ParseError(),
         message=message,
@@ -438,21 +449,18 @@ class CfnJSONDecoder(json.JSONDecoder):
                         result = object_pairs_hook(pairs, beg_mark, end_mark)
                         return result, end + 1
                     except DuplicateError as err:
+                        errs = []
+                        for m in err.duplicates:
+                            errs.append(
+                                build_match_from_key(
+                                    message=f'Duplicate found {err}',
+                                    key=m,
+                                )
+                            )
                         raise JSONDecodeError(
                             doc=s,
                             pos=end,
-                            errors=[
-                                build_match_from_node(
-                                    message=f'Duplicate found {err}',
-                                    node=err.mapping,
-                                    key=err.key,
-                                ),
-                                build_match(
-                                    message=f'Duplicate found {err}',
-                                    doc=s,
-                                    pos=end,
-                                ),
-                            ],
+                            errors=errs,
                         ) from err
                 pairs = {}
                 if object_hook is not None:
@@ -571,21 +579,18 @@ class CfnJSONDecoder(json.JSONDecoder):
                 )
                 result = object_pairs_hook(pairs, beg_mark, end_mark)
             except DuplicateError as err:
+                errs = []
+                for m in err.duplicates:
+                    errs.append(
+                        build_match_from_key(
+                            message=f'Duplicate found {err}',
+                            key=m,
+                        )
+                    )
                 raise JSONDecodeError(
                     doc=s,
                     pos=end,
-                    errors=[
-                        build_match_from_node(
-                            message=f'Duplicate found {err}',
-                            node=err.mapping,
-                            key=err.key,
-                        ),
-                        build_match(
-                            message=f'Duplicate found {err}',
-                            doc=s,
-                            pos=end,
-                        ),
-                    ],
+                    errors=errs,
                 ) from err
             return result, end
 
