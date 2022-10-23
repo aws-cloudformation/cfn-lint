@@ -37,12 +37,12 @@ class StringSize(CloudFormationLintRule):
 
         if isinstance(value, str) and not re.match(REGEX_DYN_REF, value):
             if not string_min <= len(value) <= string_max:
-                message = 'String has to have length between {0} and {1} at {2}'
+                message = 'String has to have length between {0} and {1} at {2}. Current length {3}.'
                 matches.append(
                     RuleMatch(
                         path,
                         message.format(
-                            string_min, string_max, '/'.join(map(str, path))
+                            string_min, string_max, '/'.join(map(str, path)), len(value)
                         ),
                     )
                 )
