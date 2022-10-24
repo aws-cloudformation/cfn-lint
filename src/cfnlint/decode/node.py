@@ -6,6 +6,8 @@ import logging
 import re
 from copy import deepcopy
 
+import regex as re
+
 LOGGER = logging.getLogger(__name__)
 
 

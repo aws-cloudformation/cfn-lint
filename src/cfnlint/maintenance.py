@@ -7,7 +7,6 @@ import json
 import logging
 import multiprocessing
 import os
-import re
 import subprocess
 import warnings
 import zipfile
@@ -15,6 +14,7 @@ from io import BytesIO
 from urllib.request import Request, urlopen
 
 import jsonpatch
+import regex as re
 
 import cfnlint
 import cfnlint.data.AdditionalSpecs

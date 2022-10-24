@@ -6,6 +6,8 @@ import json
 import re
 from test.unit.rules import BaseRuleTestCase
 
+import regex as re
+
 from cfnlint.data import CloudSpecs
 from cfnlint.helpers import RESOURCE_SPECS, load_resource
 from cfnlint.rules.resources.properties.AllowedPattern import (
