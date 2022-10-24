@@ -11,7 +11,7 @@ import hashlib
 import os
 import datetime
 import logging
-import re
+import regex as re
 import inspect
 import gzip
 from io import BytesIO

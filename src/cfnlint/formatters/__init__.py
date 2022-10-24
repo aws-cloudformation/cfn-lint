@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import json
 import operator
-import re
+import regex as re
 import sys
 from typing import List
 

@@ -2,7 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import re
+import regex as re
 from jsonschema import validate, ValidationError
 from cfnlint.helpers import (
     REGEX_DYN_REF,

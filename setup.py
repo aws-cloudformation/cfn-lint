@@ -50,7 +50,8 @@ that could potentially be improved'),
         'networkx~=2.4',
         'junit-xml~=1.9',
         'jschema_to_python~=1.2.3',
-        'sarif-om~=1.0.4'
+        'sarif-om~=1.0.4',
+        'regex',
     ],
     python_requires='>=3.7, <=4.0, !=4.0',
     entry_points={

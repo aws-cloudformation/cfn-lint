@@ -9,7 +9,7 @@ import multiprocessing
 import os
 import subprocess
 import zipfile
-import re
+import regex as re
 from io import BytesIO
 import warnings
 from urllib.request import urlopen, Request
