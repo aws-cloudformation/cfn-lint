@@ -1,3 +1,12 @@
+### v0.69.0
+###### Features
+- Update decode of yaml/json to report on all duplicates (pull #[2428](https://github.com/aws-cloudformation/cfn-lint/pull/2428))
+###### CloudFormation Specifications
+- Patch in `db.serverless` into `AWS::RDS::DBInstance.DBInstanceClass` (pull #[2430](https://github.com/aws-cloudformation/cfn-lint/pull/2430))
+- Added string max value to `Lambda::Function.Code.Zipfile` (pull #[2431](https://github.com/aws-cloudformation/cfn-lint/pull/2431))
+###### Fixes
+- Don't replace location for resource `AWS::Serverless::Application` in SAM transform when its a string (pull #[2425](https://github.com/aws-cloudformation/cfn-lint/pull/2425))
+
 ### v0.68.1
 ###### CloudFormation Specifications
 - Patch in `db.serverless` into `AWS::RDS::DBInstance.DBInstanceClass` (pull #[2424](https://github.com/aws-cloudformation/cfn-lint/pull/2424))

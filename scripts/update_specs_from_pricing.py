@@ -163,7 +163,7 @@ def get_rds_pricing():
                 if product.get('productFamily') in ['Database Instance']:
                     # Get overall instance types
                     if not results.get(region_map[product.get('attributes').get('location')]):
-                        results[region_map[product.get('attributes').get('location')]] = set()
+                        results[region_map[product.get('attributes').get('location')]] = set(['db.serverless'])
                     results[region_map[product.get('attributes').get('location')]].add(
                         product.get('attributes').get('instanceType')
                     )
@@ -178,7 +178,10 @@ def get_rds_pricing():
                         if not rds_specs.get(license_name).get(product_name):
                             rds_specs[license_name][product_name] = {}
                         if not rds_specs.get(license_name).get(product_name).get(product_region):
-                            rds_specs[license_name][product_name][product_region] = set(['db.serverless'])
+                            if license_name == 'general-public-license' and product_name in ['aurora-mysql', 'aurora-postgresql']:
+                                rds_specs[license_name][product_name][product_region] = set(['db.serverless'])
+                            else:
+                                rds_specs[license_name][product_name][product_region] = set()
 
                         rds_specs[license_name][product_name][product_region].add(instance_type)
 
