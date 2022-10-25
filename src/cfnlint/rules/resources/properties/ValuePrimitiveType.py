@@ -170,7 +170,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                                 matches.append(
                                     RuleMatch(
                                         path,
-                                        f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value for {primitive_type}',
+                                        f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value of type [{primitive_type}]',
                                     )
                                 )
                             else:
@@ -179,7 +179,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
                                         matches.append(
                                             RuleMatch(
                                                 path,
-                                                f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value for {primitive_type}',
+                                                f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value of type [{primitive_type}]',
                                             )
                                         )
         else:
