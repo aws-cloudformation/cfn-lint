@@ -444,18 +444,6 @@
     "aws:TagKeys"
    ]
   },
-  "AWS App2Container": {
-   "ARNFormat": "arn:${Partition}:a2c:${Region}:${Account}:${ResourceType}/${ResourceName}",
-   "ARNRegex": "^arn:${Partition}:a2c:.+:.+:.+",
-   "Actions": [
-    "GetContainerizationJobDetails",
-    "GetDeploymentJobDetails",
-    "StartContainerizationJob",
-    "StartDeploymentJob"
-   ],
-   "HasResource": false,
-   "StringPrefix": "a2c"
-  },
   "AWS AppConfig": {
    "ARNFormat": "arn:aws:appconfig:${Region}:${Account}:${RelativeId}",
    "ARNRegex": "^arn:aws:appconfig:.+",
@@ -984,6 +972,11 @@
     "batch:AWSLogsGroup",
     "batch:AWSLogsRegion",
     "batch:AWSLogsStreamPrefix",
+    "batch:EKSImage",
+    "batch:EKSPrivileged",
+    "batch:EKSRunAsGroup",
+    "batch:EKSRunAsUser",
+    "batch:EKSServiceAccountName",
     "batch:Image",
     "batch:LogDriver",
     "batch:Privileged",
@@ -2972,7 +2965,7 @@
    ]
   },
   "AWS Elemental Appliances and Software": {
-   "ARNFormat": "arn:aws:elemental-appliances-software:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:aws:elemental-appliances-software:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:elemental-appliances-software:.+:.+:.+",
    "Actions": [
     "CreateQuote",
@@ -3320,6 +3313,28 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
    ]
+  },
+  "AWS Elemental Support Cases": {
+   "ARNFormat": "arn:${Partition}:elemental-support-cases:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:${Partition}:elemental-support-cases:.+:.+:.+",
+   "Actions": [
+    "CheckCasePermission",
+    "CreateCase",
+    "GetCase",
+    "GetCases",
+    "UpdateCase"
+   ],
+   "HasResource": false,
+   "StringPrefix": "elemental-support-cases"
+  },
+  "AWS Elemental Support Content": {
+   "ARNFormat": "arn:${Partition}:elemental-support-content:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:${Partition}:elemental-support-content:.+:.+:.+",
+   "Actions": [
+    "Query"
+   ],
+   "HasResource": false,
+   "StringPrefix": "elemental-support-content"
   },
   "AWS Fault Injection Simulator": {
    "ARNFormat": "arn:aws:fis:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -6232,7 +6247,7 @@
     "UpdateSiteAddress",
     "UpdateSiteRackPhysicalProperties"
    ],
-   "HasResource": false,
+   "HasResource": true,
    "StringPrefix": "outposts"
   },
   "AWS Panorama": {
@@ -7809,9 +7824,9 @@
    "Actions": [
     "CreateQuery",
     "ExtendQuery",
-    "GetExtensionAccounts",
     "GetQueryAnswer",
-    "GetQueryExplanation"
+    "GetQueryExplanation",
+    "GetQueryExtensionAccounts"
    ],
    "HasResource": false,
    "StringPrefix": "tiros"
@@ -16309,6 +16324,7 @@
     "ListHyperParameterTuningJobs",
     "ListImageVersions",
     "ListImages",
+    "ListInferenceRecommendationsJobSteps",
     "ListInferenceRecommendationsJobs",
     "ListLabelingJobs",
     "ListLabelingJobsForWorkteam",
@@ -17398,28 +17414,6 @@
     "aws:TagKeys",
     "elasticloadbalancing:ResourceTag/${TagKey}"
    ]
-  },
-  "Elemental Support Cases": {
-   "ARNFormat": "arn:aws:elemental-support-cases:<region>:<account-id>:<resource-type>/<resource_name>",
-   "ARNRegex": "^arn:aws:elemental-support-cases:.+:.+:.+",
-   "Actions": [
-    "CheckCasePermission",
-    "CreateCase",
-    "GetCase",
-    "GetCases",
-    "UpdateCase"
-   ],
-   "HasResource": false,
-   "StringPrefix": "elemental-support-cases"
-  },
-  "Elemental Support Content": {
-   "ARNFormat": "arn:aws:elemental-support-content:<region>:<account-id>:<resource-type>/<resource_name>",
-   "ARNRegex": "^arn:aws:elemental-support-content:.+:.+:.+",
-   "Actions": [
-    "Query"
-   ],
-   "HasResource": false,
-   "StringPrefix": "elemental-support-content"
   },
   "High-volume outbound communications": {
    "ARNFormat": "arn:aws:connect-campaigns:${Region}:${Account}:campaign/${CampaignId}",
