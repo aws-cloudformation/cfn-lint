@@ -162,6 +162,26 @@ class ValuePrimitiveType(CloudFormationLintRule):
                                 strict_check,
                             )
                         )
+                    else:
+                        # types that represent a singular value (not json)
+                        cfnlint.helpers.FUNCTIONS_SINGLE.sort()
+                        if primitive_type in ['String', 'Boolean', 'Integer', 'Double']:
+                            if len(map_value) != 1:
+                                matches.append(
+                                    RuleMatch(
+                                        path,
+                                        f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value of type [{primitive_type}]',
+                                    )
+                                )
+                            else:
+                                for k in map_value.keys():
+                                    if k not in cfnlint.helpers.FUNCTIONS_SINGLE:
+                                        matches.append(
+                                            RuleMatch(
+                                                path,
+                                                f'Use a valid function [{", ".join(cfnlint.helpers.FUNCTIONS_SINGLE)}] when providing a value of type [{primitive_type}]',
+                                            )
+                                        )
         else:
             # some properties support primitive types and objects
             # skip in the case it could be an object and the value is a object
