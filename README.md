@@ -301,11 +301,20 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 
 ```yaml
 repos:
-- repo: https://github.com/aws-cloudformation/cfn-python-lint
+- repo: https://github.com/aws-cloudformation/cfn-lint
   rev: v0.69.1  # The version of cfn-lint to use
   hooks:
-    - id: cfn-python-lint
+    - id: cfn-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
+```
+
+if you are using a `.cfnlintrc` and specifying the `templates` section we recommend using
+```yaml
+repos:
+- repo: https://github.com/aws-cloudformation/cfn-lint
+  rev: v0.69.1  # The version of cfn-lint to use
+  hooks:
+    - id: cfn-lint-rc
 ```
 
 * If you exclude the `files:` line above, every json/yml/yaml file will be checked.
