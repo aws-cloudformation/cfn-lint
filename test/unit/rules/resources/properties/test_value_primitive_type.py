@@ -104,3 +104,42 @@ class TestResourceValuePrimitiveTypeNonStrict(BaseRuleTestCase):
         self.assertEqual(len(self.rule._value_check(1, ['test'], 'Unknown', False, {})), 0)
         self.assertEqual(len(self.rule._value_check('1', ['test'], 'Unknown', False, {})), 0)
         self.assertEqual(len(self.rule._value_check(True, ['test'], 'Unknown', False, {})), 0)
+
+class TestResourceValuePrimitiveTypeCheckValue(BaseRuleTestCase):
+    """Test Check Value for maps"""
+
+    def setUp(self):
+        """Setup"""
+        self.rule = ValuePrimitiveType()
+        self.rule.config['strict'] = False
+
+    def test_file_check_value_good_function(self):
+        results = self.rule.check_value({'key': {'Ref': ['Parameter']}}, [], primitive_type='String', item_type='Map')
+        self.assertEqual(len(results), 0)
+    
+    def test_file_check_value_is_string(self):
+        results = self.rule.check_value({'key': 1}, [], primitive_type='Integer', item_type='Map')
+        self.assertEqual(len(results), 0)
+
+    def test_file_check_value_is_json(self):
+        results = self.rule.check_value({'key': {}}, [], primitive_type='Json', item_type='Map')
+        self.assertEqual(len(results), 0)
+
+    def test_file_check_value_bad_function(self):
+        results = self.rule.check_value({'key': {'Func': ['Parameter']}}, [], primitive_type='Boolean', item_type='Map')
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].message, 'Use a valid function [Fn::Base64, Fn::Cidr, Fn::Contains, '
+            'Fn::FindInMap, Fn::GetAtt, Fn::If, Fn::ImportValue, Fn::Join, Fn::Length, '
+            'Fn::Select, Fn::Sub, Fn::ToJsonString, Ref] when '
+            'providing a value of type [Boolean]')
+    
+    def test_file_check_value_bad_object(self):
+        results = self.rule.check_value({'key': {'Func': ['Parameter'], 'Func2': ['Parameter']}}, [], primitive_type='String', item_type='Map')
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].message, 'Use a valid function [Fn::Base64, Fn::Cidr, Fn::Contains, '
+            'Fn::FindInMap, Fn::GetAtt, Fn::If, Fn::ImportValue, Fn::Join, Fn::Length, '
+            'Fn::Select, Fn::Sub, Fn::ToJsonString, Ref] when '
+            'providing a value of type [String]')
+    
+
+
