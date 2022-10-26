@@ -23,14 +23,10 @@ class EqualsIsUseful(CloudFormationLintRule):
 
         if json.dumps(values[0]) == json.dumps(values[1]):
             message = self.function + ' element will alway return true'
-            matches.append(
-                RuleMatch(path, message)
-            )
+            matches.append(RuleMatch(path, message))
         elif isinstance(values[0], str) and isinstance(values[1], str):
             message = self.function + ' element will alway return false'
-            matches.append(
-                RuleMatch(path, message)
-            )
+            matches.append(RuleMatch(path, message))
         return matches
 
     def match(self, cfn):
@@ -43,8 +39,6 @@ class EqualsIsUseful(CloudFormationLintRule):
             if tree[0] == 'Conditions':
                 value = tree[-1]
                 if isinstance(value, list) and len(value) == 2:
-                    matches.extend(self._check_equal_values(
-                        value, tree[:-1]
-                    ))
+                    matches.extend(self._check_equal_values(value, tree[:-1]))
 
         return matches
