@@ -36550,6 +36550,20 @@
     }
    }
   },
+  "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html",
+   "Properties": {
+    "ConsumerGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig-consumergroupid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId"
+     }
+    }
+   }
+  },
   "AWS::Lambda::EventSourceMapping.DestinationConfig": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-destinationconfig.html",
    "Properties": {
@@ -36629,6 +36643,20 @@
     }
    }
   },
+  "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html",
+   "Properties": {
+    "ConsumerGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig-consumergroupid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId"
+     }
+    }
+   }
+  },
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-sourceaccessconfiguration.html",
    "Properties": {
@@ -36692,10 +36720,7 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-code.html#cfn-lambda-function-code-zipfile",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::Function.Code.ZipFile"
-     }
+     "UpdateType": "Mutable"
     }
    }
   },
@@ -48541,6 +48566,12 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-acmpca-certificateauthority.html#cfn-acmpca-certificateauthority-type",
      "PrimitiveType": "String",
      "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "UsageMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-acmpca-certificateauthority.html#cfn-acmpca-certificateauthority-usagemode",
+     "PrimitiveType": "String",
+     "Required": false,
      "UpdateType": "Immutable"
     }
    }
@@ -69913,6 +69944,12 @@
    },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
    "Properties": {
+    "AmazonManagedKafkaEventSourceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
+     "Required": false,
+     "Type": "AmazonManagedKafkaEventSourceConfig",
+     "UpdateType": "Immutable"
+    },
     "BatchSize": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
      "PrimitiveType": "Integer",
@@ -70026,6 +70063,12 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
      "Required": false,
      "Type": "SelfManagedEventSource",
+     "UpdateType": "Immutable"
+    },
+    "SelfManagedKafkaEventSourceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
+     "Required": false,
+     "Type": "SelfManagedKafkaEventSourceConfig",
      "UpdateType": "Immutable"
     },
     "SourceAccessConfigurations": {
@@ -85351,6 +85394,11 @@
     "Enforce"
    ]
   },
+  "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId": {
+   "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+   "StringMax": 200,
+   "StringMin": 1
+  },
   "AWS::Lambda::EventSourceMapping.BatchSize": {
    "NumberMax": 10000,
    "NumberMin": 1
@@ -85423,6 +85471,11 @@
    "StringMax": 1000,
    "StringMin": 1
   },
+  "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId": {
+   "AllowedPatternRegex": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+   "StringMax": 200,
+   "StringMin": 1
+  },
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.Type": {
    "AllowedValues": [
     "BASIC_AUTH",
@@ -85472,10 +85525,6 @@
   },
   "AWS::Lambda::Function.Code.S3ObjectVersion": {
    "StringMax": 1024,
-   "StringMin": 1
-  },
-  "AWS::Lambda::Function.Code.ZipFile": {
-   "StringMax": 4096,
    "StringMin": 1
   },
   "AWS::Lambda::Function.CodeSigningConfigArn": {
@@ -87032,7 +87081,7 @@
    "StringMin": 1
   },
   "AWS::SSO::PermissionSet.Description": {
-   "AllowedPatternRegex": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A0-\\u00FF]*",
+   "AllowedPatternRegex": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*",
    "StringMax": 700,
    "StringMin": 1
   },
@@ -88450,7 +88499,8 @@
   "AWS::WorkSpaces::Workspace.RunningMode": {
    "AllowedValues": [
     "ALWAYS_ON",
-    "AUTO_STOP"
+    "AUTO_STOP",
+    "MANUAL"
    ]
   },
   "AWS::XRay::Group.GroupName": {

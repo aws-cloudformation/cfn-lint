@@ -1,3 +1,7 @@
+### v0.69.1
+###### CloudFormation Specifications
+- Updated string max value to `Lambda::Function.Code.Zipfile` to 4MB (pull #[2444](https://github.com/aws-cloudformation/cfn-lint/pull/2444))
+
 ### v0.69.0
 ###### Features
 - Update decode of yaml/json to report on all duplicates (pull #[2428](https://github.com/aws-cloudformation/cfn-lint/pull/2428))
