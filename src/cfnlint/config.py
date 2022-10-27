@@ -527,6 +527,13 @@ class CliArgs:
             action='store_true',
             help='Merges lists between configuration layers',
         )
+        standard.add_argument(
+            '--non-zero-exit-code',
+            type=str,
+            default='informational',
+            choices=['informational', 'warning', 'error', 'none'],
+            help='Exit code will be non zero from the specified rule class and higher',
+        )
         advanced.add_argument('--force', help=argparse.SUPPRESS, action='store_true')
 
         return parser
@@ -771,6 +778,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     @property
     def merge_configs(self):
         return self._get_argument_value('merge_configs', True, True)
+
+    @property
+    def non_zero_exit_code(self):
+        return self._get_argument_value('non_zero_exit_code', False, False)
 
     @property
     def force(self):

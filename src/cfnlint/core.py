@@ -6,7 +6,7 @@ import json
 import logging
 import os
 import sys
-from typing import Iterator, Sequence, Optional, Tuple, List
+from typing import Dict, Iterator, Sequence, Optional, Tuple, List
 
 from jsonschema.exceptions import ValidationError
 
@@ -78,15 +78,32 @@ def run_cli(
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
-def get_exit_code(matches: Matches) -> int:
+def get_exit_code(matches: Matches, exit_level: str = 'informational') -> int:
     """Determine exit code"""
+
+    exit_levels: Dict[str, List[str]] = {
+        'informational': ['informational', 'warning', 'error'],
+        'warning': ['warning', 'error'],
+        'error': ['error'],
+        'none': [],
+    }
+
     exit_code = 0
     for match in matches:
-        if match.rule.severity == 'informational':
+        if (
+            match.rule.severity == 'informational'
+            and match.rule.severity in exit_levels[exit_level]
+        ):
             exit_code = exit_code | 8
-        elif match.rule.severity == 'warning':
+        elif (
+            match.rule.severity == 'warning'
+            and match.rule.severity in exit_levels[exit_level]
+        ):
             exit_code = exit_code | 4
-        elif match.rule.severity == 'error':
+        elif (
+            match.rule.severity == 'error'
+            and match.rule.severity in exit_levels[exit_level]
+        ):
             exit_code = exit_code | 2
 
     return exit_code
