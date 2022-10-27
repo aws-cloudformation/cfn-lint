@@ -20,6 +20,18 @@ conditions, and nesting those functions inside each other) so it's a best effort
 validate those values but the promise is to not fail if we can't understand or translate
 all the things that could be going on.
 
+## Contribute
+
+We encourage you to contribute to `cfn-lint`! Please check out the [Contributing Guidelines](https://github.com/aws-cloudformation/cfn-lint/blob/main/CONTRIBUTING.md) for more information on how to proceed.
+
+## Community
+
+Join us on Discord! Connect & interact with CloudFormation developers &
+experts, find channels to discuss and get help for cfn-lint, CloudFormation registry, StackSets,
+Guard and more:
+
+[![Join our Discord](https://discordapp.com/api/guilds/981586120448020580/widget.png?style=banner3)](https://discord.gg/9zpd7TTRwq)
+
 #### Serverless Application Model
 
 The Serverless Application Model (SAM) is supported by the linter. The template is
