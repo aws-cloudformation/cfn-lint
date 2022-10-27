@@ -78,9 +78,9 @@ class Configuration(CloudFormationLintRule):
             },
         },
         'primitive_types': {
-            'String': str,
-            'Integer': int,
-            'Boolean': bool,
+            'String': (str, int, bool, float),
+            'Integer': (int, str),
+            'Boolean': (bool, str),
             'List': list,
         },
     }
