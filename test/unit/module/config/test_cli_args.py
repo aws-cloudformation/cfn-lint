@@ -2,7 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from argparse import ArgumentError
 import logging
+import os
+from unittest.mock import patch
 from test.testlib.testcase import BaseTestCase
 import cfnlint.config  # pylint: disable=E0401
 
@@ -88,3 +91,18 @@ class TestArgsParser(BaseTestCase):
             ['-x', 'E3012:strict=true', '-x', 'E3012:key=value,E3001:key=value'])
         self.assertEqual(config.cli_args.configure_rules, {
                          'E3012': {'key': 'value', 'strict': 'true'}, 'E3001': {'key': 'value'}})
+
+    def test_exit_code_parameter(self):
+        """Test values of exit code"""
+
+        for param in ['informational', 'warning', 'error']:
+            with self.subTest():
+                config = cfnlint.config.CliArgs(['--non-zero-exit-code', param])
+                self.assertEqual(config.cli_args.non_zero_exit_code, param )
+    
+    def test_exit_code_parameter_error(self):
+        """Test result when bad value provided"""
+        with open(os.devnull, 'w') as devnull:
+            with patch('sys.stderr', devnull):
+                with self.assertRaises(SystemExit):
+                    cfnlint.config.CliArgs(['--non-zero-exit-code', 'bad'])
