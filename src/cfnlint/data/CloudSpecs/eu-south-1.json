@@ -2254,6 +2254,7 @@
     },
     "AllowHeaders": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-api-cors.html#cfn-apigatewayv2-api-cors-allowheaders",
+     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
@@ -2261,6 +2262,7 @@
     },
     "AllowMethods": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-api-cors.html#cfn-apigatewayv2-api-cors-allowmethods",
+     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
@@ -2268,6 +2270,7 @@
     },
     "AllowOrigins": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-api-cors.html#cfn-apigatewayv2-api-cors-alloworigins",
+     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
@@ -2275,6 +2278,7 @@
     },
     "ExposeHeaders": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-api-cors.html#cfn-apigatewayv2-api-cors-exposeheaders",
+     "DuplicatesAllowed": true,
      "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
@@ -23825,7 +23829,7 @@
     "Image": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-image",
      "PrimitiveType": "String",
-     "Required": false,
+     "Required": true,
      "UpdateType": "Immutable"
     },
     "Interactive": {
@@ -23877,7 +23881,7 @@
     "Name": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-name",
      "PrimitiveType": "String",
-     "Required": false,
+     "Required": true,
      "UpdateType": "Immutable"
     },
     "PortMappings": {
@@ -29456,6 +29460,53 @@
      "Value": {
       "ValueType": "AWS::FMS::Policy.ThirdPartyFirewallPolicy.FirewallDeploymentModel"
      }
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoexportpolicy.html",
+   "Properties": {
+    "Events": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoexportpolicy.html#cfn-fsx-datarepositoryassociation-autoexportpolicy-events",
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events"
+     }
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoimportpolicy.html",
+   "Properties": {
+    "Events": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoimportpolicy.html#cfn-fsx-datarepositoryassociation-autoimportpolicy-events",
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events"
+     }
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.S3": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html",
+   "Properties": {
+    "AutoExportPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html#cfn-fsx-datarepositoryassociation-s3-autoexportpolicy",
+     "Required": false,
+     "Type": "AutoExportPolicy",
+     "UpdateType": "Mutable"
+    },
+    "AutoImportPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html#cfn-fsx-datarepositoryassociation-s3-autoimportpolicy",
+     "Required": false,
+     "Type": "AutoImportPolicy",
+     "UpdateType": "Mutable"
     }
    }
   },
@@ -48451,7 +48502,7 @@
    }
   }
  },
- "ResourceSpecificationVersion": "94.0.0",
+ "ResourceSpecificationVersion": "95.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": {
    "Attributes": {
@@ -50207,6 +50258,9 @@
    "Attributes": {
     "ApiEndpoint": {
      "PrimitiveType": "String"
+    },
+    "ApiId": {
+     "PrimitiveType": "String"
     }
    },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html",
@@ -50297,8 +50351,9 @@
     },
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-api.html#cfn-apigatewayv2-api-tags",
-     "PrimitiveType": "Json",
+     "PrimitiveItemType": "String",
      "Required": false,
+     "Type": "Map",
      "UpdateType": "Mutable"
     },
     "Target": {
@@ -52974,52 +53029,57 @@
    }
   },
   "AWS::AutoScaling::ScheduledAction": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html",
+   "Attributes": {
+    "ScheduledActionName": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html",
    "Properties": {
     "AutoScalingGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-asgname",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-autoscalinggroupname",
      "PrimitiveType": "String",
      "Required": true,
      "UpdateType": "Immutable"
     },
     "DesiredCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-desiredcapacity",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-desiredcapacity",
      "PrimitiveType": "Integer",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "EndTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-endtime",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-endtime",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "MaxSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-maxsize",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-maxsize",
      "PrimitiveType": "Integer",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "MinSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-minsize",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-minsize",
      "PrimitiveType": "Integer",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "Recurrence": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-recurrence",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-recurrence",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "StartTime": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-starttime",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-starttime",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable"
     },
     "TimeZone": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-as-scheduledaction.html#cfn-as-scheduledaction-timezone",
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-scheduledaction.html#cfn-autoscaling-scheduledaction-timezone",
      "PrimitiveType": "String",
      "Required": false,
      "UpdateType": "Mutable"
@@ -64788,11 +64848,6 @@
    }
   },
   "AWS::ElastiCache::SubnetGroup": {
-   "Attributes": {
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticache-subnetgroup.html",
    "Properties": {
     "CacheSubnetGroupName": {
@@ -66193,6 +66248,63 @@
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fms-policy.html#cfn-fms-policy-tags",
      "ItemType": "PolicyTag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation": {
+   "Attributes": {
+    "AssociationId": {
+     "PrimitiveType": "String"
+    },
+    "ResourceARN": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html",
+   "Properties": {
+    "BatchImportMetaDataOnCreate": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-batchimportmetadataoncreate",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DataRepositoryPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-datarepositorypath",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FileSystemId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-filesystemid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FileSystemPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-filesystempath",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ImportedFileChunkSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-importedfilechunksize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "S3": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-s3",
+     "Required": false,
+     "Type": "S3",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
      "Required": false,
      "Type": "List",
      "UpdateType": "Mutable"
@@ -83914,6 +84026,20 @@
    "AllowedValues": [
     "DISTRIBUTED",
     "CENTRALIZED"
+   ]
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events": {
+   "AllowedValues": [
+    "NEW",
+    "CHANGED",
+    "DELETED"
+   ]
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events": {
+   "AllowedValues": [
+    "NEW",
+    "CHANGED",
+    "DELETED"
    ]
   },
   "AWS::FSx::FileSystem.StorageCapacity": {
