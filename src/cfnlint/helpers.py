@@ -18,7 +18,9 @@ from io import BytesIO
 from typing import Dict, List
 import importlib.resources as pkg_resources
 import importlib
+import zipfile
 from urllib.request import urlopen, Request
+import importlib_resources
 from cfnlint.decode.node import dict_node, list_node, str_node
 from cfnlint.data import CloudSpecs
 
@@ -435,8 +437,11 @@ def bool_compare(first, second):
 
 def initialize_specs():
     """Reload Resource Specs"""
-    for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=(f'{reg}.json'))
+    source = importlib_resources.files(CloudSpecs).joinpath('specs.zip')
+    with importlib_resources.as_file(source) as spec_file:
+        with zipfile.ZipFile(spec_file) as zip_content:
+            for reg in REGIONS:
+                RESOURCE_SPECS[reg] = json.loads(zip_content.read(f'{reg}.json'))
 
 
 initialize_specs()
