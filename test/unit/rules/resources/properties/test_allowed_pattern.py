@@ -6,7 +6,7 @@ import re
 import json
 from test.unit.rules import BaseRuleTestCase
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern  # pylint: disable=E0401
-from cfnlint.helpers import load_resource
+from cfnlint.helpers import load_resource, RESOURCE_SPECS
 from cfnlint.data import CloudSpecs
 
 
@@ -21,7 +21,7 @@ class TestAllowedPattern(BaseRuleTestCase):
             'test/fixtures/templates/good/resources/properties/allowed_pattern.yaml'
         ]
 
-        self.spec = load_resource(CloudSpecs, 'us-east-1.json')
+        self.spec = RESOURCE_SPECS['us-east-1']
 
     def test_file_positive(self):
         """Test Positive"""

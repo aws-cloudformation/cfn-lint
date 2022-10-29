@@ -10,6 +10,7 @@ import jsonschema
 
 import cfnlint.formatters
 import cfnlint.helpers
+import cfnlint.core
 
 
 class TestFormatters(BaseTestCase):

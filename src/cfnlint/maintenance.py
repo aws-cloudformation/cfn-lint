@@ -10,6 +10,7 @@ import os
 import subprocess
 import zipfile
 import re
+import filecmp
 from io import BytesIO
 import warnings
 from urllib.request import urlopen, Request
@@ -32,11 +33,14 @@ def update_resource_specs(force: bool = False):
     # Pool() only implements the Context Manager protocol from Python3.3 onwards,
     # so it will fail Python2.7 style linting, as well as throw AttributeError
     schema_cache = get_schema_value_types()
+
+    # pre-work us-east-1 for comparison later
+    update_resource_spec('us-east-1', SPEC_REGIONS['us-east-1'], schema_cache, force)
     try:
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             # Patch from registry schema
-            pool_tuple = [(k, v, schema_cache, force) for k, v in SPEC_REGIONS.items()]
+            pool_tuple = [(k, v, schema_cache, force) for k, v in SPEC_REGIONS.items() if k != 'us-east-1']
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
 
@@ -144,7 +148,58 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
 
     spec = search_and_replace_botocore_types(spec)
 
+    directory_us_east_1 = os.path.join(
+        os.path.dirname(cfnlint.__file__), 'data/CloudSpecs/us-east-1/'
+    )
+    directory = os.path.join(
+        os.path.dirname(cfnlint.__file__), f'data/CloudSpecs/{region}/'
+    )
+    for f in os.listdir(directory):
+        if f not in ['__pycache__', '__init__.py']:
+            os.remove(os.path.join(directory, f))
+    for resource_name, resource_def in spec.get('ResourceTypes', {}).items():
+        friendly_name = resource_name.replace('::', '_')
+        resource_filename = os.path.join(directory, f'{friendly_name}.json')
+        resource_us_east_1_filename = os.path.join(directory_us_east_1, f'{friendly_name}.json')
+        with open(resource_filename, 'w', encoding='utf-8') as f:
+            property_types = {k: v for k, v in spec.get('PropertyTypes', {}).items() if k.startswith(resource_name)}
+            json.dump({'ResourceTypes': resource_def, 'PropertyTypes': property_types}, f, indent=1, sort_keys=True, separators=(',', ': '))
+        if region != 'us-east-1':
+            try:
+                if filecmp.cmp(resource_filename, resource_us_east_1_filename):
+                    os.remove(resource_filename)
+            except Exception as e:  # pylint: disable=broad-except
+                # Exceptions will typically be the file doesn't exist in us-east-1
+                multiprocessing_logger.debug(
+                    'Issuing comparing %s into %s: %s',
+                    resource_filename,
+                    resource_us_east_1_filename,
+                    e,
+                )
+    
     with open(filename, 'w', encoding='utf-8') as f:
+        # Tag is a one off PropertyType
+        spec['PropertyTypes'] = {
+            "Tag": {
+                "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html",
+                "Properties": {
+                    "Key": {
+                    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html#cfn-resource-tags-key",
+                    "PrimitiveType": "String",
+                    "Required": True,
+                    "UpdateType": "Mutable"
+                    },
+                    "Value": {
+                    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html#cfn-resource-tags-value",
+                    "PrimitiveType": "String",
+                    "Required": True,
+                    "UpdateType": "Mutable"
+                    }
+                }
+            }
+        }
+        spec['ResourceNames'] = sorted(list(spec.get('ResourceTypes').keys()))
+        spec['ResourceTypes'] = {}
         json.dump(spec, f, indent=1, sort_keys=True, separators=(',', ': '))
 
 
