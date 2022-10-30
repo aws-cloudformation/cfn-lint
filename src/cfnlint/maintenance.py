@@ -10,7 +10,6 @@ import os
 import subprocess
 import zipfile
 import re
-import filecmp
 from io import BytesIO
 import warnings
 from urllib.request import urlopen, Request
@@ -40,7 +39,11 @@ def update_resource_specs(force: bool = False):
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             # Patch from registry schema
-            pool_tuple = [(k, v, schema_cache, force) for k, v in SPEC_REGIONS.items() if k != 'us-east-1']
+            pool_tuple = [
+                (k, v, schema_cache, force)
+                for k, v in SPEC_REGIONS.items()
+                if k != 'us-east-1'
+            ]
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
 
@@ -151,15 +154,17 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
 
     if region != 'us-east-1':
         base_specs = cfnlint.helpers.load_resource(
-            f'cfnlint.data.CloudSpecs', 'us-east-1.json'
+            'cfnlint.data.CloudSpecs', 'us-east-1.json'
         )
         for section, section_values in spec.items():
             if section in ['ResourceTypes', 'PropertyTypes', 'ValueTypes']:
                 for key, value in section_values.items():
                     base_value = base_specs.get(section, {}).get(key, {})
-                    if json.dumps(value, sort_keys=True) == json.dumps(base_value, sort_keys=True):
+                    if json.dumps(value, sort_keys=True) == json.dumps(
+                        base_value, sort_keys=True
+                    ):
                         spec[section][key] = 'CACHED'
-    
+
     with open(filename, 'w', encoding='utf-8') as f:
         json.dump(spec, f, indent=1, sort_keys=True, separators=(',', ': '))
 

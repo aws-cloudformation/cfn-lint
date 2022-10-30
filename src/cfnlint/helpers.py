@@ -435,10 +435,10 @@ def bool_compare(first, second):
 
 def initialize_specs():
     """Reload Resource Specs"""
-   
+
     def load_region(region):
         spec = load_resource(CloudSpecs, filename=(f'{region}.json'))
-       
+
         for section, section_values in spec.items():
             if section in ['ResourceTypes', 'PropertyTypes', 'ValueTypes']:
                 for key, value in section_values.items():
