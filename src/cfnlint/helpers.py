@@ -435,49 +435,21 @@ def bool_compare(first, second):
 
 def initialize_specs():
     """Reload Resource Specs"""
-
-    _cache = {}
-    def _load_cache():
-        # used to reduce the amount of times we read from disk.  These resources
-        # are used by nearly all specs so lets read once and re-use
-        directory = os.path.join(
-            os.path
-            .dirname(__file__), 'data/CloudSpecs/us-east-1/'
-        )
-        for f in os.listdir(directory):
-            if f not in ['__pycache__', '__init__.py']:
-                resource_name = f.replace('_', '::').replace('.json','')
-                resource_spec = json.loads(pkg_resources.read_text(f'cfnlint.data.CloudSpecs.us-east-1', f, encoding='utf-8'))
-                _cache[resource_name] = resource_spec
-    
+   
     def load_region(region):
         spec = load_resource(CloudSpecs, filename=(f'{region}.json'))
-        directory = os.path.join(
-            os.path
-            .dirname(__file__), f'data/CloudSpecs/{region}/'
-        )
-        for resource_name in spec.get('ResourceNames', []):
-            friendly_name = f'{resource_name.replace("::", "_")}.json'
-            # region us-east-1 is already cached so don't check for files
-            if region != 'us-east-1':
-                # if a file exists for the region use that over the cache
-                if os.path.exists(os.path.join(directory, friendly_name)):
-                    resource_spec = json.loads(pkg_resources.read_text(f'cfnlint.data.CloudSpecs.{region}', friendly_name, encoding='utf-8'))
-                else:
-                    resource_spec = _cache.get(resource_name)
-            else:
-                resource_spec = _cache.get(resource_name)
-            
-            spec['ResourceTypes'][resource_name] = resource_spec.get('ResourceTypes')
-            for property_name, property_value in resource_spec.get('PropertyTypes').items():
-                spec['PropertyTypes'][property_name] = property_value
-
-        spec.pop('ResourceNames')
+       
+        for section, section_values in spec.items():
+            if section in ['ResourceTypes', 'PropertyTypes', 'ValueTypes']:
+                for key, value in section_values.items():
+                    if value == 'CACHED':
+                        spec[section][key] = RESOURCE_SPECS['us-east-1'][section][key]
         return spec
 
-    _load_cache()
+    RESOURCE_SPECS['us-east-1'] = load_region('us-east-1')
     for region in REGIONS:
-        RESOURCE_SPECS[region] = load_region(region)
+        if region != 'us-east-1':
+            RESOURCE_SPECS[region] = load_region(region)
 
 
 initialize_specs()
