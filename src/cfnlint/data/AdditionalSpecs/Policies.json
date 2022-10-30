@@ -47,6 +47,7 @@
   "aws:TagKeys",
   "aws:TokenIssueTime",
   "aws:UserAgent",
+  "aws:ViaAWSService",
   "aws:userid",
   "aws:username"
  ],
@@ -443,6 +444,18 @@
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
    ]
+  },
+  "AWS App2Container": {
+   "ARNFormat": "arn:${Partition}:a2c:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:${Partition}:a2c:.+:.+:.+",
+   "Actions": [
+    "GetContainerizationJobDetails",
+    "GetDeploymentJobDetails",
+    "StartContainerizationJob",
+    "StartDeploymentJob"
+   ],
+   "HasResource": false,
+   "StringPrefix": "a2c"
   },
   "AWS AppConfig": {
    "ARNFormat": "arn:aws:appconfig:${Region}:${Account}:${RelativeId}",
@@ -1494,18 +1507,25 @@
   },
   "AWS CloudWatch RUM": {
    "ARNFormat": "arn:aws:rum:${Region}:${Account}:appmonitor/${Name}",
-   "ARNRegex": "^arn:aws:rum:${Region}:${Account}:appmonitor/.+?",
+   "ARNRegex": "^arn:aws:rum:.+:.+:.+",
    "Actions": [
+    "BatchCreateRumMetricDefinitions",
+    "BatchDeleteRumMetricDefinitions",
+    "BatchGetRumMetricDefinitions",
     "CreateAppMonitor",
     "DeleteAppMonitor",
+    "DeleteRumMetricsDestination",
     "GetAppMonitor",
     "GetAppMonitorData",
     "ListAppMonitors",
+    "ListRumMetricsDestinations",
     "ListTagsForResource",
     "PutRumEvents",
+    "PutRumMetricsDestination",
     "TagResource",
     "UntagResource",
-    "UpdateAppMonitor"
+    "UpdateAppMonitor",
+    "UpdateRumMetricDefinition"
    ],
    "HasResource": true,
    "StringPrefix": "rum",
@@ -13846,7 +13866,8 @@
     "UpdateConfiguration",
     "UpdateConnectivity",
     "UpdateMonitoring",
-    "UpdateSecurity"
+    "UpdateSecurity",
+    "UpdateStorage"
    ],
    "HasResource": true,
    "StringPrefix": "kafka",
@@ -16466,6 +16487,7 @@
    "Actions": [
     "CreateProject",
     "DeleteProject",
+    "GetAccountDetails",
     "GetBatch",
     "GetProject",
     "ListBatchDataTransfers",

@@ -2504,6 +2504,30 @@
     }
    }
   },
+  "AWS::AppFlow::ConnectorProfile.CredentialsMap": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-customauthcredentials.html#cfn-appflow-connectorprofile-customauthcredentials-credentialsmap",
+   "PrimitiveType": "Json",
+   "Required": false,
+   "UpdateType": "Mutable"
+  },
+  "AWS::AppFlow::ConnectorProfile.ProfileProperties": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-profileproperties.html",
+   "PrimitiveType": "Json",
+   "Required": false,
+   "UpdateType": "Mutable"
+  },
+  "AWS::AppFlow::ConnectorProfile.TokenUrlCustomProperties": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-connectorprofile-tokenurlcustomproperties.html",
+   "PrimitiveType": "Json",
+   "Required": false,
+   "UpdateType": "Mutable"
+  },
+  "AWS::AppFlow::Flow.CustomProperties": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-appflow-flow-customproperties.html",
+   "PrimitiveType": "Json",
+   "Required": false,
+   "UpdateType": "Mutable"
+  },
   "AWS::ApplicationAutoScaling::ScalableTarget.ScalableTargetAction": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scalabletargetaction.html",
    "Properties": {
@@ -15137,7 +15161,7 @@
     "Image": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-image",
      "PrimitiveType": "String",
-     "Required": false,
+     "Required": true,
      "UpdateType": "Immutable"
     },
     "Interactive": {
@@ -15189,7 +15213,7 @@
     "Name": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions.html#cfn-ecs-taskdefinition-containerdefinition-name",
      "PrimitiveType": "String",
-     "Required": false,
+     "Required": true,
      "UpdateType": "Immutable"
     },
     "PortMappings": {
@@ -20490,6 +20514,53 @@
      "PrimitiveItemType": "String",
      "Required": true,
      "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoexportpolicy.html",
+   "Properties": {
+    "Events": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoexportpolicy.html#cfn-fsx-datarepositoryassociation-autoexportpolicy-events",
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events"
+     }
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoimportpolicy.html",
+   "Properties": {
+    "Events": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-autoimportpolicy.html#cfn-fsx-datarepositoryassociation-autoimportpolicy-events",
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events"
+     }
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation.S3": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html",
+   "Properties": {
+    "AutoExportPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html#cfn-fsx-datarepositoryassociation-s3-autoexportpolicy",
+     "Required": false,
+     "Type": "AutoExportPolicy",
+     "UpdateType": "Mutable"
+    },
+    "AutoImportPolicy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-fsx-datarepositoryassociation-s3.html#cfn-fsx-datarepositoryassociation-s3-autoimportpolicy",
+     "Required": false,
+     "Type": "AutoImportPolicy",
      "UpdateType": "Mutable"
     }
    }
@@ -38220,7 +38291,7 @@
    }
   }
  },
- "ResourceSpecificationVersion": "94.0.0",
+ "ResourceSpecificationVersion": "95.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": {
    "Attributes": {
@@ -52077,6 +52148,63 @@
      "ItemType": "ExperimentTemplateTarget",
      "Required": true,
      "Type": "Map",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::FSx::DataRepositoryAssociation": {
+   "Attributes": {
+    "AssociationId": {
+     "PrimitiveType": "String"
+    },
+    "ResourceARN": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html",
+   "Properties": {
+    "BatchImportMetaDataOnCreate": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-batchimportmetadataoncreate",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DataRepositoryPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-datarepositorypath",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FileSystemId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-filesystemid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FileSystemPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-filesystempath",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ImportedFileChunkSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-importedfilechunksize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "S3": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-s3",
+     "Required": false,
+     "Type": "S3",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-fsx-datarepositoryassociation.html#cfn-fsx-datarepositoryassociation-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
      "UpdateType": "Mutable"
     }
    }
@@ -67707,6 +67835,20 @@
   "AWS::FIS::ExperimentTemplate.ExperimentTemplateStopCondition.Value": {
    "StringMax": 2048,
    "StringMin": 20
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events": {
+   "AllowedValues": [
+    "NEW",
+    "CHANGED",
+    "DELETED"
+   ]
+  },
+  "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events": {
+   "AllowedValues": [
+    "NEW",
+    "CHANGED",
+    "DELETED"
+   ]
   },
   "AWS::FSx::FileSystem.StorageCapacity": {
    "NumberMax": 65536,
