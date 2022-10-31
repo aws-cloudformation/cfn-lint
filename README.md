@@ -120,7 +120,7 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 - 14 is an error and a warning and an informational
 
 ###### Configuring Exit Codes
-`cfn-lint` will allow you to configure exit codes. You can provided the parameter `--non-zero-exit-code` with a value of `informational`, `warning`, `error`, or `none`. `cfn-lint` will determine the exit code based on the match severity being the value of the parameter `--non-zero-exit-code` and higher. The exit codes will remain the same as above.
+`cfn-lint` allows you to configure exit codes. You can provide the parameter `--non-zero-exit-code` with a value of `informational`, `warning`, `error`, or `none`. `cfn-lint` will determine the exit code based on the match severity being the value of the parameter `--non-zero-exit-code` and higher. The exit codes will remain the same as above.
 
 The order of severity is as follows:
 1. `informational` *default*
