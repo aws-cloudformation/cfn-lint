@@ -117,22 +117,14 @@ class Configuration(CloudFormationLintRule):
                     elif prim_type in ['Boolean']:
                         if value not in ['True', 'true', 'False', 'false']:
                             matches.append(RuleMatch(path, default_message))
-                    elif prim_type in ['Integer', 'Long', 'Double']:
+                    else:  # has to be integer
                         if isinstance(value, bool):
                             matches.append(RuleMatch(path, default_message))
-                        elif prim_type in ['Integer']:
-                            if isinstance(value, float):
-                                if not value.is_integer():
-                                    matches.append(RuleMatch(path, default_message))
-                            else:
-                                int(value)
-                        elif prim_type in ['Long']:
-                            # Some times python will strip the decimals when doing a conversion
-                            if isinstance(value, float):
+                        if isinstance(value, float):
+                            if not value.is_integer():
                                 matches.append(RuleMatch(path, default_message))
+                        else:
                             int(value)
-                        else:  # has to be a Double
-                            float(value)
                 except Exception:  # pylint: disable=W0703
                     matches.append(RuleMatch(path, default_message))
 
