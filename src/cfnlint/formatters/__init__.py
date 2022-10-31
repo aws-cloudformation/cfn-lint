@@ -92,6 +92,10 @@ class JUnitFormatter(BaseFormatter):
         if not rules:
             return None
 
+        if rules is not None:
+            # These "base" rules are not passed into formatters
+            rules.extend([ParseError(), TransformError(), RuleError()])
+
         test_cases = []
         for rule in rules.all_rules.values():
             if not rule.id in rules.used_rules:
