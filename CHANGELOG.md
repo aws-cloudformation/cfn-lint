@@ -1,3 +1,14 @@
+### v0.70.0
+###### Features
+- Add rule [W8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W8003) to check if `Fn::Equals` will always be true or false (pull #[2426](https://github.com/aws-cloudformation/cfn-lint/pull/2426))
+- Allow you to configure how exit codes work (pull #[2436](https://github.com/aws-cloudformation/cfn-lint/pull/2436))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `95.0.0` (pull #[2440](https://github.com/aws-cloudformation/cfn-lint/pull/2440))
+- Remove check for string size of `Lambda::Function.Code.Zipfile` (pull #[2447](https://github.com/aws-cloudformation/cfn-lint/pull/2447))
+###### Fixes
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to validate bad functions (pull #[2441](https://github.com/aws-cloudformation/cfn-lint/pull/2441))
+- Update rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3016) to make checks less restrictive (pull #[2453](https://github.com/aws-cloudformation/cfn-lint/pull/2453))
+
 ### v0.69.1
 ###### CloudFormation Specifications
 - Updated string max value to `Lambda::Function.Code.Zipfile` to 4MB (pull #[2444](https://github.com/aws-cloudformation/cfn-lint/pull/2444))
