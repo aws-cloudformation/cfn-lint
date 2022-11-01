@@ -19,12 +19,11 @@ class TestMatching(BaseTestCase):
     def setUp(self) -> None:
         return super().setUp()
 
-    def test(self: Any, *args: Any, **kwargs: Any):
+    def example(self: Any, *args: Any, **kwargs: Any):
         return [rule_match]
 
     def test_matching_location(self):
-
-        f = matching('test')
-        r = f(self.test)
+        f = matching('example')
+        r = f(self.example)
         t = r(self, '', None)
         self.assertEqual(t, [Match(1, 1, 1, 1, '', rule(), 'Message', rule_match)])
