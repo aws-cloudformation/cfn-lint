@@ -441,8 +441,21 @@ def bool_compare(first, second):
 
 def initialize_specs():
     """Reload Resource Specs"""
-    for reg in REGIONS:
-        RESOURCE_SPECS[reg] = load_resource(CloudSpecs, filename=(f'{reg}.json'))
+
+    def load_region(region):
+        spec = load_resource(CloudSpecs, filename=(f'{region}.json'))
+
+        for section, section_values in spec.items():
+            if section in ['ResourceTypes', 'PropertyTypes', 'ValueTypes']:
+                for key, value in section_values.items():
+                    if value == 'CACHED':
+                        spec[section][key] = RESOURCE_SPECS['us-east-1'][section][key]
+        return spec
+
+    RESOURCE_SPECS['us-east-1'] = load_region('us-east-1')
+    for region in REGIONS:
+        if region != 'us-east-1':
+            RESOURCE_SPECS[region] = load_region(region)
 
 
 initialize_specs()
