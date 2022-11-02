@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import re
 from cfnlint.exceptions import DuplicateRuleError
 from test.testlib.testcase import BaseTestCase
 from cfnlint.template import Template
@@ -230,6 +231,26 @@ class TestRulesCollection(BaseTestCase):
         rules_to_add = [rule0_e0000(), rule1_e0000()]
         rules = RulesCollection()
         self.assertRaises(DuplicateRuleError, rules.extend, rules_to_add)
+
+    def test_repr(self):
+        class rule0_e0000(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0000'
+            shortdesc = 'Rule A'
+            description = 'First rule'
+        class rule1_e0001(CloudFormationLintRule):
+            """Error Rule"""
+            id = 'E0001'
+            shortdesc = 'Rule B'
+            description = 'Second rule'
+        rules = RulesCollection()
+        rules.extend([rule0_e0000(), rule1_e0001()])
+
+        retval = repr(rules)
+        pattern = r"\AE0000: Rule A\nFirst rule\nE0001: Rule B\nSecond rule\Z"
+        match = re.match(pattern, retval)
+        assert match, f"{retval} does not match {pattern}"
+
 
 class TestCreateFromModule(BaseTestCase):
     """Test loading a rules collection from a module"""

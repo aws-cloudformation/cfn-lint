@@ -302,9 +302,7 @@ class RulesCollection:
             self.register(rule)
 
     def __repr__(self):
-        return '\n'.join(
-            [rule.verbose() for rule in sorted(self.rules, key=lambda x: x.id)]
-        )
+        return '\n'.join([self.rules[id].verbose() for id in sorted(self.rules)])
 
     def is_rule_enabled(self, rule: CloudFormationLintRule):
         """Checks if an individual rule is valid"""
