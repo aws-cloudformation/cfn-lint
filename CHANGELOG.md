@@ -1,3 +1,9 @@
+### v0.70.1
+###### Features
+- Add support for Python 3.11 (pull #[2463](https://github.com/aws-cloudformation/cfn-lint/pull/2463))
+###### Fixes
+- Fix an issue with `--list-rules` failing (pull #[2466](https://github.com/aws-cloudformation/cfn-lint/pull/2466))
+
 ### v0.70.0
 ###### Features
 - Add rule [W8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W8003) to check if `Fn::Equals` will always be true or false (pull #[2426](https://github.com/aws-cloudformation/cfn-lint/pull/2426))
