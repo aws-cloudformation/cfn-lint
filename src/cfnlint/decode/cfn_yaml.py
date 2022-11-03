@@ -256,7 +256,7 @@ def load(filename):
     content = ''
 
     if not sys.stdin.isatty():
-        for line in fileinput.input(files=filename):
+        for line in fileinput.input(files='-', encoding="utf-8"):
             content = content + line
     else:
         with open(filename, encoding='utf-8') as fp:
