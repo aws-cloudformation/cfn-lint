@@ -1,3 +1,12 @@
+### v0.80.0
+###### Features
+- Reduce storage on disk by reducing regional specs to only have differences from `us-east-1` spec (pull #[2457](https://github.com/aws-cloudformation/cfn-lint/pull/2457))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `96.0.0` (pull #[2461](https://github.com/aws-cloudformation/cfn-lint/pull/2461))
+###### Fixes
+- Fix an issue with junit/pretty formatter/core process to get all rules even on parse failure (pull #[2462](https://github.com/aws-cloudformation/cfn-lint/pull/2462))
+- Fix an issue when use stdin to pass a template and cfn-lint with parameters giving `E0000` (pull #[2470](https://github.com/aws-cloudformation/cfn-lint/pull/2470))
+
 ### v0.70.1
 ###### Features
 - Add support for Python 3.11 (pull #[2463](https://github.com/aws-cloudformation/cfn-lint/pull/2463))
