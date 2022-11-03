@@ -256,8 +256,12 @@ def load(filename):
     content = ''
 
     if not sys.stdin.isatty():
-        for line in fileinput.input(files='-', encoding="utf-8"):
-            content = content + line
+        if sys.version_info.major <= 3 and sys.version_info.minor <= 8:
+            for line in fileinput.input(files='-'):
+                content = content + line
+        else: 
+            for line in fileinput.input(files='-', encoding='utf-8'):
+                content = content + line
     else:
         with open(filename, encoding='utf-8') as fp:
             content = fp.read()
