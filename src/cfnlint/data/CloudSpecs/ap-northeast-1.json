@@ -484,12 +484,14 @@
   "AWS::AppRunner::Service.HealthCheckConfiguration": "CACHED",
   "AWS::AppRunner::Service.ImageConfiguration": "CACHED",
   "AWS::AppRunner::Service.ImageRepository": "CACHED",
+  "AWS::AppRunner::Service.IngressConfiguration": "CACHED",
   "AWS::AppRunner::Service.InstanceConfiguration": "CACHED",
   "AWS::AppRunner::Service.KeyValuePair": "CACHED",
   "AWS::AppRunner::Service.NetworkConfiguration": "CACHED",
   "AWS::AppRunner::Service.ServiceObservabilityConfiguration": "CACHED",
   "AWS::AppRunner::Service.SourceCodeVersion": "CACHED",
   "AWS::AppRunner::Service.SourceConfiguration": "CACHED",
+  "AWS::AppRunner::VpcIngressConnection.IngressVpcConfiguration": "CACHED",
   "AWS::AppStream::AppBlock.S3Location": "CACHED",
   "AWS::AppStream::AppBlock.ScriptDetails": "CACHED",
   "AWS::AppStream::Application.S3Location": "CACHED",
@@ -629,18 +631,28 @@
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainer": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerVolumeMount": "CACHED",
+  "AWS::Batch::JobDefinition.EksProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EksVolume": "CACHED",
+  "AWS::Batch::JobDefinition.EmptyDir": "CACHED",
   "AWS::Batch::JobDefinition.Environment": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.HostPath": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
   "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
+  "AWS::Batch::JobDefinition.Resources": "CACHED",
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.SecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -1103,241 +1115,12 @@
   "AWS::EC2::EC2Fleet.CapacityReservationOptionsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.FleetLaunchTemplateConfigRequest": "CACHED",
   "AWS::EC2::EC2Fleet.FleetLaunchTemplateOverridesRequest": "CACHED",
-  "AWS::EC2::EC2Fleet.FleetLaunchTemplateSpecificationRequest": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest.html",
-   "Properties": {
-    "LaunchTemplateId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest.html#cfn-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest-launchtemplateid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LaunchTemplateName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest.html#cfn-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest-launchtemplatename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.FleetLaunchTemplateSpecificationRequest.LaunchTemplateName"
-     }
-    },
-    "Version": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest.html#cfn-ec2-ec2fleet-fleetlaunchtemplatespecificationrequest-version",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
-  "AWS::EC2::EC2Fleet.InstanceRequirementsRequest": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html",
-   "Properties": {
-    "AcceleratorCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-acceleratorcount",
-     "Required": false,
-     "Type": "AcceleratorCountRequest",
-     "UpdateType": "Immutable"
-    },
-    "AcceleratorManufacturers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-acceleratormanufacturers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorManufacturers"
-     }
-    },
-    "AcceleratorNames": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-acceleratornames",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorNames"
-     }
-    },
-    "AcceleratorTotalMemoryMiB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-acceleratortotalmemorymib",
-     "Required": false,
-     "Type": "AcceleratorTotalMemoryMiBRequest",
-     "UpdateType": "Immutable"
-    },
-    "AcceleratorTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-acceleratortypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorTypes"
-     }
-    },
-    "AllowedInstanceTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-allowedinstancetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "BareMetal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-baremetal",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BareMetal"
-     }
-    },
-    "BaselineEbsBandwidthMbps": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-baselineebsbandwidthmbps",
-     "Required": false,
-     "Type": "BaselineEbsBandwidthMbpsRequest",
-     "UpdateType": "Immutable"
-    },
-    "BurstablePerformance": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-burstableperformance",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BurstablePerformance"
-     }
-    },
-    "CpuManufacturers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-cpumanufacturers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.CpuManufacturers"
-     }
-    },
-    "ExcludedInstanceTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-excludedinstancetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.ExcludedInstanceTypes"
-     }
-    },
-    "InstanceGenerations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-instancegenerations",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.InstanceGenerations"
-     }
-    },
-    "LocalStorage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-localstorage",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.LocalStorage"
-     }
-    },
-    "LocalStorageTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-localstoragetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.LocalStorageTypes"
-     }
-    },
-    "MemoryGiBPerVCpu": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-memorygibpervcpu",
-     "Required": false,
-     "Type": "MemoryGiBPerVCpuRequest",
-     "UpdateType": "Immutable"
-    },
-    "MemoryMiB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-memorymib",
-     "Required": false,
-     "Type": "MemoryMiBRequest",
-     "UpdateType": "Immutable"
-    },
-    "NetworkBandwidthGbps": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-networkbandwidthgbps",
-     "Required": false,
-     "Type": "NetworkBandwidthGbpsRequest",
-     "UpdateType": "Immutable"
-    },
-    "NetworkInterfaceCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-networkinterfacecount",
-     "Required": false,
-     "Type": "NetworkInterfaceCountRequest",
-     "UpdateType": "Immutable"
-    },
-    "OnDemandMaxPricePercentageOverLowestPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-ondemandmaxpricepercentageoverlowestprice",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "RequireHibernateSupport": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-requirehibernatesupport",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SpotMaxPricePercentageOverLowestPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-spotmaxpricepercentageoverlowestprice",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TotalLocalStorageGB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-totallocalstoragegb",
-     "Required": false,
-     "Type": "TotalLocalStorageGBRequest",
-     "UpdateType": "Immutable"
-    },
-    "VCpuCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-instancerequirementsrequest.html#cfn-ec2-ec2fleet-instancerequirementsrequest-vcpucount",
-     "Required": false,
-     "Type": "VCpuCountRangeRequest",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::EC2Fleet.FleetLaunchTemplateSpecificationRequest": "CACHED",
+  "AWS::EC2::EC2Fleet.InstanceRequirementsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.MaintenanceStrategies": "CACHED",
   "AWS::EC2::EC2Fleet.MemoryGiBPerVCpuRequest": "CACHED",
   "AWS::EC2::EC2Fleet.MemoryMiBRequest": "CACHED",
-  "AWS::EC2::EC2Fleet.NetworkBandwidthGbpsRequest": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-networkbandwidthgbpsrequest.html",
-   "Properties": {
-    "Max": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-networkbandwidthgbpsrequest.html#cfn-ec2-ec2fleet-networkbandwidthgbpsrequest-max",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Min": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-ec2fleet-networkbandwidthgbpsrequest.html#cfn-ec2-ec2fleet-networkbandwidthgbpsrequest-min",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::EC2Fleet.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.NetworkInterfaceCountRequest": "CACHED",
   "AWS::EC2::EC2Fleet.OnDemandOptionsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.Placement": "CACHED",
@@ -1439,389 +1222,19 @@
   "AWS::EC2::SpotFleet.IamInstanceProfileSpecification": "CACHED",
   "AWS::EC2::SpotFleet.InstanceIpv6Address": "CACHED",
   "AWS::EC2::SpotFleet.InstanceNetworkInterfaceSpecification": "CACHED",
-  "AWS::EC2::SpotFleet.InstanceRequirementsRequest": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html",
-   "Properties": {
-    "AcceleratorCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-acceleratorcount",
-     "Required": false,
-     "Type": "AcceleratorCountRequest",
-     "UpdateType": "Immutable"
-    },
-    "AcceleratorManufacturers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-acceleratormanufacturers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorManufacturers"
-     }
-    },
-    "AcceleratorNames": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-acceleratornames",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorNames"
-     }
-    },
-    "AcceleratorTotalMemoryMiB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-acceleratortotalmemorymib",
-     "Required": false,
-     "Type": "AcceleratorTotalMemoryMiBRequest",
-     "UpdateType": "Immutable"
-    },
-    "AcceleratorTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-acceleratortypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorTypes"
-     }
-    },
-    "AllowedInstanceTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-allowedinstancetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "BareMetal": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-baremetal",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BareMetal"
-     }
-    },
-    "BaselineEbsBandwidthMbps": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-baselineebsbandwidthmbps",
-     "Required": false,
-     "Type": "BaselineEbsBandwidthMbpsRequest",
-     "UpdateType": "Immutable"
-    },
-    "BurstablePerformance": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-burstableperformance",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BurstablePerformance"
-     }
-    },
-    "CpuManufacturers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-cpumanufacturers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.CpuManufacturers"
-     }
-    },
-    "ExcludedInstanceTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-excludedinstancetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.ExcludedInstanceTypes"
-     }
-    },
-    "InstanceGenerations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-instancegenerations",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.InstanceGenerations"
-     }
-    },
-    "LocalStorage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-localstorage",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.LocalStorage"
-     }
-    },
-    "LocalStorageTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-localstoragetypes",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.InstanceRequirementsRequest.LocalStorageTypes"
-     }
-    },
-    "MemoryGiBPerVCpu": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-memorygibpervcpu",
-     "Required": false,
-     "Type": "MemoryGiBPerVCpuRequest",
-     "UpdateType": "Immutable"
-    },
-    "MemoryMiB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-memorymib",
-     "Required": false,
-     "Type": "MemoryMiBRequest",
-     "UpdateType": "Immutable"
-    },
-    "NetworkBandwidthGbps": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-networkbandwidthgbps",
-     "Required": false,
-     "Type": "NetworkBandwidthGbpsRequest",
-     "UpdateType": "Immutable"
-    },
-    "NetworkInterfaceCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-networkinterfacecount",
-     "Required": false,
-     "Type": "NetworkInterfaceCountRequest",
-     "UpdateType": "Immutable"
-    },
-    "OnDemandMaxPricePercentageOverLowestPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-ondemandmaxpricepercentageoverlowestprice",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "RequireHibernateSupport": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-requirehibernatesupport",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SpotMaxPricePercentageOverLowestPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-spotmaxpricepercentageoverlowestprice",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TotalLocalStorageGB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-totallocalstoragegb",
-     "Required": false,
-     "Type": "TotalLocalStorageGBRequest",
-     "UpdateType": "Immutable"
-    },
-    "VCpuCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-instancerequirementsrequest.html#cfn-ec2-spotfleet-instancerequirementsrequest-vcpucount",
-     "Required": false,
-     "Type": "VCpuCountRangeRequest",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::SpotFleet.InstanceRequirementsRequest": "CACHED",
   "AWS::EC2::SpotFleet.LaunchTemplateConfig": "CACHED",
   "AWS::EC2::SpotFleet.LaunchTemplateOverrides": "CACHED",
   "AWS::EC2::SpotFleet.LoadBalancersConfig": "CACHED",
   "AWS::EC2::SpotFleet.MemoryGiBPerVCpuRequest": "CACHED",
   "AWS::EC2::SpotFleet.MemoryMiBRequest": "CACHED",
-  "AWS::EC2::SpotFleet.NetworkBandwidthGbpsRequest": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-networkbandwidthgbpsrequest.html",
-   "Properties": {
-    "Max": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-networkbandwidthgbpsrequest.html#cfn-ec2-spotfleet-networkbandwidthgbpsrequest-max",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Min": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-networkbandwidthgbpsrequest.html#cfn-ec2-spotfleet-networkbandwidthgbpsrequest-min",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::SpotFleet.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::EC2::SpotFleet.NetworkInterfaceCountRequest": "CACHED",
   "AWS::EC2::SpotFleet.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::SpotFleet.SpotCapacityRebalance": "CACHED",
   "AWS::EC2::SpotFleet.SpotFleetLaunchSpecification": "CACHED",
   "AWS::EC2::SpotFleet.SpotFleetMonitoring": "CACHED",
-  "AWS::EC2::SpotFleet.SpotFleetRequestConfigData": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html",
-   "Properties": {
-    "AllocationStrategy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-allocationstrategy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.AllocationStrategy"
-     }
-    },
-    "Context": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-context",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ExcessCapacityTerminationPolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-excesscapacityterminationpolicy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.ExcessCapacityTerminationPolicy"
-     }
-    },
-    "IamFleetRole": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-iamfleetrole",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::IAM::Role.Arn"
-     }
-    },
-    "InstanceInterruptionBehavior": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-instanceinterruptionbehavior",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.InstanceInterruptionBehavior"
-     }
-    },
-    "InstancePoolsToUseCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-instancepoolstousecount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LaunchSpecifications": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-launchspecifications",
-     "DuplicatesAllowed": false,
-     "ItemType": "SpotFleetLaunchSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "LaunchTemplateConfigs": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-launchtemplateconfigs",
-     "DuplicatesAllowed": false,
-     "ItemType": "LaunchTemplateConfig",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "LoadBalancersConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-loadbalancersconfig",
-     "Required": false,
-     "Type": "LoadBalancersConfig",
-     "UpdateType": "Immutable"
-    },
-    "OnDemandAllocationStrategy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-ondemandallocationstrategy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "OnDemandMaxTotalPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-ondemandmaxtotalprice",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "OnDemandTargetCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-ondemandtargetcapacity",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ReplaceUnhealthyInstances": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-replaceunhealthyinstances",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SpotMaintenanceStrategies": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-spotmaintenancestrategies",
-     "Required": false,
-     "Type": "SpotMaintenanceStrategies",
-     "UpdateType": "Immutable"
-    },
-    "SpotMaxTotalPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-spotmaxtotalprice",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SpotPrice": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-spotprice",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "TagSpecifications": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-tagspecifications",
-     "DuplicatesAllowed": false,
-     "ItemType": "SpotFleetTagSpecification",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "TargetCapacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-targetcapacity",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "TargetCapacityUnitType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-targetcapacityunittype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.TargetCapacityUnitType"
-     }
-    },
-    "TerminateInstancesWithExpiration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-terminateinstanceswithexpiration",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::SpotFleet.SpotFleetRequestConfigData.Type"
-     }
-    },
-    "ValidFrom": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-validfrom",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ValidUntil": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-spotfleet-spotfleetrequestconfigdata.html#cfn-ec2-spotfleet-spotfleetrequestconfigdata-validuntil",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::SpotFleet.SpotFleetRequestConfigData": "CACHED",
   "AWS::EC2::SpotFleet.SpotFleetTagSpecification": "CACHED",
   "AWS::EC2::SpotFleet.SpotMaintenanceStrategies": "CACHED",
   "AWS::EC2::SpotFleet.SpotPlacement": "CACHED",
@@ -2401,6 +1814,7 @@
   "AWS::IoT::TopicRule.PutAssetPropertyValueEntry": "CACHED",
   "AWS::IoT::TopicRule.PutItemInput": "CACHED",
   "AWS::IoT::TopicRule.RepublishAction": "CACHED",
+  "AWS::IoT::TopicRule.RepublishActionHeaders": "CACHED",
   "AWS::IoT::TopicRule.S3Action": "CACHED",
   "AWS::IoT::TopicRule.SigV4Authorization": "CACHED",
   "AWS::IoT::TopicRule.SnsAction": "CACHED",
@@ -2411,6 +1825,7 @@
   "AWS::IoT::TopicRule.TimestreamDimension": "CACHED",
   "AWS::IoT::TopicRule.TimestreamTimestamp": "CACHED",
   "AWS::IoT::TopicRule.TopicRulePayload": "CACHED",
+  "AWS::IoT::TopicRule.UserProperty": "CACHED",
   "AWS::IoT::TopicRuleDestination.HttpUrlDestinationSummary": "CACHED",
   "AWS::IoT::TopicRuleDestination.VpcDestinationProperties": "CACHED",
   "AWS::IoTAnalytics::Channel.ChannelStorage": "CACHED",
@@ -3323,32 +2738,7 @@
   "AWS::QuickSight::DataSource.AuroraParameters": "CACHED",
   "AWS::QuickSight::DataSource.AuroraPostgreSqlParameters": "CACHED",
   "AWS::QuickSight::DataSource.CredentialPair": "CACHED",
-  "AWS::QuickSight::DataSource.DataSourceCredentials": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-datasource-datasourcecredentials.html",
-   "Properties": {
-    "CopySourceArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-datasource-datasourcecredentials.html#cfn-quicksight-datasource-datasourcecredentials-copysourcearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::QuickSight::DataSource.DataSourceCredentials.CopySourceArn"
-     }
-    },
-    "CredentialPair": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-datasource-datasourcecredentials.html#cfn-quicksight-datasource-datasourcecredentials-credentialpair",
-     "Required": false,
-     "Type": "CredentialPair",
-     "UpdateType": "Mutable"
-    },
-    "SecretArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-datasource-datasourcecredentials.html#cfn-quicksight-datasource-datasourcecredentials-secretarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::QuickSight::DataSource.DataSourceCredentials": "CACHED",
   "AWS::QuickSight::DataSource.DataSourceErrorInfo": "CACHED",
   "AWS::QuickSight::DataSource.DataSourceParameters": "CACHED",
   "AWS::QuickSight::DataSource.ManifestFileLocation": "CACHED",
@@ -4116,7 +3506,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "95.0.0",
+ "ResourceSpecificationVersion": "96.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4185,6 +3575,7 @@
   "AWS::AppRunner::ObservabilityConfiguration": "CACHED",
   "AWS::AppRunner::Service": "CACHED",
   "AWS::AppRunner::VpcConnector": "CACHED",
+  "AWS::AppRunner::VpcIngressConnection": "CACHED",
   "AWS::AppStream::AppBlock": "CACHED",
   "AWS::AppStream::Application": "CACHED",
   "AWS::AppStream::ApplicationEntitlementAssociation": "CACHED",
@@ -4380,60 +3771,7 @@
   "AWS::EC2::CustomerGateway": "CACHED",
   "AWS::EC2::DHCPOptions": "CACHED",
   "AWS::EC2::EC2Fleet": "CACHED",
-  "AWS::EC2::EIP": {
-   "Attributes": {
-    "AllocationId": {
-     "PrimitiveType": "String"
-    },
-    "PublicIp": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html",
-   "Properties": {
-    "Domain": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-domain",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "Ec2ElasticIpDomain"
-     }
-    },
-    "InstanceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-instanceid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "NetworkBorderGroup": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-networkbordergroup",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PublicIpv4Pool": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-publicipv4pool",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TransferAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-eip.html#cfn-ec2-eip-transferaddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EC2::EIP": "CACHED",
   "AWS::EC2::EIPAssociation": "CACHED",
   "AWS::EC2::EgressOnlyInternetGateway": "CACHED",
   "AWS::EC2::EnclaveCertificateIamRoleAssociation": "CACHED",
@@ -5377,6 +4715,8 @@
   "AWS::AppRunner::Service.ServiceObservabilityConfiguration.ObservabilityConfigurationArn": "CACHED",
   "AWS::AppRunner::Service.SourceCodeVersion.Type": "CACHED",
   "AWS::AppRunner::VpcConnector.VpcConnectorName": "CACHED",
+  "AWS::AppRunner::VpcIngressConnection.ServiceArn": "CACHED",
+  "AWS::AppRunner::VpcIngressConnection.VpcIngressConnectionName": "CACHED",
   "AWS::AppStream::Fleet.DisconnectTimeoutInSeconds": "CACHED",
   "AWS::AppStream::Fleet.IdleDisconnectTimeoutInSeconds": "CACHED",
   "AWS::AppStream::Fleet.MaxUserDurationInSeconds": "CACHED",
@@ -5949,6 +5289,7 @@
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorManufacturers": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorNames": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorTypes": "CACHED",
+  "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AllowedInstanceTypes": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BareMetal": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BurstablePerformance": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.CpuManufacturers": "CACHED",
@@ -5986,6 +5327,7 @@
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorManufacturers": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorNames": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorTypes": "CACHED",
+  "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AllowedInstanceTypes": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BareMetal": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BurstablePerformance": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.CpuManufacturers": "CACHED",
@@ -7273,6 +6615,7 @@
   "AWS::QuickSight::DataSource.CredentialPair.Password": "CACHED",
   "AWS::QuickSight::DataSource.CredentialPair.Username": "CACHED",
   "AWS::QuickSight::DataSource.DataSourceCredentials.CopySourceArn": "CACHED",
+  "AWS::QuickSight::DataSource.DataSourceCredentials.SecretArn": "CACHED",
   "AWS::QuickSight::DataSource.DataSourceErrorInfo.Type": "CACHED",
   "AWS::QuickSight::DataSource.ManifestFileLocation.Bucket": "CACHED",
   "AWS::QuickSight::DataSource.ManifestFileLocation.Key": "CACHED",
@@ -7345,6 +6688,7 @@
   "AWS::RDS::DBCluster.MasterUsername": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration.MaxCapacity": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration.MinCapacity": "CACHED",
+  "AWS::RDS::DBClusterParameterGroup.DBClusterParameterGroupName": "CACHED",
   "AWS::RDS::DBInstance.AllocatedStorage": "CACHED",
   "AWS::RDS::DBInstance.BackupRetentionPeriod": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceClass": {
@@ -7530,6 +6874,7 @@
   "AWS::RDS::DBInstance.Port": "CACHED",
   "AWS::RDS::DBInstance.ProcessorFeature.Name": "CACHED",
   "AWS::RDS::DBInstance.PromotionTier": "CACHED",
+  "AWS::RDS::DBParameterGroup.DBParameterGroupName": "CACHED",
   "AWS::RDS::DBProxy.AuthFormat.AuthScheme": "CACHED",
   "AWS::RDS::DBProxy.AuthFormat.IAMAuth": "CACHED",
   "AWS::RDS::DBProxy.DBProxyName": "CACHED",
