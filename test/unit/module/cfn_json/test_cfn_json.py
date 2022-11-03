@@ -77,7 +77,7 @@ class TestCfnJson(BaseTestCase):
     def test_success_parse_stdin(self):
         """Test Successful JSON Parsing through stdin"""
         for _, values in self.filenames.items():
-            filename = '-'
+            filename = None
             failures = values.get('failures')
             with open(values.get('filename'), 'r') as fp:
                 file_content = fp.read()
