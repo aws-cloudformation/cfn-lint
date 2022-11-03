@@ -367,11 +367,11 @@ def load(filename):
 
     if not sys.stdin.isatty():
         if sys.version_info.major <= 3 and sys.version_info.minor <= 8:
-            for line in fileinput.input(files='-'):
+            for line in fileinput.input(files=filename):
                 content = content + line
         else:
             for line in fileinput.input(  # pylint: disable=unexpected-keyword-arg
-                files='-', encoding='utf-8'
+                files=filename, encoding='utf-8'
             ):
                 content = content + line
     else:
