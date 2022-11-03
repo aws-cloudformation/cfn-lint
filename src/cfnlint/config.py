@@ -677,7 +677,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         elif templates_args:
             filenames = templates_args
         else:
-            return None
+            return ['-']
 
         # if only one is specified convert it to array
         if isinstance(filenames, str):
