@@ -480,18 +480,28 @@
   "AWS::Batch::JobDefinition.ContainerProperties": "CACHED",
   "AWS::Batch::JobDefinition.Device": "CACHED",
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainer": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerVolumeMount": "CACHED",
+  "AWS::Batch::JobDefinition.EksProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EksVolume": "CACHED",
+  "AWS::Batch::JobDefinition.EmptyDir": "CACHED",
   "AWS::Batch::JobDefinition.Environment": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.HostPath": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
   "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
+  "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
+  "AWS::Batch::JobDefinition.Resources": "CACHED",
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
+  "AWS::Batch::JobDefinition.SecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -579,6 +589,8 @@
   "AWS::CloudFront::StreamingDistribution.S3Origin": "CACHED",
   "AWS::CloudFront::StreamingDistribution.StreamingDistributionConfig": "CACHED",
   "AWS::CloudFront::StreamingDistribution.TrustedSigners": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedEventSelector": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector": "CACHED",
   "AWS::CloudTrail::Trail.DataResource": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector": "CACHED",
   "AWS::CloudTrail::Trail.InsightSelector": "CACHED",
@@ -1073,6 +1085,7 @@
   "AWS::EC2::EC2Fleet.MaintenanceStrategies": "CACHED",
   "AWS::EC2::EC2Fleet.MemoryGiBPerVCpuRequest": "CACHED",
   "AWS::EC2::EC2Fleet.MemoryMiBRequest": "CACHED",
+  "AWS::EC2::EC2Fleet.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.NetworkInterfaceCountRequest": "CACHED",
   "AWS::EC2::EC2Fleet.OnDemandOptionsRequest": "CACHED",
   "AWS::EC2::EC2Fleet.Placement": "CACHED",
@@ -1180,6 +1193,7 @@
   "AWS::EC2::SpotFleet.LoadBalancersConfig": "CACHED",
   "AWS::EC2::SpotFleet.MemoryGiBPerVCpuRequest": "CACHED",
   "AWS::EC2::SpotFleet.MemoryMiBRequest": "CACHED",
+  "AWS::EC2::SpotFleet.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::EC2::SpotFleet.NetworkInterfaceCountRequest": "CACHED",
   "AWS::EC2::SpotFleet.PrivateIpAddressSpecification": "CACHED",
   "AWS::EC2::SpotFleet.SpotCapacityRebalance": "CACHED",
@@ -2801,7 +2815,7 @@
   "AWS::XRay::SamplingRule.SamplingRuleUpdate": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "95.0.0",
+ "ResourceSpecificationVersion": "96.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3046,7 +3060,29 @@
   "AWS::ApiGatewayV2::ApiGatewayManagedOverrides": "CACHED",
   "AWS::ApiGatewayV2::ApiMapping": "CACHED",
   "AWS::ApiGatewayV2::Authorizer": "CACHED",
-  "AWS::ApiGatewayV2::Deployment": "CACHED",
+  "AWS::ApiGatewayV2::Deployment": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-deployment.html",
+   "Properties": {
+    "ApiId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-deployment.html#cfn-apigatewayv2-deployment-apiid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-deployment.html#cfn-apigatewayv2-deployment-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "StageName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-deployment.html#cfn-apigatewayv2-deployment-stagename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApiGatewayV2::DomainName": "CACHED",
   "AWS::ApiGatewayV2::Integration": "CACHED",
   "AWS::ApiGatewayV2::IntegrationResponse": "CACHED",
@@ -3165,6 +3201,7 @@
   "AWS::CloudFront::RealtimeLogConfig": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy": "CACHED",
   "AWS::CloudFront::StreamingDistribution": "CACHED",
+  "AWS::CloudTrail::EventDataStore": "CACHED",
   "AWS::CloudTrail::Trail": "CACHED",
   "AWS::CloudWatch::Alarm": "CACHED",
   "AWS::CloudWatch::AnomalyDetector": "CACHED",
@@ -3604,93 +3641,7 @@
   "AWS::EC2::EIPAssociation": "CACHED",
   "AWS::EC2::EgressOnlyInternetGateway": "CACHED",
   "AWS::EC2::EnclaveCertificateIamRoleAssociation": "CACHED",
-  "AWS::EC2::FlowLog": {
-   "Attributes": {
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html",
-   "Properties": {
-    "DeliverLogsPermissionArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-deliverlogspermissionarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DestinationOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-destinationoptions",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LogDestination": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-logdestination",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LogDestinationType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-logdestinationtype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::FlowLog.LogDestinationType"
-     }
-    },
-    "LogFormat": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-logformat",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "LogGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-loggroupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "MaxAggregationInterval": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-maxaggregationinterval",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ResourceId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-resourceid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "ResourceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-resourcetype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::FlowLog.ResourceType"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TrafficType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-flowlog.html#cfn-ec2-flowlog-traffictype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::FlowLog.TrafficType"
-     }
-    }
-   }
-  },
+  "AWS::EC2::FlowLog": "CACHED",
   "AWS::EC2::GatewayRouteTableAssociation": "CACHED",
   "AWS::EC2::Host": "CACHED",
   "AWS::EC2::IPAM": "CACHED",
@@ -5181,6 +5132,14 @@
   "AWS::CloudFront::RealtimeLogConfig.SamplingRate": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.FrameOptions.FrameOption": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.ReferrerPolicy.ReferrerPolicy": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedEventSelector.Name": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.EndsWith": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.Equals": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.Field": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.NotEndsWith": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.NotEquals": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.NotStartsWith": "CACHED",
+  "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.StartsWith": "CACHED",
   "AWS::CloudTrail::Trail.DataResourceType": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector.ReadWriteType": "CACHED",
   "AWS::CloudTrail::Trail.TrailName": "CACHED",
@@ -5408,6 +5367,7 @@
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorManufacturers": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorNames": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AcceleratorTypes": "CACHED",
+  "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.AllowedInstanceTypes": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BareMetal": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.BurstablePerformance": "CACHED",
   "AWS::EC2::EC2Fleet.InstanceRequirementsRequest.CpuManufacturers": "CACHED",
@@ -5445,6 +5405,7 @@
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorManufacturers": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorNames": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AcceleratorTypes": "CACHED",
+  "AWS::EC2::SpotFleet.InstanceRequirementsRequest.AllowedInstanceTypes": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BareMetal": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.BurstablePerformance": "CACHED",
   "AWS::EC2::SpotFleet.InstanceRequirementsRequest.CpuManufacturers": "CACHED",
@@ -6071,6 +6032,7 @@
   "AWS::RDS::DBCluster.MasterUsername": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration.MaxCapacity": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration.MinCapacity": "CACHED",
+  "AWS::RDS::DBClusterParameterGroup.DBClusterParameterGroupName": "CACHED",
   "AWS::RDS::DBInstance.AllocatedStorage": "CACHED",
   "AWS::RDS::DBInstance.BackupRetentionPeriod": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceClass": {
@@ -6166,6 +6128,7 @@
   "AWS::RDS::DBInstance.Port": "CACHED",
   "AWS::RDS::DBInstance.ProcessorFeature.Name": "CACHED",
   "AWS::RDS::DBInstance.PromotionTier": "CACHED",
+  "AWS::RDS::DBParameterGroup.DBParameterGroupName": "CACHED",
   "AWS::RDS::DBProxy.AuthFormat.AuthScheme": "CACHED",
   "AWS::RDS::DBProxy.AuthFormat.IAMAuth": "CACHED",
   "AWS::RDS::DBProxy.DBProxyName": "CACHED",
