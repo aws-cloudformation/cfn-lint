@@ -366,7 +366,7 @@ def load(filename):
     content = ''
 
     if not sys.stdin.isatty():
-        if sys.version_info.major <= 3 and sys.version_info.minor <= 8:
+        if sys.version_info.major <= 3 and sys.version_info.minor <= 9:
             for line in fileinput.input(files=filename):
                 content = content + line
         else:
