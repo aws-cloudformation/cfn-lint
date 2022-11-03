@@ -108,7 +108,7 @@ class TestCli(BaseTestCase):
 
         with patch('sys.stdin', StringIO(file_content)):
             (_, filenames, _) = cfnlint.core.get_args_filenames([])
-            assert filenames == ['-'], filenames
+            assert filenames == [None]
 
         with patch('sys.stdin', StringIO(file_content)):
             (_, filenames, _) = cfnlint.core.get_args_filenames(['--template', filename])
