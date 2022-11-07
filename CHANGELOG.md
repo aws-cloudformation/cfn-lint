@@ -1,4 +1,4 @@
-### v0.80.0
+### v0.71.0
 ###### Features
 - Reduce storage on disk by reducing regional specs to only have differences from `us-east-1` spec (pull #[2457](https://github.com/aws-cloudformation/cfn-lint/pull/2457))
 ###### CloudFormation Specifications
