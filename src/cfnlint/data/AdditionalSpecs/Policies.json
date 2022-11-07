@@ -6091,7 +6091,7 @@
    "StringPrefix": "opsworks-cm"
   },
   "AWS Organizations": {
-   "ARNFormat": "arn:aws:organizations::${MasterAccountId}:${Resource}/o-${OrganizationId}(/${ResourceType}/${ResourceId})?",
+   "ARNFormat": "arn:aws:organizations::${Account}:${Resource}/o-${OrganizationId}(/${ResourceType}/${ResourceId})?",
    "ARNRegex": "^arn:aws:organizations::.+:.+",
    "Actions": [
     "AcceptHandshake",
@@ -11320,18 +11320,22 @@
    ]
   },
   "Amazon EMR on EKS (EMR Containers)": {
-   "ARNFormat": "arn:aws:emr-containers:${region}:${account}:/${resourceType}/${resourcePath}",
+   "ARNFormat": "arn:aws:emr-containers:${Region}:${Account}:/${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:emr-containers:.+",
    "Actions": [
     "CancelJobRun",
+    "CreateJobTemplate",
     "CreateManagedEndpoint",
     "CreateVirtualCluster",
+    "DeleteJobTemplate",
     "DeleteManagedEndpoint",
     "DeleteVirtualCluster",
     "DescribeJobRun",
+    "DescribeJobTemplate",
     "DescribeManagedEndpoint",
     "DescribeVirtualCluster",
     "ListJobRuns",
+    "ListJobTemplates",
     "ListManagedEndpoints",
     "ListTagsForResource",
     "ListVirtualClusters",
@@ -11345,7 +11349,8 @@
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
-    "emr-containers:ExecutionRoleArn"
+    "emr-containers:ExecutionRoleArn",
+    "emr-containers:JobTemplateArn"
    ]
   },
   "Amazon ElastiCache": {
@@ -14606,6 +14611,7 @@
     "PartiQLDropTable",
     "PartiQLHistoryFunction",
     "PartiQLInsert",
+    "PartiQLRedact",
     "PartiQLSelect",
     "PartiQLUndropTable",
     "PartiQLUpdate",
