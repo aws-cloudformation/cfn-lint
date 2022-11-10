@@ -379,6 +379,13 @@ class CliArgs:
             default=[],
             action='extend',
         )
+        standard.add_argument(
+            '--detect-cfn-files',
+            dest='detect_cfn_files',
+            help='Only lint files that contain the string \'AWSTemplateFormatVersion\'. This is useful for ignoring non-Cloudformation yaml files',
+            default=False,
+            action='store_true',
+        )
         advanced.add_argument(
             '-D', '--debug', help='Enable debug logging', action='store_true'
         )
@@ -577,6 +584,9 @@ class TemplateArgs:
                         if config_name == 'ignore_bad_template':
                             if isinstance(config_value, bool):
                                 defaults['ignore_bad_template'] = config_value
+                        if config_name == 'detect_cfn_files':
+                            if isinstance(config_value, bool):
+                                defaults['detect_cfn_files'] = config_value
                         if config_name == 'include_checks':
                             if isinstance(config_value, list):
                                 defaults['include_checks'] = config_value
@@ -699,6 +709,10 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                     if add_filename not in ignore_templates:
                         all_filenames.append(add_filename)
 
+        # ignore files without 'AWSTemplateFormatVersion' in their header if '--detect_cfn_files' is passed
+        if self._get_argument_value('detect_cfn_files', True, True):
+            all_filenames = list(filter(self._test_is_cfn_file, all_filenames))
+
         return sorted(all_filenames)
 
     def _ignore_templates(self):
@@ -725,6 +739,11 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 all_filenames.extend(add_filenames)
 
         return all_filenames
+
+    def _test_is_cfn_file(self,filename):
+        with open(filename, encoding='utf-8') as f:
+            content = f.read()
+            return "AWSTemplateFormatVersion" in content
 
     @property
     def append_rules(self):

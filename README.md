@@ -179,6 +179,7 @@ Optional parameters:
 | -l, --list-rules | | | List all the rules |
 | -r, --regions | regions | [REGIONS [REGIONS ...]], ALL_REGIONS  | Test the template against many regions.  [Supported regions](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) |
 | -b, --ignore-bad-template | ignore_bad_template | | Ignores bad template errors |
+| --detect-cfn-files | detect_cfn_files | | Only lint files that contain the string `AWSTemplateFormatVersion`. This is useful for ignoring non-Cloudformation yaml files |
 | --ignore-templates | | IGNORE_TEMPLATES [IGNORE_TEMPLATES ...] | Ignore templates from being scanned
 | -a, --append-rules | append_rules | [RULESPATH [RULESPATH ...]] | Specify one or more rules paths using one or more --append-rules arguments.  Each path can be either a directory containing python files, or an import path to a module. |
 | -i, --ignore-checks | ignore_checks | [IGNORE_CHECKS [IGNORE_CHECKS ...]] | Only check rules whose ID do not match or prefix these values.  Examples: <br />- A value of `W` will disable all warnings<br />- `W2` disables all Warnings for Parameter rules.<br />- `W2001` will disable rule `W2001` |
