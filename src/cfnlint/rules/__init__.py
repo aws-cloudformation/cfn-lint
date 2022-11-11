@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 import importlib
 import traceback
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union, MutableSet
 from cfnlint.exceptions import DuplicateRuleError
 import cfnlint.helpers
 import cfnlint.rules.custom
@@ -24,7 +24,7 @@ def matching(match_type: Any):
     def decorator(match_function):
         """The Actual Decorator"""
 
-        def wrapper(self, filename, cfn, *args, **kwargs):
+        def wrapper(self, filename: str, cfn: Template, *args, **kwargs):
             """Wrapper"""
             matches = []
 
@@ -228,15 +228,15 @@ class RulesCollection:
 
     def __init__(
         self,
-        ignore_rules=None,
-        include_rules=None,
-        configure_rules=None,
-        include_experimental=False,
-        mandatory_rules=None,
+        ignore_rules: Union[List[str], None] = None,
+        include_rules: Union[List[str], None] = None,
+        configure_rules: Any = None,
+        include_experimental: bool = False,
+        mandatory_rules: Union[List[str], None] = None,
     ):
         self.rules: Dict[str, CloudFormationLintRule] = {}
         self.all_rules: Dict[str, CloudFormationLintRule] = {}
-        self.used_rules = set()
+        self.used_rules: MutableSet[str] = set()
 
         self.configure(
             ignore_rules=ignore_rules,
@@ -248,13 +248,13 @@ class RulesCollection:
 
     def configure(
         self,
-        ignore_rules=None,
-        include_rules=None,
-        configure_rules=None,
-        include_experimental=False,
-        mandatory_rules=None,
+        ignore_rules: Union[List[str], None] = None,
+        include_rules: Union[List[str], None] = None,
+        configure_rules: Any = None,
+        include_experimental: bool = False,
+        mandatory_rules: Union[List[str], None] = None,
     ):
-        self.rules: Dict[str, CloudFormationLintRule] = {}
+        self.rules = {}
         # Whether "experimental" rules should be added
         self.include_experimental = include_experimental
 
