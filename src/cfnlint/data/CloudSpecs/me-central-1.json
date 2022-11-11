@@ -944,6 +944,7 @@
   "AWS::DynamoDB::Table.SSESpecification": "CACHED",
   "AWS::DynamoDB::Table.StreamSpecification": "CACHED",
   "AWS::DynamoDB::Table.TimeToLiveSpecification": "CACHED",
+  "AWS::EC2::CapacityReservation.TagSpecification": "CACHED",
   "AWS::EC2::EC2Fleet.AcceleratorCountRequest": "CACHED",
   "AWS::EC2::EC2Fleet.AcceleratorTotalMemoryMiBRequest": "CACHED",
   "AWS::EC2::EC2Fleet.BaselineEbsBandwidthMbpsRequest": "CACHED",
@@ -1110,7 +1111,24 @@
   "AWS::EKS::Cluster.KubernetesNetworkConfig": "CACHED",
   "AWS::EKS::Cluster.Logging": "CACHED",
   "AWS::EKS::Cluster.LoggingTypeConfig": "CACHED",
-  "AWS::EKS::Cluster.OutpostConfig": "CACHED",
+  "AWS::EKS::Cluster.OutpostConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html",
+   "Properties": {
+    "ControlPlaneInstanceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-controlplaneinstancetype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "OutpostArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-outpostarns",
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EKS::Cluster.Provider": "CACHED",
   "AWS::EKS::Cluster.ResourcesVpcConfig": "CACHED",
   "AWS::EKS::FargateProfile.Label": "CACHED",
@@ -2065,7 +2083,7 @@
   "AWS::XRay::SamplingRule.SamplingRuleUpdate": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "96.0.0",
+ "ResourceSpecificationVersion": "97.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::ApiGateway::Account": {
@@ -3433,6 +3451,7 @@
   "AWS::DMS::ReplicationSubnetGroup": "CACHED",
   "AWS::DMS::ReplicationTask": "CACHED",
   "AWS::DynamoDB::Table": "CACHED",
+  "AWS::EC2::CapacityReservation": "CACHED",
   "AWS::EC2::CustomerGateway": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-customer-gateway.html",
    "Properties": {
@@ -3793,52 +3812,7 @@
   "AWS::EC2::VPCDHCPOptionsAssociation": "CACHED",
   "AWS::EC2::VPCEndpoint": "CACHED",
   "AWS::EC2::VPCGatewayAttachment": "CACHED",
-  "AWS::EC2::VPCPeeringConnection": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html",
-   "Properties": {
-    "PeerOwnerId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-peerownerid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PeerRegion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-peerregion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PeerRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-peerrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PeerVpcId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-peervpcid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VpcId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcpeeringconnection.html#cfn-ec2-vpcpeeringconnection-vpcid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::VPC.Id"
-     }
-    }
-   }
-  },
+  "AWS::EC2::VPCPeeringConnection": "CACHED",
   "AWS::EC2::VPNConnection": "CACHED",
   "AWS::EC2::VPNConnectionRoute": "CACHED",
   "AWS::EC2::VPNGateway": {
@@ -4958,6 +4932,7 @@
     }
    }
   },
+  "AWS::Route53::DNSSEC": "CACHED",
   "AWS::Route53::HealthCheck": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-route53-healthcheck.html",
    "Properties": {
@@ -5022,6 +4997,7 @@
     }
    }
   },
+  "AWS::Route53::KeySigningKey": "CACHED",
   "AWS::Route53::RecordSet": "CACHED",
   "AWS::Route53::RecordSetGroup": "CACHED",
   "AWS::S3::AccessPoint": "CACHED",
@@ -5755,6 +5731,7 @@
   "AWS::RDS::DBParameterGroup.DBParameterGroupName": "CACHED",
   "AWS::RDS::DBSubnetGroup.DBSubnetGroupName": "CACHED",
   "AWS::Redshift::Cluster.NumberOfNodes": "CACHED",
+  "AWS::Route53::DNSSEC.HostedZoneId": "CACHED",
   "AWS::Route53::HealthCheck.AlarmIdentifier.Name": "CACHED",
   "AWS::Route53::HealthCheck.HealthCheckConfig.FailureThreshold": "CACHED",
   "AWS::Route53::HealthCheck.HealthCheckConfig.IPAddress": "CACHED",
@@ -5762,6 +5739,10 @@
   "AWS::Route53::HealthCheck.HealthCheckConfig.Port": "CACHED",
   "AWS::Route53::HealthCheck.HealthCheckConfig.RequestInterval": "CACHED",
   "AWS::Route53::HealthCheck.HealthCheckConfig.Type": "CACHED",
+  "AWS::Route53::KeySigningKey.HostedZoneId": "CACHED",
+  "AWS::Route53::KeySigningKey.KeyManagementServiceArn": "CACHED",
+  "AWS::Route53::KeySigningKey.Name": "CACHED",
+  "AWS::Route53::KeySigningKey.Status": "CACHED",
   "AWS::S3::AccessPoint.Bucket": "CACHED",
   "AWS::S3::AccessPoint.Name": "CACHED",
   "AWS::S3::AccessPoint.VpcConfiguration.VpcId": "CACHED",
