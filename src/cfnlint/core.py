@@ -6,7 +6,7 @@ import json
 import logging
 import os
 import sys
-from typing import Dict, Iterator, Sequence, Optional, Tuple, List
+from typing import Dict, Iterator, Sequence, Optional, Tuple, List, Union
 
 from jsonschema.exceptions import ValidationError
 
@@ -133,12 +133,12 @@ def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
 
 def get_rules(
     append_rules: List[str],
-    ignore_rules: Sequence[str],
-    include_rules: Sequence[str],
+    ignore_rules: List[str],
+    include_rules: List[str],
     configure_rules=None,
     include_experimental: bool = False,
-    mandatory_rules: Sequence[str] = None,
-    custom_rules: str = None,
+    mandatory_rules: Union[List[str], None] = None,
+    custom_rules: Union[str, None] = None,
 ) -> RulesCollection:
     rules = RulesCollection(
         ignore_rules,
