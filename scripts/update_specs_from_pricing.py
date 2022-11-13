@@ -32,8 +32,8 @@ region_map = {
     'Canada (Central)': 'ca-central-1',
     'China (Beijing)': 'cn-north-1',
     'China (Ningxia)': 'cn-northwest-1',
-    'EU (Zurich)': 'eu-central-1',
-    'EU (Frankfurt)': 'eu-central-2',
+    'EU (Frankfurt)': 'eu-central-1',
+    'Europe (Zurich)': 'eu-central-2',
     'EU (Ireland)': 'eu-west-1',
     'EU (London)': 'eu-west-2',
     'EU (Milan)': 'eu-south-1',
@@ -82,7 +82,7 @@ def update_outputs(key, values, outputs):
 
 
 def get_paginator(service):
-    LOGGER.info('Get ' + service + ' pricing')
+    LOGGER.info('Get ' + service + ' pricing paginator')
     return client.get_paginator('get_products').paginate(
         ServiceCode=service,
         FormatVersion='aws_v1',
