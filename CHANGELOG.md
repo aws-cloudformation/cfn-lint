@@ -1,3 +1,9 @@
+### v0.71.1
+###### Features
+###### CloudFormation Specifications
+- Add support for region `eu-central-2` (pull #[2478](https://github.com/aws-cloudformation/cfn-lint/pull/2478))
+- Update CloudFormation specs to `97.0.0` (pull #[2475](https://github.com/aws-cloudformation/cfn-lint/pull/2475))
+
 ### v0.71.0
 ###### Features
 - Reduce storage on disk by reducing regional specs to only have differences from `us-east-1` spec (pull #[2457](https://github.com/aws-cloudformation/cfn-lint/pull/2457))
