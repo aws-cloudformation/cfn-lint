@@ -2,7 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import load_resource
+from cfnlint.helpers import load_resource, RESOURCE_SPECS
 from cfnlint.data import CloudSpecs
 from test.testlib.testcase import BaseTestCase
 
@@ -14,7 +14,7 @@ class TestPatchedSpecs(BaseTestCase):
     def setUp(self):
         """ SetUp template object"""
 
-        self.spec = load_resource(CloudSpecs, 'us-east-1.json')
+        self.spec = RESOURCE_SPECS['us-east-1']
 
     def _test_property_type_values(self, values, r_name, p_name, r_type):
         p_value_type = values.get('Value', {}).get('ValueType')

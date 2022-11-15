@@ -3,7 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Union
 from cfnlint.template import Template
 from cfnlint.transform import Transform
 from .rules import Match, RulesCollection
@@ -22,7 +22,7 @@ class Runner:
         template: str,
         regions: Sequence[str],
         verbosity=0,
-        mandatory_rules: Sequence[str] = None,
+        mandatory_rules: Union[Sequence[str], None] = None,
     ):
 
         self.rules = rules

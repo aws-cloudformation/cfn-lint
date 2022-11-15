@@ -78,9 +78,9 @@ class Configuration(CloudFormationLintRule):
             },
         },
         'primitive_types': {
-            'String': str,
-            'Integer': int,
-            'Boolean': bool,
+            'String': (str),
+            'Integer': (int),
+            'Boolean': (bool),
             'List': list,
         },
     }
@@ -105,15 +105,28 @@ class Configuration(CloudFormationLintRule):
                         )
                     )
         else:
-            default_message = 'Value for {0} must be of type {1}'
+            default_message = (
+                f'Value for {kwargs.get("key_name")} must be of type {prim_type}'
+            )
             if not isinstance(
                 value, self.valid_attributes.get('primitive_types').get(prim_type)
             ):
-                matches.append(
-                    RuleMatch(
-                        path, default_message.format(kwargs.get('key_name'), prim_type)
-                    )
-                )
+                try:
+                    if prim_type in ['String']:
+                        str(value)
+                    elif prim_type in ['Boolean']:
+                        if value not in ['True', 'true', 'False', 'false']:
+                            matches.append(RuleMatch(path, default_message))
+                    else:  # has to be integer
+                        if isinstance(value, bool):
+                            matches.append(RuleMatch(path, default_message))
+                        if isinstance(value, float):
+                            if not value.is_integer():
+                                matches.append(RuleMatch(path, default_message))
+                        else:
+                            int(value)
+                except Exception:  # pylint: disable=W0703
+                    matches.append(RuleMatch(path, default_message))
 
         return matches
 

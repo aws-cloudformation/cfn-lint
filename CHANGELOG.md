@@ -1,3 +1,35 @@
+### v0.71.1
+###### Features
+###### CloudFormation Specifications
+- Add support for region `eu-central-2` (pull #[2478](https://github.com/aws-cloudformation/cfn-lint/pull/2478))
+- Update CloudFormation specs to `97.0.0` (pull #[2475](https://github.com/aws-cloudformation/cfn-lint/pull/2475))
+
+### v0.71.0
+###### Features
+- Reduce storage on disk by reducing regional specs to only have differences from `us-east-1` spec (pull #[2457](https://github.com/aws-cloudformation/cfn-lint/pull/2457))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `96.0.0` (pull #[2461](https://github.com/aws-cloudformation/cfn-lint/pull/2461))
+###### Fixes
+- Fix an issue with junit/pretty formatter/core process to get all rules even on parse failure (pull #[2462](https://github.com/aws-cloudformation/cfn-lint/pull/2462))
+- Fix an issue when use stdin to pass a template and cfn-lint with parameters giving `E0000` (pull #[2470](https://github.com/aws-cloudformation/cfn-lint/pull/2470))
+
+### v0.70.1
+###### Features
+- Add support for Python 3.11 (pull #[2463](https://github.com/aws-cloudformation/cfn-lint/pull/2463))
+###### Fixes
+- Fix an issue with `--list-rules` failing (pull #[2466](https://github.com/aws-cloudformation/cfn-lint/pull/2466))
+
+### v0.70.0
+###### Features
+- Add rule [W8003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W8003) to check if `Fn::Equals` will always be true or false (pull #[2426](https://github.com/aws-cloudformation/cfn-lint/pull/2426))
+- Allow you to configure how exit codes work (pull #[2436](https://github.com/aws-cloudformation/cfn-lint/pull/2436))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `95.0.0` (pull #[2440](https://github.com/aws-cloudformation/cfn-lint/pull/2440))
+- Remove check for string size of `Lambda::Function.Code.Zipfile` (pull #[2447](https://github.com/aws-cloudformation/cfn-lint/pull/2447))
+###### Fixes
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) to validate bad functions (pull #[2441](https://github.com/aws-cloudformation/cfn-lint/pull/2441))
+- Update rule [E3016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3016) to make checks less restrictive (pull #[2453](https://github.com/aws-cloudformation/cfn-lint/pull/2453))
+
 ### v0.69.1
 ###### CloudFormation Specifications
 - Updated string max value to `Lambda::Function.Code.Zipfile` to 4MB (pull #[2444](https://github.com/aws-cloudformation/cfn-lint/pull/2444))

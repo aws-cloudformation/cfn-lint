@@ -256,8 +256,15 @@ def load(filename):
     content = ''
 
     if not sys.stdin.isatty():
-        for line in fileinput.input(files=filename):
-            content = content + line
+        filename = '-' if filename is None else filename
+        if sys.version_info.major <= 3 and sys.version_info.minor <= 9:
+            for line in fileinput.input(files=filename):
+                content = content + line
+        else:
+            for line in fileinput.input(  # pylint: disable=unexpected-keyword-arg
+                files=filename, encoding='utf-8'
+            ):
+                content = content + line
     else:
         with open(filename, encoding='utf-8') as fp:
             content = fp.read()

@@ -6,7 +6,7 @@ import json
 import logging
 import os
 import sys
-from typing import Dict, Iterator, Sequence, Optional, Tuple, List
+from typing import Dict, Iterator, Sequence, Optional, Tuple, List, Union
 
 from jsonschema.exceptions import ValidationError
 
@@ -133,12 +133,12 @@ def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
 
 def get_rules(
     append_rules: List[str],
-    ignore_rules: Sequence[str],
-    include_rules: Sequence[str],
+    ignore_rules: List[str],
+    include_rules: List[str],
     configure_rules=None,
     include_experimental: bool = False,
-    mandatory_rules: Sequence[str] = None,
-    custom_rules: str = None,
+    mandatory_rules: Union[List[str], None] = None,
+    custom_rules: Union[str, None] = None,
 ) -> RulesCollection:
     rules = RulesCollection(
         ignore_rules,
@@ -256,35 +256,8 @@ def _reset_rule_cache() -> None:
     __CACHED_RULES = None
 
 
-def get_template_rules(
-    filename: str, args: cfnlint.config.ConfigMixIn
-) -> TemplateRules:
-    """Get Template Configuration items and set them as default values"""
+def _build_rule_cache(args: cfnlint.config.ConfigMixIn) -> None:
     global __CACHED_RULES  # pylint: disable=global-statement
-
-    ignore_bad_template: bool = False
-    if args.ignore_bad_template:
-        ignore_bad_template = True
-    else:
-        # There is no collection at this point so we need to handle this
-        # check directly
-        if not ParseError().is_enabled(
-            include_experimental=False,
-            ignore_rules=args.ignore_checks,
-            include_rules=args.include_checks,
-            mandatory_rules=args.mandatory_checks,
-        ):
-            ignore_bad_template = True
-
-    (template, errors) = cfnlint.decode.decode(filename)
-
-    if errors:
-        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
-            return (template, None, [])
-        return (template, None, errors)
-
-    args.template_args = template
-
     if __CACHED_RULES:
         __CACHED_RULES.configure(
             ignore_rules=args.ignore_checks,
@@ -303,6 +276,38 @@ def get_template_rules(
             args.mandatory_checks,
             args.custom_rules,
         )
+
+
+def get_template_rules(
+    filename: str, args: cfnlint.config.ConfigMixIn
+) -> TemplateRules:
+    """Get Template Configuration items and set them as default values"""
+
+    ignore_bad_template: bool = False
+    if args.ignore_bad_template:
+        ignore_bad_template = True
+    else:
+        # There is no collection at this point so we need to handle this
+        # check directly
+        if not ParseError().is_enabled(
+            include_experimental=False,
+            ignore_rules=args.ignore_checks,
+            include_rules=args.include_checks,
+            mandatory_rules=args.mandatory_checks,
+        ):
+            ignore_bad_template = True
+
+    (template, errors) = cfnlint.decode.decode(filename)
+
+    if errors:
+        _build_rule_cache(args)
+        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
+            return (template, __CACHED_RULES, [])
+        return (template, __CACHED_RULES, errors)
+
+    args.template_args = template
+
+    _build_rule_cache(args)
 
     return (template, __CACHED_RULES, [])
 

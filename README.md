@@ -119,6 +119,15 @@ Lint all `yaml` files in `path` and all subdirectories (recursive):
 - 12 is an warning and informational
 - 14 is an error and a warning and an informational
 
+###### Configuring Exit Codes
+`cfn-lint` allows you to configure exit codes. You can provide the parameter `--non-zero-exit-code` with a value of `informational`, `warning`, `error`, or `none`. `cfn-lint` will determine the exit code based on the match severity being the value of the parameter `--non-zero-exit-code` and higher. The exit codes will remain the same as above.
+
+The order of severity is as follows:
+1. `informational` *default*
+1. `warning`
+1. `error`
+1. `none` *Exit code will always be 0 unless there is a syntax error*
+
 ##### Specifying the template as an input stream
 
 The template to be linted can also be passed using standard input:
@@ -176,6 +185,7 @@ Optional parameters:
 | -e, --include-experimental | include_experimental | | Whether rules that still in an experimental state should be included in the checks |
 | -c, --include-checks | | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -m, --mandatory-checks | | | Rules to check regardless of ignore configuration |
+| --non-zero-exit-code | | informational (default), warning, error, none] | Exit code will be non zero from the specified rule class and higher |
 | -x,  --configure-rule | | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false
 | -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
@@ -314,7 +324,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.69.1  # The version of cfn-lint to use
+  rev: v0.71.1  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -324,7 +334,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.69.1  # The version of cfn-lint to use
+  rev: v0.71.1  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint-rc
 ```
