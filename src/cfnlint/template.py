@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 import re
 from copy import deepcopy, copy
+from typing import Union
 
 import cfnlint.conditions
 import cfnlint.helpers
@@ -13,7 +14,7 @@ from cfnlint.graph import Graph
 LOGGER = logging.getLogger(__name__)
 
 
-class Template:  # pylint: disable=R0904,too-many-lines
+class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attributes
     """Class for a CloudFormation template"""
 
     # pylint: disable=dangerous-default-value
@@ -42,6 +43,18 @@ class Template:  # pylint: disable=R0904,too-many-lines
         self.transform_pre['Transform'] = self.template.get('Transform', [])
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
+        self.graph: Union[Graph, None] = None
+        try:
+            self.graph = Graph(self)
+        except KeyError as err:
+            LOGGER.debug(
+                'Encountered KeyError error while building graph. Ignored as this '
+                'should be caught by other rules and is more than likely a template '
+                'formatting error: %s',
+                err,
+            )
+        except Exception as err:  # pylint: disable=broad-except
+            LOGGER.info('Encountered unknown error while building graph: %s', err)
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -53,10 +66,9 @@ class Template:  # pylint: disable=R0904,too-many-lines
 
     def build_graph(self):
         """Generates a DOT representation of the template"""
-        g = Graph(self)
         path = self.filename + '.dot'
         try:
-            g.to_dot(path)
+            self.graph.to_dot(path)
             LOGGER.info('DOT representation of the graph written to %s', path)
         except ImportError:
             LOGGER.error(

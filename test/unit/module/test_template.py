@@ -41,22 +41,22 @@ class TestTemplate(BaseTestCase):
         dot = 'test/fixtures/templates/good/generic.yaml.dot'
 
         expected_content = """digraph "template" {
-RootRole [label="RootRole\\n<AWS::IAM::Role>"];
-MyModule [label="MyModule\\n<My::Organization::Custom::MODULE>"];
-RolePolicies [label="RolePolicies\\n<AWS::IAM::Policy>"];
-RootInstanceProfile [label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>"];
-MyEC2Instance [label="MyEC2Instance\\n<AWS::EC2::Instance>"];
-mySnsTopic [label="mySnsTopic\\n<AWS::SNS::Topic>"];
-MyEC2Instance1 [label="MyEC2Instance1\\n<AWS::EC2::Instance>"];
-ElasticIP [label="ElasticIP\\n<AWS::EC2::EIP>"];
-ElasticLoadBalancer [label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>"];
-IamPipeline [label="IamPipeline\\n<AWS::CloudFormation::Stack>"];
-CustomResource [label="CustomResource\\n<Custom::Function>"];
-WaitCondition [label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>"];
-RolePolicies -> RootRole  [key=0, label=Ref];
-RootInstanceProfile -> RootRole  [key=0, label=Ref];
-MyEC2Instance -> RootInstanceProfile  [key=0, label=Ref];
-ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
+MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type=Resource];
+RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type=Resource];
+RolePolicies [color=black, label="RolePolicies\\n<AWS::IAM::Policy>", shape=ellipse, type=Resource];
+RootInstanceProfile [color=black, label="RootInstanceProfile\\n<AWS::IAM::InstanceProfile>", shape=ellipse, type=Resource];
+MyEC2Instance [color=black, label="MyEC2Instance\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
+mySnsTopic [color=black, label="mySnsTopic\\n<AWS::SNS::Topic>", shape=ellipse, type=Resource];
+MyEC2Instance1 [color=black, label="MyEC2Instance1\\n<AWS::EC2::Instance>", shape=ellipse, type=Resource];
+ElasticIP [color=black, label="ElasticIP\\n<AWS::EC2::EIP>", shape=ellipse, type=Resource];
+ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoadBalancing::LoadBalancer>", shape=ellipse, type=Resource];
+IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type=Resource];
+CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type=Resource];
+WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type=Resource];
+RolePolicies -> RootRole  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Roles', 0]"];
+RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Roles', 0]"];
+MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'IamInstanceProfile']"];
+ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Instances', 0]"];
 }
 """.split('\n')
 
@@ -64,7 +64,8 @@ ElasticLoadBalancer -> MyEC2Instance  [key=0, label=Ref];
         with open(dot, 'r') as file:
             file_contents = file.read().split('\n')
             # doing set equality instead of string equality because python 2.7 and 3.8 produce the same graph but with different edge order
-            assert len(file_contents) == len(expected_content) and sorted(file_contents) == sorted(expected_content)
+            assert len(file_contents) == len(expected_content), f'Length {len(file_contents)} != {len(expected_content)}'
+            assert sorted(file_contents) == sorted(expected_content)
 
         os.remove(dot)
 
