@@ -60,7 +60,7 @@ class AllowedPattern(CloudFormationLintRule):
 
         if isinstance(value, str):
             if value_pattern_regex:
-                regex = re.compile(value_pattern_regex)
+                regex = re.compile(value_pattern_regex, re.ASCII)
 
                 # Ignore values with dynamic references. Simple check to prevent false-positives
                 # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
