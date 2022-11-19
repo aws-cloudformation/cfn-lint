@@ -5152,8 +5152,10 @@
     "DeleteEntity",
     "DeleteScene",
     "DeleteWorkspace",
+    "ExecuteQuery",
     "GetComponentType",
     "GetEntity",
+    "GetPricingPlan",
     "GetPropertyValue",
     "GetPropertyValueHistory",
     "GetScene",
@@ -5167,6 +5169,7 @@
     "UntagResource",
     "UpdateComponentType",
     "UpdateEntity",
+    "UpdatePricingPlan",
     "UpdateScene",
     "UpdateWorkspace"
    ],
@@ -5577,13 +5580,19 @@
     "DescribeTask",
     "ListChangeSets",
     "ListEntities",
+    "ListTagsForResource",
     "ListTasks",
     "StartChangeSet",
+    "TagResource",
+    "UntagResource",
     "UpdateTask"
    ],
    "HasResource": true,
    "StringPrefix": "aws-marketplace",
    "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
     "catalog:ChangeType"
    ]
   },
@@ -6414,6 +6423,8 @@
     "GetEnvironmentTemplateVersion",
     "GetRepository",
     "GetRepositorySyncStatus",
+    "GetResourceTemplateVersionStatusCounts",
+    "GetResourcesSummary",
     "GetService",
     "GetServiceInstance",
     "GetServiceTemplate",
@@ -7187,6 +7198,7 @@
     "GetApplication",
     "GetAssociatedResource",
     "GetAttributeGroup",
+    "GetConfiguration",
     "GetProvisionedProductOutputs",
     "ImportAsProvisionedProduct",
     "ListAcceptedPortfolioShares",
@@ -7214,6 +7226,7 @@
     "ListTagOptions",
     "ListTagsForResource",
     "ProvisionProduct",
+    "PutConfiguration",
     "RejectPortfolioShare",
     "ScanProvisionedProducts",
     "SearchProducts",
@@ -7241,6 +7254,8 @@
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys",
+    "servicecatalog:Resource",
+    "servicecatalog:ResourceType",
     "servicecatalog:accountLevel",
     "servicecatalog:roleLevel",
     "servicecatalog:userLevel"
@@ -7849,8 +7864,41 @@
     "aws:TagKeys"
    ]
   },
+  "AWS Systems Manager for SAP": {
+   "ARNFormat": "arn:aws:ssm-sap:${Region}:${Account}:${ApplicationType}/${ApplicationId}",
+   "ARNRegex": "^arn:aws:ssm-sap:.+",
+   "Actions": [
+    "BackupDatabase",
+    "DeleteResourcePermission",
+    "DeregisterApplication",
+    "GetApplication",
+    "GetComponent",
+    "GetDatabase",
+    "GetOperation",
+    "GetResourcePermission",
+    "ListApplications",
+    "ListComponents",
+    "ListDatabases",
+    "ListOperations",
+    "ListTagsForResource",
+    "PutResourcePermission",
+    "RegisterApplication",
+    "RestoreDatabase",
+    "TagResource",
+    "UntagResource",
+    "UpdateApplicationSettings",
+    "UpdateHANABackupSettings"
+   ],
+   "HasResource": true,
+   "StringPrefix": "ssm-sap",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "AWS Tag Editor": {
-   "ARNFormat": "arn:aws:resource-explorer:<region>:<account-id>:<resource-type>/<resource_name>",
+   "ARNFormat": "arn:${Partition}:resource-explorer:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:resource-explorer:.+",
    "Actions": [
     "ListResourceTypes",
@@ -7863,6 +7911,10 @@
   "AWS Tax Settings": {
    "Actions": [
     "GetExemptions",
+    "GetTaxInterview",
+    "GetTaxRegistration",
+    "PutTaxInterview",
+    "PutTaxRegistration",
     "UpdateExemptions"
    ],
    "HasResource": false,
@@ -8300,6 +8352,7 @@
     "CreateGroup",
     "CreateSamplingRule",
     "DeleteGroup",
+    "DeleteResourcePolicy",
     "DeleteSamplingRule",
     "GetDistinctTraceGraphs",
     "GetEncryptionConfig",
@@ -8316,8 +8369,10 @@
     "GetTimeSeriesServiceStatistics",
     "GetTraceGraph",
     "GetTraceSummaries",
+    "ListResourcePolicies",
     "ListTagsForResource",
     "PutEncryptionConfig",
+    "PutResourcePolicy",
     "PutTelemetryRecords",
     "PutTraceSegments",
     "TagResource",
@@ -8579,7 +8634,7 @@
    ]
   },
   "Amazon AppFlow": {
-   "ARNFormat": "arn:aws:appflow:{Region}:{AccountId}:{ResourceType}/{ResourceName}",
+   "ARNFormat": "arn:aws:appflow:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:appflow:.+:.+:.+",
    "Actions": [
     "CreateConnectorProfile",
@@ -8608,6 +8663,7 @@
     "UnRegisterConnector",
     "UntagResource",
     "UpdateConnectorProfile",
+    "UpdateConnectorRegistration",
     "UpdateFlow",
     "UseConnectorProfile"
    ],
@@ -9463,7 +9519,7 @@
    ]
   },
   "Amazon CloudWatch Logs": {
-   "ARNFormat": "arn:aws:logs:.+:.+:.+",
+   "ARNFormat": "arn:aws:logs:${Region}:${Account}:.+",
    "ARNRegex": "^arn:aws:logs:.+",
    "Actions": [
     "AssociateKmsKey",
@@ -9498,6 +9554,7 @@
     "GetLogRecord",
     "GetQueryResults",
     "ListLogDeliveries",
+    "ListTagsForResource",
     "ListTagsLogGroup",
     "PutDestination",
     "PutDestinationPolicy",
@@ -9510,14 +9567,18 @@
     "StartQuery",
     "StopQuery",
     "TagLogGroup",
+    "TagResource",
     "TestMetricFilter",
     "UntagLogGroup",
+    "UntagResource",
     "UpdateLogDelivery"
    ],
    "HasResource": true,
    "StringPrefix": "logs",
    "conditionKeys": [
-    "aws:ResourceTag/${TagKey}"
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
    ]
   },
   "Amazon CloudWatch Synthetics": {
@@ -9991,6 +10052,7 @@
     "DescribeContact",
     "DescribeContactFlow",
     "DescribeContactFlowModule",
+    "DescribeForecastingPlanningSchedulingIntegration",
     "DescribeHoursOfOperation",
     "DescribeInstance",
     "DescribeInstanceAttribute",
@@ -10015,6 +10077,7 @@
     "DisassociateQueueQuickConnects",
     "DisassociateRoutingProfileQueues",
     "DisassociateSecurityKey",
+    "DismissUserContact",
     "GetContactAttributes",
     "GetCurrentMetricData",
     "GetCurrentUserData",
@@ -10055,6 +10118,7 @@
     "ListUseCases",
     "ListUserHierarchyGroups",
     "ListUsers",
+    "MonitorContact",
     "PutUserStatus",
     "ReleasePhoneNumber",
     "ReplicateInstance",
@@ -10068,11 +10132,13 @@
     "StartChatContact",
     "StartContactRecording",
     "StartContactStreaming",
+    "StartForecastingPlanningSchedulingIntegration",
     "StartOutboundVoiceContact",
     "StartTaskContact",
     "StopContact",
     "StopContactRecording",
     "StopContactStreaming",
+    "StopForecastingPlanningSchedulingIntegration",
     "SuspendContactRecording",
     "TagResource",
     "TransferContact",
@@ -10121,6 +10187,7 @@
     "aws:TagKeys",
     "connect:AttributeType",
     "connect:InstanceId",
+    "connect:MonitorCapabilities",
     "connect:SearchTag/${TagKey}",
     "connect:StorageResourceType"
    ]
@@ -10526,6 +10593,7 @@
    "ARNFormat": "arn:aws:ec2:${Region}:${Account}:${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:ec2:.+",
    "Actions": [
+    "AcceptAddressTransfer",
     "AcceptReservedInstancesExchangeQuote",
     "AcceptTransitGatewayMulticastDomainAssociations",
     "AcceptTransitGatewayPeeringAttachment",
@@ -10566,6 +10634,7 @@
     "CancelCapacityReservationFleets",
     "CancelConversionTask",
     "CancelExportTask",
+    "CancelImageLaunchPermission",
     "CancelImportTask",
     "CancelReservedInstancesListing",
     "CancelSpotFleetRequests",
@@ -10731,6 +10800,7 @@
     "DeregisterTransitGatewayMulticastGroupMembers",
     "DeregisterTransitGatewayMulticastGroupSources",
     "DescribeAccountAttributes",
+    "DescribeAddressTransfers",
     "DescribeAddresses",
     "DescribeAddressesAttribute",
     "DescribeAggregateIdFormat",
@@ -10871,6 +10941,7 @@
     "DetachNetworkInterface",
     "DetachVolume",
     "DetachVpnGateway",
+    "DisableAddressTransfer",
     "DisableEbsEncryptionByDefault",
     "DisableFastLaunch",
     "DisableFastSnapshotRestores",
@@ -10893,6 +10964,7 @@
     "DisassociateTransitGatewayRouteTable",
     "DisassociateTrunkInterface",
     "DisassociateVpcCidrBlock",
+    "EnableAddressTransfer",
     "EnableEbsEncryptionByDefault",
     "EnableFastLaunch",
     "EnableFastSnapshotRestores",
@@ -11435,6 +11507,7 @@
     "BatchApplyUpdateAction",
     "BatchStopUpdateAction",
     "CompleteMigration",
+    "Connect",
     "CopySnapshot",
     "CreateCacheCluster",
     "CreateCacheParameterGroup",
@@ -11515,7 +11588,8 @@
     "elasticache:NumNodeGroups",
     "elasticache:ReplicasPerNodeGroup",
     "elasticache:SnapshotRetentionLimit",
-    "elasticache:TransitEncryptionEnabled"
+    "elasticache:TransitEncryptionEnabled",
+    "elasticache:UserAuthenticationMode"
    ]
   },
   "Amazon Elastic Block Store": {
@@ -12816,20 +12890,25 @@
    ]
   },
   "Amazon Interactive Video Service Chat": {
-   "ARNFormat": "arn:aws:ivschat:${Region}:${AccountId}:${ResourceType}/${ResourceId}",
+   "ARNFormat": "arn:aws:ivschat:${Region}:${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:aws:ivschat:.+:.+:.+",
    "Actions": [
     "CreateChatToken",
+    "CreateLoggingConfiguration",
     "CreateRoom",
+    "DeleteLoggingConfiguration",
     "DeleteMessage",
     "DeleteRoom",
     "DisconnectUser",
+    "GetLoggingConfiguration",
     "GetRoom",
+    "ListLoggingConfigurations",
     "ListRooms",
     "ListTagsForResource",
     "SendEvent",
     "TagResource",
     "UntagResource",
+    "UpdateLoggingConfiguration",
     "UpdateRoom"
    ],
    "HasResource": true,
@@ -14763,6 +14842,7 @@
     "CreateUser",
     "CreateVPCConnection",
     "DeleteAccountCustomization",
+    "DeleteAccountSubscription",
     "DeleteAnalysis",
     "DeleteCustomPermissions",
     "DeleteDashboard",
@@ -14848,6 +14928,8 @@
     "ScopeDownPolicy",
     "SearchAnalyses",
     "SearchDashboards",
+    "SearchDataSets",
+    "SearchDataSources",
     "SearchDirectoryGroups",
     "SearchFolders",
     "SearchGroups",
@@ -16197,7 +16279,7 @@
    ]
   },
   "Amazon SQS": {
-   "ARNFormat": "arn:aws:sqs:${Region}:${AccountID}:${QueueName}",
+   "ARNFormat": "arn:aws:sqs:${Region}:${Account}:${QueueName}",
    "ARNRegex": "^arn:aws:sqs:.+",
    "Actions": [
     "AddPermission",
@@ -16219,7 +16301,12 @@
     "UntagQueue"
    ],
    "HasResource": true,
-   "StringPrefix": "sqs"
+   "StringPrefix": "sqs",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "Amazon SageMaker": {
    "ARNFormat": "arn:aws:sagemaker:${Region}:${Account}:${ResourceType}/${ResourceName}",
@@ -16962,6 +17049,7 @@
     "DeleteComment",
     "DeleteCustomMetadata",
     "DeleteDocument",
+    "DeleteDocumentVersion",
     "DeleteFolder",
     "DeleteFolderContents",
     "DeleteInstance",
@@ -16995,6 +17083,7 @@
     "RegisterDirectory",
     "RemoveAllResourcePermissions",
     "RemoveResourcePermission",
+    "RestoreDocumentVersions",
     "UpdateDocument",
     "UpdateDocumentVersion",
     "UpdateFolder",
