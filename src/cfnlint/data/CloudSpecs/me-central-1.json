@@ -552,6 +552,7 @@
   "AWS::AutoScaling::AutoScalingGroup.MemoryMiBRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.MetricsCollection": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.MixedInstancesPolicy": "CACHED",
+  "AWS::AutoScaling::AutoScalingGroup.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.NetworkInterfaceCountRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.NotificationConfiguration": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.TagProperty": "CACHED",
@@ -928,6 +929,16 @@
   "AWS::DMS::Endpoint.RedshiftSettings": "CACHED",
   "AWS::DMS::Endpoint.S3Settings": "CACHED",
   "AWS::DMS::Endpoint.SybaseSettings": "CACHED",
+  "AWS::DataSync::LocationEFS.Ec2Config": "CACHED",
+  "AWS::DataSync::LocationHDFS.NameNode": "CACHED",
+  "AWS::DataSync::LocationHDFS.QopConfiguration": "CACHED",
+  "AWS::DataSync::LocationNFS.MountOptions": "CACHED",
+  "AWS::DataSync::LocationNFS.OnPremConfig": "CACHED",
+  "AWS::DataSync::LocationS3.S3Config": "CACHED",
+  "AWS::DataSync::LocationSMB.MountOptions": "CACHED",
+  "AWS::DataSync::Task.FilterRule": "CACHED",
+  "AWS::DataSync::Task.Options": "CACHED",
+  "AWS::DataSync::Task.TaskSchedule": "CACHED",
   "AWS::DynamoDB::Table.AttributeDefinition": "CACHED",
   "AWS::DynamoDB::Table.ContributorInsightsSpecification": "CACHED",
   "AWS::DynamoDB::Table.Csv": "CACHED",
@@ -1053,6 +1064,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
   "AWS::ECS::Service.CapacityProviderStrategyItem": "CACHED",
@@ -1060,9 +1072,14 @@
   "AWS::ECS::Service.DeploymentConfiguration": "CACHED",
   "AWS::ECS::Service.DeploymentController": "CACHED",
   "AWS::ECS::Service.LoadBalancer": "CACHED",
+  "AWS::ECS::Service.LogConfiguration": "CACHED",
   "AWS::ECS::Service.NetworkConfiguration": "CACHED",
   "AWS::ECS::Service.PlacementConstraint": "CACHED",
   "AWS::ECS::Service.PlacementStrategy": "CACHED",
+  "AWS::ECS::Service.Secret": "CACHED",
+  "AWS::ECS::Service.ServiceConnectClientAlias": "CACHED",
+  "AWS::ECS::Service.ServiceConnectConfiguration": "CACHED",
+  "AWS::ECS::Service.ServiceConnectService": "CACHED",
   "AWS::ECS::Service.ServiceRegistry": "CACHED",
   "AWS::ECS::TaskDefinition.AuthorizationConfig": "CACHED",
   "AWS::ECS::TaskDefinition.ContainerDefinition": "CACHED",
@@ -1082,7 +1099,29 @@
   "AWS::ECS::TaskDefinition.LinuxParameters": "CACHED",
   "AWS::ECS::TaskDefinition.LogConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.MountPoint": "CACHED",
-  "AWS::ECS::TaskDefinition.PortMapping": "CACHED",
+  "AWS::ECS::TaskDefinition.PortMapping": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html",
+   "Properties": {
+    "ContainerPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-containerport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "HostPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-readonly",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Protocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-sourcevolume",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::ECS::TaskDefinition.ProxyConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.RepositoryCredentials": "CACHED",
   "AWS::ECS::TaskDefinition.ResourceRequirement": "CACHED",
@@ -1107,28 +1146,12 @@
   "AWS::EFS::FileSystem.ElasticFileSystemTag": "CACHED",
   "AWS::EFS::FileSystem.LifecyclePolicy": "CACHED",
   "AWS::EKS::Cluster.ClusterLogging": "CACHED",
+  "AWS::EKS::Cluster.ControlPlanePlacement": "CACHED",
   "AWS::EKS::Cluster.EncryptionConfig": "CACHED",
   "AWS::EKS::Cluster.KubernetesNetworkConfig": "CACHED",
   "AWS::EKS::Cluster.Logging": "CACHED",
   "AWS::EKS::Cluster.LoggingTypeConfig": "CACHED",
-  "AWS::EKS::Cluster.OutpostConfig": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html",
-   "Properties": {
-    "ControlPlaneInstanceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-controlplaneinstancetype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "OutpostArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-eks-cluster-outpostconfig.html#cfn-eks-cluster-outpostconfig-outpostarns",
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::EKS::Cluster.OutpostConfig": "CACHED",
   "AWS::EKS::Cluster.Provider": "CACHED",
   "AWS::EKS::Cluster.ResourcesVpcConfig": "CACHED",
   "AWS::EKS::FargateProfile.Label": "CACHED",
@@ -2083,7 +2106,7 @@
   "AWS::XRay::SamplingRule.SamplingRuleUpdate": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "97.0.0",
+ "ResourceSpecificationVersion": "99.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::ApiGateway::Account": {
@@ -2230,38 +2253,7 @@
     }
    }
   },
-  "AWS::ApiGateway::BasePathMapping": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-basepathmapping.html",
-   "Properties": {
-    "BasePath": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-basepathmapping.html#cfn-apigateway-basepathmapping-basepath",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "DomainName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-basepathmapping.html#cfn-apigateway-basepathmapping-domainname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "RestApiId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-basepathmapping.html#cfn-apigateway-basepathmapping-restapiid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "RestApiId"
-     }
-    },
-    "Stage": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-basepathmapping.html#cfn-apigateway-basepathmapping-stage",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ApiGateway::BasePathMapping": "CACHED",
   "AWS::ApiGateway::ClientCertificate": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-clientcertificate.html",
    "Properties": {
@@ -3450,6 +3442,14 @@
   },
   "AWS::DMS::ReplicationSubnetGroup": "CACHED",
   "AWS::DMS::ReplicationTask": "CACHED",
+  "AWS::DataSync::Agent": "CACHED",
+  "AWS::DataSync::LocationEFS": "CACHED",
+  "AWS::DataSync::LocationHDFS": "CACHED",
+  "AWS::DataSync::LocationNFS": "CACHED",
+  "AWS::DataSync::LocationObjectStorage": "CACHED",
+  "AWS::DataSync::LocationS3": "CACHED",
+  "AWS::DataSync::LocationSMB": "CACHED",
+  "AWS::DataSync::Task": "CACHED",
   "AWS::DynamoDB::Table": "CACHED",
   "AWS::EC2::CapacityReservation": "CACHED",
   "AWS::EC2::CustomerGateway": {
@@ -5220,6 +5220,7 @@
   "AWS::WAF::WebACL": "CACHED",
   "AWS::WAF::XssMatchSet": "CACHED",
   "AWS::XRay::Group": "CACHED",
+  "AWS::XRay::ResourcePolicy": "CACHED",
   "AWS::XRay::SamplingRule": "CACHED"
  },
  "ValueTypes": {
@@ -5380,6 +5381,67 @@
   "AWS::Config::ConfigRule.Source.Owner": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.EventSource": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.MessageType": "CACHED",
+  "AWS::DataSync::Agent.ActivationKey": "CACHED",
+  "AWS::DataSync::Agent.AgentName": "CACHED",
+  "AWS::DataSync::Agent.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::Agent.SubnetArns": "CACHED",
+  "AWS::DataSync::Agent.VpcEndpointId": "CACHED",
+  "AWS::DataSync::LocationEFS.AccessPointArn": "CACHED",
+  "AWS::DataSync::LocationEFS.Ec2Config.SecurityGroupArns": "CACHED",
+  "AWS::DataSync::LocationEFS.Ec2Config.SubnetArn": "CACHED",
+  "AWS::DataSync::LocationEFS.EfsFilesystemArn": "CACHED",
+  "AWS::DataSync::LocationEFS.FileSystemAccessRoleArn": "CACHED",
+  "AWS::DataSync::LocationEFS.InTransitEncryption": "CACHED",
+  "AWS::DataSync::LocationHDFS.AgentArns": "CACHED",
+  "AWS::DataSync::LocationHDFS.AuthenticationType": "CACHED",
+  "AWS::DataSync::LocationHDFS.BlockSize": "CACHED",
+  "AWS::DataSync::LocationHDFS.KerberosPrincipal": "CACHED",
+  "AWS::DataSync::LocationHDFS.KmsKeyProviderUri": "CACHED",
+  "AWS::DataSync::LocationHDFS.NameNode.Hostname": "CACHED",
+  "AWS::DataSync::LocationHDFS.NameNode.Port": "CACHED",
+  "AWS::DataSync::LocationHDFS.QopConfiguration.DataTransferProtection": "CACHED",
+  "AWS::DataSync::LocationHDFS.QopConfiguration.RpcProtection": "CACHED",
+  "AWS::DataSync::LocationHDFS.ReplicationFactor": "CACHED",
+  "AWS::DataSync::LocationHDFS.SimpleUser": "CACHED",
+  "AWS::DataSync::LocationNFS.MountOptions.Version": "CACHED",
+  "AWS::DataSync::LocationNFS.OnPremConfig.AgentArns": "CACHED",
+  "AWS::DataSync::LocationNFS.ServerHostname": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.AccessKey": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.AgentArns": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.SecretKey": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.ServerHostname": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.ServerPort": "CACHED",
+  "AWS::DataSync::LocationObjectStorage.ServerProtocol": "CACHED",
+  "AWS::DataSync::LocationS3.S3BucketArn": "CACHED",
+  "AWS::DataSync::LocationS3.S3Config.BucketAccessRoleArn": "CACHED",
+  "AWS::DataSync::LocationS3.S3StorageClass": "CACHED",
+  "AWS::DataSync::LocationSMB.AgentArns": "CACHED",
+  "AWS::DataSync::LocationSMB.Domain": "CACHED",
+  "AWS::DataSync::LocationSMB.MountOptions.Version": "CACHED",
+  "AWS::DataSync::LocationSMB.Password": "CACHED",
+  "AWS::DataSync::LocationSMB.ServerHostname": "CACHED",
+  "AWS::DataSync::LocationSMB.User": "CACHED",
+  "AWS::DataSync::Task.CloudWatchLogGroupArn": "CACHED",
+  "AWS::DataSync::Task.DestinationLocationArn": "CACHED",
+  "AWS::DataSync::Task.FilterRule.FilterType": "CACHED",
+  "AWS::DataSync::Task.FilterRule.Value": "CACHED",
+  "AWS::DataSync::Task.Name": "CACHED",
+  "AWS::DataSync::Task.Options.Atime": "CACHED",
+  "AWS::DataSync::Task.Options.Gid": "CACHED",
+  "AWS::DataSync::Task.Options.LogLevel": "CACHED",
+  "AWS::DataSync::Task.Options.Mtime": "CACHED",
+  "AWS::DataSync::Task.Options.ObjectTags": "CACHED",
+  "AWS::DataSync::Task.Options.OverwriteMode": "CACHED",
+  "AWS::DataSync::Task.Options.PosixPermissions": "CACHED",
+  "AWS::DataSync::Task.Options.PreserveDeletedFiles": "CACHED",
+  "AWS::DataSync::Task.Options.PreserveDevices": "CACHED",
+  "AWS::DataSync::Task.Options.SecurityDescriptorCopyFlags": "CACHED",
+  "AWS::DataSync::Task.Options.TaskQueueing": "CACHED",
+  "AWS::DataSync::Task.Options.TransferMode": "CACHED",
+  "AWS::DataSync::Task.Options.Uid": "CACHED",
+  "AWS::DataSync::Task.Options.VerifyMode": "CACHED",
+  "AWS::DataSync::Task.SourceLocationArn": "CACHED",
+  "AWS::DataSync::Task.TaskSchedule.ScheduleExpression": "CACHED",
   "AWS::Default::Default.EnabledState": "CACHED",
   "AWS::DocDB::DBCluster.BackupRetentionPeriod": "CACHED",
   "AWS::DynamoDB::Table.AttributeDefinition.AttributeType": "CACHED",
@@ -5847,6 +5909,8 @@
   "AWS::WorkSpaces::Workspace.ComputeTypeName": "CACHED",
   "AWS::WorkSpaces::Workspace.RunningMode": "CACHED",
   "AWS::XRay::Group.GroupName": "CACHED",
+  "AWS::XRay::ResourcePolicy.PolicyDocument": "CACHED",
+  "AWS::XRay::ResourcePolicy.PolicyName": "CACHED",
   "AWS::XRay::SamplingRule.RuleName": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRule.Priority": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRule.RuleName": "CACHED",
