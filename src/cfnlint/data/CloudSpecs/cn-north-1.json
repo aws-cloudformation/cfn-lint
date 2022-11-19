@@ -177,24 +177,7 @@
   "AWS::ApiGatewayV2::ApiGatewayManagedOverrides.RouteOverrides": "CACHED",
   "AWS::ApiGatewayV2::ApiGatewayManagedOverrides.RouteSettings": "CACHED",
   "AWS::ApiGatewayV2::ApiGatewayManagedOverrides.StageOverrides": "CACHED",
-  "AWS::ApiGatewayV2::Authorizer.JWTConfiguration": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-authorizer-jwtconfiguration.html",
-   "Properties": {
-    "Audience": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-authorizer-jwtconfiguration.html#cfn-apigatewayv2-authorizer-jwtconfiguration-audience",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Issuer": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-authorizer-jwtconfiguration.html#cfn-apigatewayv2-authorizer-jwtconfiguration-issuer",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ApiGatewayV2::Authorizer.JWTConfiguration": "CACHED",
   "AWS::ApiGatewayV2::DomainName.DomainNameConfiguration": "CACHED",
   "AWS::ApiGatewayV2::DomainName.MutualTlsAuthentication": "CACHED",
   "AWS::ApiGatewayV2::Integration.ResponseParameter": "CACHED",
@@ -225,6 +208,7 @@
   "AWS::AppSync::DataSource.OpenSearchServiceConfig": "CACHED",
   "AWS::AppSync::DataSource.RdsHttpEndpointConfig": "CACHED",
   "AWS::AppSync::DataSource.RelationalDatabaseConfig": "CACHED",
+  "AWS::AppSync::FunctionConfiguration.AppSyncRuntime": "CACHED",
   "AWS::AppSync::FunctionConfiguration.LambdaConflictHandlerConfig": "CACHED",
   "AWS::AppSync::FunctionConfiguration.SyncConfig": "CACHED",
   "AWS::AppSync::GraphQLApi.AdditionalAuthenticationProvider": "CACHED",
@@ -233,6 +217,7 @@
   "AWS::AppSync::GraphQLApi.LogConfig": "CACHED",
   "AWS::AppSync::GraphQLApi.OpenIDConnectConfig": "CACHED",
   "AWS::AppSync::GraphQLApi.UserPoolConfig": "CACHED",
+  "AWS::AppSync::Resolver.AppSyncRuntime": "CACHED",
   "AWS::AppSync::Resolver.CachingConfig": "CACHED",
   "AWS::AppSync::Resolver.LambdaConflictHandlerConfig": "CACHED",
   "AWS::AppSync::Resolver.PipelineConfig": "CACHED",
@@ -278,6 +263,7 @@
   "AWS::AutoScaling::AutoScalingGroup.MemoryMiBRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.MetricsCollection": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.MixedInstancesPolicy": "CACHED",
+  "AWS::AutoScaling::AutoScalingGroup.NetworkBandwidthGbpsRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.NetworkInterfaceCountRequest": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.NotificationConfiguration": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup.TagProperty": "CACHED",
@@ -973,6 +959,7 @@
   "AWS::EC2::SpotFleet.TotalLocalStorageGBRequest": "CACHED",
   "AWS::EC2::SpotFleet.VCpuCountRangeRequest": "CACHED",
   "AWS::EC2::TrafficMirrorFilterRule.TrafficMirrorPortRange": "CACHED",
+  "AWS::EC2::TransitGatewayConnect.TransitGatewayConnectOptions": "CACHED",
   "AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification": "CACHED",
   "AWS::ECR::Repository.EncryptionConfiguration": "CACHED",
   "AWS::ECR::Repository.ImageScanningConfiguration": "CACHED",
@@ -984,6 +971,7 @@
   "AWS::ECS::Cluster.ClusterSettings": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandConfiguration": "CACHED",
   "AWS::ECS::Cluster.ExecuteCommandLogConfiguration": "CACHED",
+  "AWS::ECS::Cluster.ServiceConnectDefaults": "CACHED",
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
   "AWS::ECS::Service.CapacityProviderStrategyItem": "CACHED",
@@ -991,9 +979,14 @@
   "AWS::ECS::Service.DeploymentConfiguration": "CACHED",
   "AWS::ECS::Service.DeploymentController": "CACHED",
   "AWS::ECS::Service.LoadBalancer": "CACHED",
+  "AWS::ECS::Service.LogConfiguration": "CACHED",
   "AWS::ECS::Service.NetworkConfiguration": "CACHED",
   "AWS::ECS::Service.PlacementConstraint": "CACHED",
   "AWS::ECS::Service.PlacementStrategy": "CACHED",
+  "AWS::ECS::Service.Secret": "CACHED",
+  "AWS::ECS::Service.ServiceConnectClientAlias": "CACHED",
+  "AWS::ECS::Service.ServiceConnectConfiguration": "CACHED",
+  "AWS::ECS::Service.ServiceConnectService": "CACHED",
   "AWS::ECS::Service.ServiceRegistry": "CACHED",
   "AWS::ECS::TaskDefinition.AuthorizationConfig": "CACHED",
   "AWS::ECS::TaskDefinition.ContainerDefinition": "CACHED",
@@ -1013,7 +1006,29 @@
   "AWS::ECS::TaskDefinition.LinuxParameters": "CACHED",
   "AWS::ECS::TaskDefinition.LogConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.MountPoint": "CACHED",
-  "AWS::ECS::TaskDefinition.PortMapping": "CACHED",
+  "AWS::ECS::TaskDefinition.PortMapping": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html",
+   "Properties": {
+    "ContainerPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-containerport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "HostPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-readonly",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Protocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ecs-taskdefinition-containerdefinitions-portmappings.html#cfn-ecs-taskdefinition-containerdefinition-portmappings-sourcevolume",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::ECS::TaskDefinition.ProxyConfiguration": "CACHED",
   "AWS::ECS::TaskDefinition.RepositoryCredentials": "CACHED",
   "AWS::ECS::TaskDefinition.ResourceRequirement": "CACHED",
@@ -1726,6 +1741,111 @@
   "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource.ReferenceDataSource": "CACHED",
   "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource.ReferenceSchema": "CACHED",
   "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource.S3ReferenceDataSource": "CACHED",
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessBufferingHints": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessbufferinghints.html",
+   "Properties": {
+    "IntervalInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessbufferinghints.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessbufferinghints-intervalinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SizeInMBs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessbufferinghints.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessbufferinghints-sizeinmbs",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html",
+   "Properties": {
+    "BufferingHints": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-bufferinghints",
+     "Required": false,
+     "Type": "AmazonOpenSearchServerlessBufferingHints",
+     "UpdateType": "Mutable"
+    },
+    "CloudWatchLoggingOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-cloudwatchloggingoptions",
+     "Required": false,
+     "Type": "CloudWatchLoggingOptions",
+     "UpdateType": "Mutable"
+    },
+    "CollectionEndpoint": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-collectionendpoint",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.CollectionEndpoint"
+     }
+    },
+    "IndexName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-indexname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.IndexName"
+     }
+    },
+    "ProcessingConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-processingconfiguration",
+     "Required": false,
+     "Type": "ProcessingConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "RetryOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-retryoptions",
+     "Required": false,
+     "Type": "AmazonOpenSearchServerlessRetryOptions",
+     "UpdateType": "Mutable"
+    },
+    "RoleARN": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.RoleARN"
+     }
+    },
+    "S3BackupMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-s3backupmode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.S3BackupMode"
+     }
+    },
+    "S3Configuration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-s3configuration",
+     "Required": true,
+     "Type": "S3DestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "VpcConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration-vpcconfiguration",
+     "Required": false,
+     "Type": "VpcConfiguration",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessRetryOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessretryoptions.html",
+   "Properties": {
+    "DurationInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-kinesisfirehose-deliverystream-amazonopensearchserverlessretryoptions.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessretryoptions-durationinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceBufferingHints": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceDestinationConfiguration": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceRetryOptions": "CACHED",
@@ -2396,7 +2516,7 @@
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "97.0.0",
+ "ResourceSpecificationVersion": "99.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -2424,78 +2544,7 @@
   "AWS::ApiGatewayV2::Api": "CACHED",
   "AWS::ApiGatewayV2::ApiGatewayManagedOverrides": "CACHED",
   "AWS::ApiGatewayV2::ApiMapping": "CACHED",
-  "AWS::ApiGatewayV2::Authorizer": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html",
-   "Properties": {
-    "ApiId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-apiid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "AuthorizerCredentialsArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-authorizercredentialsarn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizerPayloadFormatVersion": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-authorizerpayloadformatversion",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizerResultTtlInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-authorizerresultttlinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizerType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-authorizertype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizerUri": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-authorizeruri",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableSimpleResponses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-enablesimpleresponses",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "IdentitySource": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-identitysource",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "IdentityValidationExpression": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-identityvalidationexpression",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "JwtConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-jwtconfiguration",
-     "Required": false,
-     "Type": "JWTConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-authorizer.html#cfn-apigatewayv2-authorizer-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ApiGatewayV2::Authorizer": "CACHED",
   "AWS::ApiGatewayV2::Deployment": "CACHED",
   "AWS::ApiGatewayV2::DomainName": "CACHED",
   "AWS::ApiGatewayV2::Integration": "CACHED",
@@ -3523,6 +3572,9 @@
     }
    }
   },
+  "AWS::EC2::TransitGatewayConnect": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastDomain": "CACHED",
+  "AWS::EC2::TransitGatewayPeeringAttachment": "CACHED",
   "AWS::EC2::TransitGatewayRoute": "CACHED",
   "AWS::EC2::TransitGatewayRouteTable": "CACHED",
   "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
@@ -3831,7 +3883,162 @@
   "AWS::ElasticLoadBalancingV2::ListenerCertificate": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerRule": "CACHED",
   "AWS::ElasticLoadBalancingV2::LoadBalancer": "CACHED",
-  "AWS::ElasticLoadBalancingV2::TargetGroup": "CACHED",
+  "AWS::ElasticLoadBalancingV2::TargetGroup": {
+   "Attributes": {
+    "LoadBalancerArns": {
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "TargetGroupArn": {
+     "PrimitiveType": "String"
+    },
+    "TargetGroupFullName": {
+     "PrimitiveType": "String"
+    },
+    "TargetGroupName": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html",
+   "Properties": {
+    "HealthCheckEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckIntervalSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckintervalseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ElasticLoadBalancingV2::TargetGroup.HealthCheckIntervalSeconds"
+     }
+    },
+    "HealthCheckPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckport",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckProtocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckprotocol",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckTimeoutSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthchecktimeoutseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TargetGroupHealthCheckTimeoutSeconds"
+     }
+    },
+    "HealthyThresholdCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthythresholdcount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TargetGroupHealthyThresholdCount"
+     }
+    },
+    "IpAddressType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-ipaddresstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Matcher": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-matcher",
+     "Required": false,
+     "Type": "Matcher",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Port": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-port",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Protocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocol",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ProtocolVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocolversion",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetGroupAttributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targetgroupattributes",
+     "DuplicatesAllowed": false,
+     "ItemType": "TargetGroupAttribute",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targettype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Targets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targets",
+     "DuplicatesAllowed": false,
+     "ItemType": "TargetDescription",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "UnhealthyThresholdCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-unhealthythresholdcount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ElasticLoadBalancingV2::TargetGroup.UnhealthyThresholdCount"
+     }
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-vpcid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPC.Id"
+     }
+    }
+   }
+  },
   "AWS::Elasticsearch::Domain": "CACHED",
   "AWS::Events::EventBus": "CACHED",
   "AWS::Events::EventBusPolicy": "CACHED",
@@ -3954,7 +4161,101 @@
   "AWS::KinesisAnalyticsV2::ApplicationCloudWatchLoggingOption": "CACHED",
   "AWS::KinesisAnalyticsV2::ApplicationOutput": "CACHED",
   "AWS::KinesisAnalyticsV2::ApplicationReferenceDataSource": "CACHED",
-  "AWS::KinesisFirehose::DeliveryStream": "CACHED",
+  "AWS::KinesisFirehose::DeliveryStream": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html",
+   "Properties": {
+    "AmazonOpenSearchServerlessDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-amazonopensearchserverlessdestinationconfiguration",
+     "Required": false,
+     "Type": "AmazonOpenSearchServerlessDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "AmazonopensearchserviceDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-amazonopensearchservicedestinationconfiguration",
+     "Required": false,
+     "Type": "AmazonopensearchserviceDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "DeliveryStreamEncryptionConfigurationInput": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-deliverystreamencryptionconfigurationinput",
+     "Required": false,
+     "Type": "DeliveryStreamEncryptionConfigurationInput",
+     "UpdateType": "Mutable"
+    },
+    "DeliveryStreamName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-deliverystreamname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.DeliveryStreamName"
+     }
+    },
+    "DeliveryStreamType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-deliverystreamtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::KinesisFirehose::DeliveryStream.DeliveryStreamType"
+     }
+    },
+    "ElasticsearchDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-elasticsearchdestinationconfiguration",
+     "Required": false,
+     "Type": "ElasticsearchDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "ExtendedS3DestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-extendeds3destinationconfiguration",
+     "Required": false,
+     "Type": "ExtendedS3DestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "HttpEndpointDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-httpendpointdestinationconfiguration",
+     "Required": false,
+     "Type": "HttpEndpointDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "KinesisStreamSourceConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-kinesisstreamsourceconfiguration",
+     "Required": false,
+     "Type": "KinesisStreamSourceConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "RedshiftDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-redshiftdestinationconfiguration",
+     "Required": false,
+     "Type": "RedshiftDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "S3DestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-s3destinationconfiguration",
+     "Required": false,
+     "Type": "S3DestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "SplunkDestinationConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-splunkdestinationconfiguration",
+     "Required": false,
+     "Type": "SplunkDestinationConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-kinesisfirehose-deliverystream.html#cfn-kinesisfirehose-deliverystream-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::LakeFormation::DataCellsFilter": "CACHED",
   "AWS::LakeFormation::PrincipalPermissions": "CACHED",
   "AWS::LakeFormation::Tag": "CACHED",
@@ -4161,45 +4462,7 @@
   "AWS::Neptune::DBSubnetGroup": "CACHED",
   "AWS::OpenSearchService::Domain": "CACHED",
   "AWS::Organizations::Account": "CACHED",
-  "AWS::Organizations::OrganizationalUnit": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-organizations-organizationalunit.html",
-   "Properties": {
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-organizations-organizationalunit.html#cfn-organizations-organizationalunit-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Organizations::OrganizationalUnit.Name"
-     }
-    },
-    "ParentId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-organizations-organizationalunit.html#cfn-organizations-organizationalunit-parentid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Organizations::OrganizationalUnit.ParentId"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-organizations-organizationalunit.html#cfn-organizations-organizationalunit-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Organizations::OrganizationalUnit": "CACHED",
   "AWS::Personalize::Dataset": "CACHED",
   "AWS::Personalize::DatasetGroup": "CACHED",
   "AWS::Personalize::Schema": "CACHED",
@@ -5549,6 +5812,26 @@
   "AWS::KinesisAnalyticsV2::Application.S3ContentLocation.ObjectVersion": "CACHED",
   "AWS::KinesisAnalyticsV2::Application.ServiceExecutionRole": "CACHED",
   "AWS::KinesisAnalyticsV2::Application.ZeppelinMonitoringConfiguration.LogLevel": "CACHED",
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.CollectionEndpoint": {
+   "AllowedPatternRegex": "https:.*",
+   "StringMax": 512,
+   "StringMin": 1
+  },
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.IndexName": {
+   "StringMax": 80,
+   "StringMin": 1
+  },
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.RoleARN": {
+   "AllowedPatternRegex": "arn:.*",
+   "StringMax": 512,
+   "StringMin": 1
+  },
+  "AWS::KinesisFirehose::DeliveryStream.AmazonOpenSearchServerlessDestinationConfiguration.S3BackupMode": {
+   "AllowedValues": [
+    "FailedDocumentsOnly",
+    "AllDocuments"
+   ]
+  },
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceDestinationConfiguration.ClusterEndpoint": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceDestinationConfiguration.DomainARN": "CACHED",
   "AWS::KinesisFirehose::DeliveryStream.AmazonopensearchserviceDestinationConfiguration.IndexName": "CACHED",
@@ -5705,14 +5988,8 @@
   "AWS::Organizations::Account.Email": "CACHED",
   "AWS::Organizations::Account.ParentIds": "CACHED",
   "AWS::Organizations::Account.RoleName": "CACHED",
-  "AWS::Organizations::OrganizationalUnit.Name": {
-   "AllowedPatternRegex": "[\\s\\S]*",
-   "StringMax": 128,
-   "StringMin": 1
-  },
-  "AWS::Organizations::OrganizationalUnit.ParentId": {
-   "AllowedPatternRegex": "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$"
-  },
+  "AWS::Organizations::OrganizationalUnit.Name": "CACHED",
+  "AWS::Organizations::OrganizationalUnit.ParentId": "CACHED",
   "AWS::Personalize::Dataset.DatasetGroupArn": "CACHED",
   "AWS::Personalize::Dataset.DatasetImportJob.DatasetArn": "CACHED",
   "AWS::Personalize::Dataset.DatasetImportJob.DatasetImportJobArn": "CACHED",
