@@ -38,14 +38,7 @@ class TestGetUrlContent(BaseTestCase):
         input_buffer = '{"key": "value"}'
         cm = MagicMock()
         cm.getcode.return_value = 200
-        if sys.version_info.major == 3:
-            cm.read.return_value = gzip.compress(input_buffer.encode('utf-8'))
-        else:
-            string_buffer = StringIO.StringIO()
-            gzip_file = gzip.GzipFile(fileobj=string_buffer, mode='w', compresslevel=6)
-            gzip_file.write(input_buffer)
-            gzip_file.close()
-            cm.read.return_value = string_buffer.getvalue()
+        cm.read.return_value = gzip.compress(input_buffer.encode('utf-8'))
 
         cm.info.return_value = {
             'Content-Encoding': 'gzip'
@@ -76,14 +69,7 @@ class TestGetUrlContent(BaseTestCase):
             'ETag': etag
         }
 
-        if sys.version_info.major == 3:
-            cm.read.return_value = gzip.compress(input_buffer.encode('utf-8'))
-        else:
-            string_buffer = StringIO.StringIO()
-            gzip_file = gzip.GzipFile(fileobj=string_buffer, mode='w', compresslevel=6)
-            gzip_file.write(input_buffer)
-            gzip_file.close()
-            cm.read.return_value = string_buffer.getvalue()
+        cm.read.return_value = gzip.compress(input_buffer.encode('utf-8'))
 
         cm.__enter__.return_value = cm
         mocked_urlopen.return_value = cm
@@ -121,10 +107,7 @@ class TestGetUrlContent(BaseTestCase):
         result = cfnlint.helpers.url_has_newer_version(url)
         
         # Python2 does not support caching, so will always return true
-        if sys.version_info.major == 2:
-            self.assertTrue(result)
-        else:
-            self.assertFalse(result)
+        self.assertFalse(result)
 
     @patch('cfnlint.helpers.urlopen')
     @patch('cfnlint.helpers.load_metadata')

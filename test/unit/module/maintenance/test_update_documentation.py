@@ -24,10 +24,7 @@ Regular Text
     def test_update_docs(self):
         collection = RulesCollection(include_rules=['I'], include_experimental=True)
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         mo = mock_open(read_data=self.TEST_TEXT)
         mo.return_value.__iter__ = lambda self: self
