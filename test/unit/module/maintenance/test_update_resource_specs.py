@@ -7,10 +7,7 @@ import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch, MagicMock, Mock, ANY, call
 import cfnlint.maintenance
-try:
-    from urllib.request import urlopen, Request
-except ImportError:
-    from urllib2 import urlopen
+
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())
@@ -113,10 +110,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_urlopen.return_value = cm
         schema_cache = cfnlint.maintenance.get_schema_value_types()
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
             cfnlint.maintenance.update_resource_spec(
@@ -205,10 +199,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_urlopen.return_value = cm
         schema_cache = cfnlint.maintenance.get_schema_value_types()
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         mock_load_resource.return_value = {
                     'PropertyTypes': {
@@ -332,10 +323,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
         mock_urlopen.return_value = cm
         schema_cache = cfnlint.maintenance.get_schema_value_types()
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
             cfnlint.maintenance.update_resource_spec(
@@ -355,16 +343,3 @@ class TestUpdateResourceSpecs(BaseTestCase):
         cfnlint.maintenance.update_resource_specs()
 
         fake_pool.starmap.assert_called_once()
-
-    @patch('cfnlint.maintenance.multiprocessing.Pool')
-    @patch('cfnlint.maintenance.update_resource_spec')
-    @patch('cfnlint.maintenance.SPEC_REGIONS', {'us-east-1': 'http://us-east-1.foo', 'us-west-2': 'http://us-west-2.foo'})
-    def test_update_resource_specs_python_2(self, mock_update_resource_spec, mock_pool):
-
-        fake_pool = MagicMock()
-        mock_pool.return_value.__enter__.return_value = AttributeError(
-            'foobar')
-
-        cfnlint.maintenance.update_resource_specs()
-
-        mock_update_resource_spec.assert_has_calls([call('us-east-1', 'http://us-east-1.foo', ANY, False), call('us-west-2', 'http://us-west-2.foo', ANY, False)])

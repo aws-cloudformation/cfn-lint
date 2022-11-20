@@ -36,10 +36,7 @@ class TestDownloadsMetadata(BaseTestCase):
             'etag': 'foo'
         }
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         mo = mock_open(read_data=json.dumps(file_contents))
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:
@@ -63,10 +60,7 @@ class TestDownloadsMetadata(BaseTestCase):
         mock_path_exists.return_value = False
         mock_dirname.return_value = filedir
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         mo = mock_open()
         with patch('{}.open'.format(builtin_module_name), mo) as mock_builtin_open:

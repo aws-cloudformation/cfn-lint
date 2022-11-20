@@ -22,10 +22,7 @@ class TestUpdateIamPolicies(BaseTestCase):
 
         mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
 
-        if sys.version_info.major == 3:
-            builtin_module_name = 'builtins'
-        else:
-            builtin_module_name = '__builtin__'
+        builtin_module_name = 'builtins'
 
         with patch('{}.open'.format(builtin_module_name)) as mock_builtin_open:
             cfnlint.maintenance.update_iam_policies()

@@ -41,12 +41,8 @@ class BaseCliTestCase(BaseTestCase):
                     result = result.decode('utf8')
                 matches = json.loads(result)
 
-                if sys.version_info[0] >= 3:
-                    self.assertCountEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
-                        len(expected_results), len(matches), filename))
-                else:
-                    self.assertItemsEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
-                        len(expected_results), len(matches), filename))
+                self.assertCountEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
+                    len(expected_results), len(matches), filename))
 
             except subprocess.CalledProcessError as error:
                 self.assertEqual(error.returncode, exit_code, 'Expected {} exit code, got {} on {}'.format(
@@ -56,12 +52,9 @@ class BaseCliTestCase(BaseTestCase):
                     error.output = error.output.decode('utf8')
                 matches = json.loads(error.output)
 
-                if sys.version_info[0] >= 3:
-                    self.assertCountEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
-                        len(expected_results), len(matches), filename))
-                else:
-                    self.assertItemsEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
-                        len(expected_results), len(matches), filename))
+                self.assertCountEqual(expected_results, matches, 'Expected {} failures, got {} on {}'.format(
+                    len(expected_results), len(matches), filename))
+
 
     def run_module_integration_scenarios(self, rules):
         """ Test using cfnlint as a module integrated into another package"""
