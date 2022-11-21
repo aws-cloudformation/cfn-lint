@@ -51,7 +51,7 @@ $ pip install tox
 $ tox
 
 # Run a specific test suite
-$ tox -e py37 # Run all unit tests again Python 3.7
+$ tox -e py37 # Run all unit tests against Python 3.7
 ```
 Tox test suites available:
 * **py37**: Unit tests (Python 3.7)
@@ -59,7 +59,7 @@ Tox test suites available:
 * **py39**: Unit tests (Python 3.9)
 * **py310**: Unit tests (Python 3.10)
 * **py311**: Unit tests (Python 3.11)
-* **pylint**: Python syntax check
+* **style**: Python syntax check
 
 ## Contributing via Pull Requests
 Contributions via pull requests are much appreciated. Before sending us a pull request, please ensure that:
