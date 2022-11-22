@@ -368,7 +368,7 @@ class CliArgs:
         standard.add_argument(
             '-b',
             '--ignore-bad-template',
-            help='Ignore failures with Bad template',
+            help='Suppress the \'Template file not found\' error. This is useful for suppressing errors caused by wildcards that expand to no files',
             action='store_true',
         )
         standard.add_argument(
