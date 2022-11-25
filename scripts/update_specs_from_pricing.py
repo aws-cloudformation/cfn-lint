@@ -26,6 +26,7 @@ region_map = {
     'Asia Pacific (Mumbai)': 'ap-south-1',
     'Asia Pacific (Hyderabad)': 'ap-south-2',
     'Asia Pacific (Osaka)': 'ap-northeast-3',
+    'Asia Pacific (Osaka-Local)': 'ap-northeast-3',
     'Asia Pacific (Seoul)': 'ap-northeast-2',
     'Asia Pacific (Singapore)': 'ap-southeast-1',
     'Asia Pacific (Sydney)': 'ap-southeast-2',
