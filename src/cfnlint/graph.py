@@ -240,6 +240,7 @@ class Graph:
     def _add_node(self, node_id, label, settings):
         if settings.node_type in ['Parameter', 'Output']:
             node_id = f'{settings.node_type}-{node_id}'
+
         self.graph.add_node(
             node_id,
             label=label,
@@ -255,7 +256,6 @@ class Graph:
             source_paths=source_path,
             label=settings.label,
             color=settings.color,
-            penwidth=1,
         )
 
     def _is_resource(self, cfn, identifier):
