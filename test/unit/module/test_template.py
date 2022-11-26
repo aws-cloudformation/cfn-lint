@@ -53,10 +53,10 @@ ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoad
 IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type=Resource];
 CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type=Resource];
 WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type=Resource];
-RolePolicies -> RootRole  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Roles', 0]"];
-RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Roles', 0]"];
-MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'IamInstanceProfile']"];
-ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, penwidth=1, source_paths="['Properties', 'Instances', 0]"];
+RolePolicies -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
+RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
+MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, source_paths="['Properties', 'IamInstanceProfile']"];
+ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_paths="['Properties', 'Instances', 0]"];
 }
 """.split('\n')
 

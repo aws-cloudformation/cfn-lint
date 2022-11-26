@@ -6,7 +6,8 @@ import logging
 from typing import List, Optional, Sequence, Union
 from cfnlint.template import Template
 from cfnlint.transform import Transform
-from .rules import Match, RulesCollection
+from cfnlint.graph import Graph
+from cfnlint.rules import Match, RulesCollection
 
 
 LOGGER = logging.getLogger(__name__)
@@ -52,6 +53,7 @@ class Runner:
         transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
         matches = transform.transform_template()
         self.cfn.template = transform.template()
+        self.cfn.graph = Graph(self.cfn)
         return matches
 
     def run(self) -> List[Match]:
