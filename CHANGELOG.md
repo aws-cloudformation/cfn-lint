@@ -1,3 +1,9 @@
+### v0.72.1
+###### CloudFormation Specifications
+- Add `ap-south-2` region (pull #[2503](https://github.com/aws-cloudformation/cfn-lint/pull/2503))
+###### Fixes
+- Rebuild the graph after doing the transform (pull #[2502](https://github.com/aws-cloudformation/cfn-lint/pull/2502))
+
 ### v0.72.0
 ###### Features
 - Add more info into the graph including outputs and parameters(pull #[2452](https://github.com/aws-cloudformation/cfn-lint/pull/2452))
