@@ -24,4 +24,6 @@ class TestRulesFindInMap(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/functions_findinmap.yaml", 7)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/functions_findinmap.yaml", 7
+        )

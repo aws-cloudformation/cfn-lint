@@ -228,7 +228,7 @@ def update_documentation(rules):
                         "git",
                         "grep",
                         "-l",
-                        "id = '" + rule.id + "'",
+                        'id = "' + rule.id + '"',
                         "src/cfnlint/rules/",
                     ]
                 )
