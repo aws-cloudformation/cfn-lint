@@ -4,7 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=cyclic-import
 import json
+
 import cfnlint.rules.custom.Operators
+
 
 # pylint: disable=too-many-return-statements
 def make_rule(line, lineNumber):

@@ -7,18 +7,18 @@ import json
 import logging
 import multiprocessing
 import os
-import subprocess
-import zipfile
 import re
-from io import BytesIO
+import subprocess
 import warnings
-from urllib.request import urlopen, Request
-import jsonpatch
-import cfnlint
-from cfnlint.helpers import get_url_content, url_has_newer_version
-from cfnlint.helpers import SPEC_REGIONS
-import cfnlint.data.AdditionalSpecs
+import zipfile
+from io import BytesIO
+from urllib.request import Request, urlopen
 
+import jsonpatch
+
+import cfnlint
+import cfnlint.data.AdditionalSpecs
+from cfnlint.helpers import SPEC_REGIONS, get_url_content, url_has_newer_version
 
 LOGGER = logging.getLogger(__name__)
 

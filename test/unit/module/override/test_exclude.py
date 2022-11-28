@@ -4,10 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from test.testlib.testcase import BaseTestCase
-from cfnlint.runner import Runner
+
+import cfnlint.helpers
 from cfnlint.rules import RulesCollection
 from cfnlint.rules.resources.Configuration import Configuration  # pylint: disable=E0401
-import cfnlint.helpers
+from cfnlint.runner import Runner
 
 
 class TestExclude(BaseTestCase):

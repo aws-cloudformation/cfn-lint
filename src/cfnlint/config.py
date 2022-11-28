@@ -2,19 +2,20 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import argparse
-import logging
+import copy
 import glob
 import json
-import copy
+import logging
+import sys
 from pathlib import Path
 from typing import Dict
-import jsonschema
-import cfnlint.decode.cfn_yaml
-from cfnlint.version import __version__
-from cfnlint.helpers import REGIONS
 
+import jsonschema
+
+import cfnlint.decode.cfn_yaml
+from cfnlint.helpers import REGIONS
+from cfnlint.version import __version__
 
 # pylint: disable=too-many-public-methods
 LOGGER = logging.getLogger('cfnlint')

@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
+
 import cfnlint.core
-from cfnlint.rules import Match, CloudFormationLintRule
+from cfnlint.rules import CloudFormationLintRule, Match
 
 
 class ErrorRule(CloudFormationLintRule):

@@ -4,9 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import os
 from pathlib import Path
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
 from cfnlint.helpers import LIMITS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class LimitSize(CloudFormationLintRule):

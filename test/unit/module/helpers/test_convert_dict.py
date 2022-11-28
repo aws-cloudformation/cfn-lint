@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
-from cfnlint.helpers import convert_dict
+
 from cfnlint.decode.node import dict_node, list_node, str_node
+from cfnlint.helpers import convert_dict
 
 
 class TestConvertDict(BaseTestCase):

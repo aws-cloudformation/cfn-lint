@@ -2,11 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from argparse import ArgumentError
 import logging
 import os
-from unittest.mock import patch
+from argparse import ArgumentError
 from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
+
 import cfnlint.config  # pylint: disable=E0401
 
 LOGGER = logging.getLogger('cfnlint')

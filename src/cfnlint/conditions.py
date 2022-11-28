@@ -3,9 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import hashlib
-from copy import copy
 import json
 import logging
+from copy import copy
+
 import cfnlint.helpers
 
 LOGGER = logging.getLogger(__name__)

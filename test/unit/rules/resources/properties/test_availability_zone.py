@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
-from cfnlint.rules.resources.properties.AvailabilityZone import AvailabilityZone  # pylint: disable=E0401
+
+from cfnlint.rules.resources.properties.AvailabilityZone import (
+    AvailabilityZone,  # pylint: disable=E0401
+)
 
 
 class TestPropertyAvailabilityZone(BaseRuleTestCase):

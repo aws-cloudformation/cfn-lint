@@ -5,9 +5,9 @@ SPDX-License-Identifier: MIT-0
 from unittest import TestCase
 
 from cfnlint.api import lint, lint_all
-from cfnlint.rules import RulesCollection
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
+from cfnlint.rules import RulesCollection
 
 
 class TestLint(TestCase):

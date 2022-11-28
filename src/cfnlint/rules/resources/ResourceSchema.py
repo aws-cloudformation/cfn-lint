@@ -3,16 +3,17 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from jsonschema import validate, ValidationError
+
+from jsonschema import ValidationError, validate
+
 from cfnlint.helpers import (
-    REGEX_DYN_REF,
-    PSEUDOPARAMS,
     FN_PREFIX,
-    UNCONVERTED_SUFFIXES,
+    PSEUDOPARAMS,
+    REGEX_DYN_REF,
     REGISTRY_SCHEMAS,
+    UNCONVERTED_SUFFIXES,
 )
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ResourceSchema(CloudFormationLintRule):

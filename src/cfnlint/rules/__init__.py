@@ -2,18 +2,18 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import os
-import logging
-from datetime import datetime
 import importlib
+import logging
+import os
 import traceback
-from typing import Any, Dict, List, Optional, Tuple, Union, MutableSet
-from cfnlint.exceptions import DuplicateRuleError
+from datetime import datetime
+from typing import Any, Dict, List, MutableSet, Optional, Tuple, Union
+
 import cfnlint.helpers
 import cfnlint.rules.custom
 from cfnlint.decode.node import TemplateAttributeError
+from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.template import Template
-
 
 LOGGER = logging.getLogger(__name__)
 

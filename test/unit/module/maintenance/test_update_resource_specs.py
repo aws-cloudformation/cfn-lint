@@ -2,12 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import logging
+import sys
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import patch, MagicMock, Mock, ANY, call
-import cfnlint.maintenance
+from unittest.mock import ANY, MagicMock, Mock, call, patch
 
+import cfnlint.maintenance
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())

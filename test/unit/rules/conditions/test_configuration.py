@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
-from cfnlint.rules.conditions.Configuration import Configuration  # pylint: disable=E0401
+
+from cfnlint.rules.conditions.Configuration import (
+    Configuration,  # pylint: disable=E0401
+)
 
 
 class TestMappingConfiguration(BaseRuleTestCase):

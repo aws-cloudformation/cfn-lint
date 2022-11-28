@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 from test.testlib.testcase import BaseTestCase
-import cfnlint.config  # pylint: disable=E0401
 
+import cfnlint.config  # pylint: disable=E0401
 
 LOGGER = logging.getLogger('cfnlint')
 

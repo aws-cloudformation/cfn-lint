@@ -5,10 +5,10 @@ SPDX-License-Identifier: MIT-0
 import datetime
 import json
 import re
+
 import cfnlint.helpers
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class JsonSize(CloudFormationLintRule):

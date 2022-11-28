@@ -2,8 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules.resources.PreviousGenerationInstanceType import PreviousGenerationInstanceType  # pylint: disable=E0401
 from test.unit.rules import BaseRuleTestCase
+
+from cfnlint.rules.resources.PreviousGenerationInstanceType import (
+    PreviousGenerationInstanceType,  # pylint: disable=E0401
+)
 
 
 class TestPreviousGenerationInstanceType(BaseRuleTestCase):

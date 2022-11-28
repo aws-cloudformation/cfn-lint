@@ -3,12 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from cfnlint.exceptions import DuplicateRuleError
 from test.testlib.testcase import BaseTestCase
-from cfnlint.template import Template
-from cfnlint.rules import CloudFormationLintRule, RulesCollection
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.exceptions import DuplicateRuleError
+from cfnlint.rules import CloudFormationLintRule, RulesCollection
+from cfnlint.template import Template
 
 
 class TestRulesCollection(BaseTestCase):

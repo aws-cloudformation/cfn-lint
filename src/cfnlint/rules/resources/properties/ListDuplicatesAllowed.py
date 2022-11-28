@@ -4,10 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import hashlib
 import json
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 
 from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ListDuplicatesAllowed(CloudFormationLintRule):

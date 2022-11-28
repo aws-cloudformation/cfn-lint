@@ -3,14 +3,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import fileinput
-import sys
-import logging
 import json
-from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK  # type: ignore
+import logging
+import sys
+from json.decoder import (  # type: ignore
+    BACKSLASH,
+    STRINGCHUNK,
+    WHITESPACE,
+    WHITESPACE_STR,
+)
 from json.scanner import NUMBER_RE
-import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
 
+import cfnlint
+from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
 
 LOGGER = logging.getLogger(__name__)
 

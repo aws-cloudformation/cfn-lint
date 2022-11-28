@@ -2,9 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import load_resource, RESOURCE_SPECS
-from cfnlint.data import CloudSpecs
 from test.testlib.testcase import BaseTestCase
+
+from cfnlint.data import CloudSpecs
+from cfnlint.helpers import RESOURCE_SPECS, load_resource
 
 
 class TestPatchedSpecs(BaseTestCase):

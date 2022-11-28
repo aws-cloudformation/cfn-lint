@@ -2,11 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import warnings
-import sys
 import logging
-import cfnlint.core
+import sys
+import warnings
 
+import cfnlint.core
 
 LOGGER = logging.getLogger('cfnlint')
 

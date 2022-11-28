@@ -6,9 +6,9 @@ import logging
 import os
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
+
 import cfnlint.config  # pylint: disable=E0401
 from cfnlint.helpers import REGIONS
-
 
 LOGGER = logging.getLogger('cfnlint')
 

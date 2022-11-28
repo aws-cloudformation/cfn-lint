@@ -2,12 +2,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
-import os
-from test.testlib.testcase import BaseTestCase
-from unittest.mock import patch, MagicMock, mock_open
-import cfnlint.helpers
 import json
+import os
+import sys
+from test.testlib.testcase import BaseTestCase
+from unittest.mock import MagicMock, mock_open, patch
+
+import cfnlint.helpers
 
 
 class TestDownloadsMetadata(BaseTestCase):

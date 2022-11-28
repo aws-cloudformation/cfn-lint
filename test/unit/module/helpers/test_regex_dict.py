@@ -2,8 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import RegexDict
 from test.testlib.testcase import BaseTestCase
+
+from cfnlint.helpers import RegexDict
+
 
 class TestRegexDict(BaseTestCase):
     """Test Regex Dict """

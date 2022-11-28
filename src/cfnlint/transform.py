@@ -2,16 +2,17 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import os
 import logging
+import os
+
 import samtranslator
 from samtranslator.parser import parser
-from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 from samtranslator.sdk import resource
+from samtranslator.translator.translator import Translator
 
-from cfnlint.helpers import load_resource, convert_dict, format_json_string
 from cfnlint.data import Serverless
+from cfnlint.helpers import convert_dict, format_json_string, load_resource
 from cfnlint.rules import Match, TransformError
 
 LOGGER = logging.getLogger('cfnlint')

@@ -2,16 +2,17 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from ast import Call
 import logging
-from typing import Tuple, List, Union, Callable, Optional
+from ast import Call
 from json.decoder import JSONDecodeError
+from typing import Callable, List, Optional, Tuple, Union
+
+from yaml import YAMLError
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
-from yaml import YAMLError
-from cfnlint.decode import cfn_yaml, cfn_json
-from cfnlint.rules import Match, ParseError
 
+from cfnlint.decode import cfn_json, cfn_yaml
+from cfnlint.rules import Match, ParseError
 
 LOGGER = logging.getLogger(__name__)
 

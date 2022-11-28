@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
 
+
 class CustomRule1(CloudFormationLintRule):
     """ Def Rule """
     id = 'E9001'

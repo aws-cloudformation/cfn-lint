@@ -8,8 +8,8 @@ import logging
 import re
 import warnings
 from typing import Any, List
-import networkx
 
+import networkx
 
 LOGGER = logging.getLogger('cfnlint.graph')
 

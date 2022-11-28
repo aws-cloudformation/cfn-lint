@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import json
 import os
 from test.testlib.testcase import BaseTestCase
+
 import cfnlint.helpers
 from cfnlint.template import Template  # pylint: disable=E0401
 

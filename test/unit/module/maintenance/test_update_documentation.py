@@ -2,10 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import logging
+import sys
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import patch, mock_open, call
+from unittest.mock import call, mock_open, patch
+
 import cfnlint.maintenance
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
 

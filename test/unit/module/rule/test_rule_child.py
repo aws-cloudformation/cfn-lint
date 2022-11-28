@@ -2,12 +2,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Dict, Any
-from cfnlint.decode import decode_str
-from cfnlint.runner import Runner
 from test.testlib.testcase import BaseTestCase
-from cfnlint.rules import Match, RuleMatch, RulesCollection
+from typing import Any, Dict
+
+from cfnlint.decode import decode_str
 from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
+from cfnlint.rules import Match, RuleMatch, RulesCollection
+from cfnlint.runner import Runner
 
 
 class TestCloudFormationRuleChild(BaseTestCase):

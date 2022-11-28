@@ -1,4 +1,5 @@
 from test.unit.rules import BaseRuleTestCase
+
 from cfnlint.rules.functions.ToJsonString import ToJsonString
 
 

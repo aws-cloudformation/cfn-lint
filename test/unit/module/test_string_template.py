@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 
 
 class TestNonObjectTemplate(BaseTestCase):

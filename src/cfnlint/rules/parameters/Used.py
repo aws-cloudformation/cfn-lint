@@ -3,9 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from __future__ import unicode_literals
+
 import re
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Used(CloudFormationLintRule):

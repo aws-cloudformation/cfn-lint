@@ -4,24 +4,24 @@ Helpers for loading resources, managing specs, constants, etc.
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
-import fnmatch
-import json
-import hashlib
-import os
 import datetime
-import logging
-import re
-import inspect
+import fnmatch
 import gzip
+import hashlib
+import importlib
+import importlib.resources as pkg_resources
+import inspect
+import json
+import logging
+import os
+import re
+import sys
 from io import BytesIO
 from typing import Dict, List
-import importlib.resources as pkg_resources
-import importlib
-from urllib.request import urlopen, Request
-from cfnlint.decode.node import dict_node, list_node, str_node
-from cfnlint.data import CloudSpecs
+from urllib.request import Request, urlopen
 
+from cfnlint.data import CloudSpecs
+from cfnlint.decode.node import dict_node, list_node, str_node
 
 LOGGER = logging.getLogger(__name__)
 

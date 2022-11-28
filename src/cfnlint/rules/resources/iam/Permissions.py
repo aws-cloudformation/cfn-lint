@@ -3,10 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
-from cfnlint.helpers import convert_dict, load_resource
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
 from cfnlint.data import AdditionalSpecs
+from cfnlint.helpers import convert_dict, load_resource
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Permissions(CloudFormationLintRule):

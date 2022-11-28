@@ -4,11 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 from test.testlib.testcase import BaseTestCase
-from six import StringIO
-import cfnlint.core  # pylint: disable=E0401
-import cfnlint.config  # pylint: disable=E0401
 from unittest.mock import patch
 
+from six import StringIO
+
+import cfnlint.config  # pylint: disable=E0401
+import cfnlint.core  # pylint: disable=E0401
 
 LOGGER = logging.getLogger('cfnlint')
 

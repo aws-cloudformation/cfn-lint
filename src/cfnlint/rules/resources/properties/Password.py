@@ -3,9 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import REGEX_DYN_REF_SSM, REGEX_DYN_REF
+
+from cfnlint.helpers import REGEX_DYN_REF, REGEX_DYN_REF_SSM
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Password(CloudFormationLintRule):

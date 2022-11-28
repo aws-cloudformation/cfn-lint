@@ -5,9 +5,9 @@ SPDX-License-Identifier: MIT-0
 import logging
 import test.fixtures.specs
 from test.testlib.testcase import BaseTestCase
+
 import cfnlint.helpers
 from cfnlint.maintenance import patch_spec
-
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())

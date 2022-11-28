@@ -3,7 +3,11 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
-from cfnlint.decode.node import intrinsic_node,  TemplateAttributeError # pylint: disable=E0401
+
+from cfnlint.decode.node import (  # pylint: disable=E0401
+    TemplateAttributeError,
+    intrinsic_node,
+)
 
 
 class TestNodeIntrinsic(BaseTestCase):

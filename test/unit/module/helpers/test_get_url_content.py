@@ -2,14 +2,16 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import gzip
+import sys
+
 try:
     import StringIO
 except:
     pass
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
+
 import cfnlint.helpers
 
 

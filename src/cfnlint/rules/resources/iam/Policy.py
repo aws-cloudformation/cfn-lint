@@ -4,9 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from datetime import date
-from cfnlint.helpers import convert_dict, FUNCTIONS_SINGLE
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
+from cfnlint.helpers import FUNCTIONS_SINGLE, convert_dict
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Policy(CloudFormationLintRule):

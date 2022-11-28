@@ -5,17 +5,16 @@ SPDX-License-Identifier: MIT-0
 import fileinput
 import logging
 import sys
+
+from yaml import MappingNode, ScalarNode, SequenceNode
 from yaml.composer import Composer
+from yaml.constructor import ConstructorError, SafeConstructor
 from yaml.reader import Reader
-from yaml.scanner import Scanner
 from yaml.resolver import Resolver
-from yaml import ScalarNode
-from yaml import SequenceNode
-from yaml import MappingNode
-from yaml.constructor import SafeConstructor
-from yaml.constructor import ConstructorError
+from yaml.scanner import Scanner
+
 import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
+from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
 
 try:
     from yaml._yaml import CParser as Parser  # pylint: disable=ungrouped-imports,

@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import datetime
 from test.testlib.testcase import BaseTestCase
+
 from cfnlint.helpers import format_json_string
 
 

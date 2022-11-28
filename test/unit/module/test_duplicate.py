@@ -4,10 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from test.testlib.testcase import BaseTestCase
-from cfnlint.rules import RulesCollection
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection
 
 
 class TestDuplicate(BaseTestCase):

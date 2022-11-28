@@ -3,12 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-from test.testlib.testcase import BaseTestCase
-import jsonschema
-from unittest.mock import patch
-import cfnlint.config  # pylint: disable=E0401
 from pathlib import Path
+from test.testlib.testcase import BaseTestCase
+from unittest.mock import patch
 
+import jsonschema
+
+import cfnlint.config  # pylint: disable=E0401
 
 LOGGER = logging.getLogger('cfnlint')
 

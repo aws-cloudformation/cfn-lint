@@ -4,10 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import test.fixtures.schemas
-from jsonschema import validate
 from test.testlib.testcase import BaseTestCase
-import cfnlint.helpers
 
+from jsonschema import validate
+
+import cfnlint.helpers
 
 LOGGER = logging.getLogger('cfnlint.maintenance')
 LOGGER.addHandler(logging.NullHandler())

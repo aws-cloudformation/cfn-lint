@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import re
-from copy import deepcopy, copy
+from copy import copy, deepcopy
 from typing import Union
 
 import cfnlint.conditions

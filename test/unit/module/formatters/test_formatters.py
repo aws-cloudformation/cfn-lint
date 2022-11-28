@@ -8,9 +8,9 @@ from test.testlib.testcase import BaseTestCase
 
 import jsonschema
 
+import cfnlint.core
 import cfnlint.formatters
 import cfnlint.helpers
-import cfnlint.core
 
 
 class TestFormatters(BaseTestCase):

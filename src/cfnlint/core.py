@@ -6,18 +6,18 @@ import json
 import logging
 import os
 import sys
-from typing import Dict, Iterator, Sequence, Optional, Tuple, List, Union
+from typing import Dict, Iterator, List, Optional, Sequence, Tuple, Union
 
 from jsonschema.exceptions import ValidationError
 
-import cfnlint.runner
-from cfnlint.template import Template
-from cfnlint.rules import Match, RulesCollection, ParseError, TransformError
 import cfnlint.config
-import cfnlint.formatters
 import cfnlint.decode
+import cfnlint.formatters
 import cfnlint.maintenance
+import cfnlint.runner
 from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
+from cfnlint.rules import Match, ParseError, RulesCollection, TransformError
+from cfnlint.template import Template
 
 LOGGER = logging.getLogger('cfnlint')
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')

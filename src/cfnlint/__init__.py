@@ -3,26 +3,24 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import cfnlint.helpers
+
 import cfnlint.conditions
+import cfnlint.helpers
+import cfnlint.rules
+from cfnlint.decode.node import TemplateAttributeError, dict_node
 from cfnlint.decorators.refactored import refactored
 from cfnlint.graph import Graph
-from cfnlint.transform import Transform
-from cfnlint.decode.node import TemplateAttributeError
 from cfnlint.helpers import PSEUDOPARAMS
-from cfnlint.rules import RuleMatch as _RuleMatch
-from cfnlint.rules import Match as _Match
-from cfnlint.rules import RulesCollection as _RulesCollection
 from cfnlint.rules import CloudFormationLintRule as _CloudFormationLintRule
+from cfnlint.rules import Match as _Match
 from cfnlint.rules import ParseError as _ParseError
-from cfnlint.rules import TransformError as _TransformError
 from cfnlint.rules import RuleError as _RuleError
+from cfnlint.rules import RuleMatch as _RuleMatch
+from cfnlint.rules import RulesCollection as _RulesCollection
+from cfnlint.rules import TransformError as _TransformError
 from cfnlint.runner import Runner as _Runner
 from cfnlint.template import Template as _Template
-
-
-from cfnlint.decode.node import dict_node
-import cfnlint.rules
+from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)
 

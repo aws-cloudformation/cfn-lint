@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from datetime import datetime
-from cfnlint.helpers import load_resource
+
 from cfnlint.data import AdditionalSpecs
+from cfnlint.helpers import load_resource
 from cfnlint.rules import CloudFormationLintRule
 
 
