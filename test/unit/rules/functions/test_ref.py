@@ -8,7 +8,7 @@ from cfnlint.rules.functions.Ref import Ref  # pylint: disable=E0401
 
 
 class TestRulesRef(BaseRuleTestCase):
-    """Test Rules Ref exists """
+    """Test Rules Ref exists"""
 
     def setUp(self):
         """Setup"""
@@ -21,4 +21,4 @@ class TestRulesRef(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions/ref.yaml', 1)
+        self.helper_file_negative("test/fixtures/templates/bad/functions/ref.yaml", 1)

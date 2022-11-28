@@ -8,7 +8,7 @@ from cfnlint.rules.functions.GetAz import GetAz  # pylint: disable=E0401
 
 
 class TestRulesGetAZs(BaseRuleTestCase):
-    """Test Rules Get Att """
+    """Test Rules Get Att"""
 
     def setUp(self):
         """Setup"""
@@ -21,4 +21,4 @@ class TestRulesGetAZs(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions_getaz.yaml', 3)
+        self.helper_file_negative("test/fixtures/templates/bad/functions_getaz.yaml", 3)

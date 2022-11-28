@@ -17,7 +17,7 @@ class TestAttributeMismatch(BaseRuleTestCase):
         super(TestAttributeMismatch, self).setUp()
         self.collection.register(AttributeMismatch())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/dynamodb/attributes.yaml'
+            "test/fixtures/templates/good/resources/dynamodb/attributes.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,14 +27,20 @@ class TestAttributeMismatch(BaseRuleTestCase):
     def test_file_negative_unused_1(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/dynamodb/unused_attribute_definition_1.yaml', 1)
+            "test/fixtures/templates/bad/resources/dynamodb/unused_attribute_definition_1.yaml",
+            1,
+        )
 
     def test_file_negative_unused_2(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/dynamodb/unused_attribute_definition_2.yaml', 1)
+            "test/fixtures/templates/bad/resources/dynamodb/unused_attribute_definition_2.yaml",
+            1,
+        )
 
     def test_file_negative_undefined(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/dynamodb/undefined_attribute_definition.yaml', 1)
+            "test/fixtures/templates/bad/resources/dynamodb/undefined_attribute_definition.yaml",
+            1,
+        )

@@ -15,9 +15,7 @@ class TestNot(BaseRuleTestCase):
         super(TestNot, self).setUp()
         self.collection.register(Not())
 
-    success_templates = [
-        'test/fixtures/templates/good/conditions/not.yaml'
-    ]
+    success_templates = ["test/fixtures/templates/good/conditions/not.yaml"]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -25,4 +23,4 @@ class TestNot(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/conditions/not.yaml', 5)
+        self.helper_file_negative("test/fixtures/templates/bad/conditions/not.yaml", 5)

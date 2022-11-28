@@ -18,4 +18,6 @@ class TestPreviousGenerationInstanceType(BaseRuleTestCase):
         self.helper_file_positive()
 
     def test_file_negative(self):
-        self.helper_file_negative('test/fixtures/templates/bad/previous_generation_instances.yaml', 4)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/previous_generation_instances.yaml", 4
+        )

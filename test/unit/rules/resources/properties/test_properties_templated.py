@@ -17,7 +17,7 @@ class TestPropertiesTemplated(BaseRuleTestCase):
         super(TestPropertiesTemplated, self).setUp()
         self.collection.register(PropertiesTemplated())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/templated_code.yaml'
+            "test/fixtures/templates/good/resources/properties/templated_code.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,5 @@ class TestPropertiesTemplated(BaseRuleTestCase):
     def test_file_negative_4(self):
         """Failure test"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/templated_code.yaml', 1)
+            "test/fixtures/templates/bad/resources/properties/templated_code.yaml", 1
+        )

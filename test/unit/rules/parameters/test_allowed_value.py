@@ -15,7 +15,7 @@ class TestAllowedValue(BaseRuleTestCase):
         super(TestAllowedValue, self).setUp()
         self.collection.register(AllowedValue())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/allowed_values.yaml'
+            "test/fixtures/templates/good/resources/properties/allowed_values.yaml"
         ]
 
     def test_file_positive(self):
@@ -25,4 +25,5 @@ class TestAllowedValue(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/allowed_values.yaml', 2)
+            "test/fixtures/templates/bad/resources/properties/allowed_values.yaml", 2
+        )

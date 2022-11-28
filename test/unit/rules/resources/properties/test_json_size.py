@@ -17,7 +17,7 @@ class TestJsonSize(BaseRuleTestCase):
         super(TestJsonSize, self).setUp()
         self.collection.register(JsonSize())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/json_size.yaml'
+            "test/fixtures/templates/good/resources/properties/json_size.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,5 @@ class TestJsonSize(BaseRuleTestCase):
     def test_role_assume_role_policy_document(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/json_size.yaml', 2)
+            "test/fixtures/templates/bad/resources/properties/json_size.yaml", 2
+        )

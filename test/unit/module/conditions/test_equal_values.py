@@ -8,11 +8,11 @@ from cfnlint import conditions
 
 
 class TestEquals(BaseTestCase):
-    """ Test Equals Logic """
+    """Test Equals Logic"""
 
     def test_equal_value_string(self):
-        """ Test equals setup """
-        template = 'us-east-1'
+        """Test equals setup"""
+        template = "us-east-1"
         result = conditions.EqualsValue(template)
-        self.assertTrue(result == 'us-east-1')
-        self.assertFalse(result == 'us-west-2')
+        self.assertTrue(result == "us-east-1")
+        self.assertFalse(result == "us-west-2")

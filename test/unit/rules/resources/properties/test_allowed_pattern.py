@@ -21,10 +21,10 @@ class TestAllowedPattern(BaseRuleTestCase):
         super(TestAllowedPattern, self).setUp()
         self.collection.register(AllowedPattern())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/allowed_pattern.yaml'
+            "test/fixtures/templates/good/resources/properties/allowed_pattern.yaml"
         ]
 
-        self.spec = RESOURCE_SPECS['us-east-1']
+        self.spec = RESOURCE_SPECS["us-east-1"]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -33,21 +33,26 @@ class TestAllowedPattern(BaseRuleTestCase):
     def test_template_config(self):
         """Test strict false"""
         self.helper_file_rule_config(
-            'test/fixtures/templates/bad/properties_sg_ingress.yaml',
-            {'exceptions': ['Special charaters*']}, 1
+            "test/fixtures/templates/bad/properties_sg_ingress.yaml",
+            {"exceptions": ["Special charaters*"]},
+            1,
         )
 
     def test_file_negative_sg_ingress(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_sg_ingress.yaml', 2)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/properties_sg_ingress.yaml", 2
+        )
 
     def test_valid_regex(self):
         """Test Resource Type Value Regex"""
-        for r_name, r_values in self.spec.get('ValueTypes').items():
-            if r_values.get('AllowedPatternRegex'):
-                p_regex = r_values.get('AllowedPatternRegex')
+        for r_name, r_values in self.spec.get("ValueTypes").items():
+            if r_values.get("AllowedPatternRegex"):
+                p_regex = r_values.get("AllowedPatternRegex")
                 try:
                     re.compile(p_regex)
                 except re.error:
-                    self.fail("Invalid regex value %s specified for ValueType %s" %
-                              (p_regex, r_name))
+                    self.fail(
+                        "Invalid regex value %s specified for ValueType %s"
+                        % (p_regex, r_name)
+                    )

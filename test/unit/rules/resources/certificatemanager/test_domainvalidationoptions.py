@@ -20,9 +20,12 @@ class TestDomainValidationOptions(BaseRuleTestCase):
     def test_file_positive(self):
         """Test Positive"""
         self.helper_file_positive_template(
-            'test/fixtures/templates/good/resources/certificatemanager/domain_validation_options.yaml')
+            "test/fixtures/templates/good/resources/certificatemanager/domain_validation_options.yaml"
+        )
 
     def test_file_negative_invalid_validationdomain(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/certificatemanager/domain_validation_options.yaml', 2)
+            "test/fixtures/templates/bad/resources/certificatemanager/domain_validation_options.yaml",
+            2,
+        )

@@ -17,7 +17,7 @@ class TestECSTaskDefinitionEssentialContainer(BaseRuleTestCase):
         super(TestECSTaskDefinitionEssentialContainer, self).setUp()
         self.collection.register(TaskDefinitionEssentialContainer())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/ecs/test_ecs_task_definition_essential_container.yml',
+            "test/fixtures/templates/good/resources/ecs/test_ecs_task_definition_essential_container.yml",
         ]
 
     def test_file_positive(self):
@@ -26,4 +26,7 @@ class TestECSTaskDefinitionEssentialContainer(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/resources/ecs/test_ecs_task_definition_essential_container.yml', 1)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources/ecs/test_ecs_task_definition_essential_container.yml",
+            1,
+        )

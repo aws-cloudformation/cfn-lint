@@ -17,7 +17,7 @@ class TestPropertyInclusive(BaseRuleTestCase):
         super(TestPropertyInclusive, self).setUp()
         self.collection.register(Inclusive())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/properties/inclusive.yaml'
+            "test/fixtures/templates/good/resources/properties/inclusive.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,5 @@ class TestPropertyInclusive(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/inclusive.yaml', 4)
+            "test/fixtures/templates/bad/resources/properties/inclusive.yaml", 4
+        )

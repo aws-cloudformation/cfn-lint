@@ -8,14 +8,14 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 class FindInMapKeys(CloudFormationLintRule):
     """Check if FindInMap values are correct"""
 
-    id = 'W1011'
-    shortdesc = 'FindInMap keys exist in the map'
+    id = "W1011"
+    shortdesc = "FindInMap keys exist in the map"
     description = (
-        'Checks the keys in a FindInMap to make sure they exist. '
-        'Check only if the Map Name is a string and if the key is a string.'
+        "Checks the keys in a FindInMap to make sure they exist. "
+        "Check only if the Map Name is a string and if the key is a string."
     )
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html'
-    tags = ['functions', 'findinmap']
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html"
+    tags = ["functions", "findinmap"]
 
     def check_keys(self, map_name, keys, mappings, tree):
         """Check the validity of the first key"""
@@ -37,7 +37,7 @@ class FindInMapKeys(CloudFormationLintRule):
                                             first_key,
                                             map_name,
                                             first_key,
-                                            '/'.join(map(str, tree)),
+                                            "/".join(map(str, tree)),
                                         ),
                                     )
                                 )
@@ -52,7 +52,7 @@ class FindInMapKeys(CloudFormationLintRule):
                                             second_key,
                                             map_name,
                                             first_key,
-                                            '/'.join(map(str, tree)),
+                                            "/".join(map(str, tree)),
                                         ),
                                     )
                                 )
@@ -67,7 +67,7 @@ class FindInMapKeys(CloudFormationLintRule):
                                             second_key,
                                             map_name,
                                             key,
-                                            '/'.join(map(str, tree)),
+                                            "/".join(map(str, tree)),
                                         ),
                                     )
                                 )
@@ -77,7 +77,7 @@ class FindInMapKeys(CloudFormationLintRule):
     def match(self, cfn):
         matches = []
 
-        findinmaps = cfn.search_deep_keys('Fn::FindInMap')
+        findinmaps = cfn.search_deep_keys("Fn::FindInMap")
         mappings = cfn.get_mappings()
         for findinmap in findinmaps:
             tree = findinmap[:-1]

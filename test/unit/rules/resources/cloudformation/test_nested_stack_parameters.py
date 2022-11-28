@@ -10,14 +10,14 @@ from cfnlint.rules.resources.cloudformation.NestedStackParameters import (
 
 
 class TestNestedStackParameters(BaseRuleTestCase):
-    """Test CloudFormation Nested stack parameters """
+    """Test CloudFormation Nested stack parameters"""
 
     def setUp(self):
         """Setup"""
         super(TestNestedStackParameters, self).setUp()
         self.collection.register(NestedStackParameters())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/cloudformation/stacks.yaml'
+            "test/fixtures/templates/good/resources/cloudformation/stacks.yaml"
         ]
 
     def test_file_positive(self):
@@ -28,4 +28,6 @@ class TestNestedStackParameters(BaseRuleTestCase):
         """Test failure"""
         err_count = 8
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/cloudformation/stacks.yaml', err_count)
+            "test/fixtures/templates/bad/resources/cloudformation/stacks.yaml",
+            err_count,
+        )

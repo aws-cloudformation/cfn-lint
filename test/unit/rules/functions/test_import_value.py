@@ -8,7 +8,7 @@ from cfnlint.rules.functions.ImportValue import ImportValue  # pylint: disable=E
 
 
 class TestImportValue(BaseRuleTestCase):
-    """Test Rules Get Att """
+    """Test Rules Get Att"""
 
     def setUp(self):
         """Setup"""
@@ -21,4 +21,6 @@ class TestImportValue(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions/import_value.yaml', 3)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/functions/import_value.yaml", 3
+        )

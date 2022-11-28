@@ -25,8 +25,8 @@ except ImportError:
 
     cyaml = False
 
-UNCONVERTED_SUFFIXES = ['Ref', 'Condition']
-FN_PREFIX = 'Fn::'
+UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
+FN_PREFIX = "Fn::"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -145,7 +145,7 @@ class NodeConstructor(SafeConstructor):
         (obj,) = SafeConstructor.construct_yaml_map(self, node)
 
         if len(mapping) == 1:
-            if 'Fn::Sub' in mapping:
+            if "Fn::Sub" in mapping:
                 return sub_node(obj, node.start_mark, node.end_mark)
 
         return dict_node(obj, node.start_mark, node.end_mark)
@@ -162,15 +162,15 @@ class NodeConstructor(SafeConstructor):
 
 
 NodeConstructor.add_constructor(  # type: ignore
-    'tag:yaml.org,2002:map', NodeConstructor.construct_yaml_map
+    "tag:yaml.org,2002:map", NodeConstructor.construct_yaml_map
 )
 
 NodeConstructor.add_constructor(  # type: ignore
-    'tag:yaml.org,2002:str', NodeConstructor.construct_yaml_str
+    "tag:yaml.org,2002:str", NodeConstructor.construct_yaml_str
 )
 
 NodeConstructor.add_constructor(  # type: ignore
-    'tag:yaml.org,2002:seq', NodeConstructor.construct_yaml_seq
+    "tag:yaml.org,2002:seq", NodeConstructor.construct_yaml_seq
 )
 
 # pylint: disable=too-many-ancestors
@@ -200,10 +200,10 @@ def multi_constructor(loader, tag_suffix, node):
     """
 
     if tag_suffix not in UNCONVERTED_SUFFIXES:
-        tag_suffix = f'{FN_PREFIX}{tag_suffix}'
+        tag_suffix = f"{FN_PREFIX}{tag_suffix}"
 
     constructor = None
-    if tag_suffix == 'Fn::GetAtt':
+    if tag_suffix == "Fn::GetAtt":
         constructor = construct_getatt
     elif isinstance(node, ScalarNode):
         constructor = loader.construct_scalar
@@ -212,9 +212,9 @@ def multi_constructor(loader, tag_suffix, node):
     elif isinstance(node, MappingNode):
         constructor = loader.construct_mapping
     else:
-        raise f'Bad tag: !{tag_suffix}'
+        raise f"Bad tag: !{tag_suffix}"
 
-    if tag_suffix == 'Fn::Sub':
+    if tag_suffix == "Fn::Sub":
         return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
@@ -226,11 +226,11 @@ def construct_getatt(node):
     """
 
     if isinstance(node.value, (str)):
-        return list_node(node.value.split('.', 1), node.start_mark, node.end_mark)
+        return list_node(node.value.split(".", 1), node.start_mark, node.end_mark)
     if isinstance(node.value, list):
         return list_node([s.value for s in node.value], node.start_mark, node.end_mark)
 
-    raise ValueError(f'Unexpected node type: {type(node.value)}')
+    raise ValueError(f"Unexpected node type: {type(node.value)}")
 
 
 def loads(yaml_string, fname=None):
@@ -238,7 +238,7 @@ def loads(yaml_string, fname=None):
     Load the given YAML string
     """
     loader = MarkedLoader(yaml_string, fname)
-    loader.add_multi_constructor('!', multi_constructor)
+    loader.add_multi_constructor("!", multi_constructor)
     template = loader.get_single_data()
     # Convert an empty file to an empty dict
     if template is None:
@@ -252,20 +252,20 @@ def load(filename):
     Load the given YAML file
     """
 
-    content = ''
+    content = ""
 
     if not sys.stdin.isatty():
-        filename = '-' if filename is None else filename
+        filename = "-" if filename is None else filename
         if sys.version_info.major <= 3 and sys.version_info.minor <= 9:
             for line in fileinput.input(files=filename):
                 content = content + line
         else:
             for line in fileinput.input(  # pylint: disable=unexpected-keyword-arg
-                files=filename, encoding='utf-8'
+                files=filename, encoding="utf-8"
             ):
                 content = content + line
     else:
-        with open(filename, encoding='utf-8') as fp:
+        with open(filename, encoding="utf-8") as fp:
             content = fp.read()
 
     return loads(content, filename)

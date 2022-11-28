@@ -4,7 +4,7 @@ class CfnLintError(Exception):
     :ivar msg: The descriptive message associated with the error.
     """
 
-    fmt = 'An unspecified error occurred'
+    fmt = "An unspecified error occurred"
 
     def __init__(self, **kwargs):
         msg = self.fmt.format(**kwargs)
@@ -18,4 +18,4 @@ class DuplicateRuleError(CfnLintError):
     :ivar data_path: The data path that the user attempted to load.
     """
 
-    fmt = 'Rule already included: {rule_id}'
+    fmt = "Rule already included: {rule_id}"

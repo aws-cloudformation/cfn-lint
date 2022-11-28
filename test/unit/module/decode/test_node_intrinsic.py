@@ -11,10 +11,7 @@ from cfnlint.decode.node import (  # pylint: disable=E0401
 
 
 class TestNodeIntrinsic(BaseTestCase):
-
     def test_success_init(self):
-        template = intrinsic_node({
-            'Fn::Sub': []
-        }, (0, 1), (2, 3))
+        template = intrinsic_node({"Fn::Sub": []}, (0, 1), (2, 3))
 
         self.assertRaises(TemplateAttributeError, template.is_valid)

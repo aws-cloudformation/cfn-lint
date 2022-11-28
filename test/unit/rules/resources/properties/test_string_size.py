@@ -24,4 +24,5 @@ class TestStringSize(BaseRuleTestCase):
     def test_file_negative_string_size(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/string_size.yaml', 3)
+            "test/fixtures/templates/bad/resources/properties/string_size.yaml", 3
+        )

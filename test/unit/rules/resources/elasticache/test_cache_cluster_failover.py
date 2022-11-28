@@ -17,7 +17,7 @@ class TestElasticCacheClusterFailover(BaseRuleTestCase):
         super(TestElasticCacheClusterFailover, self).setUp()
         self.collection.register(CacheClusterFailover())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/elasticache/cache_cluster_failover.yaml'
+            "test/fixtures/templates/good/resources/elasticache/cache_cluster_failover.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,6 @@ class TestElasticCacheClusterFailover(BaseRuleTestCase):
     def test_file_artifact_failure(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/elasticache/cache_cluster_failover.yaml', 5)
+            "test/fixtures/templates/bad/resources/elasticache/cache_cluster_failover.yaml",
+            5,
+        )

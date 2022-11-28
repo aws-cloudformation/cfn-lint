@@ -65,6 +65,6 @@ def lint_all(s: str) -> Matches:
     """
     return lint(
         s=s,
-        rules=get_rules([], [], ['I', 'W', 'E'], include_experimental=True),
+        rules=get_rules([], [], ["I", "W", "E"], include_experimental=True),
         regions=REGIONS,
     )

@@ -26,25 +26,25 @@ class TestExclude(BaseTestCase):
 
     def test_success_run(self):
         """Success test"""
-        filename = 'test/fixtures/templates/good/generic.yaml'
+        filename = "test/fixtures/templates/good/generic.yaml"
         template = self.load_template(filename)
-        with open('test/fixtures/templates/override_spec/exclude.json') as fp:
+        with open("test/fixtures/templates/override_spec/exclude.json") as fp:
             custom_spec = json.load(fp)
 
         cfnlint.helpers.set_specs(custom_spec)
 
-        good_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
+        good_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
         self.assertEqual([], good_runner.run())
 
     def test_fail_run(self):
         """Failure test required"""
-        filename = 'test/fixtures/templates/bad/override/exclude.yaml'
+        filename = "test/fixtures/templates/bad/override/exclude.yaml"
         template = self.load_template(filename)
 
-        with open('test/fixtures/templates/override_spec/exclude.json') as fp:
+        with open("test/fixtures/templates/override_spec/exclude.json") as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
 
-        bad_runner = Runner(self.collection, filename, template, ['us-east-1'], [])
+        bad_runner = Runner(self.collection, filename, template, ["us-east-1"], [])
         errs = bad_runner.run()
         self.assertEqual(2, len(errs))

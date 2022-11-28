@@ -8,7 +8,7 @@ from cfnlint.rules.functions.If import If  # pylint: disable=E0401
 
 
 class TestIf(BaseRuleTestCase):
-    """Test Rules If conditions exist """
+    """Test Rules If conditions exist"""
 
     def setUp(self):
         """Setup"""
@@ -21,4 +21,4 @@ class TestIf(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions/if.yaml', 3)
+        self.helper_file_negative("test/fixtures/templates/bad/functions/if.yaml", 3)

@@ -8,7 +8,7 @@ from cfnlint.rules.functions.Select import Select  # pylint: disable=E0401
 
 
 class TestRulesSelect(BaseRuleTestCase):
-    """Test Rules Get Att """
+    """Test Rules Get Att"""
 
     def setUp(self):
         """Setup"""
@@ -21,4 +21,6 @@ class TestRulesSelect(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/functions_select.yaml', 3)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/functions_select.yaml", 3
+        )

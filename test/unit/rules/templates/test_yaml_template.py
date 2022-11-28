@@ -19,7 +19,7 @@ class TestBaseTemplate(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Failure test"""
-        failure = 'test/fixtures/templates/bad/template.yaml'
+        failure = "test/fixtures/templates/bad/template.yaml"
         try:
             Runner(self.collection, failure, True)
             self.assertEqual(1, 0)

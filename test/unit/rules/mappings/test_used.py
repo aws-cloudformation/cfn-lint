@@ -16,8 +16,8 @@ class TestUsedMappings(BaseRuleTestCase):
         self.collection.register(Used())
 
     success_templates = [
-        'test/fixtures/templates/good/functions_findinmap.yaml',
-        'test/fixtures/templates/good/mappings/used.yaml'
+        "test/fixtures/templates/good/functions_findinmap.yaml",
+        "test/fixtures/templates/good/mappings/used.yaml",
     ]
 
     def test_file_positive(self):
@@ -26,4 +26,4 @@ class TestUsedMappings(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/mappings/used.yaml', 1)
+        self.helper_file_negative("test/fixtures/templates/bad/mappings/used.yaml", 1)

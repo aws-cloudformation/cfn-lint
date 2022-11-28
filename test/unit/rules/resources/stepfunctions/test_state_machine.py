@@ -17,7 +17,7 @@ class TestStateMachine(BaseRuleTestCase):
         super(TestStateMachine, self).setUp()
         self.collection.register(StateMachine())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/stepfunctions/state_machine.yaml'
+            "test/fixtures/templates/good/resources/stepfunctions/state_machine.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,5 @@ class TestStateMachine(BaseRuleTestCase):
     def test_file_negative_alias(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/stepfunctions/state_machine.yaml', 5)
+            "test/fixtures/templates/bad/resources/stepfunctions/state_machine.yaml", 5
+        )

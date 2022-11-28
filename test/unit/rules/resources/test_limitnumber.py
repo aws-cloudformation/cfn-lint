@@ -23,4 +23,4 @@ class TestResourceLimitNumber(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/limit_numbers.yaml', 1)
+        self.helper_file_negative("test/fixtures/templates/bad/limit_numbers.yaml", 1)

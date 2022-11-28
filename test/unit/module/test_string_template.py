@@ -9,15 +9,15 @@ import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 
 
 class TestNonObjectTemplate(BaseTestCase):
-    """Test Duplicates Parsing """
+    """Test Duplicates Parsing"""
 
     def setUp(self):
-        """ SetUp template object"""
+        """SetUp template object"""
 
     def test_fail_yaml_run(self):
         """Test failure run"""
 
-        filename = 'test/fixtures/templates/bad/string.yaml'
+        filename = "test/fixtures/templates/bad/string.yaml"
 
         _, matches = cfnlint.decode.decode(filename)
         assert len(matches) == 1

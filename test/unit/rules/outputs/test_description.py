@@ -15,7 +15,7 @@ class TestDescription(BaseRuleTestCase):
         super(TestDescription, self).setUp()
         self.collection.register(Description())
         self.success_templates = [
-            'test/fixtures/templates/good/outputs/description.yaml',
+            "test/fixtures/templates/good/outputs/description.yaml",
         ]
 
     def test_file_positive(self):
@@ -24,4 +24,6 @@ class TestDescription(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/outputs/description.yaml', 1)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/outputs/description.yaml", 1
+        )

@@ -17,7 +17,7 @@ class TestRoute53RecordSetName(BaseRuleTestCase):
         super(TestRoute53RecordSetName, self).setUp()
         self.collection.register(RecordSetName())
         self.success_templates = [
-            'test/fixtures/templates/good/resources/route53/recordset_name.yaml'
+            "test/fixtures/templates/good/resources/route53/recordset_name.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,4 +27,5 @@ class TestRoute53RecordSetName(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/route53/recordset_name.yaml', 4)
+            "test/fixtures/templates/bad/resources/route53/recordset_name.yaml", 4
+        )
