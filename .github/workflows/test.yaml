@@ -50,3 +50,19 @@ jobs:
         run: |
           cfn-lint test/fixtures/templates/good/generic.yaml
           cat test/fixtures/templates/good/generic.yaml | cfn-lint
+  dependencies:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python: [3.8]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install cfn-lint
+        run: |
+          pip3 install -e .
+      - uses: pypa/gh-action-pip-audit@v1.0.1
