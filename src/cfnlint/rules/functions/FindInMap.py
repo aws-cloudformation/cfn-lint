@@ -83,41 +83,20 @@ class FindInMap(CloudFormationLintRule):
 
         return matches
 
-    def first_key(self, first_key, tree):
-        """Check the validity of the first key"""
+    def match_key(self, key, tree, key_name, key_index):
+        """Check the validity of a key"""
         matches = []
-        if isinstance(first_key, (str, int)):
+        if isinstance(key, (str, int)):
             return matches
-        if isinstance(first_key, (dict)):
-            matches.extend(self.check_dict(first_key, tree[:] + [1]))
+        if isinstance(key, dict):
+            matches.extend(self.check_dict(key, tree[:] + [key_index]))
         else:
-            message = 'FindInMap first key should be a {0}, string, or int at {1}'
+            message = 'FindInMap {0} should be a {1}, string, or int at {2}'
             matches.append(
                 RuleMatch(
-                    tree[:] + [1],
+                    tree[:] + [key_index],
                     message.format(
-                        ', '.join(map(str, self.supported_functions)),
-                        '/'.join(map(str, tree)),
-                    ),
-                )
-            )
-
-        return matches
-
-    def second_key(self, second_key, tree):
-        """Check the validity of the second key"""
-        matches = []
-        if isinstance(second_key, (str, int)):
-            return matches
-
-        if isinstance(second_key, (dict)):
-            matches.extend(self.check_dict(second_key, tree[:] + [2]))
-        else:
-            message = 'FindInMap second key should be a {0}, string, or int at {1}'
-            matches.append(
-                RuleMatch(
-                    tree[:] + [2],
-                    message.format(
+                        key_name,
                         ', '.join(map(str, self.supported_functions)),
                         '/'.join(map(str, tree)),
                     ),
@@ -144,8 +123,8 @@ class FindInMap(CloudFormationLintRule):
                 second_key = map_obj[2]
 
                 matches.extend(self.map_name(map_name, mappings, tree))
-                matches.extend(self.first_key(first_key, tree))
-                matches.extend(self.second_key(second_key, tree))
+                matches.extend(self.match_key(first_key, tree, 'first key', 1))
+                matches.extend(self.match_key(second_key, tree, 'second key', 2))
 
             else:
                 message = 'FindInMap is a list with 3 values for {0}'
