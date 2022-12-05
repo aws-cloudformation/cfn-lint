@@ -1,3 +1,9 @@
+### v0.72.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `100.0.0` (pull #[2493](https://github.com/aws-cloudformation/cfn-lint/pull/2493))
+###### Fixes
+- Update rule [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011) to merge key validation into one method (pull #[2502](https://github.com/aws-cloudformation/cfn-lint/pull/2502))
+
 ### v0.72.1
 ###### CloudFormation Specifications
 - Add `ap-south-2` region (pull #[2503](https://github.com/aws-cloudformation/cfn-lint/pull/2503))
