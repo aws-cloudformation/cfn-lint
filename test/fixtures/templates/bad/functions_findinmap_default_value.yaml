@@ -1,0 +1,116 @@
+Transform: AWS::LanguageExtensions
+Mappings:
+  MapName:
+    TopKey:
+      SecondKey: Value
+Resources:
+  Cluster0:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapNameNotExist
+        - TopKey
+        - SecondKey
+        - DefaultValue: default
+  Cluster1:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - SecondKey
+        - Default: default
+  Cluster2:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - !GetAtt Cluster0.ClusterName
+        - TopKey
+        - SecondKey
+        - DefaultValue: default
+  Cluster3:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - Second
+        - DefaultValue: [!GetAtt Cluster1.ClusterName]
+  Cluster4:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - Second
+        - DefaultValue: ["1", !GetAtt [Cluster1.ClusterName]]
+  Cluster5:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - Second
+        - DefaultValue:
+            Key1: Value
+            Key2: Value
+  Cluster6:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - Second
+        - DefaultValue:
+            Key1: [Value1, Value1]
+            Key2: Value2
+  Cluster7:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - [MapName1, MapName2]
+        - [TopKey1, TopKey2]
+        - Second
+        - Default:
+            Fn::Join: [".", ["V3N", "0H1"]]
+            Fn::Select: [0, ["V6C", "2B3"]]
+  Cluster8:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName:
+        Fn::FindInMap:
+          TopKey: TopKey1
+          SecondLevelKey: SecondKey1
+          DefaultValue: value
+  Cluster9:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName:
+        Fn::FindInMap:
+          - MapName
+          - TopKey
+          - SecondKey
+          - - DefaultValue
+            - Value
+  Cluster10:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+  Cluster11:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - !Select [0, ["Key1", "Key2"]]
+        - Second
+        - [DefaultValue, value, [default]]
+  Cluster12:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey
+        - Second
+        - DefaultValue: [Default, Value, [DefaultValue]]
