@@ -16,6 +16,9 @@ class TestHardCodedArnProperties(BaseRuleTestCase):
         """Setup"""
         super(TestHardCodedArnProperties, self).setUp()
         self.collection.register(HardCodedArnProperties())
+        self.success_templates = [
+            "test/fixtures/templates/good/resources/properties/hard_coded_arn_properties_sam.yaml",
+        ]
 
     def test_file_positive(self):
         """Test Positive"""

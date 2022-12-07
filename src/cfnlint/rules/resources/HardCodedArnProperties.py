@@ -71,8 +71,12 @@ class HardCodedArnProperties(CloudFormationLintRule):
         return results
 
     def match(self, cfn):
-        """Check CloudFormation Resources"""
         matches = []
+
+        transforms = cfn.transform_pre["Transform"]
+        transforms = transforms if isinstance(transforms, list) else [transforms]
+        if "AWS::Serverless-2016-10-31" in cfn.transform_pre["Transform"]:
+            return matches
 
         # Get a list of paths to every leaf node string containing at least one ${parameter}
         parameter_string_paths = self.match_values(cfn)
