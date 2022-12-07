@@ -3,19 +3,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from collections import defaultdict
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
 import cfnlint.helpers
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class RouteTableAssociation(CloudFormationLintRule):
     """Check only one route table association defined per subnet"""
 
-    id = 'E3022'
-    shortdesc = 'Resource SubnetRouteTableAssociation Properties'
-    description = 'Validate there is only one SubnetRouteTableAssociation per subnet'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html'
-    tags = ['resources', 'ec2', 'subnet', 'route table']
+    id = "E3022"
+    shortdesc = "Resource SubnetRouteTableAssociation Properties"
+    description = "Validate there is only one SubnetRouteTableAssociation per subnet"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnet-route-table-assoc.html"
+    tags = ["resources", "ec2", "subnet", "route table"]
 
     def __init__(self):
         super().__init__()
@@ -46,15 +46,15 @@ class RouteTableAssociation(CloudFormationLintRule):
                                         value[2], resource_condition, property_condition
                                     )
                                 )
-                    if key == 'Ref':
+                    if key == "Ref":
                         values.extend(
                             self.get_values(
                                 value, resource_condition, property_condition
                             )
                         )
-                    if key == 'Fn::GetAtt':
+                    if key == "Fn::GetAtt":
                         if isinstance(value[1], (str)):
-                            sub_value = '.'.join(value)
+                            sub_value = ".".join(value)
                             values.append(
                                 (resource_condition, property_condition, sub_value)
                             )
@@ -73,12 +73,12 @@ class RouteTableAssociation(CloudFormationLintRule):
     def match(self, cfn):
         """Check SubnetRouteTableAssociation Resource Properties"""
         matches = []
-        resources = cfn.get_resources(['AWS::EC2::SubnetRouteTableAssociation'])
+        resources = cfn.get_resources(["AWS::EC2::SubnetRouteTableAssociation"])
         for resource_name, resource in resources.items():
-            properties = resource.get('Properties')
+            properties = resource.get("Properties")
             if properties:
-                resource_condition = resource.get('Condition')
-                subnetid = properties.get('SubnetId')
+                resource_condition = resource.get("Condition")
+                subnetid = properties.get("SubnetId")
                 self.check_values(subnetid, resource_condition, resource_name)
         for resource_name, resource_values in self.resource_values.items():
             for value in resource_values:
@@ -94,12 +94,12 @@ class RouteTableAssociation(CloudFormationLintRule):
                     other_resources.extend(self.associated_resources[bare_value])
 
                 if other_resources:
-                    path = ['Resources', resource_name, 'Properties', 'SubnetId']
-                    message = 'SubnetId in {0} is also associated with {1}'
+                    path = ["Resources", resource_name, "Properties", "SubnetId"]
+                    message = "SubnetId in {0} is also associated with {1}"
                     matches.append(
                         RuleMatch(
                             path,
-                            message.format(resource_name, ', '.join(other_resources)),
+                            message.format(resource_name, ", ".join(other_resources)),
                         )
                     )
 

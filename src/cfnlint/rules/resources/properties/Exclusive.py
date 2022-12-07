@@ -2,29 +2,28 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Exclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
 
-    id = 'E2520'
-    shortdesc = 'Check Properties that are mutually exclusive'
+    id = "E2520"
+    shortdesc = "Check Properties that are mutually exclusive"
     description = (
-        'Making sure CloudFormation properties that are exclusive are not defined'
+        "Making sure CloudFormation properties that are exclusive are not defined"
     )
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['resources']
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    tags = ["resources"]
 
     def __init__(self):
         """Init"""
         super().__init__()
-        exclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Exclusive.json')
-        self.resource_types_specs = exclusivespec['ResourceTypes']
-        self.property_types_specs = exclusivespec['PropertyTypes']
+        exclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, "Exclusive.json")
+        self.resource_types_specs = exclusivespec["ResourceTypes"]
+        self.property_types_specs = exclusivespec["PropertyTypes"]
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
@@ -36,14 +35,14 @@ class Exclusive(CloudFormationLintRule):
 
         property_sets = cfn.get_object_without_conditions(properties)
         for property_set in property_sets:
-            obj = property_set['Object'].clean()
+            obj = property_set["Object"].clean()
             for prop in obj:
                 if prop in exclusions:
                     for excl_property in exclusions[prop]:
                         if excl_property in obj:
-                            if property_set['Scenario'] is None:
+                            if property_set["Scenario"] is None:
                                 message = (
-                                    'Property {0} should NOT exist with {1} for {2}'
+                                    "Property {0} should NOT exist with {1} for {2}"
                                 )
                                 matches.append(
                                     RuleMatch(
@@ -51,19 +50,19 @@ class Exclusive(CloudFormationLintRule):
                                         message.format(
                                             excl_property,
                                             prop,
-                                            '/'.join(map(str, path)),
+                                            "/".join(map(str, path)),
                                         ),
                                     )
                                 )
                             else:
-                                scenario_text = ' and '.join(
+                                scenario_text = " and ".join(
                                     [
                                         f'when condition "{k}" is {v}'
-                                        for (k, v) in property_set['Scenario'].items()
+                                        for (k, v) in property_set["Scenario"].items()
                                     ]
                                 )
                                 message = (
-                                    'Property {0} should NOT exist with {1} {2} for {3}'
+                                    "Property {0} should NOT exist with {1} {2} for {3}"
                                 )
                                 matches.append(
                                     RuleMatch(
@@ -72,7 +71,7 @@ class Exclusive(CloudFormationLintRule):
                                             excl_property,
                                             prop,
                                             scenario_text,
-                                            '/'.join(map(str, path)),
+                                            "/".join(map(str, path)),
                                         ),
                                     )
                                 )

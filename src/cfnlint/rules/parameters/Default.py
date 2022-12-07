@@ -3,24 +3,24 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Default(CloudFormationLintRule):
     """Check if Parameters are configured correctly"""
 
-    id = 'E2015'
-    shortdesc = 'Default value is within parameter constraints'
-    description = 'Making sure the parameters have a default value inside AllowedValues, MinValue, MaxValue, AllowedPattern'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
-    tags = ['parameters']
+    id = "E2015"
+    shortdesc = "Default value is within parameter constraints"
+    description = "Making sure the parameters have a default value inside AllowedValues, MinValue, MaxValue, AllowedPattern"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html"
+    tags = ["parameters"]
 
     def check_allowed_pattern(self, allowed_value, allowed_pattern, path):
         """
         Check allowed value against allowed pattern
         """
-        message = 'Default should be allowed by AllowedPattern'
+        message = "Default should be allowed by AllowedPattern"
         try:
             if not re.match(allowed_pattern, str(allowed_value)):
                 return [RuleMatch(path, message)]
@@ -35,7 +35,7 @@ class Default(CloudFormationLintRule):
         """
         Check allowed value against min value
         """
-        message = 'Default should be equal to or higher than MinValue'
+        message = "Default should be equal to or higher than MinValue"
 
         if isinstance(allowed_value, int) and isinstance(min_value, int):
             if allowed_value < min_value:
@@ -47,7 +47,7 @@ class Default(CloudFormationLintRule):
         """
         Check allowed value against max value
         """
-        message = 'Default should be less than or equal to MaxValue'
+        message = "Default should be less than or equal to MaxValue"
 
         if isinstance(allowed_value, int) and isinstance(max_value, int):
             if allowed_value > max_value:
@@ -59,7 +59,7 @@ class Default(CloudFormationLintRule):
         """
         Check allowed value against allowed values
         """
-        message = 'Default should be a value within AllowedValues'
+        message = "Default should be a value within AllowedValues"
 
         if allowed_value not in allowed_values:
             return [RuleMatch(path, message)]
@@ -70,7 +70,7 @@ class Default(CloudFormationLintRule):
         """
         Check allowed value against MinLength
         """
-        message = 'Default should have a length above or equal to MinLength'
+        message = "Default should have a length above or equal to MinLength"
 
         value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
         if isinstance(min_length, int):
@@ -83,7 +83,7 @@ class Default(CloudFormationLintRule):
         """
         Check allowed value against MaxLength
         """
-        message = 'Default should have a length below or equal to MaxLength'
+        message = "Default should have a length below or equal to MaxLength"
 
         value = allowed_value if isinstance(allowed_value, str) else str(allowed_value)
         if isinstance(max_length, int):
@@ -96,31 +96,31 @@ class Default(CloudFormationLintRule):
         matches = []
 
         for paramname, paramvalue in cfn.get_parameters_valid().items():
-            default_value = paramvalue.get('Default')
+            default_value = paramvalue.get("Default")
             if default_value is not None:
-                path = ['Parameters', paramname, 'Default']
-                allowed_pattern = paramvalue.get('AllowedPattern')
+                path = ["Parameters", paramname, "Default"]
+                allowed_pattern = paramvalue.get("AllowedPattern")
                 if allowed_pattern:
                     matches.extend(
                         self.check_allowed_pattern(default_value, allowed_pattern, path)
                     )
-                min_value = paramvalue.get('MinValue')
+                min_value = paramvalue.get("MinValue")
                 if min_value:
                     matches.extend(self.check_min_value(default_value, min_value, path))
-                max_value = paramvalue.get('MaxValue')
+                max_value = paramvalue.get("MaxValue")
                 if max_value is not None:
                     matches.extend(self.check_max_value(default_value, max_value, path))
-                allowed_values = paramvalue.get('AllowedValues')
+                allowed_values = paramvalue.get("AllowedValues")
                 if allowed_values:
                     matches.extend(
                         self.check_allowed_values(default_value, allowed_values, path)
                     )
-                min_length = paramvalue.get('MinLength')
+                min_length = paramvalue.get("MinLength")
                 if min_length is not None:
                     matches.extend(
                         self.check_min_length(default_value, min_length, path)
                     )
-                max_length = paramvalue.get('MaxLength')
+                max_length = paramvalue.get("MaxLength")
                 if max_length is not None:
                     matches.extend(
                         self.check_max_length(default_value, max_length, path)

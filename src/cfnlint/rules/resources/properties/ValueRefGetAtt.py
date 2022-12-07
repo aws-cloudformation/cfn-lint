@@ -2,28 +2,27 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
-from cfnlint.helpers import RESOURCE_SPECS
 import cfnlint.helpers
+from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ValueRefGetAtt(CloudFormationLintRule):
     """Check if Resource Properties are correct"""
 
-    id = 'E3008'
-    shortdesc = 'Check values of properties for valid Refs and GetAtts'
-    description = 'Checks resource properties for Ref and GetAtt values'
-    tags = ['resources', 'ref', 'getatt']
+    id = "E3008"
+    shortdesc = "Check values of properties for valid Refs and GetAtts"
+    description = "Checks resource properties for Ref and GetAtt values"
+    tags = ["resources", "ref", "getatt"]
 
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes'
+            "ResourceTypes"
         ):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes'
+            "PropertyTypes"
         ):
             self.resource_sub_property_types.append(property_type_spec)
 
@@ -37,7 +36,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
         if path[-1] != property_name:
             # Property doesn't match the property name
             # Check if its a number and a condition
-            if isinstance(path[-1], int) and path[-2] == 'Fn::If':
+            if isinstance(path[-1], int) and path[-2] == "Fn::If":
                 return self.is_value_a_list(path[:-2], property_name)
 
             return False
@@ -47,14 +46,14 @@ class ValueRefGetAtt(CloudFormationLintRule):
     def check_value_ref(self, value, path, **kwargs):
         """Check Ref"""
         matches = []
-        cfn = kwargs.get('cfn')
-        value_specs = kwargs.get('value_specs', {}).get('Ref')
-        list_value_specs = kwargs.get('list_value_specs', {}).get('Ref')
-        property_type = kwargs.get('property_type')
-        property_name = kwargs.get('property_name')
+        cfn = kwargs.get("cfn")
+        value_specs = kwargs.get("value_specs", {}).get("Ref")
+        list_value_specs = kwargs.get("list_value_specs", {}).get("Ref")
+        property_type = kwargs.get("property_type")
+        property_name = kwargs.get("property_name")
         if (
-            path[-1] == 'Ref'
-            and property_type == 'List'
+            path[-1] == "Ref"
+            and property_type == "List"
             and self.is_value_a_list(path[:-1], property_name)
         ):
             specs = list_value_specs
@@ -67,23 +66,23 @@ class ValueRefGetAtt(CloudFormationLintRule):
             # None it just hasn't been defined and we can skip
             return matches
 
-        if value in cfn.template.get('Parameters', {}):
-            param = cfn.template.get('Parameters').get(value, {})
-            parameter_type = param.get('Type')
+        if value in cfn.template.get("Parameters", {}):
+            param = cfn.template.get("Parameters").get(value, {})
+            parameter_type = param.get("Type")
             valid_parameter_types = []
-            for parameter in specs.get('Parameters'):
+            for parameter in specs.get("Parameters"):
                 for param_type in (
                     RESOURCE_SPECS.get(cfn.regions[0])
-                    .get('ParameterTypes')
+                    .get("ParameterTypes")
                     .get(parameter)
                 ):
                     valid_parameter_types.append(param_type)
 
-            if not specs.get('Parameters'):
+            if not specs.get("Parameters"):
                 message = 'Property "{0}" has no valid Refs to Parameters at {1}'
                 matches.append(
                     RuleMatch(
-                        path, message.format(property_name, '/'.join(map(str, path)))
+                        path, message.format(property_name, "/".join(map(str, path)))
                     )
                 )
             elif parameter_type not in valid_parameter_types:
@@ -93,30 +92,30 @@ class ValueRefGetAtt(CloudFormationLintRule):
                         path,
                         message.format(
                             property_name,
-                            ', '.join(map(str, valid_parameter_types)),
-                            '/'.join(map(str, path)),
+                            ", ".join(map(str, valid_parameter_types)),
+                            "/".join(map(str, path)),
                         ),
                     )
                 )
-        if value in cfn.template.get('Resources', {}):
-            resource = cfn.template.get('Resources').get(value, {})
-            resource_type = resource.get('Type')
-            if not specs.get('Resources'):
+        if value in cfn.template.get("Resources", {}):
+            resource = cfn.template.get("Resources").get(value, {})
+            resource_type = resource.get("Type")
+            if not specs.get("Resources"):
                 message = 'Property "{0}" has no valid Refs to Resources at {1}'
                 matches.append(
                     RuleMatch(
-                        path, message.format(property_name, '/'.join(map(str, path)))
+                        path, message.format(property_name, "/".join(map(str, path)))
                     )
                 )
-            elif resource_type not in specs.get('Resources'):
+            elif resource_type not in specs.get("Resources"):
                 message = 'Property "{0}" can Ref to resources of types [{1}] at {2}'
                 matches.append(
                     RuleMatch(
                         path,
                         message.format(
                             property_name,
-                            ', '.join(map(str, specs.get('Resources'))),
-                            '/'.join(map(str, path)),
+                            ", ".join(map(str, specs.get("Resources"))),
+                            "/".join(map(str, path)),
                         ),
                     )
                 )
@@ -126,29 +125,29 @@ class ValueRefGetAtt(CloudFormationLintRule):
     def check_value_getatt(self, value, path, **kwargs):
         """Check GetAtt"""
         matches = []
-        cfn = kwargs.get('cfn')
-        value_specs = kwargs.get('value_specs', {}).get('GetAtt')
-        list_value_specs = kwargs.get('list_value_specs', {}).get('GetAtt')
-        property_type = kwargs.get('property_type')
-        property_name = kwargs.get('property_name')
+        cfn = kwargs.get("cfn")
+        value_specs = kwargs.get("value_specs", {}).get("GetAtt")
+        list_value_specs = kwargs.get("list_value_specs", {}).get("GetAtt")
+        property_type = kwargs.get("property_type")
+        property_name = kwargs.get("property_name")
         # You can sometimes get a list or a string with . in it
         if isinstance(value, list):
             resource_name = value[0]
             if len(value[1:]) == 1:
-                resource_attribute = value[1].split('.')
+                resource_attribute = value[1].split(".")
             else:
                 resource_attribute = value[1:]
         elif isinstance(value, str):
-            resource_name = value.split('.')[0]
-            resource_attribute = value.split('.')[1:]
+            resource_name = value.split(".")[0]
+            resource_attribute = value.split(".")[1:]
         is_value_a_list = self.is_value_a_list(path[:-1], property_name)
-        if path[-1] == 'Fn::GetAtt' and property_type == 'List' and is_value_a_list:
+        if path[-1] == "Fn::GetAtt" and property_type == "List" and is_value_a_list:
             specs = list_value_specs
         else:
             specs = value_specs
 
         resource_type = (
-            cfn.template.get('Resources', {}).get(resource_name, {}).get('Type')
+            cfn.template.get("Resources", {}).get(resource_name, {}).get("Type")
         )
 
         if cfnlint.helpers.is_custom_resource(resource_type):
@@ -158,20 +157,20 @@ class ValueRefGetAtt(CloudFormationLintRule):
         if (
             resource_type
             in [
-                'AWS::CloudFormation::Stack',
-                'AWS::ServiceCatalog::CloudFormationProvisionedProduct',
+                "AWS::CloudFormation::Stack",
+                "AWS::ServiceCatalog::CloudFormationProvisionedProduct",
             ]
-            and resource_attribute[0] == 'Outputs'
+            and resource_attribute[0] == "Outputs"
         ):
             # Nested Stack Outputs
             # if its a string type we are good and return matches
             # if its a list its a failure as Outputs can only be strings
-            if is_value_a_list and property_type == 'List':
+            if is_value_a_list and property_type == "List":
                 message = (
-                    'CloudFormation stack outputs need to be strings not lists at {0}'
+                    "CloudFormation stack outputs need to be strings not lists at {0}"
                 )
                 matches.append(
-                    RuleMatch(path, message.format('/'.join(map(str, path))))
+                    RuleMatch(path, message.format("/".join(map(str, path))))
                 )
 
             return matches
@@ -183,7 +182,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
             # GetAtt is specified but empty so there are no valid options
             message = 'Property "{0}" has no valid Fn::GetAtt options at {1}'
             matches.append(
-                RuleMatch(path, message.format(property_name, '/'.join(map(str, path))))
+                RuleMatch(path, message.format(property_name, "/".join(map(str, path))))
             )
             return matches
 
@@ -196,15 +195,15 @@ class ValueRefGetAtt(CloudFormationLintRule):
                     path,
                     message.format(
                         property_name,
-                        ', '.join(map(str, specs)),
-                        '/'.join(map(str, path)),
+                        ", ".join(map(str, specs)),
+                        "/".join(map(str, path)),
                     ),
                 )
             )
         elif isinstance(specs[resource_type], list):
             found = False
             for allowed_att in specs[resource_type]:
-                if '.'.join(map(str, resource_attribute)) == allowed_att:
+                if ".".join(map(str, resource_attribute)) == allowed_att:
                     found = True
             if not found:
                 message = (
@@ -216,11 +215,11 @@ class ValueRefGetAtt(CloudFormationLintRule):
                         message.format(
                             property_name,
                             specs[resource_type],
-                            '/'.join(map(str, path)),
+                            "/".join(map(str, path)),
                         ),
                     )
                 )
-        elif '.'.join(map(str, resource_attribute)) != specs[resource_type]:
+        elif ".".join(map(str, resource_attribute)) != specs[resource_type]:
             message = (
                 'Property "{0}" can Fn::GetAtt to a resource attribute "{1}" at {2}'
             )
@@ -228,7 +227,7 @@ class ValueRefGetAtt(CloudFormationLintRule):
                 RuleMatch(
                     path,
                     message.format(
-                        property_name, specs[resource_type], '/'.join(map(str, path))
+                        property_name, specs[resource_type], "/".join(map(str, path))
                     ),
                 )
             )
@@ -241,12 +240,12 @@ class ValueRefGetAtt(CloudFormationLintRule):
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
-                    value = value_specs.get(prop).get('Value', {})
+                    value = value_specs.get(prop).get("Value", {})
                     if value:
-                        value_type = value.get('ValueType', '')
-                        list_value_type = value.get('ListValueType', '')
+                        value_type = value.get("ValueType", "")
+                        list_value_type = value.get("ListValueType", "")
                         property_type = (
-                            property_specs.get('Properties').get(prop).get('Type')
+                            property_specs.get("Properties").get(prop).get("Type")
                         )
                         matches.extend(
                             cfn.check_value(
@@ -256,10 +255,10 @@ class ValueRefGetAtt(CloudFormationLintRule):
                                 check_ref=self.check_value_ref,
                                 check_get_att=self.check_value_getatt,
                                 value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get('ValueTypes')
+                                .get("ValueTypes")
                                 .get(value_type, {}),
                                 list_value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get('ValueTypes')
+                                .get("ValueTypes")
                                 .get(list_value_type, {}),
                                 cfn=cfn,
                                 property_type=property_type,
@@ -275,12 +274,12 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('PropertyTypes')
+            .get("PropertyTypes")
             .get(property_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         property_specs = (
-            RESOURCE_SPECS.get(cfn.regions[0]).get('PropertyTypes').get(property_type)
+            RESOURCE_SPECS.get(cfn.regions[0]).get("PropertyTypes").get(property_type)
         )
         matches.extend(self.check(cfn, properties, specs, property_specs, path))
 
@@ -292,12 +291,12 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('ResourceTypes')
+            .get("ResourceTypes")
             .get(resource_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         resource_specs = (
-            RESOURCE_SPECS.get(cfn.regions[0]).get('ResourceTypes').get(resource_type)
+            RESOURCE_SPECS.get(cfn.regions[0]).get("ResourceTypes").get(resource_type)
         )
         matches.extend(self.check(cfn, properties, specs, resource_specs, path))
 

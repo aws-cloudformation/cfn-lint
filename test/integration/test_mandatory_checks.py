@@ -6,7 +6,7 @@ from test.integration import BaseCliTestCase
 
 
 class TestDirectives(BaseCliTestCase):
-    """Test Directives """
+    """Test Directives"""
 
     scenarios = [
         {
@@ -119,46 +119,46 @@ class TestDirectives(BaseCliTestCase):
                     },
                 },
                 {
-                    'Filename': 'test/fixtures/templates/bad/core/mandatory_checks.yaml',
-                    'Level': 'Error',
-                    'Location': {
-                        'End': {'ColumnNumber': 18, 'LineNumber': 13},
-                        'Path': [
-                            'Resources',
-                            'myBucketPass',
-                            'Properties',
-                            'BucketName1'
+                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {"ColumnNumber": 18, "LineNumber": 13},
+                        "Path": [
+                            "Resources",
+                            "myBucketPass",
+                            "Properties",
+                            "BucketName1",
                         ],
-                        'Start': {'ColumnNumber': 7, 'LineNumber': 13}
+                        "Start": {"ColumnNumber": 7, "LineNumber": 13},
                     },
-                    'Message': 'Invalid Property Resources/myBucketPass/Properties/BucketName1. Did you mean BucketName?',
-                    'Rule': {
-                        'Description': 'Making sure that resources properties are properly configured',
-                        'Id': 'E3002',
-                        'ShortDescription': 'Resource properties are invalid',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties'
-                        }
+                    "Message": "Invalid Property Resources/myBucketPass/Properties/BucketName1. Did you mean BucketName?",
+                    "Rule": {
+                        "Description": "Making sure that resources properties are properly configured",
+                        "Id": "E3002",
+                        "ShortDescription": "Resource properties are invalid",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
                     },
+                },
                 {
-                    'Filename': 'test/fixtures/templates/bad/core/mandatory_checks.yaml',
-                    'Level': 'Error',
-                    'Location': {
-                        'End': {'ColumnNumber': 16, 'LineNumber': 19},
-                        'Path': [
-                            'Resources',
-                            'myBucketFirstAndLastPass',
-                            'BadProperty'
+                    "Filename": "test/fixtures/templates/bad/core/mandatory_checks.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "End": {"ColumnNumber": 16, "LineNumber": 19},
+                        "Path": [
+                            "Resources",
+                            "myBucketFirstAndLastPass",
+                            "BadProperty",
                         ],
-                        'Start': {'ColumnNumber': 5, 'LineNumber': 19}
+                        "Start": {"ColumnNumber": 5, "LineNumber": 19},
                     },
-                    'Message': 'Invalid resource attribute BadProperty for resource myBucketFirstAndLastPass',
-                    'Rule': {
-                        'Description': 'Making sure the basic CloudFormation resources are properly configured',
-                        'Id': 'E3001',
-                        'ShortDescription': 'Basic CloudFormation Resource Check',
-                        'Source': 'https://github.com/aws-cloudformation/cfn-python-lint'
-                    }
-                }
+                    "Message": "Invalid resource attribute BadProperty for resource myBucketFirstAndLastPass",
+                    "Rule": {
+                        "Description": "Making sure the basic CloudFormation resources are properly configured",
+                        "Id": "E3001",
+                        "ShortDescription": "Basic CloudFormation Resource Check",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint",
+                    },
+                },
             ],
         }
     ]

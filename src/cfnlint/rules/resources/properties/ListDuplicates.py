@@ -4,32 +4,31 @@ SPDX-License-Identifier: MIT-0
 """
 import hashlib
 import json
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 
 from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ListDuplicates(CloudFormationLintRule):
     """Check if duplicates exist in a List"""
 
-    id = 'E3037'
-    shortdesc = 'Check if a list has duplicate values'
+    id = "E3037"
+    shortdesc = "Check if a list has duplicate values"
     description = (
-        'Certain lists don\'t support duplicate items. '
-        'Check when duplicates are provided but not supported.'
+        "Certain lists don't support duplicate items. "
+        "Check when duplicates are provided but not supported."
     )
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue'
-    tags = ['resources', 'property', 'list']
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue"
+    tags = ["resources", "property", "list"]
 
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes'
+            "ResourceTypes"
         ):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes'
+            "PropertyTypes"
         ):
             self.resource_sub_property_types.append(property_type_spec)
 
@@ -41,19 +40,19 @@ class ListDuplicates(CloudFormationLintRule):
         if isinstance(values, list):
             for index, value in enumerate(values):
                 value_hash = hashlib.sha1(
-                    json.dumps(value, sort_keys=True, default=str).encode('utf-8')
+                    json.dumps(value, sort_keys=True, default=str).encode("utf-8")
                 ).hexdigest()
                 if value_hash in list_items:
                     if not scenario:
-                        message = 'List has a duplicate value at {0}'
+                        message = "List has a duplicate value at {0}"
                         matches.append(
                             RuleMatch(
                                 path + [index],
-                                message.format('/'.join(map(str, path + [index]))),
+                                message.format("/".join(map(str, path + [index]))),
                             )
                         )
                     else:
-                        scenario_text = ' and '.join(
+                        scenario_text = " and ".join(
                             [f'condition "{k}" is {v}' for (k, v) in scenario.items()]
                         )
                         message = f'List has a duplicate value at {"/".join(map(str, path))} when {scenario_text}'
@@ -74,7 +73,7 @@ class ListDuplicates(CloudFormationLintRule):
             for prop in props:
                 matches.extend(
                     self._check_duplicates(
-                        prop.get('Object'), path, prop.get('Scenario')
+                        prop.get("Object"), path, prop.get("Scenario")
                     )
                 )
 
@@ -86,11 +85,11 @@ class ListDuplicates(CloudFormationLintRule):
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in value_specs:
-                    property_type = value_specs.get(prop).get('Type')
+                    property_type = value_specs.get(prop).get("Type")
                     duplicates_allowed = value_specs.get(prop).get(
-                        'DuplicatesAllowed', True
+                        "DuplicatesAllowed", True
                     )
-                    if property_type == 'List' and not duplicates_allowed:
+                    if property_type == "List" and not duplicates_allowed:
                         matches.extend(
                             self.check_duplicates(p_value[prop], p_path + [prop], cfn)
                         )
@@ -103,9 +102,9 @@ class ListDuplicates(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('PropertyTypes')
+            .get("PropertyTypes")
             .get(property_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 
@@ -117,9 +116,9 @@ class ListDuplicates(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('ResourceTypes')
+            .get("ResourceTypes")
             .get(resource_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 

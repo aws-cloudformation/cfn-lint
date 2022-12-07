@@ -2,30 +2,29 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class DependsOnObsolete(CloudFormationLintRule):
     """Check unneeded DepensOn Resource Configuration"""
 
-    id = 'W3005'
-    shortdesc = 'Check obsolete DependsOn configuration for Resources'
+    id = "W3005"
+    shortdesc = "Check obsolete DependsOn configuration for Resources"
     description = (
-        'Check if DependsOn is specified if not needed. '
-        'A Ref or a Fn::GetAtt already is an implicit dependency.'
+        "Check if DependsOn is specified if not needed. "
+        "A Ref or a Fn::GetAtt already is an implicit dependency."
     )
     source_url = (
-        'https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/'
+        "https://aws.amazon.com/blogs/devops/optimize-aws-cloudformation-templates/"
     )
-    tags = ['resources', 'dependson', 'ref', 'getatt']
+    tags = ["resources", "dependson", "ref", "getatt"]
 
     def get_resource_references(self, cfn, ref_function, resource):
         """Get tree of all resource references of a resource"""
         trees = cfn.search_deep_keys(ref_function)
 
         # Filter only resoureces
-        trees = filter(lambda x: x[0] == 'Resources', trees)
+        trees = filter(lambda x: x[0] == "Resources", trees)
         # Filter on the given resource only
         trees = filter(lambda x: x[1] == resource, trees)
 
@@ -36,24 +35,24 @@ class DependsOnObsolete(CloudFormationLintRule):
         matches = []
 
         # Get references
-        trees = self.get_resource_references(cfn, 'Ref', resource)
+        trees = self.get_resource_references(cfn, "Ref", resource)
 
         for tree in trees:
             if tree[-1] == key:
                 message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Ref" at {1}'
                 matches.append(
-                    RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1]))))
+                    RuleMatch(path, message.format(key, "/".join(map(str, tree[:-1]))))
                 )
 
         # Get the GetAtt
-        trees = self.get_resource_references(cfn, 'Fn::GetAtt', resource)
+        trees = self.get_resource_references(cfn, "Fn::GetAtt", resource)
 
         for tree in trees:
             # GettAtt formation is "resource : Attribute", just check the resource
             if tree[-1][0] == key:
                 message = 'Obsolete DependsOn on resource ({0}), dependency already enforced by a "Fn:GetAtt" at {1}'
                 matches.append(
-                    RuleMatch(path, message.format(key, '/'.join(map(str, tree[:-1]))))
+                    RuleMatch(path, message.format(key, "/".join(map(str, tree[:-1]))))
                 )
 
         return matches
@@ -64,10 +63,10 @@ class DependsOnObsolete(CloudFormationLintRule):
         resources = cfn.get_resources()
 
         for resource_name, resource_values in resources.items():
-            depends_ons = resource_values.get('DependsOn')
+            depends_ons = resource_values.get("DependsOn")
             if depends_ons:
-                path = ['Resources', resource_name, 'DependsOn']
-                self.logger.debug('Validating unneeded DependsOn for %s', resource_name)
+                path = ["Resources", resource_name, "DependsOn"]
+                self.logger.debug("Validating unneeded DependsOn for %s", resource_name)
                 if isinstance(depends_ons, list):
                     for index, depends_on in enumerate(depends_ons):
                         matches.extend(

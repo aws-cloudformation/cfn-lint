@@ -7,23 +7,23 @@ import json
 import logging
 import multiprocessing
 import os
-import subprocess
-import zipfile
 import re
-from io import BytesIO
+import subprocess
 import warnings
-from urllib.request import urlopen, Request
-import jsonpatch
-import cfnlint
-from cfnlint.helpers import get_url_content, url_has_newer_version
-from cfnlint.helpers import SPEC_REGIONS
-import cfnlint.data.AdditionalSpecs
+import zipfile
+from io import BytesIO
+from urllib.request import Request, urlopen
 
+import jsonpatch
+
+import cfnlint
+import cfnlint.data.AdditionalSpecs
+from cfnlint.helpers import SPEC_REGIONS, get_url_content, url_has_newer_version
 
 LOGGER = logging.getLogger(__name__)
 
 REGISTRY_SCHEMA_ZIP = (
-    'https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip'
+    "https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip"
 )
 
 
@@ -34,7 +34,7 @@ def update_resource_specs(force: bool = False):
     schema_cache = get_schema_value_types()
 
     # pre-work us-east-1 for comparison later
-    update_resource_spec('us-east-1', SPEC_REGIONS['us-east-1'], schema_cache, force)
+    update_resource_spec("us-east-1", SPEC_REGIONS["us-east-1"], schema_cache, force)
     try:
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
@@ -42,26 +42,26 @@ def update_resource_specs(force: bool = False):
             pool_tuple = [
                 (k, v, schema_cache, force)
                 for k, v in SPEC_REGIONS.items()
-                if k != 'us-east-1'
+                if k != "us-east-1"
             ]
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
 
         # Do it the long, slow way
         for region, url in SPEC_REGIONS.items():
-            if region != 'us-east-1':
+            if region != "us-east-1":
                 update_resource_spec(region, url, schema_cache, force)
 
 
 def update_resource_spec(region, url, schema_cache, force: bool = False):
     """Update a single resource spec"""
     filename = os.path.join(
-        os.path.dirname(cfnlint.__file__), f'data/CloudSpecs/{region}.json'
+        os.path.dirname(cfnlint.__file__), f"data/CloudSpecs/{region}.json"
     )
 
     multiprocessing_logger = multiprocessing.log_to_stderr()
 
-    multiprocessing_logger.debug('Downloading template %s into %s', url, filename)
+    multiprocessing_logger.debug("Downloading template %s into %s", url, filename)
 
     # Check to see if we already have the latest version, and if so stop
     if not (url_has_newer_version(url) or force):
@@ -70,14 +70,14 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
     spec_content = get_url_content(url, caching=True)
 
     multiprocessing_logger.debug(
-        'A more recent version of %s was found, and will be downloaded to %s',
+        "A more recent version of %s was found, and will be downloaded to %s",
         url,
         filename,
     )
     spec = json.loads(spec_content)
 
     # Patch the files
-    spec = patch_spec(spec, 'all')
+    spec = patch_spec(spec, "all")
     spec = patch_spec(spec, region)
 
     # do each patch individually so we can ignore errors
@@ -87,34 +87,34 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
             # Ref/GetAtt as an example.  So we want to add new
             # ValueTypes that don't exist
             for i_patch in patch:
-                path_details = i_patch.get('path').split('/')
-                if path_details[1] == 'ValueTypes':
-                    if not spec.get('ValueTypes').get(path_details[2]):
-                        spec['ValueTypes'][path_details[2]] = {}
+                path_details = i_patch.get("path").split("/")
+                if path_details[1] == "ValueTypes":
+                    if not spec.get("ValueTypes").get(path_details[2]):
+                        spec["ValueTypes"][path_details[2]] = {}
             # do the patch
             jsonpatch.JsonPatch(patch).apply(spec, in_place=True)
         except jsonpatch.JsonPatchConflict:
             for i_patch in patch:
-                path_details = i_patch.get('path').split('/')
-                if path_details[1] == 'ValueTypes':
-                    if not spec.get('ValueTypes').get(path_details[2]):
+                path_details = i_patch.get("path").split("/")
+                if path_details[1] == "ValueTypes":
+                    if not spec.get("ValueTypes").get(path_details[2]):
                         try:
-                            del spec['ValueTypes'][path_details[2]]
+                            del spec["ValueTypes"][path_details[2]]
                         except:  # pylint: disable=bare-except
                             pass
-            LOGGER.debug('Patch (%s) not applied in region %s', patch, region)
+            LOGGER.debug("Patch (%s) not applied in region %s", patch, region)
         except jsonpatch.JsonPointerException:
             for i_patch in patch:
-                path_details = i_patch.get('path').split('/')
-                if path_details[1] == 'ValueTypes':
-                    if not spec.get('ValueTypes').get(path_details[2]):
+                path_details = i_patch.get("path").split("/")
+                if path_details[1] == "ValueTypes":
+                    if not spec.get("ValueTypes").get(path_details[2]):
                         try:
-                            del spec['ValueTypes'][path_details[2]]
+                            del spec["ValueTypes"][path_details[2]]
                         except:  # pylint: disable=bare-except
                             pass
             # Debug as the parent element isn't supported in the region
             LOGGER.debug(
-                'Parent element not found for patch (%s) in region %s', patch, region
+                "Parent element not found for patch (%s) in region %s", patch, region
             )
 
     botocore_cache = {}
@@ -123,20 +123,20 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
         if isinstance(obj, dict):
             new_obj = {}
             for key, value in obj.items():
-                if key == 'botocore':
-                    service_and_type = value.split('/')
-                    service = '/'.join(service_and_type[:-1])
+                if key == "botocore":
+                    service_and_type = value.split("/")
+                    service = "/".join(service_and_type[:-1])
                     botocore_type = service_and_type[-1]
                     if service not in botocore_cache:
                         botocore_cache[service] = json.loads(
                             get_url_content(
-                                'https://raw.githubusercontent.com/boto/botocore/master/botocore/data/'
+                                "https://raw.githubusercontent.com/boto/botocore/master/botocore/data/"
                                 + service
-                                + '/service-2.json'
+                                + "/service-2.json"
                             )
                         )
-                    new_obj['AllowedValues'] = sorted(
-                        botocore_cache[service]['shapes'][botocore_type]['enum']
+                    new_obj["AllowedValues"] = sorted(
+                        botocore_cache[service]["shapes"][botocore_type]["enum"]
                     )
                 else:
                     new_obj[key] = search_and_replace_botocore_types(value)
@@ -152,26 +152,26 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
 
     spec = search_and_replace_botocore_types(spec)
 
-    if region != 'us-east-1':
+    if region != "us-east-1":
         base_specs = cfnlint.helpers.load_resource(
-            'cfnlint.data.CloudSpecs', 'us-east-1.json'
+            "cfnlint.data.CloudSpecs", "us-east-1.json"
         )
         for section, section_values in spec.items():
-            if section in ['ResourceTypes', 'PropertyTypes', 'ValueTypes']:
+            if section in ["ResourceTypes", "PropertyTypes", "ValueTypes"]:
                 for key, value in section_values.items():
                     base_value = base_specs.get(section, {}).get(key, {})
                     if json.dumps(value, sort_keys=True) == json.dumps(
                         base_value, sort_keys=True
                     ):
-                        spec[section][key] = 'CACHED'
+                        spec[section][key] = "CACHED"
 
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(spec, f, indent=1, sort_keys=True, separators=(',', ': '))
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(spec, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 def update_documentation(rules):
     # Update the overview of all rules in the linter
-    filename = 'docs/rules.md'
+    filename = "docs/rules.md"
 
     # Sort rules by the Rule ID
     sorted_rules = sorted(rules, key=lambda obj: obj.id)
@@ -180,19 +180,19 @@ def update_documentation(rules):
 
     # Read current file up to the Rules part, everything up to that point is
     # static documentation.
-    with open(filename, 'r', encoding='utf-8') as original_file:
+    with open(filename, "r", encoding="utf-8") as original_file:
 
         line = original_file.readline()
         while line:
             data.append(line)
 
-            if line == '## Rules\n':
+            if line == "## Rules\n":
                 break
 
             line = original_file.readline()
 
     # Rebuild the file content
-    with open(filename, 'w', encoding='utf-8') as new_file:
+    with open(filename, "w", encoding="utf-8") as new_file:
 
         # Rewrite the static documentation
         for line in data:
@@ -200,16 +200,16 @@ def update_documentation(rules):
 
         # Add the rules
         new_file.write(
-            '(_This documentation is generated by running `cfn-lint --update-documentation`, do not alter this manually_)\n\n'
+            "(_This documentation is generated by running `cfn-lint --update-documentation`, do not alter this manually_)\n\n"
         )
         new_file.write(
-            f'The following **{len(sorted_rules) + 3}** rules are applied by this linter:\n\n'
+            f"The following **{len(sorted_rules) + 3}** rules are applied by this linter:\n\n"
         )
         new_file.write(
-            '| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n'
+            "| Rule ID  | Title | Description | Config<br />(Name:Type:Default) | Source | Tags |\n"
         )
         new_file.write(
-            '| -------- | ----- | ----------- | ---------- | ------ | ---- |\n'
+            "| -------- | ----- | ----------- | ---------- | ------ | ---- |\n"
         )
 
         rule_output = (
@@ -221,24 +221,23 @@ def update_documentation(rules):
             cfnlint.rules.TransformError(),
             cfnlint.rules.RuleError(),
         ] + sorted_rules:
-            # pylint: disable=invalid-string-quote
             rule_source_code_file = (
-                '../'
+                "../"
                 + subprocess.check_output(
                     [
-                        'git',
-                        'grep',
-                        '-l',
-                        "id = '" + rule.id + "'",
-                        'src/cfnlint/rules/',
+                        "git",
+                        "grep",
+                        "-l",
+                        'id = "' + rule.id + '"',
+                        "src/cfnlint/rules/",
                     ]
                 )
-                .decode('ascii')
+                .decode("ascii")
                 .strip()
             )
-            rule_id = rule.id + '*' if rule.experimental else rule.id
-            tags = ','.join(f'`{tag}`' for tag in rule.tags)
-            config = '<br />'.join(
+            rule_id = rule.id + "*" if rule.experimental else rule.id
+            tags = ",".join(f"`{tag}`" for tag in rule.tags)
+            config = "<br />".join(
                 f'{key}:{values.get("type")}:{values.get("default")}'
                 for key, values in rule.config_definition.items()
             )
@@ -253,7 +252,7 @@ def update_documentation(rules):
                     rule_source_code_file,
                 )
             )
-        new_file.write('\n\\* experimental rules\n')
+        new_file.write("\n\\* experimental rules\n")
 
 
 def patch_spec(content, region):
@@ -261,19 +260,19 @@ def patch_spec(content, region):
     LOGGER.info('Patching spec file for region "%s"', region)
 
     append_dir = os.path.join(
-        os.path.dirname(__file__), 'data', 'ExtendedSpecs', region
+        os.path.dirname(__file__), "data", "ExtendedSpecs", region
     )
     for dirpath, _, filenames in os.walk(append_dir):
         filenames.sort()
-        for filename in fnmatch.filter(filenames, '*.json'):
+        for filename in fnmatch.filter(filenames, "*.json"):
             file_path = os.path.basename(filename)
-            module = dirpath.replace(f'{append_dir}', f'{region}').replace(
-                os.path.sep, '.'
+            module = dirpath.replace(f"{append_dir}", f"{region}").replace(
+                os.path.sep, "."
             )
-            LOGGER.info('Processing %s/%s', module, file_path)
+            LOGGER.info("Processing %s/%s", module, file_path)
             all_patches = jsonpatch.JsonPatch(
                 cfnlint.helpers.load_resource(
-                    f'cfnlint.data.ExtendedSpecs.{module}', file_path
+                    f"cfnlint.data.ExtendedSpecs.{module}", file_path
                 )
             )
 
@@ -283,12 +282,12 @@ def patch_spec(content, region):
                     jsonpatch.JsonPatch([all_patch]).apply(content, in_place=True)
                 except jsonpatch.JsonPatchConflict:
                     LOGGER.debug(
-                        'Patch (%s) not applied in region %s', all_patch, region
+                        "Patch (%s) not applied in region %s", all_patch, region
                     )
                 except jsonpatch.JsonPointerException:
                     # Debug as the parent element isn't supported in the region
                     LOGGER.debug(
-                        'Parent element not found for patch (%s) in region %s',
+                        "Parent element not found for patch (%s) in region %s",
                         all_patch,
                         region,
                     )
@@ -299,32 +298,32 @@ def patch_spec(content, region):
 def update_iam_policies():
     """update iam policies file"""
 
-    url = 'https://awspolicygen.s3.amazonaws.com/js/policies.js'
+    url = "https://awspolicygen.s3.amazonaws.com/js/policies.js"
 
     filename = os.path.join(
-        os.path.dirname(cfnlint.data.AdditionalSpecs.__file__), 'Policies.json'
+        os.path.dirname(cfnlint.data.AdditionalSpecs.__file__), "Policies.json"
     )
-    LOGGER.debug('Downloading policies %s into %s', url, filename)
+    LOGGER.debug("Downloading policies %s into %s", url, filename)
 
     content = get_url_content(url)
 
-    content = content.split('app.PolicyEditorConfig=')[1]
+    content = content.split("app.PolicyEditorConfig=")[1]
     content = json.loads(content)
 
     actions = {
-        'Manage Amazon API Gateway': ['HEAD', 'OPTIONS'],
-        'Amazon API Gateway Management': ['HEAD', 'OPTIONS'],
-        'Amazon API Gateway Management V2': ['HEAD', 'OPTIONS'],
-        'Amazon Kinesis Video Streams': ['StartStreamEncryption'],
+        "Manage Amazon API Gateway": ["HEAD", "OPTIONS"],
+        "Amazon API Gateway Management": ["HEAD", "OPTIONS"],
+        "Amazon API Gateway Management V2": ["HEAD", "OPTIONS"],
+        "Amazon Kinesis Video Streams": ["StartStreamEncryption"],
     }
     for k, v in actions.items():
-        if content.get('serviceMap').get(k):
-            content['serviceMap'][k]['Actions'].extend(v)
+        if content.get("serviceMap").get(k):
+            content["serviceMap"][k]["Actions"].extend(v)
         else:
             LOGGER.debug('"%s" was not found in the policies file', k)
 
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(content, f, indent=1, sort_keys=True, separators=(',', ': '))
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(content, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 def get_schema_value_types():
@@ -332,20 +331,20 @@ def get_schema_value_types():
         results = {}
         name = None
 
-        if properties.get('$ref'):
-            name = properties.get('$ref').split('/')[-1]
-            subname, results = resolve_refs(schema.get('definitions').get(name), schema)
+        if properties.get("$ref"):
+            name = properties.get("$ref").split("/")[-1]
+            subname, results = resolve_refs(schema.get("definitions").get(name), schema)
             if subname:
                 name = subname
-            properties = schema.get('definitions').get(name)
+            properties = schema.get("definitions").get(name)
 
-        if properties.get('type') == 'array':
-            results = properties.get('items')
+        if properties.get("type") == "array":
+            results = properties.get("items")
 
         if results:
             properties = results
 
-        if results and results.get('$ref'):
+        if results and results.get("$ref"):
             name, results = resolve_refs(results, schema)
 
         if not results:
@@ -355,111 +354,111 @@ def get_schema_value_types():
 
     def get_object_details(names, properties, schema):
         results = {}
-        warnings.filterwarnings('error')
+        warnings.filterwarnings("error")
         for propname, propdetails in properties.items():
             subname, propdetails = resolve_refs(propdetails, schema)
-            t = propdetails.get('type')
+            t = propdetails.get("type")
             if not t:
                 continue
-            if t in ['object']:
+            if t in ["object"]:
                 if subname is None:
                     subname = propname
-                if propdetails.get('properties'):
+                if propdetails.get("properties"):
                     if subname not in names:
                         results.update(
                             get_object_details(
-                                names + [subname], propdetails.get('properties'), schema
+                                names + [subname], propdetails.get("properties"), schema
                             )
                         )
                 elif (
-                    propdetails.get('oneOf')
-                    or propdetails.get('anyOf')
-                    or propdetails.get('allOf')
+                    propdetails.get("oneOf")
+                    or propdetails.get("anyOf")
+                    or propdetails.get("allOf")
                 ):
                     LOGGER.info(
-                        'Type %s object for %s has only oneOf,anyOf, or allOf properties',
+                        "Type %s object for %s has only oneOf,anyOf, or allOf properties",
                         names[0],
                         propname,
                     )
                     continue
-            elif t not in ['string', 'integer', 'number', 'boolean']:
-                if propdetails.get('$ref'):
+            elif t not in ["string", "integer", "number", "boolean"]:
+                if propdetails.get("$ref"):
                     results.update(
                         get_object_details(
                             names + [propname],
-                            schema.get('definitions').get(t.get('$ref').split('/')[-1]),
+                            schema.get("definitions").get(t.get("$ref").split("/")[-1]),
                             schema,
                         )
                     )
                 elif isinstance(t, list):
                     LOGGER.info(
-                        'Type for %s object and %s property is a list',
+                        "Type for %s object and %s property is a list",
                         names[0],
                         propname,
                     )
                 else:
                     LOGGER.info(
-                        'Unable to handle %s object for %s property', names[0], propname
+                        "Unable to handle %s object for %s property", names[0], propname
                     )
-            elif t == 'string':
-                if not results.get('.'.join(names + [propname])):
+            elif t == "string":
+                if not results.get(".".join(names + [propname])):
                     if (
-                        propdetails.get('pattern')
+                        propdetails.get("pattern")
                         or (
-                            propdetails.get('minLength')
-                            and propdetails.get('maxLength')
+                            propdetails.get("minLength")
+                            and propdetails.get("maxLength")
                         )
-                        or propdetails.get('enum')
+                        or propdetails.get("enum")
                     ):
-                        results['.'.join(names + [propname])] = {}
-                if propdetails.get('pattern'):
-                    p = propdetails.get('pattern')
+                        results[".".join(names + [propname])] = {}
+                if propdetails.get("pattern"):
+                    p = propdetails.get("pattern")
                     if (
-                        '.'.join(names + [propname])
-                        == 'AWS::OpsWorksCM::Server.CustomPrivateKey'
+                        ".".join(names + [propname])
+                        == "AWS::OpsWorksCM::Server.CustomPrivateKey"
                     ):
                         # one off exception to handle a weird parsing issue in python 2.7
                         continue
                     # python 3 has the ability to test isascii
                     # python 3.7 introduces is ascii so switching to encode
                     try:
-                        p.encode('ascii')
+                        p.encode("ascii")
                     except UnicodeEncodeError:
                         continue
                     try:
-                        if '\\p{' in p:
+                        if "\\p{" in p:
                             continue
                         re.compile(p, re.UNICODE)
-                        results['.'.join(names + [propname])].update(
-                            {'AllowedPatternRegex': p}
+                        results[".".join(names + [propname])].update(
+                            {"AllowedPatternRegex": p}
                         )
                     except:  # pylint: disable=bare-except
                         LOGGER.info(
-                            'Unable to handle regex for type %s and property %s with regex %s',
+                            "Unable to handle regex for type %s and property %s with regex %s",
                             names[0],
                             propname,
                             p,
                         )
-                if propdetails.get('minLength') and propdetails.get('maxLength'):
-                    results['.'.join(names + [propname])].update(
+                if propdetails.get("minLength") and propdetails.get("maxLength"):
+                    results[".".join(names + [propname])].update(
                         {
-                            'StringMin': propdetails.get('minLength'),
-                            'StringMax': propdetails.get('maxLength'),
+                            "StringMin": propdetails.get("minLength"),
+                            "StringMax": propdetails.get("maxLength"),
                         }
                     )
-                if propdetails.get('enum'):
-                    results['.'.join(names + [propname])].update(
-                        {'AllowedValues': propdetails.get('enum')}
+                if propdetails.get("enum"):
+                    results[".".join(names + [propname])].update(
+                        {"AllowedValues": propdetails.get("enum")}
                     )
-            elif t in ['number', 'integer']:
-                if not results.get('.'.join(names + [propname])):
-                    if propdetails.get('minimum') and propdetails.get('maximum'):
-                        results['.'.join(names + [propname])] = {}
-                if propdetails.get('minimum') and propdetails.get('maximum'):
-                    results['.'.join(names + [propname])].update(
+            elif t in ["number", "integer"]:
+                if not results.get(".".join(names + [propname])):
+                    if propdetails.get("minimum") and propdetails.get("maximum"):
+                        results[".".join(names + [propname])] = {}
+                if propdetails.get("minimum") and propdetails.get("maximum"):
+                    results[".".join(names + [propname])].update(
                         {
-                            'NumberMin': propdetails.get('minimum'),
-                            'NumberMax': propdetails.get('maximum'),
+                            "NumberMin": propdetails.get("minimum"),
+                            "NumberMax": propdetails.get("maximum"),
                         }
                     )
 
@@ -467,15 +466,15 @@ def get_schema_value_types():
 
     def process_schema(schema):
         details = get_object_details(
-            [schema.get('typeName')], schema.get('properties'), schema
+            [schema.get("typeName")], schema.get("properties"), schema
         )
 
         # Remove duplicates
         vtypes = {}
         for n, v in details.items():
-            if n.count('.') > 1:
-                s = n.split('.')
-                vtypes[s[0] + '.' + '.'.join(s[-2:])] = v
+            if n.count(".") > 1:
+                s = n.split(".")
+                vtypes[s[0] + "." + ".".join(s[-2:])] = v
             else:
                 vtypes[n] = v
 
@@ -483,23 +482,23 @@ def get_schema_value_types():
         for n, v in vtypes.items():
             patch = []
             if v:
-                if n.count('.') == 2:
-                    r_type = 'PropertyTypes'
+                if n.count(".") == 2:
+                    r_type = "PropertyTypes"
                 else:
-                    r_type = 'ResourceTypes'
+                    r_type = "ResourceTypes"
                 element = {
-                    'op': 'add',
-                    'path': f'/{r_type}/{".".join(n.split(".")[0:-1])}/Properties/{n.split(".")[-1]}/Value',
-                    'value': {
-                        'ValueType': n,
+                    "op": "add",
+                    "path": f'/{r_type}/{".".join(n.split(".")[0:-1])}/Properties/{n.split(".")[-1]}/Value',
+                    "value": {
+                        "ValueType": n,
                     },
                 }
                 patch.append(element)
                 for s, vs in v.items():
                     element = {
-                        'op': 'add',
-                        'path': f'/ValueTypes/{n}/{s}',
-                        'value': vs,
+                        "op": "add",
+                        "path": f"/ValueTypes/{n}/{s}",
+                        "value": vs,
                     }
                     patch.append(element)
             if patch:
@@ -519,7 +518,7 @@ def get_schema_value_types():
                     else:
                         data = d
                     if isinstance(data, bytes):
-                        data = data.decode('utf-8')
+                        data = data.decode("utf-8")
                     schema = json.loads(data)
                     patches = process_schema(schema)
                     results.extend(patches)

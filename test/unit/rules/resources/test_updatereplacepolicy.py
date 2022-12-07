@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
-from cfnlint.rules.resources.UpdateReplacePolicy import UpdateReplacePolicy  # pylint: disable=E0401
+
+from cfnlint.rules.resources.UpdateReplacePolicy import (
+    UpdateReplacePolicy,  # pylint: disable=E0401
+)
 
 
 class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
@@ -14,7 +17,8 @@ class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
         super(TestResourceUpdateReplacePolicy, self).setUp()
         self.collection.register(UpdateReplacePolicy())
         self.success_templates = [
-            'test/fixtures/templates/good/resources_lang_extensions_updatereplacepolicy.yaml']
+            "test/fixtures/templates/good/resources_lang_extensions_updatereplacepolicy.yaml"
+        ]
 
     def test_file_positive(self):
         """Test Positive"""
@@ -23,9 +27,12 @@ class TestResourceUpdateReplacePolicy(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources_updatereplacepolicy.yaml', 4)
+            "test/fixtures/templates/bad/resources_updatereplacepolicy.yaml", 4
+        )
 
     def test_lang_extensions_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources_lang_extensions_updatereplacepolicy.yaml', 3)
+            "test/fixtures/templates/bad/resources_lang_extensions_updatereplacepolicy.yaml",
+            3,
+        )

@@ -3,35 +3,36 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from jsonschema import validate, ValidationError
+
+from jsonschema import ValidationError, validate
+
 from cfnlint.helpers import (
-    REGEX_DYN_REF,
-    PSEUDOPARAMS,
     FN_PREFIX,
-    UNCONVERTED_SUFFIXES,
+    PSEUDOPARAMS,
+    REGEX_DYN_REF,
     REGISTRY_SCHEMAS,
+    UNCONVERTED_SUFFIXES,
 )
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ResourceSchema(CloudFormationLintRule):
-    id = 'E3000'
-    shortdesc = 'Resource schema'
-    description = 'CloudFormation Registry resource schema validation'
+    id = "E3000"
+    shortdesc = "Resource schema"
+    description = "CloudFormation Registry resource schema validation"
     source_url = (
-        'https://github.com/aws-cloudformation/aws-cloudformation-resource-schema/'
+        "https://github.com/aws-cloudformation/aws-cloudformation-resource-schema/"
     )
-    tags = ['resources']
+    tags = ["resources"]
 
     def match(self, cfn):
         matches = []
         for schema in REGISTRY_SCHEMAS:
-            resource_type = schema['typeName']
+            resource_type = schema["typeName"]
             for resource_name, resource_values in cfn.get_resources(
                 [resource_type]
             ).items():
-                properties = resource_values.get('Properties', {})
+                properties = resource_values.get("Properties", {})
                 # ignoring resources with CloudFormation template syntax in Properties
                 if (
                     not re.match(REGEX_DYN_REF, str(properties))
@@ -46,7 +47,7 @@ class ResourceSchema(CloudFormationLintRule):
                     except ValidationError as e:
                         matches.append(
                             RuleMatch(
-                                ['Resources', resource_name, 'Properties'], e.message
+                                ["Resources", resource_name, "Properties"], e.message
                             )
                         )
         return matches

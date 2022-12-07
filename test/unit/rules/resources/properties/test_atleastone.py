@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
-from cfnlint.rules.resources.properties.AtLeastOne import AtLeastOne  # pylint: disable=E0401
+
+from cfnlint.rules.resources.properties.AtLeastOne import (
+    AtLeastOne,  # pylint: disable=E0401
+)
 
 
 class TestPropertyAtLeastOne(BaseRuleTestCase):
@@ -21,4 +24,5 @@ class TestPropertyAtLeastOne(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            'test/fixtures/templates/bad/resources/properties/atleastone.yaml', 2)
+            "test/fixtures/templates/bad/resources/properties/atleastone.yaml", 2
+        )

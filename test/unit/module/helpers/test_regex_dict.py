@@ -2,30 +2,32 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import RegexDict
 from test.testlib.testcase import BaseTestCase
 
+from cfnlint.helpers import RegexDict
+
+
 class TestRegexDict(BaseTestCase):
-    """Test Regex Dict """
+    """Test Regex Dict"""
 
     def test_getitem(self):
         """Test success run"""
 
         obj = RegexDict()
-        obj['^Value$'] = True
+        obj["^Value$"] = True
 
         with self.assertRaises(KeyError):
-            obj['NotExist']
+            obj["NotExist"]
 
     def test_get(self):
         obj = RegexDict()
-        obj['^Value$'] = True
+        obj["^Value$"] = True
 
-        self.assertEqual(obj.get('NotExist', 'Default'), 'Default')
+        self.assertEqual(obj.get("NotExist", "Default"), "Default")
 
     def test_return_longest(self):
         obj = RegexDict()
-        obj['^Test'] = False
-        obj['^TestLonger'] = True
+        obj["^Test"] = False
+        obj["^TestLonger"] = True
 
-        self.assertTrue(obj['TestLongerObject'])
+        self.assertTrue(obj["TestLongerObject"])

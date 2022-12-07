@@ -4,11 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 from typing import List
 
-from cfnlint.rules import Match, RulesCollection
 from cfnlint.config import configure_logging
 from cfnlint.core import get_rules
 from cfnlint.decode import decode_str
 from cfnlint.helpers import REGIONS
+from cfnlint.rules import Match, RulesCollection
 from cfnlint.runner import Runner
 
 Matches = List[Match]
@@ -65,6 +65,6 @@ def lint_all(s: str) -> Matches:
     """
     return lint(
         s=s,
-        rules=get_rules([], [], ['I', 'W', 'E'], include_experimental=True),
+        rules=get_rules([], [], ["I", "W", "E"], include_experimental=True),
         regions=REGIONS,
     )

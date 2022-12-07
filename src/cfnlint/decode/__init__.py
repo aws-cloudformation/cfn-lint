@@ -2,16 +2,17 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from ast import Call
 import logging
-from typing import Tuple, List, Union, Callable, Optional
+from ast import Call
 from json.decoder import JSONDecodeError
+from typing import Callable, List, Optional, Tuple, Union
+
+from yaml import YAMLError
 from yaml.parser import ParserError
 from yaml.scanner import ScannerError
-from yaml import YAMLError
-from cfnlint.decode import cfn_yaml, cfn_json
-from cfnlint.rules import Match, ParseError
 
+from cfnlint.decode import cfn_json, cfn_yaml
+from cfnlint.rules import Match, ParseError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,34 +40,34 @@ def _decode(
         template = yaml_f(payload)
     except IOError as e:
         if e.errno == 2:
-            LOGGER.error('Template file not found: %s', filename)
+            LOGGER.error("Template file not found: %s", filename)
             matches.append(
                 create_match_file_error(
-                    filename, f'Template file not found: {filename}'
+                    filename, f"Template file not found: {filename}"
                 )
             )
         elif e.errno == 21:
-            LOGGER.error('Template references a directory, not a file: %s', filename)
+            LOGGER.error("Template references a directory, not a file: %s", filename)
             matches.append(
                 create_match_file_error(
-                    filename, 'Template references a directory, not a file: {filename}'
+                    filename, "Template references a directory, not a file: {filename}"
                 )
             )
         elif e.errno == 13:
-            LOGGER.error('Permission denied when accessing template file: %s', filename)
+            LOGGER.error("Permission denied when accessing template file: %s", filename)
             matches.append(
                 create_match_file_error(
                     filename,
-                    'Permission denied when accessing template file: {filename}',
+                    "Permission denied when accessing template file: {filename}",
                 )
             )
 
         if matches:
             return (None, matches)
     except UnicodeDecodeError as _:
-        LOGGER.error('Cannot read file contents: %s', filename)
+        LOGGER.error("Cannot read file contents: %s", filename)
         matches.append(
-            create_match_file_error(filename, 'Cannot read file contents: {filename}')
+            create_match_file_error(filename, "Cannot read file contents: {filename}")
         )
     except cfn_yaml.CfnParseError as err:
         matches = err.matches
@@ -76,10 +77,10 @@ def _decode(
         if err.problem and (
             err.problem
             in [
-                'found character \'\\t\' that cannot start any token',
-                'found unknown escape character',
+                "found character '\\t' that cannot start any token",
+                "found unknown escape character",
             ]
-            or err.problem.startswith('found unknown escape character')
+            or err.problem.startswith("found unknown escape character")
         ):
             try:
                 template = json_f(payload)
@@ -88,22 +89,22 @@ def _decode(
                     json_err.filename = filename
                 matches = json_errs.matches
             except JSONDecodeError as json_err:
-                if hasattr(json_err, 'msg'):
+                if hasattr(json_err, "msg"):
                     if (
-                        json_err.msg == 'No JSON object could be decoded'
+                        json_err.msg == "No JSON object could be decoded"
                     ):  # pylint: disable=no-member
                         matches = [create_match_yaml_parser_error(err, filename)]
                     else:
                         matches = [create_match_json_parser_error(json_err, filename)]
-                if hasattr(json_err, 'msg'):
-                    if json_err.msg == 'Expecting value':  # pylint: disable=no-member
+                if hasattr(json_err, "msg"):
+                    if json_err.msg == "Expecting value":  # pylint: disable=no-member
                         matches = [create_match_yaml_parser_error(err, filename)]
                     else:
                         matches = [create_match_json_parser_error(json_err, filename)]
             except Exception as json_err:  # pylint: disable=W0703
-                LOGGER.error('Template %s is malformed: %s', filename, err.problem)
+                LOGGER.error("Template %s is malformed: %s", filename, err.problem)
                 LOGGER.error(
-                    'Tried to parse %s as JSON but got error: %s',
+                    "Tried to parse %s as JSON but got error: %s",
                     filename,
                     str(json_err),
                 )
@@ -112,7 +113,7 @@ def _decode(
                     [
                         create_match_file_error(
                             filename,
-                            f'Tried to parse {filename} as JSON but got error: {str(json_err)}',
+                            f"Tried to parse {filename} as JSON but got error: {str(json_err)}",
                         )
                     ],
                 )
@@ -131,7 +132,7 @@ def _decode(
                 1,
                 filename,
                 ParseError(),
-                message='Template needs to be an object.',
+                message="Template needs to be an object.",
             )
         ]
     return (template, matches)

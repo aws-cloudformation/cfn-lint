@@ -2,31 +2,30 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class OnlyOne(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
 
-    id = 'E2523'
-    shortdesc = 'Check Properties that need only one of a list of properties'
+    id = "E2523"
+    shortdesc = "Check Properties that need only one of a list of properties"
     description = (
-        'Making sure CloudFormation properties '
-        + 'that require only one property from a list. '
-        + 'One has to be specified.'
+        "Making sure CloudFormation properties "
+        + "that require only one property from a list. "
+        + "One has to be specified."
     )
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['resources']
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    tags = ["resources"]
 
     def __init__(self):
         """Init"""
         super().__init__()
-        onlyonespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'OnlyOne.json')
-        self.resource_types_specs = onlyonespec['ResourceTypes']
-        self.property_types_specs = onlyonespec['PropertyTypes']
+        onlyonespec = cfnlint.helpers.load_resource(AdditionalSpecs, "OnlyOne.json")
+        self.resource_types_specs = onlyonespec["ResourceTypes"]
+        self.property_types_specs = onlyonespec["PropertyTypes"]
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
@@ -44,36 +43,36 @@ class OnlyOne(CloudFormationLintRule):
                 for property_set in property_sets:
                     count = 0
                     for prop in onlyoneprop:
-                        if prop in property_set['Object']:
+                        if prop in property_set["Object"]:
                             count += 1
 
                     if count != 1:
-                        if property_set['Scenario'] is None:
-                            message = 'Only one of [{0}] should be specified for {1}'
+                        if property_set["Scenario"] is None:
+                            message = "Only one of [{0}] should be specified for {1}"
                             matches.append(
                                 RuleMatch(
                                     path,
                                     message.format(
-                                        ', '.join(map(str, onlyoneprop)),
-                                        '/'.join(map(str, safe_path)),
+                                        ", ".join(map(str, onlyoneprop)),
+                                        "/".join(map(str, safe_path)),
                                     ),
                                 )
                             )
                         else:
-                            scenario_text = ' and '.join(
+                            scenario_text = " and ".join(
                                 [
                                     f'when condition "{k}" is {v}'
-                                    for (k, v) in property_set['Scenario'].items()
+                                    for (k, v) in property_set["Scenario"].items()
                                 ]
                             )
-                            message = 'Only one of [{0}] should be specified {1} at {2}'
+                            message = "Only one of [{0}] should be specified {1} at {2}"
                             matches.append(
                                 RuleMatch(
                                     path,
                                     message.format(
-                                        ', '.join(map(str, onlyoneprop)),
+                                        ", ".join(map(str, onlyoneprop)),
                                         scenario_text,
-                                        '/'.join(map(str, safe_path)),
+                                        "/".join(map(str, safe_path)),
                                     ),
                                 )
                             )

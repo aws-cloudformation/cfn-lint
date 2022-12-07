@@ -2,21 +2,22 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import os
 import logging
+import os
+
 import samtranslator
 from samtranslator.parser import parser
-from samtranslator.translator.translator import Translator
 from samtranslator.public.exceptions import InvalidDocumentException
 from samtranslator.sdk import resource
+from samtranslator.translator.translator import Translator
 
-from cfnlint.helpers import load_resource, convert_dict, format_json_string
 from cfnlint.data import Serverless
+from cfnlint.helpers import convert_dict, format_json_string, load_resource
 from cfnlint.rules import Match, TransformError
 
-LOGGER = logging.getLogger('cfnlint')
+LOGGER = logging.getLogger("cfnlint")
 
-samtranslator_logger = logging.getLogger('samtranslator')
+samtranslator_logger = logging.getLogger("samtranslator")
 samtranslator_logger.setLevel(logging.CRITICAL)
 
 # Override SAM validation as cfn-lint does thoese
@@ -58,7 +59,7 @@ class Transform:
         Load the ManagedPolicies locally, based on the AWS-CLI:
         https://github.com/awslabs/aws-sam-cli/blob/develop/samcli/lib/samlib/default_managed_policies.json
         """
-        return load_resource(Serverless, 'ManagedPolicies.json')
+        return load_resource(Serverless, "ManagedPolicies.json")
 
     def _replace_local_codeuri(self):
         """
@@ -69,58 +70,58 @@ class Transform:
         does not support local paths)
         """
 
-        all_resources = self._template.get('Resources', {})
+        all_resources = self._template.get("Resources", {})
 
-        template_globals = self._template.get('Globals', {})
-        auto_publish_alias = template_globals.get('Function', {}).get(
-            'AutoPublishAlias'
+        template_globals = self._template.get("Globals", {})
+        auto_publish_alias = template_globals.get("Function", {}).get(
+            "AutoPublishAlias"
         )
         if isinstance(auto_publish_alias, dict):
             if len(auto_publish_alias) == 1:
                 for k, v in auto_publish_alias.items():
-                    if k == 'Ref':
-                        if v in self._template.get('Parameters'):
-                            self._parameters[v] = 'Alias'
+                    if k == "Ref":
+                        if v in self._template.get("Parameters"):
+                            self._parameters[v] = "Alias"
 
         for _, resource in all_resources.items():
 
-            resource_type = resource.get('Type')
-            resource_dict = resource.get('Properties')
+            resource_type = resource.get("Type")
+            resource_dict = resource.get("Properties")
 
-            if resource_type == 'AWS::Serverless::Function':
+            if resource_type == "AWS::Serverless::Function":
 
-                if resource_dict.get('PackageType') == 'Image':
-                    Transform._update_to_s3_uri('ImageUri', resource_dict)
+                if resource_dict.get("PackageType") == "Image":
+                    Transform._update_to_s3_uri("ImageUri", resource_dict)
                 else:
-                    Transform._update_to_s3_uri('CodeUri', resource_dict)
-                auto_publish_alias = resource_dict.get('AutoPublishAlias')
+                    Transform._update_to_s3_uri("CodeUri", resource_dict)
+                auto_publish_alias = resource_dict.get("AutoPublishAlias")
                 if isinstance(auto_publish_alias, dict):
                     if len(auto_publish_alias) == 1:
                         for k, v in auto_publish_alias.items():
-                            if k == 'Ref':
-                                if v in self._template.get('Parameters'):
-                                    self._parameters[v] = 'Alias'
-            if resource_type in ['AWS::Serverless::LayerVersion']:
-                if resource_dict.get('ContentUri'):
-                    Transform._update_to_s3_uri('ContentUri', resource_dict)
-            if resource_type == 'AWS::Serverless::Application':
-                if resource_dict.get('Location'):
-                    if isinstance(resource_dict.get('Location'), dict):
-                        resource_dict['Location'] = ''
-                        Transform._update_to_s3_uri('Location', resource_dict)
-            if resource_type == 'AWS::Serverless::Api':
+                            if k == "Ref":
+                                if v in self._template.get("Parameters"):
+                                    self._parameters[v] = "Alias"
+            if resource_type in ["AWS::Serverless::LayerVersion"]:
+                if resource_dict.get("ContentUri"):
+                    Transform._update_to_s3_uri("ContentUri", resource_dict)
+            if resource_type == "AWS::Serverless::Application":
+                if resource_dict.get("Location"):
+                    if isinstance(resource_dict.get("Location"), dict):
+                        resource_dict["Location"] = ""
+                        Transform._update_to_s3_uri("Location", resource_dict)
+            if resource_type == "AWS::Serverless::Api":
                 if (
-                    'DefinitionBody' not in resource_dict
-                    and 'Auth' not in resource_dict
-                    and 'Cors' not in resource_dict
+                    "DefinitionBody" not in resource_dict
+                    and "Auth" not in resource_dict
+                    and "Cors" not in resource_dict
                 ):
-                    Transform._update_to_s3_uri('DefinitionUri', resource_dict)
+                    Transform._update_to_s3_uri("DefinitionUri", resource_dict)
                 else:
-                    resource_dict['DefinitionBody'] = ''
-            if resource_type == 'AWS::Serverless::StateMachine' and resource_dict.get(
-                'DefinitionUri'
+                    resource_dict["DefinitionBody"] = ""
+            if resource_type == "AWS::Serverless::StateMachine" and resource_dict.get(
+                "DefinitionUri"
             ):
-                Transform._update_to_s3_uri('DefinitionUri', resource_dict)
+                Transform._update_to_s3_uri("DefinitionUri", resource_dict)
 
     def transform_template(self):
         """
@@ -130,7 +131,7 @@ class Transform:
 
         try:
             # Output the SAM Translator version in debug mode
-            LOGGER.info('SAM Translator: %s', samtranslator.__version__)
+            LOGGER.info("SAM Translator: %s", samtranslator.__version__)
 
             sam_translator = Translator(
                 managed_policy_map=self._managed_policy_map, sam_parser=self._sam_parser
@@ -141,8 +142,8 @@ class Transform:
             # Tell SAM to use the region we're linting in, this has to be
             # controlled using the default AWS mechanisms, see also:
             # https://github.com/awslabs/serverless-application-model/blob/master/samtranslator/translator/arn_generator.py
-            LOGGER.info('Setting AWS_DEFAULT_REGION to %s', self._region)
-            os.environ['AWS_DEFAULT_REGION'] = self._region
+            LOGGER.info("Setting AWS_DEFAULT_REGION to %s", self._region)
+            os.environ["AWS_DEFAULT_REGION"] = self._region
 
             self._template = convert_dict(
                 sam_translator.translate(
@@ -151,10 +152,10 @@ class Transform:
             )
 
             LOGGER.info(
-                'Transformed template: \n%s', format_json_string(self._template)
+                "Transformed template: \n%s", format_json_string(self._template)
             )
         except InvalidDocumentException as e:
-            message = 'Error transforming template: {0}'
+            message = "Error transforming template: {0}"
             for cause in e.causes:
                 matches.append(
                     Match(
@@ -168,9 +169,9 @@ class Transform:
                     )
                 )
         except Exception as e:  # pylint: disable=W0703
-            LOGGER.debug('Error transforming template: %s', str(e))
-            LOGGER.debug('Stack trace: %s', e, exc_info=True)
-            message = 'Error transforming template: {0}'
+            LOGGER.debug("Error transforming template: %s", str(e))
+            LOGGER.debug("Stack trace: %s", e, exc_info=True)
+            message = "Error transforming template: {0}"
             matches.append(
                 Match(
                     1, 1, 1, 1, self._filename, TransformError(), message.format(str(e))
@@ -192,11 +193,11 @@ class Transform:
         bool
             Returns True if the uri given is an S3 uri, otherwise False
         """
-        return isinstance(uri, str) and uri.startswith('s3://')
+        return isinstance(uri, str) and uri.startswith("s3://")
 
     @staticmethod
     def _update_to_s3_uri(
-        property_key, resource_property_dict, s3_uri_value='s3://bucket/value'
+        property_key, resource_property_dict, s3_uri_value="s3://bucket/value"
     ):
         """
         Updates the 'property_key' in the 'resource_property_dict' to the
@@ -211,13 +212,13 @@ class Transform:
         s3_uri_value str, optional
             Value to update the value of the property_key to
         """
-        uri_property = resource_property_dict.get(property_key, '.')
+        uri_property = resource_property_dict.get(property_key, ".")
 
         # ignore if dict or already an S3 Uri
         if isinstance(uri_property, dict):
             if len(uri_property) == 1:
                 for k in uri_property.keys():
-                    if k == 'Ref':
+                    if k == "Ref":
                         resource_property_dict[property_key] = s3_uri_value
             return
         if Transform.is_s3_uri(uri_property):

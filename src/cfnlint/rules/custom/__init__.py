@@ -4,7 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 # pylint: disable=cyclic-import
 import json
+
 import cfnlint.rules.custom.Operators
+
 
 # pylint: disable=too-many-return-statements
 def make_rule(line, lineNumber):
@@ -28,11 +30,11 @@ def make_rule(line, lineNumber):
     def process_sets(raw_value):
         if (
             len(raw_value) > 1
-            and raw_value[0] == '['
-            and (raw_value[-2] == ']' or raw_value[-1] == ']')
+            and raw_value[0] == "["
+            and (raw_value[-2] == "]" or raw_value[-1] == "]")
         ):
             raw_value = raw_value[1:-2]
-            raw_value = raw_value.split(',')
+            raw_value = raw_value.split(",")
             for x in raw_value:
                 x = x.strip()
             return raw_value
@@ -41,20 +43,20 @@ def make_rule(line, lineNumber):
 
     line = line.rstrip()
     rule_id = lineNumber + 9000
-    line = line.split(' ', 3)
-    error_level = 'E'
+    line = line.split(" ", 3)
+    error_level = "E"
     if len(line) == 4:
         resourceType = line[0]
         prop = line[1]
         operator = line[2]
         value = None
         error_message = None
-        if 'WARN' in line[3]:
-            error_level = 'W'
-            value, error_message = set_arguments(line[3], 'WARN')
-        elif 'ERROR' in line[3]:
-            error_level = 'E'
-            value, error_message = set_arguments(line[3], 'ERROR')
+        if "WARN" in line[3]:
+            error_level = "W"
+            value, error_message = set_arguments(line[3], "WARN")
+        elif "ERROR" in line[3]:
+            error_level = "E"
+            value, error_message = set_arguments(line[3], "ERROR")
         else:
             value = process_sets(line[3])
             value = get_value(line[3])
@@ -62,31 +64,31 @@ def make_rule(line, lineNumber):
         if isinstance(value, str):
             value = value.strip().strip('"')
 
-        if operator in ['EQUALS', '==']:
+        if operator in ["EQUALS", "=="]:
             return cfnlint.rules.custom.Operators.CreateEqualsRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator in ['NOT_EQUALS', '!=']:
+        if operator in ["NOT_EQUALS", "!="]:
             return cfnlint.rules.custom.Operators.CreateNotEqualsRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == 'IN':
+        if operator == "IN":
             return cfnlint.rules.custom.Operators.CreateInSetRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == 'NOT_IN':
+        if operator == "NOT_IN":
             return cfnlint.rules.custom.Operators.CreateNotInSetRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == '>=':
+        if operator == ">=":
             return cfnlint.rules.custom.Operators.CreateGreaterRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == '<=':
+        if operator == "<=":
             return cfnlint.rules.custom.Operators.CreateLesserRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
 
     return cfnlint.rules.custom.Operators.CreateInvalidRule(
-        'E' + str(rule_id), operator
+        "E" + str(rule_id), operator
     )

@@ -3,9 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import hashlib
-from copy import copy
 import json
 import logging
+from copy import copy
+
 import cfnlint.helpers
 
 LOGGER = logging.getLogger(__name__)
@@ -19,7 +20,7 @@ class ConditionParseError(Exception):
 
 def get_hash(obj):
     """Return a hash of an object"""
-    return hashlib.sha1(json.dumps(obj, sort_keys=True).encode('utf-8')).hexdigest()
+    return hashlib.sha1(json.dumps(obj, sort_keys=True).encode("utf-8")).hexdigest()
 
 
 class EqualsValue:
@@ -34,14 +35,14 @@ class EqualsValue:
                 # Save hashes of the dict for consistency and sorting
                 self.Function = get_hash(value)
             else:
-                LOGGER.debug('Length of the object needs to be 1')
+                LOGGER.debug("Length of the object needs to be 1")
                 raise ConditionParseError
         elif isinstance(value, str):
             self.String = value
         elif isinstance(value, int):
             self.String = str(value)
         else:
-            LOGGER.debug('Equals value has to be string or object')
+            LOGGER.debug("Equals value has to be string or object")
             raise ConditionParseError
 
     def __eq__(self, other):
@@ -60,10 +61,10 @@ class Equals:
                 self.Left = EqualsValue(equals[0])
                 self.Right = EqualsValue(equals[1])
             else:
-                LOGGER.debug('Length of Equals needs to be 2')
+                LOGGER.debug("Length of Equals needs to be 2")
                 raise ConditionParseError
         else:
-            LOGGER.debug('Equals needs to be a list')
+            LOGGER.debug("Equals needs to be a list")
             raise ConditionParseError
 
     def test(self, scenarios):
@@ -92,17 +93,17 @@ class Condition:
         self.Not = []
         self.Influenced_Equals = {}
         if name is not None:
-            value = template.get('Conditions', {}).get(name, {})
+            value = template.get("Conditions", {}).get(name, {})
             try:
                 self.process_condition(template, value)
             except ConditionParseError:
-                LOGGER.debug('Error parsing condition: %s', name)
+                LOGGER.debug("Error parsing condition: %s", name)
                 self.Equals = None
         elif sub_condition is not None:
             try:
                 self.process_condition(template, sub_condition)
             except ConditionParseError:
-                LOGGER.debug('Error parsing condition: %s', name)
+                LOGGER.debug("Error parsing condition: %s", name)
                 self.Equals = None
 
     def test(self, scenarios):
@@ -153,17 +154,17 @@ class Condition:
                         equal = Equals(func_value)
                         self.process_influenced_equal(equal)
                         self.Equals = equal
-                    elif func_name == 'Condition':
-                        value = template.get('Conditions', {}).get(func_value, {})
+                    elif func_name == "Condition":
+                        value = template.get("Conditions", {}).get(func_value, {})
                         try:
                             self.process_condition(template, value)
                         except ConditionParseError:
-                            LOGGER.debug('Error parsing condition: %s', func_value)
+                            LOGGER.debug("Error parsing condition: %s", func_value)
             else:
-                LOGGER.debug('Length of the object must be 1')
+                LOGGER.debug("Length of the object must be 1")
                 raise ConditionParseError
         else:
-            LOGGER.debug('Condition has to be an object')
+            LOGGER.debug("Condition has to be an object")
             raise ConditionParseError
 
     def process_function(self, template, values):
@@ -176,7 +177,7 @@ class Condition:
                             equal = Equals(v)
                             self.process_influenced_equal(equal)
                             results.append(equal)
-                        elif k == 'Condition':
+                        elif k == "Condition":
                             condition = Condition(template, v)
                             results.append(condition)
                             for i_e_k, i_e_v in condition.Influenced_Equals.items():
@@ -211,23 +212,23 @@ class Conditions:
             self.Equals = self._get_condition_equals(
                 cfn.search_deep_keys(cfnlint.helpers.FUNCTION_EQUALS)
             )
-            for condition_name in cfn.template.get('Conditions', {}):
+            for condition_name in cfn.template.get("Conditions", {}):
                 self.Conditions[condition_name] = Condition(
                     cfn.template, condition_name
                 )
             # Configure parameters Allowed Values if they have them
             for parameter_name, parameter_values in cfn.template.get(
-                'Parameters', {}
+                "Parameters", {}
             ).items():
                 # ALlowed Values must be a list so validate they are
-                if isinstance(parameter_values.get('AllowedValues'), list):
+                if isinstance(parameter_values.get("AllowedValues"), list):
                     # Any parameter in a condition could be used but would have to be done by
                     # Ref so build a ref to match for getting an equivalent hash
                     self.Parameters[
-                        get_hash({'Ref': parameter_name})
-                    ] = parameter_values.get('AllowedValues')
+                        get_hash({"Ref": parameter_name})
+                    ] = parameter_values.get("AllowedValues")
         except Exception as err:  # pylint: disable=W0703
-            LOGGER.debug('While processing conditions got error: %s', err)
+            LOGGER.debug("While processing conditions got error: %s", err)
 
     def _get_condition_equals(self, equals):
         """
@@ -238,7 +239,7 @@ class Conditions:
         results = {}
 
         for equal in equals:
-            if equal[0] == 'Conditions':
+            if equal[0] == "Conditions":
                 condition_name = equal[1]
                 equals = equal[-1]
                 if isinstance(equals, list):
@@ -266,17 +267,17 @@ class Conditions:
                             if dict_hash_2:
                                 results[dict_hash_1].append(
                                     {
-                                        'Condition': condition_name,
-                                        'Type': 'dict',
-                                        'Value': dict_hash_2,
+                                        "Condition": condition_name,
+                                        "Type": "dict",
+                                        "Value": dict_hash_2,
                                     }
                                 )
                             else:
                                 results[dict_hash_1].append(
                                     {
-                                        'Condition': condition_name,
-                                        'Type': 'string',
-                                        'Value': value_2,
+                                        "Condition": condition_name,
+                                        "Type": "string",
+                                        "Value": value_2,
                                     }
                                 )
                         if dict_hash_2:
@@ -285,17 +286,17 @@ class Conditions:
                             if dict_hash_1:
                                 results[dict_hash_2].append(
                                     {
-                                        'Condition': condition_name,
-                                        'Type': 'dict',
-                                        'Value': dict_hash_1,
+                                        "Condition": condition_name,
+                                        "Type": "dict",
+                                        "Value": dict_hash_1,
                                     }
                                 )
                             else:
                                 results[dict_hash_2].append(
                                     {
-                                        'Condition': condition_name,
-                                        'Type': 'string',
-                                        'Value': value_1,
+                                        "Condition": condition_name,
+                                        "Type": "string",
+                                        "Value": value_1,
                                     }
                                 )
         return results
@@ -366,7 +367,7 @@ class Conditions:
         def multiply_equals(currents, s_hash, sets, parameter_values):
             """Multiply Equals when building scenarios"""
             results = []
-            false_case = ''
+            false_case = ""
             if not currents:
                 # If the Parameter being REFed has Allowed Values use those instead
                 if parameter_values:
@@ -385,7 +386,7 @@ class Conditions:
                         false_case += s_set
                         results.append(new)
                     new = {}
-                    new[s_hash] = false_case + '.bad'
+                    new[s_hash] = false_case + ".bad"
                     results.append(new)
             for current in currents:
                 # If the Parameter being REFed has Allowed Values use those instead
@@ -405,7 +406,7 @@ class Conditions:
                         false_case += s_set
                         results.append(new)
                     new = copy(current)
-                    new[s_hash] = false_case + '.bad'
+                    new[s_hash] = false_case + ".bad"
                     results.append(new)
 
             return results
@@ -415,7 +416,7 @@ class Conditions:
             # At this point this value is completely arbitrary and not configurable
             if len(conditions) > 4:
                 LOGGER.info(
-                    'Found %s conditions.  Limiting results to protect against heavy cpu time',
+                    "Found %s conditions.  Limiting results to protect against heavy cpu time",
                     len(conditions),
                 )
                 true_results = []

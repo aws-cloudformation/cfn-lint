@@ -2,22 +2,23 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import sys
 import argparse
-import logging
+import copy
 import glob
 import json
-import copy
+import logging
+import sys
 from pathlib import Path
 from typing import Dict
-import jsonschema
-import cfnlint.decode.cfn_yaml
-from cfnlint.version import __version__
-from cfnlint.helpers import REGIONS
 
+import jsonschema
+
+import cfnlint.decode.cfn_yaml
+from cfnlint.helpers import REGIONS
+from cfnlint.version import __version__
 
 # pylint: disable=too-many-public-methods
-LOGGER = logging.getLogger('cfnlint')
+LOGGER = logging.getLogger("cfnlint")
 
 
 def configure_logging(debug_logging, info_logging):
@@ -31,7 +32,7 @@ def configure_logging(debug_logging, info_logging):
     else:
         LOGGER.setLevel(logging.NOTSET)
     log_formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     ch.setFormatter(log_formatter)
 
@@ -56,16 +57,16 @@ class ConfigFileArgs:
         # self.file_args = self.get_config_file_defaults()
         self.file_args = {}
         self.default_schema_file = Path(__file__).parent.joinpath(
-            'data/CfnLintCli/config/schema.json'
+            "data/CfnLintCli/config/schema.json"
         )
-        with self.default_schema_file.open(encoding='utf-8') as f:
+        with self.default_schema_file.open(encoding="utf-8") as f:
             self.default_schema = json.load(f)
         self.schema = self.default_schema if not schema else schema
 
         if config_file:
             self.__custom_config_file = config_file
         else:
-            LOGGER.debug('Looking for CFLINTRC before attempting to load')
+            LOGGER.debug("Looking for CFLINTRC before attempting to load")
             self.__user_config_file, self.__project_config_file = self._find_config()
 
         self.load()
@@ -81,24 +82,24 @@ class ConfigFileArgs:
         -------
             > user_config, project_config = self._find_config()
         """
-        config_file_name = '.cfnlintrc'
+        config_file_name = ".cfnlintrc"
         self.__user_config_file = Path.home().joinpath(config_file_name)
 
         self.__project_config_file = Path.cwd().joinpath(config_file_name)
-        if self._has_file(config_file_name + '.yaml'):
-            self.__project_config_file = Path.cwd().joinpath(config_file_name + '.yaml')
-        elif self._has_file(config_file_name + '.yml'):
-            self.__project_config_file = Path.cwd().joinpath(config_file_name + '.yml')
+        if self._has_file(config_file_name + ".yaml"):
+            self.__project_config_file = Path.cwd().joinpath(config_file_name + ".yaml")
+        elif self._has_file(config_file_name + ".yml"):
+            self.__project_config_file = Path.cwd().joinpath(config_file_name + ".yml")
 
-        user_config_path = ''
-        project_config_path = ''
+        user_config_path = ""
+        project_config_path = ""
 
         if self._has_file(self.__user_config_file):
-            LOGGER.debug('Found User CFNLINTRC')
+            LOGGER.debug("Found User CFNLINTRC")
             user_config_path = self.__user_config_file
 
         if self._has_file(self.__project_config_file):
-            LOGGER.debug('Found Project level CFNLINTRC')
+            LOGGER.debug("Found Project level CFNLINTRC")
             project_config_path = self.__project_config_file
 
         return user_config_path, project_config_path
@@ -126,27 +127,27 @@ class ConfigFileArgs:
 
         if self.__custom_config_file:
             custom_config = self._read_config(self.__custom_config_file)
-            LOGGER.debug('Validating Custom CFNLINTRC')
+            LOGGER.debug("Validating Custom CFNLINTRC")
             self.validate_config(custom_config, self.schema)
-            LOGGER.debug('Custom configuration loaded as')
-            LOGGER.debug('%s', custom_config)
+            LOGGER.debug("Custom configuration loaded as")
+            LOGGER.debug("%s", custom_config)
 
             self.file_args = custom_config
         else:
             user_config = self._read_config(self.__user_config_file)
-            LOGGER.debug('Validating User CFNLINTRC')
+            LOGGER.debug("Validating User CFNLINTRC")
             self.validate_config(user_config, self.schema)
 
             project_config = self._read_config(self.__project_config_file)
-            LOGGER.debug('Validating Project CFNLINTRC')
+            LOGGER.debug("Validating Project CFNLINTRC")
             self.validate_config(project_config, self.schema)
 
-            LOGGER.debug('User configuration loaded as')
-            LOGGER.debug('%s', user_config)
-            LOGGER.debug('Project configuration loaded as')
-            LOGGER.debug('%s', project_config)
+            LOGGER.debug("User configuration loaded as")
+            LOGGER.debug("%s", user_config)
+            LOGGER.debug("Project configuration loaded as")
+            LOGGER.debug("%s", project_config)
 
-            LOGGER.debug('Merging configurations...')
+            LOGGER.debug("Merging configurations...")
             self.file_args = self.merge_config(user_config, project_config)
 
     def validate_config(self, config, schema):
@@ -162,12 +163,12 @@ class ConfigFileArgs:
         jsonschema.exceptions.ValidationError
             Returned when cfnlintrc doesn't match schema provided
         """
-        LOGGER.debug('Validating CFNLINTRC config with given JSONSchema')
-        LOGGER.debug('Schema used: %s', schema)
-        LOGGER.debug('Config used: %s', config)
+        LOGGER.debug("Validating CFNLINTRC config with given JSONSchema")
+        LOGGER.debug("Schema used: %s", schema)
+        LOGGER.debug("Config used: %s", config)
 
         jsonschema.validate(config, schema)
-        LOGGER.debug('CFNLINTRC looks valid!')
+        LOGGER.debug("CFNLINTRC looks valid!")
 
     def merge_config(self, user_config, project_config):
         """Merge project and user configuration into a single dictionary
@@ -199,7 +200,7 @@ class ConfigFileArgs:
                 else:
                     user_config[key] = project_config[key]
                     LOGGER.debug(
-                        'Overriding User\'s key %s with Project\'s specific value %s.',
+                        "Overriding User's key %s with Project's specific value %s.",
                         key,
                         project_config[key],
                     )
@@ -223,7 +224,7 @@ class ConfigFileArgs:
         config_template = None
 
         if self._has_file(config):
-            LOGGER.debug('Parsing CFNLINTRC')
+            LOGGER.debug("Parsing CFNLINTRC")
             config_template = cfnlint.decode.cfn_yaml.load(str(config))
 
         if not config_template:
@@ -234,7 +235,7 @@ class ConfigFileArgs:
 
 def comma_separated_arg(string):
     """Split a comma separated string"""
-    return string.split(',')
+    return string.split(",")
 
 
 def _ensure_value(namespace, name, value):
@@ -277,9 +278,9 @@ class RuleConfigurationAction(argparse.Action):
         configs = comma_separated_arg(string)
         results = {}
         for config in configs:
-            rule_id = config.split(':')[0]
-            config_name = config.split(':')[1].split('=')[0]
-            config_value = config.split(':')[1].split('=')[1]
+            rule_id = config.split(":")[0]
+            config_name = config.split(":")[1].split("=")[0]
+            config_value = config.split(":")[1].split("=")[1]
             if rule_id not in results:
                 results[rule_id] = {}
             results[rule_id][config_name] = config_value
@@ -320,7 +321,7 @@ class CliArgs:
 
             def error(self, message):
                 self.print_help(sys.stderr)
-                self.exit(32, f'{self.prog}: error: {message}\n')
+                self.exit(32, f"{self.prog}: error: {message}\n")
 
         class ExtendAction(argparse.Action):
             """Support argument types that are lists and can be specified multiple times."""
@@ -336,205 +337,205 @@ class CliArgs:
                 setattr(namespace, self.dest, items)
 
         usage = (
-            '\nBasic: cfn-lint test.yaml\n'
-            'Ignore a rule: cfn-lint -i E3012 -- test.yaml\n'
-            'Configure a rule: cfn-lint -x E3012:strict=false -t test.yaml\n'
-            'Lint all yaml files in a folder: cfn-lint dir/**/*.yaml'
+            "\nBasic: cfn-lint test.yaml\n"
+            "Ignore a rule: cfn-lint -i E3012 -- test.yaml\n"
+            "Configure a rule: cfn-lint -x E3012:strict=false -t test.yaml\n"
+            "Lint all yaml files in a folder: cfn-lint dir/**/*.yaml"
         )
 
-        parser = ArgumentParser(description='CloudFormation Linter', usage=usage)
-        parser.register('action', 'extend', ExtendAction)
+        parser = ArgumentParser(description="CloudFormation Linter", usage=usage)
+        parser.register("action", "extend", ExtendAction)
 
-        standard = parser.add_argument_group('Standard')
-        advanced = parser.add_argument_group('Advanced / Debugging')
+        standard = parser.add_argument_group("Standard")
+        advanced = parser.add_argument_group("Advanced / Debugging")
 
         # Allow the template to be passes as an optional or a positional argument
         standard.add_argument(
-            'templates',
-            metavar='TEMPLATE',
-            nargs='*',
-            help='The CloudFormation template to be linted',
+            "templates",
+            metavar="TEMPLATE",
+            nargs="*",
+            help="The CloudFormation template to be linted",
         )
         standard.add_argument(
-            '-t',
-            '--template',
-            metavar='TEMPLATE',
-            dest='template_alt',
-            help='The CloudFormation template to be linted',
-            nargs='+',
+            "-t",
+            "--template",
+            metavar="TEMPLATE",
+            dest="template_alt",
+            help="The CloudFormation template to be linted",
+            nargs="+",
             default=[],
-            action='extend',
+            action="extend",
         )
         standard.add_argument(
-            '-b',
-            '--ignore-bad-template',
-            help='Ignore failures with Bad template',
-            action='store_true',
+            "-b",
+            "--ignore-bad-template",
+            help="Ignore failures with Bad template",
+            action="store_true",
         )
         standard.add_argument(
-            '--ignore-templates',
-            dest='ignore_templates',
-            help='Ignore templates',
-            nargs='+',
+            "--ignore-templates",
+            dest="ignore_templates",
+            help="Ignore templates",
+            nargs="+",
             default=[],
-            action='extend',
+            action="extend",
         )
         advanced.add_argument(
-            '-D', '--debug', help='Enable debug logging', action='store_true'
+            "-D", "--debug", help="Enable debug logging", action="store_true"
         )
         advanced.add_argument(
-            '-I', '--info', help='Enable information logging', action='store_true'
+            "-I", "--info", help="Enable information logging", action="store_true"
         )
         standard.add_argument(
-            '-f',
-            '--format',
-            help='Output Format',
-            choices=['quiet', 'parseable', 'json', 'junit', 'pretty', 'sarif'],
+            "-f",
+            "--format",
+            help="Output Format",
+            choices=["quiet", "parseable", "json", "junit", "pretty", "sarif"],
         )
         standard.add_argument(
-            '-l',
-            '--list-rules',
-            dest='listrules',
+            "-l",
+            "--list-rules",
+            dest="listrules",
             default=False,
-            action='store_true',
-            help='list all the rules',
+            action="store_true",
+            help="list all the rules",
         )
         standard.add_argument(
-            '-r',
-            '--regions',
-            dest='regions',
-            nargs='+',
+            "-r",
+            "--regions",
+            dest="regions",
+            nargs="+",
             default=[],
             type=comma_separated_arg,
-            action='extend',
-            help='list the regions to validate against.',
+            action="extend",
+            help="list the regions to validate against.",
         )
         advanced.add_argument(
-            '-a',
-            '--append-rules',
-            dest='append_rules',
-            nargs='+',
+            "-a",
+            "--append-rules",
+            dest="append_rules",
+            nargs="+",
             default=[],
             type=comma_separated_arg,
-            action='extend',
-            help='specify one or more rules directories using '
-            'one or more --append-rules arguments. ',
+            action="extend",
+            help="specify one or more rules directories using "
+            "one or more --append-rules arguments. ",
         )
         standard.add_argument(
-            '-i',
-            '--ignore-checks',
-            dest='ignore_checks',
-            nargs='+',
+            "-i",
+            "--ignore-checks",
+            dest="ignore_checks",
+            nargs="+",
             default=[],
             type=comma_separated_arg,
-            action='extend',
-            help='only check rules whose id do not match these values',
+            action="extend",
+            help="only check rules whose id do not match these values",
         )
         standard.add_argument(
-            '-c',
-            '--include-checks',
-            dest='include_checks',
-            nargs='+',
+            "-c",
+            "--include-checks",
+            dest="include_checks",
+            nargs="+",
             default=[],
             type=comma_separated_arg,
-            action='extend',
-            help='include rules whose id match these values',
+            action="extend",
+            help="include rules whose id match these values",
         )
         standard.add_argument(
-            '-m',
-            '--mandatory-checks',
-            dest='mandatory_checks',
-            nargs='+',
+            "-m",
+            "--mandatory-checks",
+            dest="mandatory_checks",
+            nargs="+",
             default=[],
             type=comma_separated_arg,
-            action='extend',
-            help='always check rules whose id match these values, regardless of template exclusions',
+            action="extend",
+            help="always check rules whose id match these values, regardless of template exclusions",
         )
         standard.add_argument(
-            '-e',
-            '--include-experimental',
-            help='Include experimental rules',
-            action='store_true',
+            "-e",
+            "--include-experimental",
+            help="Include experimental rules",
+            action="store_true",
         )
         standard.add_argument(
-            '-x',
-            '--configure-rule',
-            dest='configure_rules',
-            nargs='+',
+            "-x",
+            "--configure-rule",
+            dest="configure_rules",
+            nargs="+",
             default={},
             action=RuleConfigurationAction,
-            help='Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false',
+            help="Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false",
         )
         standard.add_argument(
-            '--config-file',
-            dest='config_file',
-            help='Specify the cfnlintrc file to use',
+            "--config-file",
+            dest="config_file",
+            help="Specify the cfnlintrc file to use",
         )
         standard.add_argument(
-            '-z',
-            '--custom-rules',
-            dest='custom_rules',
-            help='Allows specification of a custom rule file.',
+            "-z",
+            "--custom-rules",
+            dest="custom_rules",
+            help="Allows specification of a custom rule file.",
         )
         advanced.add_argument(
-            '-o',
-            '--override-spec',
-            dest='override_spec',
-            help='A CloudFormation Spec override file that allows customization',
+            "-o",
+            "--override-spec",
+            dest="override_spec",
+            help="A CloudFormation Spec override file that allows customization",
         )
         advanced.add_argument(
-            '-g',
-            '--build-graph',
-            help='Creates a file in the same directory as the template that models the template\'s resources in DOT format',
-            action='store_true',
+            "-g",
+            "--build-graph",
+            help="Creates a file in the same directory as the template that models the template's resources in DOT format",
+            action="store_true",
         )
         advanced.add_argument(
-            '-s',
-            '--registry-schemas',
-            help='one or more directories of CloudFormation Registry Schemas',
-            action='extend',
+            "-s",
+            "--registry-schemas",
+            help="one or more directories of CloudFormation Registry Schemas",
+            action="extend",
             type=comma_separated_arg,
-            nargs='+',
+            nargs="+",
         )
         standard.add_argument(
-            '-v',
-            '--version',
-            help='Version of cfn-lint',
-            action='version',
-            version=f'%(prog)s {__version__}',
+            "-v",
+            "--version",
+            help="Version of cfn-lint",
+            action="version",
+            version=f"%(prog)s {__version__}",
         )
         advanced.add_argument(
-            '-u',
-            '--update-specs',
-            help='Update the CloudFormation Specs',
-            action='store_true',
+            "-u",
+            "--update-specs",
+            help="Update the CloudFormation Specs",
+            action="store_true",
         )
         advanced.add_argument(
-            '--update-documentation', help=argparse.SUPPRESS, action='store_true'
+            "--update-documentation", help=argparse.SUPPRESS, action="store_true"
         )
         advanced.add_argument(
-            '--update-iam-policies', help=argparse.SUPPRESS, action='store_true'
+            "--update-iam-policies", help=argparse.SUPPRESS, action="store_true"
         )
         standard.add_argument(
-            '--output-file',
+            "--output-file",
             type=str,
             default=None,
-            help='Writes the output to the specified file, ideal for producing reports',
+            help="Writes the output to the specified file, ideal for producing reports",
         )
         standard.add_argument(
-            '--merge-configs',
+            "--merge-configs",
             default=False,
-            action='store_true',
-            help='Merges lists between configuration layers',
+            action="store_true",
+            help="Merges lists between configuration layers",
         )
         standard.add_argument(
-            '--non-zero-exit-code',
+            "--non-zero-exit-code",
             type=str,
-            default='informational',
-            choices=['informational', 'warning', 'error', 'none'],
-            help='Exit code will be non zero from the specified rule class and higher',
+            default="informational",
+            choices=["informational", "warning", "error", "none"],
+            help="Exit code will be non zero from the specified rule class and higher",
         )
-        advanced.add_argument('--force', help=argparse.SUPPRESS, action='store_true')
+        advanced.add_argument("--force", help=argparse.SUPPRESS, action="store_true")
 
         return parser
 
@@ -551,38 +552,38 @@ class TemplateArgs:
     def set_template_args(self, template):
         defaults = {}
         if isinstance(template, dict):
-            metadata = template.get('Metadata', {})
+            metadata = template.get("Metadata", {})
             if metadata:
                 configs = (
-                    template.get('Metadata', {}).get('cfn-lint', {}).get('config', {})
+                    template.get("Metadata", {}).get("cfn-lint", {}).get("config", {})
                 )
 
                 if isinstance(configs, dict):
                     for config_name, config_value in configs.items():
-                        if config_name == 'ignore_checks':
+                        if config_name == "ignore_checks":
                             if isinstance(config_value, list):
-                                defaults['ignore_checks'] = config_value
-                        if config_name == 'regions':
+                                defaults["ignore_checks"] = config_value
+                        if config_name == "regions":
                             if isinstance(config_value, list):
-                                defaults['regions'] = config_value
-                        if config_name == 'append_rules':
+                                defaults["regions"] = config_value
+                        if config_name == "append_rules":
                             if isinstance(config_value, list):
-                                defaults['append_rules'] = config_value
-                        if config_name == 'override_spec':
+                                defaults["append_rules"] = config_value
+                        if config_name == "override_spec":
                             if isinstance(config_value, (str)):
-                                defaults['override_spec'] = config_value
-                        if config_name == 'custom_rules':
+                                defaults["override_spec"] = config_value
+                        if config_name == "custom_rules":
                             if isinstance(config_value, (str)):
-                                defaults['custom_rules'] = config_value
-                        if config_name == 'ignore_bad_template':
+                                defaults["custom_rules"] = config_value
+                        if config_name == "ignore_bad_template":
                             if isinstance(config_value, bool):
-                                defaults['ignore_bad_template'] = config_value
-                        if config_name == 'include_checks':
+                                defaults["ignore_bad_template"] = config_value
+                        if config_name == "include_checks":
                             if isinstance(config_value, list):
-                                defaults['include_checks'] = config_value
-                        if config_name == 'configure_rules':
+                                defaults["include_checks"] = config_value
+                        if config_name == "configure_rules":
                             if isinstance(config_value, dict):
-                                defaults['configure_rules'] = config_value
+                                defaults["configure_rules"] = config_value
 
         self._template_args = defaults
 
@@ -599,7 +600,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         configure_logging(self.cli_args.debug, self.cli_args.info)
         TemplateArgs.__init__(self, {})
         ConfigFileArgs.__init__(
-            self, config_file=self._get_argument_value('config_file', False, False)
+            self, config_file=self._get_argument_value("config_file", False, False)
         )
 
     def _get_argument_value(self, arg_name, is_template, is_config_file):
@@ -609,7 +610,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
         # merge list configurations
         # make sure we don't do an infinite loop so skip this check for merge_configs
-        if arg_name != 'merge_configs':
+        if arg_name != "merge_configs":
             if self.merge_configs:
                 # the CLI will always have an empty list when the item is a list
                 # we will use that to evaluate if we need to merge the lists
@@ -632,46 +633,46 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def ignore_checks(self):
-        return self._get_argument_value('ignore_checks', True, True)
+        return self._get_argument_value("ignore_checks", True, True)
 
     @property
     def include_checks(self):
-        results = self._get_argument_value('include_checks', True, True)
-        return ['W', 'E'] + results
+        results = self._get_argument_value("include_checks", True, True)
+        return ["W", "E"] + results
 
     @property
     def mandatory_checks(self):
-        return self._get_argument_value('mandatory_checks', False, True)
+        return self._get_argument_value("mandatory_checks", False, True)
 
     @property
     def include_experimental(self):
-        return self._get_argument_value('include_experimental', True, True)
+        return self._get_argument_value("include_experimental", True, True)
 
     @property
     def regions(self):
-        results = self._get_argument_value('regions', True, True)
+        results = self._get_argument_value("regions", True, True)
         if not results:
-            return ['us-east-1']
-        if 'ALL_REGIONS' in results:
+            return ["us-east-1"]
+        if "ALL_REGIONS" in results:
             return REGIONS
         return results
 
     @property
     def ignore_bad_template(self):
-        return self._get_argument_value('ignore_bad_template', True, True)
+        return self._get_argument_value("ignore_bad_template", True, True)
 
     @property
     def debug(self):
-        return self._get_argument_value('debug', False, False)
+        return self._get_argument_value("debug", False, False)
 
     @property
     def format(self):
-        return self._get_argument_value('format', False, True)
+        return self._get_argument_value("format", False, True)
 
     @property
     def templates(self):
-        templates_args = self._get_argument_value('templates', False, True)
-        template_alt_args = self._get_argument_value('template_alt', False, False)
+        templates_args = self._get_argument_value("templates", False, True)
+        template_alt_args = self._get_argument_value("template_alt", False, False)
         if template_alt_args:
             filenames = template_alt_args
         elif templates_args:
@@ -702,7 +703,7 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
         return sorted(all_filenames)
 
     def _ignore_templates(self):
-        ignore_template_args = self._get_argument_value('ignore_templates', False, True)
+        ignore_template_args = self._get_argument_value("ignore_templates", False, True)
         if ignore_template_args:
             filenames = ignore_template_args
         else:
@@ -728,61 +729,61 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
 
     @property
     def append_rules(self):
-        return self._get_argument_value('append_rules', False, True)
+        return self._get_argument_value("append_rules", False, True)
 
     @property
     def override_spec(self):
-        return self._get_argument_value('override_spec', False, True)
+        return self._get_argument_value("override_spec", False, True)
 
     @property
     def custom_rules(self):
         """custom_rules_spec"""
-        return self._get_argument_value('custom_rules', False, True)
+        return self._get_argument_value("custom_rules", False, True)
 
     @property
     def update_specs(self):
-        return self._get_argument_value('update_specs', False, False)
+        return self._get_argument_value("update_specs", False, False)
 
     @property
     def update_documentation(self):
-        return self._get_argument_value('update_documentation', False, False)
+        return self._get_argument_value("update_documentation", False, False)
 
     @property
     def update_iam_policies(self):
-        return self._get_argument_value('update_iam_policies', False, False)
+        return self._get_argument_value("update_iam_policies", False, False)
 
     @property
     def listrules(self):
-        return self._get_argument_value('listrules', False, False)
+        return self._get_argument_value("listrules", False, False)
 
     @property
     def configure_rules(self):
-        return self._get_argument_value('configure_rules', True, True)
+        return self._get_argument_value("configure_rules", True, True)
 
     @property
     def config_file(self):
-        return self._get_argument_value('config_file', False, False)
+        return self._get_argument_value("config_file", False, False)
 
     @property
     def build_graph(self):
-        return self._get_argument_value('build_graph', False, False)
+        return self._get_argument_value("build_graph", False, False)
 
     @property
     def output_file(self):
-        return self._get_argument_value('output_file', False, True)
+        return self._get_argument_value("output_file", False, True)
 
     @property
     def registry_schemas(self):
-        return self._get_argument_value('registry_schemas', False, True)
+        return self._get_argument_value("registry_schemas", False, True)
 
     @property
     def merge_configs(self):
-        return self._get_argument_value('merge_configs', True, True)
+        return self._get_argument_value("merge_configs", True, True)
 
     @property
     def non_zero_exit_code(self):
-        return self._get_argument_value('non_zero_exit_code', False, False)
+        return self._get_argument_value("non_zero_exit_code", False, False)
 
     @property
     def force(self):
-        return self._get_argument_value('force', False, False)
+        return self._get_argument_value("force", False, False)

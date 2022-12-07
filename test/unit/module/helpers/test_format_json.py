@@ -4,22 +4,18 @@ SPDX-License-Identifier: MIT-0
 """
 import datetime
 from test.testlib.testcase import BaseTestCase
+
 from cfnlint.helpers import format_json_string
 
 
 class TestFormatJson(BaseTestCase):
-    """Test Dumping JSON objects """
+    """Test Dumping JSON objects"""
 
     def test_success_run(self):
         """Test success run"""
         obj = {
-            'Key': {
-                'SubKey': 'Value',
-                'Date': datetime.datetime(2010, 9, 9)
-            },
-            'List': [
-                {'SubKey': 'AnotherValue'}
-            ]
+            "Key": {"SubKey": "Value", "Date": datetime.datetime(2010, 9, 9)},
+            "List": [{"SubKey": "AnotherValue"}],
         }
         success = """{
  "Key": {

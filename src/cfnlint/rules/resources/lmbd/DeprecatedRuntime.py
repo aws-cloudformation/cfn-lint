@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from datetime import datetime
-from cfnlint.helpers import load_resource
+
 from cfnlint.data import AdditionalSpecs
+from cfnlint.helpers import load_resource
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -14,9 +15,9 @@ class DeprecatedRuntime(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super().__init__()
-        self.resource_property_types.append('AWS::Lambda::Function')
+        self.resource_property_types.append("AWS::Lambda::Function")
         self.deprecated_runtimes = load_resource(
-            AdditionalSpecs, 'LmbdRuntimeLifecycle.json'
+            AdditionalSpecs, "LmbdRuntimeLifecycle.json"
         )
 
     current_date = datetime.today()
@@ -37,16 +38,16 @@ class DeprecatedRuntime(CloudFormationLintRule):
         matches = []
         if value in parameters:
             parameter = parameters.get(value, {})
-            param_path = ['Parameters', value]
+            param_path = ["Parameters", value]
 
             # Validate the Default
-            default_value = parameter.get('Default', '')
-            matches.extend(self.check_runtime(default_value, param_path + ['Default']))
+            default_value = parameter.get("Default", "")
+            matches.extend(self.check_runtime(default_value, param_path + ["Default"]))
 
             # Validate AllowedValues
-            allowed_values = parameter.get('AllowedValues')
+            allowed_values = parameter.get("AllowedValues")
             if isinstance(allowed_values, list):
-                param_path = param_path + ['AllowedValues']
+                param_path = param_path + ["AllowedValues"]
                 for index, allowed_value in enumerate(allowed_values):
                     matches.extend(
                         self.check_runtime(allowed_value, param_path + [index])
@@ -61,7 +62,7 @@ class DeprecatedRuntime(CloudFormationLintRule):
         matches.extend(
             cfn.check_value(
                 obj=properties,
-                key='Runtime',
+                key="Runtime",
                 path=path[:],
                 check_value=self.check_value,
                 check_ref=self.check_ref,

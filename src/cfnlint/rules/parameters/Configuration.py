@@ -2,72 +2,71 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Configuration(CloudFormationLintRule):
     """Check if Parameters are configured correctly"""
 
-    id = 'E2001'
-    shortdesc = 'Parameters have appropriate properties'
-    description = 'Making sure the parameters are properly configured'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html'
-    tags = ['parameters']
+    id = "E2001"
+    shortdesc = "Parameters have appropriate properties"
+    description = "Making sure the parameters are properly configured"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html"
+    tags = ["parameters"]
 
     valid_keys = {
-        'AllowedPattern': {'Type': 'String'},
-        'AllowedValues': {
-            'Type': 'List',
-            'ItemType': 'String',
+        "AllowedPattern": {"Type": "String"},
+        "AllowedValues": {
+            "Type": "List",
+            "ItemType": "String",
         },
-        'ConstraintDescription': {'Type': 'String'},
-        'Default': {'Type': 'String'},
-        'Description': {'Type': 'String'},
-        'MaxLength': {
-            'Type': 'Integer',
-            'ValidForTypes': [
-                'String',
-                'AWS::EC2::AvailabilityZone::Name',
-                'AWS::EC2::Image::Id',
-                'AWS::EC2::Instance::Id',
-                'AWS::EC2::KeyPair::KeyName',
-                'AWS::EC2::SecurityGroup::GroupName',
-                'AWS::EC2::SecurityGroup::Id',
-                'AWS::EC2::Subnet::Id',
-                'AWS::EC2::Volume::Id',
-                'AWS::EC2::VPC::Id',
-                'AWS::Route53::HostedZone::Id',
+        "ConstraintDescription": {"Type": "String"},
+        "Default": {"Type": "String"},
+        "Description": {"Type": "String"},
+        "MaxLength": {
+            "Type": "Integer",
+            "ValidForTypes": [
+                "String",
+                "AWS::EC2::AvailabilityZone::Name",
+                "AWS::EC2::Image::Id",
+                "AWS::EC2::Instance::Id",
+                "AWS::EC2::KeyPair::KeyName",
+                "AWS::EC2::SecurityGroup::GroupName",
+                "AWS::EC2::SecurityGroup::Id",
+                "AWS::EC2::Subnet::Id",
+                "AWS::EC2::Volume::Id",
+                "AWS::EC2::VPC::Id",
+                "AWS::Route53::HostedZone::Id",
             ],
         },
-        'MaxValue': {'Type': 'Integer', 'ValidForTypes': ['Number']},
-        'MinLength': {
-            'Type': 'Integer',
-            'ValidForTypes': [
-                'String',
-                'AWS::EC2::AvailabilityZone::Name',
-                'AWS::EC2::Image::Id',
-                'AWS::EC2::Instance::Id',
-                'AWS::EC2::KeyPair::KeyName',
-                'AWS::EC2::SecurityGroup::GroupName',
-                'AWS::EC2::SecurityGroup::Id',
-                'AWS::EC2::Subnet::Id',
-                'AWS::EC2::Volume::Id',
-                'AWS::EC2::VPC::Id',
-                'AWS::Route53::HostedZone::Id',
+        "MaxValue": {"Type": "Integer", "ValidForTypes": ["Number"]},
+        "MinLength": {
+            "Type": "Integer",
+            "ValidForTypes": [
+                "String",
+                "AWS::EC2::AvailabilityZone::Name",
+                "AWS::EC2::Image::Id",
+                "AWS::EC2::Instance::Id",
+                "AWS::EC2::KeyPair::KeyName",
+                "AWS::EC2::SecurityGroup::GroupName",
+                "AWS::EC2::SecurityGroup::Id",
+                "AWS::EC2::Subnet::Id",
+                "AWS::EC2::Volume::Id",
+                "AWS::EC2::VPC::Id",
+                "AWS::Route53::HostedZone::Id",
             ],
         },
-        'MinValue': {'Type': 'Integer', 'ValidForTypes': ['Number']},
-        'NoEcho': {'Type': 'Boolean'},
-        'Type': {'Type': 'String'},
+        "MinValue": {"Type": "Integer", "ValidForTypes": ["Number"]},
+        "NoEcho": {"Type": "Boolean"},
+        "Type": {"Type": "String"},
     }
 
-    required_keys = ['Type']
+    required_keys = ["Type"]
 
     def check_type(self, value, path, props):
         """Check the type and handle recursion with lists"""
         results = []
-        prop_type = props.get('Type')
+        prop_type = props.get("Type")
         if value is None:
             message = (
                 f'Property {"/".join(map(str, path))} should be of type {prop_type}'
@@ -75,28 +74,28 @@ class Configuration(CloudFormationLintRule):
             results.append(RuleMatch(path, message))
             return results
         try:
-            if prop_type in ['List']:
+            if prop_type in ["List"]:
                 if isinstance(value, list):
                     for i, item in enumerate(value):
                         results.extend(
                             self.check_type(
-                                item, path[:] + [i], {'Type': props.get('ItemType')}
+                                item, path[:] + [i], {"Type": props.get("ItemType")}
                             )
                         )
                 else:
                     message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
-            if prop_type in ['String']:
+            if prop_type in ["String"]:
                 if isinstance(value, (dict, list)):
                     message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
                 str(value)
-            elif prop_type in ['Boolean']:
+            elif prop_type in ["Boolean"]:
                 if not isinstance(value, bool):
-                    if value not in ['True', 'true', 'False', 'false']:
+                    if value not in ["True", "true", "False", "false"]:
                         message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                         results.append(RuleMatch(path, message))
-            elif prop_type in ['Integer']:
+            elif prop_type in ["Integer"]:
                 if isinstance(value, bool):
                     message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
                     results.append(RuleMatch(path, message))
@@ -122,43 +121,43 @@ class Configuration(CloudFormationLintRule):
             if isinstance(paramvalue, dict):
                 for propname, propvalue in paramvalue.items():
                     if propname not in self.valid_keys:
-                        message = 'Parameter {0} has invalid property {1}'
+                        message = "Parameter {0} has invalid property {1}"
                         matches.append(
                             RuleMatch(
-                                ['Parameters', paramname, propname],
+                                ["Parameters", paramname, propname],
                                 message.format(paramname, propname),
                             )
                         )
                     else:
                         props = self.valid_keys.get(propname)
-                        prop_path = ['Parameters', paramname, propname]
+                        prop_path = ["Parameters", paramname, propname]
                         matches.extend(self.check_type(propvalue, prop_path, props))
                         # Check that the property is needed for the current type
-                        valid_for = props.get('ValidForTypes')
+                        valid_for = props.get("ValidForTypes")
                         if valid_for is not None:
-                            if paramvalue.get('Type') not in valid_for:
-                                message = 'Parameter {0} has property {1} which is only valid for {2}'
+                            if paramvalue.get("Type") not in valid_for:
+                                message = "Parameter {0} has property {1} which is only valid for {2}"
                                 matches.append(
                                     RuleMatch(
-                                        ['Parameters', paramname, propname],
+                                        ["Parameters", paramname, propname],
                                         message.format(paramname, propname, valid_for),
                                     )
                                 )
 
                 for reqname in self.required_keys:
                     if reqname not in paramvalue.keys():
-                        message = 'Parameter {0} is missing required property {1}'
+                        message = "Parameter {0} is missing required property {1}"
                         matches.append(
                             RuleMatch(
-                                ['Parameters', paramname],
+                                ["Parameters", paramname],
                                 message.format(paramname, reqname),
                             )
                         )
             else:
-                message = 'Parameter {0} is not an object'
+                message = "Parameter {0} is not an object"
                 matches.append(
                     RuleMatch(
-                        ['Parameters', paramname], message.format(paramname, reqname)
+                        ["Parameters", paramname], message.format(paramname, reqname)
                     )
                 )
 

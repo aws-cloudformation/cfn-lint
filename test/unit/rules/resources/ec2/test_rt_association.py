@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
-from cfnlint.rules.resources.ectwo.RouteTableAssociation import RouteTableAssociation  # pylint: disable=E0401
+
+from cfnlint.rules.resources.ectwo.RouteTableAssociation import (
+    RouteTableAssociation,  # pylint: disable=E0401
+)
 
 
 class TestPropertyRtAssociation(BaseRuleTestCase):
@@ -20,4 +23,6 @@ class TestPropertyRtAssociation(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/properties_rt_association.yaml', 5)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/properties_rt_association.yaml", 5
+        )

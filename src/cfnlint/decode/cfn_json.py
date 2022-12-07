@@ -3,14 +3,19 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import fileinput
-import sys
-import logging
 import json
-from json.decoder import WHITESPACE, WHITESPACE_STR, BACKSLASH, STRINGCHUNK  # type: ignore
+import logging
+import sys
+from json.decoder import (  # type: ignore
+    BACKSLASH,
+    STRINGCHUNK,
+    WHITESPACE,
+    WHITESPACE_STR,
+)
 from json.scanner import NUMBER_RE
-import cfnlint
-from cfnlint.decode.node import str_node, dict_node, list_node, sub_node
 
+import cfnlint
+from cfnlint.decode.node import dict_node, list_node, str_node, sub_node
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,7 +57,7 @@ def check_duplicates(ordered_pairs, beg_mark, end_mark):
         raise err
 
     if len(mapping) == 1:
-        if 'Fn::Sub' in mapping:
+        if "Fn::Sub" in mapping:
             return sub_node(ordered_pairs, beg_mark, end_mark)
     return mapping
 
@@ -73,7 +78,7 @@ class JSONDecodeError(ValueError):
         if isinstance(errors, cfnlint.rules.Match):
             errors = [errors]
 
-        errmsg = f'{errors[0].message}: line {errors[0].linenumber} column {errors[0].linenumber} (char {pos})'
+        errmsg = f"{errors[0].message}: line {errors[0].linenumber} column {errors[0].linenumber} (char {pos})"
         ValueError.__init__(self, errmsg)
         self.msg = errors[0].message
         self.doc = doc
@@ -86,17 +91,17 @@ class JSONDecodeError(ValueError):
         return self.__class__, (self.msg, self.doc, self.pos)
 
 
-def build_match(message, doc, pos, key=' '):
+def build_match(message, doc, pos, key=" "):
 
-    lineno = doc.count('\n', 0, pos) + 1
-    colno = pos - doc.rfind('\n', 0, pos)
+    lineno = doc.count("\n", 0, pos) + 1
+    colno = pos - doc.rfind("\n", 0, pos)
 
     return cfnlint.rules.Match(
         lineno,
         colno + 1,
         lineno,
         colno + 1 + len(key),
-        '',
+        "",
         cfnlint.rules.ParseError(),
         message=message,
     )
@@ -108,7 +113,7 @@ def build_match_from_key(message, key):
         key.start_mark.column + 1,
         key.end_mark.line,
         key.end_mark.column + 1 + len(key),
-        '',
+        "",
         cfnlint.rules.ParseError(),
         message=message,
     )
@@ -146,7 +151,7 @@ def py_scanstring(s, end, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.match):
                 pos=begin,
                 errors=[
                     build_match(
-                        message='Unterminated string starting at',
+                        message="Unterminated string starting at",
                         doc=s,
                         pos=begin,
                     ),
@@ -161,9 +166,9 @@ def py_scanstring(s, end, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.match):
         # or a backslash denoting that an escape sequence follows
         if terminator == '"':
             break
-        if terminator != '\\':
+        if terminator != "\\":
             if strict:
-                msg = f'Invalid control character {terminator!r} at'
+                msg = f"Invalid control character {terminator!r} at"
                 raise JSONDecodeError(
                     doc=s,
                     pos=end,
@@ -185,18 +190,18 @@ def py_scanstring(s, end, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.match):
                 pos=begin,
                 errors=[
                     build_match(
-                        message='Unterminated string starting at',
+                        message="Unterminated string starting at",
                         doc=s,
                         pos=begin,
                     ),
                 ],
             ) from exc
         # If not a unicode escape sequence, must be in the lookup table
-        if esc != 'u':
+        if esc != "u":
             try:
                 char = _b[esc]
             except KeyError as exc:
-                msg = f'Invalid \\escape: {esc!r}'
+                msg = f"Invalid \\escape: {esc!r}"
                 raise JSONDecodeError(
                     doc=s,
                     pos=end,
@@ -212,24 +217,24 @@ def py_scanstring(s, end, strict=True, _b=BACKSLASH, _m=STRINGCHUNK.match):
         else:
             uni = _decode_uXXXX(s, end)
             end += 5
-            if 0xD800 <= uni <= 0xDBFF and s[end : end + 2] == '\\u':
+            if 0xD800 <= uni <= 0xDBFF and s[end : end + 2] == "\\u":
                 uni2 = _decode_uXXXX(s, end + 1)
                 if 0xDC00 <= uni2 <= 0xDFFF:
                     uni = 0x10000 + (((uni - 0xD800) << 10) | (uni2 - 0xDC00))
                     end += 6
             char = chr(uni)
         _append(char)
-    return ''.join(chunks), end
+    return "".join(chunks), end
 
 
 def _decode_uXXXX(s, pos):
     esc = s[pos + 1 : pos + 5]
-    if len(esc) == 4 and esc[1] not in 'xX':
+    if len(esc) == 4 and esc[1] not in "xX":
         try:
             return int(esc, 16)
         except ValueError:
             pass
-    msg = 'Invalid \\uXXXX escape'
+    msg = "Invalid \\uXXXX escape"
     raise JSONDecodeError(
         doc=s,
         pos=pos,
@@ -271,7 +276,7 @@ def py_make_scanner(context):
 
         if nextchar == '"':
             return parse_string(string, idx + 1, strict)
-        if nextchar == '{':
+        if nextchar == "{":
             return parse_object(
                 (string, idx + 1),
                 strict,
@@ -280,29 +285,29 @@ def py_make_scanner(context):
                 object_pairs_hook,
                 memo,
             )
-        if nextchar == '[':
+        if nextchar == "[":
             return parse_array((string, idx + 1), _scan_once)
-        if nextchar == 'n' and string[idx : idx + 4] == 'null':
+        if nextchar == "n" and string[idx : idx + 4] == "null":
             return None, idx + 4
-        if nextchar == 't' and string[idx : idx + 4] == 'true':
+        if nextchar == "t" and string[idx : idx + 4] == "true":
             return True, idx + 4
-        if nextchar == 'f' and string[idx : idx + 5] == 'false':
+        if nextchar == "f" and string[idx : idx + 5] == "false":
             return False, idx + 5
 
         m = match_number(string, idx)
         if m is not None:
             integer, frac, exp = m.groups()
             if frac or exp:
-                res = parse_float(integer + (frac or '') + (exp or ''))
+                res = parse_float(integer + (frac or "") + (exp or ""))
             else:
                 res = parse_int(integer)
             return res, m.end()
-        if nextchar == 'N' and string[idx : idx + 3] == 'NaN':
-            return parse_constant('NaN'), idx + 3
-        if nextchar == 'I' and string[idx : idx + 8] == 'Infinity':
-            return parse_constant('Infinity'), idx + 8
-        if nextchar == '-' and string[idx : idx + 9] == '-Infinity':
-            return parse_constant('-Infinity'), idx + 9
+        if nextchar == "N" and string[idx : idx + 3] == "NaN":
+            return parse_constant("NaN"), idx + 3
+        if nextchar == "I" and string[idx : idx + 8] == "Infinity":
+            return parse_constant("Infinity"), idx + 8
+        if nextchar == "-" and string[idx : idx + 9] == "-Infinity":
+            return parse_constant("-Infinity"), idx + 9
 
         raise StopIteration(idx)
 
@@ -316,7 +321,7 @@ def py_make_scanner(context):
     return _scan_once
 
 
-def find_indexes(s, ch='\n'):
+def find_indexes(s, ch="\n"):
     """Finds all instances of given char and returns list of indexes"""
     return [i for i, ltr in enumerate(s) if ltr == ch]
 
@@ -363,20 +368,20 @@ def load(filename):
     Load the given JSON file
     """
 
-    content = ''
+    content = ""
 
     if not sys.stdin.isatty():
-        filename = '-' if filename is None else filename
+        filename = "-" if filename is None else filename
         if sys.version_info.major <= 3 and sys.version_info.minor <= 9:
             for line in fileinput.input(files=filename):
                 content = content + line
         else:
             for line in fileinput.input(  # pylint: disable=unexpected-keyword-arg
-                files=filename, encoding='utf-8'
+                files=filename, encoding="utf-8"
             ):
                 content = content + line
     else:
-        with open(filename, encoding='utf-8') as fp:
+        with open(filename, encoding="utf-8") as fp:
             content = fp.read()
 
     return json.loads(content, cls=CfnJSONDecoder)
@@ -447,7 +452,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                 end = _w(s, end).end()
                 nextchar = s[end : end + 1]
             # Trivial empty object
-            if nextchar == '}':
+            if nextchar == "}":
                 if object_pairs_hook is not None:
                     try:
                         beg_mark, end_mark = get_beg_end_mark(
@@ -460,7 +465,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                         for m in err.duplicates:
                             errs.append(
                                 build_match_from_key(
-                                    message=f'Duplicate found {err}',
+                                    message=f"Duplicate found {err}",
                                     key=m,
                                 )
                             )
@@ -483,7 +488,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                     pos=end,
                     errors=[
                         build_match(
-                            message='Expecting property name enclosed in double quotes',
+                            message="Expecting property name enclosed in double quotes",
                             doc=s,
                             pos=end,
                         ),
@@ -498,15 +503,15 @@ class CfnJSONDecoder(json.JSONDecoder):
             key = memo_get(key, key)
             # To skip some function call overhead we optimize the fast paths where
             # the JSON key separator is ": " or just ":".
-            if s[end : end + 1] != ':':
+            if s[end : end + 1] != ":":
                 end = _w(s, end).end()
-                if s[end : end + 1] != ':':
+                if s[end : end + 1] != ":":
                     raise JSONDecodeError(
                         doc=s,
                         pos=end,
                         errors=[
                             build_match(
-                                message='Expecting \':\' delimiter',
+                                message="Expecting ':' delimiter",
                                 doc=s,
                                 pos=end,
                             ),
@@ -533,7 +538,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                     pos=str(err),
                     errors=[
                         build_match(
-                            message='Expecting value',
+                            message="Expecting value",
                             doc=s,
                             pos=str(err),
                         ),
@@ -547,18 +552,18 @@ class CfnJSONDecoder(json.JSONDecoder):
                     end = _w(s, end + 1).end()
                     nextchar = s[end]
             except IndexError:
-                nextchar = ''
+                nextchar = ""
             end += 1
 
-            if nextchar == '}':
+            if nextchar == "}":
                 break
-            if nextchar != ',':
+            if nextchar != ",":
                 raise JSONDecodeError(
                     doc=s,
                     pos=end - 1,
                     errors=[
                         build_match(
-                            message='Expecting \',\' delimiter',
+                            message="Expecting ',' delimiter",
                             doc=s,
                             pos=end - 1,
                         ),
@@ -573,7 +578,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                     pos=end - 1,
                     errors=[
                         build_match(
-                            message='Expecting property name enclosed in double quotes',
+                            message="Expecting property name enclosed in double quotes",
                             doc=s,
                             pos=end - 1,
                         ),
@@ -590,7 +595,7 @@ class CfnJSONDecoder(json.JSONDecoder):
                 for m in err.duplicates:
                     errs.append(
                         build_match_from_key(
-                            message=f'Duplicate found {err}',
+                            message=f"Duplicate found {err}",
                             key=m,
                         )
                     )

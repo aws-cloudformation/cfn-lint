@@ -2,8 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import re
 import logging
+import re
 from copy import deepcopy
 
 LOGGER = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ def create_str_node_class(cls):
             return cls.__new__(self, x)
 
         def __getattr__(self, name):
-            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
+            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
 
         def __deepcopy__(self, memo):
             result = str_node(self, self.start_mark, self.end_mark)
@@ -44,7 +44,7 @@ def create_str_node_class(cls):
         def __copy__(self):
             return self
 
-    node_class.__name__ = f'{cls.__name__}_node'
+    node_class.__name__ = f"{cls.__name__}_node"
     return node_class
 
 
@@ -63,7 +63,7 @@ def create_dict_node_class(cls):
                 cls.__init__(self)
             self.start_mark = start_mark
             self.end_mark = end_mark
-            self.condition_functions = ['Fn::If']
+            self.condition_functions = ["Fn::If"]
 
         def __deepcopy__(self, memo):
             result = dict_node(self, self.start_mark, self.end_mark)
@@ -88,14 +88,14 @@ def create_dict_node_class(cls):
             mappings = mappings or {}
             if len(self) == 1:
                 for k, v in self.items():
-                    if k in ['Fn::Select']:
+                    if k in ["Fn::Select"]:
                         if isinstance(v, list):
                             if len(v) == 2:
                                 p_v = v[1]
                                 if isinstance(p_v, dict):
                                     if len(p_v) == 1:
                                         for l_k in p_v.keys():
-                                            if l_k == 'Fn::FindInMap':
+                                            if l_k == "Fn::FindInMap":
                                                 return True
 
             return False
@@ -140,7 +140,7 @@ def create_dict_node_class(cls):
             result = dict_node({}, self.start_mark, self.end_mark)
             for k, v in self.items():
                 if isinstance(v, dict) and len(v) == 1:
-                    if v.get('Ref') == 'AWS::NoValue':
+                    if v.get("Ref") == "AWS::NoValue":
                         continue
                 result[k] = v
             return result
@@ -150,7 +150,7 @@ def create_dict_node_class(cls):
             path = path or []
             if len(self) == 1:
                 for k, v in self.items():
-                    if k == 'Fn::If':
+                    if k == "Fn::If":
                         if isinstance(v, list):
                             if len(v) == 3:
                                 for i, if_v in enumerate(v[1:]):
@@ -168,7 +168,7 @@ def create_dict_node_class(cls):
                                     else:
                                         if isinstance(if_v, type_t) or not type_t:
                                             yield if_v, path[:] + [k, i + 1]
-                    elif not (k == 'Ref' and v == 'AWS::NoValue'):
+                    elif not (k == "Ref" and v == "AWS::NoValue"):
                         if isinstance(self, type_t) or not type_t:
                             yield self.clean(), path[:]
             else:
@@ -176,9 +176,9 @@ def create_dict_node_class(cls):
                     yield self.clean(), path[:]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
+            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
 
-    node_class.__name__ = f'{cls.__name__}_node'
+    node_class.__name__ = f"{cls.__name__}_node"
     return node_class
 
 
@@ -191,9 +191,9 @@ def create_intrinsic_node_class(cls):
         """Node class created based on the input class"""
 
         def is_valid(self):
-            raise TemplateAttributeError('intrisnic class shouldn\'t be directly used')
+            raise TemplateAttributeError("intrisnic class shouldn't be directly used")
 
-    intrinsic_class.__name__ = f'{cls.__name__}_intrinsic'
+    intrinsic_class.__name__ = f"{cls.__name__}_intrinsic"
     return intrinsic_class
 
 
@@ -208,14 +208,14 @@ def create_sub_node_class(cls):
         def __init__(self, x, start_mark, end_mark):
             cls.__init__(self, x, start_mark, end_mark)
             self.__cache_is_valid = False
-            self.__cache_sub_string = ''
+            self.__cache_sub_string = ""
             self.__cache_sub_string_vars = set()
             self.__cache_sub_vars = {}
             self.__setup()
 
         def __setup_list_sub_string(self, s):
             self.__cache_sub_string = s
-            regex = re.compile(r'\${[^!].*?}')
+            regex = re.compile(r"\${[^!].*?}")
             string_params = regex.findall(s)
 
             for string_param in string_params:
@@ -234,7 +234,7 @@ def create_sub_node_class(cls):
         def __setup(self):
             if len(self) == 1:
                 for k, v in self.items():
-                    if k == 'Fn::Sub':
+                    if k == "Fn::Sub":
                         if isinstance(v, str):
                             self.__setup_list_sub_string(v)
                             self.__cache_is_valid = True
@@ -261,12 +261,12 @@ def create_sub_node_class(cls):
             if self.is_valid():
                 return self.__cache_sub_string
 
-            return ''
+            return ""
 
         def is_valid(self):
             return self.__cache_is_valid
 
-    sub_class.__name__ = f'{cls.__name__}_sub'
+    sub_class.__name__ = f"{cls.__name__}_sub"
     return sub_class
 
 
@@ -285,7 +285,7 @@ def create_dict_list_class(cls):
                 cls.__init__(self)
             self.start_mark = start_mark
             self.end_mark = end_mark
-            self.condition_functions = ['Fn::If']
+            self.condition_functions = ["Fn::If"]
 
         def __deepcopy__(self, memo):
             result = list_node([], self.start_mark, self.end_mark)
@@ -311,9 +311,9 @@ def create_dict_list_class(cls):
                         yield v, path[:] + [i]
 
         def __getattr__(self, name):
-            raise TemplateAttributeError(f'{self.__class__.__name__}.{name} is invalid')
+            raise TemplateAttributeError(f"{self.__class__.__name__}.{name} is invalid")
 
-    node_class.__name__ = f'{cls.__name__}_node'
+    node_class.__name__ = f"{cls.__name__}_node"
     return node_class
 
 

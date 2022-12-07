@@ -2,33 +2,32 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class AtLeastOne(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
 
-    id = 'E2522'
-    shortdesc = 'Check Properties that need at least one of a list of properties'
+    id = "E2522"
+    shortdesc = "Check Properties that need at least one of a list of properties"
     description = (
-        'Making sure CloudFormation properties '
-        + 'that require at least one property from a list. '
-        + 'More than one can be included.'
+        "Making sure CloudFormation properties "
+        + "that require at least one property from a list. "
+        + "More than one can be included."
     )
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['resources']
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    tags = ["resources"]
 
     def __init__(self):
         """Init"""
         super().__init__()
         atleastonespec = cfnlint.helpers.load_resource(
-            AdditionalSpecs, 'AtLeastOne.json'
+            AdditionalSpecs, "AtLeastOne.json"
         )
-        self.resource_types_specs = atleastonespec['ResourceTypes']
-        self.property_types_specs = atleastonespec['PropertyTypes']
+        self.resource_types_specs = atleastonespec["ResourceTypes"]
+        self.property_types_specs = atleastonespec["PropertyTypes"]
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
@@ -46,40 +45,40 @@ class AtLeastOne(CloudFormationLintRule):
                 for property_set in property_sets:
                     count = 0
                     for prop in atleastoneprop:
-                        if prop in property_set['Object']:
+                        if prop in property_set["Object"]:
                             count += 1
 
                     if count == 0:
-                        if property_set['Scenario'] is None:
+                        if property_set["Scenario"] is None:
                             message = (
-                                'At least one of [{0}] should be specified for {1}'
+                                "At least one of [{0}] should be specified for {1}"
                             )
                             matches.append(
                                 RuleMatch(
                                     path,
                                     message.format(
-                                        ', '.join(map(str, atleastoneprop)),
-                                        '/'.join(map(str, safe_path)),
+                                        ", ".join(map(str, atleastoneprop)),
+                                        "/".join(map(str, safe_path)),
                                     ),
                                 )
                             )
                         else:
-                            scenario_text = ' and '.join(
+                            scenario_text = " and ".join(
                                 [
                                     f'when condition "{k}" is {v}'
-                                    for (k, v) in property_set['Scenario'].items()
+                                    for (k, v) in property_set["Scenario"].items()
                                 ]
                             )
                             message = (
-                                'At least one of [{0}] should be specified {1} at {2}'
+                                "At least one of [{0}] should be specified {1} at {2}"
                             )
                             matches.append(
                                 RuleMatch(
                                     path,
                                     message.format(
-                                        ', '.join(map(str, atleastoneprop)),
+                                        ", ".join(map(str, atleastoneprop)),
                                         scenario_text,
-                                        '/'.join(map(str, safe_path)),
+                                        "/".join(map(str, safe_path)),
                                     ),
                                 )
                             )

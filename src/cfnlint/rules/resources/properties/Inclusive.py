@@ -2,27 +2,26 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Inclusive(CloudFormationLintRule):
     """Check Properties Resource Configuration"""
 
-    id = 'E2521'
-    shortdesc = 'Check Properties that are required together'
-    description = 'Make sure CloudFormation resource properties are included together when required'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint'
-    tags = ['resources']
+    id = "E2521"
+    shortdesc = "Check Properties that are required together"
+    description = "Make sure CloudFormation resource properties are included together when required"
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    tags = ["resources"]
 
     def __init__(self):
         """Init"""
         super().__init__()
-        inclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, 'Inclusive.json')
-        self.resource_types_specs = inclusivespec['ResourceTypes']
-        self.property_types_specs = inclusivespec['PropertyTypes']
+        inclusivespec = cfnlint.helpers.load_resource(AdditionalSpecs, "Inclusive.json")
+        self.resource_types_specs = inclusivespec["ResourceTypes"]
+        self.property_types_specs = inclusivespec["PropertyTypes"]
         for resource_type_spec in self.resource_types_specs:
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
@@ -36,12 +35,12 @@ class Inclusive(CloudFormationLintRule):
 
         property_sets = cfn.get_object_without_conditions(properties)
         for property_set in property_sets:
-            obj = property_set['Object'].clean()
+            obj = property_set["Object"].clean()
             for prop in obj:
                 if prop in inclusions:
                     for incl_property in inclusions[prop]:
                         if incl_property not in obj:
-                            if property_set['Scenario'] is None:
+                            if property_set["Scenario"] is None:
                                 matches.append(
                                     RuleMatch(
                                         path,
@@ -49,14 +48,14 @@ class Inclusive(CloudFormationLintRule):
                                     )
                                 )
                             else:
-                                scenario_text = ' and '.join(
+                                scenario_text = " and ".join(
                                     [
                                         f'when condition "{k}" is {v}'
-                                        for (k, v) in property_set['Scenario'].items()
+                                        for (k, v) in property_set["Scenario"].items()
                                     ]
                                 )
                                 message = (
-                                    'Property {0} should exist with {1} {2} for {3}'
+                                    "Property {0} should exist with {1} {2} for {3}"
                                 )
                                 matches.append(
                                     RuleMatch(
@@ -65,7 +64,7 @@ class Inclusive(CloudFormationLintRule):
                                             incl_property,
                                             prop,
                                             scenario_text,
-                                            '/'.join(map(str, path)),
+                                            "/".join(map(str, path)),
                                         ),
                                     )
                                 )

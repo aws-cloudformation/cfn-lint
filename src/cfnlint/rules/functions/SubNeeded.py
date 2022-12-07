@@ -2,30 +2,30 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from functools import reduce  # pylint: disable=redefined-builtin
-import re
 import copy
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+import re
+from functools import reduce  # pylint: disable=redefined-builtin
+
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class SubNeeded(CloudFormationLintRule):
     """Check if a substitution string exists without a substitution function"""
 
-    id = 'E1029'
-    shortdesc = 'Sub is required if a variable is used in a string'
-    description = 'If a substitution variable exists in a string but isn\'t wrapped with the Fn::Sub function the deployment will fail.'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html'
-    tags = ['functions', 'sub']
+    id = "E1029"
+    shortdesc = "Sub is required if a variable is used in a string"
+    description = "If a substitution variable exists in a string but isn't wrapped with the Fn::Sub function the deployment will fail."
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html"
+    tags = ["functions", "sub"]
 
-    exceptions = ['TemplateBody']
+    exceptions = ["TemplateBody"]
 
     def __init__(self):
         """Init"""
         super().__init__()
-        self.config_definition = {'custom_excludes': {'default': '', 'type': 'string'}}
+        self.config_definition = {"custom_excludes": {"default": "", "type": "string"}}
         self.configure()
-        self.subParameterRegex = re.compile(r'(\$\{[A-Za-z0-9_:\.]+\})')
+        self.subParameterRegex = re.compile(r"(\$\{[A-Za-z0-9_:\.]+\})")
 
     def _match_values(self, cfnelem, path):
         """Recursively search for values matching the searchRegex"""
@@ -55,17 +55,17 @@ class SubNeeded(CloudFormationLintRule):
         results = []
         results.extend(self._match_values(cfn.template, []))
         # Globals are removed during a transform.  They need to be checked manually
-        results.extend(self._match_values(cfn.template.get('Globals', {}), []))
+        results.extend(self._match_values(cfn.template.get("Globals", {}), []))
         return results
 
     def _api_exceptions(self, value):
         """Key value exceptions"""
-        parameter_search = re.compile(r'^\$\{stageVariables\..*\}$')
+        parameter_search = re.compile(r"^\$\{stageVariables\..*\}$")
         return re.match(parameter_search, value)
 
     def _variable_custom_excluded(self, value):
         """User-defined exceptions for variables, anywhere in the file"""
-        custom_excludes = self.config['custom_excludes']
+        custom_excludes = self.config["custom_excludes"]
         if custom_excludes:
             custom_search = re.compile(custom_excludes)
             return re.match(custom_search, value)
@@ -87,10 +87,10 @@ class SubNeeded(CloudFormationLintRule):
             # Step Function State Machine has a Definition Substitution that allows usage of special variables outside of a !Sub
             # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stepfunctions-statemachine-definitionsubstitutions.html
 
-            if 'DefinitionString' in parameter_string_path:
+            if "DefinitionString" in parameter_string_path:
                 modified_parameter_string_path = copy.copy(parameter_string_path)
-                index = parameter_string_path.index('DefinitionString')
-                modified_parameter_string_path[index] = 'DefinitionSubstitutions'
+                index = parameter_string_path.index("DefinitionString")
+                modified_parameter_string_path[index] = "DefinitionSubstitutions"
                 modified_parameter_string_path = modified_parameter_string_path[
                     : index + 1
                 ]
@@ -108,19 +108,19 @@ class SubNeeded(CloudFormationLintRule):
                 continue
 
             # Exclude literals (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-sub.html)
-            if var.startswith('${!'):
+            if var.startswith("${!"):
                 continue
 
             var_stripped = var[2:-1].strip()
 
             # If we didn't find an 'Fn::Sub' it means a string containing a ${parameter} may not be evaluated correctly
             if (
-                not 'Fn::Sub' in parameter_string_path
+                not "Fn::Sub" in parameter_string_path
                 and parameter_string_path[-2] not in self.exceptions
             ):
                 if (
                     var_stripped in refs or var_stripped in getatts
-                ) or 'DefinitionString' in parameter_string_path:
+                ) or "DefinitionString" in parameter_string_path:
                     # Remove the last item (the variable) to prevent multiple errors on 1 line errors
                     path = parameter_string_path[:-1]
                     message = f'Found an embedded parameter "{var}" outside of an "Fn::Sub" at {"/".join(map(str, path))}'

@@ -6,21 +6,21 @@ import json
 import logging
 import os
 import sys
-from typing import Dict, Iterator, Sequence, Optional, Tuple, List, Union
+from typing import Dict, Iterator, List, Optional, Sequence, Tuple, Union
 
 from jsonschema.exceptions import ValidationError
 
-import cfnlint.runner
-from cfnlint.template import Template
-from cfnlint.rules import Match, RulesCollection, ParseError, TransformError
 import cfnlint.config
-import cfnlint.formatters
 import cfnlint.decode
+import cfnlint.formatters
 import cfnlint.maintenance
+import cfnlint.runner
 from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
+from cfnlint.rules import Match, ParseError, RulesCollection, TransformError
+from cfnlint.template import Template
 
-LOGGER = logging.getLogger('cfnlint')
-DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), 'rules')
+LOGGER = logging.getLogger("cfnlint")
+DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
 __CACHED_RULES = None
 
 Matches = List[Match]
@@ -36,7 +36,7 @@ class CfnLintExitException(Exception):
 
     def __init__(self, msg=None, exit_code=1):
         if msg is None:
-            msg = f'process failed with exit code {exit_code}'
+            msg = f"process failed with exit code {exit_code}"
         super().__init__(msg)
         self.exit_code = exit_code
 
@@ -72,36 +72,36 @@ def run_cli(
         for path in registry_schemas:
             if path and os.path.isdir(os.path.expanduser(path)):
                 for f in os.listdir(path):
-                    with open(os.path.join(path, f), encoding='utf-8') as schema:
+                    with open(os.path.join(path, f), encoding="utf-8") as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
 
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
 
-def get_exit_code(matches: Matches, exit_level: str = 'informational') -> int:
+def get_exit_code(matches: Matches, exit_level: str = "informational") -> int:
     """Determine exit code"""
 
     exit_levels: Dict[str, List[str]] = {
-        'informational': ['informational', 'warning', 'error'],
-        'warning': ['warning', 'error'],
-        'error': ['error'],
-        'none': [],
+        "informational": ["informational", "warning", "error"],
+        "warning": ["warning", "error"],
+        "error": ["error"],
+        "none": [],
     }
 
     exit_code = 0
     for match in matches:
         if (
-            match.rule.severity == 'informational'
+            match.rule.severity == "informational"
             and match.rule.severity in exit_levels[exit_level]
         ):
             exit_code = exit_code | 8
         elif (
-            match.rule.severity == 'warning'
+            match.rule.severity == "warning"
             and match.rule.severity in exit_levels[exit_level]
         ):
             exit_code = exit_code | 4
         elif (
-            match.rule.severity == 'error'
+            match.rule.severity == "error"
             and match.rule.severity in exit_levels[exit_level]
         ):
             exit_code = exit_code | 2
@@ -114,18 +114,18 @@ def get_exit_code(matches: Matches, exit_level: str = 'informational') -> int:
 
 def get_formatter(fmt: str) -> cfnlint.formatters.BaseFormatter:
     if fmt:
-        if fmt == 'quiet':
+        if fmt == "quiet":
             return cfnlint.formatters.QuietFormatter()
-        if fmt == 'parseable':
+        if fmt == "parseable":
             # pylint: disable=bad-option-value
             return cfnlint.formatters.ParseableFormatter()
-        if fmt == 'json':
+        if fmt == "json":
             return cfnlint.formatters.JsonFormatter()
-        if fmt == 'junit':
+        if fmt == "junit":
             return cfnlint.formatters.JUnitFormatter()
-        if fmt == 'pretty':
+        if fmt == "pretty":
             return cfnlint.formatters.PrettyFormatter()
-        if fmt == 'sarif':
+        if fmt == "sarif":
             return cfnlint.formatters.SARIFFormatter()
 
     return cfnlint.formatters.Formatter()
@@ -158,14 +158,14 @@ def get_rules(
         rules.create_from_custom_rules_file(custom_rules)
     except (OSError, ImportError) as e:
         raise UnexpectedRuleException(
-            f'Tried to append rules but got an error: {str(e)}', 1
+            f"Tried to append rules but got an error: {str(e)}", 1
         ) from e
     return rules
 
 
 def get_matches(filenames: str, args: cfnlint.config.ConfigMixIn) -> Iterator[Match]:
     for filename in filenames:
-        LOGGER.debug('Begin linting of file: %s', str(filename))
+        LOGGER.debug("Begin linting of file: %s", str(filename))
         (template, rules, errors) = get_template_rules(filename, args)
         # template matches may be empty but the template is still None
         # this happens when ignoring bad templates
@@ -186,7 +186,7 @@ def get_matches(filenames: str, args: cfnlint.config.ConfigMixIn) -> Iterator[Ma
             if errors:
                 for match in errors:
                     yield match
-        LOGGER.debug('Completed linting of file: %s', str(filename))
+        LOGGER.debug("Completed linting of file: %s", str(filename))
 
 
 def configure_logging(debug_logging):
@@ -202,7 +202,7 @@ def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
     try:
         config = cfnlint.config.ConfigMixIn(cli_args)
     except ValidationError as e:
-        LOGGER.error('Error parsing config file: %s', str(e))
+        LOGGER.error("Error parsing config file: %s", str(e))
         sys.exit(1)
 
     fmt = config.format
@@ -215,7 +215,7 @@ def get_args_filenames(cli_args: Sequence[str]) -> ArgsFilename:
     if config.update_documentation:
         # Get ALL rules (ignore the CLI settings))
         documentation_rules = cfnlint.core.get_rules(
-            [], [], ['I', 'E', 'W'], {}, True, []
+            [], [], ["I", "E", "W"], {}, True, []
         )
         cfnlint.maintenance.update_documentation(documentation_rules)
         sys.exit(0)
@@ -301,7 +301,7 @@ def get_template_rules(
 
     if errors:
         _build_rule_cache(args)
-        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == 'E0000':
+        if len(errors) == 1 and ignore_bad_template and errors[0].rule.id == "E0000":
             return (template, __CACHED_RULES, [])
         return (template, __CACHED_RULES, errors)
 
@@ -323,7 +323,7 @@ def run_checks(
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
-            msg = f'Regions {unsupported_regions} are unsupported. Supported regions are {REGIONS}'
+            msg = f"Regions {unsupported_regions} are unsupported. Supported regions are {REGIONS}"
             raise InvalidRegionException(msg, 32)
 
     errors: Matches = []
@@ -354,7 +354,7 @@ def run_checks(
     try:
         errors.extend(runner.run())
     except Exception as err:  # pylint: disable=W0703
-        msg = f'Tried to process rules on file {filename} but got an error: {str(err)}'
+        msg = f"Tried to process rules on file {filename} but got an error: {str(err)}"
         UnexpectedRuleException(msg, 1)
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 

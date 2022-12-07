@@ -2,43 +2,42 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class PropertiesTemplated(CloudFormationLintRule):
     """Check Base Resource Configuration"""
 
-    id = 'W3002'
+    id = "W3002"
     shortdesc = (
-        'Warn when properties are configured to only work with the package command'
+        "Warn when properties are configured to only work with the package command"
     )
     description = (
-        'Some properties can be configured to only work with the CloudFormation'
-        'package command. Warn when this is the case so user is aware.'
+        "Some properties can be configured to only work with the CloudFormation"
+        "package command. Warn when this is the case so user is aware."
     )
     source_url = (
-        'https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html'
+        "https://docs.aws.amazon.com/cli/latest/reference/cloudformation/package.html"
     )
-    tags = ['resources']
+    tags = ["resources"]
 
     templated_exceptions = {
-        'AWS::ApiGateway::RestApi': ['BodyS3Location'],
-        'AWS::Lambda::Function': ['Code'],
-        'AWS::Lambda::LayerVersion': ['Content'],
-        'AWS::ElasticBeanstalk::ApplicationVersion': ['SourceBundle'],
-        'AWS::StepFunctions::StateMachine': ['DefinitionS3Location'],
-        'AWS::AppSync::GraphQLSchema': ['DefinitionS3Location'],
-        'AWS::AppSync::Resolver': [
-            'RequestMappingTemplateS3Location',
-            'ResponseMappingTemplateS3Location',
+        "AWS::ApiGateway::RestApi": ["BodyS3Location"],
+        "AWS::Lambda::Function": ["Code"],
+        "AWS::Lambda::LayerVersion": ["Content"],
+        "AWS::ElasticBeanstalk::ApplicationVersion": ["SourceBundle"],
+        "AWS::StepFunctions::StateMachine": ["DefinitionS3Location"],
+        "AWS::AppSync::GraphQLSchema": ["DefinitionS3Location"],
+        "AWS::AppSync::Resolver": [
+            "RequestMappingTemplateS3Location",
+            "ResponseMappingTemplateS3Location",
         ],
-        'AWS::AppSync::FunctionConfiguration': [
-            'RequestMappingTemplateS3Location',
-            'ResponseMappingTemplateS3Location',
+        "AWS::AppSync::FunctionConfiguration": [
+            "RequestMappingTemplateS3Location",
+            "ResponseMappingTemplateS3Location",
         ],
-        'AWS::CloudFormation::Stack': ['TemplateURL'],
-        'AWS::CodeCommit::Repository': ['S3'],
+        "AWS::CloudFormation::Stack": ["TemplateURL"],
+        "AWS::CodeCommit::Repository": ["S3"],
     }
 
     def __init__(self):
@@ -50,7 +49,7 @@ class PropertiesTemplated(CloudFormationLintRule):
         """Check the value"""
         matches = []
         if isinstance(value, str):
-            if not value.startswith('s3://') and not value.startswith('https://'):
+            if not value.startswith("s3://") and not value.startswith("https://"):
                 message = f'This code may only work with `package` cli command as the property ({"/".join(map(str, path))}) is a string'
                 matches.append(RuleMatch(path, message))
 

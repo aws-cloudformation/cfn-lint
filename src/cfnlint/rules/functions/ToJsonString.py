@@ -2,25 +2,25 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
 from cfnlint.languageExtensions import LanguageExtensions
+from cfnlint.rules import CloudFormationLintRule
 
 
 class ToJsonString(CloudFormationLintRule):
     """Check if ToJsonString values are correct"""
 
-    id = 'E1031'
-    shortdesc = 'ToJsonString validation of parameters'
-    description = 'Making sure Fn::ToJsonString is configured correctly'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html'
-    tags = ['functions', 'toJsonString']
+    id = "E1031"
+    shortdesc = "ToJsonString validation of parameters"
+    description = "Making sure Fn::ToJsonString is configured correctly"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference.html"
+    tags = ["functions", "toJsonString"]
 
     def match(self, cfn):
         has_language_extensions_transform = cfn.has_language_extensions_transform()
-        unsupported_pseudo_parameters = ['AWS::NotificationARNs']
+        unsupported_pseudo_parameters = ["AWS::NotificationARNs"]
 
         matches = []
-        intrinsic_function = 'Fn::ToJsonString'
+        intrinsic_function = "Fn::ToJsonString"
         fn_toJsonString_objects = cfn.search_deep_keys(intrinsic_function)
 
         for fn_toJsonString_object in fn_toJsonString_objects:

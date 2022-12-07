@@ -4,17 +4,18 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 from test.testlib.testcase import BaseTestCase
-from cfnlint.rules import RulesCollection
-from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
-import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+
 import cfnlint.decode.cfn_json  # pylint: disable=E0401
+import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
+from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
+from cfnlint.rules import RulesCollection
 
 
 class TestDuplicate(BaseTestCase):
-    """Test Duplicates Parsing """
+    """Test Duplicates Parsing"""
 
     def setUp(self):
-        """ SetUp template object"""
+        """SetUp template object"""
         self.rules = RulesCollection()
         rulesdirs = [DEFAULT_RULESDIR]
         for rulesdir in rulesdirs:
@@ -23,15 +24,15 @@ class TestDuplicate(BaseTestCase):
     def test_success_run(self):
         """Test success run"""
 
-        filename = 'test/fixtures/templates/good/generic.yaml'
+        filename = "test/fixtures/templates/good/generic.yaml"
 
         try:
             cfnlint.decode.cfn_yaml.load(filename)
         except cfnlint.decode.cfn_yaml.CfnParseError:
-            assert(False)
+            assert False
             return
 
-        assert(True)
+        assert True
 
     def test_fail_json_run(self):
         """Test failure run"""
@@ -39,7 +40,7 @@ class TestDuplicate(BaseTestCase):
     def test_fail_run(self):
         """Test failure run"""
 
-        filename = 'test/fixtures/templates/bad/duplicate.json'
+        filename = "test/fixtures/templates/bad/duplicate.json"
 
         try:
             cfnlint.decode.cfn_json.load(filename)
@@ -47,12 +48,12 @@ class TestDuplicate(BaseTestCase):
             self.assertEqual(len(e.matches), 3)
             return
 
-        assert(False)
+        assert False
 
     def test_fail_yaml_run(self):
         """Test failure run"""
 
-        filename = 'test/fixtures/templates/bad/duplicate.yaml'
+        filename = "test/fixtures/templates/bad/duplicate.yaml"
 
         try:
             cfnlint.decode.cfn_yaml.load(filename)
@@ -60,4 +61,4 @@ class TestDuplicate(BaseTestCase):
             self.assertEqual(len(e.matches), 3)
             return
 
-        assert(False)
+        assert False

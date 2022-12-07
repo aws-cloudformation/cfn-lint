@@ -3,25 +3,25 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from cfnlint.rules import CloudFormationLintRule
+
 import cfnlint.helpers
 from cfnlint.data import AdditionalSpecs
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class BasedOnValue(CloudFormationLintRule):
     """Generic rule for checking properties based on value"""
 
-    spec_type = ''
-    message = ''
+    spec_type = ""
+    message = ""
 
     def __init__(self):
         super().__init__()
         basedonvalue = cfnlint.helpers.load_resource(
-            AdditionalSpecs, 'BasedOnValue.json'
+            AdditionalSpecs, "BasedOnValue.json"
         )
-        self.resource_types_specs = basedonvalue['ResourceTypes']
-        self.property_types_specs = basedonvalue['PropertyTypes']
+        self.resource_types_specs = basedonvalue["ResourceTypes"]
+        self.property_types_specs = basedonvalue["PropertyTypes"]
         for resource_type, resource_specs in self.resource_types_specs.items():
             for based_on_specs in resource_specs.values():
                 for spec in based_on_specs:
@@ -36,28 +36,28 @@ class BasedOnValue(CloudFormationLintRule):
     def _check_value(self, value, spec, cfn):
         """Checks a value to see if it fits in the spec"""
         if isinstance(value, str):
-            regex = spec.get('Regex')
+            regex = spec.get("Regex")
             if regex:
-                if re.match(spec.get('Regex'), value):
+                if re.match(spec.get("Regex"), value):
                     return True
         elif isinstance(value, dict):
             if len(value) == 1:
                 for k, v in value.items():
-                    ref = spec.get('Ref')
+                    ref = spec.get("Ref")
                     if ref:
-                        if k == 'Ref':
+                        if k == "Ref":
                             if isinstance(v, str):
                                 return (
-                                    cfn.template.get('Resources').get(v, {}).get('Type')
+                                    cfn.template.get("Resources").get(v, {}).get("Type")
                                     in ref
                                 )
 
-                    getatt = spec.get('GetAtt')
+                    getatt = spec.get("GetAtt")
                     if getatt:
-                        if k == 'Fn::GetAtt':
+                        if k == "Fn::GetAtt":
                             if isinstance(v, list):
                                 restype = (
-                                    cfn.template.get('Resources').get(v[0]).get('Type')
+                                    cfn.template.get("Resources").get(v[0]).get("Type")
                                 )
                                 if restype in getatt:
                                     return getatt.get(restype) == v[1]
@@ -79,11 +79,11 @@ class BasedOnValue(CloudFormationLintRule):
                         properties, property_names=property_set
                     )
                     for scenario in scenarios:
-                        if self._check_value(scenario.get('Object').get(k), s, cfn):
+                        if self._check_value(scenario.get("Object").get(k), s, cfn):
                             for property_name in spec_values:
                                 if self._check_prop(property_name, scenario):
-                                    if scenario['Scenario'] is None:
-                                        message = 'When property \'{0}\' has its current value property \'{1}\' {2} at {3}'
+                                    if scenario["Scenario"] is None:
+                                        message = "When property '{0}' has its current value property '{1}' {2} at {3}"
                                         matches.append(
                                             RuleMatch(
                                                 path,
@@ -91,20 +91,20 @@ class BasedOnValue(CloudFormationLintRule):
                                                     k,
                                                     property_name,
                                                     self.message,
-                                                    '/'.join(map(str, path)),
+                                                    "/".join(map(str, path)),
                                                 ),
                                             )
                                         )
                                     else:
-                                        scenario_text = ' and '.join(
+                                        scenario_text = " and ".join(
                                             [
                                                 f'when condition "{k}" is {v}'
                                                 for (k, v) in scenario[
-                                                    'Scenario'
+                                                    "Scenario"
                                                 ].items()
                                             ]
                                         )
-                                        message = 'When property \'{0}\' has its current value property \'{1}\' {2} when {3}'
+                                        message = "When property '{0}' has its current value property '{1}' {2} when {3}"
                                         matches.append(
                                             RuleMatch(
                                                 path,

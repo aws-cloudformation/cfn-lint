@@ -4,13 +4,14 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 from test.testlib.testcase import BaseTestCase
+
 import cfnlint.config  # pylint: disable=E0401
 
-LOGGER = logging.getLogger('cfnlint')
+LOGGER = logging.getLogger("cfnlint")
 
 
 class TestLogging(BaseTestCase):
-    """Test Logging Arguments """
+    """Test Logging Arguments"""
 
     def tearDown(self):
         """Setup"""

@@ -3,46 +3,45 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import re
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 
-from cfnlint.helpers import RESOURCE_SPECS, REGEX_DYN_REF
+from cfnlint.helpers import REGEX_DYN_REF, RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class StringSize(CloudFormationLintRule):
     """Check if a String has a length within the limit"""
 
-    id = 'E3033'
-    shortdesc = 'Check if a string has between min and max number of values specified'
-    description = 'Check strings for its length between the minimum and maximum'
-    source_url = 'https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern'
-    tags = ['resources', 'property', 'string', 'size']
+    id = "E3033"
+    shortdesc = "Check if a string has between min and max number of values specified"
+    description = "Check strings for its length between the minimum and maximum"
+    source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
+    tags = ["resources", "property", "string", "size"]
 
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes'
+            "ResourceTypes"
         ):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes'
+            "PropertyTypes"
         ):
             self.resource_sub_property_types.append(property_type_spec)
 
     def _check_string_length(self, value, path, **kwargs):
         """ """
         matches = []
-        string_min = kwargs.get('string_min')
-        string_max = kwargs.get('string_max')
+        string_min = kwargs.get("string_min")
+        string_max = kwargs.get("string_max")
 
         if isinstance(value, str) and not re.match(REGEX_DYN_REF, value):
             if not string_min <= len(value) <= string_max:
-                message = 'String has to have length between {0} and {1} at {2}. Current length {3}.'
+                message = "String has to have length between {0} and {1} at {2}. Current length {3}."
                 matches.append(
                     RuleMatch(
                         path,
                         message.format(
-                            string_min, string_max, '/'.join(map(str, path)), len(value)
+                            string_min, string_max, "/".join(map(str, path)), len(value)
                         ),
                     )
                 )
@@ -55,31 +54,31 @@ class StringSize(CloudFormationLintRule):
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in specs:
-                    value_type = specs.get(prop).get('Value', {}).get('ValueType', '')
+                    value_type = specs.get(prop).get("Value", {}).get("ValueType", "")
                     if value_type:
-                        if specs.get(prop).get('Type') == 'List':
-                            property_type = specs.get(prop).get('PrimitiveItemType')
+                        if specs.get(prop).get("Type") == "List":
+                            property_type = specs.get(prop).get("PrimitiveItemType")
                         else:
-                            property_type = specs.get(prop).get('PrimitiveType')
+                            property_type = specs.get(prop).get("PrimitiveType")
 
                         value_specs = (
                             RESOURCE_SPECS.get(cfn.regions[0])
-                            .get('ValueTypes')
+                            .get("ValueTypes")
                             .get(value_type, {})
                         )
 
-                        if value_specs.get('StringMax') and value_specs.get(
-                            'StringMin'
+                        if value_specs.get("StringMax") and value_specs.get(
+                            "StringMin"
                         ):
-                            if property_type == 'String':
+                            if property_type == "String":
                                 matches.extend(
                                     cfn.check_value(
                                         properties,
                                         prop,
                                         p_path,
                                         check_value=self._check_string_length,
-                                        string_max=value_specs.get('StringMax'),
-                                        string_min=value_specs.get('StringMin'),
+                                        string_max=value_specs.get("StringMax"),
+                                        string_min=value_specs.get("StringMin"),
                                     )
                                 )
         return matches
@@ -90,9 +89,9 @@ class StringSize(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('PropertyTypes')
+            .get("PropertyTypes")
             .get(property_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 
@@ -104,9 +103,9 @@ class StringSize(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('ResourceTypes')
+            .get("ResourceTypes")
             .get(resource_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 

@@ -2,19 +2,18 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 import cfnlint.helpers
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class Required(CloudFormationLintRule):
     """Check Required Resource Configuration"""
 
-    id = 'E3003'
-    shortdesc = 'Required Resource properties are missing'
-    description = 'Making sure that Resources properties that are required exist'
-    source_url = 'https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required'
-    tags = ['resources']
+    id = "E3003"
+    shortdesc = "Required Resource properties are missing"
+    description = "Making sure that Resources properties that are required exist"
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#required"
+    tags = ["resources"]
 
     def __init__(self):
         """Init"""
@@ -25,8 +24,8 @@ class Required(CloudFormationLintRule):
     def initialize(self, cfn):
         """Initialize the rule"""
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
-        self.resourcetypes = resourcespecs['ResourceTypes']
-        self.propertytypes = resourcespecs['PropertyTypes']
+        self.resourcetypes = resourcespecs["ResourceTypes"]
+        self.propertytypes = resourcespecs["PropertyTypes"]
         self.resource_property_types = []
         self.resource_sub_property_types = []
         for resource_type_spec in self.resourcetypes.keys():
@@ -36,8 +35,8 @@ class Required(CloudFormationLintRule):
 
     def _get_required_attrs_specs(self, resource_specs):
         reqr = []
-        for k, v in resource_specs.get('Properties', {}).items():
-            if v.get('Required', False):
+        for k, v in resource_specs.get("Properties", {}).items():
+            if v.get("Required", False):
                 reqr.append(k)
 
         return reqr
@@ -48,12 +47,12 @@ class Required(CloudFormationLintRule):
         for safe_obj, safe_path in obj.items_safe(path):
             for required_attribute in required_attributes:
                 if required_attribute not in safe_obj:
-                    message = 'Property {0} missing at {1}'
+                    message = "Property {0} missing at {1}"
                     matches.append(
                         RuleMatch(
                             safe_path,
                             message.format(
-                                required_attribute, '/'.join(map(str, safe_path))
+                                required_attribute, "/".join(map(str, safe_path))
                             ),
                         )
                     )
@@ -98,20 +97,20 @@ class Required(CloudFormationLintRule):
         matches = []
 
         for resourcename, resourcevalue in cfn.get_resources().items():
-            if 'Properties' in resourcevalue and 'Type' in resourcevalue:
-                resource_type = resourcevalue['Type']
+            if "Properties" in resourcevalue and "Type" in resourcevalue:
+                resource_type = resourcevalue["Type"]
                 if (
-                    resource_type.startswith('Custom::')
+                    resource_type.startswith("Custom::")
                     and resource_type not in self.resourcetypes
                 ):
-                    resource_type = 'AWS::CloudFormation::CustomResource'
+                    resource_type = "AWS::CloudFormation::CustomResource"
                     matches.extend(
                         self.check_obj(
-                            resourcevalue['Properties'],
+                            resourcevalue["Properties"],
                             self._get_required_attrs_specs(
                                 self.resourcetypes.get(resource_type)
                             ),
-                            ['Resources', resourcename, 'Properties'],
+                            ["Resources", resourcename, "Properties"],
                             cfn,
                         )
                     )

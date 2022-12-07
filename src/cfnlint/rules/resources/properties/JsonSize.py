@@ -5,29 +5,29 @@ SPDX-License-Identifier: MIT-0
 import datetime
 import json
 import re
+
 import cfnlint.helpers
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
 from cfnlint.helpers import RESOURCE_SPECS
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class JsonSize(CloudFormationLintRule):
     """Check if JSON Object Size is within the specified length"""
 
-    id = 'E3502'
-    shortdesc = 'Check if a JSON Object is within size limits'
-    description = 'Validate properties that are JSON values so that their length is within the limits'
-    source_url = 'https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html'
-    tags = ['resources', 'limits', 'json']
+    id = "E3502"
+    shortdesc = "Check if a JSON Object is within size limits"
+    description = "Validate properties that are JSON values so that their length is within the limits"
+    source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
+    tags = ["resources", "limits", "json"]
 
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'ResourceTypes'
+            "ResourceTypes"
         ):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            'PropertyTypes'
+            "PropertyTypes"
         ):
             self.resource_sub_property_types.append(property_type_spec)
 
@@ -35,7 +35,7 @@ class JsonSize(CloudFormationLintRule):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
         raise TypeError(
-            f'Object of type {obj.__class__.__name__} is not JSON serializable'
+            f"Object of type {obj.__class__.__name__} is not JSON serializable"
         )
 
     def check_value(self, value, path, prop, cfn, specs):
@@ -50,13 +50,13 @@ class JsonSize(CloudFormationLintRule):
                 if len(obj) == 1:
                     for k, v in obj.items():
                         if k in cfnlint.helpers.FUNCTIONS:
-                            if k == 'Fn::Sub':
+                            if k == "Fn::Sub":
                                 if isinstance(v, str):
-                                    return re.sub(r'\${.*}', '', v)
+                                    return re.sub(r"\${.*}", "", v)
                                 if isinstance(v, list):
-                                    return re.sub(r'\${.*}', '', v[0])
+                                    return re.sub(r"\${.*}", "", v[0])
                             else:
-                                return ''
+                                return ""
                         else:
                             new_obj[k] = remove_functions(v)
                             return new_obj
@@ -73,26 +73,26 @@ class JsonSize(CloudFormationLintRule):
             return obj
 
         scenarios = cfn.get_object_without_nested_conditions(value, path)
-        json_max_size = specs.get('JsonMax')
+        json_max_size = specs.get("JsonMax")
         for scenario in scenarios:
-            j = remove_functions(scenario['Object'][prop])
+            j = remove_functions(scenario["Object"][prop])
             if isinstance(j, str):
                 try:
                     j = json.loads(j)
                 except:  # pylint: disable=bare-except
                     continue
             if (
-                len(json.dumps(j, separators=(',', ':'), default=self._serialize_date))
+                len(json.dumps(j, separators=(",", ":"), default=self._serialize_date))
                 > json_max_size
             ):
-                if scenario['Scenario']:
+                if scenario["Scenario"]:
                     message = (
-                        '{0} JSON text cannot be longer than {1} characters when {2}'
+                        "{0} JSON text cannot be longer than {1} characters when {2}"
                     )
-                    scenario_text = ' and '.join(
+                    scenario_text = " and ".join(
                         [
                             f'when condition "{k}" is {v}'
-                            for (k, v) in scenario['Scenario'].items()
+                            for (k, v) in scenario["Scenario"].items()
                         ]
                     )
                     matches.append(
@@ -102,7 +102,7 @@ class JsonSize(CloudFormationLintRule):
                         )
                     )
                 else:
-                    message = '{0} JSON text cannot be longer than {1} characters'
+                    message = "{0} JSON text cannot be longer than {1} characters"
                     matches.append(
                         RuleMatch(
                             path + [prop],
@@ -118,11 +118,11 @@ class JsonSize(CloudFormationLintRule):
         for p_value, p_path in properties.items_safe(path[:]):
             for prop in p_value:
                 if prop in specs:
-                    value = specs.get(prop).get('Value', {})
+                    value = specs.get(prop).get("Value", {})
                     if value:
-                        value_type = value.get('ValueType', '')
-                        primitive_type = specs.get(prop).get('PrimitiveType')
-                        if primitive_type == 'Json':
+                        value_type = value.get("ValueType", "")
+                        primitive_type = specs.get(prop).get("PrimitiveType")
+                        if primitive_type == "Json":
                             matches.extend(
                                 self.check_value(
                                     p_value,
@@ -130,7 +130,7 @@ class JsonSize(CloudFormationLintRule):
                                     prop,
                                     cfn,
                                     RESOURCE_SPECS.get(cfn.regions[0])
-                                    .get('ValueTypes')
+                                    .get("ValueTypes")
                                     .get(value_type, {}),
                                 )
                             )
@@ -142,9 +142,9 @@ class JsonSize(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('PropertyTypes')
+            .get("PropertyTypes")
             .get(property_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 
@@ -156,9 +156,9 @@ class JsonSize(CloudFormationLintRule):
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
-            .get('ResourceTypes')
+            .get("ResourceTypes")
             .get(resource_type, {})
-            .get('Properties', {})
+            .get("Properties", {})
         )
         matches.extend(self.check(cfn, properties, specs, path))
 

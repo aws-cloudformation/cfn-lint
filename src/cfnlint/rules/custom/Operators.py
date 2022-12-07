@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 # pylint: disable=cyclic-import
 import cfnlint.rules
 
-OPERATOR = ['EQUALS', 'NOT_EQUALS', '==', '!=', 'IN', 'NOT_IN', '>=', '<=']
+OPERATOR = ["EQUALS", "NOT_EQUALS", "==", "!=", "IN", "NOT_IN", ">=", "<="]
 
 
 def CreateCustomRule(
@@ -26,7 +26,7 @@ def CreateCustomRule(
             super().__init__()
             self.resource_property_types.append(resourceType)
             self.id = rule_id
-            self.property_chain = prop.split('.')
+            self.property_chain = prop.split(".")
             self.property_value = value
             self.error_message = error_message
             self.description = description
@@ -87,7 +87,7 @@ def CreateEqualsRule(rule_id, resourceType, prop, value, error_message):
         if str(value).strip().lower() != str(expected_value).strip().lower():
             matches.append(
                 cfnlint.rules.RuleMatch(
-                    path, error_message or 'Must equal check failed'
+                    path, error_message or "Must equal check failed"
                 )
             )
 
@@ -99,8 +99,8 @@ def CreateEqualsRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for equal values',
-        description='Created from the custom rules parameter. This rule will check if a property value is equal to the specified value.',
+        shortdesc="Custom rule to check for equal values",
+        description="Created from the custom rules parameter. This rule will check if a property value is equal to the specified value.",
         rule_func=rule_func,
     )
 
@@ -111,7 +111,7 @@ def CreateNotEqualsRule(rule_id, resourceType, prop, value, error_message):
         if str(value).strip().lower() == str(expected_values).strip().lower():
             matches.append(
                 cfnlint.rules.RuleMatch(
-                    path, error_message or 'Must not equal check failed'
+                    path, error_message or "Must not equal check failed"
                 )
             )
 
@@ -123,8 +123,8 @@ def CreateNotEqualsRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for not equal values',
-        description='Created from the custom rules parameter. This rule will check if a property value is NOT equal to the specified value.',
+        shortdesc="Custom rule to check for not equal values",
+        description="Created from the custom rules parameter. This rule will check if a property value is NOT equal to the specified value.",
         rule_func=rule_func,
     )
 
@@ -136,13 +136,13 @@ def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
             if value.strip().lower() < str(expected_value).strip().lower():
                 matches.append(
                     cfnlint.rules.RuleMatch(
-                        path, error_message or 'Greater than check failed'
+                        path, error_message or "Greater than check failed"
                     )
                 )
         else:
             matches.append(
                 cfnlint.rules.RuleMatch(
-                    path, error_message or 'Given values are not numeric'
+                    path, error_message or "Given values are not numeric"
                 )
             )
 
@@ -154,8 +154,8 @@ def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for if a value is greater than the specified value',
-        description='Created from the custom rules parameter. This rule will check if a property value is greater than the specified value.',
+        shortdesc="Custom rule to check for if a value is greater than the specified value",
+        description="Created from the custom rules parameter. This rule will check if a property value is greater than the specified value.",
         rule_func=rule_func,
     )
 
@@ -167,13 +167,13 @@ def CreateLesserRule(rule_id, resourceType, prop, value, error_message):
             if value.strip().lower() > str(expected_value).strip().lower():
                 matches.append(
                     cfnlint.rules.RuleMatch(
-                        path, error_message or 'Lesser than check failed'
+                        path, error_message or "Lesser than check failed"
                     )
                 )
         else:
             matches.append(
                 cfnlint.rules.RuleMatch(
-                    path, error_message or 'Given values are not numeric'
+                    path, error_message or "Given values are not numeric"
                 )
             )
 
@@ -185,8 +185,8 @@ def CreateLesserRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for if a value is lesser than the specified value',
-        description='Created from the custom rules parameter. This rule will check if a property value is lesser than the specified value.',
+        shortdesc="Custom rule to check for if a value is lesser than the specified value",
+        description="Created from the custom rules parameter. This rule will check if a property value is lesser than the specified value.",
         rule_func=rule_func,
     )
 
@@ -196,7 +196,7 @@ def CreateInSetRule(rule_id, resourceType, prop, value, error_message):
         matches = []
         if value not in expected_values:
             matches.append(
-                cfnlint.rules.RuleMatch(path, error_message or 'In set check failed')
+                cfnlint.rules.RuleMatch(path, error_message or "In set check failed")
             )
 
         return matches
@@ -207,8 +207,8 @@ def CreateInSetRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for if a value exists in a list of specified values',
-        description='Created from the custom rules parameter. This rule will check if a property value exists inside a list of specified values.',
+        shortdesc="Custom rule to check for if a value exists in a list of specified values",
+        description="Created from the custom rules parameter. This rule will check if a property value exists inside a list of specified values.",
         rule_func=rule_func,
     )
 
@@ -219,7 +219,7 @@ def CreateNotInSetRule(rule_id, resourceType, prop, value, error_message):
         if value in expected_values:
             matches.append(
                 cfnlint.rules.RuleMatch(
-                    path, error_message or 'Not in set check failed'
+                    path, error_message or "Not in set check failed"
                 )
             )
 
@@ -231,8 +231,8 @@ def CreateNotInSetRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc='Custom rule to check for if a value does not exist in a list of specified values',
-        description='Created from the custom rules parameter. This rule will check if a property value does not exist inside a list of specified values.',
+        shortdesc="Custom rule to check for if a value does not exist in a list of specified values",
+        description="Created from the custom rules parameter. This rule will check if a property value does not exist inside a list of specified values.",
         rule_func=rule_func,
     )
 
@@ -243,14 +243,14 @@ def CreateInvalidRule(rule_id, operator):
             super().__init__()
             self.id = rule_id
             self.operator = operator
-            self.description = 'Created from the custom rule parameter. This rule is the result of an invalid configuration of a custom rule.'
-            self.shortdesc = 'Invalid custom rule configuration'
+            self.description = "Created from the custom rule parameter. This rule is the result of an invalid configuration of a custom rule."
+            self.shortdesc = "Invalid custom rule configuration"
 
         def match(self, _):
             message = '"{0}" not in supported operators: [{1}]'
             return [
                 cfnlint.rules.RuleMatch(
-                    [], message.format(str(self.operator), ', '.join(OPERATOR))
+                    [], message.format(str(self.operator), ", ".join(OPERATOR))
                 )
             ]
 

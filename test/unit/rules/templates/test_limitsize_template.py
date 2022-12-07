@@ -3,37 +3,59 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
+
 from cfnlint.rules.templates.LimitSize import LimitSize  # pylint: disable=E0401
 
 
 def write_limit_test_templates():
-    with open('test/fixtures/templates/bad/limit_numbers.yaml', 'w') as f:
-        f.write('Parameters:\n')
+    with open("test/fixtures/templates/bad/limit_numbers.yaml", "w") as f:
+        f.write("Parameters:\n")
         for n in range(1, 202):
-            f.write('  Parameter' + str(n) + ''':
-    Type: String\n''')
-        f.write('Resources:\n')
+            f.write(
+                "  Parameter"
+                + str(n)
+                + """:
+    Type: String\n"""
+            )
+        f.write("Resources:\n")
         for n in range(1, 502):
-            f.write('  Resource' + str(n) + ''':
-    Type: AWS::SNS::Topic\n''')
-        f.write('Outputs:\n')
+            f.write(
+                "  Resource"
+                + str(n)
+                + """:
+    Type: AWS::SNS::Topic\n"""
+            )
+        f.write("Outputs:\n")
         for n in range(1, 202):
-            f.write('  Output' + str(n) + ''':
-    Value: !Ref Parameter1\n''')
-        f.write('Mappings:\n')
+            f.write(
+                "  Output"
+                + str(n)
+                + """:
+    Value: !Ref Parameter1\n"""
+            )
+        f.write("Mappings:\n")
         for n in range(1, 202):
-            f.write('  Mapping' + str(n) + ''':
+            f.write(
+                "  Mapping"
+                + str(n)
+                + """:
     Key:
-      Key: Value\n''')
+      Key: Value\n"""
+            )
         for n in range(1, 202):
-            f.write('      Key' + str(n) + ': Value\n')
+            f.write("      Key" + str(n) + ": Value\n")
 
-    with open('test/fixtures/templates/bad/limit_size.yaml', 'w') as f:
-        f.write('''Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In aliquet justo nibh, a venenatis justo suscipit et. Sed vulputate est non vulputate cursus. In et mollis nunc. Ut semper justo nec odio dignissim semper. Sed interdum elementum ante. Phasellus bibendum mattis ultrices. Nullam varius dui mi, ac fermentum ante sodales nec. Mauris id libero id turpis sollicitudin imperdiet. Praesent volutpat, elit ut malesuada ultricies, magna velit ullamcorper leo, sagittis pulvinar elit erat faucibus felis.
+    with open("test/fixtures/templates/bad/limit_size.yaml", "w") as f:
+        f.write(
+            """Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In aliquet justo nibh, a venenatis justo suscipit et. Sed vulputate est non vulputate cursus. In et mollis nunc. Ut semper justo nec odio dignissim semper. Sed interdum elementum ante. Phasellus bibendum mattis ultrices. Nullam varius dui mi, ac fermentum ante sodales nec. Mauris id libero id turpis sollicitudin imperdiet. Praesent volutpat, elit ut malesuada ultricies, magna velit ullamcorper leo, sagittis pulvinar elit erat faucibus felis.
 Morbi sagittis pretium ligula in tristique. Suspendisse odio lectus, condimentum eget egestas pharetra, elementum sit amet sapien. Nullam ipsum eros, ullamcorper ut mi nec, maximus sagittis lacus. In laoreet quam sit amet ante dictum efficitur. Praesent pellentesque purus sit amet nisl scelerisque feugiat. Phasellus feugiat, ex posuere pharetra eleifend, ipsum libero viverra est, sit amet sodales ipsum urna in quam. Donec sit amet pharetra nibh. Nulla eu fermentum leo, a venenatis urna. Nam ac sagittis magna volutpat."
-Resources:\n''')
+Resources:\n"""
+        )
         for n in range(1, 300):
-            f.write('  Resource' + str(n) + ''':
+            f.write(
+                "  Resource"
+                + str(n)
+                + """:
     Type: AWS::EC2::Instance
     Metadata:
       Comment: Install a Magento web serve
@@ -132,7 +154,8 @@ Resources:\n''')
         Value: AWS Quick Start (Magento)
       - Key: Name
         Value: MagentoAMI (AWS Quick Start)
-''')
+"""
+            )
 
 
 class TestTemplateLimitSize(BaseRuleTestCase):
@@ -150,4 +173,4 @@ class TestTemplateLimitSize(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative('test/fixtures/templates/bad/limit_size.yaml', 1)
+        self.helper_file_negative("test/fixtures/templates/bad/limit_size.yaml", 1)
