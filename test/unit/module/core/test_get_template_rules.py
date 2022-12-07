@@ -30,7 +30,7 @@ class TestGetTemplateRules(BaseTestCase):
         self.assertEqual(len(errors), 0)
         for rule in rules:
             if rule.id == "E3012":
-                self.assertEqual(rule.config, {"strict": True})
+                self.assertEqual(rule.config, {"strict": True, "experimental": False})
 
         filename = "test/fixtures/templates/good/core/config_default_e3012.yaml"
         (args, _, _) = cfnlint.core.get_args_filenames(
@@ -44,4 +44,4 @@ class TestGetTemplateRules(BaseTestCase):
         self.assertEqual(len(errors), 0)
         for rule in rules:
             if rule.id == "E3012":
-                self.assertEqual(rule.config, {"strict": False})
+                self.assertEqual(rule.config, {"strict": False, "experimental": False})

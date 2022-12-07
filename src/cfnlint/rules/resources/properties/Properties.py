@@ -25,6 +25,7 @@ class Properties(CloudFormationLintRule):
         self.propertytypes = {}
         self.parameternames = {}
         self.intrinsictypes = {}
+        self.config_definition = {"experimental": {"default": False, "type": "boolean"}}
 
     def primitivetypecheck(self, value, primtype, proppath):
         """
@@ -536,6 +537,9 @@ class Properties(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
         self.cfn = cfn
+
+        if self.config.get("experimental"):
+            return matches
 
         resourcespecs = cfnlint.helpers.RESOURCE_SPECS[cfn.regions[0]]
         self.resourcetypes = resourcespecs["ResourceTypes"]

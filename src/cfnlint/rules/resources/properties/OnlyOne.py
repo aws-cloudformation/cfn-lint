@@ -30,6 +30,7 @@ class OnlyOne(CloudFormationLintRule):
             self.resource_property_types.append(resource_type_spec)
         for property_type_spec in self.property_types_specs:
             self.resource_sub_property_types.append(property_type_spec)
+        self.config_definition = {"experimental": {"default": False, "type": "boolean"}}
 
     def check(self, properties, onlyoneprops, path, cfn):
         """Check itself"""
@@ -83,6 +84,9 @@ class OnlyOne(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
+        if self.config.get("experimental"):
+            return matches
+
         onlyoneprops = self.property_types_specs.get(property_type, {})
         matches.extend(self.check(properties, onlyoneprops, path, cfn))
 
@@ -91,6 +95,9 @@ class OnlyOne(CloudFormationLintRule):
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
+        if self.config.get("experimental"):
+            return matches
 
         onlyoneprops = self.resource_types_specs.get(resource_type, {})
         matches.extend(self.check(properties, onlyoneprops, path, cfn))

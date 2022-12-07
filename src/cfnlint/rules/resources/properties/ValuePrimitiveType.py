@@ -2,8 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from typing import Any, List
+
+import jsonschema
+
 import cfnlint.helpers
+from cfnlint.helpers import FUNCTIONS, FUNCTIONS_MULTIPLE
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class ValuePrimitiveType(CloudFormationLintRule):
@@ -23,9 +29,13 @@ class ValuePrimitiveType(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super().__init__()
+        self.cfn = None
         self.resource_specs = []
         self.property_specs = []
-        self.config_definition = {"strict": {"default": False, "type": "boolean"}}
+        self.config_definition = {
+            "strict": {"default": False, "type": "boolean"},
+            "experimental": {"default": False, "type": "boolean"},
+        }
         self.configure()
 
     def initialize(self, cfn):
@@ -229,6 +239,9 @@ class ValuePrimitiveType(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
+        if self.config.get("experimental"):
+            return matches
+
         if self.property_specs.get(property_type, {}).get("Properties"):
             property_specs = self.property_specs.get(property_type, {}).get(
                 "Properties", {}
@@ -243,9 +256,150 @@ class ValuePrimitiveType(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
+        if self.config.get("experimental"):
+            return matches
+
         resource_specs = self.resource_specs.get(resource_type, {}).get(
             "Properties", {}
         )
         matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
 
         return matches
+
+    # pylint: disable=too-many-return-statements
+    def _schema_value_check(
+        self, value: Any, item_type: str, strict_check: bool
+    ) -> bool:
+        """Checks non strict"""
+        if not strict_check:
+            try:
+                if item_type in ["string"]:
+                    str(value)
+                elif item_type in ["boolean"]:
+                    if value not in ["True", "true", "False", "false"]:
+                        return False
+                elif item_type in ["integer", "number"]:
+                    if isinstance(value, bool):
+                        return False
+                    if item_type in ["integer"]:
+                        int(value)
+                    else:  # has to be a Double
+                        float(value)
+                else:
+                    return False
+            except Exception:  # pylint: disable=W0703
+                return False
+        else:
+            return False
+
+        return True
+
+    def _schema_check_primitive_type(self, value: Any, types: List[str]) -> bool:
+        """Chec item type"""
+        strict_check = self.config.get("strict")
+        result = False
+        for t in types:
+            if t == "string":
+                if not isinstance(value, (str)):
+                    if self._schema_value_check(value, "string", strict_check):
+                        result = True
+                else:
+                    result = True
+            elif t == "boolean":
+                if not isinstance(value, (bool)):
+                    if self._schema_value_check(value, "boolean", strict_check):
+                        result = True
+                else:
+                    result = True
+            elif t == "number":
+                if not isinstance(value, (float, int)) or isinstance(value, (bool)):
+                    if self._schema_value_check(value, "number", strict_check):
+                        result = True
+                else:
+                    result = True
+            elif t == "integer":
+                # bool is an int in python
+                if not isinstance(value, (int)) or isinstance(value, (bool)):
+                    if self._schema_value_check(value, "integer", strict_check):
+                        result = True
+                else:
+                    result = True
+            elif isinstance(value, list):
+                if self._schema_value_check(value, "list", strict_check):
+                    result = True
+
+        return result
+
+    def validate_configure(self, cfn: Template):
+        self.cfn = cfn
+
+    # pylint: disable=unused-argument
+    def validate(self, validator, types, instance, schema):
+        types = ensure_list(types)
+        reprs = ", ".join(repr(type) for type in types)
+        if not any(validator.is_type(instance, type) for type in types):
+            if isinstance(instance, dict):
+                if len(instance) == 1:
+                    for k, v in instance.items():
+                        if k == "Ref":
+                            valid_refs = self.cfn.get_valid_refs()
+                            for t in types:
+                                if t == "array":
+                                    if v in valid_refs:
+                                        ref_type = valid_refs.get(v).get("Type")
+                                        if "List" in ref_type:
+                                            return
+                                elif t in ["string", "number", "integer", "boolean"]:
+                                    if v in valid_refs:
+                                        ref_type = valid_refs.get(v).get("Type")
+                                        if "List" not in ref_type:
+                                            return
+                            if v not in valid_refs:
+                                # Picked up by another rule
+                                continue
+                            yield ValidationError(
+                                f"{instance!r} is not of type {reprs}", extra_args={}
+                            )
+                        elif k in FUNCTIONS_MULTIPLE:
+                            for t in types:
+                                if t == "array":
+                                    return
+                            yield ValidationError(
+                                f"{instance!r} is not of type {reprs}", extra_args={}
+                            )
+                        elif k in FUNCTIONS:
+                            for t in types:
+                                if t in ["string", "integer", "boolane"]:
+                                    return
+                            yield ValidationError(
+                                f"{instance!r} is not of type {reprs}", extra_args={}
+                            )
+                        else:
+                            yield ValidationError(
+                                f"{instance!r} is not of type {reprs}", extra_args={}
+                            )
+            if not self._schema_check_primitive_type(instance, types):
+                extra_args = {
+                    "actual_type": type(instance).__name__,
+                    "expected_type": reprs,
+                }
+                yield ValidationError(
+                    f"{instance!r} is not of type {reprs}", extra_args=extra_args
+                )
+
+
+class ValidationError(jsonschema.ValidationError):
+    def __init__(self, message, extra_args):
+        super().__init__(message)
+        self.extra_args = extra_args
+
+
+def ensure_list(thing):
+    """
+    Wrap ``thing`` in a list if it's a single str.
+    Otherwise, return it unchanged.
+    """
+
+    if isinstance(thing, str):
+        return [thing]
+    return thing

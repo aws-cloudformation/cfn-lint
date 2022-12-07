@@ -360,12 +360,15 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
     @patch("cfnlint.maintenance.multiprocessing.Pool")
     @patch("cfnlint.maintenance.update_resource_spec")
+    @patch("cfnlint.maintenance.PROVIDER_SCHEMA_MANAGER")
     @patch("cfnlint.maintenance.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
-    def test_update_resource_specs_python_3(self, mock_update_resource_spec, mock_pool):
+    def test_update_resource_specs_python(
+        self, mock_update_provider_schema, mock_update_resource_spec, mock_pool
+    ):
 
         fake_pool = MagicMock()
         mock_pool.return_value.__enter__.return_value = fake_pool
 
         cfnlint.maintenance.update_resource_specs()
 
-        fake_pool.starmap.assert_called_once()
+        self.assertEqual(fake_pool.starmap.call_count, 1)

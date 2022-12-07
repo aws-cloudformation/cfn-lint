@@ -18,7 +18,9 @@ import re
 import sys
 from io import BytesIO
 from typing import Dict, List
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, urlretrieve
+
+import jsonpatch
 
 from cfnlint.data import CloudSpecs
 from cfnlint.decode.node import dict_node, list_node, str_node
@@ -322,6 +324,34 @@ def get_url_content(url, caching=False):
     return content
 
 
+def get_url_retrieve(url: str, caching: bool = False) -> str:
+    """Get the contents of a zip file and returns
+    a string representing the file
+
+    Args:
+        url (str): The url to retrieve
+        caching (bool): If we can cache the results (default: False)
+    Returns:
+        str: A string representing the file object that was retrieved
+    """
+
+    if caching:
+        # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+        req = Request(url, method="HEAD")
+        with urlopen(req) as res:
+            if res.info().get("ETag"):
+                metadata_filename = get_metadata_filename(url)
+                # Load in all existing values
+                metadata = load_metadata(metadata_filename)
+                metadata["etag"] = res.info().get("ETag")
+                metadata["url"] = url  # To make it obvious which url the Tag relates to
+                save_metadata(metadata, metadata_filename)
+
+    fileobject, _ = urlretrieve(url)
+
+    return fileobject
+
+
 def load_metadata(filename):
     """Get the contents of the download metadata file"""
     metadata = {}
@@ -587,3 +617,21 @@ def override_specs(override_spec_file):
     except (ValueError) as err:
         LOGGER.error("Override spec file %s is malformed: %s", filename, err)
         sys.exit(1)
+
+
+def apply_json_patch(data: Dict, patches: List[Dict], region: str) -> Dict:
+    # Process the generic patches 1 by 1 so we can "ignore" failed ones
+    for patch in patches:
+        try:
+            jsonpatch.JsonPatch([patch]).apply(data, in_place=True)
+        except jsonpatch.JsonPatchConflict:
+            LOGGER.debug("Patch (%s) not applied in region %s", patch, region)
+        except jsonpatch.JsonPointerException:
+            # Debug as the parent element isn't supported in the region
+            LOGGER.debug(
+                "Parent element not found for patch (%s) in region %s",
+                patches,
+                region,
+            )
+
+    return data

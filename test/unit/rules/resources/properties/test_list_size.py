@@ -16,6 +16,7 @@ class TestListSize(BaseRuleTestCase):
         """Setup"""
         super(TestListSize, self).setUp()
         self.collection.register(ListSize())
+        self.collection.configure(include_experimental=False)
 
     def test_file_positive(self):
         """Test Positive"""
@@ -25,6 +26,12 @@ class TestListSize(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/resources_iam_managedpolicyarns.yaml", 3
+        )
+
+    def test_file_negative_experimental(self):
+        self.collection.configure(include_experimental=True)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources_iam_managedpolicyarns.yaml", 0
         )
 
     def test_file_negative_iam_user_groups(self):

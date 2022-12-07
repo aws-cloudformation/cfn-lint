@@ -24,6 +24,7 @@ class TestResourceProperties(BaseRuleTestCase):
             "test/fixtures/templates/good/resources/properties/templated_code.yaml",
             "test/fixtures/templates/good/resources/properties/properties_nested_if.yaml",
         ]
+        self.collection.configure(include_experimental=False)
 
     def test_file_positive(self):
         """Test Positive"""
@@ -32,6 +33,11 @@ class TestResourceProperties(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative("test/fixtures/templates/bad/generic.yaml", 9)
+
+    def test_file_negative_experimental(self):
+        """Test failure"""
+        self.collection.configure(include_experimental=True)
+        self.helper_file_negative("test/fixtures/templates/bad/generic.yaml", 0)
 
     def test_file_negative_2(self):
         """Failure test"""
@@ -77,6 +83,7 @@ class TestSpecifiedCustomResourceProperties(TestResourceProperties):
         with open("test/fixtures/templates/override_spec/custom.json") as fp:
             custom_spec = json.load(fp)
         cfnlint.helpers.set_specs(custom_spec)
+        self.collection.configure(include_experimental=False)
         # Reset Spec override after test
         self.addCleanup(cfnlint.helpers.initialize_specs)
 

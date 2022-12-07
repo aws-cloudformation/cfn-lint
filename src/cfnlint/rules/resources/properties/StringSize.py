@@ -17,6 +17,10 @@ class StringSize(CloudFormationLintRule):
     source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["resources", "property", "string", "size"]
 
+    def __init__(self):
+        super().__init__()
+        self.config_definition = {"experimental": {"default": False, "type": "boolean"}}
+
     def initialize(self, cfn):
         """Initialize the rule"""
         for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
@@ -87,6 +91,9 @@ class StringSize(CloudFormationLintRule):
         """Match for sub properties"""
         matches = []
 
+        if self.config.get("experimental"):
+            return matches
+
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
             .get("PropertyTypes")
@@ -100,6 +107,9 @@ class StringSize(CloudFormationLintRule):
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
+        if self.config.get("experimental"):
+            return matches
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])

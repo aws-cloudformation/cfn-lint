@@ -20,6 +20,7 @@ class Required(CloudFormationLintRule):
         super().__init__()
         self.resourcetypes = []
         self.propertytypes = []
+        self.config_definition = {"experimental": {"default": False, "type": "boolean"}}
 
     def initialize(self, cfn):
         """Initialize the rule"""
@@ -63,6 +64,9 @@ class Required(CloudFormationLintRule):
         """Check CloudFormation Properties"""
         matches = []
 
+        if self.config.get("experimental"):
+            return matches
+
         if properties is None:
             # covered under rule E3001.  If there are required properties properties is required first
             return matches
@@ -81,6 +85,10 @@ class Required(CloudFormationLintRule):
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
+        if self.config.get("experimental"):
+            return matches
+
         matches.extend(
             self.check_obj(
                 properties,
@@ -95,6 +103,9 @@ class Required(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = []
+
+        if self.config.get("experimental"):
+            return matches
 
         for resourcename, resourcevalue in cfn.get_resources().items():
             if "Properties" in resourcevalue and "Type" in resourcevalue:

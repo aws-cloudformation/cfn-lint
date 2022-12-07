@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import logging
 import re
 from copy import copy, deepcopy
-from typing import Union
 
 import cfnlint.conditions
 import cfnlint.helpers
@@ -43,7 +42,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Transform"] = self.template.get("Transform", [])
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
-        self.graph: Union[Graph, None] = None
+        self.graph = None
         try:
             self.graph = Graph(self)
         except KeyError as err:
@@ -847,7 +846,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
                 new_object = {}
                 for k, v in value.items():
-                    new_object[k] = get_value(v, scenario)
+                    new_v = get_value(v, scenario)
+                    if new_v is not None:
+                        new_object[k] = get_value(v, scenario)
                 return new_object
             if isinstance(value, list):
                 new_list = []

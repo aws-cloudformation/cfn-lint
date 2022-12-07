@@ -23,8 +23,8 @@ class TestAllowedPattern(BaseRuleTestCase):
         self.success_templates = [
             "test/fixtures/templates/good/resources/properties/allowed_pattern.yaml"
         ]
-
         self.spec = RESOURCE_SPECS["us-east-1"]
+        self.collection.configure(include_experimental=False)
 
     def test_file_positive(self):
         """Test Positive"""
@@ -42,6 +42,13 @@ class TestAllowedPattern(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/properties_sg_ingress.yaml", 2
+        )
+
+    def test_file_negative_expiremental(self):
+        """Test failure"""
+        self.collection.configure(include_experimental=True)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/properties_sg_ingress.yaml", 0
         )
 
     def test_valid_regex(self):

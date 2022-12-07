@@ -12,13 +12,20 @@ import subprocess
 import warnings
 import zipfile
 from io import BytesIO
+from typing import Dict
 from urllib.request import Request, urlopen
 
 import jsonpatch
 
 import cfnlint
 import cfnlint.data.AdditionalSpecs
-from cfnlint.helpers import SPEC_REGIONS, get_url_content, url_has_newer_version
+from cfnlint.helpers import (
+    SPEC_REGIONS,
+    apply_json_patch,
+    get_url_content,
+    url_has_newer_version,
+)
+from cfnlint.schema_manager import PROVIDER_SCHEMA_MANAGER
 
 LOGGER = logging.getLogger(__name__)
 
@@ -33,6 +40,10 @@ def update_resource_specs(force: bool = False):
     # so it will fail Python2.7 style linting, as well as throw AttributeError
     schema_cache = get_schema_value_types()
 
+    # Update provider Schemas
+    PROVIDER_SCHEMA_MANAGER.update(force)
+
+    # Update CloudFormation Specs
     # pre-work us-east-1 for comparison later
     update_resource_spec("us-east-1", SPEC_REGIONS["us-east-1"], schema_cache, force)
     try:
@@ -46,7 +57,6 @@ def update_resource_specs(force: bool = False):
             ]
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
-
         # Do it the long, slow way
         for region, url in SPEC_REGIONS.items():
             if region != "us-east-1":
@@ -255,7 +265,7 @@ def update_documentation(rules):
         new_file.write("\n\\* experimental rules\n")
 
 
-def patch_spec(content, region):
+def patch_spec(content: Dict, region: str):
     """Patch the spec file"""
     LOGGER.info('Patching spec file for region "%s"', region)
 
@@ -276,21 +286,7 @@ def patch_spec(content, region):
                 )
             )
 
-            # Process the generic patches 1 by 1 so we can "ignore" failed ones
-            for all_patch in all_patches:
-                try:
-                    jsonpatch.JsonPatch([all_patch]).apply(content, in_place=True)
-                except jsonpatch.JsonPatchConflict:
-                    LOGGER.debug(
-                        "Patch (%s) not applied in region %s", all_patch, region
-                    )
-                except jsonpatch.JsonPointerException:
-                    # Debug as the parent element isn't supported in the region
-                    LOGGER.debug(
-                        "Parent element not found for patch (%s) in region %s",
-                        all_patch,
-                        region,
-                    )
+            content = apply_json_patch(content, all_patches, region)
 
     return content
 

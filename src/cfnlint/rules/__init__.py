@@ -162,13 +162,20 @@ class CloudFormationLintRule:
 
         return True
 
-    def configure(self, configs=None):
+    def configure(self, configs=None, experimental=False):
         """Set the configuration"""
 
         # set defaults
         if isinstance(self.config_definition, dict):
             for config_name, config_values in self.config_definition.items():
                 self.config[config_name] = config_values["default"]
+
+        # set experimental if the rule is asking for it
+        if "experimental" in self.config_definition:
+            if self.config_definition["experimental"]["type"] == "boolean":
+                self.config["experimental"] = cfnlint.helpers.bool_compare(
+                    experimental, True
+                )
 
         if isinstance(configs, dict):
             for key, value in configs.items():
@@ -278,7 +285,9 @@ class RulesCollection:
         if self.is_rule_enabled(rule):
             self.used_rules.add(rule.id)
             self.rules[rule.id] = rule
-            rule.configure(self.configure_rules.get(rule.id, None))
+            rule.configure(
+                self.configure_rules.get(rule.id, None), self.include_experimental
+            )
 
     def register(self, rule: CloudFormationLintRule):
         """Register rules"""

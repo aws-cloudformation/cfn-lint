@@ -25,7 +25,8 @@ class AllowedPattern(CloudFormationLintRule):
                 "default": [],
                 "type": "list",
                 "itemtype": "string",
-            }
+            },
+            "experimental": {"default": False, "type": "boolean"},
         }
         self.configure()
 
@@ -112,6 +113,8 @@ class AllowedPattern(CloudFormationLintRule):
     def match_resource_sub_properties(self, properties, property_type, path, cfn):
         """Match for sub properties"""
         matches = []
+        if self.config.get("experimental"):
+            return matches
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])
@@ -129,6 +132,8 @@ class AllowedPattern(CloudFormationLintRule):
     def match_resource_properties(self, properties, resource_type, path, cfn):
         """Check CloudFormation Properties"""
         matches = []
+        if self.config.get("experimental"):
+            return matches
 
         specs = (
             RESOURCE_SPECS.get(cfn.regions[0])

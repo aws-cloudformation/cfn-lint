@@ -17,6 +17,7 @@ class TestPropertyOnlyOne(BaseRuleTestCase):
         self.success_templates = [
             "test/fixtures/templates/good/resources/properties/onlyone.yaml"
         ]
+        self.collection.configure(include_experimental=False)
 
     def test_file_positive(self):
         """Test Positive"""
@@ -26,4 +27,10 @@ class TestPropertyOnlyOne(BaseRuleTestCase):
         """Test failure"""
         self.helper_file_negative(
             "test/fixtures/templates/bad/resources/properties/onlyone.yaml", 4
+        )
+
+    def test_file_negative_experimental(self):
+        self.collection.configure(include_experimental=True)
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources/properties/onlyone.yaml", 0
         )
