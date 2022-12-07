@@ -1,0 +1,137 @@
+{
+ "typeName": "AWS::AppStream::ImageBuilder",
+ "description": "Resource Type definition for AWS::AppStream::ImageBuilder",
+ "additionalProperties": false,
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  },
+  "EnableDefaultInternetAccess": {
+   "type": "boolean"
+  },
+  "DomainJoinInfo": {
+   "$ref": "#/definitions/DomainJoinInfo"
+  },
+  "AppstreamAgentVersion": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "ImageName": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "IamRoleArn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "StreamingUrl": {
+   "type": "string"
+  },
+  "ImageArn": {
+   "type": "string"
+  },
+  "AccessEndpoints": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/AccessEndpoint"
+   }
+  }
+ },
+ "definitions": {
+  "VpcConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "SubnetIds": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "DomainJoinInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    },
+    "DirectoryName": {
+     "type": "string"
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "AccessEndpoint": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "type": "string"
+    },
+    "VpceId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointType",
+    "VpceId"
+   ]
+  }
+ },
+ "required": [
+  "InstanceType",
+  "Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/StreamingUrl",
+  "/properties/Id"
+ ]
+}

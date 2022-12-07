@@ -1,0 +1,253 @@
+{
+ "typeName": "AWS::OpsWorks::Layer",
+ "description": "Resource Type definition for AWS::OpsWorks::Layer",
+ "additionalProperties": false,
+ "properties": {
+  "EnableAutoHealing": {
+   "type": "boolean"
+  },
+  "LoadBasedAutoScaling": {
+   "$ref": "#/definitions/LoadBasedAutoScaling"
+  },
+  "UseEbsOptimizedInstances": {
+   "type": "boolean"
+  },
+  "Attributes": {
+   "type": "object",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   }
+  },
+  "CustomInstanceProfileArn": {
+   "type": "string"
+  },
+  "InstallUpdatesOnBoot": {
+   "type": "boolean"
+  },
+  "VolumeConfigurations": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/VolumeConfiguration"
+   }
+  },
+  "Name": {
+   "type": "string"
+  },
+  "CustomSecurityGroupIds": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Type": {
+   "type": "string"
+  },
+  "AutoAssignElasticIps": {
+   "type": "boolean"
+  },
+  "Packages": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "LifecycleEventConfiguration": {
+   "$ref": "#/definitions/LifecycleEventConfiguration"
+  },
+  "Shortname": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "AutoAssignPublicIps": {
+   "type": "boolean"
+  },
+  "CustomRecipes": {
+   "$ref": "#/definitions/Recipes"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "CustomJson": {
+   "type": "object"
+  },
+  "StackId": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "LoadBasedAutoScaling": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Enable": {
+     "type": "boolean"
+    },
+    "DownScaling": {
+     "$ref": "#/definitions/AutoScalingThresholds"
+    },
+    "UpScaling": {
+     "$ref": "#/definitions/AutoScalingThresholds"
+    }
+   }
+  },
+  "AutoScalingThresholds": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "InstanceCount": {
+     "type": "integer"
+    },
+    "CpuThreshold": {
+     "type": "number"
+    },
+    "ThresholdsWaitTime": {
+     "type": "integer"
+    },
+    "MemoryThreshold": {
+     "type": "number"
+    },
+    "IgnoreMetricsTime": {
+     "type": "integer"
+    },
+    "LoadThreshold": {
+     "type": "number"
+    }
+   }
+  },
+  "LifecycleEventConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ShutdownEventConfiguration": {
+     "$ref": "#/definitions/ShutdownEventConfiguration"
+    }
+   }
+  },
+  "Recipes": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Configure": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Undeploy": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Deploy": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Shutdown": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Setup": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "ShutdownEventConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionTimeout": {
+     "type": "integer"
+    },
+    "DelayUntilElbConnectionsDrained": {
+     "type": "boolean"
+    }
+   }
+  },
+  "VolumeConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MountPoint": {
+     "type": "string"
+    },
+    "VolumeType": {
+     "type": "string"
+    },
+    "RaidLevel": {
+     "type": "integer"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Size": {
+     "type": "integer"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "NumberOfDisks": {
+     "type": "integer"
+    }
+   }
+  }
+ },
+ "required": [
+  "EnableAutoHealing",
+  "Type",
+  "AutoAssignElasticIps",
+  "Shortname",
+  "AutoAssignPublicIps",
+  "Name",
+  "StackId"
+ ],
+ "createOnlyProperties": [
+  "/properties/StackId",
+  "/properties/Type"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

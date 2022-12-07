@@ -1,0 +1,315 @@
+{
+ "documentationUrl": "https://docs.aws.amazon.com/iot/latest/developerguide/job-templates.html",
+ "taggable": true,
+ "typeName": "AWS::IoT::JobTemplate",
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "description": "Job templates enable you to preconfigure jobs so that you can deploy them to multiple sets of target devices.",
+ "createOnlyProperties": [
+  "/properties/JobTemplateId",
+  "/properties/JobArn",
+  "/properties/Description",
+  "/properties/Document",
+  "/properties/DocumentSource",
+  "/properties/TimeoutConfig",
+  "/properties/JobExecutionsRolloutConfig",
+  "/properties/AbortConfig",
+  "/properties/PresignedUrlConfig",
+  "/properties/Tags"
+ ],
+ "primaryIdentifier": [
+  "/properties/JobTemplateId"
+ ],
+ "required": [
+  "JobTemplateId",
+  "Description"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "handlers": {
+  "read": {
+   "permissions": [
+    "iot:DescribeJobTemplate"
+   ]
+  },
+  "create": {
+   "permissions": [
+    "iot:CreateJobTemplate",
+    "iam:PassRole",
+    "s3:GetObject"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListJobTemplates"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DeleteJobTemplate"
+   ]
+  }
+ },
+ "writeOnlyProperties": [
+  "/properties/JobArn",
+  "/properties/Tags"
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "ExpiresInSec": {
+   "description": "How number (in seconds) pre-signed URLs are valid.",
+   "maximum": 3600,
+   "type": "integer",
+   "minimum": 60
+  },
+  "Action": {
+   "type": "string",
+   "enum": [
+    "CANCEL"
+   ]
+  },
+  "FailureType": {
+   "type": "string",
+   "enum": [
+    "FAILED",
+    "REJECTED",
+    "TIMED_OUT",
+    "ALL"
+   ]
+  },
+  "BaseRatePerMinute": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "NumberOfNotifiedThings": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "RoleArn": {
+   "minLength": 20,
+   "description": "The ARN of an IAM role that grants grants permission to download files from the S3 bucket where the job data/updates are stored. The role must also grant permission for IoT to download the files.",
+   "type": "string",
+   "maxLength": 2048
+  },
+  "ExponentialRolloutRate": {
+   "description": "Allows you to create an exponential rate of rollout for a job.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "RateIncreaseCriteria": {
+     "description": "The criteria to initiate the increase in rate of rollout for a job.",
+     "type": "object",
+     "$ref": "#/definitions/RateIncreaseCriteria"
+    },
+    "BaseRatePerMinute": {
+     "description": "The minimum number of things that will be notified of a pending job, per minute at the start of job rollout. This parameter allows you to define the initial rate of rollout.",
+     "$ref": "#/definitions/BaseRatePerMinute"
+    },
+    "IncrementFactor": {
+     "description": "The exponential factor to increase the rate of rollout for a job.",
+     "$ref": "#/definitions/IncrementFactor"
+    }
+   },
+   "required": [
+    "BaseRatePerMinute",
+    "IncrementFactor",
+    "RateIncreaseCriteria"
+   ]
+  },
+  "IncrementFactor": {
+   "maximum": 5,
+   "type": "number",
+   "minimum": 1
+  },
+  "InProgressTimeoutInMinutes": {
+   "description": "Specifies the amount of time, in minutes, this device has to finish execution of this job.",
+   "maximum": 10080,
+   "type": "integer",
+   "minimum": 1
+  },
+  "RateIncreaseCriteria": {
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "NumberOfSucceededThings": {
+     "$ref": "#/definitions/NumberOfSucceededThings"
+    },
+    "NumberOfNotifiedThings": {
+     "$ref": "#/definitions/NumberOfNotifiedThings"
+    }
+   }
+  },
+  "MaximumPerMinute": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "AbortCriteria": {
+   "description": "The criteria that determine when and how a job abort takes place.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "Action": {
+     "description": "The type of job action to take to initiate the job abort.",
+     "$ref": "#/definitions/Action"
+    },
+    "FailureType": {
+     "description": "The type of job execution failures that can initiate a job abort.",
+     "$ref": "#/definitions/FailureType"
+    },
+    "ThresholdPercentage": {
+     "description": "The minimum percentage of job execution failures that must occur to initiate the job abort.",
+     "$ref": "#/definitions/ThresholdPercentage"
+    },
+    "MinNumberOfExecutedThings": {
+     "description": "The minimum number of things which must receive job execution notifications before the job can be aborted.",
+     "$ref": "#/definitions/MinNumberOfExecutedThings"
+    }
+   },
+   "required": [
+    "Action",
+    "FailureType",
+    "MinNumberOfExecutedThings",
+    "ThresholdPercentage"
+   ]
+  },
+  "NumberOfSucceededThings": {
+   "type": "integer",
+   "minimum": 1
+  },
+  "ThresholdPercentage": {
+   "maximum": 100,
+   "type": "number"
+  },
+  "Tag": {
+   "description": "A key-value pair to associate with a resource.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "Value": {
+     "minLength": 1,
+     "description": "The tag's value.",
+     "type": "string",
+     "maxLength": 256
+    },
+    "Key": {
+     "minLength": 1,
+     "description": "The tag's key.",
+     "type": "string",
+     "maxLength": 128
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "MinNumberOfExecutedThings": {
+   "type": "integer",
+   "minimum": 1
+  }
+ },
+ "properties": {
+  "JobArn": {
+   "description": "Optional for copying a JobTemplate from a pre-existing Job configuration.",
+   "type": "string"
+  },
+  "TimeoutConfig": {
+   "description": "Specifies the amount of time each device has to finish its execution of the job.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "InProgressTimeoutInMinutes": {
+     "$ref": "#/definitions/InProgressTimeoutInMinutes"
+    }
+   },
+   "required": [
+    "InProgressTimeoutInMinutes"
+   ]
+  },
+  "JobExecutionsRolloutConfig": {
+   "description": "Allows you to create a staged rollout of a job.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "MaximumPerMinute": {
+     "description": "The maximum number of things that will be notified of a pending job, per minute. This parameter allows you to create a staged rollout.",
+     "$ref": "#/definitions/MaximumPerMinute"
+    },
+    "ExponentialRolloutRate": {
+     "description": "The rate of increase for a job rollout. This parameter allows you to define an exponential rate for a job rollout.",
+     "$ref": "#/definitions/ExponentialRolloutRate"
+    }
+   }
+  },
+  "Description": {
+   "pattern": "[^\\p{C}]+",
+   "description": "A description of the Job Template.",
+   "type": "string",
+   "maxLength": 2028
+  },
+  "DocumentSource": {
+   "minLength": 1,
+   "description": "An S3 link to the job document to use in the template. Required if you don't specify a value for document.",
+   "type": "string",
+   "maxLength": 1350
+  },
+  "AbortConfig": {
+   "description": "The criteria that determine when and how a job abort takes place.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "CriteriaList": {
+     "minItems": 1,
+     "insertionOrder": false,
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/AbortCriteria"
+     }
+    }
+   },
+   "required": [
+    "CriteriaList"
+   ]
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "JobTemplateId": {
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_-]+",
+   "type": "string",
+   "maxLength": 64
+  },
+  "Document": {
+   "description": "The job document. Required if you don't specify a value for documentSource.",
+   "type": "string",
+   "maxLength": 32768
+  },
+  "PresignedUrlConfig": {
+   "description": "Configuration for pre-signed S3 URLs.",
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "ExpiresInSec": {
+     "$ref": "#/definitions/ExpiresInSec"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ]
+  },
+  "Tags": {
+   "maxItems": 50,
+   "uniqueItems": true,
+   "description": "Metadata that can be used to manage the JobTemplate.",
+   "insertionOrder": false,
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ }
+}

@@ -1,0 +1,196 @@
+{
+  "typeName" : "AWS::ApiGateway::Method",
+  "description" : "Resource Type definition for AWS::ApiGateway::Method",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "ApiKeyRequired" : {
+      "type" : "boolean"
+    },
+    "AuthorizationScopes" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AuthorizationType" : {
+      "type" : "string"
+    },
+    "AuthorizerId" : {
+      "type" : "string"
+    },
+    "HttpMethod" : {
+      "type" : "string"
+    },
+    "Integration" : {
+      "$ref" : "#/definitions/Integration"
+    },
+    "MethodResponses" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/MethodResponse"
+      }
+    },
+    "OperationName" : {
+      "type" : "string"
+    },
+    "RequestModels" : {
+      "type" : "object",
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RequestParameters" : {
+      "type" : "object",
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "RequestValidatorId" : {
+      "type" : "string"
+    },
+    "ResourceId" : {
+      "type" : "string"
+    },
+    "RestApiId" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Integration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CacheKeyParameters" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "CacheNamespace" : {
+          "type" : "string"
+        },
+        "ConnectionId" : {
+          "type" : "string"
+        },
+        "ConnectionType" : {
+          "type" : "string"
+        },
+        "ContentHandling" : {
+          "type" : "string"
+        },
+        "Credentials" : {
+          "type" : "string"
+        },
+        "IntegrationHttpMethod" : {
+          "type" : "string"
+        },
+        "IntegrationResponses" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/IntegrationResponse"
+          }
+        },
+        "PassthroughBehavior" : {
+          "type" : "string"
+        },
+        "RequestParameters" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "RequestTemplates" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "TimeoutInMillis" : {
+          "type" : "integer"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Uri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "MethodResponse" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResponseModels" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "ResponseParameters" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "boolean"
+            }
+          }
+        },
+        "StatusCode" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "StatusCode" ]
+    },
+    "IntegrationResponse" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContentHandling" : {
+          "type" : "string"
+        },
+        "ResponseParameters" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "ResponseTemplates" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "SelectionPattern" : {
+          "type" : "string"
+        },
+        "StatusCode" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "StatusCode" ]
+    }
+  },
+  "required" : [ "ResourceId", "RestApiId", "HttpMethod" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

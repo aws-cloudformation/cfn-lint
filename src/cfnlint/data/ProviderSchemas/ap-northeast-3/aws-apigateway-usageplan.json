@@ -1,0 +1,107 @@
+{
+ "typeName": "AWS::ApiGateway::UsagePlan",
+ "description": "Resource Type definition for AWS::ApiGateway::UsagePlan",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "ApiStages": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/ApiStage"
+   }
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Quota": {
+   "$ref": "#/definitions/QuotaSettings"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Throttle": {
+   "$ref": "#/definitions/ThrottleSettings"
+  },
+  "UsagePlanName": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "ApiStage": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ApiId": {
+     "type": "string"
+    },
+    "Stage": {
+     "type": "string"
+    },
+    "Throttle": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "$ref": "#/definitions/ThrottleSettings"
+      }
+     }
+    }
+   }
+  },
+  "ThrottleSettings": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "BurstLimit": {
+     "type": "integer"
+    },
+    "RateLimit": {
+     "type": "number"
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "QuotaSettings": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Limit": {
+     "type": "integer"
+    },
+    "Offset": {
+     "type": "integer"
+    },
+    "Period": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

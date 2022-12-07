@@ -1,0 +1,57 @@
+{
+ "typeName": "AWS::GameLift::Build",
+ "description": "Resource Type definition for AWS::GameLift::Build",
+ "additionalProperties": false,
+ "properties": {
+  "OperatingSystem": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "StorageLocation": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Version": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "S3Location": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ObjectVersion": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key",
+    "RoleArn"
+   ]
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/StorageLocation",
+  "/properties/OperatingSystem"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

@@ -1,0 +1,42 @@
+{
+  "typeName" : "AWS::AppStream::DirectoryConfig",
+  "description" : "Resource Type definition for AWS::AppStream::DirectoryConfig",
+  "additionalProperties" : false,
+  "properties" : {
+    "OrganizationalUnitDistinguishedNames" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "ServiceAccountCredentials" : {
+      "$ref" : "#/definitions/ServiceAccountCredentials"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "DirectoryName" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "ServiceAccountCredentials" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AccountName" : {
+          "type" : "string"
+        },
+        "AccountPassword" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AccountName", "AccountPassword" ]
+    }
+  },
+  "required" : [ "OrganizationalUnitDistinguishedNames", "ServiceAccountCredentials", "DirectoryName" ],
+  "createOnlyProperties" : [ "/properties/DirectoryName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

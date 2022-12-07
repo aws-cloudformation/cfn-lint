@@ -1,0 +1,114 @@
+{
+ "typeName": "AWS::ApplicationAutoScaling::ScalableTarget",
+ "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalableTarget",
+ "additionalProperties": false,
+ "properties": {
+  "ScheduledActions": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/ScheduledAction"
+   }
+  },
+  "ResourceId": {
+   "type": "string"
+  },
+  "ServiceNamespace": {
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "type": "string"
+  },
+  "SuspendedState": {
+   "$ref": "#/definitions/SuspendedState"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "MinCapacity": {
+   "type": "integer"
+  },
+  "RoleARN": {
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "type": "integer"
+  }
+ },
+ "definitions": {
+  "SuspendedState": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ScheduledScalingSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingOutSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingInSuspended": {
+     "type": "boolean"
+    }
+   }
+  },
+  "ScheduledAction": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Timezone": {
+     "type": "string"
+    },
+    "ScheduledActionName": {
+     "type": "string"
+    },
+    "EndTime": {
+     "type": "string"
+    },
+    "Schedule": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "ScalableTargetAction": {
+     "$ref": "#/definitions/ScalableTargetAction"
+    }
+   },
+   "required": [
+    "ScheduledActionName",
+    "Schedule"
+   ]
+  },
+  "ScalableTargetAction": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MinCapacity": {
+     "type": "integer"
+    },
+    "MaxCapacity": {
+     "type": "integer"
+    }
+   }
+  }
+ },
+ "required": [
+  "ResourceId",
+  "ServiceNamespace",
+  "ScalableDimension",
+  "MinCapacity",
+  "RoleARN",
+  "MaxCapacity"
+ ],
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

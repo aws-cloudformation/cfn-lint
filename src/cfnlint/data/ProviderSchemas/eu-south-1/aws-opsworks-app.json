@@ -1,0 +1,139 @@
+{
+  "typeName" : "AWS::OpsWorks::App",
+  "description" : "Resource Type definition for AWS::OpsWorks::App",
+  "additionalProperties" : false,
+  "properties" : {
+    "EnableSsl" : {
+      "type" : "boolean"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Attributes" : {
+      "type" : "object",
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AppSource" : {
+      "$ref" : "#/definitions/Source"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Domains" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "DataSources" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/DataSource"
+      }
+    },
+    "Type" : {
+      "type" : "string"
+    },
+    "SslConfiguration" : {
+      "$ref" : "#/definitions/SslConfiguration"
+    },
+    "Environment" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/EnvironmentVariable"
+      }
+    },
+    "Shortname" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "StackId" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SslConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Chain" : {
+          "type" : "string"
+        },
+        "PrivateKey" : {
+          "type" : "string"
+        },
+        "Certificate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EnvironmentVariable" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "Secure" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Source" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SshKey" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Revision" : {
+          "type" : "string"
+        },
+        "Username" : {
+          "type" : "string"
+        },
+        "Url" : {
+          "type" : "string"
+        },
+        "Password" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DataSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Arn" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "Type", "Name", "StackId" ],
+  "createOnlyProperties" : [ "/properties/Shortname", "/properties/StackId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

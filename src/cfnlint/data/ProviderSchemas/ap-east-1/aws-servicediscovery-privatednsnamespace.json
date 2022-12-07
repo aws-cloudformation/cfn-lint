@@ -1,0 +1,81 @@
+{
+  "typeName" : "AWS::ServiceDiscovery::PrivateDnsNamespace",
+  "description" : "Resource Type definition for AWS::ServiceDiscovery::PrivateDnsNamespace",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
+    },
+    "HostedZoneId" : {
+      "type" : "string"
+    },
+    "Vpc" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Properties" : {
+      "$ref" : "#/definitions/Properties"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "PrivateDnsPropertiesMutable" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SOA" : {
+          "$ref" : "#/definitions/SOA"
+        }
+      }
+    },
+    "SOA" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TTL" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Properties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DnsProperties" : {
+          "$ref" : "#/definitions/PrivateDnsPropertiesMutable"
+        }
+      }
+    }
+  },
+  "required" : [ "Vpc", "Name" ],
+  "createOnlyProperties" : [ "/properties/Vpc", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/HostedZoneId", "/properties/Arn" ]
+}

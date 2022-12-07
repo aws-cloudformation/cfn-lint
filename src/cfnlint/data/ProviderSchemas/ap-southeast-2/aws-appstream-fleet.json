@@ -1,0 +1,155 @@
+{
+  "typeName" : "AWS::AppStream::Fleet",
+  "description" : "Resource Type definition for AWS::AppStream::Fleet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
+    },
+    "ComputeCapacity" : {
+      "$ref" : "#/definitions/ComputeCapacity"
+    },
+    "Platform" : {
+      "type" : "string"
+    },
+    "VpcConfig" : {
+      "$ref" : "#/definitions/VpcConfig"
+    },
+    "FleetType" : {
+      "type" : "string"
+    },
+    "EnableDefaultInternetAccess" : {
+      "type" : "boolean"
+    },
+    "DomainJoinInfo" : {
+      "$ref" : "#/definitions/DomainJoinInfo"
+    },
+    "SessionScriptS3Location" : {
+      "$ref" : "#/definitions/S3Location"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "ImageName" : {
+      "type" : "string"
+    },
+    "MaxUserDurationInSeconds" : {
+      "type" : "integer"
+    },
+    "IdleDisconnectTimeoutInSeconds" : {
+      "type" : "integer"
+    },
+    "UsbDeviceFilterStrings" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "DisconnectTimeoutInSeconds" : {
+      "type" : "integer"
+    },
+    "DisplayName" : {
+      "type" : "string"
+    },
+    "StreamView" : {
+      "type" : "string"
+    },
+    "IamRoleArn" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "InstanceType" : {
+      "type" : "string"
+    },
+    "MaxConcurrentSessions" : {
+      "type" : "integer"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "ImageArn" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "ComputeCapacity" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DesiredInstances" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "DesiredInstances" ]
+    },
+    "VpcConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "DomainJoinInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OrganizationalUnitDistinguishedName" : {
+          "type" : "string"
+        },
+        "DirectoryName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "S3Location" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Bucket" : {
+          "type" : "string"
+        },
+        "S3Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "S3Bucket", "S3Key" ]
+    }
+  },
+  "required" : [ "InstanceType", "Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/FleetType" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

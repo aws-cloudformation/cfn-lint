@@ -1,0 +1,118 @@
+{
+  "typeName" : "AWS::ElasticLoadBalancingV2::LoadBalancer",
+  "description" : "Resource Type definition for AWS::ElasticLoadBalancingV2::LoadBalancer",
+  "additionalProperties" : false,
+  "properties" : {
+    "IpAddressType" : {
+      "type" : "string"
+    },
+    "SecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "LoadBalancerAttributes" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/LoadBalancerAttribute"
+      }
+    },
+    "Scheme" : {
+      "type" : "string"
+    },
+    "DNSName" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "LoadBalancerName" : {
+      "type" : "string"
+    },
+    "Subnets" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Type" : {
+      "type" : "string"
+    },
+    "CanonicalHostedZoneID" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "LoadBalancerFullName" : {
+      "type" : "string"
+    },
+    "SubnetMappings" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/SubnetMapping"
+      }
+    }
+  },
+  "definitions" : {
+    "SubnetMapping" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IPv6Address" : {
+          "type" : "string"
+        },
+        "SubnetId" : {
+          "type" : "string"
+        },
+        "AllocationId" : {
+          "type" : "string"
+        },
+        "PrivateIPv4Address" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "SubnetId" ]
+    },
+    "LoadBalancerAttribute" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Type", "/properties/Scheme" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/LoadBalancerName", "/properties/CanonicalHostedZoneID", "/properties/Id", "/properties/LoadBalancerFullName", "/properties/DNSName" ]
+}

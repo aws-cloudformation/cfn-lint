@@ -1,0 +1,109 @@
+{
+  "typeName" : "AWS::Cognito::IdentityPool",
+  "description" : "Resource Type definition for AWS::Cognito::IdentityPool",
+  "additionalProperties" : false,
+  "properties" : {
+    "PushSync" : {
+      "$ref" : "#/definitions/PushSync"
+    },
+    "CognitoIdentityProviders" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/CognitoIdentityProvider"
+      }
+    },
+    "DeveloperProviderName" : {
+      "type" : "string"
+    },
+    "CognitoStreams" : {
+      "$ref" : "#/definitions/CognitoStreams"
+    },
+    "SupportedLoginProviders" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "CognitoEvents" : {
+      "type" : "object"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "IdentityPoolName" : {
+      "type" : "string"
+    },
+    "AllowUnauthenticatedIdentities" : {
+      "type" : "boolean"
+    },
+    "SamlProviderARNs" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "OpenIdConnectProviderARNs" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AllowClassicFlow" : {
+      "type" : "boolean"
+    }
+  },
+  "definitions" : {
+    "PushSync" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ApplicationArns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "RoleArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CognitoIdentityProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ServerSideTokenCheck" : {
+          "type" : "boolean"
+        },
+        "ProviderName" : {
+          "type" : "string"
+        },
+        "ClientId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CognitoStreams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamingStatus" : {
+          "type" : "string"
+        },
+        "StreamName" : {
+          "type" : "string"
+        },
+        "RoleArn" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "AllowUnauthenticatedIdentities" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Name" ]
+}

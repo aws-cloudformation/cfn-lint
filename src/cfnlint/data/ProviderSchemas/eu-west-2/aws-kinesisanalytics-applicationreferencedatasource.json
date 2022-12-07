@@ -1,0 +1,138 @@
+{
+  "typeName" : "AWS::KinesisAnalytics::ApplicationReferenceDataSource",
+  "description" : "Resource Type definition for AWS::KinesisAnalytics::ApplicationReferenceDataSource",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "ApplicationName" : {
+      "type" : "string"
+    },
+    "ReferenceDataSource" : {
+      "$ref" : "#/definitions/ReferenceDataSource"
+    }
+  },
+  "definitions" : {
+    "ReferenceDataSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ReferenceSchema" : {
+          "$ref" : "#/definitions/ReferenceSchema"
+        },
+        "TableName" : {
+          "type" : "string"
+        },
+        "S3ReferenceDataSource" : {
+          "$ref" : "#/definitions/S3ReferenceDataSource"
+        }
+      },
+      "required" : [ "ReferenceSchema" ]
+    },
+    "S3ReferenceDataSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BucketARN" : {
+          "type" : "string"
+        },
+        "FileKey" : {
+          "type" : "string"
+        },
+        "ReferenceRoleARN" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "BucketARN", "FileKey", "ReferenceRoleARN" ]
+    },
+    "ReferenceSchema" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecordEncoding" : {
+          "type" : "string"
+        },
+        "RecordColumns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/RecordColumn"
+          }
+        },
+        "RecordFormat" : {
+          "$ref" : "#/definitions/RecordFormat"
+        }
+      },
+      "required" : [ "RecordColumns", "RecordFormat" ]
+    },
+    "RecordColumn" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Mapping" : {
+          "type" : "string"
+        },
+        "SqlType" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "SqlType", "Name" ]
+    },
+    "RecordFormat" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MappingParameters" : {
+          "$ref" : "#/definitions/MappingParameters"
+        },
+        "RecordFormatType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RecordFormatType" ]
+    },
+    "MappingParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JSONMappingParameters" : {
+          "$ref" : "#/definitions/JSONMappingParameters"
+        },
+        "CSVMappingParameters" : {
+          "$ref" : "#/definitions/CSVMappingParameters"
+        }
+      }
+    },
+    "CSVMappingParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecordRowDelimiter" : {
+          "type" : "string"
+        },
+        "RecordColumnDelimiter" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RecordColumnDelimiter", "RecordRowDelimiter" ]
+    },
+    "JSONMappingParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecordRowPath" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RecordRowPath" ]
+    }
+  },
+  "required" : [ "ReferenceDataSource", "ApplicationName" ],
+  "createOnlyProperties" : [ "/properties/ApplicationName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

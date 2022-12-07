@@ -1,0 +1,155 @@
+{
+  "typeName" : "AWS::ApiGateway::Stage",
+  "description" : "Resource Type definition for AWS::ApiGateway::Stage",
+  "additionalProperties" : false,
+  "properties" : {
+    "DeploymentId" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "StageName" : {
+      "type" : "string"
+    },
+    "RestApiId" : {
+      "type" : "string"
+    },
+    "CanarySetting" : {
+      "$ref" : "#/definitions/CanarySetting"
+    },
+    "ClientCertificateId" : {
+      "type" : "string"
+    },
+    "Variables" : {
+      "type" : "object",
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DocumentationVersion" : {
+      "type" : "string"
+    },
+    "TracingEnabled" : {
+      "type" : "boolean"
+    },
+    "MethodSettings" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/MethodSetting"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "AccessLogSetting" : {
+      "$ref" : "#/definitions/AccessLogSetting"
+    },
+    "CacheClusterSize" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "CacheClusterEnabled" : {
+      "type" : "boolean"
+    }
+  },
+  "definitions" : {
+    "MethodSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CacheTtlInSeconds" : {
+          "type" : "integer"
+        },
+        "LoggingLevel" : {
+          "type" : "string"
+        },
+        "ResourcePath" : {
+          "type" : "string"
+        },
+        "CacheDataEncrypted" : {
+          "type" : "boolean"
+        },
+        "DataTraceEnabled" : {
+          "type" : "boolean"
+        },
+        "ThrottlingBurstLimit" : {
+          "type" : "integer"
+        },
+        "CachingEnabled" : {
+          "type" : "boolean"
+        },
+        "MetricsEnabled" : {
+          "type" : "boolean"
+        },
+        "HttpMethod" : {
+          "type" : "string"
+        },
+        "ThrottlingRateLimit" : {
+          "type" : "number"
+        }
+      }
+    },
+    "CanarySetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StageVariableOverrides" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "PercentTraffic" : {
+          "type" : "number"
+        },
+        "DeploymentId" : {
+          "type" : "string"
+        },
+        "UseStageCache" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "AccessLogSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DestinationArn" : {
+          "type" : "string"
+        },
+        "Format" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "RestApiId" ],
+  "createOnlyProperties" : [ "/properties/StageName", "/properties/RestApiId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

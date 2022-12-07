@@ -1,0 +1,288 @@
+{
+ "typeName": "AWS::CodePipeline::Pipeline",
+ "description": "Resource Type definition for AWS::CodePipeline::Pipeline",
+ "additionalProperties": false,
+ "properties": {
+  "ArtifactStores": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/ArtifactStoreMap"
+   }
+  },
+  "Version": {
+   "type": "string"
+  },
+  "ArtifactStore": {
+   "$ref": "#/definitions/ArtifactStore"
+  },
+  "DisableInboundStageTransitions": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/StageTransition"
+   }
+  },
+  "Stages": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/StageDeclaration"
+   }
+  },
+  "RestartExecutionOnUpdate": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "ActionDeclaration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ActionTypeId": {
+     "$ref": "#/definitions/ActionTypeId"
+    },
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     }
+    },
+    "OutputArtifacts": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/OutputArtifact"
+     }
+    },
+    "Region": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "RunOrder": {
+     "type": "integer"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ActionTypeId",
+    "Name"
+   ]
+  },
+  "BlockerDeclaration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ]
+  },
+  "ActionTypeId": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Owner": {
+     "type": "string"
+    },
+    "Category": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner",
+    "Category",
+    "Version",
+    "Provider"
+   ]
+  },
+  "StageDeclaration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Blockers": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/BlockerDeclaration"
+     }
+    },
+    "Actions": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/ActionDeclaration"
+     }
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Name"
+   ]
+  },
+  "InputArtifact": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  },
+  "ArtifactStore": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "EncryptionKey": {
+     "$ref": "#/definitions/EncryptionKey"
+    },
+    "Location": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ]
+  },
+  "ArtifactStoreMap": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactStore": {
+     "$ref": "#/definitions/ArtifactStore"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactStore",
+    "Region"
+   ]
+  },
+  "StageTransition": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "StageName": {
+     "type": "string"
+    },
+    "Reason": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StageName",
+    "Reason"
+   ]
+  },
+  "EncryptionKey": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "OutputArtifact": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  }
+ },
+ "required": [
+  "Stages",
+  "RoleArn"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Version"
+ ]
+}

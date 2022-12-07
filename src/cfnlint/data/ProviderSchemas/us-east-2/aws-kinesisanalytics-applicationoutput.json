@@ -1,0 +1,112 @@
+{
+ "typeName": "AWS::KinesisAnalytics::ApplicationOutput",
+ "description": "Resource Type definition for AWS::KinesisAnalytics::ApplicationOutput",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "ApplicationName": {
+   "type": "string"
+  },
+  "Output": {
+   "$ref": "#/definitions/Output"
+  }
+ },
+ "definitions": {
+  "Output": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DestinationSchema": {
+     "$ref": "#/definitions/DestinationSchema"
+    },
+    "LambdaOutput": {
+     "$ref": "#/definitions/LambdaOutput"
+    },
+    "KinesisFirehoseOutput": {
+     "$ref": "#/definitions/KinesisFirehoseOutput"
+    },
+    "KinesisStreamsOutput": {
+     "$ref": "#/definitions/KinesisStreamsOutput"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationSchema"
+   ]
+  },
+  "KinesisStreamsOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ]
+  },
+  "KinesisFirehoseOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ]
+  },
+  "LambdaOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    },
+    "RoleARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN",
+    "RoleARN"
+   ]
+  },
+  "DestinationSchema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RecordFormatType": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "ApplicationName",
+  "Output"
+ ],
+ "createOnlyProperties": [
+  "/properties/ApplicationName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

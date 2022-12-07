@@ -1,0 +1,213 @@
+{
+  "typeName" : "AWS::Pinpoint::Segment",
+  "description" : "Resource Type definition for AWS::Pinpoint::Segment",
+  "additionalProperties" : false,
+  "properties" : {
+    "SegmentId" : {
+      "type" : "string"
+    },
+    "SegmentGroups" : {
+      "$ref" : "#/definitions/SegmentGroups"
+    },
+    "Dimensions" : {
+      "$ref" : "#/definitions/SegmentDimensions"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "ApplicationId" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SegmentDimensions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Demographic" : {
+          "$ref" : "#/definitions/Demographic"
+        },
+        "Metrics" : {
+          "type" : "object"
+        },
+        "Attributes" : {
+          "type" : "object"
+        },
+        "Behavior" : {
+          "$ref" : "#/definitions/Behavior"
+        },
+        "UserAttributes" : {
+          "type" : "object"
+        },
+        "Location" : {
+          "$ref" : "#/definitions/Location"
+        }
+      }
+    },
+    "Demographic" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AppVersion" : {
+          "$ref" : "#/definitions/SetDimension"
+        },
+        "DeviceType" : {
+          "$ref" : "#/definitions/SetDimension"
+        },
+        "Platform" : {
+          "$ref" : "#/definitions/SetDimension"
+        },
+        "Channel" : {
+          "$ref" : "#/definitions/SetDimension"
+        },
+        "Model" : {
+          "$ref" : "#/definitions/SetDimension"
+        },
+        "Make" : {
+          "$ref" : "#/definitions/SetDimension"
+        }
+      }
+    },
+    "SetDimension" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "DimensionType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Recency" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Duration" : {
+          "type" : "string"
+        },
+        "RecencyType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Duration", "RecencyType" ]
+    },
+    "GPSPoint" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RangeInKilometers" : {
+          "type" : "number"
+        },
+        "Coordinates" : {
+          "$ref" : "#/definitions/Coordinates"
+        }
+      },
+      "required" : [ "RangeInKilometers", "Coordinates" ]
+    },
+    "SegmentGroups" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Include" : {
+          "type" : "string"
+        },
+        "Groups" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Groups"
+          }
+        }
+      }
+    },
+    "Groups" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Dimensions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/SegmentDimensions"
+          }
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "SourceSegments" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/SourceSegments"
+          }
+        },
+        "SourceType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Coordinates" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Longitude" : {
+          "type" : "number"
+        },
+        "Latitude" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Latitude", "Longitude" ]
+    },
+    "Behavior" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Recency" : {
+          "$ref" : "#/definitions/Recency"
+        }
+      }
+    },
+    "SourceSegments" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Version" : {
+          "type" : "integer"
+        },
+        "Id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Id" ]
+    },
+    "Location" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "GPSPoint" : {
+          "$ref" : "#/definitions/GPSPoint"
+        },
+        "Country" : {
+          "$ref" : "#/definitions/SetDimension"
+        }
+      }
+    }
+  },
+  "required" : [ "ApplicationId", "Name" ],
+  "createOnlyProperties" : [ "/properties/ApplicationId" ],
+  "primaryIdentifier" : [ "/properties/SegmentId" ],
+  "readOnlyProperties" : [ "/properties/SegmentId", "/properties/Arn" ]
+}

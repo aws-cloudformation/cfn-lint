@@ -1,0 +1,72 @@
+{
+  "typeName" : "AWS::CodePipeline::Webhook",
+  "description" : "Resource Type definition for AWS::CodePipeline::Webhook",
+  "additionalProperties" : false,
+  "properties" : {
+    "AuthenticationConfiguration" : {
+      "$ref" : "#/definitions/WebhookAuthConfiguration"
+    },
+    "Filters" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/WebhookFilterRule"
+      }
+    },
+    "Authentication" : {
+      "type" : "string"
+    },
+    "TargetPipeline" : {
+      "type" : "string"
+    },
+    "TargetAction" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Url" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "TargetPipelineVersion" : {
+      "type" : "integer"
+    },
+    "RegisterWithThirdParty" : {
+      "type" : "boolean"
+    }
+  },
+  "definitions" : {
+    "WebhookFilterRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JsonPath" : {
+          "type" : "string"
+        },
+        "MatchEquals" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "JsonPath" ]
+    },
+    "WebhookAuthConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllowedIPRange" : {
+          "type" : "string"
+        },
+        "SecretToken" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "AuthenticationConfiguration", "Filters", "Authentication", "TargetPipeline", "TargetAction", "TargetPipelineVersion" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Url" ]
+}

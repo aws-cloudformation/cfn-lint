@@ -1,0 +1,199 @@
+{
+  "typeName" : "AWS::AppSync::DataSource",
+  "description" : "Resource Type definition for AWS::AppSync::DataSource",
+  "additionalProperties" : false,
+  "properties" : {
+    "OpenSearchServiceConfig" : {
+      "$ref" : "#/definitions/OpenSearchServiceConfig"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "ServiceRoleArn" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "DataSourceArn" : {
+      "type" : "string"
+    },
+    "Type" : {
+      "type" : "string"
+    },
+    "HttpConfig" : {
+      "$ref" : "#/definitions/HttpConfig"
+    },
+    "RelationalDatabaseConfig" : {
+      "$ref" : "#/definitions/RelationalDatabaseConfig"
+    },
+    "LambdaConfig" : {
+      "$ref" : "#/definitions/LambdaConfig"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ApiId" : {
+      "type" : "string"
+    },
+    "DynamoDBConfig" : {
+      "$ref" : "#/definitions/DynamoDBConfig"
+    },
+    "ElasticsearchConfig" : {
+      "$ref" : "#/definitions/ElasticsearchConfig"
+    }
+  },
+  "definitions" : {
+    "RdsHttpEndpointConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
+        },
+        "AwsRegion" : {
+          "type" : "string"
+        },
+        "DbClusterIdentifier" : {
+          "type" : "string"
+        },
+        "AwsSecretStoreArn" : {
+          "type" : "string"
+        },
+        "Schema" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AwsRegion", "DbClusterIdentifier", "AwsSecretStoreArn" ]
+    },
+    "OpenSearchServiceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AwsRegion" : {
+          "type" : "string"
+        },
+        "Endpoint" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AwsRegion", "Endpoint" ]
+    },
+    "AwsIamConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SigningRegion" : {
+          "type" : "string"
+        },
+        "SigningServiceName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthorizationConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AuthorizationType" : {
+          "type" : "string"
+        },
+        "AwsIamConfig" : {
+          "$ref" : "#/definitions/AwsIamConfig"
+        }
+      },
+      "required" : [ "AuthorizationType" ]
+    },
+    "DeltaSyncConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BaseTableTTL" : {
+          "type" : "string"
+        },
+        "DeltaSyncTableTTL" : {
+          "type" : "string"
+        },
+        "DeltaSyncTableName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "BaseTableTTL", "DeltaSyncTableTTL", "DeltaSyncTableName" ]
+    },
+    "RelationalDatabaseConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RdsHttpEndpointConfig" : {
+          "$ref" : "#/definitions/RdsHttpEndpointConfig"
+        },
+        "RelationalDatabaseSourceType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RelationalDatabaseSourceType" ]
+    },
+    "HttpConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Endpoint" : {
+          "type" : "string"
+        },
+        "AuthorizationConfig" : {
+          "$ref" : "#/definitions/AuthorizationConfig"
+        }
+      },
+      "required" : [ "Endpoint" ]
+    },
+    "LambdaConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LambdaFunctionArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "LambdaFunctionArn" ]
+    },
+    "ElasticsearchConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AwsRegion" : {
+          "type" : "string"
+        },
+        "Endpoint" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AwsRegion", "Endpoint" ]
+    },
+    "DynamoDBConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TableName" : {
+          "type" : "string"
+        },
+        "DeltaSyncConfig" : {
+          "$ref" : "#/definitions/DeltaSyncConfig"
+        },
+        "UseCallerCredentials" : {
+          "type" : "boolean"
+        },
+        "AwsRegion" : {
+          "type" : "string"
+        },
+        "Versioned" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "TableName", "AwsRegion" ]
+    }
+  },
+  "required" : [ "Type", "ApiId", "Name" ],
+  "createOnlyProperties" : [ "/properties/ApiId", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/DataSourceArn" ]
+}

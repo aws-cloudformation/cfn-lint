@@ -1,0 +1,78 @@
+{
+  "typeName" : "AWS::WorkSpaces::Workspace",
+  "description" : "Resource Type definition for AWS::WorkSpaces::Workspace",
+  "additionalProperties" : false,
+  "properties" : {
+    "UserVolumeEncryptionEnabled" : {
+      "type" : "boolean"
+    },
+    "BundleId" : {
+      "type" : "string"
+    },
+    "DirectoryId" : {
+      "type" : "string"
+    },
+    "UserName" : {
+      "type" : "string"
+    },
+    "RootVolumeEncryptionEnabled" : {
+      "type" : "boolean"
+    },
+    "VolumeEncryptionKey" : {
+      "type" : "string"
+    },
+    "WorkspaceProperties" : {
+      "$ref" : "#/definitions/WorkspaceProperties"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "WorkspaceProperties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RootVolumeSizeGib" : {
+          "type" : "integer"
+        },
+        "ComputeTypeName" : {
+          "type" : "string"
+        },
+        "UserVolumeSizeGib" : {
+          "type" : "integer"
+        },
+        "RunningMode" : {
+          "type" : "string"
+        },
+        "RunningModeAutoStopTimeoutInMinutes" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "BundleId", "DirectoryId", "UserName" ],
+  "createOnlyProperties" : [ "/properties/UserName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

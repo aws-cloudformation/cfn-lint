@@ -1,0 +1,108 @@
+{
+ "typeName": "AWS::Route53::HostedZone",
+ "description": "Resource Type definition for AWS::Route53::HostedZone",
+ "additionalProperties": false,
+ "properties": {
+  "HostedZoneTags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/HostedZoneTag"
+   }
+  },
+  "VPCs": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/VPC"
+   }
+  },
+  "HostedZoneConfig": {
+   "$ref": "#/definitions/HostedZoneConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "NameServers": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "QueryLoggingConfig": {
+   "$ref": "#/definitions/QueryLoggingConfig"
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "HostedZoneTag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "VPC": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "VPCRegion": {
+     "type": "string"
+    },
+    "VPCId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VPCRegion",
+    "VPCId"
+   ]
+  },
+  "HostedZoneConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    }
+   }
+  },
+  "QueryLoggingConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsLogGroupArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CloudWatchLogsLogGroupArn"
+   ]
+  }
+ },
+ "required": [
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/NameServers"
+ ]
+}

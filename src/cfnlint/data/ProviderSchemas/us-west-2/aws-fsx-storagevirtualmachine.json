@@ -1,0 +1,113 @@
+{
+ "typeName": "AWS::FSx::StorageVirtualMachine",
+ "description": "Resource Type definition for AWS::FSx::StorageVirtualMachine",
+ "additionalProperties": false,
+ "properties": {
+  "ResourceARN": {
+   "type": "string"
+  },
+  "SvmAdminPassword": {
+   "type": "string"
+  },
+  "StorageVirtualMachineId": {
+   "type": "string"
+  },
+  "ActiveDirectoryConfiguration": {
+   "$ref": "#/definitions/ActiveDirectoryConfiguration"
+  },
+  "RootVolumeSecurityStyle": {
+   "type": "string"
+  },
+  "FileSystemId": {
+   "type": "string"
+  },
+  "UUID": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "SelfManagedActiveDirectoryConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "FileSystemAdministratorsGroup": {
+     "type": "string"
+    },
+    "UserName": {
+     "type": "string"
+    },
+    "DomainName": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    },
+    "DnsIps": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Password": {
+     "type": "string"
+    }
+   }
+  },
+  "ActiveDirectoryConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SelfManagedActiveDirectoryConfiguration": {
+     "$ref": "#/definitions/SelfManagedActiveDirectoryConfiguration"
+    },
+    "NetBiosName": {
+     "type": "string"
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "required": [
+  "FileSystemId",
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RootVolumeSecurityStyle",
+  "/properties/FileSystemId"
+ ],
+ "primaryIdentifier": [
+  "/properties/StorageVirtualMachineId"
+ ],
+ "readOnlyProperties": [
+  "/properties/ResourceARN",
+  "/properties/UUID",
+  "/properties/StorageVirtualMachineId"
+ ]
+}

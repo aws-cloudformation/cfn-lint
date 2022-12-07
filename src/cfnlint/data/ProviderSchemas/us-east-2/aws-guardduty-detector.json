@@ -1,0 +1,104 @@
+{
+  "typeName" : "AWS::GuardDuty::Detector",
+  "description" : "Resource Type definition for AWS::GuardDuty::Detector",
+  "additionalProperties" : false,
+  "properties" : {
+    "FindingPublishingFrequency" : {
+      "type" : "string"
+    },
+    "Enable" : {
+      "type" : "boolean"
+    },
+    "DataSources" : {
+      "$ref" : "#/definitions/CFNDataSourceConfigurations"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "CFNMalwareProtectionConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScanEc2InstanceWithFindings" : {
+          "$ref" : "#/definitions/CFNScanEc2InstanceWithFindingsConfiguration"
+        }
+      }
+    },
+    "CFNS3LogsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enable" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "CFNScanEc2InstanceWithFindingsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EbsVolumes" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "CFNKubernetesAuditLogsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enable" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "CFNKubernetesConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AuditLogs" : {
+          "$ref" : "#/definitions/CFNKubernetesAuditLogsConfiguration"
+        }
+      }
+    },
+    "CFNDataSourceConfigurations" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MalwareProtection" : {
+          "$ref" : "#/definitions/CFNMalwareProtectionConfiguration"
+        },
+        "S3Logs" : {
+          "$ref" : "#/definitions/CFNS3LogsConfiguration"
+        },
+        "Kubernetes" : {
+          "$ref" : "#/definitions/CFNKubernetesConfiguration"
+        }
+      }
+    }
+  },
+  "required" : [ "Enable" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

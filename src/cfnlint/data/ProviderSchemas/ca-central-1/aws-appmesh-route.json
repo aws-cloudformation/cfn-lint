@@ -1,0 +1,541 @@
+{
+ "typeName": "AWS::AppMesh::Route",
+ "description": "Resource Type definition for AWS::AppMesh::Route",
+ "additionalProperties": false,
+ "properties": {
+  "Uid": {
+   "type": "string"
+  },
+  "MeshName": {
+   "type": "string"
+  },
+  "VirtualRouterName": {
+   "type": "string"
+  },
+  "MeshOwner": {
+   "type": "string"
+  },
+  "ResourceOwner": {
+   "type": "string"
+  },
+  "RouteName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Spec": {
+   "$ref": "#/definitions/RouteSpec"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "definitions": {
+  "QueryParameter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Match": {
+     "$ref": "#/definitions/HttpQueryParameterMatch"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  },
+  "HttpRetryPolicy": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MaxRetries": {
+     "type": "integer"
+    },
+    "TcpRetryEvents": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "PerRetryTimeout": {
+     "$ref": "#/definitions/Duration"
+    },
+    "HttpRetryEvents": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "MaxRetries",
+    "PerRetryTimeout"
+   ]
+  },
+  "HttpQueryParameterMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Exact": {
+     "type": "string"
+    }
+   }
+  },
+  "GrpcRoute": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/GrpcRouteAction"
+    },
+    "RetryPolicy": {
+     "$ref": "#/definitions/GrpcRetryPolicy"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/GrpcTimeout"
+    },
+    "Match": {
+     "$ref": "#/definitions/GrpcRouteMatch"
+    }
+   },
+   "required": [
+    "Action",
+    "Match"
+   ]
+  },
+  "HttpRouteAction": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "WeightedTargets": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/WeightedTarget"
+     }
+    }
+   },
+   "required": [
+    "WeightedTargets"
+   ]
+  },
+  "TcpRoute": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/TcpRouteAction"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/TcpTimeout"
+    },
+    "Match": {
+     "$ref": "#/definitions/TcpRouteMatch"
+    }
+   },
+   "required": [
+    "Action"
+   ]
+  },
+  "HttpRouteHeader": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Invert": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Match": {
+     "$ref": "#/definitions/HeaderMatchMethod"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  },
+  "GrpcTimeout": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "PerRequest": {
+     "$ref": "#/definitions/Duration"
+    },
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    }
+   }
+  },
+  "GrpcRouteMetadataMatchMethod": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Suffix": {
+     "type": "string"
+    },
+    "Exact": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Regex": {
+     "type": "string"
+    },
+    "Range": {
+     "$ref": "#/definitions/MatchRange"
+    }
+   }
+  },
+  "GrpcRouteMetadata": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Invert": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Match": {
+     "$ref": "#/definitions/GrpcRouteMetadataMatchMethod"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  },
+  "HeaderMatchMethod": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Suffix": {
+     "type": "string"
+    },
+    "Exact": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Regex": {
+     "type": "string"
+    },
+    "Range": {
+     "$ref": "#/definitions/MatchRange"
+    }
+   }
+  },
+  "GrpcRetryPolicy": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MaxRetries": {
+     "type": "integer"
+    },
+    "TcpRetryEvents": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "PerRetryTimeout": {
+     "$ref": "#/definitions/Duration"
+    },
+    "GrpcRetryEvents": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "HttpRetryEvents": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "MaxRetries",
+    "PerRetryTimeout"
+   ]
+  },
+  "TcpTimeout": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    }
+   }
+  },
+  "WeightedTarget": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "VirtualNode": {
+     "type": "string"
+    },
+    "Weight": {
+     "type": "integer"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "VirtualNode",
+    "Weight"
+   ]
+  },
+  "HttpPathMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Regex": {
+     "type": "string"
+    },
+    "Exact": {
+     "type": "string"
+    }
+   }
+  },
+  "HttpTimeout": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "PerRequest": {
+     "$ref": "#/definitions/Duration"
+    },
+    "Idle": {
+     "$ref": "#/definitions/Duration"
+    }
+   }
+  },
+  "TcpRouteAction": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "WeightedTargets": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/WeightedTarget"
+     }
+    }
+   },
+   "required": [
+    "WeightedTargets"
+   ]
+  },
+  "GrpcRouteMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Metadata": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/GrpcRouteMetadata"
+     }
+    },
+    "MethodName": {
+     "type": "string"
+    },
+    "ServiceName": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   }
+  },
+  "MatchRange": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Start": {
+     "type": "integer"
+    },
+    "End": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Start",
+    "End"
+   ]
+  },
+  "Duration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "integer"
+    },
+    "Unit": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ]
+  },
+  "RouteSpec": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "HttpRoute": {
+     "$ref": "#/definitions/HttpRoute"
+    },
+    "Http2Route": {
+     "$ref": "#/definitions/HttpRoute"
+    },
+    "GrpcRoute": {
+     "$ref": "#/definitions/GrpcRoute"
+    },
+    "TcpRoute": {
+     "$ref": "#/definitions/TcpRoute"
+    },
+    "Priority": {
+     "type": "integer"
+    }
+   }
+  },
+  "TcpRouteMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Port": {
+     "type": "integer"
+    }
+   }
+  },
+  "HttpRoute": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "$ref": "#/definitions/HttpRouteAction"
+    },
+    "RetryPolicy": {
+     "$ref": "#/definitions/HttpRetryPolicy"
+    },
+    "Timeout": {
+     "$ref": "#/definitions/HttpTimeout"
+    },
+    "Match": {
+     "$ref": "#/definitions/HttpRouteMatch"
+    }
+   },
+   "required": [
+    "Action",
+    "Match"
+   ]
+  },
+  "GrpcRouteAction": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "WeightedTargets": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/WeightedTarget"
+     }
+    }
+   },
+   "required": [
+    "WeightedTargets"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "HttpRouteMatch": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Path": {
+     "$ref": "#/definitions/HttpPathMatch"
+    },
+    "Scheme": {
+     "type": "string"
+    },
+    "Headers": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/HttpRouteHeader"
+     }
+    },
+    "Port": {
+     "type": "integer"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "Method": {
+     "type": "string"
+    },
+    "QueryParameters": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/QueryParameter"
+     }
+    }
+   }
+  }
+ },
+ "required": [
+  "MeshName",
+  "VirtualRouterName",
+  "Spec"
+ ],
+ "createOnlyProperties": [
+  "/properties/MeshName",
+  "/properties/VirtualRouterName",
+  "/properties/RouteName",
+  "/properties/MeshOwner"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/ResourceOwner",
+  "/properties/Arn",
+  "/properties/Uid"
+ ]
+}

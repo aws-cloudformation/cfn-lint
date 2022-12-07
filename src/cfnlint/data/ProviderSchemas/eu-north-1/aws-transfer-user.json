@@ -1,0 +1,111 @@
+{
+  "typeName" : "AWS::Transfer::User",
+  "description" : "Resource Type definition for AWS::Transfer::User",
+  "additionalProperties" : false,
+  "properties" : {
+    "Policy" : {
+      "type" : "string"
+    },
+    "Role" : {
+      "type" : "string"
+    },
+    "HomeDirectory" : {
+      "type" : "string"
+    },
+    "HomeDirectoryType" : {
+      "type" : "string"
+    },
+    "ServerId" : {
+      "type" : "string"
+    },
+    "UserName" : {
+      "type" : "string"
+    },
+    "HomeDirectoryMappings" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/HomeDirectoryMapEntry"
+      }
+    },
+    "PosixProfile" : {
+      "$ref" : "#/definitions/PosixProfile"
+    },
+    "SshPublicKeys" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/SshPublicKey"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "SshPublicKey" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "PosixProfile" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Uid" : {
+          "type" : "number"
+        },
+        "SecondaryGids" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "number"
+          }
+        },
+        "Gid" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Uid", "Gid" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "HomeDirectoryMapEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Entry" : {
+          "type" : "string"
+        },
+        "Target" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Entry", "Target" ]
+    }
+  },
+  "required" : [ "Role", "ServerId", "UserName" ],
+  "createOnlyProperties" : [ "/properties/ServerId", "/properties/UserName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
+}

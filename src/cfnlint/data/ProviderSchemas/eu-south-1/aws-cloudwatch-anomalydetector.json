@@ -1,0 +1,184 @@
+{
+  "typeName" : "AWS::CloudWatch::AnomalyDetector",
+  "description" : "Resource Type definition for AWS::CloudWatch::AnomalyDetector",
+  "additionalProperties" : false,
+  "properties" : {
+    "MetricName" : {
+      "type" : "string"
+    },
+    "Stat" : {
+      "type" : "string"
+    },
+    "Configuration" : {
+      "$ref" : "#/definitions/Configuration"
+    },
+    "MetricMathAnomalyDetector" : {
+      "$ref" : "#/definitions/MetricMathAnomalyDetector"
+    },
+    "Dimensions" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Dimension"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Namespace" : {
+      "type" : "string"
+    },
+    "SingleMetricAnomalyDetector" : {
+      "$ref" : "#/definitions/SingleMetricAnomalyDetector"
+    }
+  },
+  "definitions" : {
+    "MetricMathAnomalyDetector" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricDataQueries" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/MetricDataQuery"
+          }
+        }
+      }
+    },
+    "Configuration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricTimeZone" : {
+          "type" : "string"
+        },
+        "ExcludedTimeRanges" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Range"
+          }
+        }
+      }
+    },
+    "MetricStat" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Period" : {
+          "type" : "integer"
+        },
+        "Metric" : {
+          "$ref" : "#/definitions/Metric"
+        },
+        "Stat" : {
+          "type" : "string"
+        },
+        "Unit" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Stat", "Period", "Metric" ]
+    },
+    "Metric" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricName" : {
+          "type" : "string"
+        },
+        "Dimensions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Dimension"
+          }
+        },
+        "Namespace" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "MetricName", "Namespace" ]
+    },
+    "Dimension" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Name" ]
+    },
+    "MetricDataQuery" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AccountId" : {
+          "type" : "string"
+        },
+        "ReturnData" : {
+          "type" : "boolean"
+        },
+        "Expression" : {
+          "type" : "string"
+        },
+        "MetricStat" : {
+          "$ref" : "#/definitions/MetricStat"
+        },
+        "Label" : {
+          "type" : "string"
+        },
+        "Period" : {
+          "type" : "integer"
+        },
+        "Id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Id" ]
+    },
+    "Range" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EndTime" : {
+          "type" : "string"
+        },
+        "StartTime" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "EndTime", "StartTime" ]
+    },
+    "SingleMetricAnomalyDetector" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricName" : {
+          "type" : "string"
+        },
+        "Dimensions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Dimension"
+          }
+        },
+        "Stat" : {
+          "type" : "string"
+        },
+        "Namespace" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "createOnlyProperties" : [ "/properties/Dimensions", "/properties/MetricName", "/properties/Namespace", "/properties/SingleMetricAnomalyDetector", "/properties/MetricMathAnomalyDetector", "/properties/Stat" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

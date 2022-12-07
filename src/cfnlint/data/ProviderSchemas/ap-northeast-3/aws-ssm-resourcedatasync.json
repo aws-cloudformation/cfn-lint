@@ -1,0 +1,105 @@
+{
+  "typeName" : "AWS::SSM::ResourceDataSync",
+  "description" : "Resource Type definition for AWS::SSM::ResourceDataSync",
+  "additionalProperties" : false,
+  "properties" : {
+    "S3Destination" : {
+      "$ref" : "#/definitions/S3Destination"
+    },
+    "KMSKeyArn" : {
+      "type" : "string"
+    },
+    "SyncSource" : {
+      "$ref" : "#/definitions/SyncSource"
+    },
+    "BucketName" : {
+      "type" : "string"
+    },
+    "BucketRegion" : {
+      "type" : "string"
+    },
+    "SyncFormat" : {
+      "type" : "string"
+    },
+    "SyncName" : {
+      "type" : "string"
+    },
+    "SyncType" : {
+      "type" : "string"
+    },
+    "BucketPrefix" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "S3Destination" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "KMSKeyArn" : {
+          "type" : "string"
+        },
+        "BucketPrefix" : {
+          "type" : "string"
+        },
+        "BucketName" : {
+          "type" : "string"
+        },
+        "BucketRegion" : {
+          "type" : "string"
+        },
+        "SyncFormat" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "BucketName", "BucketRegion", "SyncFormat" ]
+    },
+    "SyncSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IncludeFutureRegions" : {
+          "type" : "boolean"
+        },
+        "SourceRegions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SourceType" : {
+          "type" : "string"
+        },
+        "AwsOrganizationsSource" : {
+          "$ref" : "#/definitions/AwsOrganizationsSource"
+        }
+      },
+      "required" : [ "SourceType", "SourceRegions" ]
+    },
+    "AwsOrganizationsSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OrganizationalUnits" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "OrganizationSourceType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "OrganizationSourceType" ]
+    }
+  },
+  "required" : [ "SyncName" ],
+  "createOnlyProperties" : [ "/properties/KMSKeyArn", "/properties/SyncFormat", "/properties/BucketPrefix", "/properties/SyncName", "/properties/BucketRegion", "/properties/BucketName", "/properties/S3Destination", "/properties/SyncType" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

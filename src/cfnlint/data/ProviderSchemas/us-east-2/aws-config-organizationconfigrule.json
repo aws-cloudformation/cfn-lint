@@ -1,0 +1,122 @@
+{
+ "typeName": "AWS::Config::OrganizationConfigRule",
+ "description": "Resource Type definition for AWS::Config::OrganizationConfigRule",
+ "additionalProperties": false,
+ "properties": {
+  "OrganizationCustomRuleMetadata": {
+   "$ref": "#/definitions/OrganizationCustomRuleMetadata"
+  },
+  "OrganizationManagedRuleMetadata": {
+   "$ref": "#/definitions/OrganizationManagedRuleMetadata"
+  },
+  "ExcludedAccounts": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "OrganizationConfigRuleName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "OrganizationManagedRuleMetadata": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TagKeyScope": {
+     "type": "string"
+    },
+    "TagValueScope": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "ResourceIdScope": {
+     "type": "string"
+    },
+    "RuleIdentifier": {
+     "type": "string"
+    },
+    "ResourceTypesScope": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "MaximumExecutionFrequency": {
+     "type": "string"
+    },
+    "InputParameters": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RuleIdentifier"
+   ]
+  },
+  "OrganizationCustomRuleMetadata": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TagKeyScope": {
+     "type": "string"
+    },
+    "TagValueScope": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "ResourceIdScope": {
+     "type": "string"
+    },
+    "LambdaFunctionArn": {
+     "type": "string"
+    },
+    "OrganizationConfigRuleTriggerTypes": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "ResourceTypesScope": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "MaximumExecutionFrequency": {
+     "type": "string"
+    },
+    "InputParameters": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LambdaFunctionArn",
+    "OrganizationConfigRuleTriggerTypes"
+   ]
+  }
+ },
+ "required": [
+  "OrganizationConfigRuleName"
+ ],
+ "createOnlyProperties": [
+  "/properties/OrganizationConfigRuleName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

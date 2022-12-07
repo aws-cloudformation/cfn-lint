@@ -1,0 +1,271 @@
+{
+  "typeName" : "AWS::AmazonMQ::Broker",
+  "description" : "Resource Type definition for AWS::AmazonMQ::Broker",
+  "additionalProperties" : false,
+  "properties" : {
+    "SecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Configuration" : {
+      "$ref" : "#/definitions/ConfigurationId"
+    },
+    "AuthenticationStrategy" : {
+      "type" : "string"
+    },
+    "Users" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/User"
+      }
+    },
+    "SubnetIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "StompEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "MqttEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AmqpEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "DeploymentMode" : {
+      "type" : "string"
+    },
+    "EngineType" : {
+      "type" : "string"
+    },
+    "EncryptionOptions" : {
+      "$ref" : "#/definitions/EncryptionOptions"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagsEntry"
+      }
+    },
+    "ConfigurationRevision" : {
+      "type" : "integer"
+    },
+    "StorageType" : {
+      "type" : "string"
+    },
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "MaintenanceWindowStartTime" : {
+      "$ref" : "#/definitions/MaintenanceWindow"
+    },
+    "HostInstanceType" : {
+      "type" : "string"
+    },
+    "AutoMinorVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "Logs" : {
+      "$ref" : "#/definitions/LogList"
+    },
+    "ConfigurationId" : {
+      "type" : "string"
+    },
+    "BrokerName" : {
+      "type" : "string"
+    },
+    "WssEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "IpAddresses" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "OpenWireEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "LdapServerMetadata" : {
+      "$ref" : "#/definitions/LdapServerMetadata"
+    },
+    "PubliclyAccessible" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "LogList" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Audit" : {
+          "type" : "boolean"
+        },
+        "General" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "LdapServerMetadata" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Hosts" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "UserRoleName" : {
+          "type" : "string"
+        },
+        "UserSearchMatching" : {
+          "type" : "string"
+        },
+        "RoleName" : {
+          "type" : "string"
+        },
+        "UserBase" : {
+          "type" : "string"
+        },
+        "UserSearchSubtree" : {
+          "type" : "boolean"
+        },
+        "RoleSearchMatching" : {
+          "type" : "string"
+        },
+        "ServiceAccountUsername" : {
+          "type" : "string"
+        },
+        "RoleBase" : {
+          "type" : "string"
+        },
+        "ServiceAccountPassword" : {
+          "type" : "string"
+        },
+        "RoleSearchSubtree" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Hosts", "UserSearchMatching", "UserBase", "RoleSearchMatching", "ServiceAccountUsername", "RoleBase", "ServiceAccountPassword" ]
+    },
+    "User" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConsoleAccess" : {
+          "type" : "boolean"
+        },
+        "Username" : {
+          "type" : "string"
+        },
+        "Groups" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Password" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Username", "Password" ]
+    },
+    "MaintenanceWindow" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DayOfWeek" : {
+          "type" : "string"
+        },
+        "TimeOfDay" : {
+          "type" : "string"
+        },
+        "TimeZone" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DayOfWeek", "TimeOfDay", "TimeZone" ]
+    },
+    "TagsEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "EncryptionOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "KmsKeyId" : {
+          "type" : "string"
+        },
+        "UseAwsOwnedKey" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "UseAwsOwnedKey" ]
+    },
+    "ConfigurationId" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Revision" : {
+          "type" : "integer"
+        },
+        "Id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Revision", "Id" ]
+    }
+  },
+  "required" : [ "EngineVersion", "DeploymentMode", "HostInstanceType", "EngineType", "AutoMinorVersionUpgrade", "Users", "PubliclyAccessible", "BrokerName" ],
+  "createOnlyProperties" : [ "/properties/BrokerName", "/properties/StorageType", "/properties/DeploymentMode", "/properties/EngineType", "/properties/SubnetIds", "/properties/AuthenticationStrategy", "/properties/EncryptionOptions", "/properties/PubliclyAccessible" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/IpAddresses", "/properties/Id", "/properties/MqttEndpoints", "/properties/OpenWireEndpoints", "/properties/ConfigurationId", "/properties/ConfigurationRevision", "/properties/StompEndpoints", "/properties/WssEndpoints", "/properties/AmqpEndpoints", "/properties/Arn" ]
+}

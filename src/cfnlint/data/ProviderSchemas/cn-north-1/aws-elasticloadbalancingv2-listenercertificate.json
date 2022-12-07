@@ -1,0 +1,44 @@
+{
+ "typeName": "AWS::ElasticLoadBalancingV2::ListenerCertificate",
+ "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::ListenerCertificate",
+ "additionalProperties": false,
+ "properties": {
+  "ListenerArn": {
+   "type": "string"
+  },
+  "Certificates": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/Certificate"
+   }
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Certificate": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CertificateArn": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "ListenerArn",
+  "Certificates"
+ ],
+ "createOnlyProperties": [
+  "/properties/ListenerArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

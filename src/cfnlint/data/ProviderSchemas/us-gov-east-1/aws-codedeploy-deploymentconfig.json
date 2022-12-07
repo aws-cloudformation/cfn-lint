@@ -1,0 +1,82 @@
+{
+  "typeName" : "AWS::CodeDeploy::DeploymentConfig",
+  "description" : "Resource Type definition for AWS::CodeDeploy::DeploymentConfig",
+  "additionalProperties" : false,
+  "properties" : {
+    "DeploymentConfigName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "TrafficRoutingConfig" : {
+      "$ref" : "#/definitions/TrafficRoutingConfig"
+    },
+    "ComputePlatform" : {
+      "type" : "string"
+    },
+    "MinimumHealthyHosts" : {
+      "$ref" : "#/definitions/MinimumHealthyHosts"
+    }
+  },
+  "definitions" : {
+    "TimeBasedLinear" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LinearInterval" : {
+          "type" : "integer"
+        },
+        "LinearPercentage" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "LinearInterval", "LinearPercentage" ]
+    },
+    "TimeBasedCanary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CanaryPercentage" : {
+          "type" : "integer"
+        },
+        "CanaryInterval" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "CanaryPercentage", "CanaryInterval" ]
+    },
+    "TrafficRoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "TimeBasedLinear" : {
+          "$ref" : "#/definitions/TimeBasedLinear"
+        },
+        "TimeBasedCanary" : {
+          "$ref" : "#/definitions/TimeBasedCanary"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "MinimumHealthyHosts" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "integer"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "Value" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/DeploymentConfigName", "/properties/MinimumHealthyHosts", "/properties/ComputePlatform", "/properties/TrafficRoutingConfig" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

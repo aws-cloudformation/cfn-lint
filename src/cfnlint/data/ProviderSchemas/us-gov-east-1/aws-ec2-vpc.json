@@ -1,0 +1,73 @@
+{
+  "typeName" : "AWS::EC2::VPC",
+  "description" : "Resource Type definition for AWS::EC2::VPC",
+  "additionalProperties" : false,
+  "properties" : {
+    "InstanceTenancy" : {
+      "type" : "string"
+    },
+    "Ipv4NetmaskLength" : {
+      "type" : "integer"
+    },
+    "CidrBlockAssociations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "CidrBlock" : {
+      "type" : "string"
+    },
+    "Ipv4IpamPoolId" : {
+      "type" : "string"
+    },
+    "DefaultNetworkAcl" : {
+      "type" : "string"
+    },
+    "EnableDnsSupport" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Ipv6CidrBlocks" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "DefaultSecurityGroup" : {
+      "type" : "string"
+    },
+    "EnableDnsHostnames" : {
+      "type" : "boolean"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/Ipv4IpamPoolId", "/properties/Ipv4NetmaskLength", "/properties/CidrBlock" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/CidrBlockAssociations", "/properties/Id", "/properties/DefaultSecurityGroup", "/properties/DefaultNetworkAcl", "/properties/Ipv6CidrBlocks" ]
+}

@@ -1,0 +1,52 @@
+{
+  "typeName" : "AWS::WAF::SqlInjectionMatchSet",
+  "description" : "Resource Type definition for AWS::WAF::SqlInjectionMatchSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "SqlInjectionMatchTuples" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/SqlInjectionMatchTuple"
+      }
+    }
+  },
+  "definitions" : {
+    "SqlInjectionMatchTuple" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FieldToMatch" : {
+          "$ref" : "#/definitions/FieldToMatch"
+        },
+        "TextTransformation" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "TextTransformation", "FieldToMatch" ]
+    },
+    "FieldToMatch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Data" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
+    }
+  },
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

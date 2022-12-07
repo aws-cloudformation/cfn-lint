@@ -1,0 +1,60 @@
+{
+  "typeName" : "AWS::AmazonMQ::Configuration",
+  "description" : "Resource Type definition for AWS::AmazonMQ::Configuration",
+  "additionalProperties" : false,
+  "properties" : {
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Revision" : {
+      "type" : "integer"
+    },
+    "AuthenticationStrategy" : {
+      "type" : "string"
+    },
+    "EngineType" : {
+      "type" : "string"
+    },
+    "Data" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagsEntry"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "TagsEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "EngineVersion", "EngineType", "Data", "Name" ],
+  "createOnlyProperties" : [ "/properties/EngineType", "/properties/Name", "/properties/AuthenticationStrategy", "/properties/EngineVersion" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Revision", "/properties/Id", "/properties/Arn" ]
+}

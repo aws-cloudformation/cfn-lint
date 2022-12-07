@@ -1,0 +1,67 @@
+{
+  "typeName" : "AWS::DirectoryService::SimpleAD",
+  "description" : "Resource Type definition for AWS::DirectoryService::SimpleAD",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
+    },
+    "VpcSettings" : {
+      "$ref" : "#/definitions/VpcSettings"
+    },
+    "Alias" : {
+      "type" : "string"
+    },
+    "Size" : {
+      "type" : "string"
+    },
+    "CreateAlias" : {
+      "type" : "boolean"
+    },
+    "EnableSso" : {
+      "type" : "boolean"
+    },
+    "ShortName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "DnsIpAddresses" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Password" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "VpcSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VpcId" : {
+          "type" : "string"
+        },
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "VpcId", "SubnetIds" ]
+    }
+  },
+  "required" : [ "VpcSettings", "Size", "Name", "Password" ],
+  "createOnlyProperties" : [ "/properties/Size", "/properties/VpcSettings", "/properties/Name", "/properties/Password", "/properties/ShortName", "/properties/Description", "/properties/CreateAlias" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Alias", "/properties/DnsIpAddresses" ]
+}

@@ -1,0 +1,81 @@
+{
+  "typeName" : "AWS::Route53Resolver::ResolverQueryLoggingConfig",
+  "description" : "Resource schema for AWS::Route53Resolver::ResolverQueryLoggingConfig.",
+  "properties" : {
+    "Id" : {
+      "description" : "ResourceId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "OwnerId" : {
+      "description" : "AccountId",
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 32
+    },
+    "Status" : {
+      "description" : "ResolverQueryLogConfigStatus, possible values are CREATING, CREATED, DELETED AND FAILED.",
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATED", "DELETING", "FAILED" ]
+    },
+    "ShareStatus" : {
+      "description" : "ShareStatus, possible values are NOT_SHARED, SHARED_WITH_ME, SHARED_BY_ME.",
+      "type" : "string",
+      "enum" : [ "NOT_SHARED", "SHARED_WITH_ME", "SHARED_BY_ME" ]
+    },
+    "AssociationCount" : {
+      "description" : "Count",
+      "type" : "integer"
+    },
+    "Arn" : {
+      "description" : "Arn",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 600
+    },
+    "Name" : {
+      "description" : "ResolverQueryLogConfigName",
+      "type" : "string",
+      "pattern" : "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "CreatorRequestId" : {
+      "description" : "The id of the creator request.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "DestinationArn" : {
+      "description" : "destination arn",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 600
+    },
+    "CreationTime" : {
+      "description" : "Rfc3339TimeString",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 40
+    }
+  },
+  "createOnlyProperties" : [ "/properties/Name", "/properties/DestinationArn" ],
+  "readOnlyProperties" : [ "/properties/OwnerId", "/properties/Status", "/properties/ShareStatus", "/properties/AssociationCount", "/properties/Arn", "/properties/CreatorRequestId", "/properties/CreationTime", "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resolverquerylogging:CreateConfig", "resolverquerylogging:GetConfig" ]
+    },
+    "read" : {
+      "permissions" : [ "resolverquerylogging:GetConfig" ]
+    },
+    "delete" : {
+      "permissions" : [ "resolverquerylogging:DeleteConfig", "resolverquerylogging:ListConfig" ]
+    },
+    "list" : {
+      "permissions" : [ "resolverquerylogging:ListConfig" ]
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "typeName" : "AWS::DataPipeline::Pipeline",
+  "description" : "Resource Type definition for AWS::DataPipeline::Pipeline",
+  "additionalProperties" : false,
+  "properties" : {
+    "PipelineTags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/PipelineTag"
+      }
+    },
+    "ParameterObjects" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ParameterObject"
+      }
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Activate" : {
+      "type" : "boolean"
+    },
+    "PipelineObjects" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/PipelineObject"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ParameterValues" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ParameterValue"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "ParameterAttribute" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StringValue" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "StringValue", "Key" ]
+    },
+    "PipelineTag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Field" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RefValue" : {
+          "type" : "string"
+        },
+        "StringValue" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Key" ]
+    },
+    "ParameterValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StringValue" : {
+          "type" : "string"
+        },
+        "Id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Id", "StringValue" ]
+    },
+    "PipelineObject" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Fields" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Field"
+          }
+        },
+        "Id" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Fields", "Id", "Name" ]
+    },
+    "ParameterObject" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Attributes" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ParameterAttribute"
+          }
+        },
+        "Id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Attributes", "Id" ]
+    }
+  },
+  "required" : [ "ParameterObjects", "Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Description" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

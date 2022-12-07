@@ -1,0 +1,125 @@
+{
+ "typeName": "AWS::RefactorSpaces::Environment",
+ "description": "Definition of AWS::RefactorSpaces::Environment Resource Type",
+ "definitions": {
+  "NetworkFabricType": {
+   "type": "string",
+   "enum": [
+    "TRANSIT_GATEWAY"
+   ]
+  },
+  "Tag": {
+   "description": "A label for tagging Environment resource",
+   "type": "object",
+   "properties": {
+    "Key": {
+     "description": "A string used to identify this tag",
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 128,
+     "pattern": "^(?!aws:).+"
+    },
+    "Value": {
+     "description": "A string containing the value for the tag",
+     "type": "string",
+     "minLength": 0,
+     "maxLength": 256
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "additionalProperties": false
+  }
+ },
+ "properties": {
+  "Description": {
+   "type": "string",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-_\\s\\.\\!\\*\\#\\@\\']+$"
+  },
+  "EnvironmentIdentifier": {
+   "type": "string",
+   "maxLength": 14,
+   "minLength": 14,
+   "pattern": "^env-([0-9A-Za-z]{10}$)"
+  },
+  "Name": {
+   "type": "string",
+   "maxLength": 63,
+   "minLength": 3,
+   "pattern": "^(?!env-)[a-zA-Z0-9]+[a-zA-Z0-9-_ ]+$"
+  },
+  "NetworkFabricType": {
+   "$ref": "#/definitions/NetworkFabricType"
+  },
+  "Arn": {
+   "type": "string",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:(aws[a-zA-Z-]*)?:refactor-spaces:[a-zA-Z0-9\\-]+:\\w{12}:[a-zA-Z_0-9+=,.@\\-_/]+$"
+  },
+  "TransitGatewayId": {
+   "type": "string",
+   "maxLength": 21,
+   "minLength": 21,
+   "pattern": "^tgw-[-a-f0-9]{17}$"
+  },
+  "Tags": {
+   "type": "array",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "description": "Metadata that you can assign to help organize the frameworks that you create. Each tag is a key-value pair."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentIdentifier",
+  "/properties/Arn",
+  "/properties/TransitGatewayId"
+ ],
+ "writeOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/NetworkFabricType"
+ ],
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/NetworkFabricType"
+ ],
+ "primaryIdentifier": [
+  "/properties/EnvironmentIdentifier"
+ ],
+ "additionalProperties": false,
+ "handlers": {
+  "create": {
+   "permissions": [
+    "refactor-spaces:CreateEnvironment",
+    "refactor-spaces:TagResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "refactor-spaces:GetEnvironment",
+    "refactor-spaces:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "refactor-spaces:DeleteEnvironment",
+    "refactor-spaces:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "refactor-spaces:ListEnvironments",
+    "refactor-spaces:ListTagsForResource"
+   ]
+  }
+ },
+ "taggable": true
+}

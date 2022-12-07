@@ -1,0 +1,117 @@
+{
+  "typeName" : "AWS::ServiceDiscovery::Service",
+  "description" : "Resource Type definition for AWS::ServiceDiscovery::Service",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "HealthCheckCustomConfig" : {
+      "$ref" : "#/definitions/HealthCheckCustomConfig"
+    },
+    "DnsConfig" : {
+      "$ref" : "#/definitions/DnsConfig"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "NamespaceId" : {
+      "type" : "string"
+    },
+    "HealthCheckConfig" : {
+      "$ref" : "#/definitions/HealthCheckConfig"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "HealthCheckCustomConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FailureThreshold" : {
+          "type" : "number"
+        }
+      }
+    },
+    "DnsConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DnsRecords" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/DnsRecord"
+          }
+        },
+        "RoutingPolicy" : {
+          "type" : "string"
+        },
+        "NamespaceId" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DnsRecords" ]
+    },
+    "HealthCheckConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "ResourcePath" : {
+          "type" : "string"
+        },
+        "FailureThreshold" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "DnsRecord" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TTL" : {
+          "type" : "number"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "TTL" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/HealthCheckCustomConfig", "/properties/Name", "/properties/Type", "/properties/NamespaceId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
+}

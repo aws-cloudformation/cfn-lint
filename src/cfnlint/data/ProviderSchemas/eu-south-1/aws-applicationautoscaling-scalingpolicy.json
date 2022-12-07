@@ -1,0 +1,158 @@
+{
+  "typeName" : "AWS::ApplicationAutoScaling::ScalingPolicy",
+  "description" : "Resource Type definition for AWS::ApplicationAutoScaling::ScalingPolicy",
+  "additionalProperties" : false,
+  "properties" : {
+    "PolicyType" : {
+      "type" : "string"
+    },
+    "ResourceId" : {
+      "type" : "string"
+    },
+    "ScalingTargetId" : {
+      "type" : "string"
+    },
+    "PolicyName" : {
+      "type" : "string"
+    },
+    "ServiceNamespace" : {
+      "type" : "string"
+    },
+    "ScalableDimension" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "TargetTrackingScalingPolicyConfiguration" : {
+      "$ref" : "#/definitions/TargetTrackingScalingPolicyConfiguration"
+    },
+    "StepScalingPolicyConfiguration" : {
+      "$ref" : "#/definitions/StepScalingPolicyConfiguration"
+    }
+  },
+  "definitions" : {
+    "CustomizedMetricSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricName" : {
+          "type" : "string"
+        },
+        "Dimensions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/MetricDimension"
+          }
+        },
+        "Statistic" : {
+          "type" : "string"
+        },
+        "Unit" : {
+          "type" : "string"
+        },
+        "Namespace" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "MetricName", "Statistic", "Namespace" ]
+    },
+    "TargetTrackingScalingPolicyConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScaleOutCooldown" : {
+          "type" : "integer"
+        },
+        "TargetValue" : {
+          "type" : "number"
+        },
+        "CustomizedMetricSpecification" : {
+          "$ref" : "#/definitions/CustomizedMetricSpecification"
+        },
+        "DisableScaleIn" : {
+          "type" : "boolean"
+        },
+        "ScaleInCooldown" : {
+          "type" : "integer"
+        },
+        "PredefinedMetricSpecification" : {
+          "$ref" : "#/definitions/PredefinedMetricSpecification"
+        }
+      },
+      "required" : [ "TargetValue" ]
+    },
+    "StepAdjustment" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricIntervalUpperBound" : {
+          "type" : "number"
+        },
+        "MetricIntervalLowerBound" : {
+          "type" : "number"
+        },
+        "ScalingAdjustment" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "ScalingAdjustment" ]
+    },
+    "StepScalingPolicyConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricAggregationType" : {
+          "type" : "string"
+        },
+        "MinAdjustmentMagnitude" : {
+          "type" : "integer"
+        },
+        "Cooldown" : {
+          "type" : "integer"
+        },
+        "StepAdjustments" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/StepAdjustment"
+          }
+        },
+        "AdjustmentType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PredefinedMetricSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceLabel" : {
+          "type" : "string"
+        },
+        "PredefinedMetricType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "PredefinedMetricType" ]
+    },
+    "MetricDimension" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Name" ]
+    }
+  },
+  "required" : [ "PolicyType", "PolicyName" ],
+  "createOnlyProperties" : [ "/properties/ResourceId", "/properties/ScalableDimension", "/properties/PolicyName", "/properties/ServiceNamespace", "/properties/ScalingTargetId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

@@ -1,0 +1,732 @@
+{
+  "typeName" : "AWS::EMR::Cluster",
+  "description" : "Resource Type definition for AWS::EMR::Cluster",
+  "additionalProperties" : false,
+  "properties" : {
+    "Steps" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/StepConfig"
+      }
+    },
+    "StepConcurrencyLevel" : {
+      "type" : "integer"
+    },
+    "EbsRootVolumeSize" : {
+      "type" : "integer"
+    },
+    "OSReleaseLabel" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "ServiceRole" : {
+      "type" : "string"
+    },
+    "LogUri" : {
+      "type" : "string"
+    },
+    "BootstrapActions" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/BootstrapActionConfig"
+      }
+    },
+    "MasterPublicDNS" : {
+      "type" : "string"
+    },
+    "Configurations" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Configuration"
+      }
+    },
+    "ReleaseLabel" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "ManagedScalingPolicy" : {
+      "$ref" : "#/definitions/ManagedScalingPolicy"
+    },
+    "LogEncryptionKmsKeyId" : {
+      "type" : "string"
+    },
+    "AdditionalInfo" : {
+      "type" : "object"
+    },
+    "AutoTerminationPolicy" : {
+      "$ref" : "#/definitions/AutoTerminationPolicy"
+    },
+    "KerberosAttributes" : {
+      "$ref" : "#/definitions/KerberosAttributes"
+    },
+    "Applications" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Application"
+      }
+    },
+    "AutoScalingRole" : {
+      "type" : "string"
+    },
+    "CustomAmiId" : {
+      "type" : "string"
+    },
+    "Instances" : {
+      "$ref" : "#/definitions/JobFlowInstancesConfig"
+    },
+    "ScaleDownBehavior" : {
+      "type" : "string"
+    },
+    "JobFlowRole" : {
+      "type" : "string"
+    },
+    "VisibleToAllUsers" : {
+      "type" : "boolean"
+    },
+    "SecurityConfiguration" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "EbsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EbsBlockDeviceConfigs" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/EbsBlockDeviceConfig"
+          }
+        },
+        "EbsOptimized" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "KeyValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Configuration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConfigurationProperties" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "Configurations" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Configuration"
+          }
+        },
+        "Classification" : {
+          "type" : "string"
+        }
+      }
+    },
+    "StepConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HadoopJarStep" : {
+          "$ref" : "#/definitions/HadoopJarStepConfig"
+        },
+        "ActionOnFailure" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "HadoopJarStep", "Name" ]
+    },
+    "InstanceFleetConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetOnDemandCapacity" : {
+          "type" : "integer"
+        },
+        "TargetSpotCapacity" : {
+          "type" : "integer"
+        },
+        "InstanceTypeConfigs" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/InstanceTypeConfig"
+          }
+        },
+        "LaunchSpecifications" : {
+          "$ref" : "#/definitions/InstanceFleetProvisioningSpecifications"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InstanceTypeConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BidPrice" : {
+          "type" : "string"
+        },
+        "WeightedCapacity" : {
+          "type" : "integer"
+        },
+        "EbsConfiguration" : {
+          "$ref" : "#/definitions/EbsConfiguration"
+        },
+        "BidPriceAsPercentageOfOnDemandPrice" : {
+          "type" : "number"
+        },
+        "CustomAmiId" : {
+          "type" : "string"
+        },
+        "Configurations" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Configuration"
+          }
+        },
+        "InstanceType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "InstanceType" ]
+    },
+    "SpotProvisioningSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllocationStrategy" : {
+          "type" : "string"
+        },
+        "TimeoutDurationMinutes" : {
+          "type" : "integer"
+        },
+        "TimeoutAction" : {
+          "type" : "string"
+        },
+        "BlockDurationMinutes" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "TimeoutDurationMinutes", "TimeoutAction" ]
+    },
+    "ScriptBootstrapActionConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Path" : {
+          "type" : "string"
+        },
+        "Args" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "Path" ]
+    },
+    "InstanceFleetProvisioningSpecifications" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SpotSpecification" : {
+          "$ref" : "#/definitions/SpotProvisioningSpecification"
+        },
+        "OnDemandSpecification" : {
+          "$ref" : "#/definitions/OnDemandProvisioningSpecification"
+        }
+      }
+    },
+    "SimpleScalingPolicyConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScalingAdjustment" : {
+          "type" : "integer"
+        },
+        "CoolDown" : {
+          "type" : "integer"
+        },
+        "AdjustmentType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ScalingAdjustment" ]
+    },
+    "OnDemandProvisioningSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllocationStrategy" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AllocationStrategy" ]
+    },
+    "ScalingTrigger" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CloudWatchAlarmDefinition" : {
+          "$ref" : "#/definitions/CloudWatchAlarmDefinition"
+        }
+      },
+      "required" : [ "CloudWatchAlarmDefinition" ]
+    },
+    "ManagedScalingPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComputeLimits" : {
+          "$ref" : "#/definitions/ComputeLimits"
+        }
+      }
+    },
+    "InstanceGroupConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutoScalingPolicy" : {
+          "$ref" : "#/definitions/AutoScalingPolicy"
+        },
+        "BidPrice" : {
+          "type" : "string"
+        },
+        "InstanceCount" : {
+          "type" : "integer"
+        },
+        "EbsConfiguration" : {
+          "$ref" : "#/definitions/EbsConfiguration"
+        },
+        "CustomAmiId" : {
+          "type" : "string"
+        },
+        "Configurations" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Configuration"
+          }
+        },
+        "InstanceType" : {
+          "type" : "string"
+        },
+        "Market" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "InstanceCount", "InstanceType" ]
+    },
+    "HadoopJarStepConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Args" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "MainClass" : {
+          "type" : "string"
+        },
+        "Jar" : {
+          "type" : "string"
+        },
+        "StepProperties" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KeyValue"
+          }
+        }
+      },
+      "required" : [ "Jar" ]
+    },
+    "VolumeSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SizeInGB" : {
+          "type" : "integer"
+        },
+        "VolumeType" : {
+          "type" : "string"
+        },
+        "Iops" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "SizeInGB", "VolumeType" ]
+    },
+    "CloudWatchAlarmDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetricName" : {
+          "type" : "string"
+        },
+        "ComparisonOperator" : {
+          "type" : "string"
+        },
+        "Statistic" : {
+          "type" : "string"
+        },
+        "Dimensions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/MetricDimension"
+          }
+        },
+        "Period" : {
+          "type" : "integer"
+        },
+        "EvaluationPeriods" : {
+          "type" : "integer"
+        },
+        "Unit" : {
+          "type" : "string"
+        },
+        "Namespace" : {
+          "type" : "string"
+        },
+        "Threshold" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "MetricName", "ComparisonOperator", "Period", "Threshold" ]
+    },
+    "AutoTerminationPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IdleTimeout" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "KerberosAttributes" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "KdcAdminPassword" : {
+          "type" : "string"
+        },
+        "Realm" : {
+          "type" : "string"
+        },
+        "ADDomainJoinPassword" : {
+          "type" : "string"
+        },
+        "ADDomainJoinUser" : {
+          "type" : "string"
+        },
+        "CrossRealmTrustPrincipalPassword" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "KdcAdminPassword", "Realm" ]
+    },
+    "JobFlowInstancesConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MasterInstanceFleet" : {
+          "$ref" : "#/definitions/InstanceFleetConfig"
+        },
+        "AdditionalSlaveSecurityGroups" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "CoreInstanceFleet" : {
+          "$ref" : "#/definitions/InstanceFleetConfig"
+        },
+        "CoreInstanceGroup" : {
+          "$ref" : "#/definitions/InstanceGroupConfig"
+        },
+        "Ec2SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "HadoopVersion" : {
+          "type" : "string"
+        },
+        "TerminationProtected" : {
+          "type" : "boolean"
+        },
+        "KeepJobFlowAliveWhenNoSteps" : {
+          "type" : "boolean"
+        },
+        "Ec2KeyName" : {
+          "type" : "string"
+        },
+        "MasterInstanceGroup" : {
+          "$ref" : "#/definitions/InstanceGroupConfig"
+        },
+        "Placement" : {
+          "$ref" : "#/definitions/PlacementType"
+        },
+        "TaskInstanceFleets" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/InstanceFleetConfig"
+          }
+        },
+        "Ec2SubnetId" : {
+          "type" : "string"
+        },
+        "TaskInstanceGroups" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/InstanceGroupConfig"
+          }
+        },
+        "ServiceAccessSecurityGroup" : {
+          "type" : "string"
+        },
+        "EmrManagedSlaveSecurityGroup" : {
+          "type" : "string"
+        },
+        "AdditionalMasterSecurityGroups" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "EmrManagedMasterSecurityGroup" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ScalingAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Market" : {
+          "type" : "string"
+        },
+        "SimpleScalingPolicyConfiguration" : {
+          "$ref" : "#/definitions/SimpleScalingPolicyConfiguration"
+        }
+      },
+      "required" : [ "SimpleScalingPolicyConfiguration" ]
+    },
+    "EbsBlockDeviceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VolumeSpecification" : {
+          "$ref" : "#/definitions/VolumeSpecification"
+        },
+        "VolumesPerInstance" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "VolumeSpecification" ]
+    },
+    "ScalingRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Action" : {
+          "$ref" : "#/definitions/ScalingAction"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "Trigger" : {
+          "$ref" : "#/definitions/ScalingTrigger"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Action", "Trigger", "Name" ]
+    },
+    "ComputeLimits" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaximumOnDemandCapacityUnits" : {
+          "type" : "integer"
+        },
+        "MaximumCapacityUnits" : {
+          "type" : "integer"
+        },
+        "MaximumCoreCapacityUnits" : {
+          "type" : "integer"
+        },
+        "MinimumCapacityUnits" : {
+          "type" : "integer"
+        },
+        "UnitType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "UnitType", "MaximumCapacityUnits", "MinimumCapacityUnits" ]
+    },
+    "MetricDimension" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "BootstrapActionConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScriptBootstrapAction" : {
+          "$ref" : "#/definitions/ScriptBootstrapActionConfig"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ScriptBootstrapAction", "Name" ]
+    },
+    "AutoScalingPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Rules" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ScalingRule"
+          }
+        },
+        "Constraints" : {
+          "$ref" : "#/definitions/ScalingConstraints"
+        }
+      },
+      "required" : [ "Constraints", "Rules" ]
+    },
+    "PlacementType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AvailabilityZone" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AvailabilityZone" ]
+    },
+    "ScalingConstraints" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MinCapacity" : {
+          "type" : "integer"
+        },
+        "MaxCapacity" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "MinCapacity", "MaxCapacity" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Application" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AdditionalInfo" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "Args" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Version" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "Instances", "ServiceRole", "JobFlowRole", "Name" ],
+  "createOnlyProperties" : [ "/properties/Steps", "/properties/EbsRootVolumeSize", "/properties/SecurityConfiguration", "/properties/ScaleDownBehavior", "/properties/Configurations", "/properties/ReleaseLabel", "/properties/BootstrapActions", "/properties/KerberosAttributes", "/properties/ServiceRole", "/properties/LogEncryptionKmsKeyId", "/properties/Name", "/properties/JobFlowRole", "/properties/AdditionalInfo", "/properties/LogUri", "/properties/CustomAmiId", "/properties/OSReleaseLabel", "/properties/AutoScalingRole", "/properties/Applications" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/MasterPublicDNS" ]
+}

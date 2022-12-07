@@ -1,0 +1,231 @@
+{
+ "typeName": "AWS::OpsWorks::Instance",
+ "description": "Resource Type definition for AWS::OpsWorks::Instance",
+ "additionalProperties": false,
+ "properties": {
+  "Tenancy": {
+   "type": "string"
+  },
+  "PrivateDnsName": {
+   "type": "string"
+  },
+  "Os": {
+   "type": "string"
+  },
+  "AgentVersion": {
+   "type": "string"
+  },
+  "BlockDeviceMappings": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/BlockDeviceMapping"
+   }
+  },
+  "InstallUpdatesOnBoot": {
+   "type": "boolean"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "TimeBasedAutoScaling": {
+   "$ref": "#/definitions/TimeBasedAutoScaling"
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "LayerIds": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Volumes": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "PrivateIp": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "AmiId": {
+   "type": "string"
+  },
+  "SshKeyName": {
+   "type": "string"
+  },
+  "Architecture": {
+   "type": "string"
+  },
+  "PublicIp": {
+   "type": "string"
+  },
+  "VirtualizationType": {
+   "type": "string"
+  },
+  "ElasticIps": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Hostname": {
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "type": "string"
+  },
+  "PublicDnsName": {
+   "type": "string"
+  },
+  "RootDeviceType": {
+   "type": "string"
+  },
+  "AutoScalingType": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "StackId": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "EbsBlockDevice": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SnapshotId": {
+     "type": "string"
+    },
+    "VolumeType": {
+     "type": "string"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "DeleteOnTermination": {
+     "type": "boolean"
+    }
+   }
+  },
+  "BlockDeviceMapping": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "NoDevice": {
+     "type": "string"
+    },
+    "VirtualName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/EbsBlockDevice"
+    },
+    "DeviceName": {
+     "type": "string"
+    }
+   }
+  },
+  "TimeBasedAutoScaling": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Monday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Thursday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Friday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Sunday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Wednesday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Tuesday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    },
+    "Saturday": {
+     "type": "object",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     }
+    }
+   }
+  }
+ },
+ "required": [
+  "LayerIds",
+  "InstanceType",
+  "StackId"
+ ],
+ "createOnlyProperties": [
+  "/properties/Tenancy",
+  "/properties/VirtualizationType",
+  "/properties/TimeBasedAutoScaling",
+  "/properties/RootDeviceType",
+  "/properties/AutoScalingType",
+  "/properties/StackId",
+  "/properties/AvailabilityZone",
+  "/properties/SubnetId",
+  "/properties/BlockDeviceMappings",
+  "/properties/EbsOptimized"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/PublicIp",
+  "/properties/Id",
+  "/properties/PublicDnsName",
+  "/properties/PrivateDnsName",
+  "/properties/PrivateIp"
+ ]
+}

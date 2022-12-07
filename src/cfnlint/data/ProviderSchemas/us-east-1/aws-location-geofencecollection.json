@@ -1,0 +1,74 @@
+{
+  "typeName" : "AWS::Location::GeofenceCollection",
+  "description" : "Definition of AWS::Location::GeofenceCollection Resource Type",
+  "definitions" : {
+    "PricingPlan" : {
+      "type" : "string",
+      "enum" : [ "RequestBasedUsage" ]
+    },
+    "iso8601UTC" : {
+      "description" : "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
+      "type" : "string",
+      "pattern" : "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$"
+    }
+  },
+  "properties" : {
+    "CollectionArn" : {
+      "type" : "string",
+      "maxLength" : 1600,
+      "pattern" : "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$"
+    },
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 1600,
+      "pattern" : "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$"
+    },
+    "CollectionName" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[-._\\w]+$"
+    },
+    "CreateTime" : {
+      "$ref" : "#/definitions/iso8601UTC"
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1
+    },
+    "PricingPlan" : {
+      "$ref" : "#/definitions/PricingPlan"
+    },
+    "PricingPlanDataSource" : {
+      "type" : "string"
+    },
+    "UpdateTime" : {
+      "$ref" : "#/definitions/iso8601UTC"
+    }
+  },
+  "readOnlyProperties" : [ "/properties/CollectionArn", "/properties/Arn", "/properties/CreateTime", "/properties/UpdateTime" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/PricingPlan", "/properties/Description", "/properties/CollectionName" ],
+  "required" : [ "CollectionName" ],
+  "primaryIdentifier" : [ "/properties/CollectionName" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "geo:CreateGeofenceCollection" ]
+    },
+    "read" : {
+      "permissions" : [ "geo:DescribeGeofenceCollection" ]
+    },
+    "delete" : {
+      "permissions" : [ "geo:DeleteGeofenceCollection" ]
+    },
+    "list" : {
+      "permissions" : [ "geo:ListGeofenceCollections" ]
+    }
+  }
+}

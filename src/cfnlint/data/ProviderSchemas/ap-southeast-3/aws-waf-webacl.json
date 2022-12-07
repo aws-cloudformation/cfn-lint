@@ -1,0 +1,58 @@
+{
+  "typeName" : "AWS::WAF::WebACL",
+  "description" : "Resource Type definition for AWS::WAF::WebACL",
+  "additionalProperties" : false,
+  "properties" : {
+    "MetricName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "DefaultAction" : {
+      "$ref" : "#/definitions/WafAction"
+    },
+    "Rules" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/ActivatedRule"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "WafAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "ActivatedRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Action" : {
+          "$ref" : "#/definitions/WafAction"
+        },
+        "Priority" : {
+          "type" : "integer"
+        },
+        "RuleId" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Priority", "RuleId" ]
+    }
+  },
+  "required" : [ "MetricName", "DefaultAction", "Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/MetricName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

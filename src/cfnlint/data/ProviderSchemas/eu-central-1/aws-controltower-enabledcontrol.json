@@ -1,0 +1,60 @@
+{
+ "typeName": "AWS::ControlTower::EnabledControl",
+ "description": "Enables a control on a specified target.",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-controltower",
+ "properties": {
+  "ControlIdentifier": {
+   "description": "Arn of the control.",
+   "type": "string",
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "minLength": 20,
+   "maxLength": 2048
+  },
+  "TargetIdentifier": {
+   "description": "Arn for Organizational unit to which the control needs to be applied",
+   "type": "string",
+   "pattern": "^arn:aws[0-9a-zA-Z_\\-:\\/]+$",
+   "minLength": 20,
+   "maxLength": 2048
+  }
+ },
+ "required": [
+  "TargetIdentifier",
+  "ControlIdentifier"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "controltower:ListEnabledControls",
+    "controltower:GetControlOperation",
+    "controltower:EnableControl"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "controltower:GetControlOperation",
+    "controltower:DisableControl"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "controltower:ListEnabledControls"
+   ]
+  }
+ },
+ "additionalProperties": false,
+ "primaryIdentifier": [
+  "/properties/TargetIdentifier",
+  "/properties/ControlIdentifier"
+ ],
+ "createOnlyProperties": [
+  "/properties/TargetIdentifier",
+  "/properties/ControlIdentifier"
+ ],
+ "tagging": {
+  "taggable": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "cloudFormationSystemTags": false
+ }
+}

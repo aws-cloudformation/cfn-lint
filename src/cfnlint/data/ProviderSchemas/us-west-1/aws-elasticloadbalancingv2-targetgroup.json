@@ -1,0 +1,150 @@
+{
+  "typeName" : "AWS::ElasticLoadBalancingV2::TargetGroup",
+  "description" : "Resource Type definition for AWS::ElasticLoadBalancingV2::TargetGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "IpAddressType" : {
+      "type" : "string"
+    },
+    "HealthCheckIntervalSeconds" : {
+      "type" : "integer"
+    },
+    "LoadBalancerArns" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Matcher" : {
+      "$ref" : "#/definitions/Matcher"
+    },
+    "HealthCheckPath" : {
+      "type" : "string"
+    },
+    "Port" : {
+      "type" : "integer"
+    },
+    "Targets" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/TargetDescription"
+      }
+    },
+    "HealthCheckEnabled" : {
+      "type" : "boolean"
+    },
+    "ProtocolVersion" : {
+      "type" : "string"
+    },
+    "UnhealthyThresholdCount" : {
+      "type" : "integer"
+    },
+    "HealthCheckTimeoutSeconds" : {
+      "type" : "integer"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "VpcId" : {
+      "type" : "string"
+    },
+    "TargetGroupFullName" : {
+      "type" : "string"
+    },
+    "HealthyThresholdCount" : {
+      "type" : "integer"
+    },
+    "HealthCheckProtocol" : {
+      "type" : "string"
+    },
+    "TargetGroupAttributes" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/TargetGroupAttribute"
+      }
+    },
+    "TargetType" : {
+      "type" : "string"
+    },
+    "HealthCheckPort" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Protocol" : {
+      "type" : "string"
+    },
+    "TargetGroupName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Matcher" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "GrpcCode" : {
+          "type" : "string"
+        },
+        "HttpCode" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TargetDescription" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AvailabilityZone" : {
+          "type" : "string"
+        },
+        "Id" : {
+          "type" : "string"
+        },
+        "Port" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Id" ]
+    },
+    "TargetGroupAttribute" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/TargetType", "/properties/ProtocolVersion", "/properties/Port", "/properties/Name", "/properties/VpcId", "/properties/Protocol", "/properties/IpAddressType" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/LoadBalancerArns", "/properties/Id", "/properties/TargetGroupName", "/properties/TargetGroupFullName" ]
+}

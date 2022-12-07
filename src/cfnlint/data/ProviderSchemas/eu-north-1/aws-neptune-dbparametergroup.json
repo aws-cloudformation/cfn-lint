@@ -1,0 +1,48 @@
+{
+  "typeName" : "AWS::Neptune::DBParameterGroup",
+  "description" : "Resource Type definition for AWS::Neptune::DBParameterGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Family" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Parameters" : {
+      "type" : "object"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "Description", "Parameters", "Family" ],
+  "createOnlyProperties" : [ "/properties/Family", "/properties/Name", "/properties/Description" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

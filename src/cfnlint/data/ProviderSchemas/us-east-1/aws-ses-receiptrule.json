@@ -1,0 +1,192 @@
+{
+  "typeName" : "AWS::SES::ReceiptRule",
+  "description" : "Resource Type definition for AWS::SES::ReceiptRule",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "After" : {
+      "type" : "string"
+    },
+    "Rule" : {
+      "$ref" : "#/definitions/Rule"
+    },
+    "RuleSetName" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Rule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScanEnabled" : {
+          "type" : "boolean"
+        },
+        "Recipients" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Actions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Action"
+          }
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "TlsPolicy" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Action" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BounceAction" : {
+          "$ref" : "#/definitions/BounceAction"
+        },
+        "S3Action" : {
+          "$ref" : "#/definitions/S3Action"
+        },
+        "StopAction" : {
+          "$ref" : "#/definitions/StopAction"
+        },
+        "SNSAction" : {
+          "$ref" : "#/definitions/SNSAction"
+        },
+        "WorkmailAction" : {
+          "$ref" : "#/definitions/WorkmailAction"
+        },
+        "AddHeaderAction" : {
+          "$ref" : "#/definitions/AddHeaderAction"
+        },
+        "LambdaAction" : {
+          "$ref" : "#/definitions/LambdaAction"
+        }
+      }
+    },
+    "SNSAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TopicArn" : {
+          "type" : "string"
+        },
+        "Encoding" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WorkmailAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TopicArn" : {
+          "type" : "string"
+        },
+        "OrganizationArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "OrganizationArn" ]
+    },
+    "StopAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Scope" : {
+          "type" : "string"
+        },
+        "TopicArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Scope" ]
+    },
+    "AddHeaderAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HeaderValue" : {
+          "type" : "string"
+        },
+        "HeaderName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "HeaderName", "HeaderValue" ]
+    },
+    "BounceAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Sender" : {
+          "type" : "string"
+        },
+        "SmtpReplyCode" : {
+          "type" : "string"
+        },
+        "Message" : {
+          "type" : "string"
+        },
+        "TopicArn" : {
+          "type" : "string"
+        },
+        "StatusCode" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Sender", "SmtpReplyCode", "Message" ]
+    },
+    "LambdaAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FunctionArn" : {
+          "type" : "string"
+        },
+        "TopicArn" : {
+          "type" : "string"
+        },
+        "InvocationType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "FunctionArn" ]
+    },
+    "S3Action" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BucketName" : {
+          "type" : "string"
+        },
+        "KmsKeyArn" : {
+          "type" : "string"
+        },
+        "TopicArn" : {
+          "type" : "string"
+        },
+        "ObjectKeyPrefix" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "BucketName" ]
+    }
+  },
+  "required" : [ "RuleSetName", "Rule" ],
+  "createOnlyProperties" : [ "/properties/RuleSetName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

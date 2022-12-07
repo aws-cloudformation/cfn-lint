@@ -1,0 +1,62 @@
+{
+ "typeName": "AWS::Logs::MetricFilter",
+ "description": "Resource Type definition for AWS::Logs::MetricFilter",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "FilterPattern": {
+   "type": "string"
+  },
+  "LogGroupName": {
+   "type": "string"
+  },
+  "MetricTransformations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/MetricTransformation"
+   }
+  }
+ },
+ "definitions": {
+  "MetricTransformation": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DefaultValue": {
+     "type": "number"
+    },
+    "MetricName": {
+     "type": "string"
+    },
+    "MetricNamespace": {
+     "type": "string"
+    },
+    "MetricValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricNamespace",
+    "MetricName",
+    "MetricValue"
+   ]
+  }
+ },
+ "required": [
+  "MetricTransformations",
+  "FilterPattern",
+  "LogGroupName"
+ ],
+ "createOnlyProperties": [
+  "/properties/LogGroupName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

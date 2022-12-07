@@ -1,0 +1,206 @@
+{
+  "typeName" : "AWS::FSx::Volume",
+  "description" : "Resource Type definition for AWS::FSx::Volume",
+  "additionalProperties" : false,
+  "properties" : {
+    "OpenZFSConfiguration" : {
+      "$ref" : "#/definitions/OpenZFSConfiguration"
+    },
+    "ResourceARN" : {
+      "type" : "string"
+    },
+    "VolumeId" : {
+      "type" : "string"
+    },
+    "VolumeType" : {
+      "type" : "string"
+    },
+    "BackupId" : {
+      "type" : "string"
+    },
+    "OntapConfiguration" : {
+      "$ref" : "#/definitions/OntapConfiguration"
+    },
+    "UUID" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "OpenZFSConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ReadOnly" : {
+          "type" : "boolean"
+        },
+        "Options" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "DataCompressionType" : {
+          "type" : "string"
+        },
+        "NfsExports" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/NfsExports"
+          }
+        },
+        "StorageCapacityQuotaGiB" : {
+          "type" : "integer"
+        },
+        "CopyTagsToSnapshots" : {
+          "type" : "boolean"
+        },
+        "ParentVolumeId" : {
+          "type" : "string"
+        },
+        "StorageCapacityReservationGiB" : {
+          "type" : "integer"
+        },
+        "RecordSizeKiB" : {
+          "type" : "integer"
+        },
+        "OriginSnapshot" : {
+          "$ref" : "#/definitions/OriginSnapshot"
+        },
+        "UserAndGroupQuotas" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/UserAndGroupQuotas"
+          }
+        }
+      },
+      "required" : [ "ParentVolumeId" ]
+    },
+    "TieringPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CoolingPeriod" : {
+          "type" : "integer"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NfsExports" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ClientConfigurations" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ClientConfigurations"
+          }
+        }
+      },
+      "required" : [ "ClientConfigurations" ]
+    },
+    "OntapConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JunctionPath" : {
+          "type" : "string"
+        },
+        "StorageVirtualMachineId" : {
+          "type" : "string"
+        },
+        "TieringPolicy" : {
+          "$ref" : "#/definitions/TieringPolicy"
+        },
+        "StorageEfficiencyEnabled" : {
+          "type" : "string"
+        },
+        "SizeInMegabytes" : {
+          "type" : "string"
+        },
+        "SecurityStyle" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "JunctionPath", "StorageVirtualMachineId", "StorageEfficiencyEnabled", "SizeInMegabytes" ]
+    },
+    "ClientConfigurations" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Clients" : {
+          "type" : "string"
+        },
+        "Options" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "Options", "Clients" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "OriginSnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SnapshotARN" : {
+          "type" : "string"
+        },
+        "CopyStrategy" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "CopyStrategy", "SnapshotARN" ]
+    },
+    "UserAndGroupQuotas" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Id" : {
+          "type" : "integer"
+        },
+        "StorageCapacityQuotaGiB" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Type", "Id", "StorageCapacityQuotaGiB" ]
+    }
+  },
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/BackupId", "/properties/VolumeType" ],
+  "primaryIdentifier" : [ "/properties/VolumeId" ],
+  "readOnlyProperties" : [ "/properties/ResourceARN", "/properties/VolumeId", "/properties/UUID" ]
+}

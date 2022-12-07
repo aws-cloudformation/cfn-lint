@@ -1,0 +1,172 @@
+{
+  "typeName" : "AWS::AppSync::GraphQLApi",
+  "description" : "Resource Type definition for AWS::AppSync::GraphQLApi",
+  "additionalProperties" : false,
+  "properties" : {
+    "OpenIDConnectConfig" : {
+      "$ref" : "#/definitions/OpenIDConnectConfig"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "AdditionalAuthenticationProviders" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/AdditionalAuthenticationProvider"
+      }
+    },
+    "GraphQLUrl" : {
+      "type" : "string"
+    },
+    "LambdaAuthorizerConfig" : {
+      "$ref" : "#/definitions/LambdaAuthorizerConfig"
+    },
+    "XrayEnabled" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "UserPoolConfig" : {
+      "$ref" : "#/definitions/UserPoolConfig"
+    },
+    "ApiId" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "AuthenticationType" : {
+      "type" : "string"
+    },
+    "LogConfig" : {
+      "$ref" : "#/definitions/LogConfig"
+    }
+  },
+  "definitions" : {
+    "OpenIDConnectConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ClientId" : {
+          "type" : "string"
+        },
+        "AuthTTL" : {
+          "type" : "number"
+        },
+        "Issuer" : {
+          "type" : "string"
+        },
+        "IatTTL" : {
+          "type" : "number"
+        }
+      }
+    },
+    "CognitoUserPoolConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AppIdClientRegex" : {
+          "type" : "string"
+        },
+        "UserPoolId" : {
+          "type" : "string"
+        },
+        "AwsRegion" : {
+          "type" : "string"
+        }
+      }
+    },
+    "LambdaAuthorizerConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IdentityValidationExpression" : {
+          "type" : "string"
+        },
+        "AuthorizerUri" : {
+          "type" : "string"
+        },
+        "AuthorizerResultTtlInSeconds" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "UserPoolConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AppIdClientRegex" : {
+          "type" : "string"
+        },
+        "UserPoolId" : {
+          "type" : "string"
+        },
+        "AwsRegion" : {
+          "type" : "string"
+        },
+        "DefaultAction" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AdditionalAuthenticationProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LambdaAuthorizerConfig" : {
+          "$ref" : "#/definitions/LambdaAuthorizerConfig"
+        },
+        "OpenIDConnectConfig" : {
+          "$ref" : "#/definitions/OpenIDConnectConfig"
+        },
+        "UserPoolConfig" : {
+          "$ref" : "#/definitions/CognitoUserPoolConfig"
+        },
+        "AuthenticationType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AuthenticationType" ]
+    },
+    "LogConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ExcludeVerboseContent" : {
+          "type" : "boolean"
+        },
+        "FieldLogLevel" : {
+          "type" : "string"
+        },
+        "CloudWatchLogsRoleArn" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "Name", "AuthenticationType" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/ApiId", "/properties/Id", "/properties/GraphQLUrl", "/properties/Arn" ]
+}

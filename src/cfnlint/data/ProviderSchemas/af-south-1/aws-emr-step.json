@@ -1,0 +1,67 @@
+{
+  "typeName" : "AWS::EMR::Step",
+  "description" : "Resource Type definition for AWS::EMR::Step",
+  "additionalProperties" : false,
+  "properties" : {
+    "JobFlowId" : {
+      "type" : "string"
+    },
+    "HadoopJarStep" : {
+      "$ref" : "#/definitions/HadoopJarStepConfig"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ActionOnFailure" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "HadoopJarStepConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Args" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "MainClass" : {
+          "type" : "string"
+        },
+        "Jar" : {
+          "type" : "string"
+        },
+        "StepProperties" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/KeyValue"
+          }
+        }
+      },
+      "required" : [ "Jar" ]
+    },
+    "KeyValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "JobFlowId", "ActionOnFailure", "HadoopJarStep", "Name" ],
+  "createOnlyProperties" : [ "/properties/JobFlowId", "/properties/HadoopJarStep", "/properties/Name", "/properties/ActionOnFailure" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

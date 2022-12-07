@@ -1,0 +1,62 @@
+{
+  "typeName" : "AWS::DMS::EventSubscription",
+  "description" : "Resource Type definition for AWS::DMS::EventSubscription",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "SourceType" : {
+      "type" : "string"
+    },
+    "EventCategories" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Enabled" : {
+      "type" : "boolean"
+    },
+    "SubscriptionName" : {
+      "type" : "string"
+    },
+    "SnsTopicArn" : {
+      "type" : "string"
+    },
+    "SourceIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "SnsTopicArn" ],
+  "createOnlyProperties" : [ "/properties/Tags", "/properties/SubscriptionName", "/properties/SourceIds" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

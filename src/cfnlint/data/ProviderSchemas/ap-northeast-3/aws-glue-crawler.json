@@ -1,0 +1,214 @@
+{
+  "typeName" : "AWS::Glue::Crawler",
+  "description" : "Resource Type definition for AWS::Glue::Crawler",
+  "additionalProperties" : false,
+  "properties" : {
+    "Classifiers" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "SchemaChangePolicy" : {
+      "$ref" : "#/definitions/SchemaChangePolicy"
+    },
+    "Configuration" : {
+      "type" : "string"
+    },
+    "RecrawlPolicy" : {
+      "$ref" : "#/definitions/RecrawlPolicy"
+    },
+    "DatabaseName" : {
+      "type" : "string"
+    },
+    "Targets" : {
+      "$ref" : "#/definitions/Targets"
+    },
+    "CrawlerSecurityConfiguration" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Role" : {
+      "type" : "string"
+    },
+    "Schedule" : {
+      "$ref" : "#/definitions/Schedule"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "TablePrefix" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    }
+  },
+  "definitions" : {
+    "S3Target" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConnectionName" : {
+          "type" : "string"
+        },
+        "Path" : {
+          "type" : "string"
+        },
+        "SampleSize" : {
+          "type" : "integer"
+        },
+        "Exclusions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "DlqEventQueueArn" : {
+          "type" : "string"
+        },
+        "EventQueueArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SchemaChangePolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "UpdateBehavior" : {
+          "type" : "string"
+        },
+        "DeleteBehavior" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Schedule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ScheduleExpression" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RecrawlPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecrawlBehavior" : {
+          "type" : "string"
+        }
+      }
+    },
+    "MongoDBTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConnectionName" : {
+          "type" : "string"
+        },
+        "Path" : {
+          "type" : "string"
+        }
+      }
+    },
+    "JdbcTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConnectionName" : {
+          "type" : "string"
+        },
+        "Path" : {
+          "type" : "string"
+        },
+        "Exclusions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Targets" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CatalogTargets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/CatalogTarget"
+          }
+        },
+        "MongoDBTargets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/MongoDBTarget"
+          }
+        },
+        "JdbcTargets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/JdbcTarget"
+          }
+        },
+        "S3Targets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/S3Target"
+          }
+        },
+        "DynamoDBTargets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/DynamoDBTarget"
+          }
+        }
+      }
+    },
+    "DynamoDBTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Path" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CatalogTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
+        },
+        "Tables" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "required" : [ "Role", "Targets" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

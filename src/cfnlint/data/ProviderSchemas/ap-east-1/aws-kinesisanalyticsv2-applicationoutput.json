@@ -1,0 +1,100 @@
+{
+ "typeName": "AWS::KinesisAnalyticsV2::ApplicationOutput",
+ "description": "Resource Type definition for AWS::KinesisAnalyticsV2::ApplicationOutput",
+ "additionalProperties": false,
+ "properties": {
+  "ApplicationName": {
+   "type": "string"
+  },
+  "Output": {
+   "$ref": "#/definitions/Output"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Output": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DestinationSchema": {
+     "$ref": "#/definitions/DestinationSchema"
+    },
+    "LambdaOutput": {
+     "$ref": "#/definitions/LambdaOutput"
+    },
+    "KinesisFirehoseOutput": {
+     "$ref": "#/definitions/KinesisFirehoseOutput"
+    },
+    "KinesisStreamsOutput": {
+     "$ref": "#/definitions/KinesisStreamsOutput"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DestinationSchema"
+   ]
+  },
+  "DestinationSchema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RecordFormatType": {
+     "type": "string"
+    }
+   }
+  },
+  "LambdaOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ]
+  },
+  "KinesisStreamsOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ]
+  },
+  "KinesisFirehoseOutput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ResourceARN": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ResourceARN"
+   ]
+  }
+ },
+ "required": [
+  "ApplicationName",
+  "Output"
+ ],
+ "createOnlyProperties": [
+  "/properties/ApplicationName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

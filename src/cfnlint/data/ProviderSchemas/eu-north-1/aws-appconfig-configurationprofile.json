@@ -1,0 +1,84 @@
+{
+ "typeName": "AWS::AppConfig::ConfigurationProfile",
+ "description": "Resource Type definition for AWS::AppConfig::ConfigurationProfile",
+ "additionalProperties": false,
+ "properties": {
+  "LocationUri": {
+   "type": "string"
+  },
+  "Type": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Validators": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Validators"
+   }
+  },
+  "RetrievalRoleArn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ApplicationId": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tags"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Validators": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Content": {
+     "type": "string"
+    }
+   }
+  },
+  "Tags": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "LocationUri",
+  "ApplicationId",
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/LocationUri",
+  "/properties/Type",
+  "/properties/ApplicationId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

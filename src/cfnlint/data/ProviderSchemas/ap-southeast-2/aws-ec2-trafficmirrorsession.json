@@ -1,0 +1,57 @@
+{
+  "typeName" : "AWS::EC2::TrafficMirrorSession",
+  "description" : "Resource Type definition for AWS::EC2::TrafficMirrorSession",
+  "additionalProperties" : false,
+  "properties" : {
+    "TrafficMirrorTargetId" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "SessionNumber" : {
+      "type" : "integer"
+    },
+    "VirtualNetworkId" : {
+      "type" : "integer"
+    },
+    "PacketLength" : {
+      "type" : "integer"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "NetworkInterfaceId" : {
+      "type" : "string"
+    },
+    "TrafficMirrorFilterId" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "TrafficMirrorTargetId", "SessionNumber", "NetworkInterfaceId", "TrafficMirrorFilterId" ],
+  "createOnlyProperties" : [ "/properties/NetworkInterfaceId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

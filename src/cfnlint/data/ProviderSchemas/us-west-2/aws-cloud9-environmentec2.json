@@ -1,0 +1,104 @@
+{
+ "typeName": "AWS::Cloud9::EnvironmentEC2",
+ "description": "Resource Type definition for AWS::Cloud9::EnvironmentEC2",
+ "additionalProperties": false,
+ "properties": {
+  "Repositories": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Repository"
+   }
+  },
+  "OwnerArn": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "ConnectionType": {
+   "type": "string"
+  },
+  "AutomaticStopTimeMinutes": {
+   "type": "integer"
+  },
+  "ImageId": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Repository": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryUrl": {
+     "type": "string"
+    },
+    "PathComponent": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PathComponent",
+    "RepositoryUrl"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "required": [
+  "InstanceType"
+ ],
+ "createOnlyProperties": [
+  "/properties/AutomaticStopTimeMinutes",
+  "/properties/OwnerArn",
+  "/properties/ConnectionType",
+  "/properties/InstanceType",
+  "/properties/ImageId",
+  "/properties/SubnetId",
+  "/properties/Repositories"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ]
+}

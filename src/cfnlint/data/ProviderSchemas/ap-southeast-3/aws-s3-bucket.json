@@ -1,0 +1,1159 @@
+{
+ "typeName": "AWS::S3::Bucket",
+ "description": "Resource Type definition for AWS::S3::Bucket",
+ "additionalProperties": false,
+ "properties": {
+  "InventoryConfigurations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/InventoryConfiguration"
+   }
+  },
+  "WebsiteConfiguration": {
+   "$ref": "#/definitions/WebsiteConfiguration"
+  },
+  "DualStackDomainName": {
+   "type": "string"
+  },
+  "AccessControl": {
+   "type": "string"
+  },
+  "AnalyticsConfigurations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/AnalyticsConfiguration"
+   }
+  },
+  "AccelerateConfiguration": {
+   "$ref": "#/definitions/AccelerateConfiguration"
+  },
+  "PublicAccessBlockConfiguration": {
+   "$ref": "#/definitions/PublicAccessBlockConfiguration"
+  },
+  "BucketName": {
+   "type": "string"
+  },
+  "RegionalDomainName": {
+   "type": "string"
+  },
+  "OwnershipControls": {
+   "$ref": "#/definitions/OwnershipControls"
+  },
+  "ObjectLockConfiguration": {
+   "$ref": "#/definitions/ObjectLockConfiguration"
+  },
+  "ObjectLockEnabled": {
+   "type": "boolean"
+  },
+  "LoggingConfiguration": {
+   "$ref": "#/definitions/LoggingConfiguration"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "BucketEncryption": {
+   "$ref": "#/definitions/BucketEncryption"
+  },
+  "WebsiteURL": {
+   "type": "string"
+  },
+  "NotificationConfiguration": {
+   "$ref": "#/definitions/NotificationConfiguration"
+  },
+  "LifecycleConfiguration": {
+   "$ref": "#/definitions/LifecycleConfiguration"
+  },
+  "VersioningConfiguration": {
+   "$ref": "#/definitions/VersioningConfiguration"
+  },
+  "MetricsConfigurations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/MetricsConfiguration"
+   }
+  },
+  "IntelligentTieringConfigurations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/IntelligentTieringConfiguration"
+   }
+  },
+  "CorsConfiguration": {
+   "$ref": "#/definitions/CorsConfiguration"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "DefaultRetention": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Years": {
+     "type": "integer"
+    },
+    "Days": {
+     "type": "integer"
+    },
+    "Mode": {
+     "type": "string"
+    }
+   }
+  },
+  "SourceSelectionCriteria": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ReplicaModifications": {
+     "$ref": "#/definitions/ReplicaModifications"
+    },
+    "SseKmsEncryptedObjects": {
+     "$ref": "#/definitions/SseKmsEncryptedObjects"
+    }
+   }
+  },
+  "ReplicationTimeValue": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Minutes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Minutes"
+   ]
+  },
+  "FilterRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Name"
+   ]
+  },
+  "ReplicationRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "Destination": {
+     "$ref": "#/definitions/ReplicationDestination"
+    },
+    "Filter": {
+     "$ref": "#/definitions/ReplicationRuleFilter"
+    },
+    "Priority": {
+     "type": "integer"
+    },
+    "SourceSelectionCriteria": {
+     "$ref": "#/definitions/SourceSelectionCriteria"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "DeleteMarkerReplication": {
+     "$ref": "#/definitions/DeleteMarkerReplication"
+    }
+   },
+   "required": [
+    "Status",
+    "Destination"
+   ]
+  },
+  "AccelerateConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AccelerationStatus": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AccelerationStatus"
+   ]
+  },
+  "Metrics": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "EventThreshold": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    }
+   },
+   "required": [
+    "Status"
+   ]
+  },
+  "RoutingRuleCondition": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "KeyPrefixEquals": {
+     "type": "string"
+    },
+    "HttpErrorCodeReturnedEquals": {
+     "type": "string"
+    }
+   }
+  },
+  "OwnershipControls": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/OwnershipControlsRule"
+     }
+    }
+   },
+   "required": [
+    "Rules"
+   ]
+  },
+  "RoutingRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RedirectRule": {
+     "$ref": "#/definitions/RedirectRule"
+    },
+    "RoutingRuleCondition": {
+     "$ref": "#/definitions/RoutingRuleCondition"
+    }
+   },
+   "required": [
+    "RedirectRule"
+   ]
+  },
+  "DeleteMarkerReplication": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    }
+   }
+  },
+  "NotificationFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "S3Key": {
+     "$ref": "#/definitions/S3KeyFilter"
+    }
+   },
+   "required": [
+    "S3Key"
+   ]
+  },
+  "ReplicationConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Role": {
+     "type": "string"
+    },
+    "Rules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/ReplicationRule"
+     }
+    }
+   },
+   "required": [
+    "Role",
+    "Rules"
+   ]
+  },
+  "ServerSideEncryptionRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "BucketKeyEnabled": {
+     "type": "boolean"
+    },
+    "ServerSideEncryptionByDefault": {
+     "$ref": "#/definitions/ServerSideEncryptionByDefault"
+    }
+   }
+  },
+  "ReplicationDestination": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AccessControlTranslation": {
+     "$ref": "#/definitions/AccessControlTranslation"
+    },
+    "Account": {
+     "type": "string"
+    },
+    "Metrics": {
+     "$ref": "#/definitions/Metrics"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "EncryptionConfiguration": {
+     "$ref": "#/definitions/EncryptionConfiguration"
+    },
+    "StorageClass": {
+     "type": "string"
+    },
+    "ReplicationTime": {
+     "$ref": "#/definitions/ReplicationTime"
+    }
+   },
+   "required": [
+    "Bucket"
+   ]
+  },
+  "OwnershipControlsRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ObjectOwnership": {
+     "type": "string"
+    }
+   }
+  },
+  "EventBridgeConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "EventBridgeEnabled": {
+     "type": "boolean"
+    }
+   }
+  },
+  "CorsRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ExposedHeaders": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "AllowedMethods": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "AllowedOrigins": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "AllowedHeaders": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "MaxAge": {
+     "type": "integer"
+    },
+    "Id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "AllowedMethods",
+    "AllowedOrigins"
+   ]
+  },
+  "AccessControlTranslation": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Owner": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ]
+  },
+  "ObjectLockRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DefaultRetention": {
+     "$ref": "#/definitions/DefaultRetention"
+    }
+   }
+  },
+  "Rule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "ExpiredObjectDeleteMarker": {
+     "type": "boolean"
+    },
+    "NoncurrentVersionExpirationInDays": {
+     "type": "integer"
+    },
+    "Transitions": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/Transition"
+     }
+    },
+    "ObjectSizeGreaterThan": {
+     "type": "integer"
+    },
+    "TagFilters": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    },
+    "NoncurrentVersionTransitions": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/NoncurrentVersionTransition"
+     }
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "ObjectSizeLessThan": {
+     "type": "integer"
+    },
+    "NoncurrentVersionTransition": {
+     "$ref": "#/definitions/NoncurrentVersionTransition"
+    },
+    "ExpirationDate": {
+     "type": "string"
+    },
+    "NoncurrentVersionExpiration": {
+     "$ref": "#/definitions/NoncurrentVersionExpiration"
+    },
+    "ExpirationInDays": {
+     "type": "integer"
+    },
+    "Transition": {
+     "$ref": "#/definitions/Transition"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "AbortIncompleteMultipartUpload": {
+     "$ref": "#/definitions/AbortIncompleteMultipartUpload"
+    }
+   },
+   "required": [
+    "Status"
+   ]
+  },
+  "S3KeyFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/FilterRule"
+     }
+    }
+   },
+   "required": [
+    "Rules"
+   ]
+  },
+  "AnalyticsConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TagFilters": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    },
+    "StorageClassAnalysis": {
+     "$ref": "#/definitions/StorageClassAnalysis"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StorageClassAnalysis",
+    "Id"
+   ]
+  },
+  "Destination": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "type": "string"
+    },
+    "BucketAccountId": {
+     "type": "string"
+    },
+    "Format": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketArn",
+    "Format"
+   ]
+  },
+  "RedirectAllRequestsTo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Protocol": {
+     "type": "string"
+    },
+    "HostName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "HostName"
+   ]
+  },
+  "TagFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "WebsiteConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RoutingRules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/RoutingRule"
+     }
+    },
+    "IndexDocument": {
+     "type": "string"
+    },
+    "RedirectAllRequestsTo": {
+     "$ref": "#/definitions/RedirectAllRequestsTo"
+    },
+    "ErrorDocument": {
+     "type": "string"
+    }
+   }
+  },
+  "TopicConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Event": {
+     "type": "string"
+    },
+    "Topic": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    }
+   },
+   "required": [
+    "Event",
+    "Topic"
+   ]
+  },
+  "IntelligentTieringConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "TagFilters": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    },
+    "Tierings": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/Tiering"
+     }
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status",
+    "Tierings",
+    "Id"
+   ]
+  },
+  "PublicAccessBlockConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RestrictPublicBuckets": {
+     "type": "boolean"
+    },
+    "IgnorePublicAcls": {
+     "type": "boolean"
+    },
+    "BlockPublicPolicy": {
+     "type": "boolean"
+    },
+    "BlockPublicAcls": {
+     "type": "boolean"
+    }
+   }
+  },
+  "NoncurrentVersionTransition": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TransitionInDays": {
+     "type": "integer"
+    },
+    "StorageClass": {
+     "type": "string"
+    },
+    "NewerNoncurrentVersions": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "StorageClass",
+    "TransitionInDays"
+   ]
+  },
+  "StorageClassAnalysis": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DataExport": {
+     "$ref": "#/definitions/DataExport"
+    }
+   }
+  },
+  "ServerSideEncryptionByDefault": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SSEAlgorithm": {
+     "type": "string"
+    },
+    "KMSMasterKeyID": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SSEAlgorithm"
+   ]
+  },
+  "MetricsConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TagFilters": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "AccessPointArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Id"
+   ]
+  },
+  "ObjectLockConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ObjectLockEnabled": {
+     "type": "string"
+    },
+    "Rule": {
+     "$ref": "#/definitions/ObjectLockRule"
+    }
+   }
+  },
+  "LoggingConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DestinationBucketName": {
+     "type": "string"
+    },
+    "LogFilePrefix": {
+     "type": "string"
+    }
+   }
+  },
+  "LambdaConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Function": {
+     "type": "string"
+    },
+    "Event": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    }
+   },
+   "required": [
+    "Function",
+    "Event"
+   ]
+  },
+  "Tiering": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AccessTier": {
+     "type": "string"
+    },
+    "Days": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "AccessTier",
+    "Days"
+   ]
+  },
+  "DataExport": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "OutputSchemaVersion": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "OutputSchemaVersion"
+   ]
+  },
+  "ReplicationTime": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    },
+    "Time": {
+     "$ref": "#/definitions/ReplicationTimeValue"
+    }
+   },
+   "required": [
+    "Status",
+    "Time"
+   ]
+  },
+  "ReplicationRuleFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Prefix": {
+     "type": "string"
+    },
+    "And": {
+     "$ref": "#/definitions/ReplicationRuleAndOperator"
+    },
+    "TagFilter": {
+     "$ref": "#/definitions/TagFilter"
+    }
+   }
+  },
+  "RedirectRule": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ReplaceKeyWith": {
+     "type": "string"
+    },
+    "HttpRedirectCode": {
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    },
+    "HostName": {
+     "type": "string"
+    },
+    "ReplaceKeyPrefixWith": {
+     "type": "string"
+    }
+   }
+  },
+  "EncryptionConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ReplicaKmsKeyID": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ReplicaKmsKeyID"
+   ]
+  },
+  "BucketEncryption": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ServerSideEncryptionConfiguration": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/ServerSideEncryptionRule"
+     }
+    }
+   },
+   "required": [
+    "ServerSideEncryptionConfiguration"
+   ]
+  },
+  "NotificationConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "QueueConfigurations": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/QueueConfiguration"
+     }
+    },
+    "LambdaConfigurations": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/LambdaConfiguration"
+     }
+    },
+    "EventBridgeConfiguration": {
+     "$ref": "#/definitions/EventBridgeConfiguration"
+    },
+    "TopicConfigurations": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TopicConfiguration"
+     }
+    }
+   }
+  },
+  "LifecycleConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Rules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/Rule"
+     }
+    }
+   },
+   "required": [
+    "Rules"
+   ]
+  },
+  "InventoryConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Destination": {
+     "$ref": "#/definitions/Destination"
+    },
+    "OptionalFields": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "IncludedObjectVersions": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "Prefix": {
+     "type": "string"
+    },
+    "ScheduleFrequency": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Destination",
+    "IncludedObjectVersions",
+    "Enabled",
+    "Id",
+    "ScheduleFrequency"
+   ]
+  },
+  "ReplicationRuleAndOperator": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TagFilters": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    },
+    "Prefix": {
+     "type": "string"
+    }
+   }
+  },
+  "VersioningConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ]
+  },
+  "CorsConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CorsRules": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/CorsRule"
+     }
+    }
+   },
+   "required": [
+    "CorsRules"
+   ]
+  },
+  "ReplicaModifications": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ]
+  },
+  "NoncurrentVersionExpiration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "NoncurrentDays": {
+     "type": "integer"
+    },
+    "NewerNoncurrentVersions": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "NoncurrentDays"
+   ]
+  },
+  "QueueConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Event": {
+     "type": "string"
+    },
+    "Filter": {
+     "$ref": "#/definitions/NotificationFilter"
+    },
+    "Queue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Event",
+    "Queue"
+   ]
+  },
+  "Transition": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TransitionDate": {
+     "type": "string"
+    },
+    "TransitionInDays": {
+     "type": "integer"
+    },
+    "StorageClass": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StorageClass"
+   ]
+  },
+  "SseKmsEncryptedObjects": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "AbortIncompleteMultipartUpload": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DaysAfterInitiation": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DaysAfterInitiation"
+   ]
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/ObjectLockEnabled",
+  "/properties/BucketName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/RegionalDomainName",
+  "/properties/Id",
+  "/properties/WebsiteURL",
+  "/properties/Arn",
+  "/properties/DomainName",
+  "/properties/DualStackDomainName"
+ ]
+}

@@ -1,0 +1,120 @@
+{
+  "typeName" : "AWS::CodePipeline::CustomActionType",
+  "description" : "Resource Type definition for AWS::CodePipeline::CustomActionType",
+  "additionalProperties" : false,
+  "properties" : {
+    "Category" : {
+      "type" : "string"
+    },
+    "InputArtifactDetails" : {
+      "$ref" : "#/definitions/ArtifactDetails"
+    },
+    "Version" : {
+      "type" : "string"
+    },
+    "OutputArtifactDetails" : {
+      "$ref" : "#/definitions/ArtifactDetails"
+    },
+    "ConfigurationProperties" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/ConfigurationProperties"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Settings" : {
+      "$ref" : "#/definitions/Settings"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Provider" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "ArtifactDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MinimumCount" : {
+          "type" : "integer"
+        },
+        "MaximumCount" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "MinimumCount", "MaximumCount" ]
+    },
+    "ConfigurationProperties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Secret" : {
+          "type" : "boolean"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "Required" : {
+          "type" : "boolean"
+        },
+        "Queryable" : {
+          "type" : "boolean"
+        },
+        "Key" : {
+          "type" : "boolean"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Secret", "Required", "Key", "Name" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Settings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RevisionUrlTemplate" : {
+          "type" : "string"
+        },
+        "EntityUrlTemplate" : {
+          "type" : "string"
+        },
+        "ThirdPartyConfigurationUrl" : {
+          "type" : "string"
+        },
+        "ExecutionUrlTemplate" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "Category", "InputArtifactDetails", "Version", "OutputArtifactDetails", "Provider" ],
+  "createOnlyProperties" : [ "/properties/ConfigurationProperties", "/properties/OutputArtifactDetails", "/properties/Version", "/properties/InputArtifactDetails", "/properties/Settings", "/properties/Provider", "/properties/Category" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

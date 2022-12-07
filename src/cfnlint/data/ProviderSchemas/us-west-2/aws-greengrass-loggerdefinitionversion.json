@@ -1,0 +1,48 @@
+{
+  "typeName" : "AWS::Greengrass::LoggerDefinitionVersion",
+  "description" : "Resource Type definition for AWS::Greengrass::LoggerDefinitionVersion",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "LoggerDefinitionId" : {
+      "type" : "string"
+    },
+    "Loggers" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Logger"
+      }
+    }
+  },
+  "definitions" : {
+    "Logger" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Space" : {
+          "type" : "integer"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Level" : {
+          "type" : "string"
+        },
+        "Id" : {
+          "type" : "string"
+        },
+        "Component" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "Level", "Id", "Component" ]
+    }
+  },
+  "required" : [ "Loggers", "LoggerDefinitionId" ],
+  "createOnlyProperties" : [ "/properties/LoggerDefinitionId", "/properties/Loggers" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

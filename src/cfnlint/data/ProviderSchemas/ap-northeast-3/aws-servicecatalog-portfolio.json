@@ -1,0 +1,50 @@
+{
+  "typeName" : "AWS::ServiceCatalog::Portfolio",
+  "description" : "Resource Type definition for AWS::ServiceCatalog::Portfolio",
+  "additionalProperties" : false,
+  "properties" : {
+    "ProviderName" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "DisplayName" : {
+      "type" : "string"
+    },
+    "AcceptLanguage" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "PortfolioName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "ProviderName", "DisplayName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/PortfolioName" ]
+}

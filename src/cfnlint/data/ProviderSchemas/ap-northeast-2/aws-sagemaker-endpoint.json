@@ -1,0 +1,152 @@
+{
+  "typeName" : "AWS::SageMaker::Endpoint",
+  "description" : "Resource Type definition for AWS::SageMaker::Endpoint",
+  "additionalProperties" : false,
+  "properties" : {
+    "RetainAllVariantProperties" : {
+      "type" : "boolean"
+    },
+    "EndpointName" : {
+      "type" : "string"
+    },
+    "ExcludeRetainedVariantProperties" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/VariantProperty"
+      }
+    },
+    "EndpointConfigName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "DeploymentConfig" : {
+      "$ref" : "#/definitions/DeploymentConfig"
+    },
+    "RetainDeploymentConfig" : {
+      "type" : "boolean"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "CapacitySize" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "integer"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "Value" ]
+    },
+    "Alarm" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AlarmName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AlarmName" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "AutoRollbackConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Alarms" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Alarm"
+          }
+        }
+      },
+      "required" : [ "Alarms" ]
+    },
+    "DeploymentConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutoRollbackConfiguration" : {
+          "$ref" : "#/definitions/AutoRollbackConfig"
+        },
+        "BlueGreenUpdatePolicy" : {
+          "$ref" : "#/definitions/BlueGreenUpdatePolicy"
+        }
+      },
+      "required" : [ "BlueGreenUpdatePolicy" ]
+    },
+    "BlueGreenUpdatePolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaximumExecutionTimeoutInSeconds" : {
+          "type" : "integer"
+        },
+        "TerminationWaitInSeconds" : {
+          "type" : "integer"
+        },
+        "TrafficRoutingConfiguration" : {
+          "$ref" : "#/definitions/TrafficRoutingConfig"
+        }
+      },
+      "required" : [ "TrafficRoutingConfiguration" ]
+    },
+    "TrafficRoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "LinearStepSize" : {
+          "$ref" : "#/definitions/CapacitySize"
+        },
+        "CanarySize" : {
+          "$ref" : "#/definitions/CapacitySize"
+        },
+        "WaitIntervalInSeconds" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "VariantProperty" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VariantPropertyType" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "EndpointConfigName" ],
+  "createOnlyProperties" : [ "/properties/EndpointName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

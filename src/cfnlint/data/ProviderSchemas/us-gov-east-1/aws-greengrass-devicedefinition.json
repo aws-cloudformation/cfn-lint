@@ -1,0 +1,80 @@
+{
+ "typeName": "AWS::Greengrass::DeviceDefinition",
+ "description": "Resource Type definition for AWS::Greengrass::DeviceDefinition",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "LatestVersionArn": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "object"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "InitialVersion": {
+   "$ref": "#/definitions/DeviceDefinitionVersion"
+  }
+ },
+ "definitions": {
+  "Device": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SyncShadow": {
+     "type": "boolean"
+    },
+    "ThingArn": {
+     "type": "string"
+    },
+    "Id": {
+     "type": "string"
+    },
+    "CertificateArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ThingArn",
+    "Id",
+    "CertificateArn"
+   ]
+  },
+  "DeviceDefinitionVersion": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Devices": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/Device"
+     }
+    }
+   },
+   "required": [
+    "Devices"
+   ]
+  }
+ },
+ "required": [
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/InitialVersion"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/LatestVersionArn",
+  "/properties/Id",
+  "/properties/Arn"
+ ]
+}

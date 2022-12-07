@@ -1,0 +1,169 @@
+{
+ "typeName": "AWS::AppStream::Stack",
+ "description": "Resource Type definition for AWS::AppStream::Stack",
+ "additionalProperties": false,
+ "properties": {
+  "Description": {
+   "type": "string"
+  },
+  "StorageConnectors": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/StorageConnector"
+   }
+  },
+  "DeleteStorageConnectors": {
+   "type": "boolean"
+  },
+  "EmbedHostDomains": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "UserSettings": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/UserSetting"
+   }
+  },
+  "AttributesToDelete": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "type": "string"
+   }
+  },
+  "RedirectURL": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "FeedbackURL": {
+   "type": "string"
+  },
+  "ApplicationSettings": {
+   "$ref": "#/definitions/ApplicationSettings"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "AccessEndpoints": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/AccessEndpoint"
+   }
+  }
+ },
+ "definitions": {
+  "StorageConnector": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Domains": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "ResourceIdentifier": {
+     "type": "string"
+    },
+    "ConnectorType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConnectorType"
+   ]
+  },
+  "ApplicationSettings": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SettingsGroup": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Enabled"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "AccessEndpoint": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "EndpointType": {
+     "type": "string"
+    },
+    "VpceId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EndpointType",
+    "VpceId"
+   ]
+  },
+  "UserSetting": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Permission": {
+     "type": "string"
+    },
+    "Action": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Action",
+    "Permission"
+   ]
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

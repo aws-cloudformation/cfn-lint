@@ -1,0 +1,81 @@
+{
+ "typeName": "AWS::Glue::Connection",
+ "description": "Resource Type definition for AWS::Glue::Connection",
+ "additionalProperties": false,
+ "properties": {
+  "ConnectionInput": {
+   "$ref": "#/definitions/ConnectionInput"
+  },
+  "CatalogId": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "ConnectionInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "ConnectionType": {
+     "type": "string"
+    },
+    "MatchCriteria": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "PhysicalConnectionRequirements": {
+     "$ref": "#/definitions/PhysicalConnectionRequirements"
+    },
+    "ConnectionProperties": {
+     "type": "object"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConnectionType"
+   ]
+  },
+  "PhysicalConnectionRequirements": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZone": {
+     "type": "string"
+    },
+    "SecurityGroupIdList": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "ConnectionInput",
+  "CatalogId"
+ ],
+ "createOnlyProperties": [
+  "/properties/CatalogId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

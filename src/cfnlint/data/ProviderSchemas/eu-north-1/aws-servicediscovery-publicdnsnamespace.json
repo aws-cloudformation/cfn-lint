@@ -1,0 +1,78 @@
+{
+  "typeName" : "AWS::ServiceDiscovery::PublicDnsNamespace",
+  "description" : "Resource Type definition for AWS::ServiceDiscovery::PublicDnsNamespace",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
+    },
+    "HostedZoneId" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Properties" : {
+      "$ref" : "#/definitions/Properties"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SOA" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TTL" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Properties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DnsProperties" : {
+          "$ref" : "#/definitions/PublicDnsPropertiesMutable"
+        }
+      }
+    },
+    "PublicDnsPropertiesMutable" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SOA" : {
+          "$ref" : "#/definitions/SOA"
+        }
+      }
+    }
+  },
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/HostedZoneId", "/properties/Arn" ]
+}

@@ -1,0 +1,111 @@
+{
+  "typeName" : "AWS::EC2::NetworkInterface",
+  "description" : "Resource Type definition for AWS::EC2::NetworkInterface",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
+    },
+    "PrivateIpAddress" : {
+      "type" : "string"
+    },
+    "PrivateIpAddresses" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/PrivateIpAddressSpecification"
+      }
+    },
+    "SecondaryPrivateIpAddressCount" : {
+      "type" : "integer"
+    },
+    "PrimaryPrivateIpAddress" : {
+      "type" : "string"
+    },
+    "GroupSet" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Ipv6Addresses" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/InstanceIpv6Address"
+      }
+    },
+    "SubnetId" : {
+      "type" : "string"
+    },
+    "SourceDestCheck" : {
+      "type" : "boolean"
+    },
+    "InterfaceType" : {
+      "type" : "string"
+    },
+    "SecondaryPrivateIpAddresses" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Ipv6AddressCount" : {
+      "type" : "integer"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "PrivateIpAddressSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PrivateIpAddress" : {
+          "type" : "string"
+        },
+        "Primary" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "PrivateIpAddress", "Primary" ]
+    },
+    "InstanceIpv6Address" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Ipv6Address" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Ipv6Address" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "SubnetId" ],
+  "createOnlyProperties" : [ "/properties/PrivateIpAddress", "/properties/InterfaceType", "/properties/SubnetId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/SecondaryPrivateIpAddresses", "/properties/PrimaryPrivateIpAddress" ]
+}

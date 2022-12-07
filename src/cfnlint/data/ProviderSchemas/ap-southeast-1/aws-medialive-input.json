@@ -1,0 +1,130 @@
+{
+  "typeName" : "AWS::MediaLive::Input",
+  "description" : "Resource Type definition for AWS::MediaLive::Input",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
+    },
+    "Destinations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputDestinationRequest"
+      }
+    },
+    "Vpc" : {
+      "$ref" : "#/definitions/InputVpcRequest"
+    },
+    "MediaConnectFlows" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/MediaConnectFlowRequest"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "InputSecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Sources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputSourceRequest"
+      }
+    },
+    "InputDevices" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputDeviceSettings"
+      }
+    },
+    "RoleArn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "InputSourceRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PasswordParam" : {
+          "type" : "string"
+        },
+        "Username" : {
+          "type" : "string"
+        },
+        "Url" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InputDeviceSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InputDestinationRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InputVpcRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "MediaConnectFlowRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FlowArn" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "createOnlyProperties" : [ "/properties/Vpc", "/properties/Type" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
+}

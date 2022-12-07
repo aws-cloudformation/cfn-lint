@@ -1,0 +1,35 @@
+{
+  "typeName" : "AWS::IoT::Thing",
+  "description" : "Resource Type definition for AWS::IoT::Thing",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "AttributePayload" : {
+      "$ref" : "#/definitions/AttributePayload"
+    },
+    "ThingName" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "AttributePayload" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Attributes" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "createOnlyProperties" : [ "/properties/ThingName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

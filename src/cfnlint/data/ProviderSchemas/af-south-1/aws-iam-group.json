@@ -1,0 +1,61 @@
+{
+ "typeName": "AWS::IAM::Group",
+ "description": "Resource Type definition for AWS::IAM::Group",
+ "additionalProperties": false,
+ "properties": {
+  "GroupName": {
+   "type": "string"
+  },
+  "Path": {
+   "type": "string"
+  },
+  "ManagedPolicyArns": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Policies": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/Policy"
+   }
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Policy": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "type": "object"
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyName",
+    "PolicyDocument"
+   ]
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/GroupName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ]
+}

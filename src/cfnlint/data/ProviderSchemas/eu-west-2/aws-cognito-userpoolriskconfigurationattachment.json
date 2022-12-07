@@ -1,0 +1,160 @@
+{
+  "typeName" : "AWS::Cognito::UserPoolRiskConfigurationAttachment",
+  "description" : "Resource Type definition for AWS::Cognito::UserPoolRiskConfigurationAttachment",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "CompromisedCredentialsRiskConfiguration" : {
+      "$ref" : "#/definitions/CompromisedCredentialsRiskConfigurationType"
+    },
+    "UserPoolId" : {
+      "type" : "string"
+    },
+    "ClientId" : {
+      "type" : "string"
+    },
+    "AccountTakeoverRiskConfiguration" : {
+      "$ref" : "#/definitions/AccountTakeoverRiskConfigurationType"
+    },
+    "RiskExceptionConfiguration" : {
+      "$ref" : "#/definitions/RiskExceptionConfigurationType"
+    }
+  },
+  "definitions" : {
+    "RiskExceptionConfigurationType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BlockedIPRangeList" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SkippedIPRangeList" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "CompromisedCredentialsRiskConfigurationType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Actions" : {
+          "$ref" : "#/definitions/CompromisedCredentialsActionsType"
+        },
+        "EventFilter" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "Actions" ]
+    },
+    "AccountTakeoverRiskConfigurationType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Actions" : {
+          "$ref" : "#/definitions/AccountTakeoverActionsType"
+        },
+        "NotifyConfiguration" : {
+          "$ref" : "#/definitions/NotifyConfigurationType"
+        }
+      },
+      "required" : [ "Actions" ]
+    },
+    "NotifyConfigurationType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BlockEmail" : {
+          "$ref" : "#/definitions/NotifyEmailType"
+        },
+        "ReplyTo" : {
+          "type" : "string"
+        },
+        "SourceArn" : {
+          "type" : "string"
+        },
+        "NoActionEmail" : {
+          "$ref" : "#/definitions/NotifyEmailType"
+        },
+        "From" : {
+          "type" : "string"
+        },
+        "MfaEmail" : {
+          "$ref" : "#/definitions/NotifyEmailType"
+        }
+      },
+      "required" : [ "SourceArn" ]
+    },
+    "CompromisedCredentialsActionsType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EventAction" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "EventAction" ]
+    },
+    "AccountTakeoverActionsType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HighAction" : {
+          "$ref" : "#/definitions/AccountTakeoverActionType"
+        },
+        "LowAction" : {
+          "$ref" : "#/definitions/AccountTakeoverActionType"
+        },
+        "MediumAction" : {
+          "$ref" : "#/definitions/AccountTakeoverActionType"
+        }
+      }
+    },
+    "AccountTakeoverActionType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Notify" : {
+          "type" : "boolean"
+        },
+        "EventAction" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Notify", "EventAction" ]
+    },
+    "NotifyEmailType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TextBody" : {
+          "type" : "string"
+        },
+        "HtmlBody" : {
+          "type" : "string"
+        },
+        "Subject" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Subject" ]
+    }
+  },
+  "required" : [ "ClientId", "UserPoolId" ],
+  "createOnlyProperties" : [ "/properties/UserPoolId", "/properties/ClientId" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/Id" ]
+}

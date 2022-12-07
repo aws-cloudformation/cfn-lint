@@ -1,0 +1,67 @@
+{
+  "typeName" : "AWS::RDS::DBSecurityGroup",
+  "description" : "Resource Type definition for AWS::RDS::DBSecurityGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "DBSecurityGroupIngress" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Ingress"
+      }
+    },
+    "EC2VpcId" : {
+      "type" : "string"
+    },
+    "GroupDescription" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Ingress" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CIDRIP" : {
+          "type" : "string"
+        },
+        "EC2SecurityGroupId" : {
+          "type" : "string"
+        },
+        "EC2SecurityGroupName" : {
+          "type" : "string"
+        },
+        "EC2SecurityGroupOwnerId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "GroupDescription", "DBSecurityGroupIngress" ],
+  "createOnlyProperties" : [ "/properties/GroupDescription", "/properties/EC2VpcId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

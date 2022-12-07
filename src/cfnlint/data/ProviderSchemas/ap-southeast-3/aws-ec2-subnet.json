@@ -1,0 +1,94 @@
+{
+  "typeName" : "AWS::EC2::Subnet",
+  "description" : "Resource Type definition for AWS::EC2::Subnet",
+  "additionalProperties" : false,
+  "properties" : {
+    "EnableDns64" : {
+      "type" : "boolean"
+    },
+    "MapPublicIpOnLaunch" : {
+      "type" : "boolean"
+    },
+    "OutpostArn" : {
+      "type" : "string"
+    },
+    "AvailabilityZoneId" : {
+      "type" : "string"
+    },
+    "AvailabilityZone" : {
+      "type" : "string"
+    },
+    "CidrBlock" : {
+      "type" : "string"
+    },
+    "AssignIpv6AddressOnCreation" : {
+      "type" : "boolean"
+    },
+    "VpcId" : {
+      "type" : "string"
+    },
+    "NetworkAclAssociationId" : {
+      "type" : "string"
+    },
+    "PrivateDnsNameOptionsOnLaunch" : {
+      "$ref" : "#/definitions/PrivateDnsNameOptionsOnLaunch"
+    },
+    "Ipv6Native" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Ipv6CidrBlocks" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Ipv6CidrBlock" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "PrivateDnsNameOptionsOnLaunch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HostnameType" : {
+          "type" : "string"
+        },
+        "EnableResourceNameDnsAAAARecord" : {
+          "type" : "boolean"
+        },
+        "EnableResourceNameDnsARecord" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "VpcId", "CidrBlock" ],
+  "createOnlyProperties" : [ "/properties/Ipv6Native", "/properties/OutpostArn", "/properties/AvailabilityZoneId", "/properties/VpcId", "/properties/AvailabilityZone", "/properties/CidrBlock" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/NetworkAclAssociationId", "/properties/Id", "/properties/Ipv6CidrBlocks" ]
+}

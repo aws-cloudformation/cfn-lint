@@ -1,0 +1,45 @@
+{
+  "typeName" : "AWS::WAF::Rule",
+  "description" : "Resource Type definition for AWS::WAF::Rule",
+  "additionalProperties" : false,
+  "properties" : {
+    "MetricName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Predicates" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Predicate"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Predicate" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Negated" : {
+          "type" : "boolean"
+        },
+        "DataId" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "DataId", "Negated" ]
+    }
+  },
+  "required" : [ "MetricName", "Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/MetricName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

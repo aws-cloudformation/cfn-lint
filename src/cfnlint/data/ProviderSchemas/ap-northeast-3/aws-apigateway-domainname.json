@@ -1,0 +1,91 @@
+{
+ "typeName": "AWS::ApiGateway::DomainName",
+ "description": "Resource Type definition for AWS::ApiGateway::DomainName",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "DistributionDomainName": {
+   "type": "string"
+  },
+  "DistributionHostedZoneId": {
+   "type": "string"
+  },
+  "RegionalDomainName": {
+   "type": "string"
+  },
+  "RegionalHostedZoneId": {
+   "type": "string"
+  },
+  "CertificateArn": {
+   "type": "string"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "RegionalCertificateArn": {
+   "type": "string"
+  },
+  "SecurityPolicy": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "definitions": {
+  "EndpointConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "required": [
+  "DomainName"
+ ],
+ "readOnlyProperties": [
+  "/properties/DistributionDomainName",
+  "/properties/RegionalDomainName",
+  "/properties/DistributionHostedZoneId",
+  "/properties/RegionalHostedZoneId",
+  "/properties/Id"
+ ],
+ "createOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ]
+}

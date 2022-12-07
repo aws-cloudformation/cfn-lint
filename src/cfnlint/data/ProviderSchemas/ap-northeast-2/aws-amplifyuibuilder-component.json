@@ -1,0 +1,540 @@
+{
+ "typeName": "AWS::AmplifyUIBuilder::Component",
+ "description": "Definition of AWS::AmplifyUIBuilder::Component Resource Type",
+ "definitions": {
+  "ActionParameters": {
+   "type": "object",
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Url": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Anchor": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Target": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Global": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Model": {
+     "type": "string"
+    },
+    "Id": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Fields": {
+     "$ref": "#/definitions/ComponentProperties"
+    },
+    "State": {
+     "$ref": "#/definitions/MutationActionSetStateParameter"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentBindingProperties": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/ComponentBindingPropertiesValue"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentBindingPropertiesValue": {
+   "type": "object",
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "BindingProperties": {
+     "$ref": "#/definitions/ComponentBindingPropertiesValueProperties"
+    },
+    "DefaultValue": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentBindingPropertiesValueProperties": {
+   "type": "object",
+   "properties": {
+    "Model": {
+     "type": "string"
+    },
+    "Field": {
+     "type": "string"
+    },
+    "Predicates": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/Predicate"
+     }
+    },
+    "UserAttribute": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    },
+    "DefaultValue": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentChild": {
+   "type": "object",
+   "properties": {
+    "ComponentType": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Properties": {
+     "$ref": "#/definitions/ComponentProperties"
+    },
+    "Children": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/ComponentChild"
+     }
+    },
+    "Events": {
+     "$ref": "#/definitions/ComponentEvents"
+    }
+   },
+   "required": [
+    "ComponentType",
+    "Name",
+    "Properties"
+   ],
+   "additionalProperties": false
+  },
+  "ComponentCollectionProperties": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/ComponentDataConfiguration"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentConditionProperty": {
+   "type": "object",
+   "properties": {
+    "Property": {
+     "type": "string"
+    },
+    "Field": {
+     "type": "string"
+    },
+    "Operator": {
+     "type": "string"
+    },
+    "Operand": {
+     "type": "string"
+    },
+    "Then": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "Else": {
+     "$ref": "#/definitions/ComponentProperty"
+    },
+    "OperandType": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentDataConfiguration": {
+   "type": "object",
+   "properties": {
+    "Model": {
+     "type": "string"
+    },
+    "Sort": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/SortProperty"
+     }
+    },
+    "Predicate": {
+     "$ref": "#/definitions/Predicate"
+    },
+    "Identifiers": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   },
+   "required": [
+    "Model"
+   ],
+   "additionalProperties": false
+  },
+  "ComponentEvent": {
+   "type": "object",
+   "properties": {
+    "Action": {
+     "type": "string"
+    },
+    "Parameters": {
+     "$ref": "#/definitions/ActionParameters"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentEvents": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/ComponentEvent"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentOverrides": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/ComponentOverridesValue"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentOverridesValue": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentProperties": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/ComponentProperty"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentProperty": {
+   "type": "object",
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "BindingProperties": {
+     "$ref": "#/definitions/ComponentPropertyBindingProperties"
+    },
+    "CollectionBindingProperties": {
+     "$ref": "#/definitions/ComponentPropertyBindingProperties"
+    },
+    "DefaultValue": {
+     "type": "string"
+    },
+    "Model": {
+     "type": "string"
+    },
+    "Bindings": {
+     "$ref": "#/definitions/FormBindings"
+    },
+    "Event": {
+     "type": "string"
+    },
+    "UserAttribute": {
+     "type": "string"
+    },
+    "Concat": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/ComponentProperty"
+     }
+    },
+    "Condition": {
+     "$ref": "#/definitions/ComponentConditionProperty"
+    },
+    "Configured": {
+     "type": "boolean"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "ImportedValue": {
+     "type": "string"
+    },
+    "ComponentName": {
+     "type": "string"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentPropertyBindingProperties": {
+   "type": "object",
+   "properties": {
+    "Property": {
+     "type": "string"
+    },
+    "Field": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Property"
+   ],
+   "additionalProperties": false
+  },
+  "ComponentVariant": {
+   "type": "object",
+   "properties": {
+    "VariantValues": {
+     "$ref": "#/definitions/ComponentVariantValues"
+    },
+    "Overrides": {
+     "$ref": "#/definitions/ComponentOverrides"
+    }
+   },
+   "additionalProperties": false
+  },
+  "ComponentVariantValues": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "FormBindingElement": {
+   "type": "object",
+   "properties": {
+    "Element": {
+     "type": "string"
+    },
+    "Property": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Element",
+    "Property"
+   ],
+   "additionalProperties": false
+  },
+  "FormBindings": {
+   "type": "object",
+   "patternProperties": {
+    ".+": {
+     "$ref": "#/definitions/FormBindingElement"
+    }
+   },
+   "additionalProperties": false
+  },
+  "MutationActionSetStateParameter": {
+   "type": "object",
+   "properties": {
+    "ComponentName": {
+     "type": "string"
+    },
+    "Property": {
+     "type": "string"
+    },
+    "Set": {
+     "$ref": "#/definitions/ComponentProperty"
+    }
+   },
+   "required": [
+    "ComponentName",
+    "Property",
+    "Set"
+   ],
+   "additionalProperties": false
+  },
+  "Predicate": {
+   "type": "object",
+   "properties": {
+    "Or": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/Predicate"
+     }
+    },
+    "And": {
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/Predicate"
+     }
+    },
+    "Field": {
+     "type": "string"
+    },
+    "Operator": {
+     "type": "string"
+    },
+    "Operand": {
+     "type": "string"
+    }
+   },
+   "additionalProperties": false
+  },
+  "SortDirection": {
+   "type": "string",
+   "enum": [
+    "ASC",
+    "DESC"
+   ]
+  },
+  "SortProperty": {
+   "type": "object",
+   "properties": {
+    "Field": {
+     "type": "string"
+    },
+    "Direction": {
+     "$ref": "#/definitions/SortDirection"
+    }
+   },
+   "required": [
+    "Direction",
+    "Field"
+   ],
+   "additionalProperties": false
+  },
+  "Tags": {
+   "type": "object",
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "type": "string",
+     "maxLength": 256,
+     "minLength": 1
+    }
+   },
+   "additionalProperties": false
+  }
+ },
+ "properties": {
+  "AppId": {
+   "type": "string"
+  },
+  "BindingProperties": {
+   "$ref": "#/definitions/ComponentBindingProperties"
+  },
+  "Children": {
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/ComponentChild"
+   }
+  },
+  "CollectionProperties": {
+   "$ref": "#/definitions/ComponentCollectionProperties"
+  },
+  "ComponentType": {
+   "type": "string",
+   "maxLength": 255,
+   "minLength": 1
+  },
+  "EnvironmentName": {
+   "type": "string"
+  },
+  "Events": {
+   "$ref": "#/definitions/ComponentEvents"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string",
+   "maxLength": 255,
+   "minLength": 1
+  },
+  "Overrides": {
+   "$ref": "#/definitions/ComponentOverrides"
+  },
+  "Properties": {
+   "$ref": "#/definitions/ComponentProperties"
+  },
+  "SchemaVersion": {
+   "type": "string"
+  },
+  "SourceId": {
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Variants": {
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/ComponentVariant"
+   }
+  }
+ },
+ "required": [
+  "BindingProperties",
+  "ComponentType",
+  "Name",
+  "Overrides",
+  "Properties",
+  "Variants"
+ ],
+ "readOnlyProperties": [
+  "/properties/AppId",
+  "/properties/EnvironmentName",
+  "/properties/Id"
+ ],
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "primaryIdentifier": [
+  "/properties/AppId",
+  "/properties/EnvironmentName",
+  "/properties/Id"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "amplify:GetApp",
+    "amplifyuibuilder:CreateComponent"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "amplify:GetApp",
+    "amplifyuibuilder:GetComponent"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "amplify:GetApp",
+    "amplifyuibuilder:UpdateComponent"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "amplify:GetApp",
+    "amplifyuibuilder:DeleteComponent"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "amplify:GetApp",
+    "amplifyuibuilder:ListComponents"
+   ]
+  }
+ },
+ "additionalProperties": false
+}

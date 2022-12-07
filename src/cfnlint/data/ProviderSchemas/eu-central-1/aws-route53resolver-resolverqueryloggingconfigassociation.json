@@ -1,0 +1,62 @@
+{
+  "typeName" : "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation",
+  "description" : "Resource schema for AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation.",
+  "properties" : {
+    "Id" : {
+      "description" : "Id",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "ResolverQueryLogConfigId" : {
+      "description" : "ResolverQueryLogConfigId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "ResourceId" : {
+      "description" : "ResourceId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Status" : {
+      "description" : "ResolverQueryLogConfigAssociationStatus",
+      "type" : "string",
+      "enum" : [ "CREATING", "ACTIVE", "ACTION_NEEDED", "DELETING", "FAILED", "OVERRIDDEN" ]
+    },
+    "Error" : {
+      "description" : "ResolverQueryLogConfigAssociationError",
+      "type" : "string",
+      "enum" : [ "NONE", "DESTINATION_NOT_FOUND", "ACCESS_DENIED" ]
+    },
+    "ErrorMessage" : {
+      "description" : "ResolverQueryLogConfigAssociationErrorMessage",
+      "type" : "string"
+    },
+    "CreationTime" : {
+      "description" : "Rfc3339TimeString",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 40
+    }
+  },
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/ResolverQueryLogConfigId", "/properties/ResourceId" ],
+  "readOnlyProperties" : [ "/properties/Status", "/properties/Error", "/properties/ErrorMessage", "/properties/CreationTime", "/properties/Id" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resolverquerylogging:AssociateConfig", "resolverquerylogging:GetConfigAssociation" ]
+    },
+    "read" : {
+      "permissions" : [ "resolverquerylogging:GetConfigAssociation" ]
+    },
+    "delete" : {
+      "permissions" : [ "resolverquerylogging:DisassociateConfig", "resolverquerylogging:ListConfigAssociation" ]
+    },
+    "list" : {
+      "permissions" : [ "resolverquerylogging:ListConfigAssociation" ]
+    }
+  }
+}

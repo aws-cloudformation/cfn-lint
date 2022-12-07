@@ -1,0 +1,116 @@
+{
+  "typeName" : "AWS::Config::ConfigRule",
+  "description" : "Resource Type definition for AWS::Config::ConfigRule",
+  "additionalProperties" : false,
+  "properties" : {
+    "ConfigRuleId" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Scope" : {
+      "$ref" : "#/definitions/Scope"
+    },
+    "ComplianceType" : {
+      "type" : "string"
+    },
+    "ConfigRuleName" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "MaximumExecutionFrequency" : {
+      "type" : "string"
+    },
+    "Source" : {
+      "$ref" : "#/definitions/Source"
+    },
+    "InputParameters" : {
+      "type" : "object"
+    }
+  },
+  "definitions" : {
+    "Scope" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TagKey" : {
+          "type" : "string"
+        },
+        "ComplianceResourceTypes" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "TagValue" : {
+          "type" : "string"
+        },
+        "ComplianceResourceId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CustomPolicyDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EnableDebugLogDelivery" : {
+          "type" : "boolean"
+        },
+        "PolicyText" : {
+          "type" : "string"
+        },
+        "PolicyRuntime" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SourceDetail" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EventSource" : {
+          "type" : "string"
+        },
+        "MaximumExecutionFrequency" : {
+          "type" : "string"
+        },
+        "MessageType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "EventSource", "MessageType" ]
+    },
+    "Source" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomPolicyDetails" : {
+          "$ref" : "#/definitions/CustomPolicyDetails"
+        },
+        "SourceIdentifier" : {
+          "type" : "string"
+        },
+        "Owner" : {
+          "type" : "string"
+        },
+        "SourceDetails" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/SourceDetail"
+          }
+        }
+      },
+      "required" : [ "Owner" ]
+    }
+  },
+  "required" : [ "Source" ],
+  "createOnlyProperties" : [ "/properties/ConfigRuleName" ],
+  "primaryIdentifier" : [ "/properties/ConfigRuleId" ],
+  "readOnlyProperties" : [ "/properties/ConfigRuleId", "/properties/Compliance.Type", "/properties/Arn" ]
+}

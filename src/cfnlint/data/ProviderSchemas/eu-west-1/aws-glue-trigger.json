@@ -1,0 +1,133 @@
+{
+  "typeName" : "AWS::Glue::Trigger",
+  "description" : "Resource Type definition for AWS::Glue::Trigger",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
+    },
+    "StartOnCreation" : {
+      "type" : "boolean"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Actions" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Action"
+      }
+    },
+    "EventBatchingCondition" : {
+      "$ref" : "#/definitions/EventBatchingCondition"
+    },
+    "WorkflowName" : {
+      "type" : "string"
+    },
+    "Schedule" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Predicate" : {
+      "$ref" : "#/definitions/Predicate"
+    }
+  },
+  "definitions" : {
+    "Condition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JobName" : {
+          "type" : "string"
+        },
+        "CrawlerName" : {
+          "type" : "string"
+        },
+        "State" : {
+          "type" : "string"
+        },
+        "CrawlState" : {
+          "type" : "string"
+        },
+        "LogicalOperator" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NotificationProperty" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NotifyDelayAfter" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Action" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NotificationProperty" : {
+          "$ref" : "#/definitions/NotificationProperty"
+        },
+        "CrawlerName" : {
+          "type" : "string"
+        },
+        "Timeout" : {
+          "type" : "integer"
+        },
+        "JobName" : {
+          "type" : "string"
+        },
+        "Arguments" : {
+          "type" : "object"
+        },
+        "SecurityConfiguration" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EventBatchingCondition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BatchSize" : {
+          "type" : "integer"
+        },
+        "BatchWindow" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "BatchSize" ]
+    },
+    "Predicate" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Logical" : {
+          "type" : "string"
+        },
+        "Conditions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Condition"
+          }
+        }
+      }
+    }
+  },
+  "required" : [ "Type", "Actions" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/WorkflowName", "/properties/Type" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

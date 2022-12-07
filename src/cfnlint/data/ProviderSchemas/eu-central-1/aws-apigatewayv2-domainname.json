@@ -1,0 +1,71 @@
+{
+  "typeName" : "AWS::ApiGatewayV2::DomainName",
+  "description" : "Resource Type definition for AWS::ApiGatewayV2::DomainName",
+  "additionalProperties" : false,
+  "properties" : {
+    "MutualTlsAuthentication" : {
+      "$ref" : "#/definitions/MutualTlsAuthentication"
+    },
+    "RegionalHostedZoneId" : {
+      "type" : "string"
+    },
+    "RegionalDomainName" : {
+      "type" : "string"
+    },
+    "DomainName" : {
+      "type" : "string"
+    },
+    "DomainNameConfigurations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/DomainNameConfiguration"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    }
+  },
+  "definitions" : {
+    "MutualTlsAuthentication" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TruststoreVersion" : {
+          "type" : "string"
+        },
+        "TruststoreUri" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DomainNameConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OwnershipVerificationCertificateArn" : {
+          "type" : "string"
+        },
+        "EndpointType" : {
+          "type" : "string"
+        },
+        "CertificateName" : {
+          "type" : "string"
+        },
+        "SecurityPolicy" : {
+          "type" : "string"
+        },
+        "CertificateArn" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "DomainName" ],
+  "createOnlyProperties" : [ "/properties/DomainName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/RegionalDomainName", "/properties/Id", "/properties/RegionalHostedZoneId" ]
+}

@@ -1,0 +1,495 @@
+{
+ "typeName": "AWS::CodeDeploy::DeploymentGroup",
+ "description": "Resource Type definition for AWS::CodeDeploy::DeploymentGroup",
+ "additionalProperties": false,
+ "properties": {
+  "OnPremisesTagSet": {
+   "$ref": "#/definitions/OnPremisesTagSet"
+  },
+  "ApplicationName": {
+   "type": "string"
+  },
+  "DeploymentStyle": {
+   "$ref": "#/definitions/DeploymentStyle"
+  },
+  "ServiceRoleArn": {
+   "type": "string"
+  },
+  "BlueGreenDeploymentConfiguration": {
+   "$ref": "#/definitions/BlueGreenDeploymentConfiguration"
+  },
+  "AutoScalingGroups": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Ec2TagSet": {
+   "$ref": "#/definitions/EC2TagSet"
+  },
+  "OutdatedInstancesStrategy": {
+   "type": "string"
+  },
+  "TriggerConfigurations": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/TriggerConfig"
+   }
+  },
+  "Deployment": {
+   "$ref": "#/definitions/Deployment"
+  },
+  "DeploymentConfigName": {
+   "type": "string"
+  },
+  "AlarmConfiguration": {
+   "$ref": "#/definitions/AlarmConfiguration"
+  },
+  "Ec2TagFilters": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/EC2TagFilter"
+   }
+  },
+  "ECSServices": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/ECSService"
+   }
+  },
+  "AutoRollbackConfiguration": {
+   "$ref": "#/definitions/AutoRollbackConfiguration"
+  },
+  "LoadBalancerInfo": {
+   "$ref": "#/definitions/LoadBalancerInfo"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "DeploymentGroupName": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "OnPremisesInstanceTagFilters": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/TagFilter"
+   }
+  }
+ },
+ "definitions": {
+  "OnPremisesTagSet": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "OnPremisesTagSetList": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/OnPremisesTagSetListObject"
+     }
+    }
+   }
+  },
+  "DeploymentStyle": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DeploymentOption": {
+     "type": "string"
+    },
+    "DeploymentType": {
+     "type": "string"
+    }
+   }
+  },
+  "BlueGreenDeploymentConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "GreenFleetProvisioningOption": {
+     "$ref": "#/definitions/GreenFleetProvisioningOption"
+    },
+    "DeploymentReadyOption": {
+     "$ref": "#/definitions/DeploymentReadyOption"
+    },
+    "TerminateBlueInstancesOnDeploymentSuccess": {
+     "$ref": "#/definitions/BlueInstanceTerminationOption"
+    }
+   }
+  },
+  "TagFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   }
+  },
+  "TriggerConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TriggerTargetArn": {
+     "type": "string"
+    },
+    "TriggerName": {
+     "type": "string"
+    },
+    "TriggerEvents": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "GitHubLocation": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Repository": {
+     "type": "string"
+    },
+    "CommitId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Repository",
+    "CommitId"
+   ]
+  },
+  "Deployment": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Revision": {
+     "$ref": "#/definitions/RevisionLocation"
+    },
+    "IgnoreApplicationStopFailures": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "Revision"
+   ]
+  },
+  "ELBInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "EC2TagSetListObject": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Ec2TagGroup": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/EC2TagFilter"
+     }
+    }
+   }
+  },
+  "S3Location": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "BundleType": {
+     "type": "string"
+    },
+    "Bucket": {
+     "type": "string"
+    },
+    "ETag": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ]
+  },
+  "AutoRollbackConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Events": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   }
+  },
+  "DeploymentReadyOption": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "WaitTimeInMinutes": {
+     "type": "integer"
+    },
+    "ActionOnTimeout": {
+     "type": "string"
+    }
+   }
+  },
+  "EC2TagFilter": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   }
+  },
+  "RevisionLocation": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "S3Location": {
+     "$ref": "#/definitions/S3Location"
+    },
+    "GitHubLocation": {
+     "$ref": "#/definitions/GitHubLocation"
+    },
+    "RevisionType": {
+     "type": "string"
+    }
+   }
+  },
+  "GreenFleetProvisioningOption": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Action": {
+     "type": "string"
+    }
+   }
+  },
+  "LoadBalancerInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TargetGroupInfoList": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TargetGroupInfo"
+     }
+    },
+    "ElbInfoList": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/ELBInfo"
+     }
+    },
+    "TargetGroupPairInfoList": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TargetGroupPairInfo"
+     }
+    }
+   }
+  },
+  "AlarmConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Alarms": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/Alarm"
+     }
+    },
+    "IgnorePollAlarmFailure": {
+     "type": "boolean"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   }
+  },
+  "EC2TagSet": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Ec2TagSetList": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/EC2TagSetListObject"
+     }
+    }
+   }
+  },
+  "TrafficRoute": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ListenerArns": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "ECSService": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ServiceName": {
+     "type": "string"
+    },
+    "ClusterName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ServiceName",
+    "ClusterName"
+   ]
+  },
+  "TargetGroupPairInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ProdTrafficRoute": {
+     "$ref": "#/definitions/TrafficRoute"
+    },
+    "TestTrafficRoute": {
+     "$ref": "#/definitions/TrafficRoute"
+    },
+    "TargetGroups": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TargetGroupInfo"
+     }
+    }
+   }
+  },
+  "Alarm": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "TargetGroupInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "OnPremisesTagSetListObject": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "OnPremisesTagGroup": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "$ref": "#/definitions/TagFilter"
+     }
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "BlueInstanceTerminationOption": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TerminationWaitTimeInMinutes": {
+     "type": "integer"
+    },
+    "Action": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "ApplicationName",
+  "ServiceRoleArn"
+ ],
+ "createOnlyProperties": [
+  "/properties/DeploymentGroupName",
+  "/properties/ApplicationName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

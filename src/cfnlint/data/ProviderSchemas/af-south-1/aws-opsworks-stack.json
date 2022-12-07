@@ -1,0 +1,225 @@
+{
+ "typeName": "AWS::OpsWorks::Stack",
+ "description": "Resource Type definition for AWS::OpsWorks::Stack",
+ "additionalProperties": false,
+ "properties": {
+  "ClonePermissions": {
+   "type": "boolean"
+  },
+  "DefaultInstanceProfileArn": {
+   "type": "string"
+  },
+  "UseOpsworksSecurityGroups": {
+   "type": "boolean"
+  },
+  "AgentVersion": {
+   "type": "string"
+  },
+  "Attributes": {
+   "type": "object",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   }
+  },
+  "ChefConfiguration": {
+   "$ref": "#/definitions/ChefConfiguration"
+  },
+  "DefaultOs": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "CustomCookbooksSource": {
+   "$ref": "#/definitions/Source"
+  },
+  "DefaultRootDeviceType": {
+   "type": "string"
+  },
+  "CloneAppIds": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "DefaultSshKeyName": {
+   "type": "string"
+  },
+  "ConfigurationManager": {
+   "$ref": "#/definitions/StackConfigurationManager"
+  },
+  "DefaultSubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "CustomJson": {
+   "type": "object"
+  },
+  "ServiceRoleArn": {
+   "type": "string"
+  },
+  "ElasticIps": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/ElasticIp"
+   }
+  },
+  "UseCustomCookbooks": {
+   "type": "boolean"
+  },
+  "DefaultAvailabilityZone": {
+   "type": "string"
+  },
+  "RdsDbInstances": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/RdsDbInstance"
+   }
+  },
+  "SourceStackId": {
+   "type": "string"
+  },
+  "VpcId": {
+   "type": "string"
+  },
+  "HostnameTheme": {
+   "type": "string"
+  },
+  "EcsClusterArn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "ElasticIp": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ip"
+   ]
+  },
+  "StackConfigurationManager": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Version": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "ChefConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "BerkshelfVersion": {
+     "type": "string"
+    },
+    "ManageBerkshelf": {
+     "type": "boolean"
+    }
+   }
+  },
+  "RdsDbInstance": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "DbPassword": {
+     "type": "string"
+    },
+    "RdsDbInstanceArn": {
+     "type": "string"
+    },
+    "DbUser": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DbPassword",
+    "RdsDbInstanceArn",
+    "DbUser"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "Source": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SshKey": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Revision": {
+     "type": "string"
+    },
+    "Username": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    },
+    "Password": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "required": [
+  "DefaultInstanceProfileArn",
+  "ServiceRoleArn",
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/CloneAppIds",
+  "/properties/ClonePermissions",
+  "/properties/ServiceRoleArn",
+  "/properties/VpcId",
+  "/properties/SourceStackId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

@@ -1,0 +1,67 @@
+{
+  "typeName" : "AWS::RoboMaker::RobotApplication",
+  "description" : "Resource Type definition for AWS::RoboMaker::RobotApplication",
+  "additionalProperties" : false,
+  "properties" : {
+    "CurrentRevisionId" : {
+      "type" : "string"
+    },
+    "RobotSoftwareSuite" : {
+      "$ref" : "#/definitions/RobotSoftwareSuite"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Sources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/SourceConfig"
+      }
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SourceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Bucket" : {
+          "type" : "string"
+        },
+        "Architecture" : {
+          "type" : "string"
+        },
+        "S3Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "S3Bucket", "Architecture", "S3Key" ]
+    },
+    "RobotSoftwareSuite" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Version" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Version", "Name" ]
+    }
+  },
+  "required" : [ "RobotSoftwareSuite", "Sources" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/RobotSoftwareSuite" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
+}

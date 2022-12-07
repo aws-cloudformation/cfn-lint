@@ -1,0 +1,209 @@
+{
+ "typeName": "AWS::Transfer::Server",
+ "description": "Resource Type definition for AWS::Transfer::Server",
+ "additionalProperties": false,
+ "properties": {
+  "LoggingRole": {
+   "type": "string"
+  },
+  "Protocols": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Protocol"
+   }
+  },
+  "IdentityProviderDetails": {
+   "$ref": "#/definitions/IdentityProviderDetails"
+  },
+  "EndpointDetails": {
+   "$ref": "#/definitions/EndpointDetails"
+  },
+  "PreAuthenticationLoginBanner": {
+   "type": "string"
+  },
+  "ServerId": {
+   "type": "string"
+  },
+  "PostAuthenticationLoginBanner": {
+   "type": "string"
+  },
+  "EndpointType": {
+   "type": "string"
+  },
+  "SecurityPolicyName": {
+   "type": "string"
+  },
+  "ProtocolDetails": {
+   "$ref": "#/definitions/ProtocolDetails"
+  },
+  "WorkflowDetails": {
+   "$ref": "#/definitions/WorkflowDetails"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "Domain": {
+   "type": "string"
+  },
+  "IdentityProviderType": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Certificate": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "IdentityProviderDetails": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Function": {
+     "type": "string"
+    },
+    "DirectoryId": {
+     "type": "string"
+    },
+    "Url": {
+     "type": "string"
+    },
+    "InvocationRole": {
+     "type": "string"
+    }
+   }
+  },
+  "ProtocolDetails": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "As2Transports": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/As2Transport"
+     }
+    },
+    "PassiveIp": {
+     "type": "string"
+    },
+    "SetStatOption": {
+     "type": "string"
+    },
+    "TlsSessionResumptionMode": {
+     "type": "string"
+    }
+   }
+  },
+  "WorkflowDetails": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "OnUpload": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowDetail"
+     }
+    },
+    "OnPartialUpload": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/WorkflowDetail"
+     }
+    }
+   }
+  },
+  "WorkflowDetail": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "WorkflowId": {
+     "type": "string"
+    },
+    "ExecutionRole": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "WorkflowId",
+    "ExecutionRole"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "Protocol": {
+   "type": "object",
+   "additionalProperties": false
+  },
+  "EndpointDetails": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AddressAllocationIds": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "VpcId": {
+     "type": "string"
+    },
+    "VpcEndpointId": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "SubnetIds": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "As2Transport": {
+   "type": "object",
+   "additionalProperties": false
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/IdentityProviderType",
+  "/properties/Domain"
+ ],
+ "primaryIdentifier": [
+  "/properties/ServerId"
+ ],
+ "readOnlyProperties": [
+  "/properties/ServerId",
+  "/properties/Arn"
+ ]
+}

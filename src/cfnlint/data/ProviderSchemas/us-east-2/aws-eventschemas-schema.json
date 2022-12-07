@@ -1,0 +1,57 @@
+{
+  "typeName" : "AWS::EventSchemas::Schema",
+  "description" : "Resource Type definition for AWS::EventSchemas::Schema",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "SchemaVersion" : {
+      "type" : "string"
+    },
+    "Content" : {
+      "type" : "string"
+    },
+    "RegistryName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "SchemaArn" : {
+      "type" : "string"
+    },
+    "SchemaName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagsEntry"
+      }
+    }
+  },
+  "definitions" : {
+    "TagsEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "Type", "Content", "RegistryName" ],
+  "createOnlyProperties" : [ "/properties/SchemaName", "/properties/RegistryName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/SchemaVersion", "/properties/SchemaArn" ]
+}

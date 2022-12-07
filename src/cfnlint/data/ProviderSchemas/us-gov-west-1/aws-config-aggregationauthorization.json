@@ -1,0 +1,42 @@
+{
+  "typeName" : "AWS::Config::AggregationAuthorization",
+  "description" : "Resource Type definition for AWS::Config::AggregationAuthorization",
+  "additionalProperties" : false,
+  "properties" : {
+    "AuthorizedAccountId" : {
+      "type" : "string"
+    },
+    "AuthorizedAwsRegion" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "AuthorizedAccountId", "AuthorizedAwsRegion" ],
+  "createOnlyProperties" : [ "/properties/AuthorizedAwsRegion", "/properties/AuthorizedAccountId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

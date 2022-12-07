@@ -1,0 +1,45 @@
+{
+  "typeName" : "AWS::EC2::CustomerGateway",
+  "description" : "Resource Type definition for AWS::EC2::CustomerGateway",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "BgpAsn" : {
+      "type" : "integer"
+    },
+    "IpAddress" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Type" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "BgpAsn", "IpAddress", "Type" ],
+  "createOnlyProperties" : [ "/properties/BgpAsn", "/properties/Type", "/properties/IpAddress" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/Id" ]
+}

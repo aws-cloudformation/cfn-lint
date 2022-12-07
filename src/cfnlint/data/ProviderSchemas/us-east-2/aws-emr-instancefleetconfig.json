@@ -1,0 +1,183 @@
+{
+  "typeName" : "AWS::EMR::InstanceFleetConfig",
+  "description" : "Resource Type definition for AWS::EMR::InstanceFleetConfig",
+  "additionalProperties" : false,
+  "properties" : {
+    "InstanceFleetType" : {
+      "type" : "string"
+    },
+    "TargetOnDemandCapacity" : {
+      "type" : "integer"
+    },
+    "ClusterId" : {
+      "type" : "string"
+    },
+    "TargetSpotCapacity" : {
+      "type" : "integer"
+    },
+    "LaunchSpecifications" : {
+      "$ref" : "#/definitions/InstanceFleetProvisioningSpecifications"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "InstanceTypeConfigs" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/InstanceTypeConfig"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "VolumeSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SizeInGB" : {
+          "type" : "integer"
+        },
+        "VolumeType" : {
+          "type" : "string"
+        },
+        "Iops" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "SizeInGB", "VolumeType" ]
+    },
+    "EbsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EbsBlockDeviceConfigs" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/EbsBlockDeviceConfig"
+          }
+        },
+        "EbsOptimized" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Configuration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConfigurationProperties" : {
+          "type" : "object",
+          "patternProperties" : {
+            "[a-zA-Z0-9]+" : {
+              "type" : "string"
+            }
+          }
+        },
+        "Configurations" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Configuration"
+          }
+        },
+        "Classification" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InstanceFleetProvisioningSpecifications" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SpotSpecification" : {
+          "$ref" : "#/definitions/SpotProvisioningSpecification"
+        },
+        "OnDemandSpecification" : {
+          "$ref" : "#/definitions/OnDemandProvisioningSpecification"
+        }
+      }
+    },
+    "OnDemandProvisioningSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllocationStrategy" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AllocationStrategy" ]
+    },
+    "EbsBlockDeviceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VolumeSpecification" : {
+          "$ref" : "#/definitions/VolumeSpecification"
+        },
+        "VolumesPerInstance" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "VolumeSpecification" ]
+    },
+    "InstanceTypeConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BidPrice" : {
+          "type" : "string"
+        },
+        "WeightedCapacity" : {
+          "type" : "integer"
+        },
+        "EbsConfiguration" : {
+          "$ref" : "#/definitions/EbsConfiguration"
+        },
+        "BidPriceAsPercentageOfOnDemandPrice" : {
+          "type" : "number"
+        },
+        "CustomAmiId" : {
+          "type" : "string"
+        },
+        "Configurations" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Configuration"
+          }
+        },
+        "InstanceType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "InstanceType" ]
+    },
+    "SpotProvisioningSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllocationStrategy" : {
+          "type" : "string"
+        },
+        "TimeoutDurationMinutes" : {
+          "type" : "integer"
+        },
+        "TimeoutAction" : {
+          "type" : "string"
+        },
+        "BlockDurationMinutes" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "TimeoutDurationMinutes", "TimeoutAction" ]
+    }
+  },
+  "required" : [ "InstanceFleetType", "ClusterId" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/InstanceTypeConfigs", "/properties/LaunchSpecifications", "/properties/ClusterId", "/properties/InstanceFleetType" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

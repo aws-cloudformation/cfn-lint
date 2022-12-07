@@ -1,0 +1,159 @@
+{
+  "typeName" : "AWS::IoTWireless::TaskDefinition",
+  "description" : "Creates a gateway task definition.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "LoRaWANGatewayVersion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PackageVersion" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 32
+        },
+        "Model" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 4096
+        },
+        "Station" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 4096
+        }
+      }
+    },
+    "LoRaWANUpdateGatewayTaskCreate" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "UpdateSignature" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 4096
+        },
+        "SigKeyCrc" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "CurrentVersion" : {
+          "$ref" : "#/definitions/LoRaWANGatewayVersion"
+        },
+        "UpdateVersion" : {
+          "$ref" : "#/definitions/LoRaWANGatewayVersion"
+        }
+      }
+    },
+    "UpdateWirelessGatewayTaskCreate" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "UpdateDataSource" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 4096
+        },
+        "UpdateDataRole" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2048
+        },
+        "LoRaWAN" : {
+          "$ref" : "#/definitions/LoRaWANUpdateGatewayTaskCreate"
+        }
+      }
+    },
+    "LoRaWANUpdateGatewayTaskEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CurrentVersion" : {
+          "$ref" : "#/definitions/LoRaWANGatewayVersion"
+        },
+        "UpdateVersion" : {
+          "$ref" : "#/definitions/LoRaWANGatewayVersion"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 127
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the new resource.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "AutoCreateTasks" : {
+      "description" : "Whether to automatically create tasks using this task definition for all gateways with the specified current version. If false, the task must me created by calling CreateWirelessGatewayTask.",
+      "type" : "boolean"
+    },
+    "Update" : {
+      "description" : "Information about the gateways to update.",
+      "$ref" : "#/definitions/UpdateWirelessGatewayTaskCreate"
+    },
+    "LoRaWANUpdateGatewayTaskEntry" : {
+      "description" : "The list of task definitions.",
+      "$ref" : "#/definitions/LoRaWANUpdateGatewayTaskEntry"
+    },
+    "Id" : {
+      "description" : "The ID of the new wireless gateway task definition",
+      "type" : "string",
+      "pattern" : "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+    },
+    "TaskDefinitionType" : {
+      "description" : "A filter to list only the wireless gateway task definitions that use this task definition type",
+      "type" : "string",
+      "enum" : [ "UPDATE" ]
+    },
+    "Arn" : {
+      "description" : "TaskDefinition arn. Returned after successful create.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the destination.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "maxItems" : 200,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "AutoCreateTasks" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "taggable" : true,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:CreateWirelessGatewayTaskDefinition", "iotwireless:TagResource", "iotwireless:ListTagsForResource", "iam:GetRole", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "iotwireless:GetWirelessGatewayTaskDefinition", "iotwireless:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteWirelessGatewayTaskDefinition" ]
+    },
+    "list" : {
+      "permissions" : [ "iotwireless:ListWirelessGatewayTaskDefinitions", "iotwireless:ListTagsForResource" ]
+    }
+  }
+}

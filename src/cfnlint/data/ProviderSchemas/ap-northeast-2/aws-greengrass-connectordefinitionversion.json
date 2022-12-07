@@ -1,0 +1,55 @@
+{
+ "typeName": "AWS::Greengrass::ConnectorDefinitionVersion",
+ "description": "Resource Type definition for AWS::Greengrass::ConnectorDefinitionVersion",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "Connectors": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Connector"
+   }
+  },
+  "ConnectorDefinitionId": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Connector": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ConnectorArn": {
+     "type": "string"
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "Id": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ConnectorArn",
+    "Id"
+   ]
+  }
+ },
+ "required": [
+  "Connectors",
+  "ConnectorDefinitionId"
+ ],
+ "createOnlyProperties": [
+  "/properties/ConnectorDefinitionId",
+  "/properties/Connectors"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

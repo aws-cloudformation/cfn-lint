@@ -1,0 +1,280 @@
+{
+  "typeName" : "AWS::ElasticLoadBalancing::LoadBalancer",
+  "description" : "Resource Type definition for AWS::ElasticLoadBalancing::LoadBalancer",
+  "additionalProperties" : false,
+  "properties" : {
+    "SecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "ConnectionDrainingPolicy" : {
+      "$ref" : "#/definitions/ConnectionDrainingPolicy"
+    },
+    "Policies" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Policies"
+      }
+    },
+    "Scheme" : {
+      "type" : "string"
+    },
+    "AvailabilityZones" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "SourceSecurityGroupOwnerAlias" : {
+      "type" : "string"
+    },
+    "HealthCheck" : {
+      "$ref" : "#/definitions/HealthCheck"
+    },
+    "CanonicalHostedZoneNameID" : {
+      "type" : "string"
+    },
+    "CanonicalHostedZoneName" : {
+      "type" : "string"
+    },
+    "DNSName" : {
+      "type" : "string"
+    },
+    "AccessLoggingPolicy" : {
+      "$ref" : "#/definitions/AccessLoggingPolicy"
+    },
+    "Instances" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "LoadBalancerName" : {
+      "type" : "string"
+    },
+    "Listeners" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Listeners"
+      }
+    },
+    "Subnets" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "CrossZone" : {
+      "type" : "boolean"
+    },
+    "AppCookieStickinessPolicy" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/AppCookieStickinessPolicy"
+      }
+    },
+    "LBCookieStickinessPolicy" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/LBCookieStickinessPolicy"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "SourceSecurityGroupGroupName" : {
+      "type" : "string"
+    },
+    "ConnectionSettings" : {
+      "$ref" : "#/definitions/ConnectionSettings"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Listeners" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PolicyNames" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "InstancePort" : {
+          "type" : "string"
+        },
+        "LoadBalancerPort" : {
+          "type" : "string"
+        },
+        "Protocol" : {
+          "type" : "string"
+        },
+        "SSLCertificateId" : {
+          "type" : "string"
+        },
+        "InstanceProtocol" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "InstancePort", "LoadBalancerPort", "Protocol" ]
+    },
+    "ConnectionDrainingPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "Timeout" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Enabled" ]
+    },
+    "Policies" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Attributes" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "PolicyType" : {
+          "type" : "string"
+        },
+        "LoadBalancerPorts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "PolicyName" : {
+          "type" : "string"
+        },
+        "InstancePorts" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "PolicyType", "PolicyName", "Attributes" ]
+    },
+    "AppCookieStickinessPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CookieName" : {
+          "type" : "string"
+        },
+        "PolicyName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "PolicyName", "CookieName" ]
+    },
+    "LBCookieStickinessPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CookieExpirationPeriod" : {
+          "type" : "string"
+        },
+        "PolicyName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "HealthCheck" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Target" : {
+          "type" : "string"
+        },
+        "UnhealthyThreshold" : {
+          "type" : "string"
+        },
+        "Timeout" : {
+          "type" : "string"
+        },
+        "HealthyThreshold" : {
+          "type" : "string"
+        },
+        "Interval" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Target", "UnhealthyThreshold", "Timeout", "HealthyThreshold", "Interval" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "AccessLoggingPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "S3BucketName" : {
+          "type" : "string"
+        },
+        "EmitInterval" : {
+          "type" : "integer"
+        },
+        "S3BucketPrefix" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Enabled", "S3BucketName" ]
+    },
+    "ConnectionSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IdleTimeout" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "IdleTimeout" ]
+    }
+  },
+  "required" : [ "Listeners" ],
+  "createOnlyProperties" : [ "/properties/LoadBalancerName", "/properties/Scheme" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/CanonicalHostedZoneName", "/properties/CanonicalHostedZoneNameID", "/properties/SourceSecurityGroup.GroupName", "/properties/DNSName", "/properties/SourceSecurityGroup.OwnerAlias" ]
+}

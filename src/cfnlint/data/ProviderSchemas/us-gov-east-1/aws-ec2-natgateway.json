@@ -1,0 +1,97 @@
+{
+ "tagging": {
+  "taggable": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "cloudFormationSystemTags": true
+ },
+ "handlers": {
+  "read": {
+   "permissions": [
+    "ec2:DescribeNatGateways"
+   ]
+  },
+  "create": {
+   "permissions": [
+    "ec2:CreateNatGateway",
+    "ec2:DescribeNatGateways",
+    "ec2:CreateTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeNatGateways",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeNatGateways"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteNatGateway",
+    "ec2:DescribeNatGateways"
+   ]
+  }
+ },
+ "typeName": "AWS::EC2::NatGateway",
+ "readOnlyProperties": [
+  "/properties/NatGatewayId"
+ ],
+ "description": "Resource Type definition for AWS::EC2::NatGateway",
+ "createOnlyProperties": [
+  "/properties/SubnetId",
+  "/properties/ConnectivityType",
+  "/properties/AllocationId"
+ ],
+ "additionalProperties": false,
+ "primaryIdentifier": [
+  "/properties/NatGatewayId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "type": "object",
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "properties": {
+  "ConnectivityType": {
+   "type": "string"
+  },
+  "AllocationId": {
+   "type": "string"
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "NatGatewayId": {
+   "type": "string"
+  },
+  "Tags": {
+   "uniqueItems": false,
+   "insertionOrder": false,
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "required": [
+  "SubnetId"
+ ]
+}

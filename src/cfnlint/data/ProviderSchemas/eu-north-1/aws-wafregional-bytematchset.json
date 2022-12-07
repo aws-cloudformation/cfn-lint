@@ -1,0 +1,61 @@
+{
+  "typeName" : "AWS::WAFRegional::ByteMatchSet",
+  "description" : "Resource Type definition for AWS::WAFRegional::ByteMatchSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "ByteMatchTuples" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ByteMatchTuple"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "ByteMatchTuple" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetString" : {
+          "type" : "string"
+        },
+        "TargetStringBase64" : {
+          "type" : "string"
+        },
+        "PositionalConstraint" : {
+          "type" : "string"
+        },
+        "TextTransformation" : {
+          "type" : "string"
+        },
+        "FieldToMatch" : {
+          "$ref" : "#/definitions/FieldToMatch"
+        }
+      },
+      "required" : [ "PositionalConstraint", "TextTransformation", "FieldToMatch" ]
+    },
+    "FieldToMatch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Data" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
+    }
+  },
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

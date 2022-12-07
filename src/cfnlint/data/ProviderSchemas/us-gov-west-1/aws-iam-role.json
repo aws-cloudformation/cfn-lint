@@ -1,0 +1,100 @@
+{
+ "typeName": "AWS::IAM::Role",
+ "description": "Resource Type definition for AWS::IAM::Role",
+ "additionalProperties": false,
+ "properties": {
+  "Path": {
+   "type": "string"
+  },
+  "ManagedPolicyArns": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "MaxSessionDuration": {
+   "type": "integer"
+  },
+  "RoleName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "Policies": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Policy"
+   }
+  },
+  "AssumeRolePolicyDocument": {
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "RoleId": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "PermissionsBoundary": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Policy": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "PolicyDocument": {
+     "type": "object"
+    },
+    "PolicyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PolicyName",
+    "PolicyDocument"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "required": [
+  "AssumeRolePolicyDocument"
+ ],
+ "createOnlyProperties": [
+  "/properties/RoleName",
+  "/properties/Path"
+ ],
+ "primaryIdentifier": [
+  "/properties/RoleId"
+ ],
+ "readOnlyProperties": [
+  "/properties/RoleId",
+  "/properties/Arn"
+ ]
+}

@@ -1,0 +1,41 @@
+{
+  "typeName" : "AWS::SageMaker::NotebookInstanceLifecycleConfig",
+  "description" : "Resource Type definition for AWS::SageMaker::NotebookInstanceLifecycleConfig",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "NotebookInstanceLifecycleConfigName" : {
+      "type" : "string"
+    },
+    "OnStart" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/NotebookInstanceLifecycleHook"
+      }
+    },
+    "OnCreate" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/NotebookInstanceLifecycleHook"
+      }
+    }
+  },
+  "definitions" : {
+    "NotebookInstanceLifecycleHook" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Content" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "createOnlyProperties" : [ "/properties/NotebookInstanceLifecycleConfigName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

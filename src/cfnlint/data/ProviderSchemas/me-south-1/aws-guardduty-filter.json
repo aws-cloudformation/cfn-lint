@@ -1,0 +1,141 @@
+{
+ "typeName": "AWS::GuardDuty::Filter",
+ "description": "Resource Type definition for AWS::GuardDuty::Filter",
+ "additionalProperties": false,
+ "properties": {
+  "Action": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DetectorId": {
+   "type": "string"
+  },
+  "FindingCriteria": {
+   "$ref": "#/definitions/FindingCriteria"
+  },
+  "Rank": {
+   "type": "integer"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Condition": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "LessThanOrEqual": {
+     "type": "integer"
+    },
+    "Lt": {
+     "type": "integer"
+    },
+    "GreaterThanOrEqual": {
+     "type": "integer"
+    },
+    "Eq": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Gt": {
+     "type": "integer"
+    },
+    "NotEquals": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Equals": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "LessThan": {
+     "type": "integer"
+    },
+    "GreaterThan": {
+     "type": "integer"
+    },
+    "Gte": {
+     "type": "integer"
+    },
+    "Neq": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Lte": {
+     "type": "integer"
+    }
+   }
+  },
+  "FindingCriteria": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Criterion": {
+     "type": "object"
+    },
+    "ItemType": {
+     "$ref": "#/definitions/Condition"
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "required": [
+  "Action",
+  "Description",
+  "DetectorId",
+  "FindingCriteria",
+  "Rank",
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/DetectorId",
+  "/properties/Name"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "typeName": "AWS::Cognito::UserPoolResourceServer",
+ "description": "Resource Type definition for AWS::Cognito::UserPoolResourceServer",
+ "additionalProperties": false,
+ "properties": {
+  "UserPoolId": {
+   "type": "string"
+  },
+  "Identifier": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Scopes": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/ResourceServerScopeType"
+   }
+  },
+  "Name": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "ResourceServerScopeType": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ScopeName": {
+     "type": "string"
+    },
+    "ScopeDescription": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScopeName",
+    "ScopeDescription"
+   ]
+  }
+ },
+ "required": [
+  "UserPoolId",
+  "Identifier",
+  "Name"
+ ],
+ "createOnlyProperties": [
+  "/properties/Identifier",
+  "/properties/UserPoolId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

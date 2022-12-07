@@ -1,0 +1,114 @@
+{
+  "typeName" : "AWS::Route53::HealthCheck",
+  "description" : "Resource Type definition for AWS::Route53::HealthCheck",
+  "additionalProperties" : false,
+  "properties" : {
+    "HealthCheckTags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/HealthCheckTag"
+      }
+    },
+    "HealthCheckConfig" : {
+      "$ref" : "#/definitions/HealthCheckConfig"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "HealthCheckTag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "AlarmIdentifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Region" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Region", "Name" ]
+    },
+    "HealthCheckConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EnableSNI" : {
+          "type" : "boolean"
+        },
+        "ChildHealthChecks" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "MeasureLatency" : {
+          "type" : "boolean"
+        },
+        "Port" : {
+          "type" : "integer"
+        },
+        "Regions" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "InsufficientDataHealthStatus" : {
+          "type" : "string"
+        },
+        "SearchString" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "ResourcePath" : {
+          "type" : "string"
+        },
+        "FullyQualifiedDomainName" : {
+          "type" : "string"
+        },
+        "Inverted" : {
+          "type" : "boolean"
+        },
+        "HealthThreshold" : {
+          "type" : "integer"
+        },
+        "RequestInterval" : {
+          "type" : "integer"
+        },
+        "AlarmIdentifier" : {
+          "$ref" : "#/definitions/AlarmIdentifier"
+        },
+        "FailureThreshold" : {
+          "type" : "integer"
+        },
+        "IPAddress" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
+    }
+  },
+  "required" : [ "HealthCheckConfig" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

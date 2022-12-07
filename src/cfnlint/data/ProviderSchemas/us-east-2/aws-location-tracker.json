@@ -1,0 +1,81 @@
+{
+  "typeName" : "AWS::Location::Tracker",
+  "description" : "Definition of AWS::Location::Tracker Resource Type",
+  "definitions" : {
+    "PricingPlan" : {
+      "type" : "string",
+      "enum" : [ "RequestBasedUsage" ]
+    },
+    "iso8601UTC" : {
+      "description" : "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
+      "type" : "string",
+      "pattern" : "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$"
+    },
+    "PositionFiltering" : {
+      "type" : "string",
+      "enum" : [ "TimeBased", "DistanceBased", "AccuracyBased" ]
+    }
+  },
+  "properties" : {
+    "CreateTime" : {
+      "$ref" : "#/definitions/iso8601UTC"
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1
+    },
+    "PricingPlan" : {
+      "$ref" : "#/definitions/PricingPlan"
+    },
+    "PricingPlanDataSource" : {
+      "type" : "string"
+    },
+    "PositionFiltering" : {
+      "$ref" : "#/definitions/PositionFiltering"
+    },
+    "TrackerArn" : {
+      "type" : "string",
+      "maxLength" : 1600,
+      "pattern" : "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$"
+    },
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 1600,
+      "pattern" : "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$"
+    },
+    "TrackerName" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[-._\\w]+$"
+    },
+    "UpdateTime" : {
+      "$ref" : "#/definitions/iso8601UTC"
+    }
+  },
+  "readOnlyProperties" : [ "/properties/CreateTime", "/properties/TrackerArn", "/properties/Arn", "/properties/UpdateTime" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/TrackerName", "/properties/PricingPlan", "/properties/Description", "/properties/PositionFiltering" ],
+  "required" : [ "TrackerName" ],
+  "primaryIdentifier" : [ "/properties/TrackerName" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "geo:CreateTracker" ]
+    },
+    "read" : {
+      "permissions" : [ "geo:DescribeTracker" ]
+    },
+    "delete" : {
+      "permissions" : [ "geo:DeleteTracker" ]
+    },
+    "list" : {
+      "permissions" : [ "geo:ListTrackers" ]
+    }
+  }
+}

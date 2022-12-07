@@ -1,0 +1,399 @@
+{
+ "typeName": "AWS::SageMaker::EndpointConfig",
+ "description": "Resource Type definition for AWS::SageMaker::EndpointConfig",
+ "additionalProperties": false,
+ "properties": {
+  "ShadowProductionVariants": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/ProductionVariant"
+   }
+  },
+  "DataCaptureConfig": {
+   "$ref": "#/definitions/DataCaptureConfig"
+  },
+  "ProductionVariants": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/ProductionVariant"
+   }
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "AsyncInferenceConfig": {
+   "$ref": "#/definitions/AsyncInferenceConfig"
+  },
+  "EndpointConfigName": {
+   "type": "string"
+  },
+  "ExplainerConfig": {
+   "$ref": "#/definitions/ExplainerConfig"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "definitions": {
+  "AsyncInferenceNotificationConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SuccessTopic": {
+     "type": "string"
+    },
+    "ErrorTopic": {
+     "type": "string"
+    }
+   }
+  },
+  "ClarifyHeader": {
+   "type": "object",
+   "additionalProperties": false
+  },
+  "ProductionVariant": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ModelDataDownloadTimeoutInSeconds": {
+     "type": "integer"
+    },
+    "ModelName": {
+     "type": "string"
+    },
+    "VolumeSizeInGB": {
+     "type": "integer"
+    },
+    "VariantName": {
+     "type": "string"
+    },
+    "ContainerStartupHealthCheckTimeoutInSeconds": {
+     "type": "integer"
+    },
+    "InitialInstanceCount": {
+     "type": "integer"
+    },
+    "ServerlessConfig": {
+     "$ref": "#/definitions/ServerlessConfig"
+    },
+    "InstanceType": {
+     "type": "string"
+    },
+    "AcceleratorType": {
+     "type": "string"
+    },
+    "InitialVariantWeight": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "ModelName",
+    "VariantName",
+    "InitialVariantWeight"
+   ]
+  },
+  "ClarifyInferenceConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ContentTemplate": {
+     "type": "string"
+    },
+    "LabelHeaders": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/ClarifyHeader"
+     }
+    },
+    "MaxPayloadInMB": {
+     "type": "integer"
+    },
+    "ProbabilityIndex": {
+     "type": "integer"
+    },
+    "LabelAttribute": {
+     "type": "string"
+    },
+    "FeatureTypes": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/ClarifyFeatureType"
+     }
+    },
+    "FeatureHeaders": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/ClarifyHeader"
+     }
+    },
+    "LabelIndex": {
+     "type": "integer"
+    },
+    "ProbabilityAttribute": {
+     "type": "string"
+    },
+    "FeaturesAttribute": {
+     "type": "string"
+    },
+    "MaxRecordCount": {
+     "type": "integer"
+    }
+   }
+  },
+  "ExplainerConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ClarifyExplainerConfig": {
+     "$ref": "#/definitions/ClarifyExplainerConfig"
+    }
+   }
+  },
+  "ClarifyFeatureType": {
+   "type": "object",
+   "additionalProperties": false
+  },
+  "CaptureContentTypeHeader": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CsvContentTypes": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "JsonContentTypes": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "ClarifyTextConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Language": {
+     "type": "string"
+    },
+    "Granularity": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Language",
+    "Granularity"
+   ]
+  },
+  "DataCaptureConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CaptureOptions": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/CaptureOption"
+     }
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "DestinationS3Uri": {
+     "type": "string"
+    },
+    "InitialSamplingPercentage": {
+     "type": "integer"
+    },
+    "CaptureContentTypeHeader": {
+     "$ref": "#/definitions/CaptureContentTypeHeader"
+    },
+    "EnableCapture": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "CaptureOptions",
+    "DestinationS3Uri",
+    "InitialSamplingPercentage"
+   ]
+  },
+  "AsyncInferenceConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ClientConfig": {
+     "$ref": "#/definitions/AsyncInferenceClientConfig"
+    },
+    "OutputConfig": {
+     "$ref": "#/definitions/AsyncInferenceOutputConfig"
+    }
+   },
+   "required": [
+    "OutputConfig"
+   ]
+  },
+  "AsyncInferenceClientConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrentInvocationsPerInstance": {
+     "type": "integer"
+    }
+   }
+  },
+  "ClarifyShapBaselineConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MimeType": {
+     "type": "string"
+    },
+    "ShapBaseline": {
+     "type": "string"
+    },
+    "ShapBaselineUri": {
+     "type": "string"
+    }
+   }
+  },
+  "ServerlessConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MaxConcurrency": {
+     "type": "integer"
+    },
+    "MemorySizeInMB": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxConcurrency",
+    "MemorySizeInMB"
+   ]
+  },
+  "ClarifyShapConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "TextConfig": {
+     "$ref": "#/definitions/ClarifyTextConfig"
+    },
+    "UseLogit": {
+     "type": "boolean"
+    },
+    "Seed": {
+     "type": "integer"
+    },
+    "ShapBaselineConfig": {
+     "$ref": "#/definitions/ClarifyShapBaselineConfig"
+    },
+    "NumberOfSamples": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ShapBaselineConfig"
+   ]
+  },
+  "ClarifyExplainerConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "EnableExplanations": {
+     "type": "string"
+    },
+    "ShapConfig": {
+     "$ref": "#/definitions/ClarifyShapConfig"
+    },
+    "InferenceConfig": {
+     "$ref": "#/definitions/ClarifyInferenceConfig"
+    }
+   },
+   "required": [
+    "ShapConfig"
+   ]
+  },
+  "CaptureOption": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CaptureMode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CaptureMode"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "AsyncInferenceOutputConfig": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "NotificationConfig": {
+     "$ref": "#/definitions/AsyncInferenceNotificationConfig"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "S3OutputPath": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3OutputPath"
+   ]
+  }
+ },
+ "required": [
+  "ProductionVariants"
+ ],
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/AsyncInferenceConfig",
+  "/properties/ShadowProductionVariants",
+  "/properties/ProductionVariants",
+  "/properties/DataCaptureConfig",
+  "/properties/ExplainerConfig",
+  "/properties/EndpointConfigName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

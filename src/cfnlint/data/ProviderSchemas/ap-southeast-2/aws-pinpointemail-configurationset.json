@@ -1,0 +1,86 @@
+{
+  "typeName" : "AWS::PinpointEmail::ConfigurationSet",
+  "description" : "Resource Type definition for AWS::PinpointEmail::ConfigurationSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "SendingOptions" : {
+      "$ref" : "#/definitions/SendingOptions"
+    },
+    "TrackingOptions" : {
+      "$ref" : "#/definitions/TrackingOptions"
+    },
+    "ReputationOptions" : {
+      "$ref" : "#/definitions/ReputationOptions"
+    },
+    "DeliveryOptions" : {
+      "$ref" : "#/definitions/DeliveryOptions"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tags"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SendingOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SendingEnabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "TrackingOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomRedirectDomain" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ReputationOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ReputationMetricsEnabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "DeliveryOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SendingPoolName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tags" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

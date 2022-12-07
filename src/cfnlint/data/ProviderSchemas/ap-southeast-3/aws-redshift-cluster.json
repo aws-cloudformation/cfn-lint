@@ -1,0 +1,151 @@
+{
+  "typeName" : "AWS::Redshift::Cluster",
+  "description" : "Resource Type definition for AWS::Redshift::Cluster",
+  "additionalProperties" : false,
+  "properties" : {
+    "HsmClientCertificateIdentifier" : {
+      "type" : "string"
+    },
+    "ElasticIp" : {
+      "type" : "string"
+    },
+    "EndpointPort" : {
+      "type" : "string"
+    },
+    "AutomatedSnapshotRetentionPeriod" : {
+      "type" : "integer"
+    },
+    "Encrypted" : {
+      "type" : "boolean"
+    },
+    "SnapshotIdentifier" : {
+      "type" : "string"
+    },
+    "Port" : {
+      "type" : "integer"
+    },
+    "NumberOfNodes" : {
+      "type" : "integer"
+    },
+    "ClusterParameterGroupName" : {
+      "type" : "string"
+    },
+    "AllowVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "VpcSecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "OwnerAccount" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "EndpointAddress" : {
+      "type" : "string"
+    },
+    "SnapshotClusterIdentifier" : {
+      "type" : "string"
+    },
+    "IamRoles" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "ClusterVersion" : {
+      "type" : "string"
+    },
+    "HsmConfigurationIdentifier" : {
+      "type" : "string"
+    },
+    "KmsKeyId" : {
+      "type" : "string"
+    },
+    "AvailabilityZone" : {
+      "type" : "string"
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string"
+    },
+    "ClusterSecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "ClusterType" : {
+      "type" : "string"
+    },
+    "ClusterIdentifier" : {
+      "type" : "string"
+    },
+    "MasterUserPassword" : {
+      "type" : "string"
+    },
+    "ClusterSubnetGroupName" : {
+      "type" : "string"
+    },
+    "LoggingProperties" : {
+      "$ref" : "#/definitions/LoggingProperties"
+    },
+    "NodeType" : {
+      "type" : "string"
+    },
+    "MasterUsername" : {
+      "type" : "string"
+    },
+    "DBName" : {
+      "type" : "string"
+    },
+    "PubliclyAccessible" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "LoggingProperties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BucketName" : {
+          "type" : "string"
+        },
+        "S3KeyPrefix" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "BucketName" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "MasterUserPassword", "NodeType", "MasterUsername", "DBName", "ClusterType" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/MasterUsername", "/properties/OwnerAccount", "/properties/SnapshotIdentifier", "/properties/Encrypted", "/properties/Port", "/properties/DBName", "/properties/SnapshotClusterIdentifier", "/properties/AvailabilityZone", "/properties/ClusterSubnetGroupName", "/properties/ClusterIdentifier", "/properties/ElasticIp" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Endpoint.Port", "/properties/Endpoint.Address" ]
+}

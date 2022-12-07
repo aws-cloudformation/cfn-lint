@@ -1,0 +1,83 @@
+{
+ "typeName": "AWS::SNS::Topic",
+ "description": "Resource Type definition for AWS::SNS::Topic",
+ "additionalProperties": false,
+ "properties": {
+  "KmsMasterKeyId": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "FifoTopic": {
+   "type": "boolean"
+  },
+  "ContentBasedDeduplication": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Subscription": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Subscription"
+   }
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  },
+  "TopicName": {
+   "type": "string"
+  }
+ },
+ "definitions": {
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "Subscription": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "type": "string"
+    },
+    "Protocol": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Endpoint",
+    "Protocol"
+   ]
+  }
+ },
+ "createOnlyProperties": [
+  "/properties/FifoTopic",
+  "/properties/TopicName"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

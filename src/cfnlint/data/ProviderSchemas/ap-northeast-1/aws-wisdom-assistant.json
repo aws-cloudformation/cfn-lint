@@ -1,0 +1,126 @@
+{
+ "typeName": "AWS::Wisdom::Assistant",
+ "description": "Definition of AWS::Wisdom::Assistant Resource Type",
+ "definitions": {
+  "AssistantType": {
+   "type": "string",
+   "enum": [
+    "AGENT"
+   ]
+  },
+  "ServerSideEncryptionConfiguration": {
+   "type": "object",
+   "properties": {
+    "KmsKeyId": {
+     "type": "string",
+     "maxLength": 4096,
+     "minLength": 1
+    }
+   },
+   "additionalProperties": false
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Type": {
+   "$ref": "#/definitions/AssistantType"
+  },
+  "Description": {
+   "type": "string",
+   "maxLength": 255,
+   "minLength": 1
+  },
+  "AssistantArn": {
+   "type": "string",
+   "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$"
+  },
+  "AssistantId": {
+   "type": "string",
+   "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+  },
+  "ServerSideEncryptionConfiguration": {
+   "$ref": "#/definitions/ServerSideEncryptionConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "type": "string",
+   "maxLength": 255,
+   "minLength": 1
+  }
+ },
+ "required": [
+  "Name",
+  "Type"
+ ],
+ "readOnlyProperties": [
+  "/properties/AssistantId",
+  "/properties/AssistantArn"
+ ],
+ "createOnlyProperties": [
+  "/properties/Description",
+  "/properties/Name",
+  "/properties/ServerSideEncryptionConfiguration",
+  "/properties/Tags",
+  "/properties/Type"
+ ],
+ "primaryIdentifier": [
+  "/properties/AssistantId"
+ ],
+ "additionalIdentifiers": [
+  [
+   "/properties/AssistantArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "taggable": false,
+ "replacementStrategy": "delete_then_create",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wisdom:CreateAssistant"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wisdom:GetAssistant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "wisdom:ListAssistants"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wisdom:DeleteAssistant"
+   ]
+  }
+ }
+}

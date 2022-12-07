@@ -1,0 +1,55 @@
+{
+  "typeName" : "AWS::Glue::Database",
+  "description" : "Resource Type definition for AWS::Glue::Database",
+  "additionalProperties" : false,
+  "properties" : {
+    "CatalogId" : {
+      "type" : "string"
+    },
+    "DatabaseInput" : {
+      "$ref" : "#/definitions/DatabaseInput"
+    },
+    "Id" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "DatabaseIdentifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
+        },
+        "CatalogId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DatabaseInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LocationUri" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "Parameters" : {
+          "type" : "object"
+        },
+        "TargetDatabase" : {
+          "$ref" : "#/definitions/DatabaseIdentifier"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "required" : [ "DatabaseInput", "CatalogId" ],
+  "createOnlyProperties" : [ "/properties/CatalogId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

@@ -1,0 +1,38 @@
+{
+  "typeName" : "AWS::ElasticBeanstalk::ApplicationVersion",
+  "description" : "Resource Type definition for AWS::ElasticBeanstalk::ApplicationVersion",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "ApplicationName" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "SourceBundle" : {
+      "$ref" : "#/definitions/SourceBundle"
+    }
+  },
+  "definitions" : {
+    "SourceBundle" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Bucket" : {
+          "type" : "string"
+        },
+        "S3Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "S3Bucket", "S3Key" ]
+    }
+  },
+  "required" : [ "ApplicationName", "SourceBundle" ],
+  "createOnlyProperties" : [ "/properties/SourceBundle", "/properties/ApplicationName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
+}

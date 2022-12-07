@@ -1,0 +1,47 @@
+{
+  "typeName" : "AWS::Route53Resolver::ResolverDNSSECConfig",
+  "description" : "Resource schema for AWS::Route53Resolver::ResolverDNSSECConfig.",
+  "properties" : {
+    "Id" : {
+      "description" : "Id",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "OwnerId" : {
+      "description" : "AccountId",
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 32
+    },
+    "ResourceId" : {
+      "description" : "ResourceId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "ValidationStatus" : {
+      "description" : "ResolverDNSSECValidationStatus, possible values are ENABLING, ENABLED, DISABLING AND DISABLED.",
+      "type" : "string",
+      "enum" : [ "ENABLING", "ENABLED", "DISABLING", "DISABLED" ]
+    }
+  },
+  "readOnlyProperties" : [ "/properties/OwnerId", "/properties/Id", "/properties/ValidationStatus" ],
+  "createOnlyProperties" : [ "/properties/ResourceId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resolverdnssec:CreateConfig" ]
+    },
+    "read" : {
+      "permissions" : [ "resolverdnssec:GetConfig" ]
+    },
+    "delete" : {
+      "permissions" : [ "resolverdnssec:DeleteConfig" ]
+    },
+    "list" : {
+      "permissions" : [ "resolverdnssec:ListConfig" ]
+    }
+  }
+}

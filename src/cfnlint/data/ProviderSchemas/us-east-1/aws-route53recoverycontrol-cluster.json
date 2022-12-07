@@ -1,0 +1,122 @@
+{
+ "typeName": "AWS::Route53RecoveryControl::Cluster",
+ "description": "AWS Route53 Recovery Control Cluster resource schema",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+ "taggable": true,
+ "definitions": {
+  "ClusterEndpoint": {
+   "type": "object",
+   "properties": {
+    "Endpoint": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 128
+    },
+    "Region": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 32
+    }
+   },
+   "additionalProperties": false
+  },
+  "Tag": {
+   "type": "object",
+   "properties": {
+    "Key": {
+     "type": "string",
+     "minLength": 1,
+     "maxLength": 128
+    },
+    "Value": {
+     "type": "string",
+     "maxLength": 256
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "additionalProperties": false
+  }
+ },
+ "properties": {
+  "Name": {
+   "description": "Name of a Cluster. You can use any non-white space character in the name",
+   "type": "string",
+   "minLength": 1,
+   "maxLength": 64
+  },
+  "ClusterArn": {
+   "description": "The Amazon Resource Name (ARN) of the cluster.",
+   "type": "string",
+   "minLength": 1,
+   "maxLength": 2048
+  },
+  "Status": {
+   "description": "Deployment status of a resource. Status can be one of the following: PENDING, DEPLOYED, PENDING_DELETION.",
+   "type": "string",
+   "enum": [
+    "PENDING",
+    "DEPLOYED",
+    "PENDING_DELETION"
+   ]
+  },
+  "ClusterEndpoints": {
+   "description": "Endpoints for the cluster.",
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/ClusterEndpoint"
+   },
+   "insertionOrder": false
+  },
+  "Tags": {
+   "description": "A collection of tags associated with a resource",
+   "type": "array",
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "insertionOrder": false
+  }
+ },
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Endpoints",
+  "/properties/ClusterEndpoints",
+  "/properties/ClusterArn"
+ ],
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53-recovery-control-config:CreateCluster"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53-recovery-control-config:DescribeCluster"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53-recovery-control-config:DeleteCluster"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53-recovery-control-config:ListClusters"
+   ]
+  }
+ }
+}

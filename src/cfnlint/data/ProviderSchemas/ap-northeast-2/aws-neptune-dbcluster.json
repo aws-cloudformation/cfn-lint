@@ -1,0 +1,136 @@
+{
+  "typeName" : "AWS::Neptune::DBCluster",
+  "description" : "Resource Type definition for AWS::Neptune::DBCluster",
+  "additionalProperties" : false,
+  "properties" : {
+    "StorageEncrypted" : {
+      "type" : "boolean"
+    },
+    "RestoreToTime" : {
+      "type" : "string"
+    },
+    "AssociatedRoles" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/DBClusterRole"
+      }
+    },
+    "SnapshotIdentifier" : {
+      "type" : "string"
+    },
+    "Port" : {
+      "type" : "integer"
+    },
+    "DBClusterIdentifier" : {
+      "type" : "string"
+    },
+    "PreferredBackupWindow" : {
+      "type" : "string"
+    },
+    "ClusterResourceId" : {
+      "type" : "string"
+    },
+    "Endpoint" : {
+      "type" : "string"
+    },
+    "VpcSecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "RestoreType" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "KmsKeyId" : {
+      "type" : "string"
+    },
+    "AvailabilityZones" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string"
+    },
+    "IamAuthEnabled" : {
+      "type" : "boolean"
+    },
+    "DBSubnetGroupName" : {
+      "type" : "string"
+    },
+    "DeletionProtection" : {
+      "type" : "boolean"
+    },
+    "UseLatestRestorableTime" : {
+      "type" : "boolean"
+    },
+    "SourceDBClusterIdentifier" : {
+      "type" : "string"
+    },
+    "ReadEndpoint" : {
+      "type" : "string"
+    },
+    "DBClusterParameterGroupName" : {
+      "type" : "string"
+    },
+    "BackupRetentionPeriod" : {
+      "type" : "integer"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "EnableCloudwatchLogsExports" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    }
+  },
+  "definitions" : {
+    "DBClusterRole" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RoleArn" : {
+          "type" : "string"
+        },
+        "FeatureName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RoleArn" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/SnapshotIdentifier", "/properties/UseLatestRestorableTime", "/properties/SourceDBClusterIdentifier", "/properties/RestoreType", "/properties/DBClusterIdentifier", "/properties/RestoreToTime", "/properties/AvailabilityZones", "/properties/DBSubnetGroupName", "/properties/EngineVersion", "/properties/StorageEncrypted" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/ReadEndpoint", "/properties/Id", "/properties/Endpoint", "/properties/ClusterResourceId" ]
+}

@@ -1,0 +1,221 @@
+{
+ "typeName": "AWS::Glue::Partition",
+ "description": "Resource Type definition for AWS::Glue::Partition",
+ "additionalProperties": false,
+ "properties": {
+  "DatabaseName": {
+   "type": "string"
+  },
+  "TableName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "CatalogId": {
+   "type": "string"
+  },
+  "PartitionInput": {
+   "$ref": "#/definitions/PartitionInput"
+  }
+ },
+ "definitions": {
+  "SchemaReference": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SchemaId": {
+     "$ref": "#/definitions/SchemaId"
+    },
+    "SchemaVersionId": {
+     "type": "string"
+    },
+    "SchemaVersionNumber": {
+     "type": "integer"
+    }
+   }
+  },
+  "Order": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Column": {
+     "type": "string"
+    },
+    "SortOrder": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "Column"
+   ]
+  },
+  "SkewedInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SkewedColumnValues": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "SkewedColumnValueLocationMaps": {
+     "type": "object"
+    },
+    "SkewedColumnNames": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "Column": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Comment": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ]
+  },
+  "StorageDescriptor": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "StoredAsSubDirectories": {
+     "type": "boolean"
+    },
+    "Parameters": {
+     "type": "object"
+    },
+    "BucketColumns": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "NumberOfBuckets": {
+     "type": "integer"
+    },
+    "OutputFormat": {
+     "type": "string"
+    },
+    "Columns": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/Column"
+     }
+    },
+    "SerdeInfo": {
+     "$ref": "#/definitions/SerdeInfo"
+    },
+    "SortColumns": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "$ref": "#/definitions/Order"
+     }
+    },
+    "Compressed": {
+     "type": "boolean"
+    },
+    "SchemaReference": {
+     "$ref": "#/definitions/SchemaReference"
+    },
+    "SkewedInfo": {
+     "$ref": "#/definitions/SkewedInfo"
+    },
+    "InputFormat": {
+     "type": "string"
+    },
+    "Location": {
+     "type": "string"
+    }
+   }
+  },
+  "SchemaId": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RegistryName": {
+     "type": "string"
+    },
+    "SchemaName": {
+     "type": "string"
+    },
+    "SchemaArn": {
+     "type": "string"
+    }
+   }
+  },
+  "SerdeInfo": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Parameters": {
+     "type": "object"
+    },
+    "SerializationLibrary": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "PartitionInput": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "StorageDescriptor": {
+     "$ref": "#/definitions/StorageDescriptor"
+    },
+    "Values": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "Parameters": {
+     "type": "object"
+    }
+   },
+   "required": [
+    "Values"
+   ]
+  }
+ },
+ "required": [
+  "TableName",
+  "DatabaseName",
+  "CatalogId",
+  "PartitionInput"
+ ],
+ "createOnlyProperties": [
+  "/properties/TableName",
+  "/properties/DatabaseName",
+  "/properties/CatalogId"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

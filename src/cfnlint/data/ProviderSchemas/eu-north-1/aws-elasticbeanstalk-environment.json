@@ -1,0 +1,110 @@
+{
+  "typeName" : "AWS::ElasticBeanstalk::Environment",
+  "description" : "Resource Type definition for AWS::ElasticBeanstalk::Environment",
+  "additionalProperties" : false,
+  "properties" : {
+    "PlatformArn" : {
+      "type" : "string"
+    },
+    "ApplicationName" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "EnvironmentName" : {
+      "type" : "string"
+    },
+    "OperationsRole" : {
+      "type" : "string"
+    },
+    "Tier" : {
+      "$ref" : "#/definitions/Tier"
+    },
+    "VersionLabel" : {
+      "type" : "string"
+    },
+    "EndpointURL" : {
+      "type" : "string"
+    },
+    "OptionSettings" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/OptionSetting"
+      }
+    },
+    "TemplateName" : {
+      "type" : "string"
+    },
+    "SolutionStackName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "CNAMEPrefix" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Version" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OptionSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "ResourceName" : {
+          "type" : "string"
+        },
+        "Namespace" : {
+          "type" : "string"
+        },
+        "OptionName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Namespace", "OptionName" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    }
+  },
+  "required" : [ "ApplicationName" ],
+  "createOnlyProperties" : [ "/properties/CNAMEPrefix", "/properties/EnvironmentName", "/properties/ApplicationName", "/properties/SolutionStackName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/EndpointURL" ]
+}

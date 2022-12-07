@@ -1,0 +1,484 @@
+{
+ "typeName": "AWS::MediaPackage::PackagingConfiguration",
+ "description": "Resource schema for AWS::MediaPackage::PackagingConfiguration",
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "properties": {
+  "Id": {
+   "description": "The ID of the PackagingConfiguration.",
+   "type": "string"
+  },
+  "PackagingGroupId": {
+   "description": "The ID of a PackagingGroup.",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The ARN of the PackagingConfiguration.",
+   "type": "string"
+  },
+  "CmafPackage": {
+   "description": "A CMAF packaging configuration.",
+   "$ref": "#/definitions/CmafPackage"
+  },
+  "DashPackage": {
+   "description": "A Dynamic Adaptive Streaming over HTTP (DASH) packaging configuration.",
+   "$ref": "#/definitions/DashPackage"
+  },
+  "HlsPackage": {
+   "description": "An HTTP Live Streaming (HLS) packaging configuration.",
+   "$ref": "#/definitions/HlsPackage"
+  },
+  "MssPackage": {
+   "description": "A Microsoft Smooth Streaming (MSS) PackagingConfiguration.",
+   "$ref": "#/definitions/MssPackage"
+  },
+  "Tags": {
+   "description": "A collection of tags associated with a resource",
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "definitions": {
+  "RoleArn": {
+   "description": "An Amazon Resource Name (ARN) of an IAM role that AWS Elemental MediaPackage will assume when accessing the key provider service.",
+   "type": "string"
+  },
+  "SpekeKeyProvider": {
+   "description": "A configuration for accessing an external Secure Packager and Encoder Key Exchange (SPEKE) service that will provide encryption keys.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionContractConfiguration": {
+     "$ref": "#/definitions/EncryptionContractConfiguration"
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/RoleArn"
+    },
+    "SystemIds": {
+     "description": "The system IDs to include in key requests.",
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    "Url": {
+     "description": "The URL of the external key provider service.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SystemIds",
+    "Url"
+   ]
+  },
+  "EncryptionContractConfiguration": {
+   "description": "The configuration to use for encrypting one or more content tracks separately for endpoints that use SPEKE 2.0.",
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "PresetSpeke20Audio",
+    "PresetSpeke20Video"
+   ],
+   "properties": {
+    "PresetSpeke20Audio": {
+     "description": "A collection of audio encryption presets.",
+     "type": "string",
+     "enum": [
+      "PRESET-AUDIO-1",
+      "PRESET-AUDIO-2",
+      "PRESET-AUDIO-3",
+      "SHARED",
+      "UNENCRYPTED"
+     ]
+    },
+    "PresetSpeke20Video": {
+     "description": "A collection of video encryption presets.",
+     "type": "string",
+     "enum": [
+      "PRESET-VIDEO-1",
+      "PRESET-VIDEO-2",
+      "PRESET-VIDEO-3",
+      "PRESET-VIDEO-4",
+      "PRESET-VIDEO-5",
+      "PRESET-VIDEO-6",
+      "PRESET-VIDEO-7",
+      "PRESET-VIDEO-8",
+      "SHARED",
+      "UNENCRYPTED"
+     ]
+    }
+   }
+  },
+  "StreamSelection": {
+   "description": "A StreamSelection configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "MaxVideoBitsPerSecond": {
+     "description": "The maximum video bitrate (bps) to include in output.",
+     "type": "integer"
+    },
+    "MinVideoBitsPerSecond": {
+     "description": "The minimum video bitrate (bps) to include in output.",
+     "type": "integer"
+    },
+    "StreamOrder": {
+     "description": "A directive that determines the order of streams in the output.",
+     "type": "string",
+     "enum": [
+      "ORIGINAL",
+      "VIDEO_BITRATE_ASCENDING",
+      "VIDEO_BITRATE_DESCENDING"
+     ]
+    }
+   }
+  },
+  "SegmentDurationSeconds": {
+   "description": "Duration (in seconds) of each fragment. Actual fragments will be rounded to the nearest multiple of the source fragment duration.",
+   "type": "integer"
+  },
+  "ManifestName": {
+   "description": "An optional string to include in the name of the manifest.",
+   "type": "string"
+  },
+  "HlsManifest": {
+   "description": "An HTTP Live Streaming (HLS) manifest configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "AdMarkers": {
+     "description": "This setting controls how ad markers are included in the packaged OriginEndpoint. \"NONE\" will omit all SCTE-35 ad markers from the output. \"PASSTHROUGH\" causes the manifest to contain a copy of the SCTE-35 ad markers (comments) taken directly from the input HTTP Live Streaming (HLS) manifest. \"SCTE35_ENHANCED\" generates ad markers and blackout tags based on SCTE-35 messages in the input source.",
+     "type": "string",
+     "enum": [
+      "NONE",
+      "SCTE35_ENHANCED",
+      "PASSTHROUGH"
+     ]
+    },
+    "IncludeIframeOnlyStream": {
+     "description": "When enabled, an I-Frame only stream will be included in the output.",
+     "type": "boolean"
+    },
+    "ManifestName": {
+     "$ref": "#/definitions/ManifestName"
+    },
+    "ProgramDateTimeIntervalSeconds": {
+     "description": "The interval (in seconds) between each EXT-X-PROGRAM-DATE-TIME tag inserted into manifests. Additionally, when an interval is specified ID3Timed Metadata messages will be generated every 5 seconds using the ingest time of the content. If the interval is not specified, or set to 0, then no EXT-X-PROGRAM-DATE-TIME tags will be inserted into manifests and no ID3Timed Metadata messages will be generated. Note that irrespective of this parameter, if any ID3 Timed Metadata is found in HTTP Live Streaming (HLS) input, it will be passed through to HLS output.",
+     "type": "integer"
+    },
+    "RepeatExtXKey": {
+     "description": "When enabled, the EXT-X-KEY tag will be repeated in output manifests.",
+     "type": "boolean"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    }
+   }
+  },
+  "DashManifest": {
+   "description": "A DASH manifest configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ManifestLayout": {
+     "description": "Determines the position of some tags in the Media Presentation Description (MPD). When set to FULL, elements like SegmentTemplate and ContentProtection are included in each Representation. When set to COMPACT, duplicate elements are combined and presented at the AdaptationSet level.",
+     "type": "string",
+     "enum": [
+      "FULL",
+      "COMPACT"
+     ]
+    },
+    "ManifestName": {
+     "$ref": "#/definitions/ManifestName"
+    },
+    "MinBufferTimeSeconds": {
+     "description": "Minimum duration (in seconds) that a player will buffer media before starting the presentation.",
+     "type": "integer"
+    },
+    "Profile": {
+     "description": "The Dynamic Adaptive Streaming over HTTP (DASH) profile type. When set to \"HBBTV_1_5\", HbbTV 1.5 compliant output is enabled.",
+     "type": "string",
+     "enum": [
+      "NONE",
+      "HBBTV_1_5"
+     ]
+    },
+    "ScteMarkersSource": {
+     "description": "The source of scte markers used. When set to SEGMENTS, the scte markers are sourced from the segments of the ingested content. When set to MANIFEST, the scte markers are sourced from the manifest of the ingested content.",
+     "type": "string",
+     "enum": [
+      "SEGMENTS",
+      "MANIFEST"
+     ]
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    }
+   }
+  },
+  "MssManifest": {
+   "description": "A Microsoft Smooth Streaming (MSS) manifest configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ManifestName": {
+     "$ref": "#/definitions/ManifestName"
+    },
+    "StreamSelection": {
+     "$ref": "#/definitions/StreamSelection"
+    }
+   }
+  },
+  "CmafEncryption": {
+   "type": "object",
+   "description": "A CMAF encryption configuration.",
+   "additionalProperties": false,
+   "properties": {
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ]
+  },
+  "CmafPackage": {
+   "description": "A CMAF packaging configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/CmafEncryption"
+    },
+    "HlsManifests": {
+     "description": "A list of HLS manifest configurations.",
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/HlsManifest"
+     }
+    },
+    "SegmentDurationSeconds": {
+     "$ref": "#/definitions/SegmentDurationSeconds"
+    },
+    "IncludeEncoderConfigurationInSegments": {
+     "description": "When includeEncoderConfigurationInSegments is set to true, MediaPackage places your encoder's Sequence Parameter Set (SPS), Picture Parameter Set (PPS), and Video Parameter Set (VPS) metadata in every video segment instead of in the init fragment. This lets you use different SPS/PPS/VPS settings for your assets during content playback.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "HlsManifests"
+   ]
+  },
+  "DashEncryption": {
+   "type": "object",
+   "description": "A Dynamic Adaptive Streaming over HTTP (DASH) encryption configuration.",
+   "additionalProperties": false,
+   "properties": {
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ]
+  },
+  "DashPackage": {
+   "type": "object",
+   "description": "A Dynamic Adaptive Streaming over HTTP (DASH) packaging configuration.",
+   "additionalProperties": false,
+   "properties": {
+    "DashManifests": {
+     "description": "A list of DASH manifest configurations.",
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/DashManifest"
+     }
+    },
+    "Encryption": {
+     "$ref": "#/definitions/DashEncryption"
+    },
+    "PeriodTriggers": {
+     "description": "A list of triggers that controls when the outgoing Dynamic Adaptive Streaming over HTTP (DASH) Media Presentation Description (MPD) will be partitioned into multiple periods. If empty, the content will not be partitioned into more than one period. If the list contains \"ADS\", new periods will be created where the Asset contains SCTE-35 ad markers.",
+     "type": "array",
+     "items": {
+      "type": "string",
+      "enum": [
+       "ADS"
+      ]
+     }
+    },
+    "SegmentDurationSeconds": {
+     "$ref": "#/definitions/SegmentDurationSeconds"
+    },
+    "SegmentTemplateFormat": {
+     "description": "Determines the type of SegmentTemplate included in the Media Presentation Description (MPD). When set to NUMBER_WITH_TIMELINE, a full timeline is presented in each SegmentTemplate, with $Number$ media URLs. When set to TIME_WITH_TIMELINE, a full timeline is presented in each SegmentTemplate, with $Time$ media URLs. When set to NUMBER_WITH_DURATION, only a duration is included in each SegmentTemplate, with $Number$ media URLs.",
+     "type": "string",
+     "enum": [
+      "NUMBER_WITH_TIMELINE",
+      "TIME_WITH_TIMELINE",
+      "NUMBER_WITH_DURATION"
+     ]
+    },
+    "IncludeEncoderConfigurationInSegments": {
+     "description": "When includeEncoderConfigurationInSegments is set to true, MediaPackage places your encoder's Sequence Parameter Set (SPS), Picture Parameter Set (PPS), and Video Parameter Set (VPS) metadata in every video segment instead of in the init fragment. This lets you use different SPS/PPS/VPS settings for your assets during content playback.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "DashManifests"
+   ]
+  },
+  "HlsEncryption": {
+   "description": "An HTTP Live Streaming (HLS) encryption configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "ConstantInitializationVector": {
+     "description": "An HTTP Live Streaming (HLS) encryption configuration.",
+     "type": "string"
+    },
+    "EncryptionMethod": {
+     "description": "The encryption method to use.",
+     "type": "string",
+     "enum": [
+      "AES_128",
+      "SAMPLE_AES"
+     ]
+    },
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ]
+  },
+  "HlsPackage": {
+   "description": "An HTTP Live Streaming (HLS) packaging configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/HlsEncryption"
+    },
+    "HlsManifests": {
+     "description": "A list of HLS manifest configurations.",
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/HlsManifest"
+     }
+    },
+    "IncludeDvbSubtitles": {
+     "description": "When enabled, MediaPackage passes through digital video broadcasting (DVB) subtitles into the output.",
+     "type": "boolean"
+    },
+    "SegmentDurationSeconds": {
+     "$ref": "#/definitions/SegmentDurationSeconds"
+    },
+    "UseAudioRenditionGroup": {
+     "description": "When enabled, audio streams will be placed in rendition groups in the output.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "HlsManifests"
+   ]
+  },
+  "MssEncryption": {
+   "description": "A CMAF encryption configuration.",
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "SpekeKeyProvider": {
+     "$ref": "#/definitions/SpekeKeyProvider"
+    }
+   },
+   "required": [
+    "SpekeKeyProvider"
+   ]
+  },
+  "MssPackage": {
+   "type": "object",
+   "description": "A Microsoft Smooth Streaming (MSS) PackagingConfiguration.",
+   "additionalProperties": false,
+   "properties": {
+    "Encryption": {
+     "$ref": "#/definitions/MssEncryption"
+    },
+    "MssManifests": {
+     "description": "A list of MSS manifest configurations.",
+     "type": "array",
+     "items": {
+      "$ref": "#/definitions/MssManifest"
+     }
+    },
+    "SegmentDurationSeconds": {
+     "$ref": "#/definitions/SegmentDurationSeconds"
+    }
+   },
+   "required": [
+    "MssManifests"
+   ]
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  }
+ },
+ "additionalProperties": false,
+ "required": [
+  "PackagingGroupId",
+  "Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "createOnlyProperties": [
+  "/properties/Id"
+ ],
+ "handlers": {
+  "create": {
+   "permissions": [
+    "mediapackage-vod:CreatePackagingConfiguration",
+    "mediapackage-vod:DescribePackagingConfiguration",
+    "mediapackage-vod:DescribePackagingGroup",
+    "mediapackage-vod:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediapackage-vod:DescribePackagingConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediapackage-vod:DeletePackagingConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediapackage-vod:ListPackagingConfigurations",
+    "mediapackage-vod:DescribePackagingGroup"
+   ]
+  }
+ }
+}

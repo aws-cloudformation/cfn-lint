@@ -1,0 +1,168 @@
+{
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-vpcattachment",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "networkmanager:GetVpcAttachment" ]
+    },
+    "create" : {
+      "permissions" : [ "networkmanager:CreateVpcAttachment", "networkmanager:GetVpcAttachment", "networkmanager:TagResource", "ec2:DescribeRegions", "iam:CreateServiceLinkedRole" ],
+      "timeoutInMinutes" : 60
+    },
+    "update" : {
+      "permissions" : [ "networkmanager:UpdateVpcAttachment", "networkmanager:GetVpcAttachment", "networkmanager:ListTagsForResource", "networkmanager:TagResource", "networkmanager:UntagResource", "ec2:DescribeRegions" ],
+      "timeoutInMinutes" : 60
+    },
+    "list" : {
+      "permissions" : [ "networkmanager:ListAttachments" ]
+    },
+    "delete" : {
+      "permissions" : [ "networkmanager:DeleteAttachment", "networkmanager:GetVpcAttachment", "networkmanager:UntagResource", "ec2:DescribeRegions" ],
+      "timeoutInMinutes" : 60
+    }
+  },
+  "typeName" : "AWS::NetworkManager::VpcAttachment",
+  "readOnlyProperties" : [ "/properties/CoreNetworkArn", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/AttachmentType", "/properties/State", "/properties/AttachmentId", "/properties/OwnerAccountId", "/properties/EdgeLocation", "/properties/AttachmentPolicyRuleNumber", "/properties/ProposedSegmentChange", "/properties/SegmentName", "/properties/ResourceArn" ],
+  "description" : "AWS::NetworkManager::VpcAttachment Resoruce Type",
+  "createOnlyProperties" : [ "/properties/CoreNetworkId", "/properties/VpcArn" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AttachmentId" ],
+  "definitions" : {
+    "ProposedSegmentChange" : {
+      "description" : "The attachment to move from one segment to another.",
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "SegmentName" : {
+          "description" : "The name of the segment to change.",
+          "type" : "string"
+        },
+        "Tags" : {
+          "description" : "The key-value tags that changed for the segment.",
+          "insertionOrder" : false,
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "AttachmentPolicyRuleNumber" : {
+          "description" : "The rule number in the policy document that applies to this change.",
+          "type" : "integer"
+        }
+      }
+    },
+    "VpcOptions" : {
+      "description" : "Vpc options of the attachment.",
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Ipv6Support" : {
+          "default" : false,
+          "description" : "Indicates whether to enable Ipv6 Support for Vpc Attachment. Valid Values: enable | disable",
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "insertionOrder" : false,
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
+        },
+        "Key" : {
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "Key", "Value" ]
+    }
+  },
+  "required" : [ "CoreNetworkId", "VpcArn", "SubnetArns" ],
+  "properties" : {
+    "ProposedSegmentChange" : {
+      "description" : "The attachment to move from one segment to another.",
+      "$ref" : "#/definitions/ProposedSegmentChange"
+    },
+    "SubnetArns" : {
+      "description" : "Subnet Arn list",
+      "insertionOrder" : false,
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Options" : {
+      "description" : "Vpc options of the attachment.",
+      "$ref" : "#/definitions/VpcOptions"
+    },
+    "CoreNetworkId" : {
+      "description" : "The ID of a core network for the VPC attachment.",
+      "type" : "string"
+    },
+    "AttachmentType" : {
+      "description" : "Attachment type.",
+      "type" : "string"
+    },
+    "SegmentName" : {
+      "description" : "The name of the segment attachment..",
+      "type" : "string"
+    },
+    "CreatedAt" : {
+      "description" : "Creation time of the attachment.",
+      "type" : "string"
+    },
+    "VpcArn" : {
+      "description" : "The ARN of the VPC.",
+      "type" : "string"
+    },
+    "UpdatedAt" : {
+      "description" : "Last update time of the attachment.",
+      "type" : "string"
+    },
+    "AttachmentId" : {
+      "description" : "Id of the attachment.",
+      "type" : "string"
+    },
+    "CoreNetworkArn" : {
+      "description" : "The ARN of a core network for the VPC attachment.",
+      "type" : "string"
+    },
+    "ResourceArn" : {
+      "description" : "The ARN of the Resource.",
+      "type" : "string"
+    },
+    "State" : {
+      "description" : "State of the attachment.",
+      "type" : "string"
+    },
+    "OwnerAccountId" : {
+      "description" : "Owner account of the attachment.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "Tags for the attachment.",
+      "insertionOrder" : false,
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "EdgeLocation" : {
+      "description" : "The Region where the edge is located.",
+      "type" : "string"
+    },
+    "AttachmentPolicyRuleNumber" : {
+      "description" : "The policy rule number associated with the attachment.",
+      "type" : "integer"
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+ "typeName": "AWS::Glue::Classifier",
+ "description": "Resource Type definition for AWS::Glue::Classifier",
+ "additionalProperties": false,
+ "properties": {
+  "Id": {
+   "type": "string"
+  },
+  "XMLClassifier": {
+   "$ref": "#/definitions/XMLClassifier"
+  },
+  "JsonClassifier": {
+   "$ref": "#/definitions/JsonClassifier"
+  },
+  "CsvClassifier": {
+   "$ref": "#/definitions/CsvClassifier"
+  },
+  "GrokClassifier": {
+   "$ref": "#/definitions/GrokClassifier"
+  }
+ },
+ "definitions": {
+  "CsvClassifier": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "QuoteSymbol": {
+     "type": "string"
+    },
+    "ContainsHeader": {
+     "type": "string"
+    },
+    "Delimiter": {
+     "type": "string"
+    },
+    "Header": {
+     "type": "array",
+     "uniqueItems": false,
+     "items": {
+      "type": "string"
+     }
+    },
+    "AllowSingleColumn": {
+     "type": "boolean"
+    },
+    "DisableValueTrimming": {
+     "type": "boolean"
+    },
+    "Name": {
+     "type": "string"
+    }
+   }
+  },
+  "JsonClassifier": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "JsonPath": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "JsonPath"
+   ]
+  },
+  "XMLClassifier": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "RowTag": {
+     "type": "string"
+    },
+    "Classification": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RowTag",
+    "Classification"
+   ]
+  },
+  "GrokClassifier": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "CustomPatterns": {
+     "type": "string"
+    },
+    "GrokPattern": {
+     "type": "string"
+    },
+    "Classification": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "GrokPattern",
+    "Classification"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id"
+ ]
+}

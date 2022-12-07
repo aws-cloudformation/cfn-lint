@@ -1,0 +1,134 @@
+{
+ "typeName": "AWS::ApiGateway::RestApi",
+ "description": "Resource Type definition for AWS::ApiGateway::RestApi",
+ "additionalProperties": false,
+ "properties": {
+  "Policy": {
+   "type": "object"
+  },
+  "BodyS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "MinimumCompressionSize": {
+   "type": "integer"
+  },
+  "Parameters": {
+   "type": "object",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   }
+  },
+  "CloneFrom": {
+   "type": "string"
+  },
+  "Mode": {
+   "type": "string"
+  },
+  "DisableExecuteApiEndpoint": {
+   "type": "boolean"
+  },
+  "FailOnWarnings": {
+   "type": "boolean"
+  },
+  "BinaryMediaTypes": {
+   "type": "array",
+   "uniqueItems": true,
+   "items": {
+    "type": "string"
+   }
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RootResourceId": {
+   "type": "string"
+  },
+  "ApiKeySourceType": {
+   "type": "string"
+  },
+  "EndpointConfiguration": {
+   "$ref": "#/definitions/EndpointConfiguration"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Body": {
+   "type": "object"
+  },
+  "Tags": {
+   "type": "array",
+   "uniqueItems": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   }
+  }
+ },
+ "definitions": {
+  "EndpointConfiguration": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Types": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    },
+    "VpcEndpointIds": {
+     "type": "array",
+     "uniqueItems": true,
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  },
+  "Tag": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Value": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ]
+  },
+  "S3Location": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "type": "string"
+    },
+    "ETag": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    },
+    "Key": {
+     "type": "string"
+    }
+   }
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/RootResourceId"
+ ]
+}
