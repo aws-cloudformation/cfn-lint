@@ -268,34 +268,43 @@
    "StringPrefix": "amplifybackend"
   },
   "AWS Amplify UI Builder": {
-   "ARNFormat": "arn:aws:amplifyuibuilder:${Region}:${AccountId}>:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:aws:amplifyuibuilder:${Region}:${Account}:${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:amplifyuibuilder:.+:.+:.+",
    "Actions": [
     "CreateComponent",
+    "CreateForm",
     "CreateTheme",
     "DeleteComponent",
+    "DeleteForm",
     "DeleteTheme",
-    "ExchangeCodeForToken",
     "ExportComponents",
+    "ExportForms",
     "ExportThemes",
     "GetComponent",
+    "GetForm",
+    "GetMetadata",
     "GetTheme",
     "ListComponents",
-    "ListTagsForResource",
+    "ListForms",
     "ListThemes",
-    "RefreshToken",
-    "TagResource",
-    "UntagResource",
+    "PutMetadataFlag",
+    "ResetMetadataFlag",
     "UpdateComponent",
+    "UpdateForm",
     "UpdateTheme"
    ],
    "HasResource": true,
    "StringPrefix": "amplifyuibuilder",
    "conditionKeys": [
-    "amplifyuibuilder:AppId",
-    "amplifyuibuilder:ComponentsId",
-    "amplifyuibuilder:EnvironmentName",
-    "amplifyuibuilder:ThemesId",
+    "amplifyuibuilder:ComponentResourceAppId",
+    "amplifyuibuilder:ComponentResourceEnvironmentName",
+    "amplifyuibuilder:ComponentResourceId",
+    "amplifyuibuilder:FormResourceAppId",
+    "amplifyuibuilder:FormResourceEnvironmentName",
+    "amplifyuibuilder:FormResourceId",
+    "amplifyuibuilder:ThemeResourceAppId",
+    "amplifyuibuilder:ThemeResourceEnvironmentName",
+    "amplifyuibuilder:ThemeResourceId",
     "aws:RequestTag/${TagKey}",
     "aws:ResourceTag/${TagKey}",
     "aws:TagKeys"
@@ -1117,7 +1126,7 @@
    "StringPrefix": "aws-portal"
   },
   "AWS Budget Service": {
-   "ARNFormat": "arn:aws:budgets::<account_ID>:budget/<budgetname>",
+   "ARNFormat": "arn:aws:budgets::${Account}:budget/${BudgetName}",
    "ARNRegex": "^arn:aws:budgets::.+:.+",
    "Actions": [
     "CreateBudgetAction",
@@ -2190,7 +2199,7 @@
    "StringPrefix": "controltower"
   },
   "AWS Cost Explorer Service": {
-   "ARNFormat": "arn:aws:ce::${AccountId}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:aws:ce::${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:ce::.+:.+",
    "Actions": [
     "CreateAnomalyMonitor",
@@ -2227,8 +2236,10 @@
     "GetUsageForecast",
     "ListCostAllocationTags",
     "ListCostCategoryDefinitions",
+    "ListSavingsPlansPurchaseRecommendationGeneration",
     "ListTagsForResource",
     "ProvideAnomalyFeedback",
+    "StartSavingsPlansPurchaseRecommendationGeneration",
     "TagResource",
     "UntagResource",
     "UpdateAnomalyMonitor",
@@ -5240,10 +5251,12 @@
     "CreateComponentType",
     "CreateEntity",
     "CreateScene",
+    "CreateSyncJob",
     "CreateWorkspace",
     "DeleteComponentType",
     "DeleteEntity",
     "DeleteScene",
+    "DeleteSyncJob",
     "DeleteWorkspace",
     "ExecuteQuery",
     "GetComponentType",
@@ -5252,10 +5265,13 @@
     "GetPropertyValue",
     "GetPropertyValueHistory",
     "GetScene",
+    "GetSyncJob",
     "GetWorkspace",
     "ListComponentTypes",
     "ListEntities",
     "ListScenes",
+    "ListSyncJobs",
+    "ListSyncResources",
     "ListTagsForResource",
     "ListWorkspaces",
     "TagResource",
@@ -5791,7 +5807,7 @@
    ]
   },
   "AWS Microservice Extractor for .NET": {
-   "ARNFormat": "arn:aws:serviceextract:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:${Partition}:serviceextract:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:serviceextract:.+:.+:.+",
    "Actions": [
     "GetConfig"
@@ -9920,6 +9936,18 @@
     "aws:TagKeys"
    ]
   },
+  "Amazon CodeWhisperer": {
+   "ARNFormat": "arn:aws:codewhisperer:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:codewhisperer:.+:[0-9]+:.+",
+   "Actions": [
+    "CreateProfile",
+    "GenerateRecommendations",
+    "ListProfiles",
+    "UpdateProfile"
+   ],
+   "HasResource": true,
+   "StringPrefix": "codewhisperer"
+  },
   "Amazon Cognito Identity": {
    "ARNFormat": "arn:aws:cognito-identity:${Region}:${Account}:${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:cognito-identity:.+",
@@ -12656,7 +12684,7 @@
   },
   "Amazon Fraud Detector": {
    "ARNFormat": "arn:aws:frauddetector:${Region}:${Account}:${ResourceType}/${ResourceName}",
-   "ARNRegex": "^arn:.+:frauddetector:.+:.+:.+",
+   "ARNRegex": "^arn:aws:frauddetector:.+:.+:.+",
    "Actions": [
     "BatchCreateVariable",
     "BatchGetVariable",
@@ -17991,6 +18019,7 @@
     "CreateConnectClientAddIn",
     "CreateConnectionAlias",
     "CreateIpGroup",
+    "CreateStandbyWorkspaces",
     "CreateTags",
     "CreateUpdatedWorkspaceImage",
     "CreateWorkspaceBundle",
@@ -18027,6 +18056,7 @@
     "ListAvailableManagementCidrRanges",
     "MigrateWorkspace",
     "ModifyAccount",
+    "ModifyCertificateBasedAuthProperties",
     "ModifyClientProperties",
     "ModifySamlProperties",
     "ModifySelfservicePermissions",
