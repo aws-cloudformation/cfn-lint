@@ -223,7 +223,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_valid_getatts(self):
         resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
-        propertytypes =  cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
+        propertytypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
         results = {}
         resources = self.template.get("Resources", {})
 
@@ -235,17 +235,16 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         )
 
         def build_output_string(resource_type, property_name):
-            property = propertytypes.get(f"{resource_type}.{property_name}")
-            if property is None:
-                return None
-            for k, v in property.get('Properties', {}).items():
-                t = v.get('Type')
+            prop = propertytypes.get(f"{resource_type}.{property_name}")
+            if prop is None:
+                yield None, None
+            for k, v in prop.get("Properties", {}).items():
+                t = v.get("Type")
                 if t:
                     for item in build_output_string(resource_type, v):
                         yield f"{k}.{item[0]}", item[1]
                 else:
-                    yield k, v.get('PrimitiveType')
-
+                    yield k, v.get("PrimitiveType")
 
         for name, value in resources.items():
             if "Type" in value:
@@ -270,19 +269,21 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                                 for attname, attvalue in resourcetypes[valtype][
                                     "Attributes"
                                 ].items():
-                                    if 'Type' in attvalue:
-                                        if attvalue.get('Type') in ['List', 'Map']:
+                                    if "Type" in attvalue:
+                                        if attvalue.get("Type") in ["List", "Map"]:
                                             element = {}
                                             element.update(attvalue)
                                             results[name][attname] = element
                                         else:
-                                            r = build_output_string(value["Type"], attname)
-                                            if r is not None:
-                                                for item in list(r):
-                                                    element = {
-                                                        'PrimitiveType': item[1]
-                                                    }
-                                                    results[name][f"{attname}.{item[0]}"] = element
+                                            for item in build_output_string(
+                                                value["Type"], attname
+                                            ):
+                                                if item[0] is None:
+                                                    continue
+                                                element = {"PrimitiveType": item[1]}
+                                                results[name][
+                                                    f"{attname}.{item[0]}"
+                                                ] = element
                                     else:
                                         element = {}
                                         element.update(attvalue)
