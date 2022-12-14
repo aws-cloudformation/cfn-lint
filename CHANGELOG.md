@@ -1,6 +1,6 @@
 ### v0.72.3
 ###### Features
-- Support the AllowedValues and AllowedPattern attributes for CommaDelimitedList parameters
+- Update rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2015) to support the `AllowedValues` and `AllowedPattern` attributes for `CommaDelimitedList` parameters (pull #[2521](https://github.com/aws-cloudformation/cfn-lint/pull/2521))
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `101.0.0` (pull #[2517](https://github.com/aws-cloudformation/cfn-lint/pull/2517))
 ###### Fixes
