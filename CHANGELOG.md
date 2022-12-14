@@ -1,3 +1,11 @@
+### v0.72.3
+###### Features
+- Support the AllowedValues and AllowedPattern attributes for CommaDelimitedList parameters
+###### CloudFormation Specifications
+- Update CloudFormation specs to `101.0.0` (pull #[2517](https://github.com/aws-cloudformation/cfn-lint/pull/2517))
+###### Fixes
+- Don't validate rule I3042 when using SAM
+
 ### v0.72.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `100.0.0` (pull #[2493](https://github.com/aws-cloudformation/cfn-lint/pull/2493))
