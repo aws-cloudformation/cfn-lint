@@ -17,7 +17,7 @@ class RelationshipConditions(CloudFormationLintRule):
         "condition."
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-ref.html"
-    tags = ["conditions", "resources", "relationships", "ref", "getatt"]
+    tags = ["conditions", "resources", "relationships", "ref", "getatt", "sub"]
 
     def match(self, cfn):
         """Check CloudFormation Ref/GetAtt for Conditions"""
@@ -82,5 +82,47 @@ class RelationshipConditions(CloudFormationLintRule):
                                 ),
                             )
                         )
+
+        # The do Sub
+        sub_objs = cfn.search_deep_keys(searchText="Fn::Sub", includeGlobals=False)
+        for sub_obj in sub_objs:
+            sub_string = sub_obj[-1]
+            # Filter out bad types of sub_strings.
+            # Lists have two be two items and it can be just a string
+            if not isinstance(sub_string, (list, str)):
+                continue
+            if isinstance(sub_string, str):
+                sub_string = [sub_string, {}]
+            if len(sub_string) != 2:
+                continue
+            sub_params = sub_string[1]
+            string_params = cfn.get_sub_parameters(sub_string[0])
+
+            for string_param in string_params:
+                if string_param not in sub_params:
+                    # deal with GetAtts by dropping everything after the .
+                    string_param = string_param.split(".")[0]
+                    if string_param in cfn.template.get("Resources", {}):
+                        scenarios = cfn.is_resource_available(
+                            sub_obj[:-1], string_param
+                        )
+                        for scenario in scenarios:
+                            scenario_text = " and ".join(
+                                [
+                                    f'when condition "{k}" is {v}'
+                                    for (k, v) in scenario.items()
+                                ]
+                            )
+                            message = 'Fn::Sub to resource "{0}" that may not be available {1} at {2}'
+                            matches.append(
+                                RuleMatch(
+                                    sub_obj[:-1],
+                                    message.format(
+                                        string_param,
+                                        scenario_text,
+                                        "/".join(map(str, sub_obj[:-1])),
+                                    ),
+                                )
+                            )
 
         return matches
