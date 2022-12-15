@@ -238,13 +238,14 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             prop = propertytypes.get(f"{resource_type}.{property_name}")
             if prop is None:
                 yield None, None
-            for k, v in prop.get("Properties", {}).items():
-                t = v.get("Type")
-                if t:
-                    for item in build_output_string(resource_type, v):
-                        yield f"{k}.{item[0]}", item[1]
-                else:
-                    yield k, v.get("PrimitiveType")
+            else:
+                for k, v in prop.get("Properties", {}).items():
+                    t = v.get("Type")
+                    if t:
+                        for item in build_output_string(resource_type, v):
+                            yield f"{k}.{item[0]}", item[1]
+                    else:
+                        yield k, v.get("PrimitiveType")
 
         for name, value in resources.items():
             if "Type" in value:
