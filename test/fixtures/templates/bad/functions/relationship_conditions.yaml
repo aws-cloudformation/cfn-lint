@@ -45,6 +45,19 @@ Resources:
       Timeout: 25
       TracingConfig:
         Mode: Active
+
+  SubCondRefParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !Sub ${LambdaExecutionRole}
+
+  SubCondGetAttParam:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Type: String
+      Value: !Sub ${LambdaExecutionRole.Arn}
+
 Outputs:
   lambdaArn:
     Value: !GetAtt LambdaExecutionRole.Arn
