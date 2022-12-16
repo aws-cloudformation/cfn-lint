@@ -1255,6 +1255,7 @@
   "AWS::ECS::ClusterCapacityProviderAssociations.CapacityProviderStrategy": "CACHED",
   "AWS::ECS::Service.AwsVpcConfiguration": "CACHED",
   "AWS::ECS::Service.CapacityProviderStrategyItem": "CACHED",
+  "AWS::ECS::Service.DeploymentAlarms": "CACHED",
   "AWS::ECS::Service.DeploymentCircuitBreaker": "CACHED",
   "AWS::ECS::Service.DeploymentConfiguration": "CACHED",
   "AWS::ECS::Service.DeploymentController": "CACHED",
@@ -1409,7 +1410,23 @@
   "AWS::ElasticBeanstalk::Application.MaxCountRule": "CACHED",
   "AWS::ElasticBeanstalk::ApplicationVersion.SourceBundle": "CACHED",
   "AWS::ElasticBeanstalk::ConfigurationTemplate.ConfigurationOptionSetting": "CACHED",
-  "AWS::ElasticBeanstalk::ConfigurationTemplate.SourceConfiguration": "CACHED",
+  "AWS::ElasticBeanstalk::ConfigurationTemplate.SourceConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticbeanstalk-configurationtemplate-sourceconfiguration.html",
+   "Properties": {
+    "ApplicationName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticbeanstalk-configurationtemplate-sourceconfiguration.html#cfn-elasticbeanstalk-configurationtemplate-sourceconfiguration-applicationname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "TemplateName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-elasticbeanstalk-configurationtemplate-sourceconfiguration.html#cfn-elasticbeanstalk-configurationtemplate-sourceconfiguration-templatename",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ElasticBeanstalk::Environment.OptionSetting": "CACHED",
   "AWS::ElasticBeanstalk::Environment.Tier": "CACHED",
   "AWS::ElasticLoadBalancing::LoadBalancer.AccessLoggingPolicy": "CACHED",
@@ -1658,6 +1675,10 @@
   "AWS::Glue::Trigger.EventBatchingCondition": "CACHED",
   "AWS::Glue::Trigger.NotificationProperty": "CACHED",
   "AWS::Glue::Trigger.Predicate": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes": "CACHED",
+  "AWS::Grafana::Workspace.IdpMetadata": "CACHED",
+  "AWS::Grafana::Workspace.RoleValues": "CACHED",
+  "AWS::Grafana::Workspace.SamlConfiguration": "CACHED",
   "AWS::Greengrass::ConnectorDefinition.Connector": "CACHED",
   "AWS::Greengrass::ConnectorDefinition.ConnectorDefinitionVersion": "CACHED",
   "AWS::Greengrass::ConnectorDefinitionVersion.Connector": "CACHED",
@@ -2679,7 +2700,35 @@
   "AWS::MediaLive::InputSecurityGroup.InputWhitelistRuleCidr": "CACHED",
   "AWS::MediaPackage::Asset.EgressEndpoint": "CACHED",
   "AWS::MediaPackage::Channel.HlsIngest": "CACHED",
-  "AWS::MediaPackage::Channel.IngestEndpoint": "CACHED",
+  "AWS::MediaPackage::Channel.IngestEndpoint": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediapackage-channel-ingestendpoint.html",
+   "Properties": {
+    "Id": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediapackage-channel-ingestendpoint.html#cfn-mediapackage-channel-ingestendpoint-id",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Password": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediapackage-channel-ingestendpoint.html#cfn-mediapackage-channel-ingestendpoint-password",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Url": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediapackage-channel-ingestendpoint.html#cfn-mediapackage-channel-ingestendpoint-url",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Username": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-mediapackage-channel-ingestendpoint.html#cfn-mediapackage-channel-ingestendpoint-username",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::MediaPackage::Channel.LogConfiguration": "CACHED",
   "AWS::MediaPackage::OriginEndpoint.Authorization": "CACHED",
   "AWS::MediaPackage::OriginEndpoint.CmafEncryption": "CACHED",
@@ -3614,6 +3663,8 @@
   "AWS::WAFv2::RuleGroup.ByteMatchStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.Captcha": "CACHED",
   "AWS::WAFv2::RuleGroup.CaptchaConfig": "CACHED",
+  "AWS::WAFv2::RuleGroup.Challenge": "CACHED",
+  "AWS::WAFv2::RuleGroup.ChallengeConfig": "CACHED",
   "AWS::WAFv2::RuleGroup.CookieMatchPattern": "CACHED",
   "AWS::WAFv2::RuleGroup.Cookies": "CACHED",
   "AWS::WAFv2::RuleGroup.Count": "CACHED",
@@ -3678,17 +3729,207 @@
   "AWS::WAFv2::WebACL.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Label": "CACHED",
   "AWS::WAFv2::WebACL.LabelMatchStatement": "CACHED",
-  "AWS::WAFv2::WebACL.ManagedRuleGroupConfig": "CACHED",
-  "AWS::WAFv2::WebACL.ManagedRuleGroupStatement": "CACHED",
+  "AWS::WAFv2::WebACL.ManagedRuleGroupConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html",
+   "Properties": {
+    "LoginPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-loginpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupConfig.LoginPath"
+     }
+    },
+    "PasswordField": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-passwordfield",
+     "Required": false,
+     "Type": "FieldIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "PayloadType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-payloadtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupConfig.PayloadType"
+     }
+    },
+    "UsernameField": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-usernamefield",
+     "Required": false,
+     "Type": "FieldIdentifier",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::WAFv2::WebACL.ManagedRuleGroupStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html",
+   "Properties": {
+    "ExcludedRules": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-excludedrules",
+     "DuplicatesAllowed": true,
+     "ItemType": "ExcludedRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ManagedRuleGroupConfigs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-managedrulegroupconfigs",
+     "DuplicatesAllowed": true,
+     "ItemType": "ManagedRuleGroupConfig",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupStatement.Name"
+     }
+    },
+    "ScopeDownStatement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-scopedownstatement",
+     "Required": false,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    },
+    "VendorName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-vendorname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Version": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-version",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupStatement.Version"
+     }
+    }
+   }
+  },
   "AWS::WAFv2::WebACL.NotStatement": "CACHED",
   "AWS::WAFv2::WebACL.OrStatement": "CACHED",
   "AWS::WAFv2::WebACL.OverrideAction": "CACHED",
   "AWS::WAFv2::WebACL.RateBasedStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexMatchStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement": "CACHED",
-  "AWS::WAFv2::WebACL.Rule": "CACHED",
-  "AWS::WAFv2::WebACL.RuleAction": "CACHED",
-  "AWS::WAFv2::WebACL.RuleGroupReferenceStatement": "CACHED",
+  "AWS::WAFv2::WebACL.Rule": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html",
+   "Properties": {
+    "Action": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-action",
+     "Required": false,
+     "Type": "RuleAction",
+     "UpdateType": "Mutable"
+    },
+    "CaptchaConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-captchaconfig",
+     "Required": false,
+     "Type": "CaptchaConfig",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.Rule.Name"
+     }
+    },
+    "OverrideAction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-overrideaction",
+     "Required": false,
+     "Type": "OverrideAction",
+     "UpdateType": "Mutable"
+    },
+    "Priority": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-priority",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "RuleLabels": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-rulelabels",
+     "DuplicatesAllowed": true,
+     "ItemType": "Label",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Statement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-statement",
+     "Required": true,
+     "Type": "Statement",
+     "UpdateType": "Mutable"
+    },
+    "VisibilityConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-visibilityconfig",
+     "Required": true,
+     "Type": "VisibilityConfig",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::WAFv2::WebACL.RuleAction": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html",
+   "Properties": {
+    "Allow": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-allow",
+     "Required": false,
+     "Type": "AllowAction",
+     "UpdateType": "Mutable"
+    },
+    "Block": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-block",
+     "Required": false,
+     "Type": "BlockAction",
+     "UpdateType": "Mutable"
+    },
+    "Captcha": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-captcha",
+     "Required": false,
+     "Type": "CaptchaAction",
+     "UpdateType": "Mutable"
+    },
+    "Count": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-count",
+     "Required": false,
+     "Type": "CountAction",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::WAFv2::WebACL.RuleGroupReferenceStatement": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html",
+   "Properties": {
+    "Arn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html#cfn-wafv2-webacl-rulegroupreferencestatement-arn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.RuleGroupReferenceStatement.Arn"
+     }
+    },
+    "ExcludedRules": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html#cfn-wafv2-webacl-rulegroupreferencestatement-excludedrules",
+     "DuplicatesAllowed": true,
+     "ItemType": "ExcludedRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::WebACL.SingleHeader": "CACHED",
   "AWS::WAFv2::WebACL.SingleQueryArgument": "CACHED",
   "AWS::WAFv2::WebACL.SizeConstraintStatement": "CACHED",
@@ -3710,7 +3951,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "101.0.0",
+ "ResourceSpecificationVersion": "102.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3995,6 +4236,7 @@
   "AWS::DocDB::DBClusterParameterGroup": "CACHED",
   "AWS::DocDB::DBInstance": "CACHED",
   "AWS::DocDB::DBSubnetGroup": "CACHED",
+  "AWS::DocDBElastic::Cluster": "CACHED",
   "AWS::DynamoDB::GlobalTable": "CACHED",
   "AWS::DynamoDB::Table": "CACHED",
   "AWS::EC2::CapacityReservation": "CACHED",
@@ -4118,14 +4360,213 @@
   "AWS::ElastiCache::UserGroup": "CACHED",
   "AWS::ElasticBeanstalk::Application": "CACHED",
   "AWS::ElasticBeanstalk::ApplicationVersion": "CACHED",
-  "AWS::ElasticBeanstalk::ConfigurationTemplate": "CACHED",
+  "AWS::ElasticBeanstalk::ConfigurationTemplate": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html",
+   "Properties": {
+    "ApplicationName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-applicationname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EnvironmentId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-environmentid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "OptionSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-optionsettings",
+     "DuplicatesAllowed": true,
+     "ItemType": "ConfigurationOptionSetting",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PlatformArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-platformarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SolutionStackName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-solutionstackname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SourceConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticbeanstalk-configurationtemplate.html#cfn-elasticbeanstalk-configurationtemplate-sourceconfiguration",
+     "Required": false,
+     "Type": "SourceConfiguration",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::ElasticBeanstalk::Environment": "CACHED",
   "AWS::ElasticLoadBalancing::LoadBalancer": "CACHED",
   "AWS::ElasticLoadBalancingV2::Listener": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerCertificate": "CACHED",
   "AWS::ElasticLoadBalancingV2::ListenerRule": "CACHED",
   "AWS::ElasticLoadBalancingV2::LoadBalancer": "CACHED",
-  "AWS::ElasticLoadBalancingV2::TargetGroup": "CACHED",
+  "AWS::ElasticLoadBalancingV2::TargetGroup": {
+   "Attributes": {
+    "LoadBalancerArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "TargetGroupFullName": {
+     "PrimitiveType": "String"
+    },
+    "TargetGroupName": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html",
+   "Properties": {
+    "HealthCheckEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckIntervalSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckintervalseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ElasticLoadBalancingV2::TargetGroup.HealthCheckIntervalSeconds"
+     }
+    },
+    "HealthCheckPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckport",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckProtocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthcheckprotocol",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HealthCheckTimeoutSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthchecktimeoutseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TargetGroupHealthCheckTimeoutSeconds"
+     }
+    },
+    "HealthyThresholdCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-healthythresholdcount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TargetGroupHealthyThresholdCount"
+     }
+    },
+    "IpAddressType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-ipaddresstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Matcher": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-matcher",
+     "Required": false,
+     "Type": "Matcher",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Port": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-port",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Protocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocol",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ProtocolVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-protocolversion",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetGroupAttributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targetgroupattributes",
+     "DuplicatesAllowed": false,
+     "ItemType": "TargetGroupAttribute",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targettype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Targets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-targets",
+     "DuplicatesAllowed": false,
+     "ItemType": "TargetDescription",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "UnhealthyThresholdCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-unhealthythresholdcount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ElasticLoadBalancingV2::TargetGroup.UnhealthyThresholdCount"
+     }
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html#cfn-elasticloadbalancingv2-targetgroup-vpcid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPC.Id"
+     }
+    }
+   }
+  },
   "AWS::Elasticsearch::Domain": "CACHED",
   "AWS::EventSchemas::Discoverer": "CACHED",
   "AWS::EventSchemas::Registry": "CACHED",
@@ -4189,6 +4630,7 @@
   "AWS::Glue::Table": "CACHED",
   "AWS::Glue::Trigger": "CACHED",
   "AWS::Glue::Workflow": "CACHED",
+  "AWS::Grafana::Workspace": "CACHED",
   "AWS::Greengrass::ConnectorDefinition": "CACHED",
   "AWS::Greengrass::ConnectorDefinitionVersion": "CACHED",
   "AWS::Greengrass::CoreDefinition": "CACHED",
@@ -4291,6 +4733,7 @@
   "AWS::IoTTwinMaker::ComponentType": "CACHED",
   "AWS::IoTTwinMaker::Entity": "CACHED",
   "AWS::IoTTwinMaker::Scene": "CACHED",
+  "AWS::IoTTwinMaker::SyncJob": "CACHED",
   "AWS::IoTTwinMaker::Workspace": "CACHED",
   "AWS::IoTWireless::Destination": "CACHED",
   "AWS::IoTWireless::DeviceProfile": "CACHED",
@@ -4395,7 +4838,57 @@
   "AWS::MediaLive::Input": "CACHED",
   "AWS::MediaLive::InputSecurityGroup": "CACHED",
   "AWS::MediaPackage::Asset": "CACHED",
-  "AWS::MediaPackage::Channel": "CACHED",
+  "AWS::MediaPackage::Channel": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EgressAccessLogs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-egressaccesslogs",
+     "Required": false,
+     "Type": "LogConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "HlsIngest": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-hlsingest",
+     "Required": false,
+     "Type": "HlsIngest",
+     "UpdateType": "Mutable"
+    },
+    "Id": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-id",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::MediaPackage::Channel.Id"
+     }
+    },
+    "IngressAccessLogs": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-ingressaccesslogs",
+     "Required": false,
+     "Type": "LogConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-mediapackage-channel.html#cfn-mediapackage-channel-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::MediaPackage::OriginEndpoint": "CACHED",
   "AWS::MediaPackage::PackagingConfiguration": "CACHED",
   "AWS::MediaPackage::PackagingGroup": "CACHED",
@@ -4586,6 +5079,7 @@
   "AWS::SSM::Parameter": "CACHED",
   "AWS::SSM::PatchBaseline": "CACHED",
   "AWS::SSM::ResourceDataSync": "CACHED",
+  "AWS::SSM::ResourcePolicy": "CACHED",
   "AWS::SSMContacts::Contact": "CACHED",
   "AWS::SSMContacts::ContactChannel": "CACHED",
   "AWS::SSMIncidents::ReplicationSet": "CACHED",
@@ -4691,7 +5185,93 @@
   "AWS::WAFv2::LoggingConfiguration": "CACHED",
   "AWS::WAFv2::RegexPatternSet": "CACHED",
   "AWS::WAFv2::RuleGroup": "CACHED",
-  "AWS::WAFv2::WebACL": "CACHED",
+  "AWS::WAFv2::WebACL": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Capacity": {
+     "PrimitiveType": "Integer"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "LabelNamespace": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html",
+   "Properties": {
+    "CaptchaConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-captchaconfig",
+     "Required": false,
+     "Type": "CaptchaConfig",
+     "UpdateType": "Mutable"
+    },
+    "CustomResponseBodies": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-customresponsebodies",
+     "ItemType": "CustomResponseBody",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "DefaultAction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-defaultaction",
+     "Required": true,
+     "Type": "DefaultAction",
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.Description"
+     }
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.Name"
+     }
+    },
+    "Rules": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-rules",
+     "DuplicatesAllowed": true,
+     "ItemType": "Rule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Scope": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-scope",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::WAFv2::WebACL.Scope"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VisibilityConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-visibilityconfig",
+     "Required": true,
+     "Type": "VisibilityConfig",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::WAFv2::WebACLAssociation": "CACHED",
   "AWS::WorkSpaces::ConnectionAlias": "CACHED",
   "AWS::WorkSpaces::Workspace": "CACHED",
@@ -5410,6 +5990,7 @@
   "AWS::DevOpsGuru::ResourceCollection.TagCollection.AppBoundaryKey": "CACHED",
   "AWS::DevOpsGuru::ResourceCollection.TagCollection.TagValues": "CACHED",
   "AWS::DocDB::DBCluster.BackupRetentionPeriod": "CACHED",
+  "AWS::DocDBElastic::Cluster.ClusterName": "CACHED",
   "AWS::DynamoDB::GlobalTable.AttributeDefinition.AttributeName": "CACHED",
   "AWS::DynamoDB::GlobalTable.GlobalSecondaryIndex.IndexName": "CACHED",
   "AWS::DynamoDB::GlobalTable.KeySchema.AttributeName": "CACHED",
@@ -5544,6 +6125,7 @@
   "AWS::EMRContainers::VirtualCluster.ContainerProvider.Id": "CACHED",
   "AWS::EMRContainers::VirtualCluster.EksInfo.Namespace": "CACHED",
   "AWS::EMRContainers::VirtualCluster.Name": "CACHED",
+  "AWS::EMRServerless::Application.Architecture": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfig.WorkerCount": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfigKeyValuePair.Key": "CACHED",
   "AWS::EMRServerless::Application.MaximumAllowedResources.Cpu": "CACHED",
@@ -5758,6 +6340,25 @@
   "AWS::Glue::Trigger.Condition.State": "CACHED",
   "AWS::Glue::Trigger.Predicate.Logical": "CACHED",
   "AWS::Glue::Trigger.Type": "CACHED",
+  "AWS::Grafana::Workspace.AccountAccessType": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Email": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Groups": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Login": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Name": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Org": "CACHED",
+  "AWS::Grafana::Workspace.AssertionAttributes.Role": "CACHED",
+  "AWS::Grafana::Workspace.AuthenticationProviders": "CACHED",
+  "AWS::Grafana::Workspace.ClientToken": "CACHED",
+  "AWS::Grafana::Workspace.DataSources": "CACHED",
+  "AWS::Grafana::Workspace.IdpMetadata.Url": "CACHED",
+  "AWS::Grafana::Workspace.Name": "CACHED",
+  "AWS::Grafana::Workspace.NotificationDestinations": "CACHED",
+  "AWS::Grafana::Workspace.OrganizationRoleName": "CACHED",
+  "AWS::Grafana::Workspace.PermissionType": "CACHED",
+  "AWS::Grafana::Workspace.RoleArn": "CACHED",
+  "AWS::Grafana::Workspace.RoleValues.Admin": "CACHED",
+  "AWS::Grafana::Workspace.RoleValues.Editor": "CACHED",
+  "AWS::Grafana::Workspace.SamlConfiguration.AllowedOrganizations": "CACHED",
   "AWS::GreengrassV2::ComponentVersion.LambdaDeviceMount.Permission": "CACHED",
   "AWS::GreengrassV2::ComponentVersion.LambdaEventSource.Type": "CACHED",
   "AWS::GreengrassV2::ComponentVersion.LambdaExecutionParameters.InputPayloadEncodingType": "CACHED",
@@ -6072,6 +6673,9 @@
   "AWS::IoTTwinMaker::Scene.ContentLocation": "CACHED",
   "AWS::IoTTwinMaker::Scene.SceneId": "CACHED",
   "AWS::IoTTwinMaker::Scene.WorkspaceId": "CACHED",
+  "AWS::IoTTwinMaker::SyncJob.SyncRole": "CACHED",
+  "AWS::IoTTwinMaker::SyncJob.SyncSource": "CACHED",
+  "AWS::IoTTwinMaker::SyncJob.WorkspaceId": "CACHED",
   "AWS::IoTTwinMaker::Workspace.Role": "CACHED",
   "AWS::IoTTwinMaker::Workspace.WorkspaceId": "CACHED",
   "AWS::IoTWireless::Destination.ExpressionType": "CACHED",
@@ -8010,336 +8614,7 @@
   "EFSFileSystemLifecyclePolicy": "CACHED",
   "EFSFileSystemPerformanceMode": "CACHED",
   "EFSFileSystemThroughputMode": "CACHED",
-  "EMRInstanceType": {
-   "AllowedValues": [
-    "c1.medium",
-    "c1.xlarge",
-    "c3.2xlarge",
-    "c3.4xlarge",
-    "c3.8xlarge",
-    "c3.large",
-    "c3.xlarge",
-    "c4.2xlarge",
-    "c4.4xlarge",
-    "c4.8xlarge",
-    "c4.large",
-    "c4.xlarge",
-    "c5.12xlarge",
-    "c5.18xlarge",
-    "c5.24xlarge",
-    "c5.2xlarge",
-    "c5.4xlarge",
-    "c5.9xlarge",
-    "c5.xlarge",
-    "c5a.12xlarge",
-    "c5a.16xlarge",
-    "c5a.24xlarge",
-    "c5a.2xlarge",
-    "c5a.4xlarge",
-    "c5a.8xlarge",
-    "c5a.xlarge",
-    "c5ad.12xlarge",
-    "c5ad.16xlarge",
-    "c5ad.24xlarge",
-    "c5ad.2xlarge",
-    "c5ad.4xlarge",
-    "c5ad.8xlarge",
-    "c5ad.xlarge",
-    "c5d.12xlarge",
-    "c5d.18xlarge",
-    "c5d.24xlarge",
-    "c5d.2xlarge",
-    "c5d.4xlarge",
-    "c5d.9xlarge",
-    "c5d.xlarge",
-    "c5n.18xlarge",
-    "c5n.2xlarge",
-    "c5n.4xlarge",
-    "c5n.9xlarge",
-    "c5n.xlarge",
-    "c6g.12xlarge",
-    "c6g.16xlarge",
-    "c6g.2xlarge",
-    "c6g.4xlarge",
-    "c6g.8xlarge",
-    "c6g.xlarge",
-    "c6gd.12xlarge",
-    "c6gd.16xlarge",
-    "c6gd.2xlarge",
-    "c6gd.4xlarge",
-    "c6gd.8xlarge",
-    "c6gd.xlarge",
-    "c6gn.12xlarge",
-    "c6gn.16xlarge",
-    "c6gn.2xlarge",
-    "c6gn.4xlarge",
-    "c6gn.8xlarge",
-    "c6gn.xlarge",
-    "c6i.12xlarge",
-    "c6i.16xlarge",
-    "c6i.24xlarge",
-    "c6i.2xlarge",
-    "c6i.32xlarge",
-    "c6i.4xlarge",
-    "c6i.8xlarge",
-    "c6i.xlarge",
-    "c7g.12xlarge",
-    "c7g.16xlarge",
-    "c7g.2xlarge",
-    "c7g.4xlarge",
-    "c7g.8xlarge",
-    "c7g.xlarge",
-    "cc1.4xlarge",
-    "cc2.8xlarge",
-    "cg1.4xlarge",
-    "cr1.8xlarge",
-    "d2.2xlarge",
-    "d2.4xlarge",
-    "d2.8xlarge",
-    "d2.xlarge",
-    "d3.2xlarge",
-    "d3.4xlarge",
-    "d3.8xlarge",
-    "d3.xlarge",
-    "d3en.12xlarge",
-    "d3en.2xlarge",
-    "d3en.4xlarge",
-    "d3en.6xlarge",
-    "d3en.8xlarge",
-    "d3en.xlarge",
-    "g2.2xlarge",
-    "g3.16xlarge",
-    "g3.4xlarge",
-    "g3.8xlarge",
-    "g3s.xlarge",
-    "g4dn.12xlarge",
-    "g4dn.16xlarge",
-    "g4dn.2xlarge",
-    "g4dn.4xlarge",
-    "g4dn.8xlarge",
-    "g4dn.xlarge",
-    "h1.16xlarge",
-    "h1.2xlarge",
-    "h1.4xlarge",
-    "h1.8xlarge",
-    "hi1.4xlarge",
-    "hs1.8xlarge",
-    "i2.2xlarge",
-    "i2.4xlarge",
-    "i2.8xlarge",
-    "i2.xlarge",
-    "i3.16xlarge",
-    "i3.2xlarge",
-    "i3.4xlarge",
-    "i3.8xlarge",
-    "i3.xlarge",
-    "i3en.12xlarge",
-    "i3en.24xlarge",
-    "i3en.2xlarge",
-    "i3en.3xlarge",
-    "i3en.6xlarge",
-    "i3en.xlarge",
-    "i4i.16xlarge",
-    "i4i.2xlarge",
-    "i4i.32xlarge",
-    "i4i.4xlarge",
-    "i4i.8xlarge",
-    "i4i.xlarge",
-    "im4gn.16xlarge",
-    "im4gn.2xlarge",
-    "im4gn.4xlarge",
-    "im4gn.8xlarge",
-    "im4gn.xlarge",
-    "is4gen.2xlarge",
-    "is4gen.4xlarge",
-    "is4gen.8xlarge",
-    "is4gen.xlarge",
-    "m1.large",
-    "m1.medium",
-    "m1.small",
-    "m1.xlarge",
-    "m2.2xlarge",
-    "m2.4xlarge",
-    "m2.xlarge",
-    "m3.2xlarge",
-    "m3.large",
-    "m3.medium",
-    "m3.xlarge",
-    "m4.10xlarge",
-    "m4.16xlarge",
-    "m4.2xlarge",
-    "m4.4xlarge",
-    "m4.large",
-    "m4.xlarge",
-    "m5.12xlarge",
-    "m5.16xlarge",
-    "m5.24xlarge",
-    "m5.2xlarge",
-    "m5.4xlarge",
-    "m5.8xlarge",
-    "m5.xlarge",
-    "m5a.12xlarge",
-    "m5a.16xlarge",
-    "m5a.24xlarge",
-    "m5a.2xlarge",
-    "m5a.4xlarge",
-    "m5a.8xlarge",
-    "m5a.xlarge",
-    "m5ad.12xlarge",
-    "m5ad.16xlarge",
-    "m5ad.24xlarge",
-    "m5ad.2xlarge",
-    "m5ad.4xlarge",
-    "m5ad.8xlarge",
-    "m5ad.xlarge",
-    "m5d.12xlarge",
-    "m5d.16xlarge",
-    "m5d.24xlarge",
-    "m5d.2xlarge",
-    "m5d.4xlarge",
-    "m5d.8xlarge",
-    "m5d.xlarge",
-    "m5dn.12xlarge",
-    "m5dn.16xlarge",
-    "m5dn.24xlarge",
-    "m5dn.2xlarge",
-    "m5dn.4xlarge",
-    "m5dn.8xlarge",
-    "m5dn.xlarge",
-    "m5n.12xlarge",
-    "m5n.16xlarge",
-    "m5n.24xlarge",
-    "m5n.2xlarge",
-    "m5n.4xlarge",
-    "m5n.8xlarge",
-    "m5n.xlarge",
-    "m5zn.12xlarge",
-    "m5zn.2xlarge",
-    "m5zn.3xlarge",
-    "m5zn.6xlarge",
-    "m5zn.xlarge",
-    "m6a.12xlarge",
-    "m6a.16xlarge",
-    "m6a.24xlarge",
-    "m6a.2xlarge",
-    "m6a.32xlarge",
-    "m6a.48xlarge",
-    "m6a.4xlarge",
-    "m6a.8xlarge",
-    "m6a.xlarge",
-    "m6g.12xlarge",
-    "m6g.16xlarge",
-    "m6g.2xlarge",
-    "m6g.4xlarge",
-    "m6g.8xlarge",
-    "m6g.xlarge",
-    "m6gd.12xlarge",
-    "m6gd.16xlarge",
-    "m6gd.2xlarge",
-    "m6gd.4xlarge",
-    "m6gd.8xlarge",
-    "m6gd.xlarge",
-    "m6i.12xlarge",
-    "m6i.16xlarge",
-    "m6i.24xlarge",
-    "m6i.2xlarge",
-    "m6i.32xlarge",
-    "m6i.4xlarge",
-    "m6i.8xlarge",
-    "m6i.xlarge",
-    "p2.16xlarge",
-    "p2.8xlarge",
-    "p2.xlarge",
-    "p3.16xlarge",
-    "p3.2xlarge",
-    "p3.8xlarge",
-    "r3.2xlarge",
-    "r3.4xlarge",
-    "r3.8xlarge",
-    "r3.xlarge",
-    "r4.16xlarge",
-    "r4.2xlarge",
-    "r4.4xlarge",
-    "r4.8xlarge",
-    "r4.xlarge",
-    "r5.12xlarge",
-    "r5.16xlarge",
-    "r5.24xlarge",
-    "r5.2xlarge",
-    "r5.4xlarge",
-    "r5.8xlarge",
-    "r5.xlarge",
-    "r5a.12xlarge",
-    "r5a.16xlarge",
-    "r5a.24xlarge",
-    "r5a.2xlarge",
-    "r5a.4xlarge",
-    "r5a.8xlarge",
-    "r5a.xlarge",
-    "r5ad.12xlarge",
-    "r5ad.16xlarge",
-    "r5ad.24xlarge",
-    "r5ad.2xlarge",
-    "r5ad.4xlarge",
-    "r5ad.8xlarge",
-    "r5ad.xlarge",
-    "r5d.12xlarge",
-    "r5d.16xlarge",
-    "r5d.24xlarge",
-    "r5d.2xlarge",
-    "r5d.4xlarge",
-    "r5d.8xlarge",
-    "r5d.xlarge",
-    "r5dn.12xlarge",
-    "r5dn.16xlarge",
-    "r5dn.24xlarge",
-    "r5dn.2xlarge",
-    "r5dn.4xlarge",
-    "r5dn.8xlarge",
-    "r5dn.xlarge",
-    "r5n.12xlarge",
-    "r5n.16xlarge",
-    "r5n.24xlarge",
-    "r5n.2xlarge",
-    "r5n.4xlarge",
-    "r5n.8xlarge",
-    "r5n.xlarge",
-    "r6g.12xlarge",
-    "r6g.16xlarge",
-    "r6g.2xlarge",
-    "r6g.4xlarge",
-    "r6g.8xlarge",
-    "r6g.xlarge",
-    "r6gd.12xlarge",
-    "r6gd.16xlarge",
-    "r6gd.2xlarge",
-    "r6gd.4xlarge",
-    "r6gd.8xlarge",
-    "r6gd.xlarge",
-    "r6i.12xlarge",
-    "r6i.16xlarge",
-    "r6i.24xlarge",
-    "r6i.2xlarge",
-    "r6i.32xlarge",
-    "r6i.4xlarge",
-    "r6i.8xlarge",
-    "r6i.xlarge",
-    "r6id.12xlarge",
-    "r6id.16xlarge",
-    "r6id.24xlarge",
-    "r6id.2xlarge",
-    "r6id.32xlarge",
-    "r6id.4xlarge",
-    "r6id.8xlarge",
-    "r6id.xlarge",
-    "t1.micro",
-    "z1d.12xlarge",
-    "z1d.2xlarge",
-    "z1d.3xlarge",
-    "z1d.6xlarge",
-    "z1d.xlarge"
-   ]
-  },
+  "EMRInstanceType": "CACHED",
   "EbsIops": "CACHED",
   "EbsVolumeType": "CACHED",
   "Ec2CpuCredits": "CACHED",
