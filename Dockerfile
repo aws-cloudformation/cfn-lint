@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.11-alpine
 
 RUN pip install cfn-lint
 RUN pip install pydot
