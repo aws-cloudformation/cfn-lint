@@ -1,3 +1,9 @@
+### v0.72.5
+###### Features
+- Update rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1001) to support `Fn::Sub` (pull #[2525](https://github.com/aws-cloudformation/cfn-lint/pull/2525))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `102.0.0` (pull #[2523](https://github.com/aws-cloudformation/cfn-lint/pull/2523))
+
 ### v0.72.4
 ###### Fixes
 - Update `Template` function `get_valid_getatts` to better return None when a property type doesn't exist (pull #[2527](https://github.com/aws-cloudformation/cfn-lint/pull/2527))
