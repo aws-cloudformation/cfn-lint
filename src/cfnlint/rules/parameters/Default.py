@@ -92,38 +92,61 @@ class Default(CloudFormationLintRule):
 
         return []
 
+    def match_default_value(self, paramname, paramvalue, default_value):
+        matches = []
+
+        if default_value is not None:
+            path = ["Parameters", paramname, "Default"]
+            allowed_pattern = paramvalue.get("AllowedPattern")
+            if allowed_pattern:
+                matches.extend(
+                    self.check_allowed_pattern(default_value, allowed_pattern, path)
+                )
+            min_value = paramvalue.get("MinValue")
+            if min_value:
+                matches.extend(self.check_min_value(default_value, min_value, path))
+            max_value = paramvalue.get("MaxValue")
+            if max_value is not None:
+                matches.extend(self.check_max_value(default_value, max_value, path))
+            allowed_values = paramvalue.get("AllowedValues")
+            if allowed_values:
+                matches.extend(
+                    self.check_allowed_values(default_value, allowed_values, path)
+                )
+            min_length = paramvalue.get("MinLength")
+            if min_length is not None:
+                matches.extend(self.check_min_length(default_value, min_length, path))
+            max_length = paramvalue.get("MaxLength")
+            if max_length is not None:
+                matches.extend(self.check_max_length(default_value, max_length, path))
+        return matches
+
+    def is_cdl(self, paramvalue):
+        return paramvalue.get("Type") == "CommaDelimitedList"
+
     def match(self, cfn):
         matches = []
 
         for paramname, paramvalue in cfn.get_parameters_valid().items():
+            param_cdl_matches = []
+            param_matches = []
             default_value = paramvalue.get("Default")
-            if default_value is not None:
-                path = ["Parameters", paramname, "Default"]
-                allowed_pattern = paramvalue.get("AllowedPattern")
-                if allowed_pattern:
-                    matches.extend(
-                        self.check_allowed_pattern(default_value, allowed_pattern, path)
+            if default_value is not None and self.is_cdl(paramvalue):
+                comma_delimited_default_values = [
+                    x.strip() for x in default_value.split(",")
+                ]
+                for value in comma_delimited_default_values:
+                    param_cdl_matches.extend(
+                        self.match_default_value(paramname, paramvalue, value)
                     )
-                min_value = paramvalue.get("MinValue")
-                if min_value:
-                    matches.extend(self.check_min_value(default_value, min_value, path))
-                max_value = paramvalue.get("MaxValue")
-                if max_value is not None:
-                    matches.extend(self.check_max_value(default_value, max_value, path))
-                allowed_values = paramvalue.get("AllowedValues")
-                if allowed_values:
-                    matches.extend(
-                        self.check_allowed_values(default_value, allowed_values, path)
-                    )
-                min_length = paramvalue.get("MinLength")
-                if min_length is not None:
-                    matches.extend(
-                        self.check_min_length(default_value, min_length, path)
-                    )
-                max_length = paramvalue.get("MaxLength")
-                if max_length is not None:
-                    matches.extend(
-                        self.check_max_length(default_value, max_length, path)
-                    )
+
+            if param_cdl_matches or not self.is_cdl(paramvalue):
+                param_matches.extend(
+                    self.match_default_value(paramname, paramvalue, default_value)
+                )
+
+            if param_matches:
+                matches.extend(param_matches)
+                matches.extend(param_cdl_matches)
 
         return matches

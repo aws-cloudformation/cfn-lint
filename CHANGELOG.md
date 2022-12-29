@@ -1,3 +1,22 @@
+### v0.72.5
+###### Features
+- Update rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1001) to support `Fn::Sub` (pull #[2525](https://github.com/aws-cloudformation/cfn-lint/pull/2525))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `102.0.0` (pull #[2523](https://github.com/aws-cloudformation/cfn-lint/pull/2523))
+
+### v0.72.4
+###### Fixes
+- Update `Template` function `get_valid_getatts` to better return None when a property type doesn't exist (pull #[2527](https://github.com/aws-cloudformation/cfn-lint/pull/2527))
+
+### v0.72.3
+###### Features
+- Update rule [E2015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2015) to support the `AllowedValues` and `AllowedPattern` attributes for `CommaDelimitedList` parameters (pull #[2521](https://github.com/aws-cloudformation/cfn-lint/pull/2521))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `101.0.0` (pull #[2517](https://github.com/aws-cloudformation/cfn-lint/pull/2517))
+- Update `get_valid_getatts` to account for changes in the CloudFormation spec (pull #[2520](https://github.com/aws-cloudformation/cfn-lint/pull/2520))
+###### Fixes
+- Don't validate rule [I3042](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3042) when using SAM (pull #[2513](https://github.com/aws-cloudformation/cfn-lint/pull/2513))
+
 ### v0.72.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `100.0.0` (pull #[2493](https://github.com/aws-cloudformation/cfn-lint/pull/2493))
