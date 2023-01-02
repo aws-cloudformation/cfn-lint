@@ -1431,7 +1431,7 @@
   },
   "AWS CloudHSM": {
    "ARNFormat": "arn:aws:cloudhsm:${Region}:${Account}:${ResourceName}",
-   "ARNRegex": "^arn:<partition>:cloudhsm:.+",
+   "ARNRegex": "^arn:aws:cloudhsm:.+",
    "Actions": [
     "AddTagsToResource",
     "CopyBackupToRegion",
@@ -2030,11 +2030,14 @@
     "ExportAutoScalingGroupRecommendations",
     "ExportEBSVolumeRecommendations",
     "ExportEC2InstanceRecommendations",
+    "ExportECSServiceRecommendations",
     "ExportLambdaFunctionRecommendations",
     "GetAutoScalingGroupRecommendations",
     "GetEBSVolumeRecommendations",
     "GetEC2InstanceRecommendations",
     "GetEC2RecommendationProjectedMetrics",
+    "GetECSServiceRecommendationProjectedMetrics",
+    "GetECSServiceRecommendations",
     "GetEffectiveRecommendationPreferences",
     "GetEnrollmentStatus",
     "GetEnrollmentStatusesForOrganization",
@@ -2265,7 +2268,7 @@
    ]
   },
   "AWS Cost and Usage Report": {
-   "ARNFormat": "arn:aws:cur:<region>:<account_ID>:definition/<reportname>",
+   "ARNFormat": "arn:aws:cur:${Region}:${Account}:definition/${ResourceName}",
    "ARNRegex": "^arn:aws:cur:.+:.+:.+",
    "Actions": [
     "DeleteReportDefinition",
@@ -4056,6 +4059,7 @@
     "ListProfiles",
     "ListTagsForResource",
     "ProvisionPermissionSet",
+    "PutApplicationAssignmentConfiguration",
     "PutInlinePolicyToPermissionSet",
     "PutMfaDeviceManagementForDirectory",
     "PutPermissionsBoundaryToPermissionSet",
@@ -5602,6 +5606,16 @@
     "aws:TagKeys",
     "license-manager:ResourceTag/${TagKey}"
    ]
+  },
+  "AWS License Manager Linux Subscriptions Manager": {
+   "Actions": [
+    "GetServiceSettings",
+    "ListLinuxSubscriptionInstances",
+    "ListLinuxSubscriptions",
+    "UpdateServiceSettings"
+   ],
+   "HasResource": false,
+   "StringPrefix": "license-manager-linux-subscriptions"
   },
   "AWS License Manager User Subscriptions": {
    "Actions": [
@@ -8598,11 +8612,20 @@
     "ListNetworkSites",
     "ListNetworks",
     "ListOrders",
+    "ListTagsForResource",
+    "Ping",
+    "TagResource",
+    "UntagResource",
     "UpdateNetworkSite",
     "UpdateNetworkSitePlan"
    ],
    "HasResource": true,
-   "StringPrefix": "private-networks"
+   "StringPrefix": "private-networks",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "Alexa for Business": {
    "ARNFormat": "arn:aws:a4b:${Region}:${Account}:${ResourceType}/${ResourceId}",
@@ -9884,6 +9907,30 @@
     "synthetics:Names"
    ]
   },
+  "Amazon CodeCatalyst": {
+   "ARNFormat": "arn:aws:codecatalyst:${Region}:${Account}:${RelativeId}",
+   "ARNRegex": "^arn:aws:codecatalyst:.+",
+   "Actions": [
+    "AcceptConnection",
+    "AssociateIamRoleToConnection",
+    "DeleteConnection",
+    "DisassociateIamRoleFromConnection",
+    "GetBillingAuthorization",
+    "GetConnection",
+    "GetPendingConnection",
+    "ListConnections",
+    "ListIamRolesForConnection",
+    "PutBillingAuthorization",
+    "RejectConnection"
+   ],
+   "HasResource": true,
+   "StringPrefix": "codecatalyst",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "Amazon CodeGuru": {
    "ARNFormat": "arn:${Partition}:codeguru:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:${Partition}:codeguru:.+:.+:.+",
@@ -10308,6 +10355,7 @@
     "CreateQueue",
     "CreateQuickConnect",
     "CreateRoutingProfile",
+    "CreateRule",
     "CreateSecurityProfile",
     "CreateTaskTemplate",
     "CreateTrafficDistributionGroup",
@@ -10321,6 +10369,7 @@
     "DeleteInstance",
     "DeleteIntegrationAssociation",
     "DeleteQuickConnect",
+    "DeleteRule",
     "DeleteSecurityProfile",
     "DeleteTaskTemplate",
     "DeleteTrafficDistributionGroup",
@@ -10341,6 +10390,7 @@
     "DescribeQueue",
     "DescribeQuickConnect",
     "DescribeRoutingProfile",
+    "DescribeRule",
     "DescribeSecurityProfile",
     "DescribeTrafficDistributionGroup",
     "DescribeUser",
@@ -10389,6 +10439,7 @@
     "ListRealtimeContactAnalysisSegments",
     "ListRoutingProfileQueues",
     "ListRoutingProfiles",
+    "ListRule",
     "ListSecurityKeys",
     "ListSecurityProfilePermissions",
     "ListSecurityProfiles",
@@ -10435,6 +10486,7 @@
     "UpdateHoursOfOperation",
     "UpdateInstanceAttribute",
     "UpdateInstanceStorageConfig",
+    "UpdateParticipantRoleConfig",
     "UpdatePhoneNumber",
     "UpdateQueueHoursOfOperation",
     "UpdateQueueMaxContacts",
@@ -10447,6 +10499,7 @@
     "UpdateRoutingProfileDefaultOutboundQueue",
     "UpdateRoutingProfileName",
     "UpdateRoutingProfileQueues",
+    "UpdateRule",
     "UpdateSecurityProfile",
     "UpdateTaskTemplate",
     "UpdateTrafficDistribution",
@@ -11836,8 +11889,8 @@
    ]
   },
   "Amazon ElastiCache": {
-   "ARNFormat": "arn:aws:elasticache:${Region}:${AccountId}:${ResourceType}:${ResourceName}",
-   "ARNRegex": "^arn:.+:elasticache:.+:.+:.+",
+   "ARNFormat": "arn:aws:elasticache:${Region}:${Account}:${ResourceType}:${ResourceName}",
+   "ARNRegex": "^arn:aws:elasticache:.+:.+:.+",
    "Actions": [
     "AddTagsToResource",
     "AuthorizeCacheSecurityGroupIngress",
@@ -13527,6 +13580,7 @@
     "CreateStream",
     "DeleteSignalingChannel",
     "DeleteStream",
+    "DescribeEdgeConfiguration",
     "DescribeImageGenerationConfiguration",
     "DescribeNotificationConfiguration",
     "DescribeSignalingChannel",
@@ -13547,6 +13601,7 @@
     "ListTagsForStream",
     "PutMedia",
     "SendAlexaOfferToMaster",
+    "StartEdgeConfigurationUpdate",
     "TagResource",
     "TagStream",
     "UntagResource",
@@ -14504,8 +14559,8 @@
    "StringPrefix": "mechanicalturk"
   },
   "Amazon MemoryDB": {
-   "ARNFormat": "arn:aws:memorydb:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
-   "ARNRegex": "^arn:.+:memorydb:.+:.+:.+",
+   "ARNFormat": "arn:aws:memorydb:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:aws:memorydb:.+:.+:.+",
    "Actions": [
     "BatchUpdateCluster",
     "CopySnapshot",
@@ -14527,6 +14582,8 @@
     "DescribeEvents",
     "DescribeParameterGroups",
     "DescribeParameters",
+    "DescribeReservedNodes",
+    "DescribeReservedNodesOfferings",
     "DescribeServiceUpdates",
     "DescribeSnapshots",
     "DescribeSubnetGroups",
@@ -14534,6 +14591,7 @@
     "FailoverShard",
     "ListAllowedNodeTypeUpdates",
     "ListTags",
+    "PurchaseReservedNodesOffering",
     "ResetParameterGroup",
     "TagResource",
     "UntagResource",
@@ -14669,6 +14727,7 @@
     "GetLaunchProfileMember",
     "GetStreamingImage",
     "GetStreamingSession",
+    "GetStreamingSessionBackup",
     "GetStreamingSessionStream",
     "GetStudio",
     "GetStudioComponent",
@@ -14678,6 +14737,7 @@
     "ListLaunchProfileMembers",
     "ListLaunchProfiles",
     "ListStreamingImages",
+    "ListStreamingSessionBackups",
     "ListStreamingSessions",
     "ListStudioComponents",
     "ListStudioMembers",
@@ -15662,6 +15722,7 @@
     "rds:DatabaseEngine",
     "rds:DatabaseName",
     "rds:EndpointType",
+    "rds:ManageMasterUserPassword",
     "rds:MultiAz",
     "rds:Piops",
     "rds:StorageEncrypted",
@@ -16139,6 +16200,7 @@
   "Amazon Route 53 Domains": {
    "Actions": [
     "AcceptDomainTransferFromAnotherAwsAccount",
+    "AssociateDelegationSignerToDomain",
     "CancelDomainTransferToAnotherAwsAccount",
     "CheckDomainAvailability",
     "CheckDomainTransferability",
@@ -16146,6 +16208,7 @@
     "DeleteTagsForDomain",
     "DisableDomainAutoRenew",
     "DisableDomainTransferLock",
+    "DisassociateDelegationSignerFromDomain",
     "EnableDomainAutoRenew",
     "EnableDomainTransferLock",
     "GetContactReachabilityStatus",
@@ -16156,10 +16219,12 @@
     "ListOperations",
     "ListPrices",
     "ListTagsForDomain",
+    "PushDomain",
     "RegisterDomain",
     "RejectDomainTransferFromAnotherAwsAccount",
     "RenewDomain",
     "ResendContactReachabilityEmail",
+    "ResendOperationAuthorization",
     "RetrieveDomainAuthCode",
     "TransferDomain",
     "TransferDomainToAnotherAwsAccount",
@@ -17569,6 +17634,8 @@
     "DescribeScheduledQuery",
     "DescribeTable",
     "ExecuteScheduledQuery",
+    "GetAwsBackupStatus",
+    "GetAwsRestoreStatus",
     "ListDatabases",
     "ListMeasures",
     "ListScheduledQueries",
@@ -17577,6 +17644,8 @@
     "PrepareQuery",
     "Select",
     "SelectValues",
+    "StartAwsBackupJob",
+    "StartAwsRestoreJob",
     "TagResource",
     "UntagResource",
     "UpdateDatabase",
