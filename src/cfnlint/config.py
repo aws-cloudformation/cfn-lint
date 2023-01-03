@@ -615,7 +615,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 # the CLI will always have an empty list when the item is a list
                 # we will use that to evaluate if we need to merge the lists
                 if isinstance(cli_value, list):
-                    result = cli_value
+                    # Use a copy here, otherwise we will accumulate template level config
+                    # into the cli_value which will  persist between template files
+                    result = cli_value.copy()
                     if isinstance(template_value, list):
                         result.extend(template_value)
                     if isinstance(file_value, list):
