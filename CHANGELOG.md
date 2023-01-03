@@ -1,3 +1,9 @@
+### v0.72.6
+###### CloudFormation Specifications
+- Update CloudFormation specs to `105.0.0` (pull #[2530](https://github.com/aws-cloudformation/cfn-lint/pull/2530))
+###### Fixes
+- Use a clean copy of the `cli_value` each time when merging config to avoid leaking config from one template to another (pull #[2536](https://github.com/aws-cloudformation/cfn-lint/pull/2536))
+
 ### v0.72.5
 ###### Features
 - Update rule [W1001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W1001) to support `Fn::Sub` (pull #[2525](https://github.com/aws-cloudformation/cfn-lint/pull/2525))
