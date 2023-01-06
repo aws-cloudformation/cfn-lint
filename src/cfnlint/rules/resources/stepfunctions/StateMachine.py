@@ -43,14 +43,18 @@ class StateMachine(CloudFormationLintRule):
         state_key_types = {
             "Pass": ["Result", "ResultPath", "Parameters"],
             "Task": [
+                "Credentials",
                 "Resource",
+                "Parameters",
                 "ResultPath",
                 "ResultSelector",
                 "Retry",
                 "Catch",
                 "TimeoutSeconds",
+                "TimeoutSecondsPath",
                 "Parameters",
                 "HeartbeatSeconds",
+                "HeartbeatSecondsPath",
             ],
             "Map": [
                 "MaxConcurrency",
