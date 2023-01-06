@@ -641,7 +641,12 @@ Resources:
     Type: AWS::CloudFormation::CustomResource
     Properties:
       ServiceToken: arn.example
-
+  Helper:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Handler: 'helper.lambda_handler'
+      Role: arn:aws:iam::123456789012:role/role-name-with-path
+      Code: !GetAtt Custom.Code
   LB1:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:

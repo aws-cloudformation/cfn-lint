@@ -42,7 +42,7 @@ class TestResourceProperties(BaseRuleTestCase):
     def test_file_negative_3(self):
         """Failure test"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resource_properties.yaml", 7
+            "test/fixtures/templates/bad/resource_properties.yaml", 8
         )
 
     def test_E3012_in_bad_template(self):
