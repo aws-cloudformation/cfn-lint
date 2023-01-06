@@ -1934,9 +1934,39 @@
   "AWS::IoT::JobTemplate.AbortConfig": "CACHED",
   "AWS::IoT::JobTemplate.AbortCriteria": "CACHED",
   "AWS::IoT::JobTemplate.ExponentialRolloutRate": "CACHED",
+  "AWS::IoT::JobTemplate.JobExecutionsRetryConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-jobtemplate-jobexecutionsretryconfig.html",
+   "Properties": {
+    "RetryCriteriaList": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-jobtemplate-jobexecutionsretryconfig.html#cfn-iot-jobtemplate-jobexecutionsretryconfig-retrycriterialist",
+     "DuplicatesAllowed": true,
+     "ItemType": "RetryCriteria",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::IoT::JobTemplate.JobExecutionsRolloutConfig": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig": "CACHED",
   "AWS::IoT::JobTemplate.RateIncreaseCriteria": "CACHED",
+  "AWS::IoT::JobTemplate.RetryCriteria": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-jobtemplate-retrycriteria.html",
+   "Properties": {
+    "FailureType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-jobtemplate-retrycriteria.html#cfn-iot-jobtemplate-retrycriteria-failuretype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "NumberOfRetries": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-iot-jobtemplate-retrycriteria.html#cfn-iot-jobtemplate-retrycriteria-numberofretries",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::IoT::JobTemplate.TimeoutConfig": "CACHED",
   "AWS::IoT::MitigationAction.ActionParams": "CACHED",
   "AWS::IoT::MitigationAction.AddThingsToThingGroupParams": "CACHED",
@@ -3930,7 +3960,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "105.0.0",
+ "ResourceSpecificationVersion": "106.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4521,7 +4551,46 @@
   "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
-  "AWS::EC2::PlacementGroup": "CACHED",
+  "AWS::EC2::PlacementGroup": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html",
+   "Properties": {
+    "GroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-groupname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PartitionCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-partitioncount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SpreadLevel": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-spreadlevel",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Strategy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "PlacementGroupStrategy"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::PrefixList": "CACHED",
   "AWS::EC2::Route": "CACHED",
   "AWS::EC2::RouteTable": "CACHED",
@@ -4745,7 +4814,90 @@
   "AWS::IoT::Dimension": "CACHED",
   "AWS::IoT::DomainConfiguration": "CACHED",
   "AWS::IoT::FleetMetric": "CACHED",
-  "AWS::IoT::JobTemplate": "CACHED",
+  "AWS::IoT::JobTemplate": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html",
+   "Properties": {
+    "AbortConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-abortconfig",
+     "Required": false,
+     "Type": "AbortConfig",
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-description",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Document": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-document",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DocumentSource": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-documentsource",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::IoT::JobTemplate.DocumentSource"
+     }
+    },
+    "JobArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-jobarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "JobExecutionsRetryConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-jobexecutionsretryconfig",
+     "Required": false,
+     "Type": "JobExecutionsRetryConfig",
+     "UpdateType": "Mutable"
+    },
+    "JobExecutionsRolloutConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-jobexecutionsrolloutconfig",
+     "Required": false,
+     "Type": "JobExecutionsRolloutConfig",
+     "UpdateType": "Immutable"
+    },
+    "JobTemplateId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-jobtemplateid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::IoT::JobTemplate.JobTemplateId"
+     }
+    },
+    "PresignedUrlConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-presignedurlconfig",
+     "Required": false,
+     "Type": "PresignedUrlConfig",
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "TimeoutConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iot-jobtemplate.html#cfn-iot-jobtemplate-timeoutconfig",
+     "Required": false,
+     "Type": "TimeoutConfig",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::IoT::Logging": "CACHED",
   "AWS::IoT::MitigationAction": "CACHED",
   "AWS::IoT::Policy": "CACHED",
@@ -4774,7 +4926,53 @@
   "AWS::IoTSiteWise::Dashboard": "CACHED",
   "AWS::IoTSiteWise::Gateway": "CACHED",
   "AWS::IoTSiteWise::Portal": "CACHED",
-  "AWS::IoTSiteWise::Project": "CACHED",
+  "AWS::IoTSiteWise::Project": {
+   "Attributes": {
+    "ProjectArn": {
+     "PrimitiveType": "String"
+    },
+    "ProjectId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html",
+   "Properties": {
+    "AssetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html#cfn-iotsitewise-project-assetids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "PortalId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html#cfn-iotsitewise-project-portalid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ProjectDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html#cfn-iotsitewise-project-projectdescription",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ProjectName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html#cfn-iotsitewise-project-projectname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iotsitewise-project.html#cfn-iotsitewise-project-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::IoTThingsGraph::FlowTemplate": "CACHED",
   "AWS::IoTTwinMaker::ComponentType": "CACHED",
   "AWS::IoTTwinMaker::Entity": "CACHED",
@@ -7049,7 +7247,6 @@
   "AWS::IoTWireless::TaskDefinition.UpdateWirelessGatewayTaskCreate.UpdateDataSource": "CACHED",
   "AWS::IoTWireless::WirelessDevice.AbpV10x.DevAddr": "CACHED",
   "AWS::IoTWireless::WirelessDevice.AbpV11.DevAddr": "CACHED",
-  "AWS::IoTWireless::WirelessDevice.LastUplinkReceivedAt": "CACHED",
   "AWS::IoTWireless::WirelessDevice.LoRaWANDevice.DevEui": "CACHED",
   "AWS::IoTWireless::WirelessDevice.OtaaV10x.AppEui": "CACHED",
   "AWS::IoTWireless::WirelessDevice.OtaaV10x.AppKey": "CACHED",
@@ -9382,6 +9579,24 @@
     "m6id.large",
     "m6id.metal",
     "m6id.xlarge",
+    "m6idn.12xlarge",
+    "m6idn.16xlarge",
+    "m6idn.24xlarge",
+    "m6idn.2xlarge",
+    "m6idn.32xlarge",
+    "m6idn.4xlarge",
+    "m6idn.8xlarge",
+    "m6idn.large",
+    "m6idn.xlarge",
+    "m6in.12xlarge",
+    "m6in.16xlarge",
+    "m6in.24xlarge",
+    "m6in.2xlarge",
+    "m6in.32xlarge",
+    "m6in.4xlarge",
+    "m6in.8xlarge",
+    "m6in.large",
+    "m6in.xlarge",
     "mac1.metal",
     "mac2.metal",
     "p2.16xlarge",
