@@ -1,3 +1,11 @@
+### v0.72.7
+###### CloudFormation Specifications
+- Update CloudFormation specs to `106.0.0` (pull #[2546](https://github.com/aws-cloudformation/cfn-lint/pull/2546))
+###### Fixes
+- Update rule [E1030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1030) to include `Fn::FindInMap` when using `Fn::Length` (pull #[2547](https://github.com/aws-cloudformation/cfn-lint/pull/2547))
+- Update rule [E3002](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3002) to allow a `Fn::GetAtt` for an object (pull #[2548](https://github.com/aws-cloudformation/cfn-lint/pull/2548))
+- Update rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) to include current task properties (pull #[2549](https://github.com/aws-cloudformation/cfn-lint/pull/2549))
+
 ### v0.72.6
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `105.0.0` (pull #[2530](https://github.com/aws-cloudformation/cfn-lint/pull/2530))
