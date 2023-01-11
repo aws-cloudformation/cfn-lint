@@ -15,6 +15,8 @@ class Length(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-length.html"
     tags = ["functions", "length"]
 
+    supported_functions = ["Fn::Split", "Fn::FindInMap"]
+
     def match(self, cfn):
         has_language_extensions_transform = cfn.has_language_extensions_transform()
         intrinsic_function = "Fn::Length"
@@ -38,12 +40,13 @@ class Length(CloudFormationLintRule):
         fn_length_value = fn_length_object[-1]
         if isinstance(fn_length_value, dict):
             if len(fn_length_value.keys()) != 1 or (
-                list(fn_length_value.keys())[0] not in ["Ref", "Fn::Split"]
+                list(fn_length_value.keys())[0]
+                not in ["Ref"] + self.supported_functions
             ):
                 self.addMatch(
                     matches,
                     tree,
-                    "Fn::Length expects either an array, a Ref to an array or Fn::Split, "
+                    f"Fn::Length expects either an array, a Ref to an array or {', '.join(self.supported_functions)}, "
                     "but found unexpected object under Fn::Length at {0}",
                 )
                 return

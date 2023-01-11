@@ -380,6 +380,21 @@ class Properties(CloudFormationLintRule):
                     and text.get(prop) == "AWS::NoValue"
                 ):
                     pass
+                elif len(text) == 1 and prop in "Fn::GetAtt":
+                    getatt = text.get(prop)
+                    getatt_type = (
+                        self.cfn.template.get("Resources", {})
+                        .get(getatt[0], {})
+                        .get("Type", "")
+                    )
+                    if (
+                        getatt_type == "AWS::CloudFormation::CustomResource"
+                        or getatt_type.startswith("Custom::")
+                    ):
+                        pass
+                    else:
+                        message = f'GetAtt must refer to a custom resource {"/".join(map(str, proppath))}'
+                        matches.append(RuleMatch(proppath, message))
                 elif not supports_additional_properties:
                     close_match = False
                     for key in resourcespec.keys():
