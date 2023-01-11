@@ -1,3 +1,7 @@
+### v0.72.8
+###### Features
+- Support `Fn::FindInMap` [enhancements](https://github.com/aws-cloudformation/cfn-language-discussion/commit/42cec9ce0d980a0832dc0fd1aed5750980280892?short_path=be2a597#diff-be2a59710611cc501f7361fcff1c335613d5dabb8326ce3ea746f4474f954bc5) when template is declared with `AWS::LanguageExtensions` (pull #[2512](https://github.com/aws-cloudformation/cfn-lint/pull/2512))
+
 ### v0.72.7
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `106.0.0` (pull #[2546](https://github.com/aws-cloudformation/cfn-lint/pull/2546))
