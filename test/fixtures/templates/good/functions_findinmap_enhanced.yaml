@@ -1,0 +1,108 @@
+Transform: AWS::LanguageExtensions
+Parameters:
+  Stage:
+    Type: String
+    Default: Prod
+Conditions:
+  IsProd: !Equals
+    - Prod
+    - !Ref Stage
+Mappings:
+  MapName:
+    TopKey1:
+      SecondKey1: Value1
+      SecondKey2: Value2
+      '{"To":"Json","String":"Function"}': Value3
+    TopKey2:
+      SecondKey1: Value4
+      SecondKey2: Value5
+Resources:
+  Mesh:
+    Type: 'AWS::AppMesh::Mesh'
+    Properties:
+      MeshName: !FindInMap
+        - MapName
+        - !Sub
+          - '${Prefix}${Suffix}'
+          - Suffix: Key1
+            Prefix: Top
+        - !Sub
+          - '${Prefix}${Suffix}'
+          - Prefix: Second
+            Suffix: Key1
+  Mesh2:
+    Type: 'AWS::AppMesh::Mesh'
+    Properties:
+      MeshName: !FindInMap
+        - MapName
+        - !If
+          - IsProd
+          - TopKey1
+          - TopKey2
+        - !If
+          - IsProd
+          - SecondKey1
+          - SecondKey2
+  Cluster:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - !Join
+          - ''
+          - - Top
+            - Key1
+        - !Join
+          - ''
+          - - Second
+            - Key1
+  Queue:
+    Type: 'AWS::SQS::Queue'
+    Properties:
+      QueueName: !FindInMap
+        - !Select
+          - 0
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey1
+        - !Select
+          - 1
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey1
+        - !Select
+          - 2
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey1
+  Cluster2:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !FindInMap
+        - !Select
+          - 'Fn::Length': []
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey2
+        - !Select
+          - 'Fn::Length':
+              - '1'
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey2
+        - !Select
+          - 'Fn::Length':
+              - '1'
+              - '2'
+          - !Split
+            - .
+            - MapName.TopKey1.SecondKey2
+  Cluster3:
+    Type: 'AWS::ECS::Cluster'
+    Properties:
+      ClusterName: !FindInMap
+        - MapName
+        - TopKey1
+        - 'Fn::ToJsonString':
+            To: Json
+            String: Function
