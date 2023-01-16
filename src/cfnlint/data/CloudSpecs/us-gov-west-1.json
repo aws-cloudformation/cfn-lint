@@ -848,29 +848,7 @@
   "AWS::Backup::BackupSelection.ConditionParameter": "CACHED",
   "AWS::Backup::BackupSelection.ConditionResourceType": "CACHED",
   "AWS::Backup::BackupSelection.Conditions": "CACHED",
-  "AWS::Backup::BackupVault.LockConfigurationType": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupvault-lockconfigurationtype.html",
-   "Properties": {
-    "ChangeableForDays": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupvault-lockconfigurationtype.html#cfn-backup-backupvault-lockconfigurationtype-changeablefordays",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MaxRetentionDays": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupvault-lockconfigurationtype.html#cfn-backup-backupvault-lockconfigurationtype-maxretentiondays",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MinRetentionDays": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupvault-lockconfigurationtype.html#cfn-backup-backupvault-lockconfigurationtype-minretentiondays",
-     "PrimitiveType": "Double",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Backup::BackupVault.LockConfigurationType": "CACHED",
   "AWS::Backup::BackupVault.NotificationObjectType": "CACHED",
   "AWS::Batch::ComputeEnvironment.ComputeResources": "CACHED",
   "AWS::Batch::ComputeEnvironment.Ec2ConfigurationObject": "CACHED",
@@ -2495,9 +2473,11 @@
   "AWS::IoT::JobTemplate.AbortConfig": "CACHED",
   "AWS::IoT::JobTemplate.AbortCriteria": "CACHED",
   "AWS::IoT::JobTemplate.ExponentialRolloutRate": "CACHED",
+  "AWS::IoT::JobTemplate.JobExecutionsRetryConfig": "CACHED",
   "AWS::IoT::JobTemplate.JobExecutionsRolloutConfig": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig": "CACHED",
   "AWS::IoT::JobTemplate.RateIncreaseCriteria": "CACHED",
+  "AWS::IoT::JobTemplate.RetryCriteria": "CACHED",
   "AWS::IoT::JobTemplate.TimeoutConfig": "CACHED",
   "AWS::IoT::MitigationAction.ActionParams": "CACHED",
   "AWS::IoT::MitigationAction.AddThingsToThingGroupParams": "CACHED",
@@ -2808,17 +2788,7 @@
   "AWS::Lambda::EventSourceMapping.Filter": "CACHED",
   "AWS::Lambda::EventSourceMapping.FilterCriteria": "CACHED",
   "AWS::Lambda::EventSourceMapping.OnFailure": "CACHED",
-  "AWS::Lambda::EventSourceMapping.ScalingConfig": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-scalingconfig.html",
-   "Properties": {
-    "MaximumConcurrency": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-scalingconfig.html#cfn-lambda-eventsourcemapping-scalingconfig-maximumconcurrency",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Lambda::EventSourceMapping.ScalingConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedEventSource": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration": "CACHED",
@@ -3122,11 +3092,13 @@
   "AWS::QuickSight::Theme.UIColorPalette": "CACHED",
   "AWS::RDS::DBCluster.DBClusterRole": "CACHED",
   "AWS::RDS::DBCluster.Endpoint": "CACHED",
+  "AWS::RDS::DBCluster.MasterUserSecret": "CACHED",
   "AWS::RDS::DBCluster.ReadEndpoint": "CACHED",
   "AWS::RDS::DBCluster.ScalingConfiguration": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceRole": "CACHED",
   "AWS::RDS::DBInstance.Endpoint": "CACHED",
+  "AWS::RDS::DBInstance.MasterUserSecret": "CACHED",
   "AWS::RDS::DBInstance.ProcessorFeature": "CACHED",
   "AWS::RDS::DBSecurityGroup.Ingress": "CACHED",
   "AWS::RDS::OptionGroup.OptionConfiguration": "CACHED",
@@ -3866,7 +3838,7 @@
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "106.0.0",
+ "ResourceSpecificationVersion": "107.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4161,7 +4133,115 @@
     }
    }
   },
-  "AWS::ApiGateway::RestApi": "CACHED",
+  "AWS::ApiGateway::RestApi": {
+   "Attributes": {
+    "RootResourceId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html",
+   "Properties": {
+    "ApiKeySourceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-apikeysourcetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ApiGateway::RestApi.ApiKeySourceType"
+     }
+    },
+    "BinaryMediaTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-binarymediatypes",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Body": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-body",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "BodyS3Location": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-bodys3location",
+     "Required": false,
+     "Type": "S3Location",
+     "UpdateType": "Mutable"
+    },
+    "CloneFrom": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-clonefrom",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DisableExecuteApiEndpoint": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-disableexecuteapiendpoint",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EndpointConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-endpointconfiguration",
+     "Required": false,
+     "Type": "EndpointConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "FailOnWarnings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-failonwarnings",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "MinimumCompressionSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-minimumcompressionsize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Mode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-mode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Parameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-parameters",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "Policy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-policy",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-restapi.html#cfn-apigateway-restapi-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApiGateway::Stage": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigateway-stage.html",
    "Properties": {
@@ -5318,15 +5398,446 @@
   "AWS::DataBrew::Schedule": "CACHED",
   "AWS::DataSync::Agent": "CACHED",
   "AWS::DataSync::LocationEFS": "CACHED",
-  "AWS::DataSync::LocationFSxLustre": "CACHED",
+  "AWS::DataSync::LocationFSxLustre": {
+   "Attributes": {
+    "LocationArn": {
+     "PrimitiveType": "String"
+    },
+    "LocationUri": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html",
+   "Properties": {
+    "FsxFilesystemArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-fsxfilesystemarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxLustre.FsxFilesystemArn"
+     }
+    },
+    "SecurityGroupArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-securitygrouparns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxLustre.SecurityGroupArns"
+     }
+    },
+    "Subdirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-subdirectory",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxlustre.html#cfn-datasync-locationfsxlustre-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::DataSync::LocationFSxONTAP": "CACHED",
-  "AWS::DataSync::LocationFSxWindows": "CACHED",
+  "AWS::DataSync::LocationFSxWindows": {
+   "Attributes": {
+    "LocationArn": {
+     "PrimitiveType": "String"
+    },
+    "LocationUri": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html",
+   "Properties": {
+    "Domain": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-domain",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxWindows.Domain"
+     }
+    },
+    "FsxFilesystemArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-fsxfilesystemarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxWindows.FsxFilesystemArn"
+     }
+    },
+    "Password": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-password",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxWindows.Password"
+     }
+    },
+    "SecurityGroupArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-securitygrouparns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxWindows.SecurityGroupArns"
+     }
+    },
+    "Subdirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-subdirectory",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "User": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationfsxwindows.html#cfn-datasync-locationfsxwindows-user",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationFSxWindows.User"
+     }
+    }
+   }
+  },
   "AWS::DataSync::LocationHDFS": "CACHED",
-  "AWS::DataSync::LocationNFS": "CACHED",
-  "AWS::DataSync::LocationObjectStorage": "CACHED",
+  "AWS::DataSync::LocationNFS": {
+   "Attributes": {
+    "LocationArn": {
+     "PrimitiveType": "String"
+    },
+    "LocationUri": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html",
+   "Properties": {
+    "MountOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-mountoptions",
+     "Required": false,
+     "Type": "MountOptions",
+     "UpdateType": "Mutable"
+    },
+    "OnPremConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-onpremconfig",
+     "Required": true,
+     "Type": "OnPremConfig",
+     "UpdateType": "Mutable"
+    },
+    "ServerHostname": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-serverhostname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationNFS.ServerHostname"
+     }
+    },
+    "Subdirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-subdirectory",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationnfs.html#cfn-datasync-locationnfs-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::DataSync::LocationObjectStorage": {
+   "Attributes": {
+    "LocationArn": {
+     "PrimitiveType": "String"
+    },
+    "LocationUri": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html",
+   "Properties": {
+    "AccessKey": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-accesskey",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.AccessKey"
+     }
+    },
+    "AgentArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-agentarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.AgentArns"
+     }
+    },
+    "BucketName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-bucketname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "SecretKey": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-secretkey",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.SecretKey"
+     }
+    },
+    "ServerHostname": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-serverhostname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.ServerHostname"
+     }
+    },
+    "ServerPort": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-serverport",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.ServerPort"
+     }
+    },
+    "ServerProtocol": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-serverprotocol",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationObjectStorage.ServerProtocol"
+     }
+    },
+    "Subdirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-subdirectory",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationobjectstorage.html#cfn-datasync-locationobjectstorage-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::DataSync::LocationS3": "CACHED",
-  "AWS::DataSync::LocationSMB": "CACHED",
-  "AWS::DataSync::Task": "CACHED",
+  "AWS::DataSync::LocationSMB": {
+   "Attributes": {
+    "LocationArn": {
+     "PrimitiveType": "String"
+    },
+    "LocationUri": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html",
+   "Properties": {
+    "AgentArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-agentarns",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationSMB.AgentArns"
+     }
+    },
+    "Domain": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-domain",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationSMB.Domain"
+     }
+    },
+    "MountOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-mountoptions",
+     "Required": false,
+     "Type": "MountOptions",
+     "UpdateType": "Mutable"
+    },
+    "Password": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-password",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationSMB.Password"
+     }
+    },
+    "ServerHostname": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-serverhostname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationSMB.ServerHostname"
+     }
+    },
+    "Subdirectory": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-subdirectory",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "User": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-locationsmb.html#cfn-datasync-locationsmb-user",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::LocationSMB.User"
+     }
+    }
+   }
+  },
+  "AWS::DataSync::Task": {
+   "Attributes": {
+    "DestinationNetworkInterfaceArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "ErrorCode": {
+     "PrimitiveType": "String"
+    },
+    "ErrorDetail": {
+     "PrimitiveType": "String"
+    },
+    "SourceNetworkInterfaceArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    },
+    "TaskArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html",
+   "Properties": {
+    "CloudWatchLogGroupArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-cloudwatchloggrouparn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.CloudWatchLogGroupArn"
+     }
+    },
+    "DestinationLocationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-destinationlocationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.DestinationLocationArn"
+     }
+    },
+    "Excludes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-excludes",
+     "DuplicatesAllowed": true,
+     "ItemType": "FilterRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Includes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-includes",
+     "DuplicatesAllowed": true,
+     "ItemType": "FilterRule",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.Name"
+     }
+    },
+    "Options": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-options",
+     "Required": false,
+     "Type": "Options",
+     "UpdateType": "Mutable"
+    },
+    "Schedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-schedule",
+     "Required": false,
+     "Type": "TaskSchedule",
+     "UpdateType": "Mutable"
+    },
+    "SourceLocationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-sourcelocationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::DataSync::Task.SourceLocationArn"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-datasync-task.html#cfn-datasync-task-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Detective::Graph": "CACHED",
   "AWS::Detective::MemberInvitation": "CACHED",
   "AWS::DirectoryService::MicrosoftAD": "CACHED",
@@ -7629,189 +8140,7 @@
   "AWS::LakeFormation::Resource": "CACHED",
   "AWS::Lambda::Alias": "CACHED",
   "AWS::Lambda::EventInvokeConfig": "CACHED",
-  "AWS::Lambda::EventSourceMapping": {
-   "Attributes": {
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
-   "Properties": {
-    "AmazonManagedKafkaEventSourceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
-     "Required": false,
-     "Type": "AmazonManagedKafkaEventSourceConfig",
-     "UpdateType": "Immutable"
-    },
-    "BatchSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.BatchSize"
-     }
-    },
-    "BisectBatchOnFunctionError": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-bisectbatchonfunctionerror",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DestinationConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-destinationconfig",
-     "Required": false,
-     "Type": "DestinationConfig",
-     "UpdateType": "Mutable"
-    },
-    "Enabled": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-enabled",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EventSourceArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-eventsourcearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.EventSourceArn"
-     }
-    },
-    "FilterCriteria": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-filtercriteria",
-     "Required": false,
-     "Type": "FilterCriteria",
-     "UpdateType": "Mutable"
-    },
-    "FunctionName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionName"
-     }
-    },
-    "FunctionResponseTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionresponsetypes",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionResponseTypes"
-     }
-    },
-    "MaximumBatchingWindowInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumbatchingwindowinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds"
-     }
-    },
-    "MaximumRecordAgeInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumrecordageinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds"
-     }
-    },
-    "MaximumRetryAttempts": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumretryattempts",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts"
-     }
-    },
-    "ParallelizationFactor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-parallelizationfactor",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.ParallelizationFactor"
-     }
-    },
-    "Queues": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-queues",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.Queues"
-     }
-    },
-    "ScalingConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-scalingconfig",
-     "Required": false,
-     "Type": "ScalingConfig",
-     "UpdateType": "Mutable"
-    },
-    "SelfManagedEventSource": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
-     "Required": false,
-     "Type": "SelfManagedEventSource",
-     "UpdateType": "Immutable"
-    },
-    "SelfManagedKafkaEventSourceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
-     "Required": false,
-     "Type": "SelfManagedKafkaEventSourceConfig",
-     "UpdateType": "Immutable"
-    },
-    "SourceAccessConfigurations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-sourceaccessconfigurations",
-     "DuplicatesAllowed": false,
-     "ItemType": "SourceAccessConfiguration",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "StartingPosition": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingposition",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.StartingPosition"
-     }
-    },
-    "StartingPositionTimestamp": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingpositiontimestamp",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Topics": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-topics",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.Topics"
-     }
-    },
-    "TumblingWindowInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-tumblingwindowinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Lambda::EventSourceMapping": "CACHED",
   "AWS::Lambda::Function": "CACHED",
   "AWS::Lambda::LayerVersion": "CACHED",
   "AWS::Lambda::LayerVersionPermission": "CACHED",
@@ -7913,35 +8242,8 @@
     }
    }
   },
-  "AWS::Logs::SubscriptionFilter": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html",
-   "Properties": {
-    "DestinationArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-destinationarn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "FilterPattern": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-filterpattern",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "LogGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-loggroupname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-cwl-subscriptionfilter-rolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::Logs::QueryDefinition": "CACHED",
+  "AWS::Logs::SubscriptionFilter": "CACHED",
   "AWS::MSK::BatchScramSecret": "CACHED",
   "AWS::MSK::Cluster": "CACHED",
   "AWS::MSK::Configuration": "CACHED",
@@ -9287,6 +9589,7 @@
   "AWS::IoT::JobTemplate.JobTemplateId": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig.ExpiresInSec": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig.RoleArn": "CACHED",
+  "AWS::IoT::JobTemplate.RetryCriteria.FailureType": "CACHED",
   "AWS::IoT::JobTemplate.TimeoutConfig.InProgressTimeoutInMinutes": "CACHED",
   "AWS::IoT::Logging.AccountId": "CACHED",
   "AWS::IoT::Logging.DefaultLogLevel": "CACHED",
@@ -9482,6 +9785,7 @@
   "AWS::Lambda::EventSourceMapping.OnFailure.Destination": "CACHED",
   "AWS::Lambda::EventSourceMapping.ParallelizationFactor": "CACHED",
   "AWS::Lambda::EventSourceMapping.Queues": "CACHED",
+  "AWS::Lambda::EventSourceMapping.ScalingConfig.MaximumConcurrency": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.Type": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.URI": "CACHED",
@@ -9517,6 +9821,10 @@
   "AWS::Logs::MetricFilter.MetricTransformation.MetricName": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation.MetricValue": "CACHED",
+  "AWS::Logs::QueryDefinition.LogGroupNames": "CACHED",
+  "AWS::Logs::QueryDefinition.Name": "CACHED",
+  "AWS::Logs::QueryDefinition.QueryString": "CACHED",
+  "AWS::Logs::SubscriptionFilter.Distribution": "CACHED",
   "AWS::M2::Application.Definition.Content": "CACHED",
   "AWS::M2::Application.Definition.S3Location": "CACHED",
   "AWS::MSK::Cluster.BrokerNodeGroupInfo.BrokerAZDistribution": "CACHED",

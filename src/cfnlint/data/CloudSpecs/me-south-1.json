@@ -1658,9 +1658,11 @@
   "AWS::IoT::JobTemplate.AbortConfig": "CACHED",
   "AWS::IoT::JobTemplate.AbortCriteria": "CACHED",
   "AWS::IoT::JobTemplate.ExponentialRolloutRate": "CACHED",
+  "AWS::IoT::JobTemplate.JobExecutionsRetryConfig": "CACHED",
   "AWS::IoT::JobTemplate.JobExecutionsRolloutConfig": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig": "CACHED",
   "AWS::IoT::JobTemplate.RateIncreaseCriteria": "CACHED",
+  "AWS::IoT::JobTemplate.RetryCriteria": "CACHED",
   "AWS::IoT::JobTemplate.TimeoutConfig": "CACHED",
   "AWS::IoT::MitigationAction.ActionParams": "CACHED",
   "AWS::IoT::MitigationAction.AddThingsToThingGroupParams": "CACHED",
@@ -1870,17 +1872,7 @@
   "AWS::Lambda::EventSourceMapping.Filter": "CACHED",
   "AWS::Lambda::EventSourceMapping.FilterCriteria": "CACHED",
   "AWS::Lambda::EventSourceMapping.OnFailure": "CACHED",
-  "AWS::Lambda::EventSourceMapping.ScalingConfig": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-scalingconfig.html",
-   "Properties": {
-    "MaximumConcurrency": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-scalingconfig.html#cfn-lambda-eventsourcemapping-scalingconfig-maximumconcurrency",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Lambda::EventSourceMapping.ScalingConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedEventSource": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration": "CACHED",
@@ -2044,11 +2036,13 @@
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationVpc": "CACHED",
   "AWS::RDS::DBCluster.DBClusterRole": "CACHED",
   "AWS::RDS::DBCluster.Endpoint": "CACHED",
+  "AWS::RDS::DBCluster.MasterUserSecret": "CACHED",
   "AWS::RDS::DBCluster.ReadEndpoint": "CACHED",
   "AWS::RDS::DBCluster.ScalingConfiguration": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceRole": "CACHED",
   "AWS::RDS::DBInstance.Endpoint": "CACHED",
+  "AWS::RDS::DBInstance.MasterUserSecret": "CACHED",
   "AWS::RDS::DBInstance.ProcessorFeature": "CACHED",
   "AWS::RDS::DBProxy.AuthFormat": "CACHED",
   "AWS::RDS::DBProxy.TagFormat": "CACHED",
@@ -2649,6 +2643,8 @@
   "AWS::WAFv2::RuleGroup.ByteMatchStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.Captcha": "CACHED",
   "AWS::WAFv2::RuleGroup.CaptchaConfig": "CACHED",
+  "AWS::WAFv2::RuleGroup.Challenge": "CACHED",
+  "AWS::WAFv2::RuleGroup.ChallengeConfig": "CACHED",
   "AWS::WAFv2::RuleGroup.CookieMatchPattern": "CACHED",
   "AWS::WAFv2::RuleGroup.Cookies": "CACHED",
   "AWS::WAFv2::RuleGroup.Count": "CACHED",
@@ -2674,87 +2670,8 @@
   "AWS::WAFv2::RuleGroup.RateBasedStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.RegexMatchStatement": "CACHED",
   "AWS::WAFv2::RuleGroup.RegexPatternSetReferenceStatement": "CACHED",
-  "AWS::WAFv2::RuleGroup.Rule": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html",
-   "Properties": {
-    "Action": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-action",
-     "Required": false,
-     "Type": "RuleAction",
-     "UpdateType": "Mutable"
-    },
-    "CaptchaConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-captchaconfig",
-     "Required": false,
-     "Type": "CaptchaConfig",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::RuleGroup.Rule.Name"
-     }
-    },
-    "Priority": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-priority",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RuleLabels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-rulelabels",
-     "DuplicatesAllowed": true,
-     "ItemType": "Label",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Statement": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-statement",
-     "Required": true,
-     "Type": "Statement",
-     "UpdateType": "Mutable"
-    },
-    "VisibilityConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-rule.html#cfn-wafv2-rulegroup-rule-visibilityconfig",
-     "Required": true,
-     "Type": "VisibilityConfig",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::WAFv2::RuleGroup.RuleAction": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ruleaction.html",
-   "Properties": {
-    "Allow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ruleaction.html#cfn-wafv2-rulegroup-ruleaction-allow",
-     "Required": false,
-     "Type": "Allow",
-     "UpdateType": "Mutable"
-    },
-    "Block": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ruleaction.html#cfn-wafv2-rulegroup-ruleaction-block",
-     "Required": false,
-     "Type": "Block",
-     "UpdateType": "Mutable"
-    },
-    "Captcha": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ruleaction.html#cfn-wafv2-rulegroup-ruleaction-captcha",
-     "Required": false,
-     "Type": "Captcha",
-     "UpdateType": "Mutable"
-    },
-    "Count": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-rulegroup-ruleaction.html#cfn-wafv2-rulegroup-ruleaction-count",
-     "Required": false,
-     "Type": "Count",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::WAFv2::RuleGroup.Rule": "CACHED",
+  "AWS::WAFv2::RuleGroup.RuleAction": "CACHED",
   "AWS::WAFv2::RuleGroup.SingleHeader": "CACHED",
   "AWS::WAFv2::RuleGroup.SingleQueryArgument": "CACHED",
   "AWS::WAFv2::RuleGroup.SizeConstraintStatement": "CACHED",
@@ -2763,6 +2680,7 @@
   "AWS::WAFv2::RuleGroup.TextTransformation": "CACHED",
   "AWS::WAFv2::RuleGroup.VisibilityConfig": "CACHED",
   "AWS::WAFv2::RuleGroup.XssMatchStatement": "CACHED",
+  "AWS::WAFv2::WebACL.AWSManagedRulesBotControlRuleSet": "CACHED",
   "AWS::WAFv2::WebACL.AllowAction": "CACHED",
   "AWS::WAFv2::WebACL.AndStatement": "CACHED",
   "AWS::WAFv2::WebACL.BlockAction": "CACHED",
@@ -2770,6 +2688,8 @@
   "AWS::WAFv2::WebACL.ByteMatchStatement": "CACHED",
   "AWS::WAFv2::WebACL.CaptchaAction": "CACHED",
   "AWS::WAFv2::WebACL.CaptchaConfig": "CACHED",
+  "AWS::WAFv2::WebACL.ChallengeAction": "CACHED",
+  "AWS::WAFv2::WebACL.ChallengeConfig": "CACHED",
   "AWS::WAFv2::WebACL.CookieMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Cookies": "CACHED",
   "AWS::WAFv2::WebACL.CountAction": "CACHED",
@@ -2792,207 +2712,18 @@
   "AWS::WAFv2::WebACL.JsonMatchPattern": "CACHED",
   "AWS::WAFv2::WebACL.Label": "CACHED",
   "AWS::WAFv2::WebACL.LabelMatchStatement": "CACHED",
-  "AWS::WAFv2::WebACL.ManagedRuleGroupConfig": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html",
-   "Properties": {
-    "LoginPath": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-loginpath",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupConfig.LoginPath"
-     }
-    },
-    "PasswordField": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-passwordfield",
-     "Required": false,
-     "Type": "FieldIdentifier",
-     "UpdateType": "Mutable"
-    },
-    "PayloadType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-payloadtype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupConfig.PayloadType"
-     }
-    },
-    "UsernameField": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupconfig.html#cfn-wafv2-webacl-managedrulegroupconfig-usernamefield",
-     "Required": false,
-     "Type": "FieldIdentifier",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::WAFv2::WebACL.ManagedRuleGroupStatement": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html",
-   "Properties": {
-    "ExcludedRules": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-excludedrules",
-     "DuplicatesAllowed": true,
-     "ItemType": "ExcludedRule",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "ManagedRuleGroupConfigs": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-managedrulegroupconfigs",
-     "DuplicatesAllowed": true,
-     "ItemType": "ManagedRuleGroupConfig",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupStatement.Name"
-     }
-    },
-    "ScopeDownStatement": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-scopedownstatement",
-     "Required": false,
-     "Type": "Statement",
-     "UpdateType": "Mutable"
-    },
-    "VendorName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-vendorname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Version": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-managedrulegroupstatement.html#cfn-wafv2-webacl-managedrulegroupstatement-version",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.ManagedRuleGroupStatement.Version"
-     }
-    }
-   }
-  },
+  "AWS::WAFv2::WebACL.ManagedRuleGroupConfig": "CACHED",
+  "AWS::WAFv2::WebACL.ManagedRuleGroupStatement": "CACHED",
   "AWS::WAFv2::WebACL.NotStatement": "CACHED",
   "AWS::WAFv2::WebACL.OrStatement": "CACHED",
   "AWS::WAFv2::WebACL.OverrideAction": "CACHED",
   "AWS::WAFv2::WebACL.RateBasedStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexMatchStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement": "CACHED",
-  "AWS::WAFv2::WebACL.Rule": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html",
-   "Properties": {
-    "Action": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-action",
-     "Required": false,
-     "Type": "RuleAction",
-     "UpdateType": "Mutable"
-    },
-    "CaptchaConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-captchaconfig",
-     "Required": false,
-     "Type": "CaptchaConfig",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.Rule.Name"
-     }
-    },
-    "OverrideAction": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-overrideaction",
-     "Required": false,
-     "Type": "OverrideAction",
-     "UpdateType": "Mutable"
-    },
-    "Priority": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-priority",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RuleLabels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-rulelabels",
-     "DuplicatesAllowed": true,
-     "ItemType": "Label",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Statement": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-statement",
-     "Required": true,
-     "Type": "Statement",
-     "UpdateType": "Mutable"
-    },
-    "VisibilityConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rule.html#cfn-wafv2-webacl-rule-visibilityconfig",
-     "Required": true,
-     "Type": "VisibilityConfig",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::WAFv2::WebACL.RuleAction": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html",
-   "Properties": {
-    "Allow": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-allow",
-     "Required": false,
-     "Type": "AllowAction",
-     "UpdateType": "Mutable"
-    },
-    "Block": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-block",
-     "Required": false,
-     "Type": "BlockAction",
-     "UpdateType": "Mutable"
-    },
-    "Captcha": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-captcha",
-     "Required": false,
-     "Type": "CaptchaAction",
-     "UpdateType": "Mutable"
-    },
-    "Count": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-ruleaction.html#cfn-wafv2-webacl-ruleaction-count",
-     "Required": false,
-     "Type": "CountAction",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::WAFv2::WebACL.RuleGroupReferenceStatement": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html",
-   "Properties": {
-    "Arn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html#cfn-wafv2-webacl-rulegroupreferencestatement-arn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.RuleGroupReferenceStatement.Arn"
-     }
-    },
-    "ExcludedRules": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-wafv2-webacl-rulegroupreferencestatement.html#cfn-wafv2-webacl-rulegroupreferencestatement-excludedrules",
-     "DuplicatesAllowed": true,
-     "ItemType": "ExcludedRule",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::WAFv2::WebACL.Rule": "CACHED",
+  "AWS::WAFv2::WebACL.RuleAction": "CACHED",
+  "AWS::WAFv2::WebACL.RuleActionOverride": "CACHED",
+  "AWS::WAFv2::WebACL.RuleGroupReferenceStatement": "CACHED",
   "AWS::WAFv2::WebACL.SingleHeader": "CACHED",
   "AWS::WAFv2::WebACL.SingleQueryArgument": "CACHED",
   "AWS::WAFv2::WebACL.SizeConstraintStatement": "CACHED",
@@ -3009,7 +2740,7 @@
   "AWS::XRay::SamplingRule.TagsItems": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "106.0.0",
+ "ResourceSpecificationVersion": "107.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3102,7 +2833,88 @@
   "AWS::AppMesh::VirtualService": "CACHED",
   "AWS::AppSync::ApiCache": "CACHED",
   "AWS::AppSync::ApiKey": "CACHED",
-  "AWS::AppSync::DataSource": "CACHED",
+  "AWS::AppSync::DataSource": {
+   "Attributes": {
+    "DataSourceArn": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html",
+   "Properties": {
+    "ApiId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-apiid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DynamoDBConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-dynamodbconfig",
+     "Required": false,
+     "Type": "DynamoDBConfig",
+     "UpdateType": "Mutable"
+    },
+    "ElasticsearchConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-elasticsearchconfig",
+     "Required": false,
+     "Type": "ElasticsearchConfig",
+     "UpdateType": "Mutable"
+    },
+    "HttpConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-httpconfig",
+     "Required": false,
+     "Type": "HttpConfig",
+     "UpdateType": "Mutable"
+    },
+    "LambdaConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-lambdaconfig",
+     "Required": false,
+     "Type": "LambdaConfig",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "OpenSearchServiceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-opensearchserviceconfig",
+     "Required": false,
+     "Type": "OpenSearchServiceConfig",
+     "UpdateType": "Mutable"
+    },
+    "RelationalDatabaseConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-relationaldatabaseconfig",
+     "Required": false,
+     "Type": "RelationalDatabaseConfig",
+     "UpdateType": "Mutable"
+    },
+    "ServiceRoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-servicerolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-type",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::AppSync::DataSource.Type"
+     }
+    }
+   }
+  },
   "AWS::AppSync::DomainName": "CACHED",
   "AWS::AppSync::DomainNameApiAssociation": "CACHED",
   "AWS::AppSync::FunctionConfiguration": "CACHED",
@@ -3414,7 +3226,46 @@
   "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
-  "AWS::EC2::PlacementGroup": "CACHED",
+  "AWS::EC2::PlacementGroup": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html",
+   "Properties": {
+    "GroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-groupname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PartitionCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-partitioncount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SpreadLevel": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-spreadlevel",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Strategy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "PlacementGroupStrategy"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-tags",
+     "DuplicatesAllowed": false,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::PrefixList": "CACHED",
   "AWS::EC2::Route": "CACHED",
   "AWS::EC2::RouteTable": "CACHED",
@@ -4078,189 +3929,7 @@
   "AWS::Lambda::Alias": "CACHED",
   "AWS::Lambda::CodeSigningConfig": "CACHED",
   "AWS::Lambda::EventInvokeConfig": "CACHED",
-  "AWS::Lambda::EventSourceMapping": {
-   "Attributes": {
-    "Id": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
-   "Properties": {
-    "AmazonManagedKafkaEventSourceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
-     "Required": false,
-     "Type": "AmazonManagedKafkaEventSourceConfig",
-     "UpdateType": "Immutable"
-    },
-    "BatchSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.BatchSize"
-     }
-    },
-    "BisectBatchOnFunctionError": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-bisectbatchonfunctionerror",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DestinationConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-destinationconfig",
-     "Required": false,
-     "Type": "DestinationConfig",
-     "UpdateType": "Mutable"
-    },
-    "Enabled": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-enabled",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EventSourceArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-eventsourcearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.EventSourceArn"
-     }
-    },
-    "FilterCriteria": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-filtercriteria",
-     "Required": false,
-     "Type": "FilterCriteria",
-     "UpdateType": "Mutable"
-    },
-    "FunctionName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionName"
-     }
-    },
-    "FunctionResponseTypes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionresponsetypes",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionResponseTypes"
-     }
-    },
-    "MaximumBatchingWindowInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumbatchingwindowinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds"
-     }
-    },
-    "MaximumRecordAgeInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumrecordageinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds"
-     }
-    },
-    "MaximumRetryAttempts": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumretryattempts",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts"
-     }
-    },
-    "ParallelizationFactor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-parallelizationfactor",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.ParallelizationFactor"
-     }
-    },
-    "Queues": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-queues",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.Queues"
-     }
-    },
-    "ScalingConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-scalingconfig",
-     "Required": false,
-     "Type": "ScalingConfig",
-     "UpdateType": "Mutable"
-    },
-    "SelfManagedEventSource": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
-     "Required": false,
-     "Type": "SelfManagedEventSource",
-     "UpdateType": "Immutable"
-    },
-    "SelfManagedKafkaEventSourceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
-     "Required": false,
-     "Type": "SelfManagedKafkaEventSourceConfig",
-     "UpdateType": "Immutable"
-    },
-    "SourceAccessConfigurations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-sourceaccessconfigurations",
-     "DuplicatesAllowed": false,
-     "ItemType": "SourceAccessConfiguration",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "StartingPosition": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingposition",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.StartingPosition"
-     }
-    },
-    "StartingPositionTimestamp": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingpositiontimestamp",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Topics": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-topics",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Lambda::EventSourceMapping.Topics"
-     }
-    },
-    "TumblingWindowInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-tumblingwindowinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Lambda::EventSourceMapping": "CACHED",
   "AWS::Lambda::Function": "CACHED",
   "AWS::Lambda::LayerVersion": "CACHED",
   "AWS::Lambda::LayerVersionPermission": "CACHED",
@@ -4541,179 +4210,8 @@
   "AWS::WAFv2::IPSet": "CACHED",
   "AWS::WAFv2::LoggingConfiguration": "CACHED",
   "AWS::WAFv2::RegexPatternSet": "CACHED",
-  "AWS::WAFv2::RuleGroup": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "AvailableLabels": {
-     "ItemType": "LabelSummary",
-     "Type": "List"
-    },
-    "ConsumedLabels": {
-     "ItemType": "LabelSummary",
-     "Type": "List"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    },
-    "LabelNamespace": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html",
-   "Properties": {
-    "Capacity": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-capacity",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "CustomResponseBodies": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-customresponsebodies",
-     "ItemType": "CustomResponseBody",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::RuleGroup.Description"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::RuleGroup.Name"
-     }
-    },
-    "Rules": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-rules",
-     "DuplicatesAllowed": true,
-     "ItemType": "Rule",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Scope": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-scope",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::RuleGroup.Scope"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VisibilityConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-rulegroup.html#cfn-wafv2-rulegroup-visibilityconfig",
-     "Required": true,
-     "Type": "VisibilityConfig",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
-  "AWS::WAFv2::WebACL": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "Capacity": {
-     "PrimitiveType": "Integer"
-    },
-    "Id": {
-     "PrimitiveType": "String"
-    },
-    "LabelNamespace": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html",
-   "Properties": {
-    "CaptchaConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-captchaconfig",
-     "Required": false,
-     "Type": "CaptchaConfig",
-     "UpdateType": "Mutable"
-    },
-    "CustomResponseBodies": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-customresponsebodies",
-     "ItemType": "CustomResponseBody",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "DefaultAction": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-defaultaction",
-     "Required": true,
-     "Type": "DefaultAction",
-     "UpdateType": "Mutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.Description"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.Name"
-     }
-    },
-    "Rules": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-rules",
-     "DuplicatesAllowed": true,
-     "ItemType": "Rule",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Scope": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-scope",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::WAFv2::WebACL.Scope"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VisibilityConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html#cfn-wafv2-webacl-visibilityconfig",
-     "Required": true,
-     "Type": "VisibilityConfig",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::WAFv2::RuleGroup": "CACHED",
+  "AWS::WAFv2::WebACL": "CACHED",
   "AWS::WAFv2::WebACLAssociation": "CACHED",
   "AWS::XRay::Group": "CACHED",
   "AWS::XRay::ResourcePolicy": "CACHED",
@@ -5513,6 +5011,7 @@
   "AWS::IoT::JobTemplate.JobTemplateId": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig.ExpiresInSec": "CACHED",
   "AWS::IoT::JobTemplate.PresignedUrlConfig.RoleArn": "CACHED",
+  "AWS::IoT::JobTemplate.RetryCriteria.FailureType": "CACHED",
   "AWS::IoT::JobTemplate.TimeoutConfig.InProgressTimeoutInMinutes": "CACHED",
   "AWS::IoT::Logging.AccountId": "CACHED",
   "AWS::IoT::Logging.DefaultLogLevel": "CACHED",
@@ -5711,6 +5210,7 @@
   "AWS::Lambda::EventSourceMapping.OnFailure.Destination": "CACHED",
   "AWS::Lambda::EventSourceMapping.ParallelizationFactor": "CACHED",
   "AWS::Lambda::EventSourceMapping.Queues": "CACHED",
+  "AWS::Lambda::EventSourceMapping.ScalingConfig.MaximumConcurrency": "CACHED",
   "AWS::Lambda::EventSourceMapping.SelfManagedKafkaEventSourceConfig.ConsumerGroupId": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.Type": "CACHED",
   "AWS::Lambda::EventSourceMapping.SourceAccessConfiguration.URI": "CACHED",
@@ -6580,6 +6080,7 @@
   "AWS::WAFv2::RuleGroup.SqliMatchStatement.SensitivityLevel": "CACHED",
   "AWS::WAFv2::RuleGroup.TextTransformation.Type": "CACHED",
   "AWS::WAFv2::RuleGroup.VisibilityConfig.MetricName": "CACHED",
+  "AWS::WAFv2::WebACL.AWSManagedRulesBotControlRuleSet.InspectionLevel": "CACHED",
   "AWS::WAFv2::WebACL.Body.OversizeHandling": "CACHED",
   "AWS::WAFv2::WebACL.ByteMatchStatement.PositionalConstraint": "CACHED",
   "AWS::WAFv2::WebACL.CookieMatchPattern.ExcludedCookies": "CACHED",
@@ -6619,11 +6120,13 @@
   "AWS::WAFv2::WebACL.RegexMatchStatement.RegexString": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.Rule.Name": "CACHED",
+  "AWS::WAFv2::WebACL.RuleActionOverride.Name": "CACHED",
   "AWS::WAFv2::WebACL.RuleGroupReferenceStatement.Arn": "CACHED",
   "AWS::WAFv2::WebACL.Scope": "CACHED",
   "AWS::WAFv2::WebACL.SizeConstraintStatement.ComparisonOperator": "CACHED",
   "AWS::WAFv2::WebACL.SqliMatchStatement.SensitivityLevel": "CACHED",
   "AWS::WAFv2::WebACL.TextTransformation.Type": "CACHED",
+  "AWS::WAFv2::WebACL.TokenDomains": "CACHED",
   "AWS::WAFv2::WebACL.VisibilityConfig.MetricName": "CACHED",
   "AWS::WAFv2::WebACLAssociation.ResourceArn": "CACHED",
   "AWS::WAFv2::WebACLAssociation.WebACLArn": "CACHED",
