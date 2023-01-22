@@ -203,6 +203,7 @@
   "AWS::AppSync::DataSource.DeltaSyncConfig": "CACHED",
   "AWS::AppSync::DataSource.DynamoDBConfig": "CACHED",
   "AWS::AppSync::DataSource.ElasticsearchConfig": "CACHED",
+  "AWS::AppSync::DataSource.EventBridgeConfig": "CACHED",
   "AWS::AppSync::DataSource.HttpConfig": "CACHED",
   "AWS::AppSync::DataSource.LambdaConfig": "CACHED",
   "AWS::AppSync::DataSource.OpenSearchServiceConfig": "CACHED",
@@ -477,6 +478,9 @@
   "AWS::CloudWatch::AnomalyDetector.Range": "CACHED",
   "AWS::CloudWatch::AnomalyDetector.SingleMetricAnomalyDetector": "CACHED",
   "AWS::CloudWatch::InsightRule.Tags": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamFilter": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamStatisticsConfiguration": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric": "CACHED",
   "AWS::CodeBuild::Project.Artifacts": "CACHED",
   "AWS::CodeBuild::Project.BatchRestrictions": "CACHED",
   "AWS::CodeBuild::Project.BuildStatusConfig": "CACHED",
@@ -1395,7 +1399,79 @@
   "AWS::ImageBuilder::DistributionConfiguration.LaunchPermissionConfiguration": "CACHED",
   "AWS::ImageBuilder::DistributionConfiguration.LaunchTemplateConfiguration": "CACHED",
   "AWS::ImageBuilder::DistributionConfiguration.TargetContainerRepository": "CACHED",
+  "AWS::ImageBuilder::Image.EcrConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-ecrconfiguration.html",
+   "Properties": {
+    "ContainerTags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-ecrconfiguration.html#cfn-imagebuilder-image-ecrconfiguration-containertags",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "RepositoryName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-ecrconfiguration.html#cfn-imagebuilder-image-ecrconfiguration-repositoryname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
+  "AWS::ImageBuilder::Image.ImageScanningConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-imagescanningconfiguration.html",
+   "Properties": {
+    "EcrConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-imagescanningconfiguration.html#cfn-imagebuilder-image-imagescanningconfiguration-ecrconfiguration",
+     "Required": false,
+     "Type": "EcrConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "ImageScanningEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-image-imagescanningconfiguration.html#cfn-imagebuilder-image-imagescanningconfiguration-imagescanningenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::ImageBuilder::Image.ImageTestsConfiguration": "CACHED",
+  "AWS::ImageBuilder::ImagePipeline.EcrConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-ecrconfiguration.html",
+   "Properties": {
+    "ContainerTags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-ecrconfiguration.html#cfn-imagebuilder-imagepipeline-ecrconfiguration-containertags",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "RepositoryName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-ecrconfiguration.html#cfn-imagebuilder-imagepipeline-ecrconfiguration-repositoryname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::ImageBuilder::ImagePipeline.ImageScanningConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-imagescanningconfiguration.html",
+   "Properties": {
+    "EcrConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-imagescanningconfiguration.html#cfn-imagebuilder-imagepipeline-imagescanningconfiguration-ecrconfiguration",
+     "Required": false,
+     "Type": "EcrConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "ImageScanningEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-imagebuilder-imagepipeline-imagescanningconfiguration.html#cfn-imagebuilder-imagepipeline-imagescanningconfiguration-imagescanningenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ImageBuilder::ImagePipeline.ImageTestsConfiguration": "CACHED",
   "AWS::ImageBuilder::ImagePipeline.Schedule": "CACHED",
   "AWS::ImageBuilder::ImageRecipe.AdditionalInstanceConfiguration": "CACHED",
@@ -1768,44 +1844,8 @@
   "AWS::Lambda::LayerVersion.Content": "CACHED",
   "AWS::Lambda::Url.Cors": "CACHED",
   "AWS::Lambda::Version.ProvisionedConcurrencyConfiguration": "CACHED",
-  "AWS::Logs::MetricFilter.MetricTransformation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html",
-   "Properties": {
-    "DefaultValue": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-defaultvalue",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MetricName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricName"
-     }
-    },
-    "MetricNamespace": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricnamespace",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace"
-     }
-    },
-    "MetricValue": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-logs-metricfilter-metrictransformation.html#cfn-cwl-metricfilter-metrictransformation-metricvalue",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::Logs::MetricFilter.MetricTransformation.MetricValue"
-     }
-    }
-   }
-  },
+  "AWS::Logs::MetricFilter.Dimension": "CACHED",
+  "AWS::Logs::MetricFilter.MetricTransformation": "CACHED",
   "AWS::MSK::Cluster.BrokerLogs": "CACHED",
   "AWS::MSK::Cluster.BrokerNodeGroupInfo": "CACHED",
   "AWS::MSK::Cluster.ClientAuthentication": "CACHED",
@@ -1868,6 +1908,7 @@
   "AWS::RDS::DBCluster.ReadEndpoint": "CACHED",
   "AWS::RDS::DBCluster.ScalingConfiguration": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration": "CACHED",
+  "AWS::RDS::DBInstance.CertificateDetails": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceRole": "CACHED",
   "AWS::RDS::DBInstance.Endpoint": "CACHED",
   "AWS::RDS::DBInstance.MasterUserSecret": "CACHED",
@@ -2391,173 +2432,17 @@
   "AWS::Transfer::User.HomeDirectoryMapEntry": "CACHED",
   "AWS::Transfer::User.PosixProfile": "CACHED",
   "AWS::Transfer::User.SshPublicKey": "CACHED",
-  "AWS::Transfer::Workflow.CopyStepDetails": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html",
-   "Properties": {
-    "DestinationFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-destinationfilelocation",
-     "Required": false,
-     "Type": "S3FileLocation",
-     "UpdateType": "Immutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.Name"
-     }
-    },
-    "OverwriteExisting": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-overwriteexisting",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.OverwriteExisting"
-     }
-    },
-    "SourceFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-sourcefilelocation",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.SourceFileLocation"
-     }
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.CopyStepDetails": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.DecryptStepDetails": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html",
-   "Properties": {
-    "DestinationFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html#cfn-transfer-workflow-decryptstepdetails-destinationfilelocation",
-     "Required": false,
-     "Type": "InputFileLocation",
-     "UpdateType": "Immutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html#cfn-transfer-workflow-decryptstepdetails-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "OverwriteExisting": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html#cfn-transfer-workflow-decryptstepdetails-overwriteexisting",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SourceFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html#cfn-transfer-workflow-decryptstepdetails-sourcefilelocation",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-decryptstepdetails.html#cfn-transfer-workflow-decryptstepdetails-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.DecryptStepDetails": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.EfsInputFileLocation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-efsinputfilelocation.html",
-   "Properties": {
-    "FileSystemId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-efsinputfilelocation.html#cfn-transfer-workflow-efsinputfilelocation-filesystemid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Path": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-efsinputfilelocation.html#cfn-transfer-workflow-efsinputfilelocation-path",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
-  "AWS::Transfer::Workflow.InputFileLocation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html",
-   "Properties": {
-    "EfsFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html#cfn-transfer-workflow-inputfilelocation-efsfilelocation",
-     "Required": false,
-     "Type": "EfsInputFileLocation",
-     "UpdateType": "Immutable"
-    },
-    "S3FileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html#cfn-transfer-workflow-inputfilelocation-s3filelocation",
-     "Required": false,
-     "Type": "S3InputFileLocation",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
-  "AWS::Transfer::Workflow.S3FileLocation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-s3filelocation.html",
-   "Properties": {
-    "S3FileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-s3filelocation.html#cfn-transfer-workflow-s3filelocation-s3filelocation",
-     "Required": false,
-     "Type": "S3InputFileLocation",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.EfsInputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.InputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.S3FileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.WorkflowStep": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html",
-   "Properties": {
-    "CopyStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-copystepdetails",
-     "Required": false,
-     "Type": "CopyStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "CustomStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-customstepdetails",
-     "Required": false,
-     "Type": "CustomStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "DecryptStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-decryptstepdetails",
-     "Required": false,
-     "Type": "DecryptStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "DeleteStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-deletestepdetails",
-     "Required": false,
-     "Type": "DeleteStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "TagStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-tagstepdetails",
-     "Required": false,
-     "Type": "TagStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.WorkflowStep.Type"
-     }
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
   "AWS::WAF::ByteMatchSet.ByteMatchTuple": "CACHED",
   "AWS::WAF::ByteMatchSet.FieldToMatch": "CACHED",
   "AWS::WAF::IPSet.IPSetDescriptor": "CACHED",
@@ -2954,7 +2839,7 @@
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "107.0.0",
+ "ResourceSpecificationVersion": "108.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -3000,88 +2885,7 @@
   "AWS::AppConfig::HostedConfigurationVersion": "CACHED",
   "AWS::AppSync::ApiCache": "CACHED",
   "AWS::AppSync::ApiKey": "CACHED",
-  "AWS::AppSync::DataSource": {
-   "Attributes": {
-    "DataSourceArn": {
-     "PrimitiveType": "String"
-    },
-    "Name": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html",
-   "Properties": {
-    "ApiId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-apiid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DynamoDBConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-dynamodbconfig",
-     "Required": false,
-     "Type": "DynamoDBConfig",
-     "UpdateType": "Mutable"
-    },
-    "ElasticsearchConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-elasticsearchconfig",
-     "Required": false,
-     "Type": "ElasticsearchConfig",
-     "UpdateType": "Mutable"
-    },
-    "HttpConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-httpconfig",
-     "Required": false,
-     "Type": "HttpConfig",
-     "UpdateType": "Mutable"
-    },
-    "LambdaConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-lambdaconfig",
-     "Required": false,
-     "Type": "LambdaConfig",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "OpenSearchServiceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-opensearchserviceconfig",
-     "Required": false,
-     "Type": "OpenSearchServiceConfig",
-     "UpdateType": "Mutable"
-    },
-    "RelationalDatabaseConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-relationaldatabaseconfig",
-     "Required": false,
-     "Type": "RelationalDatabaseConfig",
-     "UpdateType": "Mutable"
-    },
-    "ServiceRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-servicerolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::AppSync::DataSource.Type"
-     }
-    }
-   }
-  },
+  "AWS::AppSync::DataSource": "CACHED",
   "AWS::AppSync::FunctionConfiguration": "CACHED",
   "AWS::AppSync::GraphQLApi": "CACHED",
   "AWS::AppSync::GraphQLSchema": "CACHED",
@@ -3140,6 +2944,7 @@
   "AWS::CloudWatch::CompositeAlarm": "CACHED",
   "AWS::CloudWatch::Dashboard": "CACHED",
   "AWS::CloudWatch::InsightRule": "CACHED",
+  "AWS::CloudWatch::MetricStream": "CACHED",
   "AWS::CodeBuild::Project": "CACHED",
   "AWS::CodeBuild::ReportGroup": "CACHED",
   "AWS::CodeBuild::SourceCredential": "CACHED",
@@ -4787,8 +4592,163 @@
   "AWS::ImageBuilder::Component": "CACHED",
   "AWS::ImageBuilder::ContainerRecipe": "CACHED",
   "AWS::ImageBuilder::DistributionConfiguration": "CACHED",
-  "AWS::ImageBuilder::Image": "CACHED",
-  "AWS::ImageBuilder::ImagePipeline": "CACHED",
+  "AWS::ImageBuilder::Image": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "ImageId": {
+     "PrimitiveType": "String"
+    },
+    "ImageUri": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html",
+   "Properties": {
+    "ContainerRecipeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-containerrecipearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "DistributionConfigurationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-distributionconfigurationarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "EnhancedImageMetadataEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-enhancedimagemetadataenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ImageRecipeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-imagerecipearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ImageScanningConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-imagescanningconfiguration",
+     "Required": false,
+     "Type": "ImageScanningConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "ImageTestsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-imagetestsconfiguration",
+     "Required": false,
+     "Type": "ImageTestsConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "InfrastructureConfigurationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-infrastructureconfigurationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-image.html#cfn-imagebuilder-image-tags",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
+  "AWS::ImageBuilder::ImagePipeline": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html",
+   "Properties": {
+    "ContainerRecipeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-containerrecipearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DistributionConfigurationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-distributionconfigurationarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EnhancedImageMetadataEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-enhancedimagemetadataenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ImageRecipeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-imagerecipearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ImageScanningConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-imagescanningconfiguration",
+     "Required": false,
+     "Type": "ImageScanningConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "ImageTestsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-imagetestsconfiguration",
+     "Required": false,
+     "Type": "ImageTestsConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "InfrastructureConfigurationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-infrastructureconfigurationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Schedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-schedule",
+     "Required": false,
+     "Type": "Schedule",
+     "UpdateType": "Mutable"
+    },
+    "Status": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-status",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::ImageBuilder::ImagePipeline.Status"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-imagebuilder-imagepipeline.html#cfn-imagebuilder-imagepipeline-tags",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ImageBuilder::ImageRecipe": "CACHED",
   "AWS::ImageBuilder::InfrastructureConfiguration": "CACHED",
   "AWS::IoT::AccountAuditConfiguration": "CACHED",
@@ -4852,73 +4812,10 @@
   "AWS::Lambda::Permission": "CACHED",
   "AWS::Lambda::Url": "CACHED",
   "AWS::Lambda::Version": "CACHED",
-  "AWS::Logs::Destination": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html",
-   "Properties": {
-    "DestinationName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Logs::Destination.DestinationName"
-     }
-    },
-    "DestinationPolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-destinationpolicy",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-rolearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "TargetArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-destination.html#cfn-logs-destination-targetarn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Logs::Destination": "CACHED",
   "AWS::Logs::LogGroup": "CACHED",
   "AWS::Logs::LogStream": "CACHED",
-  "AWS::Logs::MetricFilter": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html",
-   "Properties": {
-    "FilterPattern": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-filterpattern",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "LogGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-loggroupname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Logs::MetricFilter.LogGroupName"
-     }
-    },
-    "MetricTransformations": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-metricfilter.html#cfn-cwl-metricfilter-metrictransformations",
-     "DuplicatesAllowed": false,
-     "ItemType": "MetricTransformation",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Logs::MetricFilter": "CACHED",
   "AWS::Logs::QueryDefinition": "CACHED",
   "AWS::Logs::SubscriptionFilter": "CACHED",
   "AWS::MSK::BatchScramSecret": "CACHED",
@@ -5875,6 +5772,13 @@
   "AWS::CloudWatch::CompositeAlarm.AlarmRule": "CACHED",
   "AWS::CloudWatch::CompositeAlarm.InsufficientDataActions": "CACHED",
   "AWS::CloudWatch::CompositeAlarm.OKActions": "CACHED",
+  "AWS::CloudWatch::MetricStream.FirehoseArn": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamFilter.Namespace": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric.MetricName": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric.Namespace": "CACHED",
+  "AWS::CloudWatch::MetricStream.Name": "CACHED",
+  "AWS::CloudWatch::MetricStream.OutputFormat": "CACHED",
+  "AWS::CloudWatch::MetricStream.RoleArn": "CACHED",
   "AWS::CodeBuild::Project.Artifacts.Packaging": "CACHED",
   "AWS::CodeBuild::Project.Artifacts.Type": "CACHED",
   "AWS::CodeBuild::Project.Environment.ComputeType": "CACHED",
@@ -6757,10 +6661,14 @@
   "AWS::Logs::LogGroup.KmsKeyId": "CACHED",
   "AWS::Logs::LogGroup.LogGroupName": "CACHED",
   "AWS::Logs::LogGroup.Retention": "CACHED",
+  "AWS::Logs::MetricFilter.Dimension.Key": "CACHED",
+  "AWS::Logs::MetricFilter.Dimension.Value": "CACHED",
+  "AWS::Logs::MetricFilter.FilterName": "CACHED",
   "AWS::Logs::MetricFilter.LogGroupName": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation.MetricName": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation.MetricNamespace": "CACHED",
   "AWS::Logs::MetricFilter.MetricTransformation.MetricValue": "CACHED",
+  "AWS::Logs::MetricFilter.MetricTransformation.Unit": "CACHED",
   "AWS::Logs::QueryDefinition.LogGroupNames": "CACHED",
   "AWS::Logs::QueryDefinition.Name": "CACHED",
   "AWS::Logs::QueryDefinition.QueryString": "CACHED",
@@ -7240,9 +7148,15 @@
   "AWS::Transfer::Workflow.CustomStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.Target": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.TimeoutSeconds": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Name": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.OverwriteExisting": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.SourceFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Type": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.Description": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.FileSystemId": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.Path": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Bucket": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Key": "CACHED",
   "AWS::Transfer::Workflow.S3Tag.Key": "CACHED",
@@ -7872,7 +7786,15 @@
     "x2idn.16xlarge",
     "x2idn.24xlarge",
     "x2idn.32xlarge",
-    "x2idn.metal"
+    "x2idn.metal",
+    "x2iedn.16xlarge",
+    "x2iedn.24xlarge",
+    "x2iedn.2xlarge",
+    "x2iedn.32xlarge",
+    "x2iedn.4xlarge",
+    "x2iedn.8xlarge",
+    "x2iedn.metal",
+    "x2iedn.xlarge"
    ],
    "Ref": {
     "Parameters": [

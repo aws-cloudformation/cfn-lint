@@ -398,6 +398,7 @@
   "AWS::AppSync::DataSource.DeltaSyncConfig": "CACHED",
   "AWS::AppSync::DataSource.DynamoDBConfig": "CACHED",
   "AWS::AppSync::DataSource.ElasticsearchConfig": "CACHED",
+  "AWS::AppSync::DataSource.EventBridgeConfig": "CACHED",
   "AWS::AppSync::DataSource.HttpConfig": "CACHED",
   "AWS::AppSync::DataSource.LambdaConfig": "CACHED",
   "AWS::AppSync::DataSource.OpenSearchServiceConfig": "CACHED",
@@ -2040,6 +2041,7 @@
   "AWS::RDS::DBCluster.ReadEndpoint": "CACHED",
   "AWS::RDS::DBCluster.ScalingConfiguration": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration": "CACHED",
+  "AWS::RDS::DBInstance.CertificateDetails": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceRole": "CACHED",
   "AWS::RDS::DBInstance.Endpoint": "CACHED",
   "AWS::RDS::DBInstance.MasterUserSecret": "CACHED",
@@ -2382,6 +2384,43 @@
   "AWS::SageMaker::DataQualityJobDefinition.StoppingCondition": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition.VpcConfig": "CACHED",
   "AWS::SageMaker::Domain.CustomImage": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html",
+   "Properties": {
+    "ExecutionRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-executionrole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.ExecutionRole"
+     }
+    },
+    "JupyterServerAppSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-jupyterserverappsettings",
+     "Required": false,
+     "Type": "JupyterServerAppSettings",
+     "UpdateType": "Mutable"
+    },
+    "KernelGatewayAppSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-kernelgatewayappsettings",
+     "Required": false,
+     "Type": "KernelGatewayAppSettings",
+     "UpdateType": "Mutable"
+    },
+    "SecurityGroups": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-domain-defaultspacesettings.html#cfn-sagemaker-domain-defaultspacesettings-securitygroups",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.DefaultSpaceSettings.SecurityGroups"
+     }
+    }
+   }
+  },
   "AWS::SageMaker::Domain.DomainSettings": "CACHED",
   "AWS::SageMaker::Domain.JupyterServerAppSettings": "CACHED",
   "AWS::SageMaker::Domain.KernelGatewayAppSettings": "CACHED",
@@ -2593,14 +2632,98 @@
   "AWS::Transfer::User.HomeDirectoryMapEntry": "CACHED",
   "AWS::Transfer::User.PosixProfile": "CACHED",
   "AWS::Transfer::User.SshPublicKey": "CACHED",
-  "AWS::Transfer::Workflow.CopyStepDetails": "CACHED",
+  "AWS::Transfer::Workflow.CopyStepDetails": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html",
+   "Properties": {
+    "DestinationFileLocation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-destinationfilelocation",
+     "Required": false,
+     "Type": "InputFileLocation",
+     "UpdateType": "Immutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.Name"
+     }
+    },
+    "OverwriteExisting": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-overwriteexisting",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.OverwriteExisting"
+     }
+    },
+    "SourceFileLocation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-sourcefilelocation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.SourceFileLocation"
+     }
+    }
+   }
+  },
   "AWS::Transfer::Workflow.CustomStepDetails": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.InputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.InputFileLocation": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html",
+   "Properties": {
+    "S3FileLocation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html#cfn-transfer-workflow-inputfilelocation-s3filelocation",
+     "Required": false,
+     "Type": "S3InputFileLocation",
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Transfer::Workflow.S3InputFileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
+  "AWS::Transfer::Workflow.WorkflowStep": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html",
+   "Properties": {
+    "CopyStepDetails": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-copystepdetails",
+     "Required": false,
+     "Type": "CopyStepDetails",
+     "UpdateType": "Immutable"
+    },
+    "CustomStepDetails": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-customstepdetails",
+     "Required": false,
+     "Type": "CustomStepDetails",
+     "UpdateType": "Immutable"
+    },
+    "DeleteStepDetails": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-deletestepdetails",
+     "Required": false,
+     "Type": "DeleteStepDetails",
+     "UpdateType": "Immutable"
+    },
+    "TagStepDetails": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-tagstepdetails",
+     "Required": false,
+     "Type": "TagStepDetails",
+     "UpdateType": "Immutable"
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-type",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Transfer::Workflow.WorkflowStep.Type"
+     }
+    }
+   }
+  },
   "AWS::WAF::ByteMatchSet.ByteMatchTuple": "CACHED",
   "AWS::WAF::ByteMatchSet.FieldToMatch": "CACHED",
   "AWS::WAF::IPSet.IPSetDescriptor": "CACHED",
@@ -2740,7 +2863,7 @@
   "AWS::XRay::SamplingRule.TagsItems": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "107.0.0",
+ "ResourceSpecificationVersion": "108.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -2833,88 +2956,7 @@
   "AWS::AppMesh::VirtualService": "CACHED",
   "AWS::AppSync::ApiCache": "CACHED",
   "AWS::AppSync::ApiKey": "CACHED",
-  "AWS::AppSync::DataSource": {
-   "Attributes": {
-    "DataSourceArn": {
-     "PrimitiveType": "String"
-    },
-    "Name": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html",
-   "Properties": {
-    "ApiId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-apiid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DynamoDBConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-dynamodbconfig",
-     "Required": false,
-     "Type": "DynamoDBConfig",
-     "UpdateType": "Mutable"
-    },
-    "ElasticsearchConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-elasticsearchconfig",
-     "Required": false,
-     "Type": "ElasticsearchConfig",
-     "UpdateType": "Mutable"
-    },
-    "HttpConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-httpconfig",
-     "Required": false,
-     "Type": "HttpConfig",
-     "UpdateType": "Mutable"
-    },
-    "LambdaConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-lambdaconfig",
-     "Required": false,
-     "Type": "LambdaConfig",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "OpenSearchServiceConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-opensearchserviceconfig",
-     "Required": false,
-     "Type": "OpenSearchServiceConfig",
-     "UpdateType": "Mutable"
-    },
-    "RelationalDatabaseConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-relationaldatabaseconfig",
-     "Required": false,
-     "Type": "RelationalDatabaseConfig",
-     "UpdateType": "Mutable"
-    },
-    "ServiceRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-servicerolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-appsync-datasource.html#cfn-appsync-datasource-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::AppSync::DataSource.Type"
-     }
-    }
-   }
-  },
+  "AWS::AppSync::DataSource": "CACHED",
   "AWS::AppSync::DomainName": "CACHED",
   "AWS::AppSync::DomainNameApiAssociation": "CACHED",
   "AWS::AppSync::FunctionConfiguration": "CACHED",
@@ -3226,46 +3268,7 @@
   "AWS::EC2::NetworkInterfaceAttachment": "CACHED",
   "AWS::EC2::NetworkInterfacePermission": "CACHED",
   "AWS::EC2::NetworkPerformanceMetricSubscription": "CACHED",
-  "AWS::EC2::PlacementGroup": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html",
-   "Properties": {
-    "GroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-groupname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "PartitionCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-partitioncount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SpreadLevel": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-spreadlevel",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "Strategy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-strategy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "PlacementGroupStrategy"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-placementgroup.html#cfn-ec2-placementgroup-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::PlacementGroup": "CACHED",
   "AWS::EC2::PrefixList": "CACHED",
   "AWS::EC2::Route": "CACHED",
   "AWS::EC2::RouteTable": "CACHED",
@@ -4129,7 +4132,122 @@
   "AWS::SageMaker::AppImageConfig": "CACHED",
   "AWS::SageMaker::CodeRepository": "CACHED",
   "AWS::SageMaker::DataQualityJobDefinition": "CACHED",
-  "AWS::SageMaker::Domain": "CACHED",
+  "AWS::SageMaker::Domain": {
+   "Attributes": {
+    "DomainArn": {
+     "PrimitiveType": "String"
+    },
+    "DomainId": {
+     "PrimitiveType": "String"
+    },
+    "HomeEfsFileSystemId": {
+     "PrimitiveType": "String"
+    },
+    "SecurityGroupIdForDomainBoundary": {
+     "PrimitiveType": "String"
+    },
+    "SingleSignOnManagedApplicationInstanceId": {
+     "PrimitiveType": "String"
+    },
+    "Url": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html",
+   "Properties": {
+    "AppNetworkAccessType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-appnetworkaccesstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.AppNetworkAccessType"
+     }
+    },
+    "AppSecurityGroupManagement": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-appsecuritygroupmanagement",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.AppSecurityGroupManagement"
+     }
+    },
+    "AuthMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-authmode",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.AuthMode"
+     }
+    },
+    "DefaultSpaceSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-defaultspacesettings",
+     "Required": false,
+     "Type": "DefaultSpaceSettings",
+     "UpdateType": "Mutable"
+    },
+    "DefaultUserSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-defaultusersettings",
+     "Required": true,
+     "Type": "UserSettings",
+     "UpdateType": "Mutable"
+    },
+    "DomainName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-domainname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.DomainName"
+     }
+    },
+    "DomainSettings": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-domainsettings",
+     "Required": false,
+     "Type": "DomainSettings",
+     "UpdateType": "Mutable"
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.KmsKeyId"
+     }
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-subnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.SubnetIds"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-sagemaker-domain.html#cfn-sagemaker-domain-vpcid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SageMaker::Domain.VpcId"
+     }
+    }
+   }
+  },
   "AWS::SageMaker::Endpoint": "CACHED",
   "AWS::SageMaker::EndpointConfig": "CACHED",
   "AWS::SageMaker::FeatureGroup": "CACHED",
@@ -4149,7 +4267,55 @@
   "AWS::SageMaker::Workteam": "CACHED",
   "AWS::SecretsManager::ResourcePolicy": "CACHED",
   "AWS::SecretsManager::RotationSchedule": "CACHED",
-  "AWS::SecretsManager::Secret": "CACHED",
+  "AWS::SecretsManager::Secret": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "GenerateSecretString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-generatesecretstring",
+     "Required": false,
+     "Type": "GenerateSecretString",
+     "UpdateType": "Mutable"
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ReplicaRegions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-replicaregions",
+     "ItemType": "ReplicaRegion",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecretString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-secretstring",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
@@ -4779,9 +4945,11 @@
   "AWS::FMS::Policy.IEMap.ACCOUNT": "CACHED",
   "AWS::FMS::Policy.IEMap.ORGUNIT": "CACHED",
   "AWS::FMS::Policy.NetworkFirewallPolicy.FirewallDeploymentModel": "CACHED",
+  "AWS::FMS::Policy.PolicyDescription": "CACHED",
   "AWS::FMS::Policy.PolicyName": "CACHED",
   "AWS::FMS::Policy.PolicyTag.Key": "CACHED",
   "AWS::FMS::Policy.PolicyTag.Value": "CACHED",
+  "AWS::FMS::Policy.ResourceSetIds": "CACHED",
   "AWS::FMS::Policy.ResourceTag.Key": "CACHED",
   "AWS::FMS::Policy.ResourceType": "CACHED",
   "AWS::FMS::Policy.ResourceTypeList": "CACHED",
@@ -5724,6 +5892,14 @@
   "AWS::SageMaker::Domain.AuthMode": "CACHED",
   "AWS::SageMaker::Domain.CustomImage.AppImageConfigName": "CACHED",
   "AWS::SageMaker::Domain.CustomImage.ImageName": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings.ExecutionRole": {
+   "AllowedPatternRegex": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "StringMax": 2048,
+   "StringMin": 20
+  },
+  "AWS::SageMaker::Domain.DefaultSpaceSettings.SecurityGroups": {
+   "AllowedPatternRegex": "[-0-9a-zA-Z]+"
+  },
   "AWS::SageMaker::Domain.DomainName": "CACHED",
   "AWS::SageMaker::Domain.DomainSettings.SecurityGroupIds": "CACHED",
   "AWS::SageMaker::Domain.KmsKeyId": "CACHED",
