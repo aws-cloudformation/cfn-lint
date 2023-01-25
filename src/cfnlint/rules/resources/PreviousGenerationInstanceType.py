@@ -93,7 +93,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
     def __is_previous_generation_instance_type(self, instance_type):
         return (
             re.search(
-                r"(^|\.)[cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1($|\.)", instance_type
+                r"(^|\.)([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)($|\.)", instance_type
             )
             is not None
         )
