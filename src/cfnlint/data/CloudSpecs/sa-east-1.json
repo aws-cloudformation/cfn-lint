@@ -493,6 +493,7 @@
   "AWS::AppSync::DataSource.DeltaSyncConfig": "CACHED",
   "AWS::AppSync::DataSource.DynamoDBConfig": "CACHED",
   "AWS::AppSync::DataSource.ElasticsearchConfig": "CACHED",
+  "AWS::AppSync::DataSource.EventBridgeConfig": "CACHED",
   "AWS::AppSync::DataSource.HttpConfig": "CACHED",
   "AWS::AppSync::DataSource.LambdaConfig": "CACHED",
   "AWS::AppSync::DataSource.OpenSearchServiceConfig": "CACHED",
@@ -2785,6 +2786,7 @@
   "AWS::RDS::DBCluster.ReadEndpoint": "CACHED",
   "AWS::RDS::DBCluster.ScalingConfiguration": "CACHED",
   "AWS::RDS::DBCluster.ServerlessV2ScalingConfiguration": "CACHED",
+  "AWS::RDS::DBInstance.CertificateDetails": "CACHED",
   "AWS::RDS::DBInstance.DBInstanceRole": "CACHED",
   "AWS::RDS::DBInstance.Endpoint": "CACHED",
   "AWS::RDS::DBInstance.MasterUserSecret": "CACHED",
@@ -3277,8 +3279,11 @@
   "AWS::Transfer::User.SshPublicKey": "CACHED",
   "AWS::Transfer::Workflow.CopyStepDetails": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation": "CACHED",
   "AWS::Transfer::Workflow.InputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.S3FileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
@@ -3449,7 +3454,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "107.0.0",
+ "ResourceSpecificationVersion": "108.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4798,7 +4803,76 @@
   "AWS::EC2::LaunchTemplate": "CACHED",
   "AWS::EC2::LocalGatewayRoute": "CACHED",
   "AWS::EC2::LocalGatewayRouteTableVPCAssociation": "CACHED",
-  "AWS::EC2::NatGateway": "CACHED",
+  "AWS::EC2::NatGateway": {
+   "Attributes": {
+    "NatGatewayId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html",
+   "Properties": {
+    "AllocationId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-allocationid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ConnectivityType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-connectivitytype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "MaxDrainDurationSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-maxdraindurationseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "PrivateIpAddress": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-privateipaddress",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "SecondaryAllocationIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryallocationids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecondaryPrivateIpAddressCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryprivateipaddresscount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SecondaryPrivateIpAddresses": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryprivateipaddresses",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SubnetId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-subnetid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
   "AWS::EC2::NetworkInsightsAccessScope": "CACHED",
@@ -5579,7 +5653,55 @@
   "AWS::SageMaker::Workteam": "CACHED",
   "AWS::SecretsManager::ResourcePolicy": "CACHED",
   "AWS::SecretsManager::RotationSchedule": "CACHED",
-  "AWS::SecretsManager::Secret": "CACHED",
+  "AWS::SecretsManager::Secret": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "GenerateSecretString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-generatesecretstring",
+     "Required": false,
+     "Type": "GenerateSecretString",
+     "UpdateType": "Mutable"
+    },
+    "KmsKeyId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-kmskeyid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ReplicaRegions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-replicaregions",
+     "ItemType": "ReplicaRegion",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecretString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-secretstring",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
@@ -6605,9 +6727,11 @@
   "AWS::FMS::Policy.IEMap.ACCOUNT": "CACHED",
   "AWS::FMS::Policy.IEMap.ORGUNIT": "CACHED",
   "AWS::FMS::Policy.NetworkFirewallPolicy.FirewallDeploymentModel": "CACHED",
+  "AWS::FMS::Policy.PolicyDescription": "CACHED",
   "AWS::FMS::Policy.PolicyName": "CACHED",
   "AWS::FMS::Policy.PolicyTag.Key": "CACHED",
   "AWS::FMS::Policy.PolicyTag.Value": "CACHED",
+  "AWS::FMS::Policy.ResourceSetIds": "CACHED",
   "AWS::FMS::Policy.ResourceTag.Key": "CACHED",
   "AWS::FMS::Policy.ResourceType": "CACHED",
   "AWS::FMS::Policy.ResourceTypeList": "CACHED",
@@ -8336,9 +8460,15 @@
   "AWS::Transfer::Workflow.CustomStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.Target": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.TimeoutSeconds": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Name": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.OverwriteExisting": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.SourceFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Type": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.Description": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.FileSystemId": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.Path": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Bucket": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Key": "CACHED",
   "AWS::Transfer::Workflow.S3Tag.Key": "CACHED",
