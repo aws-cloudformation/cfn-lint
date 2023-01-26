@@ -30,8 +30,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
                 if isinstance(
                     resource.get("Properties", {}).get(property_type, ""), str
                 ):
-                    if re.search(
-                        r"([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.",
+                    if self.__is_previous_generation_instance_type(
                         resource.get("Properties", {}).get(property_type, ""),
                     ):
                         matches.append(
@@ -69,8 +68,7 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
                     .get(property_type, ""),
                     str,
                 ):
-                    if re.search(
-                        r"([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)\.",
+                    if self.__is_previous_generation_instance_type(
                         resource.get("Properties", {})
                         .get(top_level_property_type, {})
                         .get(property_type, ""),
@@ -91,3 +89,11 @@ class PreviousGenerationInstanceType(CloudFormationLintRule):
                             )
                         )
         return matches
+
+    def __is_previous_generation_instance_type(self, instance_type):
+        return (
+            re.search(
+                r"(^|\.)([cmr][1-3]|cc2|cg1|cr1|g2|hi1|hs1|i2|t1)($|\.)", instance_type
+            )
+            is not None
+        )
