@@ -1,3 +1,10 @@
+### v0.72.10
+###### CloudFormation Specifications
+- Update CloudFormation specs to `108.0.0` (pull #[2557](https://github.com/aws-cloudformation/cfn-lint/pull/2557))
+- Add `AWS::Organizations::Account` to `StatefulResources` (pull #[2560](https://github.com/aws-cloudformation/cfn-lint/pull/2560))
+###### Fixes
+- Update rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) regex family string matching (pull #[2558](https://github.com/aws-cloudformation/cfn-lint/pull/2558))
+
 ### v0.72.9
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `107.0.0` (pull #[2546](https://github.com/aws-cloudformation/cfn-lint/pull/2550))
