@@ -283,6 +283,8 @@
   "AWS::AppFlow::ConnectorProfile.OAuth2Properties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.OAuthCredentials": "CACHED",
   "AWS::AppFlow::ConnectorProfile.OAuthProperties": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileCredentials": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.ProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.RedshiftConnectorProfileCredentials": "CACHED",
   "AWS::AppFlow::ConnectorProfile.RedshiftConnectorProfileProperties": "CACHED",
@@ -323,6 +325,7 @@
   "AWS::AppFlow::Flow.MarketoDestinationProperties": "CACHED",
   "AWS::AppFlow::Flow.MarketoSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.MetadataCatalogConfig": "CACHED",
+  "AWS::AppFlow::Flow.PardotSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.PrefixConfig": "CACHED",
   "AWS::AppFlow::Flow.RedshiftDestinationProperties": "CACHED",
   "AWS::AppFlow::Flow.S3DestinationProperties": "CACHED",
@@ -1391,11 +1394,13 @@
   "AWS::EMRContainers::VirtualCluster.EksInfo": "CACHED",
   "AWS::EMRServerless::Application.AutoStartConfiguration": "CACHED",
   "AWS::EMRServerless::Application.AutoStopConfiguration": "CACHED",
+  "AWS::EMRServerless::Application.ImageConfigurationInput": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfig": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfigKeyValuePair": "CACHED",
   "AWS::EMRServerless::Application.MaximumAllowedResources": "CACHED",
   "AWS::EMRServerless::Application.NetworkConfiguration": "CACHED",
   "AWS::EMRServerless::Application.WorkerConfiguration": "CACHED",
+  "AWS::EMRServerless::Application.WorkerTypeSpecificationInput": "CACHED",
   "AWS::ElastiCache::CacheCluster.CloudWatchLogsDestinationDetails": "CACHED",
   "AWS::ElastiCache::CacheCluster.DestinationDetails": "CACHED",
   "AWS::ElastiCache::CacheCluster.KinesisFirehoseDestinationDetails": "CACHED",
@@ -1793,7 +1798,11 @@
   "AWS::ImageBuilder::DistributionConfiguration.LaunchPermissionConfiguration": "CACHED",
   "AWS::ImageBuilder::DistributionConfiguration.LaunchTemplateConfiguration": "CACHED",
   "AWS::ImageBuilder::DistributionConfiguration.TargetContainerRepository": "CACHED",
+  "AWS::ImageBuilder::Image.EcrConfiguration": "CACHED",
+  "AWS::ImageBuilder::Image.ImageScanningConfiguration": "CACHED",
   "AWS::ImageBuilder::Image.ImageTestsConfiguration": "CACHED",
+  "AWS::ImageBuilder::ImagePipeline.EcrConfiguration": "CACHED",
+  "AWS::ImageBuilder::ImagePipeline.ImageScanningConfiguration": "CACHED",
   "AWS::ImageBuilder::ImagePipeline.ImageTestsConfiguration": "CACHED",
   "AWS::ImageBuilder::ImagePipeline.Schedule": "CACHED",
   "AWS::ImageBuilder::ImageRecipe.AdditionalInstanceConfiguration": "CACHED",
@@ -2299,6 +2308,7 @@
   "AWS::Lambda::Function.EphemeralStorage": "CACHED",
   "AWS::Lambda::Function.FileSystemConfig": "CACHED",
   "AWS::Lambda::Function.ImageConfig": "CACHED",
+  "AWS::Lambda::Function.RuntimeManagementConfig": "CACHED",
   "AWS::Lambda::Function.SnapStart": "CACHED",
   "AWS::Lambda::Function.SnapStartResponse": "CACHED",
   "AWS::Lambda::Function.TracingConfig": "CACHED",
@@ -2322,7 +2332,29 @@
   "AWS::Lex::Bot.DataPrivacy": "CACHED",
   "AWS::Lex::Bot.DialogCodeHookSetting": "CACHED",
   "AWS::Lex::Bot.ExternalSourceSetting": "CACHED",
-  "AWS::Lex::Bot.FulfillmentCodeHookSetting": "CACHED",
+  "AWS::Lex::Bot.FulfillmentCodeHookSetting": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-fulfillmentcodehooksetting.html",
+   "Properties": {
+    "Enabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-fulfillmentcodehooksetting.html#cfn-lex-bot-fulfillmentcodehooksetting-enabled",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "FulfillmentUpdatesSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-fulfillmentcodehooksetting.html#cfn-lex-bot-fulfillmentcodehooksetting-fulfillmentupdatesspecification",
+     "Required": false,
+     "Type": "FulfillmentUpdatesSpecification",
+     "UpdateType": "Mutable"
+    },
+    "PostFulfillmentStatusSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-fulfillmentcodehooksetting.html#cfn-lex-bot-fulfillmentcodehooksetting-postfulfillmentstatusspecification",
+     "Required": false,
+     "Type": "PostFulfillmentStatusSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lex::Bot.FulfillmentStartResponseSpecification": "CACHED",
   "AWS::Lex::Bot.FulfillmentUpdateResponseSpecification": "CACHED",
   "AWS::Lex::Bot.FulfillmentUpdatesSpecification": "CACHED",
@@ -2330,9 +2362,142 @@
   "AWS::Lex::Bot.GrammarSlotTypeSource": "CACHED",
   "AWS::Lex::Bot.ImageResponseCard": "CACHED",
   "AWS::Lex::Bot.InputContext": "CACHED",
-  "AWS::Lex::Bot.Intent": "CACHED",
-  "AWS::Lex::Bot.IntentClosingSetting": "CACHED",
-  "AWS::Lex::Bot.IntentConfirmationSetting": "CACHED",
+  "AWS::Lex::Bot.Intent": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html",
+   "Properties": {
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DialogCodeHook": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-dialogcodehook",
+     "Required": false,
+     "Type": "DialogCodeHookSetting",
+     "UpdateType": "Mutable"
+    },
+    "FulfillmentCodeHook": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-fulfillmentcodehook",
+     "Required": false,
+     "Type": "FulfillmentCodeHookSetting",
+     "UpdateType": "Mutable"
+    },
+    "InputContexts": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-inputcontexts",
+     "DuplicatesAllowed": true,
+     "ItemType": "InputContext",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "IntentClosingSetting": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-intentclosingsetting",
+     "Required": false,
+     "Type": "IntentClosingSetting",
+     "UpdateType": "Mutable"
+    },
+    "IntentConfirmationSetting": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-intentconfirmationsetting",
+     "Required": false,
+     "Type": "IntentConfirmationSetting",
+     "UpdateType": "Mutable"
+    },
+    "KendraConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-kendraconfiguration",
+     "Required": false,
+     "Type": "KendraConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lex::Bot.Intent.Name"
+     }
+    },
+    "OutputContexts": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-outputcontexts",
+     "DuplicatesAllowed": true,
+     "ItemType": "OutputContext",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ParentIntentSignature": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-parentintentsignature",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SampleUtterances": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-sampleutterances",
+     "DuplicatesAllowed": true,
+     "ItemType": "SampleUtterance",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SlotPriorities": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-slotpriorities",
+     "DuplicatesAllowed": true,
+     "ItemType": "SlotPriority",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Slots": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intent.html#cfn-lex-bot-intent-slots",
+     "DuplicatesAllowed": false,
+     "ItemType": "Slot",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Lex::Bot.IntentClosingSetting": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentclosingsetting.html",
+   "Properties": {
+    "ClosingResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentclosingsetting.html#cfn-lex-bot-intentclosingsetting-closingresponse",
+     "Required": true,
+     "Type": "ResponseSpecification",
+     "UpdateType": "Mutable"
+    },
+    "IsActive": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentclosingsetting.html#cfn-lex-bot-intentclosingsetting-isactive",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::Lex::Bot.IntentConfirmationSetting": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentconfirmationsetting.html",
+   "Properties": {
+    "DeclinationResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentconfirmationsetting.html#cfn-lex-bot-intentconfirmationsetting-declinationresponse",
+     "Required": true,
+     "Type": "ResponseSpecification",
+     "UpdateType": "Mutable"
+    },
+    "IsActive": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentconfirmationsetting.html#cfn-lex-bot-intentconfirmationsetting-isactive",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "PromptSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-intentconfirmationsetting.html#cfn-lex-bot-intentconfirmationsetting-promptspecification",
+     "Required": true,
+     "Type": "PromptSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lex::Bot.KendraConfiguration": "CACHED",
   "AWS::Lex::Bot.LambdaCodeHook": "CACHED",
   "AWS::Lex::Bot.Message": "CACHED",
@@ -2341,7 +2506,29 @@
   "AWS::Lex::Bot.ObfuscationSetting": "CACHED",
   "AWS::Lex::Bot.OutputContext": "CACHED",
   "AWS::Lex::Bot.PlainTextMessage": "CACHED",
-  "AWS::Lex::Bot.PostFulfillmentStatusSpecification": "CACHED",
+  "AWS::Lex::Bot.PostFulfillmentStatusSpecification": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-postfulfillmentstatusspecification.html",
+   "Properties": {
+    "FailureResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-postfulfillmentstatusspecification.html#cfn-lex-bot-postfulfillmentstatusspecification-failureresponse",
+     "Required": false,
+     "Type": "ResponseSpecification",
+     "UpdateType": "Mutable"
+    },
+    "SuccessResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-postfulfillmentstatusspecification.html#cfn-lex-bot-postfulfillmentstatusspecification-successresponse",
+     "Required": false,
+     "Type": "ResponseSpecification",
+     "UpdateType": "Mutable"
+    },
+    "TimeoutResponse": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-postfulfillmentstatusspecification.html#cfn-lex-bot-postfulfillmentstatusspecification-timeoutresponse",
+     "Required": false,
+     "Type": "ResponseSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lex::Bot.PromptSpecification": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-promptspecification.html",
    "Properties": {
@@ -2380,7 +2567,46 @@
   "AWS::Lex::Bot.SlotPriority": "CACHED",
   "AWS::Lex::Bot.SlotType": "CACHED",
   "AWS::Lex::Bot.SlotTypeValue": "CACHED",
-  "AWS::Lex::Bot.SlotValueElicitationSetting": "CACHED",
+  "AWS::Lex::Bot.SlotValueElicitationSetting": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html",
+   "Properties": {
+    "DefaultValueSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html#cfn-lex-bot-slotvalueelicitationsetting-defaultvaluespecification",
+     "Required": false,
+     "Type": "SlotDefaultValueSpecification",
+     "UpdateType": "Mutable"
+    },
+    "PromptSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html#cfn-lex-bot-slotvalueelicitationsetting-promptspecification",
+     "Required": false,
+     "Type": "PromptSpecification",
+     "UpdateType": "Mutable"
+    },
+    "SampleUtterances": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html#cfn-lex-bot-slotvalueelicitationsetting-sampleutterances",
+     "DuplicatesAllowed": true,
+     "ItemType": "SampleUtterance",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SlotConstraint": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html#cfn-lex-bot-slotvalueelicitationsetting-slotconstraint",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lex::Bot.SlotValueElicitationSetting.SlotConstraint"
+     }
+    },
+    "WaitAndContinueSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lex-bot-slotvalueelicitationsetting.html#cfn-lex-bot-slotvalueelicitationsetting-waitandcontinuespecification",
+     "Required": false,
+     "Type": "WaitAndContinueSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lex::Bot.SlotValueRegexFilter": "CACHED",
   "AWS::Lex::Bot.SlotValueSelectionSetting": "CACHED",
   "AWS::Lex::Bot.StillWaitingResponseSpecification": "CACHED",
@@ -2793,9 +3019,11 @@
   "AWS::OpenSearchService::Domain.DomainEndpointOptions": "CACHED",
   "AWS::OpenSearchService::Domain.EBSOptions": "CACHED",
   "AWS::OpenSearchService::Domain.EncryptionAtRestOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.Idp": "CACHED",
   "AWS::OpenSearchService::Domain.LogPublishingOption": "CACHED",
   "AWS::OpenSearchService::Domain.MasterUserOptions": "CACHED",
   "AWS::OpenSearchService::Domain.NodeToNodeEncryptionOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.SAMLOptions": "CACHED",
   "AWS::OpenSearchService::Domain.ServiceSoftwareOptions": "CACHED",
   "AWS::OpenSearchService::Domain.SnapshotOptions": "CACHED",
   "AWS::OpenSearchService::Domain.VPCOptions": "CACHED",
@@ -3073,6 +3301,7 @@
   "AWS::RDS::OptionGroup.OptionConfiguration": "CACHED",
   "AWS::RDS::OptionGroup.OptionSetting": "CACHED",
   "AWS::RUM::AppMonitor.AppMonitorConfiguration": "CACHED",
+  "AWS::RUM::AppMonitor.CustomEvents": "CACHED",
   "AWS::RUM::AppMonitor.MetricDefinition": "CACHED",
   "AWS::RUM::AppMonitor.MetricDestination": "CACHED",
   "AWS::Redshift::Cluster.Endpoint": "CACHED",
@@ -3340,6 +3569,7 @@
   "AWS::SageMaker::Device.Device": "CACHED",
   "AWS::SageMaker::DeviceFleet.EdgeOutputConfig": "CACHED",
   "AWS::SageMaker::Domain.CustomImage": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings": "CACHED",
   "AWS::SageMaker::Domain.DomainSettings": "CACHED",
   "AWS::SageMaker::Domain.JupyterServerAppSettings": "CACHED",
   "AWS::SageMaker::Domain.KernelGatewayAppSettings": "CACHED",
@@ -3739,7 +3969,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "108.0.0",
+ "ResourceSpecificationVersion": "109.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4010,76 +4240,7 @@
   "AWS::EC2::LaunchTemplate": "CACHED",
   "AWS::EC2::LocalGatewayRoute": "CACHED",
   "AWS::EC2::LocalGatewayRouteTableVPCAssociation": "CACHED",
-  "AWS::EC2::NatGateway": {
-   "Attributes": {
-    "NatGatewayId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html",
-   "Properties": {
-    "AllocationId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-allocationid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ConnectivityType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-connectivitytype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "MaxDrainDurationSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-maxdraindurationseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PrivateIpAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-privateipaddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "SecondaryAllocationIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryallocationids",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "SecondaryPrivateIpAddressCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryprivateipaddresscount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SecondaryPrivateIpAddresses": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-secondaryprivateipaddresses",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "SubnetId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-subnetid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html#cfn-ec2-natgateway-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::NatGateway": "CACHED",
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
   "AWS::EC2::NetworkInsightsAccessScope": "CACHED",
@@ -4419,7 +4580,23 @@
   "AWS::Location::TrackerConsumer": "CACHED",
   "AWS::Logs::Destination": "CACHED",
   "AWS::Logs::LogGroup": "CACHED",
-  "AWS::Logs::LogStream": "CACHED",
+  "AWS::Logs::LogStream": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html",
+   "Properties": {
+    "LogGroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-loggroupname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "LogStreamName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-logstream.html#cfn-logs-logstream-logstreamname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Logs::MetricFilter": "CACHED",
   "AWS::Logs::QueryDefinition": "CACHED",
   "AWS::Logs::ResourcePolicy": "CACHED",
@@ -4681,55 +4858,7 @@
   "AWS::Scheduler::ScheduleGroup": "CACHED",
   "AWS::SecretsManager::ResourcePolicy": "CACHED",
   "AWS::SecretsManager::RotationSchedule": "CACHED",
-  "AWS::SecretsManager::Secret": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "GenerateSecretString": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-generatesecretstring",
-     "Required": false,
-     "Type": "GenerateSecretString",
-     "UpdateType": "Mutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ReplicaRegions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-replicaregions",
-     "ItemType": "ReplicaRegion",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "SecretString": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-secretstring",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-secretsmanager-secret.html#cfn-secretsmanager-secret-tags",
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
@@ -4921,6 +5050,11 @@
   "AWS::AppFlow::ConnectorProfile.OAuthProperties.AuthCodeUrl": "CACHED",
   "AWS::AppFlow::ConnectorProfile.OAuthProperties.OAuthScopes": "CACHED",
   "AWS::AppFlow::ConnectorProfile.OAuthProperties.TokenUrl": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileCredentials.AccessToken": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileCredentials.ClientCredentialsArn": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileCredentials.RefreshToken": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileProperties.BusinessUnitId": "CACHED",
+  "AWS::AppFlow::ConnectorProfile.PardotConnectorProfileProperties.InstanceUrl": "CACHED",
   "AWS::AppFlow::ConnectorProfile.RedshiftConnectorProfileCredentials.Password": "CACHED",
   "AWS::AppFlow::ConnectorProfile.RedshiftConnectorProfileCredentials.Username": "CACHED",
   "AWS::AppFlow::ConnectorProfile.RedshiftConnectorProfileProperties.BucketName": "CACHED",
@@ -4973,6 +5107,7 @@
   "AWS::AppFlow::Flow.ConnectorOperator.GoogleAnalytics": "CACHED",
   "AWS::AppFlow::Flow.ConnectorOperator.InforNexus": "CACHED",
   "AWS::AppFlow::Flow.ConnectorOperator.Marketo": "CACHED",
+  "AWS::AppFlow::Flow.ConnectorOperator.Pardot": "CACHED",
   "AWS::AppFlow::Flow.ConnectorOperator.S3": "CACHED",
   "AWS::AppFlow::Flow.ConnectorOperator.SAPOData": "CACHED",
   "AWS::AppFlow::Flow.ConnectorOperator.Salesforce": "CACHED",
@@ -5001,6 +5136,7 @@
   "AWS::AppFlow::Flow.LookoutMetricsDestinationProperties.Object": "CACHED",
   "AWS::AppFlow::Flow.MarketoDestinationProperties.Object": "CACHED",
   "AWS::AppFlow::Flow.MarketoSourceProperties.Object": "CACHED",
+  "AWS::AppFlow::Flow.PardotSourceProperties.Object": "CACHED",
   "AWS::AppFlow::Flow.PrefixConfig.PathPrefixHierarchy": "CACHED",
   "AWS::AppFlow::Flow.PrefixConfig.PrefixFormat": "CACHED",
   "AWS::AppFlow::Flow.PrefixConfig.PrefixType": "CACHED",
@@ -5657,6 +5793,7 @@
   "AWS::EMRContainers::VirtualCluster.EksInfo.Namespace": "CACHED",
   "AWS::EMRContainers::VirtualCluster.Name": "CACHED",
   "AWS::EMRServerless::Application.Architecture": "CACHED",
+  "AWS::EMRServerless::Application.ImageConfigurationInput.ImageUri": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfig.WorkerCount": "CACHED",
   "AWS::EMRServerless::Application.InitialCapacityConfigKeyValuePair.Key": "CACHED",
   "AWS::EMRServerless::Application.MaximumAllowedResources.Cpu": "CACHED",
@@ -6601,6 +6738,7 @@
   "AWS::Lambda::Function.MemorySize": "CACHED",
   "AWS::Lambda::Function.PackageType": "CACHED",
   "AWS::Lambda::Function.Role": "CACHED",
+  "AWS::Lambda::Function.RuntimeManagementConfig.UpdateRuntimeOn": "CACHED",
   "AWS::Lambda::Function.SnapStart.ApplyOn": "CACHED",
   "AWS::Lambda::Function.SnapStartResponse.ApplyOn": "CACHED",
   "AWS::Lambda::Function.SnapStartResponse.OptimizationStatus": "CACHED",
@@ -6703,7 +6841,6 @@
   "AWS::Lightsail::LoadBalancerTlsCertificate.LoadBalancerName": "CACHED",
   "AWS::Location::GeofenceCollection.CollectionName": "CACHED",
   "AWS::Location::GeofenceCollection.KmsKeyId": "CACHED",
-  "AWS::Location::GeofenceCollection.PricingPlan": "CACHED",
   "AWS::Location::Map.MapConfiguration.Style": "CACHED",
   "AWS::Location::Map.MapName": "CACHED",
   "AWS::Location::Map.PricingPlan": "CACHED",
@@ -6963,6 +7100,7 @@
   "AWS::OpenSearchServerless::VpcEndpoint.SecurityGroupIds": "CACHED",
   "AWS::OpenSearchServerless::VpcEndpoint.SubnetIds": "CACHED",
   "AWS::OpenSearchServerless::VpcEndpoint.VpcId": "CACHED",
+  "AWS::OpenSearchService::Domain.Idp.MetadataContent": "CACHED",
   "AWS::OpsWorksCM::Server.BackupId": "CACHED",
   "AWS::OpsWorksCM::Server.CustomCertificate": "CACHED",
   "AWS::OpsWorksCM::Server.CustomDomain": "CACHED",
@@ -7278,6 +7416,7 @@
   "AWS::RUM::AppMonitor.AppMonitorConfiguration.IdentityPoolId": "CACHED",
   "AWS::RUM::AppMonitor.AppMonitorConfiguration.IncludedPages": "CACHED",
   "AWS::RUM::AppMonitor.AppMonitorConfiguration.Telemetries": "CACHED",
+  "AWS::RUM::AppMonitor.CustomEvents.Status": "CACHED",
   "AWS::RUM::AppMonitor.Domain": "CACHED",
   "AWS::RUM::AppMonitor.MetricDefinition.EventPattern": "CACHED",
   "AWS::RUM::AppMonitor.MetricDefinition.Name": "CACHED",
@@ -7648,6 +7787,8 @@
   "AWS::SageMaker::Domain.AuthMode": "CACHED",
   "AWS::SageMaker::Domain.CustomImage.AppImageConfigName": "CACHED",
   "AWS::SageMaker::Domain.CustomImage.ImageName": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings.ExecutionRole": "CACHED",
+  "AWS::SageMaker::Domain.DefaultSpaceSettings.SecurityGroups": "CACHED",
   "AWS::SageMaker::Domain.DomainName": "CACHED",
   "AWS::SageMaker::Domain.DomainSettings.SecurityGroupIds": "CACHED",
   "AWS::SageMaker::Domain.KmsKeyId": "CACHED",

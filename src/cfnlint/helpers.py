@@ -452,7 +452,9 @@ def initialize_specs():
         for section, section_values in spec.items():
             if section in ["ResourceTypes", "PropertyTypes", "ValueTypes"]:
                 for key, value in section_values.items():
-                    if value == "CACHED":
+                    if value == "CACHED" and RESOURCE_SPECS["us-east-1"][section].get(
+                        key
+                    ):
                         spec[section][key] = RESOURCE_SPECS["us-east-1"][section][key]
         return spec
 
