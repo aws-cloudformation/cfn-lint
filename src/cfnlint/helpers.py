@@ -36,6 +36,7 @@ SPEC_REGIONS = {
     "ap-southeast-1": "https://doigdx0kgq9el.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json",
     "ap-southeast-2": "https://d2stg8d246z9di.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json",
     "ap-southeast-3": "https://cfn-resource-specifications-ap-southeast-3-prod.s3.ap-southeast-3.amazonaws.com/latest/CloudFormationResourceSpecification.json",
+    "ap-southeast-4": "https://cfn-resource-specifications-ap-southeast-4-prod.s3.ap-southeast-4.amazonaws.com/latest/CloudFormationResourceSpecification.json",
     "ca-central-1": "https://d2s8ygphhesbe7.cloudfront.net/latest/gzip/CloudFormationResourceSpecification.json",
     "cn-north-1": "https://cfn-resource-specifications-cn-north-1-prod.s3.cn-north-1.amazonaws.com.cn/latest/gzip/CloudFormationResourceSpecification.json",
     "cn-northwest-1": "https://cfn-resource-specifications-cn-northwest-1-prod.s3.cn-northwest-1.amazonaws.com.cn/latest/gzip/CloudFormationResourceSpecification.json",
@@ -451,7 +452,9 @@ def initialize_specs():
         for section, section_values in spec.items():
             if section in ["ResourceTypes", "PropertyTypes", "ValueTypes"]:
                 for key, value in section_values.items():
-                    if value == "CACHED":
+                    if value == "CACHED" and RESOURCE_SPECS["us-east-1"][section].get(
+                        key
+                    ):
                         spec[section][key] = RESOURCE_SPECS["us-east-1"][section][key]
         return spec
 
