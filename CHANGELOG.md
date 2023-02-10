@@ -1,3 +1,11 @@
+### v0.73.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `111.0.0` (pull #[2572](https://github.com/aws-cloudformation/cfn-lint/pull/2572))
+- Add region `ap-southeast-4` (pull #[2568](https://github.com/aws-cloudformation/cfn-lint/pull/2568))
+- Remove `AWS::RDS::DBCluster` `MasterUsername` and `MasterUserPassword` from Inclusive (pull #[2571](https://github.com/aws-cloudformation/cfn-lint/pull/2571))
+###### Fixes
+- Update SAM Translator version based on the SAM CLI requirement (pull #[2570](https://github.com/aws-cloudformation/cfn-lint/pull/2570))
+
 ### v0.72.10
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `108.0.0` (pull #[2557](https://github.com/aws-cloudformation/cfn-lint/pull/2557))
