@@ -207,6 +207,7 @@ VALID_PARAMETER_TYPES_LIST = [
 
 VALID_PARAMETER_TYPES = VALID_PARAMETER_TYPES_SINGLE + VALID_PARAMETER_TYPES_LIST
 
+
 # pylint: disable=missing-class-docstring
 class RegexDict(dict):
     def __getitem__(self, item):
@@ -386,7 +387,6 @@ def set_specs(override_spec_data):
         includes = override_spec_data.pop("IncludeResourceTypes")
 
     for region, spec in RESOURCE_SPECS.items():
-
         # Merge override spec file into the AWS Resource specification
         if override_spec_data:
             RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
@@ -447,7 +447,7 @@ def initialize_specs():
     """Reload Resource Specs"""
 
     def load_region(region):
-        spec = load_resource(CloudSpecs, filename=(f"{region}.json"))
+        spec = load_resource(CloudSpecs, filename=f"{region}.json")
 
         for section, section_values in spec.items():
             if section in ["ResourceTypes", "PropertyTypes", "ValueTypes"]:
@@ -587,6 +587,6 @@ def override_specs(override_spec_file):
                 "Permission denied when accessing override spec file: %s", filename
             )
             sys.exit(1)
-    except (ValueError) as err:
+    except ValueError as err:
         LOGGER.error("Override spec file %s is malformed: %s", filename, err)
         sys.exit(1)

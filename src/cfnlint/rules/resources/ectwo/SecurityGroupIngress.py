@@ -23,7 +23,6 @@ class SecurityGroupIngress(CloudFormationLintRule):
 
         matches = []
         if vpc_id:
-
             # Check that SourceSecurityGroupName isn't specified
             if properties.get("SourceSecurityGroupName", None):
                 path_error = path[:] + ["SourceSecurityGroupName"]
@@ -38,7 +37,6 @@ class SecurityGroupIngress(CloudFormationLintRule):
                 )
 
         else:
-
             if properties.get("SourceSecurityGroupId", None):
                 path_error = path[:] + ["SourceSecurityGroupId"]
                 message = (

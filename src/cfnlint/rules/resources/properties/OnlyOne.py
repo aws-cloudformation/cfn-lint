@@ -36,7 +36,7 @@ class OnlyOne(CloudFormationLintRule):
         matches = []
 
         for onlyoneprop in onlyoneprops:
-            for (safe_properties, safe_path) in properties.items_safe(path):
+            for safe_properties, safe_path in properties.items_safe(path):
                 property_sets = cfn.get_object_without_conditions(
                     safe_properties, onlyoneprop
                 )
