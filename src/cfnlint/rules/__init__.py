@@ -497,7 +497,7 @@ class RulesCollection:
             resource_spec_properties = resource_spec.get(resource_type, {}).get(
                 "Properties"
             )
-            items_safe = resource_properties.items_safe(path, type_t=(dict))
+            items_safe = resource_properties.items_safe(path, type_t=dict)
             for resource_properties_safe, path_safe in items_safe:
                 for (
                     resource_property,

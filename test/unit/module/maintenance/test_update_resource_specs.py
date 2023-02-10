@@ -362,7 +362,6 @@ class TestUpdateResourceSpecs(BaseTestCase):
     @patch("cfnlint.maintenance.update_resource_spec")
     @patch("cfnlint.maintenance.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
     def test_update_resource_specs_python_3(self, mock_update_resource_spec, mock_pool):
-
         fake_pool = MagicMock()
         mock_pool.return_value.__enter__.return_value = fake_pool
 

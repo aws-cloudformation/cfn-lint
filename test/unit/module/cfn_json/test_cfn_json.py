@@ -88,7 +88,6 @@ class TestCfnJson(BaseTestCase):
             with open(values.get("filename"), "r") as fp:
                 file_content = fp.read()
             with patch("sys.stdin", StringIO(file_content)):
-
                 template = cfnlint.decode.cfn_json.load(filename)
                 cfn = Template(filename, template, ["us-east-1"])
 

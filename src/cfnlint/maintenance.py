@@ -46,7 +46,6 @@ def update_resource_specs(force: bool = False):
             ]
             pool.starmap(update_resource_spec, pool_tuple)
     except AttributeError:
-
         # Do it the long, slow way
         for region, url in SPEC_REGIONS.items():
             if region != "us-east-1":
@@ -181,7 +180,6 @@ def update_documentation(rules):
     # Read current file up to the Rules part, everything up to that point is
     # static documentation.
     with open(filename, "r", encoding="utf-8") as original_file:
-
         line = original_file.readline()
         while line:
             data.append(line)
@@ -193,7 +191,6 @@ def update_documentation(rules):
 
     # Rebuild the file content
     with open(filename, "w", encoding="utf-8") as new_file:
-
         # Rewrite the static documentation
         for line in data:
             new_file.write(line)

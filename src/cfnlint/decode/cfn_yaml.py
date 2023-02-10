@@ -37,7 +37,6 @@ class CfnParseError(ConstructorError):
     """
 
     def __init__(self, filename, errors):
-
         if isinstance(errors, cfnlint.rules.Match):
             errors = [errors]
 
@@ -78,7 +77,6 @@ class NodeConstructor(SafeConstructor):
     # construction") by first exhausting iterators, then yielding
     # copies.
     def construct_yaml_map(self, node):
-
         # Check for duplicate keys on the current level, this is not desirable
         # because a dict does not support this. It overwrites it with the last
         # occurance, which can give unexpected results
@@ -172,6 +170,7 @@ NodeConstructor.add_constructor(  # type: ignore
 NodeConstructor.add_constructor(  # type: ignore
     "tag:yaml.org,2002:seq", NodeConstructor.construct_yaml_seq
 )
+
 
 # pylint: disable=too-many-ancestors
 class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver):

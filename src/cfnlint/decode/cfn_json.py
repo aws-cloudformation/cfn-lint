@@ -74,7 +74,6 @@ class JSONDecodeError(ValueError):
     # Note that this exception is used from _json
 
     def __init__(self, doc, pos, errors):
-
         if isinstance(errors, cfnlint.rules.Match):
             errors = [errors]
 
@@ -92,7 +91,6 @@ class JSONDecodeError(ValueError):
 
 
 def build_match(message, doc, pos, key=" "):
-
     lineno = doc.count("\n", 0, pos) + 1
     colno = pos - doc.rfind("\n", 0, pos)
 
