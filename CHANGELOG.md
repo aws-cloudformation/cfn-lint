@@ -1,3 +1,7 @@
+### v0.73.1
+###### CloudFormation Specifications
+- Patch back in `TargetRole` for `AWS::RDS::DBProxyEndpoint` (pull #[2581](https://github.com/aws-cloudformation/cfn-lint/pull/2581))
+
 ### v0.73.0
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `111.0.0` (pull #[2572](https://github.com/aws-cloudformation/cfn-lint/pull/2572))
