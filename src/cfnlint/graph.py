@@ -279,6 +279,7 @@ class Graph:
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore", category=PendingDeprecationWarning)
+                    warnings.simplefilter("ignore", category=DeprecationWarning)
                     import pydot  # pylint: disable=unused-import
 
                     networkx.drawing.nx_pydot.write_dot(view, path)

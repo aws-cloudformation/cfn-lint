@@ -46,7 +46,7 @@ that could potentially be improved'),
         'aws-sam-translator>=1.59.0',
         'jsonpatch',
         'jsonschema>=3.0,<5',
-        'networkx~=2.4',
+        'networkx>=2.4,<4',
         'junit-xml~=1.9',
         'jschema_to_python~=1.2.3',
         'sarif-om~=1.0.4'
