@@ -1,0 +1,39 @@
+{
+  "type": "object",
+  "description": "When you specify 'SourceDBInstanceIdentifier' do not specify 'CharacterSetName', 'MasterUsername', 'MasterUserPassword', or 'StorageEncrypted'",
+  "properties": {},
+  "not": {
+    "allOf": [
+      {
+        "required": [
+          "SourceDBClusterIdentifier"
+        ]
+      },
+      {
+        "anyOf": [
+          {
+            "required": [
+              "CharacterSetName"
+            ]
+          },
+          {
+            "required": [
+              "MasterUsername"
+            ]
+          },
+          {
+            "required": [
+              "MasterUserPassword"
+            ]
+          },
+          {
+            "required": [
+              "StorageEncrypted"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "additionalProperties": true
+}

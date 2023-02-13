@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 import codecs
 import re
-from setuptools import find_packages
-from setuptools import setup
+
+from setuptools import find_packages, setup
 
 
 def get_version(filename):
@@ -46,8 +46,8 @@ that could potentially be improved'),
         'pyyaml>5.4',
         'aws-sam-translator>=1.62.0',
         'jsonpatch',
-        'jsonschema>=3.0,<5',
         'networkx>=2.4,<4',
+        'jsonschema>=4.0,<5',
         'junit-xml~=1.9',
         'jschema_to_python~=1.2.3',
         'sarif-om~=1.0.4',
