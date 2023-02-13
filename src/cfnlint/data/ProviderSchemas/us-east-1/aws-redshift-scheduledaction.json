@@ -1,0 +1,194 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ScheduledActionName"
+ ],
+ "definitions": {
+  "PauseClusterMessage": {
+   "additionalProperties": false,
+   "description": "Describes a pause cluster operation. For example, a scheduled action to run the `PauseCluster` API operation.",
+   "properties": {
+    "ClusterIdentifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ResizeClusterMessage": {
+   "additionalProperties": false,
+   "description": "Describes a resize cluster operation. For example, a scheduled action to run the `ResizeCluster` API operation.",
+   "properties": {
+    "Classic": {
+     "type": "boolean"
+    },
+    "ClusterIdentifier": {
+     "type": "string"
+    },
+    "ClusterType": {
+     "type": "string"
+    },
+    "NodeType": {
+     "type": "string"
+    },
+    "NumberOfNodes": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ResumeClusterMessage": {
+   "additionalProperties": false,
+   "description": "Describes a resume cluster operation. For example, a scheduled action to run the `ResumeCluster` API operation.",
+   "properties": {
+    "ClusterIdentifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ClusterIdentifier"
+   ],
+   "type": "object"
+  },
+  "ScheduledActionType": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ResizeCluster": {
+       "$ref": "#/definitions/ResizeClusterMessage"
+      }
+     }
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PauseCluster": {
+       "$ref": "#/definitions/PauseClusterMessage"
+      }
+     }
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "ResumeCluster": {
+       "$ref": "#/definitions/ResumeClusterMessage"
+      }
+     }
+    }
+   ],
+   "type": "object"
+  },
+  "timestamp": {
+   "type": "string"
+  }
+ },
+ "description": "The `AWS::Redshift::ScheduledAction` resource creates an Amazon Redshift Scheduled Action.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "redshift:CreateScheduledAction",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:ResizeCluster",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "redshift:DeleteScheduledAction"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "redshift:DescribeScheduledActions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "redshift:DescribeScheduledActions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "redshift:ModifyScheduledAction",
+    "redshift:PauseCluster",
+    "redshift:ResumeCluster",
+    "redshift:ResizeCluster",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ScheduledActionName"
+ ],
+ "properties": {
+  "Enable": {
+   "description": "If true, the schedule is enabled. If false, the scheduled action does not trigger.",
+   "type": "boolean"
+  },
+  "EndTime": {
+   "$ref": "#/definitions/timestamp",
+   "description": "The end time in UTC of the scheduled action. After this time, the scheduled action does not trigger."
+  },
+  "IamRole": {
+   "description": "The IAM role to assume to run the target action.",
+   "type": "string"
+  },
+  "NextInvocations": {
+   "description": "List of times when the scheduled action will run.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/timestamp"
+   },
+   "type": "array"
+  },
+  "Schedule": {
+   "description": "The schedule in `at( )` or `cron( )` format.",
+   "type": "string"
+  },
+  "ScheduledActionDescription": {
+   "description": "The description of the scheduled action.",
+   "pattern": "^(?=^[\\x09\\x0a\\x0d\\x20-\\xff]*$).{1,255}$",
+   "type": "string"
+  },
+  "ScheduledActionName": {
+   "description": "The name of the scheduled action. The name must be unique within an account.",
+   "pattern": "^(?=^[a-z][a-z0-9]*(-[a-z0-9]+)*$).{1,60}$",
+   "type": "string"
+  },
+  "StartTime": {
+   "$ref": "#/definitions/timestamp",
+   "description": "The start time in UTC of the scheduled action. Before this time, the scheduled action does not trigger."
+  },
+  "State": {
+   "description": "The state of the scheduled action.",
+   "enum": [
+    "ACTIVE",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "TargetAction": {
+   "$ref": "#/definitions/ScheduledActionType",
+   "description": "A JSON format string of the Amazon Redshift API operation with input parameters."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/State",
+  "/properties/NextInvocations"
+ ],
+ "required": [
+  "ScheduledActionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Redshift::ScheduledAction"
+}

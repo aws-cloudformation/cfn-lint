@@ -1,0 +1,194 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CoreNetworkId",
+  "/properties/EdgeLocation",
+  "/properties/TransportAttachmentId",
+  "/properties/Options"
+ ],
+ "definitions": {
+  "ConnectAttachmentOptions": {
+   "additionalProperties": false,
+   "description": "Connect attachment options for protocol",
+   "properties": {
+    "Protocol": {
+     "description": "Tunnel protocol for connect attachment",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "description": "New policy rule number of the attachment",
+     "type": "integer"
+    },
+    "SegmentName": {
+     "description": "Proposed segment name",
+     "type": "string"
+    },
+    "Tags": {
+     "description": "Proposed tags for the Segment.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::NetworkManager::ConnectAttachment Resource Type Definition",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:CreateConnectAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:DeleteAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:GetConnectAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "description": "The ID of the attachment.",
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "description": "The policy rule number associated with the attachment.",
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "description": "The type of attachment.",
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "description": "The ARN of a core network for the VPC attachment.",
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "description": "ID of the CoreNetwork that the attachment will be attached to.",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Creation time of the attachment.",
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "description": "Edge location of the attachment.",
+   "type": "string"
+  },
+  "Options": {
+   "$ref": "#/definitions/ConnectAttachmentOptions",
+   "description": "Protocol options for connect attachment"
+  },
+  "OwnerAccountId": {
+   "description": "The ID of the attachment account owner.",
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange",
+   "description": "The attachment to move from one segment to another."
+  },
+  "ResourceArn": {
+   "description": "The attachment resource ARN.",
+   "type": "string"
+  },
+  "SegmentName": {
+   "description": "The name of the segment attachment.",
+   "type": "string"
+  },
+  "State": {
+   "description": "State of the attachment.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags for the attachment.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TransportAttachmentId": {
+   "description": "Id of transport attachment",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "Last update time of the attachment.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/ProposedSegmentChange",
+  "/properties/SegmentName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-connectattachment",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::ConnectAttachment"
+}

@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AppId",
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "SubDomainSetting": {
+   "additionalProperties": false,
+   "properties": {
+    "BranchName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "(?s).+",
+     "type": "string"
+    },
+    "Prefix": {
+     "maxLength": 255,
+     "pattern": "(?s).*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Prefix",
+    "BranchName"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::Amplify::Domain resource allows you to connect a custom domain to your app.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "amplify:CreateDomainAssociation",
+    "route53:ListHostedZones",
+    "route53:ChangeResourceRecordSets",
+    "iam:PassRole",
+    "amplify:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "amplify:DeleteDomainAssociation",
+    "iam:PassRole",
+    "amplify:DeleteDomainAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "amplify:ListDomainAssociations",
+    "iam:PassRole",
+    "amplify:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "amplify:GetDomainAssociation",
+    "route53:ListHostedZones",
+    "iam:PassRole",
+    "amplify:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "amplify:UpdateDomainAssociation",
+    "route53:ListHostedZones",
+    "route53:ChangeResourceRecordSets",
+    "iam:PassRole",
+    "amplify:ListTagsForResource",
+    "amplify:TagResource",
+    "amplify:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppId": {
+   "maxLength": 20,
+   "minLength": 1,
+   "pattern": "d[a-z0-9]+",
+   "type": "string"
+  },
+  "Arn": {
+   "maxLength": 1000,
+   "pattern": "(?s).*",
+   "type": "string"
+  },
+  "AutoSubDomainCreationPatterns": {
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "pattern": "(?s).+",
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "AutoSubDomainIAMRole": {
+   "maxLength": 1000,
+   "pattern": "^$|^arn:.+:iam::\\d{12}:role.+",
+   "type": "string"
+  },
+  "CertificateRecord": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "DomainName": {
+   "maxLength": 255,
+   "pattern": "^(((?!-)[A-Za-z0-9-]{0,62}[A-Za-z0-9])\\.)+((?!-)[A-Za-z0-9-]{1,62}[A-Za-z0-9])(\\.)?$",
+   "type": "string"
+  },
+  "DomainStatus": {
+   "type": "string"
+  },
+  "EnableAutoSubDomain": {
+   "type": "boolean"
+  },
+  "StatusReason": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "SubDomainSettings": {
+   "items": {
+    "$ref": "#/definitions/SubDomainSetting"
+   },
+   "maxItems": 255,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/DomainStatus",
+  "/properties/StatusReason",
+  "/properties/CertificateRecord"
+ ],
+ "required": [
+  "AppId",
+  "DomainName",
+  "SubDomainSettings"
+ ],
+ "typeName": "AWS::Amplify::Domain"
+}
