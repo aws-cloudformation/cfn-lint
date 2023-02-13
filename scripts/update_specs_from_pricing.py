@@ -10,9 +10,11 @@ SPDX-License-Identifier: MIT-0
 """
 
 
-import boto3
 import json
 import logging
+
+import boto3
+
 LOGGER = logging.getLogger('cfnlint')
 
 

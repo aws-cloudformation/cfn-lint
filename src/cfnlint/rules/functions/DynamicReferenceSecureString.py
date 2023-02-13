@@ -31,117 +31,96 @@ class DynamicReferenceSecureString(CloudFormationLintRule):
             "AWS::DirectoryService::MicrosoftAD": "Password",
             "AWS::DirectoryService::SimpleAD": "Password",
             "AWS::ElastiCache::ReplicationGroup": "AuthToken",
-            "AWS::IAM::User.LoginProfile": "Password",
-            "AWS::KinesisFirehose::DeliveryStream.RedshiftDestinationConfiguration": "Password",
-            "AWS::OpsWorks::App.Source": "Password",
-            "AWS::OpsWorks::Stack.RdsDbInstance": "DbPassword",
-            "AWS::OpsWorks::Stack.Source": "Password",
+            "AWS::IAM::User": {
+                "LoginProfile": "Password",
+            },
+            "AWS::KinesisFirehose::DeliveryStream": {
+                "RedshiftDestinationConfiguration": "Password",
+            },
+            "AWS::OpsWorks::App": {
+                "AppSource": "Password",
+            },
+            "AWS::OpsWorks::Stack": {
+                "RdsDbInstances": "DbPassword",
+                "CustomCookbooksSource": "Password",
+            },
             "AWS::RDS::DBCluster": "MasterUserPassword",
             "AWS::RDS::DBInstance": "MasterUserPassword",
             "AWS::Redshift::Cluster": "MasterUserPassword",
         }
 
-    def initialize(self, cfn):
-        """Init"""
-        specs = cfnlint.helpers.RESOURCE_SPECS.get(cfn.regions[0])
-        self.property_specs = specs.get("PropertyTypes")
-        self.resource_specs = specs.get("ResourceTypes")
-        for resource_spec in self.resource_specs:
-            self.resource_property_types.append(resource_spec)
-        for property_spec in self.property_specs:
-            self.resource_sub_property_types.append(property_spec)
-
-    def check_dyn_ref_value(self, value, path):
-        """Chec item type"""
-        matches = []
-
-        if isinstance(value, str):
-            if re.match(cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, value):
-                message = f'Dynamic Reference secure strings are not supported for this property at {"/".join(map(str, path[:]))}'
-                matches.append(RuleMatch(path[:], message))
-
-        return matches
-
-    def check_value(self, value, path, **kwargs):
-        """Check Value"""
-        matches = []
-        item_type = kwargs.get("item_type", {})
-        if item_type in ["Map"]:
-            if isinstance(value, dict):
-                for map_key, map_value in value.items():
-                    if not isinstance(map_value, dict):
-                        matches.extend(
-                            self.check_dyn_ref_value(map_value, path[:] + [map_key])
-                        )
+    def _match_values(self, cfnelem, path):
+        """Recursively search for values matching the searchRegex"""
+        values = []
+        if isinstance(cfnelem, dict):
+            for key in cfnelem:
+                pathprop = path[:]
+                pathprop.append(key)
+                values.extend(self._match_values(cfnelem[key], pathprop))
+        elif isinstance(cfnelem, list):
+            for index, item in enumerate(cfnelem):
+                pathprop = path[:]
+                pathprop.append(index)
+                values.extend(self._match_values(item, pathprop))
         else:
-            matches.extend(self.check_dyn_ref_value(value, path[:]))
+            # Leaf node
+            if isinstance(cfnelem, str):  # and re.match(searchRegex, cfnelem):
+                for variable in re.findall(
+                    cfnlint.helpers.REGEX_DYN_REF_SSM_SECURE, cfnelem
+                ):
+                    values.append(path + [variable])
 
-        return matches
+        return values
 
-    # pylint: disable=W0613
-    # Need to disable for the function to work
-    def check_sub(self, value, path, **kwargs):
-        """Check Sub Function Dynamic References"""
+    def match_values(self, cfn):
+        """
+        Search for values in all parts of the templates that match the searchRegex
+        """
+        results = []
+        results.extend(self._match_values(cfn.template, []))
+        # Globals are removed during a transform.  They need to be checked manually
+        results.extend(self._match_values(cfn.template.get("Globals", {}), []))
+        return results
+
+    def _test_list(self, parent_list, child_list):
+        result = False
+        for idx in range(len(parent_list) - len(child_list) + 1):
+            if parent_list[idx : idx + len(child_list)] == child_list:
+                result = True
+                break
+
+        return result
+
+    def match(self, cfn):
         matches = []
-        if isinstance(value, list):
-            if isinstance(value[0], str):
-                matches.extend(self.check_dyn_ref_value(value[0], path[:] + [0]))
-        else:
-            matches.extend(self.check_dyn_ref_value(value, path[:]))
+        paths = self.match_values(cfn)
 
-        return matches
-
-    def check(self, cfn, properties, specs, property_type, path):
-        """Check itself"""
-        matches = []
-
-        for prop in properties:
-            if prop in specs:
-                if property_type in self.exceptions:
-                    if prop == self.exceptions.get(property_type):
-                        continue
-                primitive_type = specs.get(prop).get("PrimitiveType")
-                if not primitive_type:
-                    primitive_type = specs.get(prop).get("PrimitiveItemType")
-                if specs.get(prop).get("Type") in ["List", "Map"]:
-                    item_type = specs.get(prop).get("Type")
-                else:
-                    item_type = None
-                if primitive_type:
-                    matches.extend(
-                        cfn.check_value(
-                            properties,
-                            prop,
-                            path[:],
-                            check_value=self.check_value,
-                            check_sub=self.check_sub,
-                            primitive_type=primitive_type,
-                            item_type=item_type,
-                        )
-                    )
-
-        return matches
-
-    def match_resource_sub_properties(self, properties, property_type, path, cfn):
-        """Match for sub properties"""
-        matches = []
-
-        if self.property_specs.get(property_type, {}).get("Properties"):
-            property_specs = self.property_specs.get(property_type, {}).get(
-                "Properties", {}
+        for path in paths:
+            message = (
+                "Dynamic reference secure strings are not supported at this location"
             )
-            matches.extend(
-                self.check(cfn, properties, property_specs, property_type, path)
-            )
+            if path[0] == "Resources":
+                resource_type = (
+                    cfn.template.get("Resources", {}).get(path[1]).get("Type")
+                )
+                exception = self.exceptions.get(resource_type)
+                if not exception:
+                    matches.append(RuleMatch(path[:-1], message=message))
+                    continue
 
-        return matches
+                if isinstance(exception, dict):
+                    matched = False
+                    for k, v in exception.items():
+                        if self._test_list(path, ["Properties", k]):
+                            if v in path:
+                                matched = True
+                    if not matched:
+                        matches.append(RuleMatch(path[:-1], message=message))
+                    continue
+                if not self._test_list(path, ["Properties", exception]):
+                    matches.append(RuleMatch(path[:-1], message=message))
 
-    def match_resource_properties(self, properties, resource_type, path, cfn):
-        """Check CloudFormation Properties"""
-        matches = []
-        resource_specs = self.resource_specs.get(resource_type, {}).get(
-            "Properties", {}
-        )
-        matches.extend(self.check(cfn, properties, resource_specs, resource_type, path))
+            else:
+                matches.append(RuleMatch(path[:-1], message=message))
 
         return matches

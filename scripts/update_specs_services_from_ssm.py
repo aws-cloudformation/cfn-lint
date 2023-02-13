@@ -3,11 +3,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import logging
 import json
+import logging
+
 import boto3
-from cfnlint.helpers import get_url_content
-from cfnlint.helpers import REGIONS
+
+from cfnlint.helpers import REGIONS, get_url_content
 from cfnlint.maintenance import SPEC_REGIONS
 
 """
