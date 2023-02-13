@@ -1,0 +1,131 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigRuleName"
+ ],
+ "definitions": {
+  "CustomPolicyDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableDebugLogDelivery": {
+     "type": "boolean"
+    },
+    "PolicyRuntime": {
+     "type": "string"
+    },
+    "PolicyText": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Scope": {
+   "additionalProperties": false,
+   "properties": {
+    "ComplianceResourceId": {
+     "type": "string"
+    },
+    "ComplianceResourceTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "TagKey": {
+     "type": "string"
+    },
+    "TagValue": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Source": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomPolicyDetails": {
+     "$ref": "#/definitions/CustomPolicyDetails"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "SourceDetails": {
+     "items": {
+      "$ref": "#/definitions/SourceDetail"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SourceIdentifier": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner"
+   ],
+   "type": "object"
+  },
+  "SourceDetail": {
+   "additionalProperties": false,
+   "properties": {
+    "EventSource": {
+     "type": "string"
+    },
+    "MaximumExecutionFrequency": {
+     "type": "string"
+    },
+    "MessageType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EventSource",
+    "MessageType"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Config::ConfigRule",
+ "primaryIdentifier": [
+  "/properties/ConfigRuleId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ComplianceType": {
+   "type": "string"
+  },
+  "ConfigRuleId": {
+   "type": "string"
+  },
+  "ConfigRuleName": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "InputParameters": {
+   "type": "object"
+  },
+  "MaximumExecutionFrequency": {
+   "type": "string"
+  },
+  "Scope": {
+   "$ref": "#/definitions/Scope"
+  },
+  "Source": {
+   "$ref": "#/definitions/Source"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigRuleId",
+  "/properties/Compliance.Type",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Source"
+ ],
+ "typeName": "AWS::Config::ConfigRule"
+}

@@ -1,0 +1,108 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::RDS::DBSubnetGroup resource creates a database subnet group. Subnet groups must contain at least two subnets in two different Availability Zones in the same region.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "rds:CreateDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBSubnetGroups",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "rds:ModifyDBSubnetGroup",
+    "rds:DescribeDBSubnetGroups",
+    "rds:AddTagsToResource",
+    "rds:RemoveTagsFromResource",
+    "rds:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBSubnetGroupName"
+ ],
+ "properties": {
+  "DBSubnetGroupDescription": {
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "pattern": "^(?!default$)[a-zA-Z]{1}[a-zA-Z0-9-_\\.\\s]{0,254}$",
+   "type": "string"
+  },
+  "SubnetIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)"
+ },
+ "required": [
+  "DBSubnetGroupDescription",
+  "SubnetIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+ "typeName": "AWS::RDS::DBSubnetGroup",
+ "writeOnlyProperties": [
+  "/properties/SubnetIds"
+ ]
+}

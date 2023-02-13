@@ -1,0 +1,250 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/TargetArn"
+ ],
+ "definitions": {
+  "ColumnSelector": {
+   "additionalProperties": false,
+   "description": "Selector of a column from a dataset for profile job configuration. One selector includes either a column name or a regular expression",
+   "properties": {
+    "Name": {
+     "description": "The name of a column from a dataset",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Regex": {
+     "description": "A regular expression for selecting a column from a dataset",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Disabled": {
+   "description": "Boolean value to disable/enable a rule",
+   "type": "boolean"
+  },
+  "Expression": {
+   "description": "Expression with rule conditions",
+   "maxLength": 1024,
+   "minLength": 4,
+   "pattern": "^[><0-9A-Za-z_.,:)(!= ]+$",
+   "type": "string"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "description": "Data quality rule for a target resource (dataset)",
+   "properties": {
+    "CheckExpression": {
+     "$ref": "#/definitions/Expression"
+    },
+    "ColumnSelectors": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/ColumnSelector"
+     },
+     "minItems": 1,
+     "type": "array"
+    },
+    "Disabled": {
+     "$ref": "#/definitions/Disabled"
+    },
+    "Name": {
+     "description": "Name of the rule",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "SubstitutionMap": {
+     "$ref": "#/definitions/ValuesMap"
+    },
+    "Threshold": {
+     "$ref": "#/definitions/Threshold"
+    }
+   },
+   "required": [
+    "Name",
+    "CheckExpression"
+   ],
+   "type": "object"
+  },
+  "SubstitutionValue": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate expression's substitution variable names with their values",
+   "properties": {
+    "Value": {
+     "description": "Value or column name",
+     "maxLength": 1024,
+     "minLength": 0,
+     "type": "string"
+    },
+    "ValueReference": {
+     "description": "Variable name",
+     "maxLength": 128,
+     "minLength": 2,
+     "pattern": "^:[A-Za-z0-9_]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "ValueReference",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Threshold": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "$ref": "#/definitions/ThresholdType"
+    },
+    "Unit": {
+     "$ref": "#/definitions/ThresholdUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThresholdValue"
+    }
+   },
+   "required": [
+    "Value"
+   ],
+   "type": "object"
+  },
+  "ThresholdType": {
+   "description": "Threshold type for a rule",
+   "enum": [
+    "GREATER_THAN_OR_EQUAL",
+    "LESS_THAN_OR_EQUAL",
+    "GREATER_THAN",
+    "LESS_THAN"
+   ],
+   "type": "string"
+  },
+  "ThresholdUnit": {
+   "description": "Threshold unit for a rule",
+   "enum": [
+    "COUNT",
+    "PERCENTAGE"
+   ],
+   "type": "string"
+  },
+  "ThresholdValue": {
+   "description": "Threshold value for a rule",
+   "type": "number"
+  },
+  "ValuesMap": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/SubstitutionValue"
+   },
+   "type": "array"
+  }
+ },
+ "description": "Resource schema for AWS::DataBrew::Ruleset.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "databrew:CreateRuleset",
+    "databrew:TagResource",
+    "databrew:UntagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "databrew:DeleteRuleset"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "databrew:ListRulesets",
+    "databrew:ListTagsForResource",
+    "iam:ListRoles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "databrew:DescribeRuleset",
+    "databrew:ListTagsForResource",
+    "iam:ListRoles"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "databrew:UpdateRuleset"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Description": {
+   "description": "Description of the Ruleset",
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the Ruleset",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Rules": {
+   "description": "List of the data quality rules in the ruleset",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TargetArn": {
+   "description": "Arn of the target resource (dataset) to apply the ruleset to",
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  }
+ },
+ "required": [
+  "Name",
+  "TargetArn",
+  "Rules"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "taggable": true,
+ "typeName": "AWS::DataBrew::Ruleset"
+}

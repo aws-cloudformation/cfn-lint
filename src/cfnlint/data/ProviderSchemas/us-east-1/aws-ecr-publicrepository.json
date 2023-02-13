@@ -1,0 +1,182 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName"
+ ],
+ "definitions": {
+  "AboutText": {
+   "description": "Provide a detailed description of the repository. Identify what is included in the repository, any licensing details, or other relevant information.",
+   "maxLength": 10240,
+   "type": "string"
+  },
+  "Architecture": {
+   "description": "The name of the architecture.",
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ArchitectureList": {
+   "description": "Select the system architectures that the images in your repository are compatible with.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Architecture"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OperatingSystem": {
+   "description": "The name of the operating system.",
+   "maxLength": 50,
+   "minLength": 1,
+   "type": "string"
+  },
+  "OperatingSystemList": {
+   "description": "Select the operating systems that the images in your repository are compatible with.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/OperatingSystem"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RegistryId": {
+   "description": "The AWS account ID associated with the registry that contains the repository. If you do not specify a registry, the default registry is assumed. ",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "RepositoryDescription": {
+   "description": "The description of the public repository.",
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UsageText": {
+   "description": "Provide detailed information about how to use the images in the repository. This provides context, support information, and additional usage details for users of the repository.",
+   "maxLength": 10240,
+   "type": "string"
+  }
+ },
+ "description": "The AWS::ECR::PublicRepository resource specifies an Amazon Elastic Container Public Registry (Amazon Public ECR) repository, where users can push and pull Docker images. For more information, see https://docs.aws.amazon.com/AmazonECR",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr-public:CreateRepository",
+    "ecr-public:SetRepositoryPolicy",
+    "ecr-public:PutRepositoryCatalogData",
+    "ecr-public:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr-public:DeleteRepository"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr-public:DescribeRepositories"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr-public:DescribeRepositories",
+    "ecr-public:GetRepositoryPolicy",
+    "ecr-public:GetRepositoryCatalogData",
+    "ecr-public:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr-public:SetRepositoryPolicy",
+    "ecr-public:DeleteRepositoryPolicy",
+    "ecr-public:PutRepositoryCatalogData",
+    "ecr-public:TagResource",
+    "ecr-public:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RepositoryName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "RepositoryCatalogData": {
+   "additionalProperties": false,
+   "description": "The CatalogData property type specifies Catalog data for ECR Public Repository. For information about Catalog Data, see <link>",
+   "properties": {
+    "AboutText": {
+     "$ref": "#/definitions/AboutText"
+    },
+    "Architectures": {
+     "$ref": "#/definitions/ArchitectureList"
+    },
+    "OperatingSystems": {
+     "$ref": "#/definitions/OperatingSystemList"
+    },
+    "RepositoryDescription": {
+     "$ref": "#/definitions/RepositoryDescription"
+    },
+    "UsageText": {
+     "$ref": "#/definitions/UsageText"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryName": {
+   "description": "The name to use for the repository. The repository name may be specified on its own (such as nginx-web-app) or it can be prepended with a namespace to group the repository into a category (such as project-a/nginx-web-app). If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the repository name. For more information, see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-name.html.",
+   "maxLength": 256,
+   "minLength": 2,
+   "pattern": "^(?=.{2,256}$)((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)$",
+   "type": "string"
+  },
+  "RepositoryPolicyText": {
+   "description": "The JSON repository policy text to apply to the repository. For more information, see https://docs.aws.amazon.com/AmazonECR/latest/userguide/RepositoryPolicyExamples.html in the Amazon Elastic Container Registry User Guide. ",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "typeName": "AWS::ECR::PublicRepository"
+}
