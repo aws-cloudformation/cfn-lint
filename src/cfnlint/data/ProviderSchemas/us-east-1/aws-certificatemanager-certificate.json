@@ -1,0 +1,95 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/SubjectAlternativeNames",
+  "/properties/DomainValidationOptions",
+  "/properties/ValidationMethod",
+  "/properties/DomainName",
+  "/properties/CertificateAuthorityArn"
+ ],
+ "definitions": {
+  "DomainValidationOption": {
+   "additionalProperties": false,
+   "properties": {
+    "DomainName": {
+     "type": "string"
+    },
+    "HostedZoneId": {
+     "type": "string"
+    },
+    "ValidationDomain": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DomainName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::CertificateManager::Certificate",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CertificateAuthorityArn": {
+   "type": "string"
+  },
+  "CertificateTransparencyLoggingPreference": {
+   "type": "string"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "DomainValidationOptions": {
+   "items": {
+    "$ref": "#/definitions/DomainValidationOption"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SubjectAlternativeNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ValidationMethod": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "DomainName"
+ ],
+ "typeName": "AWS::CertificateManager::Certificate"
+}

@@ -1,0 +1,67 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TeamId"
+ ],
+ "description": "An AWS Support App resource that creates, updates, lists, and deletes Slack workspace configurations.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "supportapp:RegisterSlackWorkspaceForOrganization",
+    "supportapp:ListSlackWorkspaceConfigurations"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "supportapp:ListSlackWorkspaceConfigurations",
+    "supportapp:DeleteSlackWorkspaceConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "supportapp:ListSlackWorkspaceConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "supportapp:ListSlackWorkspaceConfigurations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "supportapp:RegisterSlackWorkspaceForOrganization",
+    "supportapp:ListSlackWorkspaceConfigurations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TeamId"
+ ],
+ "properties": {
+  "TeamId": {
+   "description": "The team ID in Slack, which uniquely identifies a workspace.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^\\S+$",
+   "type": "string"
+  },
+  "VersionId": {
+   "description": "An identifier used to update an existing Slack workspace configuration in AWS CloudFormation.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[0-9]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "TeamId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::SupportApp::SlackWorkspaceConfiguration",
+ "writeOnlyProperties": [
+  "/properties/VersionId"
+ ]
+}

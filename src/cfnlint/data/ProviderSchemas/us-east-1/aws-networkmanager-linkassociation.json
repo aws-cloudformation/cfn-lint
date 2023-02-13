@@ -1,0 +1,59 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId",
+  "/properties/DeviceId",
+  "/properties/LinkId"
+ ],
+ "description": "The AWS::NetworkManager::LinkAssociation type associates a link to a device. The device and link must be in the same global network and the same site.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:GetLinkAssociations",
+    "networkmanager:AssociateLink"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DisassociateLink"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:GetLinkAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetLinkAssociations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/DeviceId",
+  "/properties/LinkId"
+ ],
+ "properties": {
+  "DeviceId": {
+   "description": "The ID of the device",
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "LinkId": {
+   "description": "The ID of the link",
+   "type": "string"
+  }
+ },
+ "required": [
+  "GlobalNetworkId",
+  "DeviceId",
+  "LinkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "taggable": false,
+ "typeName": "AWS::NetworkManager::LinkAssociation"
+}

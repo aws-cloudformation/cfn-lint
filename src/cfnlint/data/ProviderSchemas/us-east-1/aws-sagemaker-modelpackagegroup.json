@@ -1,0 +1,148 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ModelPackageGroupName",
+  "/properties/ModelPackageGroupDescription"
+ ],
+ "definitions": {
+  "ModelPackageGroupArn": {
+   "description": "The Amazon Resource Name (ARN) of the model package group.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "ModelPackageGroupDescription": {
+   "description": "The description of the model package group.",
+   "maxLength": 1024,
+   "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*",
+   "type": "string"
+  },
+  "ModelPackageGroupName": {
+   "description": "The name of the model package group.",
+   "maxLength": 63,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::ModelPackageGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:CreateModelPackageGroup",
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeleteModelPackageGroup",
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:DeleteModelPackageGroupPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListModelPackageGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy",
+    "sagemaker:ListTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:DescribeModelPackageGroup",
+    "sagemaker:GetModelPackageGroupPolicy",
+    "sagemaker:DeleteModelPackageGroupPolicy",
+    "sagemaker:PutModelPackageGroupPolicy",
+    "sagemaker:ListTags",
+    "sagemaker:AddTags",
+    "sagemaker:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ModelPackageGroupArn"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "The time at which the model package group was created.",
+   "type": "string"
+  },
+  "ModelPackageGroupArn": {
+   "$ref": "#/definitions/ModelPackageGroupArn"
+  },
+  "ModelPackageGroupDescription": {
+   "$ref": "#/definitions/ModelPackageGroupDescription"
+  },
+  "ModelPackageGroupName": {
+   "$ref": "#/definitions/ModelPackageGroupName"
+  },
+  "ModelPackageGroupPolicy": {
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "ModelPackageGroupStatus": {
+   "description": "The status of a modelpackage group job.",
+   "enum": [
+    "Pending",
+    "InProgress",
+    "Completed",
+    "Failed",
+    "Deleting",
+    "DeleteFailed"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ModelPackageGroupArn",
+  "/properties/CreationTime",
+  "/properties/ModelPackageGroupStatus"
+ ],
+ "required": [
+  "ModelPackageGroupName"
+ ],
+ "typeName": "AWS::SageMaker::ModelPackageGroup"
+}

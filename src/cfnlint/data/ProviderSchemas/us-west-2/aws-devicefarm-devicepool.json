@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProjectArn"
+ ],
+ "definitions": {
+  "Rule": {
+   "additionalProperties": false,
+   "description": "Represents a condition for a device pool.",
+   "properties": {
+    "Attribute": {
+     "description": "The rule's stringified attribute.",
+     "enum": [
+      "ARN",
+      "PLATFORM",
+      "FORM_FACTOR",
+      "MANUFACTURER",
+      "REMOTE_ACCESS_ENABLED",
+      "REMOTE_DEBUG_ENABLED",
+      "APPIUM_VERSION",
+      "INSTANCE_ARN",
+      "INSTANCE_LABELS",
+      "FLEET_TYPE",
+      "OS_VERSION",
+      "MODEL",
+      "AVAILABILITY"
+     ],
+     "type": "string"
+    },
+    "Operator": {
+     "description": "Specifies how Device Farm compares the rule's attribute to the value.",
+     "enum": [
+      "EQUALS",
+      "LESS_THAN",
+      "LESS_THAN_OR_EQUALS",
+      "GREATER_THAN",
+      "GREATER_THAN_OR_EQUALS",
+      "IN",
+      "NOT_IN",
+      "CONTAINS"
+     ],
+     "type": "string"
+    },
+    "Value": {
+     "description": "The rule's value.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::DeviceFarm::DevicePool creates a new Device Pool for a given DF Project",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "devicefarm:CreateDevicePool",
+    "devicefarm:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "devicefarm:DeleteDevicePool"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "devicefarm:ListDevicePools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "devicefarm:GetDevicePool",
+    "devicefarm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "devicefarm:UpdateDevicePool",
+    "devicefarm:TagResource",
+    "devicefarm:UntagResource",
+    "devicefarm:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "type": "string"
+  },
+  "MaxDevices": {
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ProjectArn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "Rules": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Rule"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Rules",
+  "ProjectArn"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::DeviceFarm::DevicePool"
+}
