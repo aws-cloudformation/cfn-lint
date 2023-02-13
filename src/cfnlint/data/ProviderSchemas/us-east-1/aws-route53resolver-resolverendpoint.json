@@ -1,0 +1,111 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OutpostArn",
+  "/properties/Direction",
+  "/properties/SecurityGroupIds",
+  "/properties/PreferredInstanceType"
+ ],
+ "definitions": {
+  "IpAddressRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "Ip": {
+     "type": "string"
+    },
+    "Ipv6": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Route53Resolver::ResolverEndpoint",
+ "primaryIdentifier": [
+  "/properties/ResolverEndpointId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Direction": {
+   "type": "string"
+  },
+  "HostVPCId": {
+   "type": "string"
+  },
+  "IpAddressCount": {
+   "type": "string"
+  },
+  "IpAddresses": {
+   "items": {
+    "$ref": "#/definitions/IpAddressRequest"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OutpostArn": {
+   "type": "string"
+  },
+  "PreferredInstanceType": {
+   "type": "string"
+  },
+  "ResolverEndpointId": {
+   "type": "string"
+  },
+  "ResolverEndpointType": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ResolverEndpointId",
+  "/properties/IpAddressCount",
+  "/properties/Arn",
+  "/properties/HostVPCId"
+ ],
+ "required": [
+  "IpAddresses",
+  "Direction",
+  "SecurityGroupIds"
+ ],
+ "typeName": "AWS::Route53Resolver::ResolverEndpoint"
+}

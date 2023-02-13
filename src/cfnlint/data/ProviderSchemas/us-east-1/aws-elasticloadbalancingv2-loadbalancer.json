@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": [
+  "aws-elasticloadbalancingv2-loadbalancer/subnets-onlyone"
+ ],
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Type",
+  "/properties/Scheme"
+ ],
+ "definitions": {
+  "LoadBalancerAttribute": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SubnetMapping": {
+   "additionalProperties": false,
+   "properties": {
+    "AllocationId": {
+     "type": "string"
+    },
+    "IPv6Address": {
+     "type": "string"
+    },
+    "PrivateIPv4Address": {
+     "type": "string"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "SubnetId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::LoadBalancer",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CanonicalHostedZoneID": {
+   "type": "string"
+  },
+  "DNSName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpAddressType": {
+   "type": "string"
+  },
+  "LoadBalancerAttributes": {
+   "items": {
+    "$ref": "#/definitions/LoadBalancerAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LoadBalancerFullName": {
+   "type": "string"
+  },
+  "LoadBalancerName": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Scheme": {
+   "type": "string"
+  },
+  "SecurityGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SubnetMappings": {
+   "items": {
+    "$ref": "#/definitions/SubnetMapping"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Subnets": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LoadBalancerName",
+  "/properties/CanonicalHostedZoneID",
+  "/properties/Id",
+  "/properties/LoadBalancerFullName",
+  "/properties/DNSName"
+ ],
+ "typeName": "AWS::ElasticLoadBalancingV2::LoadBalancer"
+}
