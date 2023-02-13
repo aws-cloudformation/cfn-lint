@@ -1,0 +1,83 @@
+{
+  "type": "object",
+  "properties": {
+    "Condition": {
+      "type": "string"
+    },
+    "DeletionPolicy": {
+      "type": "string",
+      "enum": [
+        "Delete",
+        "Retain",
+        "Snapshot"
+      ]
+    },
+    "DependsOn": {
+      "type": ["string", "array"],
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "Metadata": {
+      "type": "object"
+    },
+    "Properties": {
+      "type": "object"
+    },
+    "Type": {
+      "type": "string",
+      "cfnType": true
+    },
+    "UpdateReplacePolicy": {
+      "type": "string",
+      "enum": [
+        "Delete",
+        "Retain",
+        "Snapshot"
+      ]
+    },
+    "Version": {
+      "type": "string"
+    },
+    "CreationPolicy": {
+      "type": "object"
+    },
+    "UpdatePolicy": {
+      "type": "object"
+    }
+  },
+  "required": ["Type"],
+  "if": {
+    "properties": {
+      "Type": {
+        "pattern": "(AWS::CloudFormation::CustomResource|Custom::.*)"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "Version": {
+        "type": "string"
+      }
+    },
+    "not": {
+      "required": ["CreationPolicy", "UpdatePolicy"]
+    }
+  },
+  "else": {
+    "properties": {
+      "CreationPolicy": {
+        "type": "object"
+      },
+      "UpdatePolicy": {
+        "type": "object"
+      }
+    },
+    "not": {
+      "required": ["Version"]
+    }
+  },
+  "additionalProperties": false
+}
