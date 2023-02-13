@@ -1,0 +1,203 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Creates a key-value pair for a specific resource.",
+   "properties": {
+    "Key": {
+     "description": "The name assigned to the tag that you create.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Contains one or more values that you assigned to the key name you create.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Transfer::Connector",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "transfer:CreateConnector",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "transfer:DeleteConnector"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "transfer:ListConnectors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "transfer:DescribeConnector"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "transfer:UpdateConnector",
+    "transfer:UnTagResource",
+    "transfer:TagResource",
+    "iam:PassRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ConnectorId"
+ ],
+ "properties": {
+  "AccessRole": {
+   "description": "Specifies the access role for the connector.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "Arn": {
+   "description": "Specifies the unique Amazon Resource Name (ARN) for the workflow.",
+   "maxLength": 1600,
+   "minLength": 20,
+   "pattern": "arn:.*",
+   "type": "string"
+  },
+  "As2Config": {
+   "additionalProperties": false,
+   "description": "Configuration for an AS2 connector.",
+   "properties": {
+    "Compression": {
+     "description": "Compression setting for this AS2 connector configuration.",
+     "enum": [
+      "ZLIB",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "EncryptionAlgorithm": {
+     "description": "Encryption algorithm for this AS2 connector configuration.",
+     "enum": [
+      "AES128_CBC",
+      "AES192_CBC",
+      "AES256_CBC",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "LocalProfileId": {
+     "description": "A unique identifier for the local profile.",
+     "maxLength": 19,
+     "minLength": 19,
+     "pattern": "^p-([0-9a-f]{17})$",
+     "type": "string"
+    },
+    "MdnResponse": {
+     "description": "MDN Response setting for this AS2 connector configuration.",
+     "enum": [
+      "SYNC",
+      "NONE"
+     ],
+     "type": "string"
+    },
+    "MdnSigningAlgorithm": {
+     "description": "MDN Signing algorithm for this AS2 connector configuration.",
+     "enum": [
+      "SHA256",
+      "SHA384",
+      "SHA512",
+      "SHA1",
+      "NONE",
+      "DEFAULT"
+     ],
+     "type": "string"
+    },
+    "MessageSubject": {
+     "description": "The message subject for this AS2 connector configuration.",
+     "maxLength": 1024,
+     "minLength": 1,
+     "pattern": "^[\\p{Print}\\p{Blank}]+",
+     "type": "string"
+    },
+    "PartnerProfileId": {
+     "description": "A unique identifier for the partner profile.",
+     "maxLength": 19,
+     "minLength": 19,
+     "pattern": "^p-([0-9a-f]{17})$",
+     "type": "string"
+    },
+    "SigningAlgorithm": {
+     "description": "Signing algorithm for this AS2 connector configuration.",
+     "enum": [
+      "SHA256",
+      "SHA384",
+      "SHA512",
+      "SHA1",
+      "NONE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ConnectorId": {
+   "description": "A unique identifier for the connector.",
+   "maxLength": 19,
+   "minLength": 19,
+   "pattern": "^c-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "LoggingRole": {
+   "description": "Specifies the logging role for the connector.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:.*role/.*",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Key-value pairs that can be used to group and search for workflows. Tags are metadata attached to workflows for any purpose.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Url": {
+   "description": "URL for Connector",
+   "maxLength": 255,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/ConnectorId"
+ ],
+ "required": [
+  "AccessRole",
+  "As2Config",
+  "Url"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Transfer::Connector"
+}

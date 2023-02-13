@@ -1,0 +1,175 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceTags"
+ ],
+ "definitions": {
+  "Arn": {
+   "description": "Subscription ARN",
+   "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name for the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Subscriber": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "pattern": "(^[a-zA-Z0-9.!#$%&'*+=?^_\u2018{|}~-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$)|(^arn:(aws[a-zA-Z-]*):sns:[a-zA-Z0-9-]+:[0-9]{12}:[a-zA-Z0-9_-]+(\\.fifo)?$)",
+     "type": "string"
+    },
+    "Status": {
+     "enum": [
+      "CONFIRMED",
+      "DECLINED"
+     ],
+     "type": "string"
+    },
+    "Type": {
+     "enum": [
+      "EMAIL",
+      "SNS"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Address",
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS Cost Anomaly Detection leverages advanced Machine Learning technologies to identify anomalous spend and root causes, so you can quickly take action. Create subscription to be notified",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ce:CreateAnomalySubscription",
+    "ce:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ce:DeleteAnomalySubscription"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ce:GetAnomalySubscriptions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ce:GetAnomalySubscriptions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ce:UpdateAnomalySubscription"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SubscriptionArn"
+ ],
+ "properties": {
+  "AccountId": {
+   "description": "The accountId",
+   "maxLength": 1024,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Frequency": {
+   "description": "The frequency at which anomaly reports are sent over email. ",
+   "enum": [
+    "DAILY",
+    "IMMEDIATE",
+    "WEEKLY"
+   ],
+   "type": "string"
+  },
+  "MonitorArnList": {
+   "description": "A list of cost anomaly monitors.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Arn"
+   },
+   "type": "array"
+  },
+  "ResourceTags": {
+   "description": "Tags to assign to subscription.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Subscribers": {
+   "description": "A list of subscriber",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Subscriber"
+   },
+   "type": "array"
+  },
+  "SubscriptionArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "SubscriptionName": {
+   "description": "The name of the subscription.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "[\\S\\s]*",
+   "type": "string"
+  },
+  "Threshold": {
+   "description": "The dollar value that triggers a notification if the threshold is exceeded. ",
+   "minimum": 0,
+   "type": "number"
+  },
+  "ThresholdExpression": {
+   "description": "An Expression object in JSON String format used to specify the anomalies that you want to generate alerts for.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SubscriptionArn",
+  "/properties/AccountId",
+  "/properties/Subscribers/*/Status"
+ ],
+ "required": [
+  "MonitorArnList",
+  "Subscribers",
+  "Frequency",
+  "SubscriptionName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::CE::AnomalySubscription",
+ "writeOnlyProperties": [
+  "/properties/ResourceTags"
+ ]
+}

@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/VirtualMfaDeviceName",
+  "/properties/Base32StringSeed",
+  "/properties/Path"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IAM::VirtualMFADevice",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:CreateVirtualMFADevice",
+    "iam:EnableMFADevice",
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteVirtualMFADevice",
+    "iam:DeactivateMFADevice"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:ListVirtualMFADevices"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:TagMFADevice",
+    "iam:UntagMFADevice"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/SerialNumber"
+ ],
+ "properties": {
+  "Path": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "(\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F)",
+   "type": "string"
+  },
+  "SerialNumber": {
+   "maxLength": 256,
+   "minLength": 9,
+   "pattern": "[\\w+=/:,.@-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Users": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VirtualMfaDeviceName": {
+   "maxLength": 226,
+   "minLength": 1,
+   "pattern": "[\\w+=,.@-]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SerialNumber"
+ ],
+ "required": [
+  "Users"
+ ],
+ "typeName": "AWS::IAM::VirtualMFADevice"
+}

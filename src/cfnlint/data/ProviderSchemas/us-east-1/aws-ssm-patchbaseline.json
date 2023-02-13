@@ -1,0 +1,185 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OperatingSystem"
+ ],
+ "definitions": {
+  "PatchFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Values": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "PatchFilterGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "PatchFilters": {
+     "items": {
+      "$ref": "#/definitions/PatchFilter"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "PatchSource": {
+   "additionalProperties": false,
+   "properties": {
+    "Configuration": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Products": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "PatchStringDate": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "Rule": {
+   "additionalProperties": false,
+   "properties": {
+    "ApproveAfterDays": {
+     "type": "integer"
+    },
+    "ApproveUntilDate": {
+     "$ref": "#/definitions/PatchStringDate"
+    },
+    "ComplianceLevel": {
+     "type": "string"
+    },
+    "EnableNonSecurity": {
+     "type": "boolean"
+    },
+    "PatchFilterGroup": {
+     "$ref": "#/definitions/PatchFilterGroup"
+    }
+   },
+   "type": "object"
+  },
+  "RuleGroup": {
+   "additionalProperties": false,
+   "properties": {
+    "PatchRules": {
+     "items": {
+      "$ref": "#/definitions/Rule"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SSM::PatchBaseline",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApprovalRules": {
+   "$ref": "#/definitions/RuleGroup"
+  },
+  "ApprovedPatches": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ApprovedPatchesComplianceLevel": {
+   "type": "string"
+  },
+  "ApprovedPatchesEnableNonSecurity": {
+   "type": "boolean"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "GlobalFilters": {
+   "$ref": "#/definitions/PatchFilterGroup"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OperatingSystem": {
+   "type": "string"
+  },
+  "PatchGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RejectedPatches": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "RejectedPatchesAction": {
+   "type": "string"
+  },
+  "Sources": {
+   "items": {
+    "$ref": "#/definitions/PatchSource"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "typeName": "AWS::SSM::PatchBaseline"
+}
