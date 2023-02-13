@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "StreamEncryption": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionType": {
+     "type": "string"
+    },
+    "KeyId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "EncryptionType",
+    "KeyId"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Kinesis::Stream",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RetentionPeriodHours": {
+   "type": "integer"
+  },
+  "ShardCount": {
+   "type": "integer"
+  },
+  "StreamEncryption": {
+   "$ref": "#/definitions/StreamEncryption"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "ShardCount"
+ ],
+ "typeName": "AWS::Kinesis::Stream"
+}

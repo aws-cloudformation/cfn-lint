@@ -1,0 +1,178 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FirewallRuleGroupId",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Route53Resolver::FirewallRuleGroupAssociation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:AssociateFirewallRuleGroup",
+    "route53resolver:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DisassociateFirewallRuleGroup",
+    "route53resolver:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListFirewallRuleGroupAssocations",
+    "route53resolver:GetFirewallRuleGroupAssociation",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetFirewallRuleGroupAssociation",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53resolver:UpdateFirewallRuleGroupAssociation",
+    "route53resolver:TagResource",
+    "route53resolver:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Arn",
+   "maxLength": 600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "Rfc3339TimeString",
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreatorRequestId": {
+   "description": "The id of the creator request.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "FirewallRuleGroupId": {
+   "description": "FirewallRuleGroupId",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "description": "Id",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ManagedOwnerName": {
+   "description": "ServicePrincipal",
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ModificationTime": {
+   "description": "Rfc3339TimeString",
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "MutationProtection": {
+   "description": "MutationProtectionStatus",
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Name": {
+   "description": "FirewallRuleGroupAssociationName",
+   "maxLength": 64,
+   "minLength": 0,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+   "type": "string"
+  },
+  "Priority": {
+   "description": "Priority",
+   "type": "integer"
+  },
+  "Status": {
+   "description": "ResolverFirewallRuleGroupAssociation, possible values are COMPLETE, DELETING, UPDATING, and INACTIVE_OWNER_ACCOUNT_CLOSED.",
+   "enum": [
+    "COMPLETE",
+    "DELETING",
+    "UPDATING",
+    "INACTIVE_OWNER_ACCOUNT_CLOSED"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "description": "FirewallDomainListAssociationStatus",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcId": {
+   "description": "VpcId",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/ManagedOwnerName",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/CreatorRequestId",
+  "/properties/CreationTime",
+  "/properties/ModificationTime"
+ ],
+ "required": [
+  "FirewallRuleGroupId",
+  "VpcId",
+  "Priority"
+ ],
+ "typeName": "AWS::Route53Resolver::FirewallRuleGroupAssociation"
+}

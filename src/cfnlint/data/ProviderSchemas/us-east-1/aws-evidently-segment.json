@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Evidently::Segment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "evidently:CreateSegment",
+    "evidently:GetSegment",
+    "evidently:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "evidently:DeleteSegment",
+    "evidently:GetSegment",
+    "evidently:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "evidently:ListSegment",
+    "evidently:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "evidently:GetSegment",
+    "evidently:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Pattern": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::Evidently::Segment"
+}
