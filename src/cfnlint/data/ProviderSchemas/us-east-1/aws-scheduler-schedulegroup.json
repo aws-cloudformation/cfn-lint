@@ -1,0 +1,130 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ScheduleGroupState": {
+   "description": "Specifies the state of the schedule group.",
+   "enum": [
+    "ACTIVE",
+    "DELETING"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "Tag to associate with the resource.",
+   "properties": {
+    "Key": {
+     "description": "Key for the tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Value for the tag",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::Scheduler::ScheduleGroup Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "scheduler:CreateScheduleGroup",
+    "scheduler:GetScheduleGroup",
+    "scheduler:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "scheduler:DeleteScheduleGroup",
+    "scheduler:GetScheduleGroup",
+    "scheduler:DeleteSchedule"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "scheduler:ListScheduleGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "scheduler:GetScheduleGroup",
+    "scheduler:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "scheduler:TagResource",
+    "scheduler:UntagResource",
+    "scheduler:ListTagsForResource",
+    "scheduler:GetScheduleGroup"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the schedule group.",
+   "maxLength": 1224,
+   "minLength": 1,
+   "pattern": "^arn:aws(-[a-z]+)?:scheduler:[a-z0-9\\-]+:\\d{12}:schedule-group\\/[0-9a-zA-Z-_.]+$",
+   "type": "string"
+  },
+  "CreationDate": {
+   "description": "The time at which the schedule group was created.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "LastModificationDate": {
+   "description": "The time at which the schedule group was last modified.",
+   "format": "date-time",
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-zA-Z-_.]+$",
+   "type": "string"
+  },
+  "State": {
+   "$ref": "#/definitions/ScheduleGroupState"
+  },
+  "Tags": {
+   "description": "The list of tags to associate with the schedule group.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDate",
+  "/properties/LastModificationDate",
+  "/properties/State"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Scheduler::ScheduleGroup"
+}

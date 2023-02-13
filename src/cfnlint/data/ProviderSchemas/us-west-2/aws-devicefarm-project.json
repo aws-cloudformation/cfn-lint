@@ -1,0 +1,98 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::DeviceFarm::Project creates a new Device Farm Project",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "devicefarm:CreateProject",
+    "devicefarm:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "devicefarm:DeleteProject"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "devicefarm:ListProjects"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "devicefarm:GetProject",
+    "devicefarm:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "devicefarm:UpdateProject",
+    "devicefarm:TagResource",
+    "devicefarm:UntagResource",
+    "devicefarm:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 1011,
+   "minLength": 32,
+   "pattern": "^arn:.+",
+   "type": "string"
+  },
+  "DefaultJobTimeoutMinutes": {
+   "maximum": 150,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::DeviceFarm::Project"
+}

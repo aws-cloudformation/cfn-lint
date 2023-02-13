@@ -1,0 +1,229 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DiskName",
+  "/properties/AvailabilityZone",
+  "/properties/SizeInGb"
+ ],
+ "definitions": {
+  "AddOn": {
+   "additionalProperties": false,
+   "description": "A addon associate with a resource.",
+   "properties": {
+    "AddOnType": {
+     "description": "The add-on type",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "AutoSnapshotAddOnRequest": {
+     "$ref": "#/definitions/AutoSnapshotAddOn"
+    },
+    "Status": {
+     "description": "Status of the Addon",
+     "enum": [
+      "Enabling",
+      "Disabling",
+      "Enabled",
+      "Terminating",
+      "Terminated",
+      "Disabled",
+      "Failed"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "AddOnType"
+   ],
+   "type": "object"
+  },
+  "AutoSnapshotAddOn": {
+   "additionalProperties": false,
+   "description": "An object that represents additional parameters when enabling or modifying the automatic snapshot add-on",
+   "properties": {
+    "SnapshotTimeOfDay": {
+     "description": "The daily time when an automatic snapshot will be created.",
+     "pattern": "^[0-9]{2}:00$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Location": {
+   "additionalProperties": false,
+   "description": "Location of a resource.",
+   "properties": {
+    "AvailabilityZone": {
+     "description": "The Availability Zone in which to create your disk. Use the following format: us-east-2a (case sensitive). Be sure to add the include Availability Zones parameter to your request.",
+     "type": "string"
+    },
+    "RegionName": {
+     "description": "The Region Name in which to create your disk.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lightsail::Disk",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lightsail:CreateDisk",
+    "lightsail:EnableAddOn",
+    "lightsail:DisableAddOn",
+    "lightsail:GetRegions",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lightsail:GetDisk",
+    "lightsail:GetDisks",
+    "lightsail:DeleteDisk"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lightsail:GetDisks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lightsail:GetDisk",
+    "lightsail:GetDisks"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lightsail:GetDisk",
+    "lightsail:GetDisks",
+    "lightsail:EnableAddOn",
+    "lightsail:DisableAddOn",
+    "lightsail:TagResource",
+    "lightsail:UntagResource"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DiskName"
+ ],
+ "properties": {
+  "AddOns": {
+   "description": "An array of objects representing the add-ons to enable for the new instance.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AddOn"
+   },
+   "type": "array"
+  },
+  "AttachedTo": {
+   "description": "Name of the attached Lightsail Instance",
+   "type": "string"
+  },
+  "AttachmentState": {
+   "description": "Attachment State of the Lightsail disk",
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "description": "The Availability Zone in which to create your instance. Use the following format: us-east-2a (case sensitive). Be sure to add the include Availability Zones parameter to your request.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DiskArn": {
+   "type": "string"
+  },
+  "DiskName": {
+   "description": "The names to use for your new Lightsail disk.",
+   "maxLength": 254,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][\\w\\-.]*[a-zA-Z0-9]$",
+   "type": "string"
+  },
+  "Iops": {
+   "description": "Iops of the Lightsail disk",
+   "type": "integer"
+  },
+  "IsAttached": {
+   "description": "Check is Disk is attached state",
+   "type": "boolean"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location"
+  },
+  "Path": {
+   "description": "Path of the  attached Disk",
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "Resource type of Lightsail instance.",
+   "type": "string"
+  },
+  "SizeInGb": {
+   "description": "Size of the Lightsail disk",
+   "type": "integer"
+  },
+  "State": {
+   "description": "State of the Lightsail disk",
+   "type": "string"
+  },
+  "SupportCode": {
+   "description": "Support code to help identify any issues",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AttachedTo",
+  "/properties/Path",
+  "/properties/IsAttached",
+  "/properties/Iops",
+  "/properties/AttachmentState",
+  "/properties/State",
+  "/properties/ResourceType",
+  "/properties/Location",
+  "/properties/SupportCode",
+  "/properties/DiskArn"
+ ],
+ "required": [
+  "DiskName",
+  "SizeInGb"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+ "taggable": true,
+ "typeName": "AWS::Lightsail::Disk"
+}
