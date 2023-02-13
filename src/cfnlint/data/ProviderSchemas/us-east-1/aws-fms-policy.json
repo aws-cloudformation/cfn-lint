@@ -1,0 +1,353 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "description": "An AWS account ID.",
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^([0-9]*)$",
+   "type": "string"
+  },
+  "Base62Id": {
+   "description": "A Base62 ID",
+   "maxLength": 22,
+   "minLength": 22,
+   "pattern": "^[a-z0-9A-Z]{22}$",
+   "type": "string"
+  },
+  "FirewallDeploymentModel": {
+   "description": "Firewall deployment mode.",
+   "enum": [
+    "DISTRIBUTED",
+    "CENTRALIZED"
+   ],
+   "type": "string"
+  },
+  "IEMap": {
+   "additionalProperties": false,
+   "description": "An FMS includeMap or excludeMap.",
+   "properties": {
+    "ACCOUNT": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/AccountId"
+     },
+     "type": "array"
+    },
+    "ORGUNIT": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/OrganizationalUnitId"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "ManagedServiceData": {
+   "description": "Firewall managed service data.",
+   "maxLength": 8192,
+   "minLength": 1,
+   "type": "string"
+  },
+  "NetworkFirewallPolicy": {
+   "additionalProperties": false,
+   "description": "Network firewall policy.",
+   "properties": {
+    "FirewallDeploymentModel": {
+     "$ref": "#/definitions/FirewallDeploymentModel"
+    }
+   },
+   "required": [
+    "FirewallDeploymentModel"
+   ],
+   "type": "object"
+  },
+  "OrganizationalUnitId": {
+   "description": "An Organizational Unit ID.",
+   "maxLength": 68,
+   "minLength": 16,
+   "pattern": "^(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+   "type": "string"
+  },
+  "PolicyOption": {
+   "additionalProperties": false,
+   "description": "Firewall policy option.",
+   "oneOf": [
+    {
+     "required": [
+      "NetworkFirewallPolicy"
+     ]
+    },
+    {
+     "required": [
+      "ThirdPartyFirewallPolicy"
+     ]
+    }
+   ],
+   "properties": {
+    "NetworkFirewallPolicy": {
+     "$ref": "#/definitions/NetworkFirewallPolicy"
+    },
+    "ThirdPartyFirewallPolicy": {
+     "$ref": "#/definitions/ThirdPartyFirewallPolicy"
+    }
+   },
+   "type": "object"
+  },
+  "PolicyTag": {
+   "additionalProperties": false,
+   "description": "A policy tag.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "pattern": "^([^\\s]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PolicyType": {
+   "description": "Firewall policy type.",
+   "enum": [
+    "WAF",
+    "WAFV2",
+    "SHIELD_ADVANCED",
+    "SECURITY_GROUPS_COMMON",
+    "SECURITY_GROUPS_CONTENT_AUDIT",
+    "SECURITY_GROUPS_USAGE_AUDIT",
+    "NETWORK_FIREWALL",
+    "THIRD_PARTY_FIREWALL",
+    "DNS_FIREWALL",
+    "IMPORT_NETWORK_FIREWALL"
+   ],
+   "type": "string"
+  },
+  "ResourceArn": {
+   "description": "A resource ARN.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "description": "A resource tag.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ResourceType": {
+   "description": "An AWS resource type",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^([^\\s]*)$",
+   "type": "string"
+  },
+  "SecurityServicePolicyData": {
+   "additionalProperties": false,
+   "description": "Firewall security service policy data.",
+   "properties": {
+    "ManagedServiceData": {
+     "$ref": "#/definitions/ManagedServiceData"
+    },
+    "PolicyOption": {
+     "$ref": "#/definitions/PolicyOption"
+    },
+    "Type": {
+     "$ref": "#/definitions/PolicyType"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ThirdPartyFirewallPolicy": {
+   "additionalProperties": false,
+   "description": "Third party firewall policy.",
+   "properties": {
+    "FirewallDeploymentModel": {
+     "$ref": "#/definitions/FirewallDeploymentModel"
+    }
+   },
+   "required": [
+    "FirewallDeploymentModel"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Creates an AWS Firewall Manager policy.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "fms:PutPolicy",
+    "fms:TagResource",
+    "waf-regional:ListRuleGroups",
+    "wafv2:CheckCapacity",
+    "wafv2:ListRuleGroups",
+    "wafv2:ListAvailableManagedRuleGroups",
+    "wafv2:ListAvailableManagedRuleGroupVersions",
+    "network-firewall:DescribeRuleGroup",
+    "network-firewall:DescribeRuleGroupMetadata",
+    "route53resolver:ListFirewallRuleGroups",
+    "ec2:DescribeAvailabilityZones",
+    "s3:PutBucketPolicy",
+    "s3:GetBucketPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "fms:DeletePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "fms:ListPolicies",
+    "fms:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "fms:GetPolicy",
+    "fms:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "fms:PutPolicy",
+    "fms:GetPolicy",
+    "fms:TagResource",
+    "fms:UntagResource",
+    "fms:ListTagsForResource",
+    "waf-regional:ListRuleGroups",
+    "wafv2:CheckCapacity",
+    "wafv2:ListRuleGroups",
+    "wafv2:ListAvailableManagedRuleGroups",
+    "wafv2:ListAvailableManagedRuleGroupVersions",
+    "network-firewall:DescribeRuleGroup",
+    "network-firewall:DescribeRuleGroupMetadata",
+    "route53resolver:ListFirewallRuleGroups",
+    "ec2:DescribeAvailabilityZones",
+    "s3:PutBucketPolicy",
+    "s3:GetBucketPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "DeleteAllPolicyResources": {
+   "type": "boolean"
+  },
+  "ExcludeMap": {
+   "$ref": "#/definitions/IEMap"
+  },
+  "ExcludeResourceTags": {
+   "type": "boolean"
+  },
+  "Id": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-z0-9A-Z-]{36}$",
+   "type": "string"
+  },
+  "IncludeMap": {
+   "$ref": "#/definitions/IEMap"
+  },
+  "PolicyDescription": {
+   "maxLength": 256,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]+)$",
+   "type": "string"
+  },
+  "PolicyName": {
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^([a-zA-Z0-9_.:/=+\\-@\\s]+)$",
+   "type": "string"
+  },
+  "RemediationEnabled": {
+   "type": "boolean"
+  },
+  "ResourceSetIds": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Base62Id"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ResourceTags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 8,
+   "type": "array"
+  },
+  "ResourceType": {
+   "$ref": "#/definitions/ResourceType"
+  },
+  "ResourceTypeList": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/ResourceType"
+   },
+   "type": "array"
+  },
+  "ResourcesCleanUp": {
+   "type": "boolean"
+  },
+  "SecurityServicePolicyData": {
+   "$ref": "#/definitions/SecurityServicePolicyData"
+  },
+  "Tags": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/PolicyTag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "ExcludeResourceTags",
+  "PolicyName",
+  "RemediationEnabled",
+  "SecurityServicePolicyData"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
+ "typeName": "AWS::FMS::Policy",
+ "writeOnlyProperties": [
+  "/properties/DeleteAllPolicyResources"
+ ]
+}

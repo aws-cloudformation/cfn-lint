@@ -1,0 +1,158 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/VpcId"
+ ],
+ "description": "Amazon OpenSearchServerless vpc endpoint resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:BatchGetVpcEndpoint",
+    "aoss:CreateVpcEndpoint",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DeleteVpcEndPoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:ModifyVpcEndPoint",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:CreateTags",
+    "route53:ChangeResourceRecordSets",
+    "route53:GetChange",
+    "route53:GetHostedZone",
+    "route53:ListResourceRecordSets",
+    "route53:ListHostedZonesByName",
+    "route53:CreateHostedZone",
+    "route53:ListHostedZonesByVPC",
+    "route53:AssociateVPCWithHostedZone"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:BatchGetVpcEndpoint",
+    "aoss:DeleteVpcEndpoint",
+    "ec2:DeleteVpcEndPoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:ModifyVpcEndPoint",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:CreateTags",
+    "route53:ChangeResourceRecordSets",
+    "route53:GetChange",
+    "route53:GetHostedZone",
+    "route53:ListResourceRecordSets",
+    "route53:ListHostedZonesByName",
+    "route53:CreateHostedZone",
+    "route53:ListHostedZonesByVPC",
+    "route53:AssociateVPCWithHostedZone"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aoss:ListVpcEndpoints",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:BatchGetVpcEndpoint",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:BatchGetVpcEndpoint",
+    "aoss:UpdateVpcEndpoint",
+    "ec2:CreateVpcEndpoint",
+    "ec2:DeleteVpcEndPoints",
+    "ec2:DescribeVpcEndpoints",
+    "ec2:ModifyVpcEndPoint",
+    "ec2:DescribeVpcs",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:CreateTags",
+    "route53:ChangeResourceRecordSets",
+    "route53:GetChange",
+    "route53:GetHostedZone",
+    "route53:ListResourceRecordSets",
+    "route53:ListHostedZonesByName",
+    "route53:CreateHostedZone",
+    "route53:ListHostedZonesByVPC",
+    "route53:AssociateVPCWithHostedZone"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Id": {
+   "description": "The identifier of the VPC Endpoint",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^vpce-[0-9a-z]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the VPC Endpoint",
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "description": "The ID of one or more security groups to associate with the endpoint network interface",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "minLength": 1,
+    "pattern": "^[\\w+\\-]+$",
+    "type": "string"
+   },
+   "maxItems": 5,
+   "minItems": 1,
+   "type": "array"
+  },
+  "SubnetIds": {
+   "description": "The ID of one or more subnets in which to create an endpoint network interface",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 32,
+    "minLength": 1,
+    "pattern": "^subnet-([0-9a-f]{8}|[0-9a-f]{17})$",
+    "type": "string"
+   },
+   "maxItems": 6,
+   "minItems": 1,
+   "type": "array"
+  },
+  "VpcId": {
+   "description": "The ID of the VPC in which the endpoint will be used.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^vpc-[0-9a-z]*$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "VpcId"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::VpcEndpoint"
+}

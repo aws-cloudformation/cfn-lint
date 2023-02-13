@@ -1,0 +1,89 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "description": "Resource Type definition for AWS::Events::ApiDestination.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "events:CreateApiDestination",
+    "events:DescribeApiDestination"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "events:DeleteApiDestination",
+    "events:DescribeApiDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "events:ListApiDestinations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "events:DescribeApiDestination"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "events:UpdateApiDestination",
+    "events:DescribeApiDestination"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The arn of the api destination.",
+   "type": "string"
+  },
+  "ConnectionArn": {
+   "description": "The arn of the connection.",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 512,
+   "type": "string"
+  },
+  "HttpMethod": {
+   "enum": [
+    "GET",
+    "HEAD",
+    "POST",
+    "OPTIONS",
+    "PUT",
+    "DELETE",
+    "PATCH"
+   ],
+   "type": "string"
+  },
+  "InvocationEndpoint": {
+   "description": "Url endpoint to invoke.",
+   "type": "string"
+  },
+  "InvocationRateLimitPerSecond": {
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Name": {
+   "description": "Name of the apiDestination.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ConnectionArn",
+  "InvocationEndpoint",
+  "HttpMethod"
+ ],
+ "typeName": "AWS::Events::ApiDestination"
+}

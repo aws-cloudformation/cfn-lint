@@ -1,0 +1,142 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/FleetType"
+ ],
+ "definitions": {
+  "ComputeCapacity": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredInstances": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "DesiredInstances"
+   ],
+   "type": "object"
+  },
+  "DomainJoinInfo": {
+   "additionalProperties": false,
+   "properties": {
+    "DirectoryName": {
+     "type": "string"
+    },
+    "OrganizationalUnitDistinguishedName": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::AppStream::Fleet",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ComputeCapacity": {
+   "$ref": "#/definitions/ComputeCapacity"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisconnectTimeoutInSeconds": {
+   "type": "integer"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "DomainJoinInfo": {
+   "$ref": "#/definitions/DomainJoinInfo"
+  },
+  "EnableDefaultInternetAccess": {
+   "type": "boolean"
+  },
+  "FleetType": {
+   "type": "string"
+  },
+  "IamRoleArn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IdleDisconnectTimeoutInSeconds": {
+   "type": "integer"
+  },
+  "ImageArn": {
+   "type": "string"
+  },
+  "ImageName": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "MaxUserDurationInSeconds": {
+   "type": "integer"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "StreamView": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ComputeCapacity",
+  "InstanceType",
+  "Name"
+ ],
+ "typeName": "AWS::AppStream::Fleet"
+}

@@ -1,0 +1,132 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerId",
+  "/properties/UserName"
+ ],
+ "definitions": {
+  "HomeDirectoryMapEntry": {
+   "additionalProperties": false,
+   "properties": {
+    "Entry": {
+     "type": "string"
+    },
+    "Target": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Entry",
+    "Target"
+   ],
+   "type": "object"
+  },
+  "PosixProfile": {
+   "additionalProperties": false,
+   "properties": {
+    "Gid": {
+     "type": "number"
+    },
+    "SecondaryGids": {
+     "items": {
+      "type": "number"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Uid": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Uid",
+    "Gid"
+   ],
+   "type": "object"
+  },
+  "SshPublicKey": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Transfer::User",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "HomeDirectory": {
+   "type": "string"
+  },
+  "HomeDirectoryMappings": {
+   "items": {
+    "$ref": "#/definitions/HomeDirectoryMapEntry"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "HomeDirectoryType": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Policy": {
+   "type": "string"
+  },
+  "PosixProfile": {
+   "$ref": "#/definitions/PosixProfile"
+  },
+  "Role": {
+   "type": "string"
+  },
+  "ServerId": {
+   "type": "string"
+  },
+  "SshPublicKeys": {
+   "items": {
+    "$ref": "#/definitions/SshPublicKey"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserName": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Role",
+  "ServerId",
+  "UserName"
+ ],
+ "typeName": "AWS::Transfer::User"
+}

@@ -1,0 +1,444 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "description": "The automation configuration to launch.",
+   "properties": {
+    "SsmAutomation": {
+     "$ref": "#/definitions/SsmAutomation"
+    }
+   },
+   "type": "object"
+  },
+  "ChatChannel": {
+   "additionalProperties": false,
+   "description": "The chat channel configuration.",
+   "properties": {
+    "ChatbotSns": {
+     "$ref": "#/definitions/ChatbotSns"
+    }
+   },
+   "type": "object"
+  },
+  "ChatbotSns": {
+   "default": [],
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/SnsArn"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DynamicSsmParameter": {
+   "additionalProperties": false,
+   "description": "A parameter with a dynamic value to set when starting the SSM automation document.",
+   "properties": {
+    "Key": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/DynamicSsmParameterValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "DynamicSsmParameterValue": {
+   "additionalProperties": false,
+   "description": "Value of the dynamic parameter to set when starting the SSM automation document.",
+   "properties": {
+    "Variable": {
+     "$ref": "#/definitions/VariableType"
+    }
+   },
+   "type": "object"
+  },
+  "IncidentTemplate": {
+   "additionalProperties": false,
+   "description": "The incident template configuration.",
+   "properties": {
+    "DedupeString": {
+     "description": "The deduplication string.",
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Impact": {
+     "description": "The impact value.",
+     "maximum": 5,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "IncidentTags": {
+     "default": [],
+     "description": "Tags that get applied to incidents created by the StartIncident API action.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "maxItems": 50,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotificationTargets": {
+     "default": [],
+     "description": "The list of notification targets.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/NotificationTargetItem"
+     },
+     "maxItems": 10,
+     "type": "array"
+    },
+    "Summary": {
+     "description": "The summary string.",
+     "maxLength": 4000,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Title": {
+     "description": "The title string.",
+     "maxLength": 200,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Title",
+    "Impact"
+   ],
+   "type": "object"
+  },
+  "Integration": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "PagerDutyConfiguration"
+     ]
+    }
+   ],
+   "properties": {
+    "PagerDutyConfiguration": {
+     "$ref": "#/definitions/PagerDutyConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "NotificationTargetItem": {
+   "additionalProperties": false,
+   "description": "A notification target.",
+   "properties": {
+    "SnsTopicArn": {
+     "$ref": "#/definitions/SnsArn"
+    }
+   },
+   "type": "object"
+  },
+  "PagerDutyConfiguration": {
+   "additionalProperties": false,
+   "description": "The pagerDuty configuration to use when starting the incident.",
+   "properties": {
+    "Name": {
+     "description": "The name of the pagerDuty configuration.",
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    },
+    "PagerDutyIncidentConfiguration": {
+     "$ref": "#/definitions/PagerDutyIncidentConfiguration"
+    },
+    "SecretId": {
+     "description": "The AWS secrets manager secretId storing the pagerDuty token.",
+     "maxLength": 512,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name",
+    "SecretId",
+    "PagerDutyIncidentConfiguration"
+   ],
+   "type": "object"
+  },
+  "PagerDutyIncidentConfiguration": {
+   "additionalProperties": false,
+   "description": "The pagerDuty incident configuration.",
+   "properties": {
+    "ServiceId": {
+     "description": "The pagerDuty serviceId.",
+     "maxLength": 200,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ServiceId"
+   ],
+   "type": "object"
+  },
+  "SSMContact": {
+   "description": "The ARN of the contact.",
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:ssm-contacts:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SnsArn": {
+   "description": "The ARN of the Chatbot SNS topic.",
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:sns:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "SsmAutomation": {
+   "additionalProperties": false,
+   "description": "The configuration to use when starting the SSM automation document.",
+   "properties": {
+    "DocumentName": {
+     "description": "The document name to use when starting the SSM automation document.",
+     "maxLength": 128,
+     "type": "string"
+    },
+    "DocumentVersion": {
+     "description": "The version of the document to use when starting the SSM automation document.",
+     "maxLength": 128,
+     "type": "string"
+    },
+    "DynamicParameters": {
+     "default": [],
+     "description": "The parameters with dynamic values to set when starting the SSM automation document.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DynamicSsmParameter"
+     },
+     "maxItems": 200,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Parameters": {
+     "default": [],
+     "description": "The parameters to set when starting the SSM automation document.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SsmParameter"
+     },
+     "maxItems": 200,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "RoleArn": {
+     "description": "The role ARN to use when starting the SSM automation document.",
+     "maxLength": 1000,
+     "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+     "type": "string"
+    },
+    "TargetAccount": {
+     "description": "The account type to use when starting the SSM automation document.",
+     "enum": [
+      "IMPACTED_ACCOUNT",
+      "RESPONSE_PLAN_OWNER_ACCOUNT"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "DocumentName"
+   ],
+   "type": "object"
+  },
+  "SsmParameter": {
+   "additionalProperties": false,
+   "description": "A parameter to set when starting the SSM automation document.",
+   "properties": {
+    "Key": {
+     "maxLength": 50,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Values": {
+     "insertionOrder": true,
+     "items": {
+      "$ref": "#/definitions/SsmParameterValue"
+     },
+     "maxItems": 10,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Values",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "SsmParameterValue": {
+   "description": "A value of the parameter to set when starting the SSM automation document.",
+   "maxLength": 10000,
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to tag a resource.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VariableType": {
+   "description": "The variable types used as dynamic parameter value when starting the SSM automation document.",
+   "enum": [
+    "INCIDENT_RECORD_ARN",
+    "INVOLVED_RESOURCES"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource type definition for AWS::SSMIncidents::ResponsePlan",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm-incidents:CreateResponsePlan",
+    "iam:PassRole",
+    "secretsmanager:GetSecretValue",
+    "kms:Decrypt",
+    "kms:GenerateDataKey*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm-incidents:DeleteResponsePlan"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ssm-incidents:ListResponsePlans"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm-incidents:GetResponsePlan",
+    "ssm-incidents:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm-incidents:UpdateResponsePlan",
+    "iam:PassRole",
+    "ssm-incidents:TagResource",
+    "ssm-incidents:UntagResource",
+    "ssm-incidents:ListTagsForResource",
+    "secretsmanager:GetSecretValue",
+    "kms:Decrypt",
+    "kms:GenerateDataKey*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Actions": {
+   "default": [],
+   "description": "The list of actions.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Action"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Arn": {
+   "description": "The ARN of the response plan.",
+   "maxLength": 1000,
+   "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+   "type": "string"
+  },
+  "ChatChannel": {
+   "$ref": "#/definitions/ChatChannel"
+  },
+  "DisplayName": {
+   "description": "The display name of the response plan.",
+   "maxLength": 200,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Engagements": {
+   "default": [],
+   "description": "The list of engagements to use.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SSMContact"
+   },
+   "maxItems": 5,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "IncidentTemplate": {
+   "$ref": "#/definitions/IncidentTemplate"
+  },
+  "Integrations": {
+   "default": [],
+   "description": "The list of integrations.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/Integration"
+   },
+   "maxItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "description": "The name of the response plan.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]*$",
+   "type": "string"
+  },
+  "Tags": {
+   "default": [],
+   "description": "The tags to apply to the response plan.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "IncidentTemplate"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm-incidents.git",
+ "taggable": true,
+ "typeName": "AWS::SSMIncidents::ResponsePlan"
+}
