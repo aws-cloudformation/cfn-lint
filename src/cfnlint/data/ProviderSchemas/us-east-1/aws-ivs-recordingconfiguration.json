@@ -1,0 +1,187 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/DestinationConfiguration",
+  "/properties/DestinationConfiguration/S3",
+  "/properties/DestinationConfiguration/S3/BucketName",
+  "/properties/RecordingReconnectWindowSeconds",
+  "/properties/ThumbnailConfiguration",
+  "/properties/ThumbnailConfiguration/RecordingMode",
+  "/properties/ThumbnailConfiguration/TargetIntervalSeconds"
+ ],
+ "definitions": {
+  "DestinationConfiguration": {
+   "additionalProperties": false,
+   "description": "Recording Destination Configuration.",
+   "properties": {
+    "S3": {
+     "$ref": "#/definitions/S3DestinationConfiguration"
+    }
+   },
+   "required": [
+    "S3"
+   ],
+   "type": "object"
+  },
+  "S3DestinationConfiguration": {
+   "additionalProperties": false,
+   "description": "Recording S3 Destination Configuration.",
+   "properties": {
+    "BucketName": {
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "^[a-z0-9-.]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThumbnailConfiguration": {
+   "additionalProperties": false,
+   "description": "Recording Thumbnail Configuration.",
+   "properties": {
+    "RecordingMode": {
+     "description": "Thumbnail Recording Mode, which determines whether thumbnails are recorded at an interval or are disabled.",
+     "enum": [
+      "INTERVAL",
+      "DISABLED"
+     ],
+     "type": "string"
+    },
+    "TargetIntervalSeconds": {
+     "description": "Thumbnail recording Target Interval Seconds defines the interval at which thumbnails are recorded. This field is required if RecordingMode is INTERVAL.",
+     "maximum": 60,
+     "minimum": 5,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "RecordingMode"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IVS::RecordingConfiguration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ivs:CreateRecordingConfiguration",
+    "iam:CreateServiceLinkedRole",
+    "iam:PutRolePolicy",
+    "iam:AttachRolePolicy",
+    "s3:ListBucket",
+    "s3:GetBucketLocation",
+    "cloudformation:ListExports"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ivs:DeleteRecordingConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ivs:ListRecordingConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ivs:GetRecordingConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sts:AssumeRole",
+    "iam:CreateServiceLinkedRole",
+    "ivs:TagResource",
+    "ivs:UntagResource",
+    "ivs:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Recording Configuration ARN is automatically generated on creation and assigned as the unique identifier.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DestinationConfiguration": {
+   "$ref": "#/definitions/DestinationConfiguration"
+  },
+  "Name": {
+   "description": "Recording Configuration Name.",
+   "maxLength": 128,
+   "minLength": 0,
+   "pattern": "^[a-zA-Z0-9-_]*$",
+   "type": "string"
+  },
+  "RecordingReconnectWindowSeconds": {
+   "default": 0,
+   "description": "Recording Reconnect Window Seconds. (0 means disabled)",
+   "maximum": 300,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "State": {
+   "description": "Recording Configuration State.",
+   "enum": [
+    "CREATING",
+    "CREATE_FAILED",
+    "ACTIVE"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the asset model.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThumbnailConfiguration": {
+   "$ref": "#/definitions/ThumbnailConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/State"
+ ],
+ "required": [
+  "DestinationConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::IVS::RecordingConfiguration"
+}

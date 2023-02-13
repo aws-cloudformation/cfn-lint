@@ -1,0 +1,175 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Criteria": {
+   "description": "The regex or s3 object to use for the AllowList.",
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "Regex": {
+       "description": "The S3 object key for the AllowList.",
+       "type": "string"
+      }
+     },
+     "required": [
+      "Regex"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3WordsList": {
+       "$ref": "#/definitions/S3WordsList",
+       "description": "The S3 location for the AllowList."
+      }
+     },
+     "required": [
+      "S3WordsList"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "Regex": {
+   "type": "string"
+  },
+  "S3WordsList": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "type": "string"
+    },
+    "ObjectKey": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "ObjectKey"
+   ],
+   "type": "object"
+  },
+  "Status": {
+   "description": "The status for the AllowList",
+   "enum": [
+    "OK",
+    "S3_OBJECT_NOT_FOUND",
+    "S3_USER_ACCESS_DENIED",
+    "S3_OBJECT_ACCESS_DENIED",
+    "S3_THROTTLED",
+    "S3_OBJECT_OVERSIZE",
+    "S3_OBJECT_EMPTY",
+    "UNKNOWN_ERROR"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The tag's key.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The tag's value.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Macie AllowList resource schema",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "macie2:CreateAllowList",
+    "macie2:GetAllowList"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "macie2:DeleteAllowList"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "macie2:ListAllowLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "macie2:GetAllowList"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "macie2:UpdateAllowList",
+    "macie2:GetAllowList",
+    "macie2:TagResource",
+    "macie2:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "AllowList ARN.",
+   "type": "string"
+  },
+  "Criteria": {
+   "$ref": "#/definitions/Criteria",
+   "description": "AllowList criteria."
+  },
+  "Description": {
+   "description": "Description of AllowList.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "AllowList ID.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of AllowList.",
+   "type": "string"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status",
+   "description": "AllowList status."
+  },
+  "Tags": {
+   "description": "A collection of tags associated with a resource",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/Status"
+ ],
+ "required": [
+  "Name",
+  "Criteria"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+ "tagging": {
+  "taggable": true
+ },
+ "typeName": "AWS::Macie::AllowList"
+}
