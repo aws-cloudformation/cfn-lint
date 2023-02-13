@@ -7,12 +7,8 @@ import fileinput
 import json
 import logging
 import sys
-from json.decoder import (  # type: ignore
-    BACKSLASH,
-    STRINGCHUNK,
-    WHITESPACE,
-    WHITESPACE_STR,
-)
+from json.decoder import WHITESPACE  # type: ignore
+from json.decoder import BACKSLASH, STRINGCHUNK, WHITESPACE_STR  # type: ignore
 from json.scanner import NUMBER_RE
 
 import cfnlint
