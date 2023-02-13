@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ObservabilityConfigurationName",
+  "/properties/TraceConfiguration",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "TraceConfiguration": {
+   "additionalProperties": false,
+   "description": "Describes the configuration of the tracing feature within an AWS App Runner observability configuration.",
+   "properties": {
+    "Vendor": {
+     "description": "The implementation provider chosen for tracing App Runner services.",
+     "enum": [
+      "AWSXRAY"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Vendor"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::AppRunner::ObservabilityConfiguration resource  is an AWS App Runner resource type that specifies an App Runner observability configuration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apprunner:CreateObservabilityConfiguration",
+    "apprunner:DescribeObservabilityConfiguration",
+    "apprunner:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apprunner:DeleteObservabilityConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apprunner:ListObservabilityConfigurations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apprunner:DescribeObservabilityConfiguration"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ObservabilityConfigurationArn"
+ ],
+ "properties": {
+  "Latest": {
+   "description": "It's set to true for the configuration with the highest Revision among all configurations that share the same Name. It's set to false otherwise.",
+   "type": "boolean"
+  },
+  "ObservabilityConfigurationArn": {
+   "description": "The Amazon Resource Name (ARN) of this ObservabilityConfiguration",
+   "maxLength": 1011,
+   "minLength": 1,
+   "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
+   "type": "string"
+  },
+  "ObservabilityConfigurationName": {
+   "description": "A name for the observability configuration. When you use it for the first time in an AWS Region, App Runner creates revision number 1 of this name. When you use the same name in subsequent calls, App Runner creates incremental revisions of the configuration.",
+   "maxLength": 32,
+   "minLength": 4,
+   "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{3,31}",
+   "type": "string"
+  },
+  "ObservabilityConfigurationRevision": {
+   "description": "The revision of this observability configuration. It's unique among all the active configurations ('Status': 'ACTIVE') that share the same ObservabilityConfigurationName.",
+   "type": "integer"
+  },
+  "Tags": {
+   "description": "A list of metadata items that you can associate with your observability configuration resource. A tag is a key-value pair.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "TraceConfiguration": {
+   "$ref": "#/definitions/TraceConfiguration",
+   "description": "The configuration of the tracing feature within this observability configuration. If you don't specify it, App Runner doesn't enable tracing."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ObservabilityConfigurationArn",
+  "/properties/ObservabilityConfigurationRevision",
+  "/properties/Latest"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::AppRunner::ObservabilityConfiguration",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}

@@ -1,0 +1,127 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Tags": {
+   "additionalProperties": false,
+   "patternProperties": {
+    "^(?!aws:)[a-zA-Z+-=._:/]+$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ThemeValue": {
+   "additionalProperties": false,
+   "properties": {
+    "Children": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/ThemeValues"
+     },
+     "type": "array"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ThemeValues": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThemeValue"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Definition of AWS::AmplifyUIBuilder::Theme Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "amplifyuibuilder:CreateTheme",
+    "amplify:GetApp"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "amplifyuibuilder:DeleteTheme",
+    "amplify:GetApp"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "amplifyuibuilder:ListThemes",
+    "amplify:GetApp"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "amplifyuibuilder:GetTheme",
+    "amplify:GetApp"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "amplifyuibuilder:UpdateTheme",
+    "amplify:GetApp"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppId",
+  "/properties/EnvironmentName",
+  "/properties/Id"
+ ],
+ "properties": {
+  "AppId": {
+   "type": "string"
+  },
+  "EnvironmentName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Overrides": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ThemeValues"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "Values": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ThemeValues"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "Values"
+ ],
+ "taggable": true,
+ "typeName": "AWS::AmplifyUIBuilder::Theme"
+}
