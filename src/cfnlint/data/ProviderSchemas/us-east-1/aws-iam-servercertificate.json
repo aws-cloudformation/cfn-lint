@@ -1,0 +1,129 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ServerCertificateName",
+  "/properties/PrivateKey",
+  "/properties/CertificateBody",
+  "/properties/CertificateChain"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IAM::ServerCertificate",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:UploadServerCertificate",
+    "iam:GetServerCertificate"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iam:DeleteServerCertificate"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iam:ListServerCertificates",
+    "iam:GetServerCertificate"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iam:GetServerCertificate"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:TagServerCertificate",
+    "iam:UntagServerCertificate"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ServerCertificateName"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Amazon Resource Name (ARN) of the server certificate",
+   "maxLength": 1600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CertificateBody": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": "string"
+  },
+  "CertificateChain": {
+   "maxLength": 2097152,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": "string"
+  },
+  "Path": {
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "(\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F)",
+   "type": "string"
+  },
+  "PrivateKey": {
+   "maxLength": 16384,
+   "minLength": 1,
+   "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+",
+   "type": "string"
+  },
+  "ServerCertificateName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\w+=,.@-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IAM::ServerCertificate",
+ "writeOnlyProperties": [
+  "/properties/PrivateKey",
+  "/properties/CertificateBody",
+  "/properties/CertificateChain"
+ ]
+}

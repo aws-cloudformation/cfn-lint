@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "An entity type for fraud detector.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "frauddetector:GetEntityTypes",
+    "frauddetector:PutEntityType",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "frauddetector:GetEntityTypes",
+    "frauddetector:DeleteEntityType"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "frauddetector:GetEntityTypes",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "frauddetector:GetEntityTypes",
+    "frauddetector:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "frauddetector:GetEntityTypes",
+    "frauddetector:PutEntityType",
+    "frauddetector:ListTagsForResource",
+    "frauddetector:TagResource",
+    "frauddetector:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The entity type ARN.",
+   "type": "string"
+  },
+  "CreatedTime": {
+   "description": "The timestamp when the entity type was created.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The entity type description.",
+   "maxLength": 128,
+   "minLength": 1,
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "description": "The timestamp when the entity type was last updated.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the entity type.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[0-9a-z_-]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags associated with this entity type.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime",
+  "/properties/LastUpdatedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::FraudDetector::EntityType"
+}

@@ -1,0 +1,157 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "LogLevel": {
+   "enum": [
+    "INFO",
+    "ERROR",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "WirelessDeviceFrameInfo": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Create and manage NetworkAnalyzerConfiguration resource.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotwireless:CreateNetworkAnalyzerConfiguration",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteNetworkAnalyzerConfiguration"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListNetworkAnalyzerConfigurations",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetNetworkAnalyzerConfiguration",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotwireless:UpdateNetworkAnalyzerConfiguration",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Arn for network analyzer configuration, Returned upon successful create.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the new resource",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the network analyzer configuration",
+   "maxLength": 1024,
+   "pattern": "^[a-zA-Z0-9-_]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TraceContent": {
+   "additionalProperties": false,
+   "description": "Trace content for your wireless gateway and wireless device resources",
+   "properties": {
+    "LogLevel": {
+     "$ref": "#/definitions/LogLevel"
+    },
+    "WirelessDeviceFrameInfo": {
+     "$ref": "#/definitions/WirelessDeviceFrameInfo"
+    }
+   },
+   "type": "object"
+  },
+  "WirelessDevices": {
+   "description": "List of wireless gateway resources that have been added to the network analyzer configuration",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 250,
+   "type": "array"
+  },
+  "WirelessGateways": {
+   "description": "List of wireless gateway resources that have been added to the network analyzer configuration",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "maxItems": 250,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTWireless::NetworkAnalyzerConfiguration"
+}

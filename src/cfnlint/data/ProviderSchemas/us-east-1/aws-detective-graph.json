@@ -1,0 +1,76 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Detective::Graph",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "detective:CreateGraph"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "detective:DeleteGraph"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "detective:ListGraphs",
+    "detective:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "detective:ListGraphs",
+    "detective:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "detective:UntagResource",
+    "detective:TagResource",
+    "detective:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Detective graph ARN",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-detective.git",
+ "typeName": "AWS::Detective::Graph"
+}
