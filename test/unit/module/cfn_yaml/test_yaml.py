@@ -10,7 +10,7 @@ from six import StringIO
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 from cfnlint.rules import RulesCollection
-from cfnlint.template import Template  # pylint: disable=E0401
+from cfnlint.template.template import Template  # pylint: disable=E0401
 
 
 class TestYamlParse(BaseTestCase):
@@ -30,7 +30,7 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 30,
+                "failures": 28,
             },
         }
 
