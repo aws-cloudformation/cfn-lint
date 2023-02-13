@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/InstanceFamilies",
+  "/properties/Platforms"
+ ],
+ "definitions": {
+  "ApplicationAttribute": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "PlatformType": {
+   "type": "string"
+  },
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Bucket": {
+     "type": "string"
+    },
+    "S3Key": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "TagKey": {
+     "type": "string"
+    },
+    "TagValue": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TagKey",
+    "TagValue"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::AppStream::Application",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:GetObject",
+    "appstream:CreateApplication"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "appstream:DeleteApplication"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "appstream:DescribeApplications"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "appstream:UpdateApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AppBlockArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "AttributesToDelete": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ApplicationAttribute"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "CreatedTime": {
+   "type": "string"
+  },
+  "Description": {
+   "type": "string"
+  },
+  "DisplayName": {
+   "type": "string"
+  },
+  "IconS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "InstanceFamilies": {
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "LaunchParameters": {
+   "type": "string"
+  },
+  "LaunchPath": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "Platforms": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PlatformType"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "WorkingDirectory": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreatedTime"
+ ],
+ "required": [
+  "Name",
+  "IconS3Location",
+  "LaunchPath",
+  "Platforms",
+  "InstanceFamilies",
+  "AppBlockArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+ "typeName": "AWS::AppStream::Application",
+ "writeOnlyProperties": [
+  "/properties/Tags"
+ ]
+}
