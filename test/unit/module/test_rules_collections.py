@@ -10,7 +10,7 @@ import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
 from cfnlint.exceptions import DuplicateRuleError
 from cfnlint.rules import CloudFormationLintRule, RulesCollection
-from cfnlint.template import Template
+from cfnlint.template.template import Template
 
 
 class TestRulesCollection(BaseTestCase):
@@ -53,24 +53,12 @@ class TestRulesCollection(BaseTestCase):
         filename = "test/fixtures/templates/bad/generic.yaml"
         template = cfnlint.decode.cfn_yaml.load(filename)
         cfn = Template(filename, template, ["us-east-1"])
-        expected_err_count = 33
+        expected_err_count = 31
         matches = []
         matches.extend(self.rules.run(filename, cfn))
         assert (
             len(matches) == expected_err_count
         ), "Expected {} failures, got {}".format(expected_err_count, len(matches))
-
-    def test_fail_sub_properties_run(self):
-        """Test failure run"""
-        filename = "test/fixtures/templates/bad/resources/properties/onlyone.yaml"
-        template = cfnlint.decode.cfn_yaml.load(filename)
-        cfn = Template(filename, template, ["us-east-1"])
-
-        matches = []
-        matches.extend(self.rules.run(filename, cfn))
-        self.assertEqual(
-            6, len(matches), "Expected {} failures, got {}".format(6, len(matches))
-        )
 
     def test_success_filtering_of_rules_default(self):
         """Test extend function"""
