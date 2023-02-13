@@ -8,7 +8,7 @@ from typing import List, Optional, Sequence, Union
 from cfnlint.conditions import Conditions
 from cfnlint.graph import Graph
 from cfnlint.rules import Match, RulesCollection
-from cfnlint.template import Template
+from cfnlint.template.template import Template
 from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)

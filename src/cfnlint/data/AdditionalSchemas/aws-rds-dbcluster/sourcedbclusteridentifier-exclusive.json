@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "description": "When you specify 'SourceDBClusterIdentifier' do not specify 'StorageEncrypted', 'MasterUsername', or 'MasterUserPassword'",
+  "properties": {},
+  "not": {
+    "allOf": [
+      {
+        "required": [
+          "SourceDBClusterIdentifier"
+        ]
+      },
+      {
+        "anyOf": [
+          {
+            "required": [
+              "StorageEncrypted"
+            ]
+          },
+          {
+            "required": [
+              "MasterUsername"
+            ]
+          },
+          {
+            "required": [
+              "MasterUserPassword"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "additionalProperties": true
+}
