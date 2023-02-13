@@ -2,10 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import datetime
+import json
+
 import regex as re
 
-from cfnlint.helpers import REGEX_DYN_REF, RESOURCE_SPECS
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.helpers import FUNCTIONS
+from cfnlint.jsonschema import ValidationError
+from cfnlint.rules import CloudFormationLintRule
 
 
 class StringSize(CloudFormationLintRule):
@@ -17,101 +21,51 @@ class StringSize(CloudFormationLintRule):
     source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["resources", "property", "string", "size"]
 
-    def initialize(self, cfn):
-        """Initialize the rule"""
-        for resource_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            "ResourceTypes"
-        ):
-            self.resource_property_types.append(resource_type_spec)
-        for property_type_spec in RESOURCE_SPECS.get(cfn.regions[0]).get(
-            "PropertyTypes"
-        ):
-            self.resource_sub_property_types.append(property_type_spec)
+    def _serialize_date(self, obj):
+        if isinstance(obj, datetime.date):
+            return obj.isoformat()
+        raise TypeError(
+            f"Object of type {obj.__class__.__name__} is not JSON serializable"
+        )
 
-    def _check_string_length(self, value, path, **kwargs):
-        """ """
-        matches = []
-        string_min = kwargs.get("string_min")
-        string_max = kwargs.get("string_max")
-
-        if isinstance(value, str) and not re.match(REGEX_DYN_REF, value):
-            if not string_min <= len(value) <= string_max:
-                message = "String has to have length between {0} and {1} at {2}. Current length {3}."
-                matches.append(
-                    RuleMatch(
-                        path,
-                        message.format(
-                            string_min, string_max, "/".join(map(str, path)), len(value)
-                        ),
-                    )
-                )
-
-        return matches
-
-    def check(self, cfn, properties, specs, path):
-        """Check itself"""
-        matches = []
-        for p_value, p_path in properties.items_safe(path[:]):
-            for prop in p_value:
-                if prop in specs:
-                    value_type = specs.get(prop).get("Value", {}).get("ValueType", "")
-                    if value_type:
-                        if specs.get(prop).get("Type") == "List":
-                            property_type = specs.get(prop).get("PrimitiveItemType")
+    # pylint: disable=too-many-return-statements
+    def _remove_functions(self, obj):
+        """Replaces intrinsic functions with string"""
+        if isinstance(obj, dict):
+            new_obj = {}
+            if len(obj) == 1:
+                for k, v in obj.items():
+                    if k in FUNCTIONS:
+                        if k == "Fn::Sub":
+                            if isinstance(v, str):
+                                return re.sub(r"\${.*}", "", v)
+                            if isinstance(v, list):
+                                return re.sub(r"\${.*}", "", v[0])
                         else:
-                            property_type = specs.get(prop).get("PrimitiveType")
+                            return ""
+                    else:
+                        new_obj[k] = self._remove_functions(v)
+                        return new_obj
+            else:
+                for k, v in obj.items():
+                    new_obj[k] = self._remove_functions(v)
+                return new_obj
+        elif isinstance(obj, list):
+            new_list = []
+            for v in obj:
+                new_list.append(self._remove_functions(v))
+            return new_list
 
-                        value_specs = (
-                            RESOURCE_SPECS.get(cfn.regions[0])
-                            .get("ValueTypes")
-                            .get(value_type, {})
-                        )
-                        if value_specs == "CACHED":
-                            value_specs = (
-                                RESOURCE_SPECS.get("us-east-1")
-                                .get("ValueTypes")
-                                .get(value_type, {})
-                            )
-                        if value_specs.get("StringMax") and value_specs.get(
-                            "StringMin"
-                        ):
-                            if property_type == "String":
-                                matches.extend(
-                                    cfn.check_value(
-                                        properties,
-                                        prop,
-                                        p_path,
-                                        check_value=self._check_string_length,
-                                        string_max=value_specs.get("StringMax"),
-                                        string_min=value_specs.get("StringMin"),
-                                    )
-                                )
-        return matches
+        return obj
 
-    def match_resource_sub_properties(self, properties, property_type, path, cfn):
-        """Match for sub properties"""
-        matches = []
+    def _non_string_max_length(self, instance, mL):
+        j = self._remove_functions(instance)
+        if len(json.dumps(j, separators=(",", ":"), default=self._serialize_date)) > mL:
+            yield ValidationError("Item is too long")
 
-        specs = (
-            RESOURCE_SPECS.get(cfn.regions[0])
-            .get("PropertyTypes")
-            .get(property_type, {})
-            .get("Properties", {})
-        )
-        matches.extend(self.check(cfn, properties, specs, path))
-
-        return matches
-
-    def match_resource_properties(self, properties, resource_type, path, cfn):
-        """Check CloudFormation Properties"""
-        matches = []
-
-        specs = (
-            RESOURCE_SPECS.get(cfn.regions[0])
-            .get("ResourceTypes")
-            .get(resource_type, {})
-            .get("Properties", {})
-        )
-        matches.extend(self.check(cfn, properties, specs, path))
-
-        return matches
+    # pylint: disable=unused-argument
+    def maxLength(self, validator, mL, instance, schema):
+        if validator.is_type(instance, "object"):
+            yield from self._non_string_max_length(instance, mL)
+        elif validator.is_type(instance, "string") and len(instance) > mL:
+            yield ValidationError(f"{instance!r} is too long")
