@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "description": "When 'EventSourceArn' is associate to Kinesis, Kafka, or DynamoDB you must specify 'StartingPosition'",
+  "if": {
+    "properties": {
+      "EventSourceArn": {
+        "pattern": "arn:aws.*:(kinesis|kafka|dynamodb):.*"
+      }
+    }
+  },
+  "then": {
+      "properties": {
+        "StartingPosition": {
+          "type": "string"
+        }
+      },
+      "required": ["StartingPosition"]
+  },
+  "else": {},
+  "additionalProperties": true
+}
