@@ -9,16 +9,17 @@ import os
 import sys
 from typing import Dict, Iterator, List, Optional, Sequence, Tuple, Union
 
-from jsonschema.exceptions import ValidationError
-
 import cfnlint.config
 import cfnlint.decode
 import cfnlint.formatters
 import cfnlint.maintenance
 import cfnlint.runner
+from cfnlint.decode import decode
 from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import Match, ParseError, RulesCollection, TransformError
-from cfnlint.template import Template
+from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
+from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger("cfnlint")
 DEFAULT_RULESDIR = os.path.join(os.path.dirname(__file__), "rules")
@@ -55,7 +56,7 @@ def run_cli(
     template: str,
     rules: RulesCollectionNone,
     regions: Sequence[str],
-    override_spec: dict,
+    override_spec: str,
     build_graph: bool,
     registry_schemas: Sequence[str],
     mandatory_rules: Optional[Sequence[str]] = None,
@@ -63,7 +64,7 @@ def run_cli(
     """Process args and run"""
 
     if override_spec:
-        cfnlint.helpers.override_specs(override_spec)
+        PROVIDER_SCHEMA_MANAGER.patch(override_spec, regions)
 
     if build_graph:
         template_obj = Template(filename, template, regions)
@@ -298,7 +299,7 @@ def get_template_rules(
         ):
             ignore_bad_template = True
 
-    (template, errors) = cfnlint.decode.decode(filename)
+    (template, errors) = decode.decode(filename)
 
     if errors:
         _build_rule_cache(args)
