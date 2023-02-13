@@ -1,0 +1,115 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ResourceArn": {
+   "description": "Provide Canary Arn associated with the group.",
+   "pattern": "arn:(aws[a-zA-Z-]*)?:synthetics:[a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:\\d{12}:canary:[0-9a-z_\\-]",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)([a-zA-Z\\d\\s_.:/=+\\-@]+)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([a-zA-Z\\d\\s_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Synthetics::Group",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "synthetics:CreateGroup",
+    "synthetics:AssociateResource",
+    "synthetics:TagResource",
+    "synthetics:GetGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "synthetics:DeleteGroup",
+    "synthetics:GetGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "synthetics:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "synthetics:GetGroup",
+    "synthetics:ListTagsForResource",
+    "synthetics:ListGroupResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "synthetics:AssociateResource",
+    "synthetics:DisassociateResource",
+    "synthetics:TagResource",
+    "synthetics:UntagResource",
+    "synthetics:GetGroup",
+    "synthetics:ListGroupResources"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Id": {
+   "description": "Id of the group.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the group.",
+   "pattern": "^[0-9a-z_\\-]{1,64}$",
+   "type": "string"
+  },
+  "ResourceArns": {
+   "items": {
+    "$ref": "#/definitions/ResourceArn"
+   },
+   "maxItems": 10,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-synthetics",
+ "typeName": "AWS::Synthetics::Group"
+}

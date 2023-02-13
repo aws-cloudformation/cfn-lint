@@ -1,0 +1,174 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Encryption": {
+   "additionalProperties": false,
+   "description": "Information about the encryption of the flow.",
+   "properties": {
+    "Algorithm": {
+     "description": "The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).",
+     "enum": [
+      "aes128",
+      "aes192",
+      "aes256"
+     ],
+     "type": "string"
+    },
+    "KeyType": {
+     "default": "static-key",
+     "description": "The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).",
+     "enum": [
+      "static-key",
+      "srt-password"
+     ],
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The ARN of the role that you created during setup (when you set up AWS Elemental MediaConnect as a trusted entity).",
+     "type": "string"
+    },
+    "SecretArn": {
+     "description": " The ARN of the secret that you created in AWS Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SecretArn"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "description": "The settings for attaching a VPC interface to an output.",
+   "properties": {
+    "VpcInterfaceName": {
+     "description": "The name of the VPC interface to use for this output.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::MediaConnect::FlowOutput",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "mediaconnect:AddFlowOutputs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:RemoveFlowOutput"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:UpdateFlowOutput"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/OutputArn"
+ ],
+ "properties": {
+  "CidrAllowList": {
+   "description": "The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Description": {
+   "description": "A description of the output.",
+   "type": "string"
+  },
+  "Destination": {
+   "description": "The address where you want to send the output.",
+   "type": "string"
+  },
+  "Encryption": {
+   "$ref": "#/definitions/Encryption",
+   "description": "The type of key used for the encryption. If no keyType is provided, the service will use the default setting (static-key)."
+  },
+  "FlowArn": {
+   "description": "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
+   "type": "string"
+  },
+  "MaxLatency": {
+   "description": "The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.",
+   "type": "integer"
+  },
+  "MinLatency": {
+   "description": "The minimum latency in milliseconds.",
+   "type": "integer"
+  },
+  "Name": {
+   "description": "The name of the output. This value must be unique within the current flow.",
+   "type": "string"
+  },
+  "OutputArn": {
+   "description": "The ARN of the output.",
+   "type": "string"
+  },
+  "Port": {
+   "description": "The port to use when content is distributed to this output.",
+   "type": "integer"
+  },
+  "Protocol": {
+   "description": "The protocol that is used by the source or output.",
+   "enum": [
+    "zixi-push",
+    "rtp-fec",
+    "rtp",
+    "zixi-pull",
+    "rist",
+    "fujitsu-qos",
+    "srt-listener",
+    "srt-caller"
+   ],
+   "type": "string"
+  },
+  "RemoteId": {
+   "description": "The remote ID for the Zixi-pull stream.",
+   "type": "string"
+  },
+  "SmoothingLatency": {
+   "description": "The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.",
+   "type": "integer"
+  },
+  "StreamId": {
+   "description": "The stream ID that you want to use for this transport. This parameter applies only to Zixi-based streams.",
+   "type": "string"
+  },
+  "VpcInterfaceAttachment": {
+   "$ref": "#/definitions/VpcInterfaceAttachment",
+   "description": "The name of the VPC interface attachment to use for this output."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OutputArn"
+ ],
+ "required": [
+  "FlowArn",
+  "Protocol"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowOutput"
+}
