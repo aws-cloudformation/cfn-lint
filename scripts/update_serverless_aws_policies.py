@@ -4,10 +4,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import logging
-import boto3
 import json
-from samtranslator.translator.managed_policy_translator import ManagedPolicyLoader
+import logging
+
+import boto3
+from samtranslator.translator.managed_policy_translator import \
+    ManagedPolicyLoader
+
 LOGGER = logging.getLogger('cfnlint')
 
 

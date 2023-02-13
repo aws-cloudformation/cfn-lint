@@ -12,7 +12,8 @@ from samtranslator.sdk import resource
 from samtranslator.translator.translator import Translator
 
 from cfnlint.data import Serverless
-from cfnlint.helpers import convert_dict, format_json_string, load_resource
+from cfnlint.decode.node import convert_dict
+from cfnlint.helpers import format_json_string, load_resource
 from cfnlint.rules import Match, TransformError
 
 LOGGER = logging.getLogger("cfnlint")
