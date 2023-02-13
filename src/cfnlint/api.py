@@ -7,7 +7,7 @@ from typing import List
 
 from cfnlint.config import configure_logging
 from cfnlint.core import get_rules
-from cfnlint.decode import decode_str
+from cfnlint.decode.decode import decode_str
 from cfnlint.helpers import REGIONS
 from cfnlint.rules import Match, RulesCollection
 from cfnlint.runner import Runner
