@@ -1,0 +1,145 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/StudioName",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "StudioEncryptionConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>Configuration of the encryption method that is used for the studio.</p>",
+   "properties": {
+    "KeyArn": {
+     "description": "<p>The ARN for a KMS key that is used to encrypt studio data.</p>",
+     "minLength": 4,
+     "pattern": "^arn:.*",
+     "type": "string"
+    },
+    "KeyType": {
+     "$ref": "#/definitions/StudioEncryptionConfigurationKeyType"
+    }
+   },
+   "required": [
+    "KeyType"
+   ],
+   "type": "object"
+  },
+  "StudioEncryptionConfigurationKeyType": {
+   "description": "<p>The type of KMS key that is used to encrypt studio data.</p>",
+   "enum": [
+    "AWS_OWNED_KEY",
+    "CUSTOMER_MANAGED_KEY"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "",
+   "patternProperties": {
+    ".+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Represents a studio that contains other Nimble Studio resources",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "nimble:CreateStudio",
+    "nimble:TagResource",
+    "sso:CreateManagedApplicationInstance"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "nimble:DeleteStudio",
+    "nimble:UntagResource",
+    "sso:DeleteManagedApplicationInstance",
+    "sso:GetManagedApplicationInstance"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "nimble:ListStudios"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "nimble:GetStudio"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "nimble:UpdateStudio"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StudioId"
+ ],
+ "properties": {
+  "AdminRoleArn": {
+   "description": "<p>The IAM role that Studio Admins will assume when logging in to the Nimble Studio portal.</p>",
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "<p>A friendly name for the studio.</p>",
+   "maxLength": 64,
+   "minLength": 0,
+   "type": "string"
+  },
+  "HomeRegion": {
+   "description": "<p>The Amazon Web Services Region where the studio resource is located.</p>",
+   "maxLength": 50,
+   "minLength": 0,
+   "pattern": "[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]",
+   "type": "string"
+  },
+  "SsoClientId": {
+   "description": "<p>The Amazon Web Services SSO application client ID used to integrate with Amazon Web Services SSO to enable Amazon Web Services SSO users to log in to Nimble Studio portal.</p>",
+   "type": "string"
+  },
+  "StudioEncryptionConfiguration": {
+   "$ref": "#/definitions/StudioEncryptionConfiguration"
+  },
+  "StudioId": {
+   "type": "string"
+  },
+  "StudioName": {
+   "description": "<p>The studio name that is used in the URL of the Nimble Studio portal when accessed by Nimble Studio users.</p>",
+   "maxLength": 64,
+   "minLength": 3,
+   "pattern": "^[a-z0-9]*$",
+   "type": "string"
+  },
+  "StudioUrl": {
+   "description": "<p>The address of the web page for the studio.</p>",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  },
+  "UserRoleArn": {
+   "description": "<p>The IAM role that Studio Users will assume when logging in to the Nimble Studio portal.</p>",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/HomeRegion",
+  "/properties/SsoClientId",
+  "/properties/StudioId",
+  "/properties/StudioUrl"
+ ],
+ "required": [
+  "DisplayName",
+  "UserRoleArn",
+  "AdminRoleArn",
+  "StudioName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-nimblestudio",
+ "typeName": "AWS::NimbleStudio::Studio"
+}

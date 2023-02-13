@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MonitorType",
+  "/properties/MonitorDimension",
+  "/properties/MonitorSpecification",
+  "/properties/ResourceTags"
+ ],
+ "definitions": {
+  "Arn": {
+   "description": "Monitor ARN",
+   "pattern": "^arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:[-a-zA-Z0-9/:_]+$",
+   "type": "string"
+  },
+  "ResourceTag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name for the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:).*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS Cost Anomaly Detection leverages advanced Machine Learning technologies to identify anomalous spend and root causes, so you can quickly take action. You can use Cost Anomaly Detection by creating monitor.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ce:CreateAnomalyMonitor",
+    "ce:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ce:DeleteAnomalyMonitor"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ce:GetAnomalyMonitors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ce:GetAnomalyMonitors"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ce:UpdateAnomalyMonitor"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MonitorArn"
+ ],
+ "properties": {
+  "CreationDate": {
+   "description": "The date when the monitor was created. ",
+   "maxLength": 40,
+   "minLength": 0,
+   "pattern": "(\\d{4}-\\d{2}-\\d{2})(T\\d{2}:\\d{2}:\\d{2}Z)?",
+   "type": "string"
+  },
+  "DimensionalValueCount": {
+   "description": "The value for evaluated dimensions.",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "LastEvaluatedDate": {
+   "description": "The date when the monitor last evaluated for anomalies.",
+   "maxLength": 40,
+   "minLength": 0,
+   "pattern": "(\\d{4}-\\d{2}-\\d{2})(T\\d{2}:\\d{2}:\\d{2}Z)?",
+   "type": "string"
+  },
+  "LastUpdatedDate": {
+   "description": "The date when the monitor was last updated.",
+   "maxLength": 40,
+   "minLength": 0,
+   "pattern": "(\\d{4}-\\d{2}-\\d{2})(T\\d{2}:\\d{2}:\\d{2}Z)?",
+   "type": "string"
+  },
+  "MonitorArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "MonitorDimension": {
+   "description": "The dimensions to evaluate",
+   "enum": [
+    "SERVICE"
+   ],
+   "type": "string"
+  },
+  "MonitorName": {
+   "description": "The name of the monitor.",
+   "maxLength": 1024,
+   "minLength": 0,
+   "pattern": "[\\S\\s]*",
+   "type": "string"
+  },
+  "MonitorSpecification": {
+   "type": "string"
+  },
+  "MonitorType": {
+   "enum": [
+    "DIMENSIONAL",
+    "CUSTOM"
+   ],
+   "type": "string"
+  },
+  "ResourceTags": {
+   "description": "Tags to assign to monitor.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceTag"
+   },
+   "maxItems": 200,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/MonitorArn",
+  "/properties/CreationDate",
+  "/properties/DimensionValueCount",
+  "/properties/LastEvaluatedDate",
+  "/properties/LastUpdatedDate",
+  "/properties/DimensionalValueCount"
+ ],
+ "required": [
+  "MonitorName",
+  "MonitorType"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::CE::AnomalyMonitor"
+}

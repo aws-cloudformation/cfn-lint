@@ -1,0 +1,79 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MrapName"
+ ],
+ "description": "The policy to be attached to a Multi Region Access Point",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3:PutMultiRegionAccessPointPolicy",
+    "s3:DescribeMultiRegionAccessPointOperation"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3:GetMultiRegionAccessPointPolicy",
+    "s3:GetMultiRegionAccessPoint"
+   ]
+  },
+  "list": {
+   "permissions": []
+  },
+  "read": {
+   "permissions": [
+    "s3:GetMultiRegionAccessPointPolicy",
+    "s3:GetMultiRegionAccessPointPolicyStatus"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "s3:PutMultiRegionAccessPointPolicy",
+    "s3:DescribeMultiRegionAccessPointOperation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MrapName"
+ ],
+ "properties": {
+  "MrapName": {
+   "description": "The name of the Multi Region Access Point to apply policy",
+   "maxLength": 50,
+   "minLength": 3,
+   "pattern": "^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$",
+   "type": "string"
+  },
+  "Policy": {
+   "description": "Policy document to apply to a Multi Region Access Point",
+   "type": "object"
+  },
+  "PolicyStatus": {
+   "additionalProperties": false,
+   "description": "The Policy Status associated with this Multi Region Access Point",
+   "properties": {
+    "IsPublic": {
+     "description": "Specifies whether the policy is public or not.",
+     "enum": [
+      "true",
+      "false"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "IsPublic"
+   ],
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PolicyStatus",
+  "/properties/PolicyStatus/IsPublic"
+ ],
+ "required": [
+  "Policy",
+  "MrapName"
+ ],
+ "typeName": "AWS::S3::MultiRegionAccessPointPolicy"
+}
