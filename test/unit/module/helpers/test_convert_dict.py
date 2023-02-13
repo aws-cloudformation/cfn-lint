@@ -4,8 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.decode.node import dict_node, list_node, str_node
-from cfnlint.helpers import convert_dict
+from cfnlint.decode.node import convert_dict, dict_node, list_node, str_node
 
 
 class TestConvertDict(BaseTestCase):
