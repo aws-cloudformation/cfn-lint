@@ -1,0 +1,117 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/InstanceId",
+  "/properties/IntegrationArn",
+  "/properties/IntegrationType"
+ ],
+ "definitions": {
+  "InstanceId": {
+   "description": "Amazon Connect instance identifier",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "IntegrationArn": {
+   "description": "ARN of Integration being associated with the instance",
+   "maxLength": 140,
+   "minLength": 1,
+   "type": "string"
+  },
+  "IntegrationAssociationId": {
+   "description": "Identifier of the association with Connect Instance",
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "IntegrationType": {
+   "description": "Specifies the integration type to be associated with the instance",
+   "enum": [
+    "LEX_BOT",
+    "LAMBDA_FUNCTION"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::IntegrationAssociation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:AssociateBot",
+    "connect:AssociateLambdaFunction",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "lambda:addPermission",
+    "lex:GetBot",
+    "lex:DescribeBotAlias",
+    "lex:CreateResourcePolicy",
+    "lex:UpdateResourcePolicy",
+    "lex:CreateResourcePolicyStatement",
+    "lambda:AddPermission",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DisassociateBot",
+    "connect:DisassociateLambdaFunction",
+    "connect:ListBots",
+    "connect:ListLambdaFunctions",
+    "lex:DeleteResourcePolicy",
+    "lex:DeleteResourcePolicyStatement",
+    "lambda:RemovePermission",
+    "iam:PutRolePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:ListBots",
+    "connect:ListLambdaFunctions"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/InstanceId",
+  "/properties/IntegrationType",
+  "/properties/IntegrationArn"
+ ],
+ "properties": {
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "IntegrationArn": {
+   "$ref": "#/definitions/IntegrationArn"
+  },
+  "IntegrationAssociationId": {
+   "$ref": "#/definitions/IntegrationAssociationId"
+  },
+  "IntegrationType": {
+   "$ref": "#/definitions/IntegrationType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IntegrationAssociationId"
+ ],
+ "required": [
+  "InstanceId",
+  "IntegrationType",
+  "IntegrationArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Connect::IntegrationAssociation"
+}

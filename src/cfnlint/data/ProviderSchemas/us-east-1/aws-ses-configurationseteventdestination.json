@@ -1,0 +1,181 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ConfigurationSetName"
+ ],
+ "definitions": {
+  "CloudWatchDestination": {
+   "additionalProperties": false,
+   "description": "An object that contains the names, default values, and sources of the dimensions associated with an Amazon CloudWatch event destination.",
+   "properties": {
+    "DimensionConfigurations": {
+     "description": "A list of dimensions upon which to categorize your emails when you publish email sending events to Amazon CloudWatch.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DimensionConfiguration"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "type": "object"
+  },
+  "DimensionConfiguration": {
+   "additionalProperties": false,
+   "description": "A list of dimensions upon which to categorize your emails when you publish email sending events to Amazon CloudWatch.",
+   "properties": {
+    "DefaultDimensionValue": {
+     "description": "The default value of the dimension that is published to Amazon CloudWatch if you do not provide the value of the dimension when you send an email.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_-]{1,256}$",
+     "type": "string"
+    },
+    "DimensionName": {
+     "description": "The name of an Amazon CloudWatch dimension associated with an email sending metric.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    },
+    "DimensionValueSource": {
+     "description": "The place where Amazon SES finds the value of a dimension to publish to Amazon CloudWatch. To use the message tags that you specify using an X-SES-MESSAGE-TAGS header or a parameter to the SendEmail/SendRawEmail API, specify messageTag. To use your own email headers, specify emailHeader. To put a custom tag on any link included in your email, specify linkTag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DimensionValueSource",
+    "DefaultDimensionValue",
+    "DimensionName"
+   ],
+   "type": "object"
+  },
+  "EventDestination": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchDestination": {
+     "$ref": "#/definitions/CloudWatchDestination",
+     "description": "An object that contains the names, default values, and sources of the dimensions associated with an Amazon CloudWatch event destination."
+    },
+    "Enabled": {
+     "description": "Sets whether Amazon SES publishes events to this destination when you send an email with the associated configuration set. Set to true to enable publishing to this destination; set to false to prevent publishing to this destination. The default value is false.   ",
+     "type": "boolean"
+    },
+    "KinesisFirehoseDestination": {
+     "$ref": "#/definitions/KinesisFirehoseDestination",
+     "description": "An object that contains the delivery stream ARN and the IAM role ARN associated with an Amazon Kinesis Firehose event destination."
+    },
+    "MatchingEventTypes": {
+     "description": "The type of email sending events, send, reject, bounce, complaint, delivery, open, click, renderingFailure, deliveryDelay, and subscription.",
+     "insertionOrder": false,
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Name": {
+     "description": "The name of the event destination set.",
+     "pattern": "^[a-zA-Z0-9_-]{0,64}$",
+     "type": "string"
+    },
+    "SnsDestination": {
+     "$ref": "#/definitions/SnsDestination",
+     "description": "An object that contains SNS topic ARN associated event destination."
+    }
+   },
+   "required": [
+    "MatchingEventTypes"
+   ],
+   "type": "object"
+  },
+  "KinesisFirehoseDestination": {
+   "additionalProperties": false,
+   "description": "An object that contains the delivery stream ARN and the IAM role ARN associated with an Amazon Kinesis Firehose event destination.",
+   "properties": {
+    "DeliveryStreamARN": {
+     "description": "The ARN of the Amazon Kinesis Firehose stream that email sending events should be published to.",
+     "type": "string"
+    },
+    "IAMRoleARN": {
+     "description": "The ARN of the IAM role under which Amazon SES publishes email sending events to the Amazon Kinesis Firehose stream.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "IAMRoleARN",
+    "DeliveryStreamARN"
+   ],
+   "type": "object"
+  },
+  "SnsDestination": {
+   "additionalProperties": false,
+   "description": "An object that contains SNS topic ARN associated event destination.",
+   "properties": {
+    "TopicARN": {
+     "maxLength": 1024,
+     "minLength": 36,
+     "pattern": "^arn:aws[a-z0-9-]*:sns:[a-z0-9-]+:\\d{12}:[^:]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicARN"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SES::ConfigurationSetEventDestination",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateConfigurationSetEventDestination",
+    "ses:GetConfigurationSetEventDestinations",
+    "ses:DescribeConfigurationSet"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteConfigurationSetEventDestination"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetConfigurationSetEventDestinations",
+    "ses:DescribeConfigurationSet"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:UpdateConfigurationSetEventDestination",
+    "ses:GetConfigurationSetEventDestinations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ConfigurationSetName": {
+   "description": "The name of the configuration set that contains the event destination.",
+   "type": "string"
+  },
+  "EventDestination": {
+   "$ref": "#/definitions/EventDestination",
+   "description": "The event destination object."
+  },
+  "Id": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ConfigurationSetName",
+  "EventDestination"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "taggable": false,
+ "typeName": "AWS::SES::ConfigurationSetEventDestination"
+}
