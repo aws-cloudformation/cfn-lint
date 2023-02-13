@@ -1,0 +1,156 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RepositoryName",
+  "/properties/DomainName",
+  "/properties/DomainOwner"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The resource schema to create a CodeArtifact repository.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "codeartifact:CreateRepository",
+    "codeartifact:DescribeRepository",
+    "codeartifact:PutRepositoryPermissionsPolicy",
+    "codeartifact:AssociateExternalConnection",
+    "codeartifact:AssociateWithDownstreamRepository",
+    "codeartifact:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "codeartifact:DeleteRepository"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "codeartifact:ListRepositories"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "codeartifact:DescribeRepository",
+    "codeartifact:GetRepositoryPermissionsPolicy",
+    "codeartifact:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "codeartifact:PutRepositoryPermissionsPolicy",
+    "codeartifact:DeleteRepositoryPermissionsPolicy",
+    "codeartifact:AssociateExternalConnection",
+    "codeartifact:DisassociateExternalConnection",
+    "codeartifact:UpdateRepository",
+    "codeartifact:AssociateWithDownstreamRepository",
+    "codeartifact:TagResource",
+    "codeartifact:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The ARN of the repository.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "A text description of the repository.",
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "DomainName": {
+   "description": "The name of the domain that contains the repository.",
+   "maxLength": 50,
+   "minLength": 2,
+   "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+   "type": "string"
+  },
+  "DomainOwner": {
+   "description": "The 12-digit account ID of the AWS account that owns the domain.",
+   "pattern": "[0-9]{12}",
+   "type": "string"
+  },
+  "ExternalConnections": {
+   "description": "A list of external connections associated with the repository.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Name": {
+   "description": "The name of the repository. This is used for GetAtt",
+   "maxLength": 100,
+   "minLength": 2,
+   "pattern": "^([A-Za-z0-9][A-Za-z0-9._\\-]{1,99})$",
+   "type": "string"
+  },
+  "PermissionsPolicyDocument": {
+   "description": "The access control resource policy on the provided repository.",
+   "maxLength": 5120,
+   "minLength": 2,
+   "type": "object"
+  },
+  "RepositoryName": {
+   "description": "The name of the repository.",
+   "maxLength": 100,
+   "minLength": 2,
+   "pattern": "^([A-Za-z0-9][A-Za-z0-9._\\-]{1,99})$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  },
+  "Upstreams": {
+   "description": "A list of upstream repositories associated with the repository.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Name",
+  "/properties/DomainName",
+  "/properties/DomainOwner",
+  "/properties/Arn"
+ ],
+ "required": [
+  "RepositoryName",
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
+ "typeName": "AWS::CodeArtifact::Repository"
+}

@@ -1,0 +1,118 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/SiteArn"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "Location": {
+   "additionalProperties": false,
+   "description": "The location of the site",
+   "properties": {
+    "Address": {
+     "description": "The physical address.",
+     "type": "string"
+    },
+    "Latitude": {
+     "description": "The latitude.",
+     "type": "string"
+    },
+    "Longitude": {
+     "description": "The longitude.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a site resource.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "The AWS::NetworkManager::Site type describes a site.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateSite"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteSite"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:GetSites"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetSites"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "networkmanager:UpdateSite"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/SiteId"
+ ],
+ "properties": {
+  "Description": {
+   "description": "The description of the site.",
+   "type": "string"
+  },
+  "GlobalNetworkId": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "Location": {
+   "$ref": "#/definitions/Location",
+   "description": "The location of the site."
+  },
+  "SiteArn": {
+   "description": "The Amazon Resource Name (ARN) of the site.",
+   "type": "string"
+  },
+  "SiteId": {
+   "description": "The ID of the site.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the site.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/SiteId",
+  "/properties/SiteArn"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "typeName": "AWS::NetworkManager::Site"
+}
