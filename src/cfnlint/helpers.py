@@ -110,16 +110,20 @@ FUNCTION_OR = "Fn::Or"
 FUNCTION_NOT = "Fn::Not"
 FUNCTION_EQUALS = "Fn::Equals"
 
-PSEUDOPARAMS = [
+PSEUDOPARAMS_SINGLE = [
     "AWS::AccountId",
-    "AWS::NotificationARNs",
-    "AWS::NoValue",
     "AWS::Partition",
     "AWS::Region",
     "AWS::StackId",
     "AWS::StackName",
     "AWS::URLSuffix",
 ]
+
+PSEUDOPARAMS_MULTIPLE = [
+    "AWS::NotificationARNs",
+]
+
+PSEUDOPARAMS = ["AWS::NoValue"] + PSEUDOPARAMS_SINGLE + PSEUDOPARAMS_MULTIPLE
 
 LIMITS = {
     "Mappings": {"number": 200, "attributes": 200, "name": 255},  # in characters

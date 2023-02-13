@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 from typing import Mapping, Sequence
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, _utils
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -23,13 +23,6 @@ class ListDuplicates(CloudFormationLintRule):
     child_rules = {
         "I3037": None,
     }
-
-    def _unbool(self, element, true=object(), false=object()):
-        if element is True:
-            return true
-        if element is False:
-            return false
-        return element
 
     def _mapping_equal(self, one, two):
         if len(one) != len(two):
@@ -50,11 +43,11 @@ class ListDuplicates(CloudFormationLintRule):
             return self._sequence_equal(one, two)
         if isinstance(one, Mapping) and isinstance(two, Mapping):
             return self._mapping_equal(one, two)
-        return self._unbool(one) == self._unbool(two)
+        return _utils.unbool(one) == _utils.unbool(two)
 
     def _uniq(self, container):
         try:
-            sort = sorted(self._unbool(i) for i in container)
+            sort = sorted(_utils.unbool(i) for i in container)
             sliced = itertools.islice(sort, 1, None)
 
             for i, j in zip(sort, sliced):
@@ -64,7 +57,7 @@ class ListDuplicates(CloudFormationLintRule):
         except (NotImplementedError, TypeError):
             seen = []
             for e in container:
-                e = self._unbool(e)
+                e = _utils.unbool(e)
                 for i in seen:
                     if self._equal(i, e):
                         return False
