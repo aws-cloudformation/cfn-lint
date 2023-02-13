@@ -1,0 +1,61 @@
+{
+ "additionalProperties": false,
+ "description": "An AWS Support App resource that creates, updates, reads, and deletes a customer's account alias.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "supportapp:PutAccountAlias",
+    "supportapp:GetAccountAlias"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "supportapp:DeleteAccountAlias",
+    "supportapp:GetAccountAlias"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "supportapp:GetAccountAlias"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "supportapp:GetAccountAlias"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "supportapp:PutAccountAlias",
+    "supportapp:GetAccountAlias"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountAliasResourceId"
+ ],
+ "properties": {
+  "AccountAlias": {
+   "description": "An account alias associated with a customer's account.",
+   "maxLength": 30,
+   "minLength": 1,
+   "pattern": "^[\\w\\- ]+$",
+   "type": "string"
+  },
+  "AccountAliasResourceId": {
+   "description": "Unique identifier representing an alias tied to an account",
+   "maxLength": 29,
+   "minLength": 29,
+   "pattern": "^[\\w\\- ]+$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountAliasResourceId"
+ ],
+ "required": [
+  "AccountAlias"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
+ "typeName": "AWS::SupportApp::AccountAlias"
+}

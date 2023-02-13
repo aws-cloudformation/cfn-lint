@@ -1,0 +1,105 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestApiId"
+ ],
+ "description": "Represents an authorization layer for methods. If enabled on a method, API Gateway will activate the authorizer when a client calls the method.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/AuthorizerId"
+ ],
+ "properties": {
+  "AuthType": {
+   "description": "Optional customer-defined field, used in OpenAPI imports and exports without functional impact.",
+   "type": "string"
+  },
+  "AuthorizerCredentials": {
+   "description": "Specifies the required credentials as an IAM role for API Gateway to invoke the authorizer.",
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "type": "string"
+  },
+  "AuthorizerResultTtlInSeconds": {
+   "description": "The TTL in seconds of cached authorizer results.",
+   "type": "integer"
+  },
+  "AuthorizerUri": {
+   "description": "Specifies the authorizer's Uniform Resource Identifier (URI).",
+   "type": "string"
+  },
+  "IdentitySource": {
+   "description": "The identity source for which authorization is requested.",
+   "type": "string"
+  },
+  "IdentityValidationExpression": {
+   "description": "A validation expression for the incoming identity token.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the authorizer.",
+   "type": "string"
+  },
+  "ProviderARNs": {
+   "description": "A list of the Amazon Cognito user pool ARNs for the COGNITO_USER_POOLS authorizer.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "RestApiId": {
+   "description": "The identifier of the API.",
+   "type": "string"
+  },
+  "Type": {
+   "description": "The authorizer type.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AuthorizerId"
+ ],
+ "required": [
+  "RestApiId",
+  "Type",
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Authorizer"
+}

@@ -1,0 +1,136 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Tags"
+ ],
+ "definitions": {
+  "Sample": {
+   "additionalProperties": false,
+   "properties": {
+    "Size": {
+     "description": "Sample size",
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Type": {
+     "description": "Sample type",
+     "enum": [
+      "FIRST_N",
+      "LAST_N",
+      "RANDOM"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::DataBrew::Project.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "databrew:CreateProject",
+    "databrew:TagResource",
+    "databrew:UntagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "databrew:DeleteProject"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "databrew:ListProjects",
+    "databrew:ListTagsForResource",
+    "iam:ListRoles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "databrew:DescribeProject",
+    "databrew:ListTagsForResource",
+    "iam:ListRoles"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "databrew:UpdateProject"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "DatasetName": {
+   "description": "Dataset name",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Project name",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RecipeName": {
+   "description": "Recipe name",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "Role arn",
+   "type": "string"
+  },
+  "Sample": {
+   "$ref": "#/definitions/Sample",
+   "description": "Sample"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "DatasetName",
+  "Name",
+  "RecipeName",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+ "taggable": true,
+ "typeName": "AWS::DataBrew::Project"
+}

@@ -1,0 +1,113 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Device/DeviceName"
+ ],
+ "definitions": {
+  "Device": {
+   "additionalProperties": false,
+   "description": "Edge device you want to create",
+   "properties": {
+    "Description": {
+     "description": "Description of the device",
+     "maxLength": 40,
+     "minLength": 1,
+     "pattern": "[\\S\\s]+",
+     "type": "string"
+    },
+    "DeviceName": {
+     "description": "The name of the device",
+     "maxLength": 63,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+     "type": "string"
+    },
+    "IotThingName": {
+     "description": "AWS Internet of Things (IoT) object name.",
+     "maxLength": 128,
+     "pattern": "[a-zA-Z0-9:_-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeviceName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^((?!aws:)[\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The key value of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::SageMaker::Device",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "sagemaker:RegisterDevices"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeregisterDevices"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribeDevice"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "sagemaker:UpdateDevices"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Device/DeviceName"
+ ],
+ "properties": {
+  "Device": {
+   "$ref": "#/definitions/Device",
+   "description": "The Edge Device you want to register against a device fleet"
+  },
+  "DeviceFleetName": {
+   "description": "The name of the edge device fleet",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*_*[a-zA-Z0-9])*$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Associate tags with the resource",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "required": [
+  "DeviceFleetName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sagemaker-edge.git",
+ "typeName": "AWS::SageMaker::Device"
+}

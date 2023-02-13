@@ -1,0 +1,66 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProfileName",
+  "/properties/Action",
+  "/properties/Principal",
+  "/properties/StatementId",
+  "/properties/ProfileVersion"
+ ],
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "signer:AddProfilePermission",
+    "signer:ListProfilePermissions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "signer:RemoveProfilePermission",
+    "signer:ListProfilePermissions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "signer:ListProfilePermissions",
+    "signer:GetSigningProfile"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "signer:ListProfilePermissions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/StatementId",
+  "/properties/ProfileName"
+ ],
+ "properties": {
+  "Action": {
+   "type": "string"
+  },
+  "Principal": {
+   "type": "string"
+  },
+  "ProfileName": {
+   "type": "string"
+  },
+  "ProfileVersion": {
+   "pattern": "^[0-9a-zA-Z]{10}$",
+   "type": "string"
+  },
+  "StatementId": {
+   "type": "string"
+  }
+ },
+ "required": [
+  "ProfileName",
+  "Action",
+  "Principal",
+  "StatementId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::Signer::ProfilePermission"
+}

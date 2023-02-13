@@ -1,0 +1,158 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ActivationKey",
+  "/properties/SecurityGroupArns",
+  "/properties/SubnetArns",
+  "/properties/VpcEndpointId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:/-]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for an AWS resource tag.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::DataSync::Agent.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "datasync:CreateAgent",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeVpcEndpoints"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "datasync:DeleteAgent"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "datasync:ListAgents"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "datasync:DescribeAgent",
+    "datasync:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "datasync:UpdateAgent",
+    "datasync:DescribeAgent",
+    "datasync:ListTagsForResource",
+    "datasync:TagResource",
+    "datasync:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AgentArn"
+ ],
+ "properties": {
+  "ActivationKey": {
+   "description": "Activation key of the Agent.",
+   "maxLength": 29,
+   "pattern": "[A-Z0-9]{5}(-[A-Z0-9]{5}){4}",
+   "type": "string"
+  },
+  "AgentArn": {
+   "description": "The DataSync Agent ARN.",
+   "maxLength": 128,
+   "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):datasync:[a-z\\-0-9]+:[0-9]{12}:agent/agent-[0-9a-z]{17}$",
+   "type": "string"
+  },
+  "AgentName": {
+   "description": "The name configured for the agent. Text reference used to identify the agent in the console.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9\\s+=._:@/-]+$",
+   "type": "string"
+  },
+  "EndpointType": {
+   "description": "The service endpoints that the agent will connect to.",
+   "enum": [
+    "FIPS",
+    "PUBLIC",
+    "PRIVATE_LINK"
+   ],
+   "type": "string"
+  },
+  "SecurityGroupArns": {
+   "description": "The ARNs of the security group used to protect your data transfer task subnets.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\\-0-9]*:[0-9]{12}:security-group/.*$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SubnetArns": {
+   "description": "The ARNs of the subnets in which DataSync will create elastic network interfaces for each data transfer task.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 128,
+    "pattern": "^arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):ec2:[a-z\\-0-9]*:[0-9]{12}:subnet/.*$",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VpcEndpointId": {
+   "description": "The ID of the VPC endpoint that the agent has access to.",
+   "pattern": "^vpce-[0-9a-f]{17}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AgentArn",
+  "/properties/EndpointType"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datasync.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::DataSync::Agent",
+ "writeOnlyProperties": [
+  "/properties/ActivationKey"
+ ]
+}
