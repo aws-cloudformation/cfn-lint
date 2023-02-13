@@ -1,0 +1,50 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PoolName",
+  "/properties/ScalingMode"
+ ],
+ "description": "Resource Type definition for AWS::SES::DedicatedIpPool",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateDedicatedIpPool",
+    "ses:GetDedicatedIpPool",
+    "ses:GetDedicatedIps"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteDedicatedIpPool"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListDedicatedIpPools"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetDedicatedIpPool",
+    "ses:GetDedicatedIps"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PoolName"
+ ],
+ "properties": {
+  "PoolName": {
+   "description": "The name of the dedicated IP pool.",
+   "pattern": "^[a-z0-9_-]{0,64}$",
+   "type": "string"
+  },
+  "ScalingMode": {
+   "description": "Specifies whether the dedicated IP pool is managed or not. The default value is STANDARD.",
+   "pattern": "^(STANDARD|MANAGED)$",
+   "type": "string"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::DedicatedIpPool"
+}

@@ -1,0 +1,156 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Arn": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "CapacityUnitsConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "RescoreCapacityUnits": {
+     "$ref": "#/definitions/RescoreCapacityUnits"
+    }
+   },
+   "required": [
+    "RescoreCapacityUnits"
+   ],
+   "type": "object"
+  },
+  "Description": {
+   "maxLength": 1000,
+   "type": "string"
+  },
+  "Id": {
+   "description": "Unique ID of rescore execution plan",
+   "maxLength": 36,
+   "minLength": 36,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of kendra ranking rescore execution plan",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RescoreCapacityUnits": {
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A label for tagging KendraRanking resources",
+   "properties": {
+    "Key": {
+     "description": "A string used to identify this tag",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "A string containing the value for the tag",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "List of tags",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "description": "A KendraRanking Rescore execution plan",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kendra-ranking:CreateRescoreExecutionPlan",
+    "kendra-ranking:DescribeRescoreExecutionPlan",
+    "kendra-ranking:UpdateRescoreExecutionPlan",
+    "kendra-ranking:ListTagsForResource",
+    "kendra-ranking:TagResource"
+   ],
+   "timeoutInMinutes": 240
+  },
+  "delete": {
+   "permissions": [
+    "kendra-ranking:DescribeRescoreExecutionPlan",
+    "kendra-ranking:DeleteRescoreExecutionPlan"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "list": {
+   "permissions": [
+    "kendra-ranking:ListRescoreExecutionPlans"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kendra-ranking:DescribeRescoreExecutionPlan",
+    "kendra-ranking:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kendra-ranking:DescribeRescoreExecutionPlan",
+    "kendra-ranking:UpdateRescoreExecutionPlan",
+    "kendra-ranking:ListTagsForResource",
+    "kendra-ranking:TagResource",
+    "kendra-ranking:UntagResource"
+   ],
+   "timeoutInMinutes": 240
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CapacityUnits": {
+   "$ref": "#/definitions/CapacityUnitsConfiguration",
+   "description": "Capacity units"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description",
+   "description": "A description for the execution plan"
+  },
+  "Id": {
+   "$ref": "#/definitions/Id"
+  },
+  "Name": {
+   "$ref": "#/definitions/Name"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags",
+   "description": "Tags for labeling the execution plan"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/hiw-index.html",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": false,
+  "taggable": true
+ },
+ "typeName": "AWS::KendraRanking::ExecutionPlan"
+}
