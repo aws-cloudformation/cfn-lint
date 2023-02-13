@@ -32,7 +32,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": "Invalid Property Resources/myBucketFail/Properties/BucketName1. Did you mean BucketName?",
+                    "Message": "Additional properties are not allowed (BucketName1 unexpected)",
                     "Rule": {
                         "Description": "Making sure that resources properties are properly configured",
                         "Id": "E3002",
@@ -53,7 +53,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 28},
                     },
-                    "Message": "Invalid Property Resources/myBucketFirstAndLastPass/Properties/BadKey",
+                    "Message": "Additional properties are not allowed (BadKey unexpected)",
                     "Rule": {
                         "Description": "Making sure that resources properties are properly configured",
                         "Id": "E3002",
@@ -73,7 +73,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 32},
                     },
-                    "Message": "Invalid resource attribute BadProperty for resource myBucketFirstAndLastFail",
+                    "Message": "Additional properties are not allowed (BadProperty unexpected)",
                     "Rule": {
                         "Description": "Making sure the basic CloudFormation resources are properly configured",
                         "Id": "E3001",
@@ -94,7 +94,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 35},
                     },
-                    "Message": "Invalid Property Resources/myBucketFirstAndLastFail/Properties/BadKey",
+                    "Message": "Additional properties are not allowed (BadKey unexpected)",
                     "Rule": {
                         "Description": "Making sure that resources properties are properly configured",
                         "Id": "E3002",
@@ -116,7 +116,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 9, "LineNumber": 37},
                     },
-                    "Message": 'You must specify a valid value for Status (Enabled1). Valid values are ["Enabled", "Suspended"]',
+                    "Message": "'Enabled1' is not one of ['Enabled', 'Suspended']",
                     "Rule": {
                         "Description": "Check if properties have a valid value in case of an enumator",
                         "Id": "E3030",

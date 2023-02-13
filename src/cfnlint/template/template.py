@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import Any, Dict, List, Union
+from typing import List
 
 import regex as re
 
@@ -16,96 +16,9 @@ import cfnlint.helpers
 from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.transforms import Transform
+from cfnlint.template.getatts import GetAtts
 
 LOGGER = logging.getLogger(__name__)
-
-
-def resolve_pointer(obj, pointer) -> Dict:
-    """Find the elements at the end of a Cfn pointer
-
-    Args:
-        obj (dict): the root schema used for searching for the pointer
-        pointer (str): the pointer using / to separate levels
-    Returns:
-        Dict: returns the object from the pointer
-    """
-    json_pointer = _SchemaPointer(obj, pointer)
-    return json_pointer.resolve()
-
-
-class _SchemaPointer:
-    def __init__(self, obj: dict, pointer: str) -> None:
-        self.obj = obj
-        self.parts = pointer.split("/")[1:]
-
-    def resolve(self) -> Dict:
-        """Find the elements at the end of a Cfn pointer
-
-        Args:
-        Returns:
-            Dict: returns the object from the pointer
-        """
-        obj = self.obj
-        for part in self.parts:
-            try:
-                obj = self.walk(obj, part)
-            except KeyError as e:
-                raise e
-
-        if "*" in self.parts:
-            return {"type": "array", "items": obj}
-
-        return obj
-
-    # pylint: disable=too-many-return-statements
-    def walk(self, obj: Dict, part: str) -> Any:
-        """Walks one step in doc and returns the referenced part
-
-        Args:
-            obj (dict): the object to evaluate for the part
-            part (str): the string representation of the part
-        Returns:
-            Dict: returns the object at the part
-        """
-        assert hasattr(obj, "__getitem__"), f"invalid document type {type(obj)}"
-
-        try:
-            # using a test for typeName as that is a root schema property
-            if part == "properties" and obj.get("typeName"):
-                return obj[part]
-            if (
-                obj.get("properties")
-                and part != "definitions"
-                and not obj.get("typeName")
-            ):
-                return obj["properties"][part]
-            # arrays have a * in the path
-            if part == "*" and obj.get("type") == "array":
-                return obj.get("items")
-            return obj[part]
-
-        except KeyError as e:
-            # CFN JSON pointers can go down $ref paths so lets do that if we can
-            if obj.get("$ref"):
-                try:
-                    return resolve_pointer(self.obj, f"{obj.get('$ref')}/{part}")
-                except KeyError as ke:
-                    raise ke
-            if obj.get("items", {}).get("$ref"):
-                ref = obj.get("items", {}).get("$ref")
-                try:
-                    return resolve_pointer(self.obj, f"{ref}/{part}")
-                except KeyError as ke:
-                    raise ke
-            if obj.get("oneOf"):
-                for oneOf in obj.get("oneOf"):  # type: ignore
-                    try:
-                        return self.walk(oneOf, part)
-                    except KeyError:
-                        pass
-
-                raise KeyError(f"No oneOf matches for {part}") from e
-            raise e
 
 
 class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attributes
@@ -141,7 +54,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
-        self.graph: Union[Graph, None] = None
+        self.graph = None
         try:
             self.graph = Graph(self)
         except KeyError as err:
@@ -353,111 +266,14 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     # pylint: disable=too-many-locals
     def get_valid_getatts(self):
-        resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
-        propertytypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
-        results = {}
+        results = GetAtts(self.regions)
+
         resources = self.template.get("Resources", {})
 
-        astrik_string_types = ("AWS::CloudFormation::Stack",)
-        astrik_unknown_types = (
-            "Custom::",
-            "AWS::Serverless::",
-            "AWS::CloudFormation::CustomResource",
-        )
-
-        def build_output_string(resource_type, property_name):
-            prop = propertytypes.get(f"{resource_type}.{property_name}")
-            if prop is None:
-                yield None, None
-            else:
-                for k, v in prop.get("Properties", {}).items():
-                    t = v.get("Type")
-                    if t:
-                        for item in build_output_string(resource_type, v):
-                            yield f"{k}.{item[0]}", item[1]
-                    else:
-                        yield k, v.get("PrimitiveType")
-
         for name, value in resources.items():
-            if "Type" in value:
-                valtype = value["Type"]
-                if isinstance(valtype, str):
-                    if valtype.startswith(astrik_string_types):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
-                        results[name] = {"*": {"PrimitiveItemType": "String"}}
-                    elif valtype.startswith(astrik_unknown_types) or valtype.endswith(
-                        "::MODULE"
-                    ):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
-                        results[name] = {"*": {}}
-                    else:
-                        if value["Type"] in resourcetypes:
-                            if "Attributes" in resourcetypes[valtype]:
-                                results[name] = {}
-                                for attname, attvalue in resourcetypes[valtype][
-                                    "Attributes"
-                                ].items():
-                                    if "Type" in attvalue:
-                                        if attvalue.get("Type") in ["List", "Map"]:
-                                            element = {}
-                                            element.update(attvalue)
-                                            results[name][attname] = element
-                                        else:
-                                            for item in build_output_string(
-                                                value["Type"], attname
-                                            ):
-                                                if item[0] is None:
-                                                    continue
-                                                element = {"PrimitiveType": item[1]}
-                                                results[name][
-                                                    f"{attname}.{item[0]}"
-                                                ] = element
-                                    else:
-                                        element = {}
-                                        element.update(attvalue)
-                                        results[name][attname] = element
-                        for schema in cfnlint.helpers.REGISTRY_SCHEMAS:
-                            if value["Type"] == schema["typeName"]:
-                                results[name] = {}
-                                for ro_property in schema.get("readOnlyProperties", []):
-                                    try:
-                                        item = resolve_pointer(schema, ro_property)
-                                    except KeyError:
-                                        continue
-                                    item_type = item["type"]
-                                    _type = None
-                                    primitive_type = None
-                                    if item_type == "string":
-                                        primitive_type = "String"
-                                    elif item_type == "number":
-                                        primitive_type = "Double"
-                                    elif item_type == "integer":
-                                        primitive_type = "Integer"
-                                    elif item_type == "boolean":
-                                        primitive_type = "Boolean"
-                                    elif item_type == "array":
-                                        _type = "List"
-                                        primitive_type = "String"
-
-                                    ro_property = ro_property.replace(
-                                        "/properties/", ""
-                                    )
-                                    results[name][".".join(ro_property.split("/"))] = {}
-                                    if _type:
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "Type"
-                                        ] = _type
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "PrimitiveItemType"
-                                        ] = primitive_type
-                                    elif primitive_type:
-                                        results[name][".".join(ro_property.split("/"))][
-                                            "PrimitiveType"
-                                        ] = primitive_type
+            resource_type = value.get("Type")
+            if isinstance(resource_type, str):
+                results.add(name, resource_type)
 
         return results
 
@@ -1028,13 +844,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if not isinstance(obj, (dict, list)):
             return results
 
-        if not scenarios:
-            if isinstance(obj, dict):
-                if len(obj) == 1:
-                    if obj.get("Ref") == "AWS::NoValue":
-                        return results
-            return [{"Scenario": None, "Object": obj}]
-
         def get_value(value, scenario):  # pylint: disable=R0911
             """Get the value based on the scenario resolving nesting"""
             if isinstance(value, dict):
@@ -1052,7 +861,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
                 new_object = {}
                 for k, v in value.items():
-                    new_object[k] = get_value(v, scenario)
+                    new_v = get_value(v, scenario)
+                    if new_v is not None:
+                        new_object[k] = get_value(v, scenario)
                 return new_object
             if isinstance(value, list):
                 new_list = []
@@ -1064,6 +875,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 return new_list
 
             return value
+
+        if not scenarios:
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get("Ref") == "AWS::NoValue":
+                        return [{"Scenario": None, "Object": {}}]
+            return [{"Scenario": None, "Object": get_value(obj, {})}]
 
         for scenario in scenarios:
             results.append({"Scenario": scenario, "Object": get_value(obj, scenario)})
@@ -1172,7 +990,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             if isinstance(obj, dict):
                 if len(obj) == 1:
                     if obj.get("Ref") == "AWS::NoValue":
-                        return results
+                        return []
             return [{"Scenario": None, "Object": obj}]
 
         for scenario in scenarios:

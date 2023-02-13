@@ -5,9 +5,13 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+from jsonschema import Draft7Validator
+
+from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
 from cfnlint.rules.resources.properties.AllowedValue import (
     AllowedValue,  # pylint: disable=E0401
 )
+from cfnlint.template import Template
 
 
 class TestAllowedValue(BaseRuleTestCase):
@@ -15,18 +19,32 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def setUp(self):
         """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/allowed_values.yaml"
-        ]
+        self.rule = AllowedValue()
+        cfn = Template(
+            "test.yaml",
+            {
+                "Parameters": {
+                    "Foo": {"Type": "String", "Default": "Bar"},
+                }
+            },
+            regions=["us-east-1"],
+        )
+        self.rule.child_rules["W2030"] = ParameterAllowedValue()
+        self.rule.initialize(cfn)
+        self.rule.child_rules["W2030"].initialize(cfn)
 
-    def test_file_positive(self):
+    def test_allowed_value(self):
         """Test Positive"""
-        self.helper_file_positive()
 
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/allowed_values.yaml", 216
+        validator = Draft7Validator({"type": "string", "enum": ["a", "b"]})
+        self.assertEqual(len(list(self.rule.enum(validator, ["a", "b"], "a", {}))), 0)
+        self.assertEqual(len(list(self.rule.enum(validator, ["a", "b"], "c", {}))), 1)
+        self.assertEqual(len(list(self.rule.enum(validator, [0, 2], 0, {}))), 0)
+        self.assertEqual(len(list(self.rule.enum(validator, [0, 2], 1, {}))), 1)
+
+        self.assertEqual(len(list(self.rule.enum(validator, [0], 0, {}))), 0)
+        self.assertEqual(len(list(self.rule.enum(validator, [1], 0, {}))), 1)
+
+        self.assertEqual(
+            len(list(self.rule.enum(validator, [0], {"Ref": "Foo"}, {}))), 1
         )
