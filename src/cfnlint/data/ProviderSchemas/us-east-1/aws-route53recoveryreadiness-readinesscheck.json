@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ReadinessCheckName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Aws Route53 Recovery Readiness Check Schema and API specification.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53-recovery-readiness:CreateReadinessCheck",
+    "route53-recovery-readiness:GetResourceSet",
+    "route53-recovery-readiness:GetReadinessCheck",
+    "route53-recovery-readiness:ListTagsForResources",
+    "route53-recovery-readiness:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53-recovery-readiness:DeleteReadinessCheck",
+    "route53-recovery-readiness:GetReadinessCheck"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53-recovery-readiness:ListReadinessChecks",
+    "route53-recovery-readiness:GetReadinessChecks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53-recovery-readiness:GetReadinessCheck",
+    "route53-recovery-readiness:ListTagsForResources"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53-recovery-readiness:UpdateReadinessCheck",
+    "route53-recovery-readiness:GetResourceSet",
+    "route53-recovery-readiness:GetReadinessCheck",
+    "route53-recovery-readiness:ListTagsForResources",
+    "route53-recovery-readiness:TagResource",
+    "route53-recovery-readiness:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ReadinessCheckName"
+ ],
+ "properties": {
+  "ReadinessCheckArn": {
+   "description": "The Amazon Resource Name (ARN) of the readiness check.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "ReadinessCheckName": {
+   "description": "Name of the ReadinessCheck to create.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "ResourceSetName": {
+   "description": "The name of the resource set to check.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A collection of tags associated with a resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag",
+    "maxItems": 20
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ReadinessCheckArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-readiness.git",
+ "taggable": true,
+ "typeName": "AWS::Route53RecoveryReadiness::ReadinessCheck"
+}

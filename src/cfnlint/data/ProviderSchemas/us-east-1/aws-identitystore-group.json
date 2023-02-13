@@ -1,0 +1,85 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IdentityStoreId"
+ ],
+ "description": "Resource Type definition for AWS::IdentityStore::Group",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "identitystore:CreateGroup",
+    "identitystore:DescribeGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "identitystore:DescribeGroup",
+    "identitystore:DeleteGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "identitystore:ListGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "identitystore:DescribeGroup"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "identitystore:DescribeGroup",
+    "identitystore:UpdateGroup"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GroupId",
+  "/properties/IdentityStoreId"
+ ],
+ "properties": {
+  "Description": {
+   "description": "A string containing the description of the group.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  \u3000]+$",
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "A string containing the name of the group. This value is commonly displayed when the group is referenced.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "pattern": "^[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+$",
+   "type": "string"
+  },
+  "GroupId": {
+   "description": "The unique identifier for a group in the identity store.",
+   "maxLength": 47,
+   "minLength": 1,
+   "pattern": "^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$",
+   "type": "string"
+  },
+  "IdentityStoreId": {
+   "description": "The globally unique identifier for the identity store.",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "^d-[0-9a-f]{10}$|^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/GroupId"
+ ],
+ "required": [
+  "IdentityStoreId",
+  "DisplayName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::IdentityStore::Group"
+}

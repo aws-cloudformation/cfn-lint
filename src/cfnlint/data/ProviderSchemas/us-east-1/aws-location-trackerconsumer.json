@@ -1,0 +1,52 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TrackerName",
+  "/properties/ConsumerArn"
+ ],
+ "description": "Definition of AWS::Location::TrackerConsumer Resource Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "geo:AssociateTrackerConsumer"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "geo:DisassociateTrackerConsumer"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "geo:ListTrackerConsumers"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "geo:ListTrackerConsumers"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TrackerName",
+  "/properties/ConsumerArn"
+ ],
+ "properties": {
+  "ConsumerArn": {
+   "maxLength": 1600,
+   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:([^/].*)?$",
+   "type": "string"
+  },
+  "TrackerName": {
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^[-._\\w]+$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "ConsumerArn",
+  "TrackerName"
+ ],
+ "typeName": "AWS::Location::TrackerConsumer"
+}
