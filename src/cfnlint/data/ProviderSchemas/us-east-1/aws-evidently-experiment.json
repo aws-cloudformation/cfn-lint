@@ -1,0 +1,314 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/Project"
+ ],
+ "definitions": {
+  "MetricGoalObject": {
+   "additionalProperties": false,
+   "properties": {
+    "DesiredChange": {
+     "enum": [
+      "INCREASE",
+      "DECREASE"
+     ],
+     "type": "string"
+    },
+    "EntityIdKey": {
+     "description": "The JSON path to reference the entity id in the event.",
+     "type": "string"
+    },
+    "EventPattern": {
+     "description": "Event patterns have the same structure as the events they match. Rules use event patterns to select events. An event pattern either matches an event or it doesn't.",
+     "type": "string"
+    },
+    "MetricName": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^[\\S]+$",
+     "type": "string"
+    },
+    "UnitLabel": {
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "ValueKey": {
+     "description": "The JSON path to reference the numerical metric value in the event.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "MetricName",
+    "EntityIdKey",
+    "ValueKey",
+    "DesiredChange"
+   ],
+   "type": "object"
+  },
+  "OnlineAbConfigObject": {
+   "additionalProperties": false,
+   "properties": {
+    "ControlTreatmentName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "TreatmentWeights": {
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/TreatmentToWeight"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "RunningStatusObject": {
+   "additionalProperties": false,
+   "oneOf": [
+    {
+     "required": [
+      "Status",
+      "AnalysisCompleteTime"
+     ]
+    },
+    {
+     "required": [
+      "Status",
+      "Reason",
+      "DesiredState"
+     ]
+    }
+   ],
+   "properties": {
+    "AnalysisCompleteTime": {
+     "description": "Provide the analysis Completion time for an experiment",
+     "type": "string"
+    },
+    "DesiredState": {
+     "description": "Provide CANCELLED or COMPLETED desired state when stopping an experiment",
+     "pattern": "^(CANCELLED|COMPLETED)",
+     "type": "string"
+    },
+    "Reason": {
+     "description": "Reason is a required input for stopping the experiment",
+     "type": "string"
+    },
+    "Status": {
+     "description": "Provide START or STOP action to apply on an experiment",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "TreatmentObject": {
+   "additionalProperties": false,
+   "properties": {
+    "Description": {
+     "type": "string"
+    },
+    "Feature": {
+     "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:.*)",
+     "type": "string"
+    },
+    "TreatmentName": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    },
+    "Variation": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TreatmentName",
+    "Feature",
+    "Variation"
+   ],
+   "type": "object"
+  },
+  "TreatmentToWeight": {
+   "additionalProperties": false,
+   "properties": {
+    "SplitWeight": {
+     "maximum": 100000,
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Treatment": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "[-a-zA-Z0-9._]*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Treatment",
+    "SplitWeight"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Evidently::Experiment.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "evidently:CreateExperiment",
+    "evidently:TagResource",
+    "evidently:GetExperiment",
+    "evidently:StartExperiment"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "evidently:DeleteExperiment",
+    "evidently:UntagResource",
+    "evidently:GetExperiment"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "evidently:GetExperiment",
+    "evidently:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "evidently:UpdateExperiment",
+    "evidently:TagResource",
+    "evidently:UntagResource",
+    "evidently:GetExperiment",
+    "evidently:StartExperiment",
+    "evidently:StopExperiment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/experiment/[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "Description": {
+   "maxLength": 160,
+   "minLength": 0,
+   "type": "string"
+  },
+  "MetricGoals": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/MetricGoalObject"
+   },
+   "maxItems": 3,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Name": {
+   "maxLength": 127,
+   "minLength": 1,
+   "pattern": "[-a-zA-Z0-9._]*",
+   "type": "string"
+  },
+  "OnlineAbConfig": {
+   "$ref": "#/definitions/OnlineAbConfigObject"
+  },
+  "Project": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "RandomizationSalt": {
+   "maxLength": 127,
+   "minLength": 0,
+   "pattern": ".*",
+   "type": "string"
+  },
+  "RemoveSegment": {
+   "type": "boolean"
+  },
+  "RunningStatus": {
+   "$ref": "#/definitions/RunningStatusObject",
+   "description": "Start Experiment. Default is False"
+  },
+  "SamplingRate": {
+   "maximum": 100000,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "Segment": {
+   "maxLength": 2048,
+   "minLength": 0,
+   "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:segment/[-a-zA-Z0-9._]*)",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Treatments": {
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/TreatmentObject"
+   },
+   "maxItems": 5,
+   "minItems": 2,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "Project",
+  "Treatments",
+  "MetricGoals",
+  "OnlineAbConfig"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+ "taggable": true,
+ "typeName": "AWS::Evidently::Experiment"
+}

@@ -1,0 +1,103 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. Specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. Specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.  The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type Definition for AWS::KinesisVideo::SignalingChannel",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kinesisvideo:CreateSignalingChannel",
+    "kinesisvideo:DescribeSignalingChannel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kinesisvideo:DeleteSignalingChannel",
+    "kinesisvideo:DescribeSignalingChannel"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kinesisvideo:DescribeSignalingChannel"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kinesisvideo:UpdateSignalingChannel",
+    "kinesisvideo:DescribeSignalingChannel"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the Kinesis Video Signaling Channel.",
+   "type": "string"
+  },
+  "MessageTtlSeconds": {
+   "description": "The period of time a signaling channel retains undelivered messages before they are discarded.",
+   "maximum": 120,
+   "minimum": 5,
+   "type": "integer"
+  },
+  "Name": {
+   "description": "The name of the Kinesis Video Signaling Channel.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_.-]+",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "description": "The type of the Kinesis Video Signaling Channel to create. Currently, SINGLE_MASTER is the only supported channel type.",
+   "enum": [
+    "SINGLE_MASTER"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesisvideo.git",
+ "typeName": "AWS::KinesisVideo::SignalingChannel"
+}

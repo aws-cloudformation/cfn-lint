@@ -1,0 +1,167 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "ApiStage": {
+   "additionalProperties": false,
+   "properties": {
+    "ApiId": {
+     "description": "The ID of an API that is in the specified Stage property that you want to associate with the usage plan.",
+     "type": "string"
+    },
+    "Stage": {
+     "description": "The name of the stage to associate with the usage plan.",
+     "type": "string"
+    },
+    "Throttle": {
+     "additionalProperties": false,
+     "description": "Map containing method-level throttling information for an API stage in a usage plan. The key for the map is the path and method for which to configure custom throttling, for example, '/pets/GET'. Duplicates are not allowed.",
+     "patternProperties": {
+      ".*": {
+       "$ref": "#/definitions/ThrottleSettings"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "QuotaSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "Limit": {
+     "description": "The maximum number of requests that users can make within the specified time period.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Offset": {
+     "description": "For the initial time period, the number of requests to subtract from the specified limit. When you first implement a usage plan, the plan might start in the middle of the week or month. With this property, you can decrease the limit for this initial time period.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "Period": {
+     "description": "The time period for which the maximum limit of requests applies, such as DAY or WEEK. For valid values, see the period property for the UsagePlan resource in the Amazon API Gateway REST API Reference.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "ThrottleSettings": {
+   "additionalProperties": false,
+   "properties": {
+    "BurstLimit": {
+     "description": "The maximum API request rate limit over a time ranging from one to a few seconds. The maximum API request rate limit depends on whether the underlying token bucket is at its full capacity.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "RateLimit": {
+     "description": "The API request steady-state rate limit (average requests per second over an extended period of time).",
+     "minimum": 0,
+     "type": "number"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApiGateway::UsagePlan",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PATCH",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ApiStages": {
+   "description": "The API stages to associate with this usage plan.",
+   "items": {
+    "$ref": "#/definitions/ApiStage"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Description": {
+   "description": "A description of the usage plan.",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The provider-assigned unique ID for this managed resource.",
+   "type": "string"
+  },
+  "Quota": {
+   "$ref": "#/definitions/QuotaSettings",
+   "description": "Configures the number of requests that users can make within a given interval."
+  },
+  "Tags": {
+   "description": "An array of arbitrary tags (key-value pairs) to associate with the usage plan.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Throttle": {
+   "$ref": "#/definitions/ThrottleSettings",
+   "description": "Configures the overall request rate (average requests per second) and burst capacity."
+  },
+  "UsagePlanName": {
+   "description": "A name for the usage plan.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "taggable": true,
+ "typeName": "AWS::ApiGateway::UsagePlan"
+}
