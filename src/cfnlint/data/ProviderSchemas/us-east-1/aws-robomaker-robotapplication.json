@@ -1,0 +1,163 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  },
+  "RobotSoftwareSuite": {
+   "additionalProperties": false,
+   "description": "The robot software suite used by the robot application.",
+   "properties": {
+    "Name": {
+     "description": "The name of robot software suite.",
+     "enum": [
+      "ROS",
+      "ROS2",
+      "General"
+     ],
+     "type": "string"
+    },
+    "Version": {
+     "description": "The version of robot software suite.",
+     "enum": [
+      "Kinetic",
+      "Melodic",
+      "Dashing"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "SourceConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Architecture": {
+     "description": "The architecture of robot application.",
+     "enum": [
+      "X86_64",
+      "ARM64",
+      "ARMHF"
+     ],
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "S3Bucket": {
+     "description": "The Arn of the S3Bucket that stores the robot application source.",
+     "type": "string"
+    },
+    "S3Key": {
+     "description": "The s3 key of robot application source.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "S3Bucket",
+    "S3Key",
+    "Architecture"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "patternProperties": {
+    "^[a-zA-Z0-9-]{1,128}$": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "This schema is for testing purpose only.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "robomaker:CreateRobotApplication"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "robomaker:DeleteRobotApplication"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "robomaker:ListRobotApplications"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "robomaker:DescribeRobotApplication"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "robomaker:TagResource",
+    "robomaker:UntagResource",
+    "robomaker:UpdateRobotApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CurrentRevisionId": {
+   "description": "The revision ID of robot application.",
+   "maxLength": 40,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Environment": {
+   "description": "The URI of the Docker image for the robot application.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the robot application.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "RobotSoftwareSuite": {
+   "$ref": "#/definitions/RobotSoftwareSuite"
+  },
+  "Sources": {
+   "description": "The sources of the robot application.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SourceConfig"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "RobotSoftwareSuite"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::RoboMaker::RobotApplication",
+ "writeOnlyProperties": [
+  "/properties/RobotSoftwareSuite/Version",
+  "/properties/Sources"
+ ]
+}
