@@ -1,0 +1,254 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DatastoreName",
+  "/properties/DatastoreTypeVersion",
+  "/properties/PreloadDataConfig",
+  "/properties/SseConfiguration",
+  "/properties/KmsEncryptionConfig"
+ ],
+ "definitions": {
+  "CreatedAt": {
+   "additionalProperties": false,
+   "description": "The time that a Data Store was created.",
+   "properties": {
+    "Nanos": {
+     "description": "Nanoseconds.",
+     "type": "integer"
+    },
+    "Seconds": {
+     "description": "Seconds since epoch.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Seconds",
+    "Nanos"
+   ],
+   "type": "object"
+  },
+  "DatastoreArn": {
+   "description": "The Amazon Resource Name used in the creation of the Data Store.",
+   "pattern": "^arn:aws((-us-gov)|(-iso)|(-iso-b)|(-cn))?:healthlake:[a-zA-Z0-9-]+:[0-9]{12}:datastore/.+?",
+   "type": "string"
+  },
+  "DatastoreEndpoint": {
+   "description": "The AWS endpoint for the Data Store. Each Data Store will have it's own endpoint with Data Store ID in the endpoint URL.",
+   "maxLength": 10000,
+   "type": "string"
+  },
+  "DatastoreId": {
+   "description": "The AWS-generated ID number for the Data Store.",
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatastoreName": {
+   "description": "The user-generated name for the Data Store.",
+   "maxLength": 256,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DatastoreStatus": {
+   "description": "The status of the Data Store. Possible statuses are 'CREATING', 'ACTIVE', 'DELETING', or 'DELETED'.",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "DELETING",
+    "DELETED"
+   ],
+   "type": "string"
+  },
+  "DatastoreTypeVersion": {
+   "description": "The FHIR version. Only R4 version data is supported.",
+   "enum": [
+    "R4"
+   ],
+   "type": "string"
+  },
+  "KmsEncryptionConfig": {
+   "additionalProperties": false,
+   "description": "The customer-managed-key (CMK) used when creating a Data Store. If a customer owned key is not specified, an AWS owned key will be used for encryption.",
+   "properties": {
+    "CmkType": {
+     "description": "The type of customer-managed-key (CMK) used for encryption. The two types of supported CMKs are customer owned CMKs and AWS owned CMKs.",
+     "enum": [
+      "CUSTOMER_MANAGED_KMS_KEY",
+      "AWS_OWNED_KMS_KEY"
+     ],
+     "type": "string"
+    },
+    "KmsKeyId": {
+     "description": "The KMS encryption key id/alias used to encrypt the Data Store contents at rest.",
+     "maxLength": 400,
+     "minLength": 1,
+     "pattern": "(arn:aws((-us-gov)|(-iso)|(-iso-b)|(-cn))?:kms:)?([a-z]{2}-[a-z]+(-[a-z]+)?-\\d:)?(\\d{12}:)?(((key/)?[a-zA-Z0-9-_]+)|(alias/[a-zA-Z0-9:/_-]+))",
+     "type": "string"
+    }
+   },
+   "required": [
+    "CmkType"
+   ],
+   "type": "object"
+  },
+  "PreloadDataConfig": {
+   "additionalProperties": false,
+   "description": "The preloaded data configuration for the Data Store. Only data preloaded from Synthea is supported.",
+   "properties": {
+    "PreloadDataType": {
+     "description": "The type of preloaded data. Only Synthea preloaded data is supported.",
+     "enum": [
+      "SYNTHEA"
+     ],
+     "type": "string"
+    }
+   },
+   "required": [
+    "PreloadDataType"
+   ],
+   "type": "object"
+  },
+  "SseConfiguration": {
+   "additionalProperties": false,
+   "description": "The server-side encryption key configuration for a customer provided encryption key.",
+   "properties": {
+    "KmsEncryptionConfig": {
+     "$ref": "#/definitions/KmsEncryptionConfig"
+    }
+   },
+   "required": [
+    "KmsEncryptionConfig"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair. A tag consists of a tag key and a tag value. Tag keys and tag values are both required, but tag values can be empty (null) strings.",
+   "properties": {
+    "Key": {
+     "description": "The key of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value of the tag.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "HealthLake FHIR Datastore",
+ "documentationUrl": "https://docs.aws.amazon.com/healthlake/latest/devguide/working-with-FHIR-healthlake.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "healthlake:CreateFHIRDatastore",
+    "healthlake:DescribeFHIRDatastore",
+    "iam:PassRole",
+    "kms:DescribeKey",
+    "kms:CreateGrant",
+    "kms:GenerateDataKey",
+    "kms:Decrypt",
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "ram:GetResourceShareInvitations",
+    "ram:AcceptResourceShareInvitation",
+    "glue:CreateDatabase",
+    "glue:DeleteDatabase"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "healthlake:DeleteFHIRDatastore",
+    "healthlake:DescribeFHIRDatastore",
+    "iam:PassRole",
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole",
+    "ram:GetResourceShareInvitations",
+    "ram:AcceptResourceShareInvitation",
+    "glue:CreateDatabase",
+    "glue:DeleteDatabase"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "healthlake:ListFHIRDatastores"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "healthlake:DescribeFHIRDatastore",
+    "healthlake:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "healthlake:TagResource",
+    "healthlake:UntagResource",
+    "healthlake:ListTagsForResource",
+    "iam:PassRole",
+    "iam:GetRole",
+    "iam:CreateServiceLinkedRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DatastoreId"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/CreatedAt"
+  },
+  "DatastoreArn": {
+   "$ref": "#/definitions/DatastoreArn"
+  },
+  "DatastoreEndpoint": {
+   "$ref": "#/definitions/DatastoreEndpoint"
+  },
+  "DatastoreId": {
+   "$ref": "#/definitions/DatastoreId"
+  },
+  "DatastoreName": {
+   "$ref": "#/definitions/DatastoreName"
+  },
+  "DatastoreStatus": {
+   "$ref": "#/definitions/DatastoreStatus"
+  },
+  "DatastoreTypeVersion": {
+   "$ref": "#/definitions/DatastoreTypeVersion"
+  },
+  "PreloadDataConfig": {
+   "$ref": "#/definitions/PreloadDataConfig"
+  },
+  "SseConfiguration": {
+   "$ref": "#/definitions/SseConfiguration"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/DatastoreArn",
+  "/properties/DatastoreEndpoint",
+  "/properties/DatastoreId",
+  "/properties/DatastoreStatus"
+ ],
+ "required": [
+  "DatastoreTypeVersion"
+ ],
+ "taggable": true,
+ "typeName": "AWS::HealthLake::FHIRDatastore"
+}

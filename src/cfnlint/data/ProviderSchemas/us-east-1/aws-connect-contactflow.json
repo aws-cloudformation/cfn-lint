@@ -1,0 +1,140 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. . You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Connect::ContactFlow",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "connect:CreateContactFlow",
+    "connect:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "connect:DeleteContactFlow",
+    "connect:UntagResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "connect:DescribeContactFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "connect:UpdateContactFlowMetadata",
+    "connect:UpdateContactFlowContent",
+    "connect:TagResource",
+    "connect:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactFlowArn"
+ ],
+ "properties": {
+  "ContactFlowArn": {
+   "description": "The identifier of the contact flow (ARN).",
+   "maxLength": 500,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Content": {
+   "description": "The content of the contact flow in JSON format.",
+   "maxLength": 256000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the contact flow.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "InstanceArn": {
+   "description": "The identifier of the Amazon Connect instance (ARN).",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the contact flow.",
+   "maxLength": 127,
+   "minLength": 1,
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the contact flow.",
+   "enum": [
+    "ACTIVE",
+    "ARCHIVED"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tags.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Type": {
+   "description": "The type of the contact flow.",
+   "enum": [
+    "CONTACT_FLOW",
+    "CUSTOMER_QUEUE",
+    "CUSTOMER_HOLD",
+    "CUSTOMER_WHISPER",
+    "AGENT_HOLD",
+    "AGENT_WHISPER",
+    "OUTBOUND_WHISPER",
+    "AGENT_TRANSFER",
+    "QUEUE_TRANSFER"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ContactFlowArn",
+  "/properties/Status"
+ ],
+ "required": [
+  "InstanceArn",
+  "Content",
+  "Name",
+  "Type"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+ "typeName": "AWS::Connect::ContactFlow"
+}

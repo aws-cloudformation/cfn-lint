@@ -1,0 +1,80 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DestinationName"
+ ],
+ "description": "The AWS::Logs::Destination resource specifies a CloudWatch Logs destination. A destination encapsulates a physical resource (such as an Amazon Kinesis data stream) and enables you to subscribe that resource to a stream of log events.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "logs:PutDestination",
+    "logs:PutDestinationPolicy",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "logs:DeleteDestination"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "logs:DescribeDestinations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "logs:DescribeDestinations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "logs:PutDestination",
+    "logs:PutDestinationPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DestinationName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DestinationName": {
+   "description": "The name of the destination resource",
+   "maxLength": 512,
+   "minLength": 1,
+   "pattern": "^[^:*]{1,512}$",
+   "type": "string"
+  },
+  "DestinationPolicy": {
+   "description": "An IAM policy document that governs which AWS accounts can create subscription filters against this destination.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "The ARN of an IAM role that permits CloudWatch Logs to send data to the specified AWS resource",
+   "minLength": 1,
+   "type": "string"
+  },
+  "TargetArn": {
+   "description": "The ARN of the physical target where the log events are delivered (for example, a Kinesis stream)",
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "DestinationName",
+  "TargetArn",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::Logs::Destination"
+}
