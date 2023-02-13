@@ -1,0 +1,91 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/TargetName",
+  "/properties/TargetType"
+ ],
+ "definitions": {},
+ "description": "Resource-specific logging allows you to specify a logging level for a specific thing group.",
+ "documentationUrl": "https://docs.aws.amazon.com/iot/latest/developerguide/configure-logging.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:SetV2LoggingLevel"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:DeleteV2LoggingLevel"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListV2LoggingLevels"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:ListV2LoggingLevels"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:ListV2LoggingLevels",
+    "iot:SetV2LoggingLevel"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/TargetId"
+ ],
+ "properties": {
+  "LogLevel": {
+   "description": "The log level for a specific target. Valid values are: ERROR, WARN, INFO, DEBUG, or DISABLED.",
+   "enum": [
+    "ERROR",
+    "WARN",
+    "INFO",
+    "DEBUG",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "TargetId": {
+   "description": "Unique Id for a Target (TargetType:TargetName), this will be internally built to serve as primary identifier for a log target.",
+   "maxLength": 140,
+   "minLength": 13,
+   "pattern": "[a-zA-Z0-9.:_-]+",
+   "type": "string"
+  },
+  "TargetName": {
+   "description": "The target name.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9.:_-]+",
+   "type": "string"
+  },
+  "TargetType": {
+   "description": "The target type. Value must be THING_GROUP, CLIENT_ID, SOURCE_IP, PRINCIPAL_ID.",
+   "enum": [
+    "THING_GROUP",
+    "CLIENT_ID",
+    "SOURCE_IP",
+    "PRINCIPAL_ID"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/TargetId"
+ ],
+ "required": [
+  "TargetName",
+  "TargetType",
+  "LogLevel"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+ "taggable": false,
+ "typeName": "AWS::IoT::ResourceSpecificLogging"
+}
