@@ -1,0 +1,83 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KeyspaceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Cassandra::Keyspace",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cassandra:Create",
+    "cassandra:Select",
+    "cassandra:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cassandra:Drop",
+    "cassandra:Select"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cassandra:Select"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cassandra:Select"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cassandra:Alter",
+    "cassandra:Select",
+    "cassandra:TagResource",
+    "cassandra:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/KeyspaceName"
+ ],
+ "properties": {
+  "KeyspaceName": {
+   "description": "Name for Cassandra keyspace",
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_]{1,47}$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "required": [],
+ "typeName": "AWS::Cassandra::Keyspace"
+}

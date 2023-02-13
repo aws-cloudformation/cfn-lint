@@ -1,0 +1,126 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactListName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Topic": {
+   "additionalProperties": false,
+   "properties": {
+    "DefaultSubscriptionStatus": {
+     "type": "string"
+    },
+    "Description": {
+     "description": "The description of the topic.",
+     "maxLength": 500,
+     "minLength": 0,
+     "type": "string"
+    },
+    "DisplayName": {
+     "description": "The display name of the topic.",
+     "maxLength": 128,
+     "minLength": 0,
+     "type": "string"
+    },
+    "TopicName": {
+     "description": "The name of the topic.",
+     "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TopicName",
+    "DisplayName",
+    "DefaultSubscriptionStatus"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::SES::ContactList.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ses:CreateContactList"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ses:DeleteContactList"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ses:ListContactLists"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ses:GetContactList"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:UpdateContactList",
+    "ses:UntagResource",
+    "ses:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ContactListName"
+ ],
+ "properties": {
+  "ContactListName": {
+   "description": "The name of the contact list.",
+   "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of the contact list.",
+   "maxLength": 500,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags (keys and values) associated with the contact list.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array"
+  },
+  "Topics": {
+   "description": "The topics associated with the contact list.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Topic"
+   },
+   "maxItems": 20,
+   "minItems": 0,
+   "type": "array"
+  }
+ },
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+ "typeName": "AWS::SES::ContactList"
+}

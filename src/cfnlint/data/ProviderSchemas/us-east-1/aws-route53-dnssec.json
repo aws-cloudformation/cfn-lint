@@ -1,0 +1,53 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/HostedZoneId"
+ ],
+ "description": "Resource used to control (enable/disable) DNSSEC in a specific hosted zone.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53:EnableHostedZoneDNSSEC",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53:DisableHostedZoneDNSSEC",
+    "kms:DescribeKey",
+    "kms:GetPublicKey",
+    "kms:Sign",
+    "kms:CreateGrant"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53:GetDNSSEC",
+    "route53:ListHostedZones"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53:GetDNSSEC"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/HostedZoneId"
+ ],
+ "properties": {
+  "HostedZoneId": {
+   "description": "The unique string (ID) used to identify a hosted zone.",
+   "pattern": "^[A-Z0-9]{1,32}$",
+   "type": "string"
+  }
+ },
+ "required": [
+  "HostedZoneId"
+ ],
+ "taggable": false,
+ "typeName": "AWS::Route53::DNSSEC"
+}
