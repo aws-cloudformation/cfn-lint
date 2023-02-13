@@ -1,0 +1,218 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/SuperuserParameters",
+  "/properties/DataBundles"
+ ],
+ "definitions": {
+  "DataBundleArn": {
+   "pattern": "^arn:aws:finspace:[A-Za-z0-9_/.-]{0,63}:\\d*:data-bundle/[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "FederationParameters": {
+   "description": "Additional parameters to identify Federation mode",
+   "properties": {
+    "ApplicationCallBackURL": {
+     "description": "SAML metadata URL to link with the Environment",
+     "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+     "type": "string"
+    },
+    "AttributeMap": {
+     "description": "Attribute map for SAML configuration",
+     "type": "object"
+    },
+    "FederationProviderName": {
+     "description": "Federation provider name to link with the Environment",
+     "maxLength": 32,
+     "minLength": 1,
+     "pattern": "[^_\\p{Z}][\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}][^_\\p{Z}]+",
+     "type": "string"
+    },
+    "FederationURN": {
+     "description": "SAML metadata URL to link with the Environment",
+     "pattern": "^[A-Za-z0-9._\\-:\\/#\\+]+{1,255}$",
+     "type": "string"
+    },
+    "SamlMetadataDocument": {
+     "description": "SAML metadata document to link the federation provider to the Environment",
+     "maxLength": 10000000,
+     "minLength": 1000,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "SamlMetadataURL": {
+     "description": "SAML metadata URL to link with the Environment",
+     "pattern": "^https?://[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SuperuserParameters": {
+   "description": "Parameters of the first Superuser for the FinSpace Environment",
+   "properties": {
+    "EmailAddress": {
+     "description": "Email address",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+[.]+[A-Za-z]+",
+     "type": "string"
+    },
+    "FirstName": {
+     "description": "First name",
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]{1,50}$",
+     "type": "string"
+    },
+    "LastName": {
+     "description": "Last name",
+     "maxLength": 50,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9]{1,50}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "An example resource schema demonstrating some basic constructs and validation rules.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "finspace:CreateEnvironment",
+    "finspace:GetEnvironment",
+    "finspace:ListEnvironments",
+    "sts:AssumeRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "finspace:DeleteEnvironment",
+    "finspace:GetEnvironment"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "finspace:ListEnvironments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "finspace:GetEnvironment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "finspace:UpdateEnvironment"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/EnvironmentId"
+ ],
+ "properties": {
+  "AwsAccountId": {
+   "description": "AWS account ID associated with the Environment",
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "DataBundles": {
+   "description": "ARNs of FinSpace Data Bundles to install",
+   "items": {
+    "$ref": "#/definitions/DataBundleArn"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "DedicatedServiceAccountId": {
+   "description": "ID for FinSpace created account used to store Environment artifacts",
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of the Environment",
+   "pattern": "^[a-zA-Z0-9. ]{1,1000}$",
+   "type": "string"
+  },
+  "EnvironmentArn": {
+   "description": "ARN of the Environment",
+   "pattern": "^arn:aws:finspace:[A-Za-z0-9_/.-]{0,63}:\\d+:environment/[0-9A-Za-z_-]{1,128}$",
+   "type": "string"
+  },
+  "EnvironmentId": {
+   "description": "Unique identifier for representing FinSpace Environment",
+   "pattern": "^[a-zA-Z0-9]{1,26}$",
+   "type": "string"
+  },
+  "EnvironmentUrl": {
+   "description": "URL used to login to the Environment",
+   "pattern": "^[-a-zA-Z0-9+&amp;@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&amp;@#/%=~_|]{1,1000}",
+   "type": "string"
+  },
+  "FederationMode": {
+   "description": "Federation mode used with the Environment",
+   "enum": [
+    "LOCAL",
+    "FEDERATED"
+   ],
+   "type": "string"
+  },
+  "FederationParameters": {
+   "$ref": "#/definitions/FederationParameters"
+  },
+  "KmsKeyId": {
+   "description": "KMS key used to encrypt customer data within FinSpace Environment infrastructure",
+   "pattern": "^[a-zA-Z-0-9-:\\/]*{1,1000}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the Environment",
+   "pattern": "^[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]{1,255}$",
+   "type": "string"
+  },
+  "SageMakerStudioDomainUrl": {
+   "description": "SageMaker Studio Domain URL associated with the Environment",
+   "pattern": "^[a-zA-Z-0-9-:\\/.]*{1,1000}$",
+   "type": "string"
+  },
+  "Status": {
+   "description": "State of the Environment",
+   "enum": [
+    "CREATE_REQUESTED",
+    "CREATING",
+    "CREATED",
+    "DELETE_REQUESTED",
+    "DELETING",
+    "DELETED",
+    "FAILED_CREATION",
+    "FAILED_DELETION",
+    "RETRY_DELETION",
+    "SUSPENDED"
+   ],
+   "type": "string"
+  },
+  "SuperuserParameters": {
+   "$ref": "#/definitions/SuperuserParameters"
+  }
+ },
+ "propertyTransform": {
+  "/properties/DataBundles": null,
+  "/properties/SuperuserParameters": null
+ },
+ "readOnlyProperties": [
+  "/properties/EnvironmentId",
+  "/properties/Status",
+  "/properties/SageMakerStudioDomainUrl",
+  "/properties/EnvironmentArn",
+  "/properties/EnvironmentUrl",
+  "/properties/AwsAccountId",
+  "/properties/DedicatedServiceAccountId"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::FinSpace::Environment"
+}
