@@ -1,0 +1,137 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LedgerName",
+  "/properties/StreamName",
+  "/properties/RoleArn",
+  "/properties/KinesisConfiguration",
+  "/properties/InclusiveStartTime",
+  "/properties/ExclusiveEndTime"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  },
+  "KinesisConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "AggregationEnabled": {
+     "type": "boolean"
+    },
+    "StreamArn": {
+     "$ref": "#/definitions/Arn",
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::QLDB::Stream.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "qldb:StreamJournalToKinesis",
+    "qldb:DescribeJournalKinesisStream"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "qldb:CancelJournalKinesisStream",
+    "qldb:DescribeJournalKinesisStream"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "qldb:listJournalKinesisStreamsForLedger"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "qldb:DescribeJournalKinesisStream"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "qldb:DescribeJournalKinesisStream",
+    "qldb:UntagResource",
+    "qldb:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LedgerName",
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ExclusiveEndTime": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InclusiveStartTime": {
+   "type": "string"
+  },
+  "KinesisConfiguration": {
+   "$ref": "#/definitions/KinesisConfiguration"
+  },
+  "LedgerName": {
+   "type": "string"
+  },
+  "RoleArn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "StreamName": {
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "LedgerName",
+  "StreamName",
+  "RoleArn",
+  "KinesisConfiguration",
+  "InclusiveStartTime"
+ ],
+ "typeName": "AWS::QLDB::Stream"
+}

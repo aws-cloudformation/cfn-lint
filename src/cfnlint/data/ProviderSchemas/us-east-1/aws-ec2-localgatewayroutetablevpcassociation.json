@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/LocalGatewayRouteTableId",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 127,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 255,
+     "minLength": 1,
+     "pattern": "^(?!aws:.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "description": "Describes an association between a local gateway route table and a VPC.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateLocalGatewayRouteTableVpcAssociation",
+    "ec2:DescribeLocalGatewayRouteTableVpcAssociations",
+    "ec2:CreateTags"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteLocalGatewayRouteTableVpcAssociation",
+    "ec2:DescribeLocalGatewayRouteTableVpcAssociations"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayRouteTableVpcAssociations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayRouteTableVpcAssociations"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeLocalGatewayRouteTableVpcAssociations",
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/LocalGatewayRouteTableVpcAssociationId"
+ ],
+ "properties": {
+  "LocalGatewayId": {
+   "description": "The ID of the local gateway.",
+   "type": "string"
+  },
+  "LocalGatewayRouteTableId": {
+   "description": "The ID of the local gateway route table.",
+   "type": "string"
+  },
+  "LocalGatewayRouteTableVpcAssociationId": {
+   "description": "The ID of the association.",
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the association.",
+   "type": "string"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags",
+   "description": "The tags for the association."
+  },
+  "VpcId": {
+   "description": "The ID of the VPC.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/LocalGatewayId",
+  "/properties/LocalGatewayRouteTableVpcAssociationId",
+  "/properties/State"
+ ],
+ "required": [
+  "LocalGatewayRouteTableId",
+  "VpcId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-lgw.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::LocalGatewayRouteTableVPCAssociation"
+}

@@ -1,0 +1,151 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "DataflowEndpoint": {
+   "additionalProperties": false,
+   "properties": {
+    "Address": {
+     "$ref": "#/definitions/SocketAddress"
+    },
+    "Mtu": {
+     "type": "integer"
+    },
+    "Name": {
+     "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EndpointDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "Endpoint": {
+     "$ref": "#/definitions/DataflowEndpoint"
+    },
+    "SecurityDetails": {
+     "$ref": "#/definitions/SecurityDetails"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "RoleArn": {
+     "type": "string"
+    },
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "SocketAddress": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
+     "type": "string"
+    },
+    "Value": {
+     "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS Ground Station DataflowEndpointGroup schema for CloudFormation",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "groundstation:CreateDataflowEndpointGroup",
+    "groundstation:GetDataflowEndpointGroup",
+    "groundstation:TagResource",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "groundstation:DeleteDataflowEndpointGroup",
+    "groundstation:GetDataflowEndpointGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "groundstation:ListDataflowEndpointGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "groundstation:GetDataflowEndpointGroup",
+    "groundstation:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ContactPostPassDurationSeconds": {
+   "type": "integer"
+  },
+  "ContactPrePassDurationSeconds": {
+   "type": "integer"
+  },
+  "EndpointDetails": {
+   "items": {
+    "$ref": "#/definitions/EndpointDetails"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "EndpointDetails"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+ "typeName": "AWS::GroundStation::DataflowEndpointGroup"
+}

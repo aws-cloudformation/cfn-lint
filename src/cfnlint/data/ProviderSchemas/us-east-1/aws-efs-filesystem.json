@@ -1,0 +1,164 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/KmsKeyId",
+  "/properties/Encrypted",
+  "/properties/PerformanceMode",
+  "/properties/AvailabilityZoneName"
+ ],
+ "definitions": {
+  "BackupPolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "Status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Status"
+   ],
+   "type": "object"
+  },
+  "ElasticFileSystemTag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "LifecyclePolicy": {
+   "additionalProperties": false,
+   "properties": {
+    "TransitionToIA": {
+     "type": "string"
+    },
+    "TransitionToPrimaryStorageClass": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EFS::FileSystem",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "elasticfilesystem:CreateFileSystem",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:PutBackupPolicy",
+    "elasticfilesystem:PutFileSystemPolicy",
+    "elasticfilesystem:PutLifecycleConfiguration"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DeleteFileSystem"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "elasticfilesystem:DescribeBackupPolicy",
+    "elasticfilesystem:DescribeFileSystemPolicy",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeLifecycleConfiguration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "elasticfilesystem:DescribeBackupPolicy",
+    "elasticfilesystem:DescribeFileSystemPolicy",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeLifecycleConfiguration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "elasticfilesystem:DeleteFileSystemPolicy",
+    "elasticfilesystem:DescribeBackupPolicy",
+    "elasticfilesystem:DescribeFileSystemPolicy",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticfilesystem:DescribeLifecycleConfiguration",
+    "elasticfilesystem:DeleteTags",
+    "elasticfilesystem:ListTagsForResource",
+    "elasticfilesystem:PutBackupPolicy",
+    "elasticfilesystem:PutFileSystemPolicy",
+    "elasticfilesystem:PutLifecycleConfiguration",
+    "elasticfilesystem:TagResource",
+    "elasticfilesystem:UntagResource",
+    "elasticfilesystem:UpdateFileSystem"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FileSystemId"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "AvailabilityZoneName": {
+   "type": "string"
+  },
+  "BackupPolicy": {
+   "$ref": "#/definitions/BackupPolicy"
+  },
+  "BypassPolicyLockoutSafetyCheck": {
+   "description": "Whether to bypass the FileSystemPolicy lockout safety check. The policy lockout safety check determines whether the policy in the request will prevent the principal making the request to be locked out from making future PutFileSystemPolicy requests on the file system. Set BypassPolicyLockoutSafetyCheck to True only when you intend to prevent the principal that is making the request from making a subsequent PutFileSystemPolicy request on the file system. Defaults to false",
+   "type": "boolean"
+  },
+  "Encrypted": {
+   "type": "boolean"
+  },
+  "FileSystemId": {
+   "type": "string"
+  },
+  "FileSystemPolicy": {
+   "type": "object"
+  },
+  "FileSystemTags": {
+   "items": {
+    "$ref": "#/definitions/ElasticFileSystemTag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "KmsKeyId": {
+   "type": "string"
+  },
+  "LifecyclePolicies": {
+   "items": {
+    "$ref": "#/definitions/LifecyclePolicy"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PerformanceMode": {
+   "type": "string"
+  },
+  "ProvisionedThroughputInMibps": {
+   "type": "number"
+  },
+  "ThroughputMode": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/FileSystemId",
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::EFS::FileSystem",
+ "writeOnlyProperties": [
+  "/properties/BypassPolicyLockoutSafetyCheck"
+ ]
+}
