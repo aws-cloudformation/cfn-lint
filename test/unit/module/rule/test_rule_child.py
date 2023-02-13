@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 from test.testlib.testcase import BaseTestCase
 from typing import Any, Dict
 
-from cfnlint.decode import decode_str
+from cfnlint.decode.decode import decode_str
 from cfnlint.rules import CloudFormationLintRule  # pylint: disable=E0401
 from cfnlint.rules import Match, RuleMatch, RulesCollection
 from cfnlint.runner import Runner
