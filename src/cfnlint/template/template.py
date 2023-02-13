@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from typing import List, Union
+from typing import List
 
 import regex as re
 
@@ -15,6 +15,7 @@ import cfnlint.helpers
 from cfnlint.graph import Graph
 from cfnlint.match import Match
 from cfnlint.template.transforms import Transform
+from cfnlint.template.getatts import GetAtts
 
 LOGGER = logging.getLogger(__name__)
 
@@ -52,7 +53,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
-        self.graph: Union[Graph, None] = None
+        self.graph = None
         try:
             self.graph = Graph(self)
         except KeyError as err:
@@ -238,73 +239,14 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_valid_getatts(self):
-        resourcetypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("ResourceTypes")
-        propertytypes = cfnlint.helpers.RESOURCE_SPECS["us-east-1"].get("PropertyTypes")
-        results = {}
+        results = GetAtts(self.regions)
+
         resources = self.template.get("Resources", {})
 
-        astrik_string_types = ("AWS::CloudFormation::Stack",)
-        astrik_unknown_types = (
-            "Custom::",
-            "AWS::Serverless::",
-            "AWS::CloudFormation::CustomResource",
-        )
-
-        def build_output_string(resource_type, property_name):
-            prop = propertytypes.get(f"{resource_type}.{property_name}")
-            if prop is None:
-                yield None, None
-            else:
-                for k, v in prop.get("Properties", {}).items():
-                    t = v.get("Type")
-                    if t:
-                        for item in build_output_string(resource_type, v):
-                            yield f"{k}.{item[0]}", item[1]
-                    else:
-                        yield k, v.get("PrimitiveType")
-
         for name, value in resources.items():
-            if "Type" in value:
-                valtype = value["Type"]
-                if isinstance(valtype, str):
-                    if valtype.startswith(astrik_string_types):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
-                        results[name] = {"*": {"PrimitiveItemType": "String"}}
-                    elif valtype.startswith(astrik_unknown_types) or valtype.endswith(
-                        "::MODULE"
-                    ):
-                        LOGGER.debug(
-                            "Cant build an appropriate getatt list from %s", valtype
-                        )
-                        results[name] = {"*": {}}
-                    else:
-                        if value["Type"] in resourcetypes:
-                            if "Attributes" in resourcetypes[valtype]:
-                                results[name] = {}
-                                for attname, attvalue in resourcetypes[valtype][
-                                    "Attributes"
-                                ].items():
-                                    if "Type" in attvalue:
-                                        if attvalue.get("Type") in ["List", "Map"]:
-                                            element = {}
-                                            element.update(attvalue)
-                                            results[name][attname] = element
-                                        else:
-                                            for item in build_output_string(
-                                                value["Type"], attname
-                                            ):
-                                                if item[0] is None:
-                                                    continue
-                                                element = {"PrimitiveType": item[1]}
-                                                results[name][
-                                                    f"{attname}.{item[0]}"
-                                                ] = element
-                                    else:
-                                        element = {}
-                                        element.update(attvalue)
-                                        results[name][attname] = element
+            resource_type = value.get("Type")
+            if isinstance(resource_type, str):
+                results.add(name, resource_type)
 
         return results
 
@@ -882,13 +824,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if not isinstance(obj, (dict, list)):
             return results
 
-        if not scenarios:
-            if isinstance(obj, dict):
-                if len(obj) == 1:
-                    if obj.get("Ref") == "AWS::NoValue":
-                        return results
-            return [{"Scenario": None, "Object": obj}]
-
         def get_value(value, scenario):  # pylint: disable=R0911
             """Get the value based on the scenario resolving nesting"""
             if isinstance(value, dict):
@@ -906,7 +841,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
                 new_object = {}
                 for k, v in value.items():
-                    new_object[k] = get_value(v, scenario)
+                    new_v = get_value(v, scenario)
+                    if new_v is not None:
+                        new_object[k] = get_value(v, scenario)
                 return new_object
             if isinstance(value, list):
                 new_list = []
@@ -918,6 +855,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 return new_list
 
             return value
+
+        if not scenarios:
+            if isinstance(obj, dict):
+                if len(obj) == 1:
+                    if obj.get("Ref") == "AWS::NoValue":
+                        return [{"Scenario": None, "Object": {}}]
+            return [{"Scenario": None, "Object": get_value(obj, {})}]
 
         for scenario in scenarios:
             results.append({"Scenario": scenario, "Object": get_value(obj, scenario)})
@@ -1026,7 +970,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             if isinstance(obj, dict):
                 if len(obj) == 1:
                     if obj.get("Ref") == "AWS::NoValue":
-                        return results
+                        return []
             return [{"Scenario": None, "Object": obj}]
 
         for scenario in scenarios:
