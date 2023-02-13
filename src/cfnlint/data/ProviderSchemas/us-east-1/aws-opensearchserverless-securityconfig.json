@@ -1,0 +1,127 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Type",
+  "/properties/Name"
+ ],
+ "definitions": {
+  "SamlConfigOptions": {
+   "additionalProperties": false,
+   "description": "Describes saml options in form of key value map",
+   "properties": {
+    "GroupAttribute": {
+     "description": "Group attribute for this saml integration",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    },
+    "Metadata": {
+     "description": "The XML saml provider metadata document that you want to use",
+     "maxLength": 20480,
+     "minLength": 1,
+     "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+",
+     "type": "string"
+    },
+    "SessionTimeout": {
+     "description": "Defines the session timeout in minutes",
+     "type": "integer"
+    },
+    "UserAttribute": {
+     "description": "Custom attribute for this saml integration",
+     "maxLength": 2048,
+     "minLength": 1,
+     "pattern": "[\\w+=,.@-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Metadata"
+   ],
+   "type": "object"
+  },
+  "SecurityConfigType": {
+   "description": "Config type for security config",
+   "enum": [
+    "saml"
+   ],
+   "type": "string"
+  }
+ },
+ "description": "Amazon OpenSearchServerless security config resource",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "aoss:CreateSecurityConfig"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "aoss:DeleteSecurityConfig"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "aoss:ListSecurityConfigs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "aoss:GetSecurityConfig"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "aoss:UpdateSecurityConfig"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Description": {
+   "description": "Security config description",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Id": {
+   "description": "The identifier of the security config",
+   "maxLength": 100,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The friendly name of the security config",
+   "maxLength": 32,
+   "minLength": 3,
+   "pattern": "^[a-z][a-z0-9-]{2,31}$",
+   "type": "string"
+  },
+  "SamlOptions": {
+   "$ref": "#/definitions/SamlConfigOptions"
+  },
+  "Type": {
+   "$ref": "#/definitions/SecurityConfigType"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::OpenSearchServerless::SecurityConfig",
+ "writeOnlyProperties": [
+  "/properties/Name"
+ ]
+}

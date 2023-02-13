@@ -1,0 +1,152 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LoRaWAN": {
+   "additionalProperties": false,
+   "properties": {
+    "DlClass": {
+     "description": "Multicast group LoRaWAN DL Class",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    },
+    "NumberOfDevicesInGroup": {
+     "description": "Multicast group number of devices in group. Returned after successful read.",
+     "type": "integer"
+    },
+    "NumberOfDevicesRequested": {
+     "description": "Multicast group number of devices requested. Returned after successful read.",
+     "type": "integer"
+    },
+    "RfRegion": {
+     "description": "Multicast group LoRaWAN RF region",
+     "maxLength": 64,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "RfRegion",
+    "DlClass"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Create and manage Multicast groups.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotwireless:CreateMulticastGroup",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteMulticastGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListMulticastGroups",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetMulticastGroup",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotwireless:UpdateMulticastGroup",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource",
+    "iotwireless:AssociateWirelessDeviceWithMulticastGroup",
+    "iotwireless:DisassociateWirelessDeviceFromMulticastGroup"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Multicast group arn. Returned after successful create.",
+   "type": "string"
+  },
+  "AssociateWirelessDevice": {
+   "description": "Wireless device to associate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Description": {
+   "description": "Multicast group description",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "DisassociateWirelessDevice": {
+   "description": "Wireless device to disassociate. Only for update request.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Id": {
+   "description": "Multicast group id. Returned after successful create.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWAN",
+   "description": "Multicast group LoRaWAN"
+  },
+  "Name": {
+   "description": "Name of Multicast group",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Status": {
+   "description": "Multicast group status. Returned after successful read.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the Multicast group.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id",
+  "/properties/Status",
+  "/properties/LoRaWAN/NumberOfDevicesRequested",
+  "/properties/LoRaWAN/NumberOfDevicesInGroup"
+ ],
+ "required": [
+  "LoRaWAN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTWireless::MulticastGroup"
+}

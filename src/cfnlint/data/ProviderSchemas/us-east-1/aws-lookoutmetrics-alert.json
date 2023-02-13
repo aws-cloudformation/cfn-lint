@@ -1,0 +1,139 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AlertName",
+  "/properties/AlertDescription",
+  "/properties/AnomalyDetectorArn",
+  "/properties/AlertSensitivityThreshold",
+  "/properties/Action"
+ ],
+ "definitions": {
+  "Action": {
+   "additionalProperties": false,
+   "properties": {
+    "LambdaConfiguration": {
+     "$ref": "#/definitions/LambdaConfiguration"
+    },
+    "SNSConfiguration": {
+     "$ref": "#/definitions/SNSConfiguration"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):.*:.*:.*:.+",
+   "type": "string"
+  },
+  "LambdaConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration options for a Lambda alert action.",
+   "properties": {
+    "LambdaArn": {
+     "$ref": "#/definitions/Arn",
+     "description": "ARN of a Lambda to send alert notifications to."
+    },
+    "RoleArn": {
+     "$ref": "#/definitions/Arn",
+     "description": "ARN of an IAM role that LookoutMetrics should assume to access the Lambda function."
+    }
+   },
+   "required": [
+    "RoleArn",
+    "LambdaArn"
+   ],
+   "type": "object"
+  },
+  "SNSConfiguration": {
+   "additionalProperties": false,
+   "description": "Configuration options for an SNS alert action.",
+   "properties": {
+    "RoleArn": {
+     "$ref": "#/definitions/Arn",
+     "description": "ARN of an IAM role that LookoutMetrics should assume to access the SNS topic."
+    },
+    "SnsTopicArn": {
+     "$ref": "#/definitions/Arn",
+     "description": "ARN of an SNS topic to send alert notifications to."
+    }
+   },
+   "required": [
+    "RoleArn",
+    "SnsTopicArn"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::LookoutMetrics::Alert",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lookoutmetrics:CreateAlert",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lookoutmetrics:DeleteAlert"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lookoutmetrics:ListAlerts"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lookoutmetrics:DescribeAlert"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/Action",
+   "description": "The action to be taken by the alert when an anomaly is detected."
+  },
+  "AlertDescription": {
+   "description": "A description for the alert.",
+   "maxLength": 256,
+   "pattern": ".*\\S.*",
+   "type": "string"
+  },
+  "AlertName": {
+   "description": "The name of the alert. If not provided, a name is generated automatically.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9][a-zA-Z0-9\\-_]*",
+   "type": "string"
+  },
+  "AlertSensitivityThreshold": {
+   "description": "A number between 0 and 100 (inclusive) that tunes the sensitivity of the alert.",
+   "maximum": 100,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "AnomalyDetectorArn": {
+   "description": "The Amazon resource name (ARN) of the Anomaly Detector to alert.",
+   "maxLength": 256,
+   "pattern": "arn:([a-z\\d-]+):.*:.*:.*:.+",
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "ARN assigned to the alert."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "AnomalyDetectorArn",
+  "AlertSensitivityThreshold",
+  "Action"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lookout-for-metrics.git",
+ "typeName": "AWS::LookoutMetrics::Alert"
+}
