@@ -1,0 +1,183 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "Domains": {
+   "description": "An inline list of domains to use for this domain list.",
+   "items": {
+    "description": "FirewallDomainName",
+    "maxLength": 255,
+    "minLength": 1,
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 255,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::Route53Resolver::FirewallDomainList.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "route53resolver:CreateFirewallDomainList",
+    "route53resolver:UpdateFirewallDomains",
+    "route53resolver:ImportFirewallDomains",
+    "route53resolver:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "route53resolver:DeleteFirewallDomainList",
+    "route53resolver:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "route53resolver:ListFirewallDomainLists",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "route53resolver:GetFirewallDomainList",
+    "route53resolver:ListFirewallDomains",
+    "route53resolver:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "route53resolver:UpdateFirewallDomains",
+    "route53resolver:ImportFirewallDomains",
+    "route53resolver:TagResource",
+    "route53resolver:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Arn",
+   "maxLength": 600,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "Rfc3339TimeString",
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "CreatorRequestId": {
+   "description": "The id of the creator request.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DomainCount": {
+   "description": "Count",
+   "minimum": 0,
+   "type": "integer"
+  },
+  "DomainFileUrl": {
+   "description": "S3 URL to import domains from.",
+   "maxLength": 1024,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Domains": {
+   "$ref": "#/definitions/Domains"
+  },
+  "Id": {
+   "description": "ResourceId",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ManagedOwnerName": {
+   "description": "ServicePrincipal",
+   "maxLength": 512,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ModificationTime": {
+   "description": "Rfc3339TimeString",
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Name": {
+   "description": "FirewallDomainListName",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "(?!^[0-9]+$)([a-zA-Z0-9\\-_' ']+)",
+   "type": "string"
+  },
+  "Status": {
+   "description": "ResolverFirewallDomainList, possible values are COMPLETE, DELETING, UPDATING, COMPLETE_IMPORT_FAILED, IMPORTING, and INACTIVE_OWNER_ACCOUNT_CLOSED.",
+   "enum": [
+    "COMPLETE",
+    "DELETING",
+    "UPDATING",
+    "COMPLETE_IMPORT_FAILED",
+    "IMPORTING",
+    "INACTIVE_OWNER_ACCOUNT_CLOSED"
+   ],
+   "type": "string"
+  },
+  "StatusMessage": {
+   "description": "FirewallDomainListAssociationStatus",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "Tags",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/DomainCount",
+  "/properties/Status",
+  "/properties/StatusMessage",
+  "/properties/ManagedOwnerName",
+  "/properties/CreatorRequestId",
+  "/properties/CreationTime",
+  "/properties/ModificationTime"
+ ],
+ "typeName": "AWS::Route53Resolver::FirewallDomainList",
+ "writeOnlyProperties": [
+  "/properties/Domains",
+  "/properties/DomainFileUrl"
+ ]
+}
