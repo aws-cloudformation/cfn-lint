@@ -2,7 +2,9 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.helpers import RESOURCE_SPECS, VALID_PARAMETER_TYPES_LIST
+from typing import Union
+
+from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -15,14 +17,54 @@ class Join(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-join.html"
     tags = ["functions", "join"]
 
+    _intrinsic_types = {
+        "Fn::Base64": {
+            "ReturnTypes": ["Singular"],
+        },
+        "Fn::Cidr": {
+            "ReturnTypes": ["List"],
+        },
+        "Fn::FindInMap": {
+            "ReturnTypes": ["Singular", "List"],
+        },
+        "Fn::GetAZs": {
+            "ReturnTypes": ["List"],
+        },
+        "Fn::GetAtt": {
+            "ReturnTypes": ["Singular", "List"],
+        },
+        "Fn::If": {
+            "ReturnTypes": ["Singular", "List"],
+        },
+        "Fn::ImportValue": {
+            "ReturnTypes": ["Singular"],
+        },
+        "Fn::Join": {
+            "ReturnTypes": ["Singular"],
+        },
+        "Fn::Select": {
+            "ReturnTypes": ["Singular", "List"],
+        },
+        "Fn::Split": {
+            "ReturnTypes": ["List"],
+        },
+        "Fn::Sub": {
+            "ReturnTypes": ["Singular"],
+        },
+        "Fn::Transform": {
+            "ReturnTypes": [],
+        },
+        "Ref": {
+            "ReturnTypes": ["Singular", "List"],
+        },
+    }
+
     def __init__(self):
         """Initialize the rule"""
         super().__init__()
         self.list_supported_functions = []
         self.singular_supported_functions = []
-        for intrinsic_type, intrinsic_value in (
-            RESOURCE_SPECS.get("us-east-1").get("IntrinsicTypes").items()
-        ):
+        for intrinsic_type, intrinsic_value in self._intrinsic_types.items():
             if "List" in intrinsic_value.get("ReturnTypes", []):
                 self.list_supported_functions.append(intrinsic_type)
             if "Singular" in intrinsic_value.get("ReturnTypes", []):
@@ -59,22 +101,17 @@ class Join(CloudFormationLintRule):
             return True
         return False
 
-    def _is_getatt_a_list(self, parameter, get_atts):
+    def _is_getatt_a_list(self, parameter, get_atts) -> Union[bool, None]:
         """Is a GetAtt a List"""
-
-        for resource, attributes in get_atts.items():
-            for attribute_name, attribute_values in attributes.items():
-                if resource == parameter[0] and attribute_name == "*":
-                    if attribute_values.get("PrimitiveItemType"):
-                        return "FALSE"
-                    if attribute_values.get("Type") == "List":
-                        return "TRUE"
-                    return "UNKNOWN"
-                if resource == parameter[0] and attribute_name == parameter[1]:
-                    if attribute_values.get("Type") == "List":
-                        return "TRUE"
-
-        return "FALSE"
+        try:
+            getatt = get_atts.match("us-east-1", parameter)
+            if getatt.get("type") == "array" or not getatt:
+                return True
+            return False
+        except:  # pylint: disable=bare-except
+            # this means we can't match the get_att.  This is
+            # covered by another rule
+            return None
 
     def _match_string_objs(self, join_string_objs, cfn, path):
         """Check join list"""
@@ -101,12 +138,10 @@ class Join(CloudFormationLintRule):
                                 )
                             )
                     elif key in ["Fn::GetAtt"]:
-                        if (
-                            self._is_getatt_a_list(
-                                self._normalize_getatt(value), get_atts
-                            )
-                            == "FALSE"
-                        ):
+                        is_a_list = self._is_getatt_a_list(
+                            self._normalize_getatt(value), get_atts
+                        )
+                        if is_a_list is not None and not is_a_list:
                             message = "Fn::Join must use a list at {0}"
                             matches.append(
                                 RuleMatch(
@@ -143,12 +178,10 @@ class Join(CloudFormationLintRule):
                                         )
                                     )
                             elif key in ["Fn::GetAtt"]:
-                                if (
-                                    self._is_getatt_a_list(
-                                        self._normalize_getatt(value), get_atts
-                                    )
-                                    == "TRUE"
-                                ):
+                                is_a_list = self._is_getatt_a_list(
+                                    self._normalize_getatt(value), get_atts
+                                )
+                                if is_a_list is not None and is_a_list:
                                     message = "Fn::Join must not be a list at {0}"
                                     matches.append(
                                         RuleMatch(

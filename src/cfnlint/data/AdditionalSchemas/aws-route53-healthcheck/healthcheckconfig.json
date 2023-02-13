@@ -1,0 +1,25 @@
+{
+  "description": "When 'Type' is 'CLOUDWATCH_METRIC' then 'AlarmIdentifier' is required",
+  "properties": {
+    "AlarmIdentifier": {
+      "type": "object"
+    },
+    "Type": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": true,
+  "if": {
+    "properties": {
+      "Type": {
+        "const": "CLOUDWATCH_METRIC"
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "AlarmIdentifier"
+    ]
+  },
+  "else": {}
+}
