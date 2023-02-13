@@ -1,0 +1,171 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PipelineName"
+ ],
+ "definitions": {
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "Bucket": {
+     "description": "The name of the S3 bucket where the PipelineDefinition file is stored.",
+     "type": "string"
+    },
+    "ETag": {
+     "description": "The Amazon S3 ETag (a file checksum) of the PipelineDefinition file. If you don't specify a value, SageMaker skips ETag validation of your PipelineDefinition file.",
+     "type": "string"
+    },
+    "Key": {
+     "description": "The file name of the PipelineDefinition file (Amazon S3 object name).",
+     "type": "string"
+    },
+    "Version": {
+     "description": "For versioning-enabled buckets, a specific version of the PipelineDefinition file.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Bucket",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::Pipeline",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "s3:GetObject",
+    "sagemaker:CreatePipeline",
+    "sagemaker:DescribePipeline"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "sagemaker:DeletePipeline"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "sagemaker:ListPipelines"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "sagemaker:DescribePipeline"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iam:PassRole",
+    "s3:GetObject",
+    "sagemaker:UpdatePipeline",
+    "sagemaker:DescribePipeline"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/PipelineName"
+ ],
+ "properties": {
+  "ParallelismConfiguration": {
+   "additionalProperties": false,
+   "properties": {
+    "MaxParallelExecutionSteps": {
+     "description": "Maximum parallel execution steps",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "required": [
+    "MaxParallelExecutionSteps"
+   ],
+   "type": "object"
+  },
+  "PipelineDefinition": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PipelineDefinitionBody": {
+       "description": "A specification that defines the pipeline in JSON format.",
+       "type": "string"
+      }
+     },
+     "required": [
+      "PipelineDefinitionBody"
+     ]
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "PipelineDefinitionS3Location": {
+       "$ref": "#/definitions/S3Location"
+      }
+     },
+     "required": [
+      "PipelineDefinitionS3Location"
+     ]
+    }
+   ],
+   "type": "object"
+  },
+  "PipelineDescription": {
+   "description": "The description of the Pipeline.",
+   "maxLength": 3072,
+   "minLength": 0,
+   "type": "string"
+  },
+  "PipelineDisplayName": {
+   "description": "The display name of the Pipeline.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "PipelineName": {
+   "description": "The name of the Pipeline.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "Role Arn",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "required": [
+  "PipelineName",
+  "PipelineDefinition",
+  "RoleArn"
+ ],
+ "typeName": "AWS::SageMaker::Pipeline"
+}

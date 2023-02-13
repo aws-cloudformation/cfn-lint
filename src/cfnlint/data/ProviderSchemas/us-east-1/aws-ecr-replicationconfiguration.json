@@ -1,0 +1,162 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Filter": {
+   "description": "The repository filter to be applied for replication.",
+   "pattern": "^(?:[a-z0-9]+(?:[._-][a-z0-9]*)*/)*[a-z0-9]*(?:[._-][a-z0-9]*)*$",
+   "type": "string"
+  },
+  "FilterType": {
+   "description": "Type of repository filter",
+   "enum": [
+    "PREFIX_MATCH"
+   ],
+   "type": "string"
+  },
+  "Region": {
+   "description": "A Region to replicate to.",
+   "pattern": "[0-9a-z-]{2,25}",
+   "type": "string"
+  },
+  "RegistryId": {
+   "description": "The account ID of the destination registry to replicate to.",
+   "pattern": "^[0-9]{12}$",
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "additionalProperties": false,
+   "description": "An object representing the replication configuration for a registry.",
+   "properties": {
+    "Rules": {
+     "description": "An array of objects representing the replication rules for a replication configuration. A replication configuration may contain a maximum of 10 rules.",
+     "items": {
+      "$ref": "#/definitions/ReplicationRule"
+     },
+     "maxItems": 10,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Rules"
+   ],
+   "type": "object"
+  },
+  "ReplicationDestination": {
+   "additionalProperties": false,
+   "description": "An array of objects representing the details of a replication destination.",
+   "properties": {
+    "Region": {
+     "$ref": "#/definitions/Region"
+    },
+    "RegistryId": {
+     "$ref": "#/definitions/RegistryId"
+    }
+   },
+   "required": [
+    "Region",
+    "RegistryId"
+   ],
+   "type": "object"
+  },
+  "ReplicationRule": {
+   "additionalProperties": false,
+   "description": "An array of objects representing the details of a replication destination.",
+   "properties": {
+    "Destinations": {
+     "description": "An array of objects representing the details of a replication destination.",
+     "items": {
+      "$ref": "#/definitions/ReplicationDestination"
+     },
+     "maxItems": 25,
+     "minItems": 1,
+     "type": "array"
+    },
+    "RepositoryFilters": {
+     "description": "An array of objects representing the details of a repository filter.",
+     "items": {
+      "$ref": "#/definitions/RepositoryFilter"
+     },
+     "maxItems": 100,
+     "minItems": 0,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Destinations"
+   ],
+   "type": "object"
+  },
+  "RepositoryFilter": {
+   "additionalProperties": false,
+   "description": "An array of objects representing the details of a repository filter.",
+   "properties": {
+    "Filter": {
+     "$ref": "#/definitions/Filter"
+    },
+    "FilterType": {
+     "$ref": "#/definitions/FilterType"
+    }
+   },
+   "required": [
+    "Filter",
+    "FilterType"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::ECR::ReplicationConfiguration resource configures the replication destinations for an Amazon Elastic Container Registry (Amazon Private ECR). For more information, see https://docs.aws.amazon.com/AmazonECR/latest/userguide/replication.html",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ecr:DescribeRegistry"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ecr:DescribeRegistry"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ecr:DescribeRegistry",
+    "ecr:PutReplicationConfiguration",
+    "iam:CreateServiceLinkedRole"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RegistryId"
+ ],
+ "properties": {
+  "RegistryId": {
+   "description": "The RegistryId associated with the aws account.",
+   "type": "string"
+  },
+  "ReplicationConfiguration": {
+   "$ref": "#/definitions/ReplicationConfiguration"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RegistryId"
+ ],
+ "required": [
+  "ReplicationConfiguration"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+ "typeName": "AWS::ECR::ReplicationConfiguration"
+}
