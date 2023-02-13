@@ -1,0 +1,64 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Application",
+  "/properties/CurrentRevisionId"
+ ],
+ "definitions": {
+  "Arn": {
+   "pattern": "arn:[\\w+=/,.@-]+:[\\w+=/,.@-]+:[\\w+=/,.@-]*:[0-9]*:[\\w+=,.@-]+(/[\\w+=,.@-]+)*",
+   "type": "string"
+  }
+ },
+ "description": "AWS::RoboMaker::SimulationApplicationVersion resource creates an AWS RoboMaker SimulationApplicationVersion. This helps you control which code your simulation uses.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "robomaker:CreateSimulationApplicationVersion",
+    "s3:GetObject"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "robomaker:DeleteSimulationApplication",
+    "robomaker:DescribeSimulationApplication"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "robomaker:DescribeSimulationApplication"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Application": {
+   "$ref": "#/definitions/Arn"
+  },
+  "ApplicationVersion": {
+   "type": "string"
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn"
+  },
+  "CurrentRevisionId": {
+   "description": "The revision ID of robot application.",
+   "maxLength": 40,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_.\\-]*",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApplicationVersion",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Application"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": false,
+ "typeName": "AWS::RoboMaker::SimulationApplicationVersion"
+}
