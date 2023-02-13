@@ -1,0 +1,109 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BgpAsn",
+  "/properties/Type",
+  "/properties/IpAddress",
+  "/properties/DeviceName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::CustomerGateway",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateCustomerGateway",
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeleteCustomerGateway",
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeCustomerGateways"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:CreateTags",
+    "ec2:DeleteTags"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CustomerGatewayId"
+ ],
+ "properties": {
+  "BgpAsn": {
+   "default": 65000,
+   "description": "For devices that support BGP, the customer gateway's BGP ASN.",
+   "type": "integer"
+  },
+  "CustomerGatewayId": {
+   "description": "CustomerGateway ID generated after customer gateway is created. Each customer gateway has a unique ID.",
+   "type": "string"
+  },
+  "DeviceName": {
+   "description": "A name for the customer gateway device.",
+   "type": "string"
+  },
+  "IpAddress": {
+   "description": "The internet-routable IP address for the customer gateway's outside interface. The address must be static.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tags for the customer gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Type": {
+   "description": "The type of VPN connection that this customer gateway supports.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CustomerGatewayId"
+ ],
+ "required": [
+  "BgpAsn",
+  "IpAddress",
+  "Type"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::CustomerGateway"
+}

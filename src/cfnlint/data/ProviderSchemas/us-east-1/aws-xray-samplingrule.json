@@ -1,0 +1,249 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "RuleARN": {
+   "description": "The ARN of the sampling rule. Specify a rule by either name or ARN, but not both.",
+   "type": "string"
+  },
+  "RuleName": {
+   "description": "The ARN of the sampling rule. Specify a rule by either name or ARN, but not both.",
+   "maxLength": 32,
+   "minLength": 1,
+   "type": "string"
+  },
+  "SamplingRule": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$comment": "String to string map",
+     "additionalProperties": false,
+     "description": "Matches attributes derived from the request.",
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "FixedRate": {
+     "description": "The percentage of matching requests to instrument, after the reservoir is exhausted.",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "HTTPMethod": {
+     "description": "Matches the HTTP method from a request URL.",
+     "maxLength": 10,
+     "type": "string"
+    },
+    "Host": {
+     "description": "Matches the hostname from a request URL.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "Priority": {
+     "description": "The priority of the sampling rule.",
+     "maximum": 9999,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReservoirSize": {
+     "description": "A fixed number of matching requests to instrument per second, prior to applying the fixed rate. The reservoir is not used directly by services, but applies to all services using the rule collectively.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ResourceARN": {
+     "description": "Matches the ARN of the AWS resource on which the service runs.",
+     "maxLength": 500,
+     "type": "string"
+    },
+    "RuleARN": {
+     "$ref": "#/definitions/RuleARN"
+    },
+    "RuleName": {
+     "$ref": "#/definitions/RuleName"
+    },
+    "ServiceName": {
+     "description": "Matches the name that the service uses to identify itself in segments.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "ServiceType": {
+     "description": "Matches the origin that the service uses to identify its type in segments.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "URLPath": {
+     "description": "Matches the path from a request URL.",
+     "maxLength": 128,
+     "type": "string"
+    },
+    "Version": {
+     "description": "The version of the sampling rule format (1)",
+     "minimum": 1,
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "SamplingRuleRecord": {
+   "additionalProperties": false,
+   "properties": {
+    "CreatedAt": {
+     "description": "When the rule was created, in Unix time seconds.",
+     "type": "string"
+    },
+    "ModifiedAt": {
+     "description": "When the rule was modified, in Unix time seconds.",
+     "type": "string"
+    },
+    "SamplingRule": {
+     "$ref": "#/definitions/SamplingRule"
+    }
+   },
+   "type": "object"
+  },
+  "SamplingRuleUpdate": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "$comment": "String to string map",
+     "additionalProperties": false,
+     "description": "Matches attributes derived from the request.",
+     "patternProperties": {
+      ".{1,}": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "FixedRate": {
+     "description": "The percentage of matching requests to instrument, after the reservoir is exhausted.",
+     "maximum": 1,
+     "minimum": 0,
+     "type": "number"
+    },
+    "HTTPMethod": {
+     "description": "Matches the HTTP method from a request URL.",
+     "maxLength": 10,
+     "type": "string"
+    },
+    "Host": {
+     "description": "Matches the hostname from a request URL.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "Priority": {
+     "description": "The priority of the sampling rule.",
+     "maximum": 9999,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "ReservoirSize": {
+     "description": "A fixed number of matching requests to instrument per second, prior to applying the fixed rate. The reservoir is not used directly by services, but applies to all services using the rule collectively.",
+     "minimum": 0,
+     "type": "integer"
+    },
+    "ResourceARN": {
+     "description": "Matches the ARN of the AWS resource on which the service runs.",
+     "maxLength": 500,
+     "type": "string"
+    },
+    "RuleARN": {
+     "$ref": "#/definitions/RuleARN"
+    },
+    "RuleName": {
+     "$ref": "#/definitions/RuleName"
+    },
+    "ServiceName": {
+     "description": "Matches the name that the service uses to identify itself in segments.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "ServiceType": {
+     "description": "Matches the origin that the service uses to identify its type in segments.",
+     "maxLength": 64,
+     "type": "string"
+    },
+    "URLPath": {
+     "description": "Matches the path from a request URL.",
+     "maxLength": 128,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "additionalProperties": false,
+    "properties": {
+     "Key": {
+      "type": "string"
+     },
+     "Value": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "Key",
+     "Value"
+    ],
+    "type": "object"
+   },
+   "type": "array"
+  }
+ },
+ "description": "This schema provides construct and validation rules for AWS-XRay SamplingRule resource parameters.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "xray:CreateSamplingRule",
+    "xray:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "xray:DeleteSamplingRule"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "xray:GetSamplingRules"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "xray:UpdateSamplingRule"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RuleARN"
+ ],
+ "properties": {
+  "RuleARN": {
+   "$ref": "#/definitions/RuleARN"
+  },
+  "RuleName": {
+   "$ref": "#/definitions/RuleName"
+  },
+  "SamplingRule": {
+   "$ref": "#/definitions/SamplingRule"
+  },
+  "SamplingRuleRecord": {
+   "$ref": "#/definitions/SamplingRuleRecord"
+  },
+  "SamplingRuleUpdate": {
+   "$ref": "#/definitions/SamplingRuleUpdate"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/RuleARN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "typeName": "AWS::XRay::SamplingRule"
+}

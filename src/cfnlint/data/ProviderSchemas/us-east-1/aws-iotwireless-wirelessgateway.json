@@ -1,0 +1,135 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "LoRaWANGateway": {
+   "additionalProperties": false,
+   "properties": {
+    "GatewayEui": {
+     "pattern": "^(([0-9A-Fa-f]{2}-){7}|([0-9A-Fa-f]{2}:){7}|([0-9A-Fa-f]{2}\\s){7}|([0-9A-Fa-f]{2}){7})([0-9A-Fa-f]{2})$",
+     "type": "string"
+    },
+    "RfRegion": {
+     "maxLength": 64,
+     "type": "string"
+    }
+   },
+   "required": [
+    "GatewayEui",
+    "RfRegion"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Create and manage wireless gateways, including LoRa gateways.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iotwireless:CreateWirelessGateway",
+    "iotwireless:TagResource",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iotwireless:DeleteWirelessGateway",
+    "iotwireless:DisassociateWirelessGatewayFromThing"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iotwireless:ListWirelessGateways",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iotwireless:GetWirelessGateway",
+    "iotwireless:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iotwireless:UpdateWirelessGateway",
+    "iotwireless:UntagResource",
+    "iotwireless:ListTagsForResource",
+    "iotwireless:AssociateWirelessGatewayWithThing"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Arn for Wireless Gateway. Returned upon successful create.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Description of Wireless Gateway.",
+   "maxLength": 2048,
+   "type": "string"
+  },
+  "Id": {
+   "description": "Id for Wireless Gateway. Returned upon successful create.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "LastUplinkReceivedAt": {
+   "description": "The date and time when the most recent uplink was received.",
+   "type": "string"
+  },
+  "LoRaWAN": {
+   "$ref": "#/definitions/LoRaWANGateway",
+   "description": "The combination of Package, Station and Model which represents the version of the LoRaWAN Wireless Gateway."
+  },
+  "Name": {
+   "description": "Name of Wireless Gateway.",
+   "maxLength": 256,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of key-value pairs that contain metadata for the gateway.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingArn": {
+   "description": "Thing Arn. Passed into Update to associate a Thing with the Wireless Gateway.",
+   "type": "string"
+  },
+  "ThingName": {
+   "description": "Thing Name. If there is a Thing created, this can be returned with a Get call.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "LoRaWAN"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "taggable": true,
+ "typeName": "AWS::IoTWireless::WirelessGateway"
+}

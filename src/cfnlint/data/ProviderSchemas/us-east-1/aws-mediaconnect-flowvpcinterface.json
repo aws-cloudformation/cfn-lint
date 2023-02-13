@@ -1,0 +1,88 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "description": "Resource schema for AWS::MediaConnect::FlowVpcInterface",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:AddFlowVpcInterfaces"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:RemoveFlowVpcInterface"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "mediaconnect:DescribeFlow"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "mediaconnect:DescribeFlow",
+    "mediaconnect:AddFlowVpcInterfaces",
+    "mediaconnect:RemoveFlowVpcInterface"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/FlowArn",
+  "/properties/Name"
+ ],
+ "properties": {
+  "FlowArn": {
+   "description": "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Immutable and has to be a unique against other VpcInterfaces in this Flow.",
+   "type": "string"
+  },
+  "NetworkInterfaceIds": {
+   "description": "IDs of the network interfaces created in customer's account by MediaConnect.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "RoleArn": {
+   "description": "Role Arn MediaConnect can assumes to create ENIs in customer's account.",
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "description": "Security Group IDs to be used on ENI.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "SubnetId": {
+   "description": "Subnet must be in the AZ of the Flow",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/NetworkInterfaceIds"
+ ],
+ "required": [
+  "FlowArn",
+  "Name",
+  "RoleArn",
+  "SubnetId",
+  "SecurityGroupIds"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+ "typeName": "AWS::MediaConnect::FlowVpcInterface"
+}

@@ -1,0 +1,66 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceArn",
+  "/properties/WebACLArn"
+ ],
+ "definitions": {
+  "ResourceArn": {
+   "maxLength": 2048,
+   "minLength": 20,
+   "type": "string"
+  }
+ },
+ "description": "Associates WebACL to Application Load Balancer, CloudFront or API Gateway.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "wafv2:AssociateWebACL",
+    "elasticloadbalancing:SetWebACL",
+    "apigateway:SetWebACL",
+    "appsync:SetWebACL",
+    "cognito-idp:AssociateWebACL"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "wafv2:DisassociateWebACL",
+    "wafv2:GetWebACLForResource",
+    "wafv2:GetWebACL",
+    "elasticloadbalancing:SetWebACL",
+    "apigateway:SetWebACL",
+    "appsync:SetWebACL",
+    "cognito-idp:DisassociateWebACL",
+    "cognito-idp:GetWebACLForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "wafv2:GetWebACLForResource",
+    "wafv2:GetWebACL",
+    "cognito-idp:GetWebACLForResource"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceArn",
+  "/properties/WebACLArn"
+ ],
+ "properties": {
+  "ResourceArn": {
+   "$ref": "#/definitions/ResourceArn"
+  },
+  "WebACLArn": {
+   "$ref": "#/definitions/ResourceArn"
+  }
+ },
+ "required": [
+  "ResourceArn",
+  "WebACLArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
+ "typeName": "AWS::WAFv2::WebACLAssociation"
+}
