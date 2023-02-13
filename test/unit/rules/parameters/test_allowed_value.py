@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 from test.unit.rules import BaseRuleTestCase
 
 from cfnlint.rules.parameters.AllowedValue import AllowedValue  # pylint: disable=E0401
+from cfnlint.template.template import Template
 
 
 class TestAllowedValue(BaseRuleTestCase):
@@ -13,18 +14,40 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def setUp(self):
         """Setup"""
-        super(TestAllowedValue, self).setUp()
-        self.collection.register(AllowedValue())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/allowed_values.yaml"
-        ]
-
-    def test_file_positive(self):
-        """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/allowed_values.yaml", 2
+        self.rule = AllowedValue()
+        cfn = Template(
+            "test.yaml",
+            {
+                "Parameters": {
+                    "1": {"Type": "String", "Default": "A"},
+                    "2": {"Type": "String", "Default": 1},
+                    "3": {
+                        "Type": "String",
+                        "AllowedValues": [
+                            "A",
+                            "B",
+                        ],
+                    },
+                    "4": {
+                        "Type": "String",
+                        "AllowedValues": [
+                            1,
+                            2,
+                        ],
+                    },
+                }
+            },
+            regions=["us-east-1"],
         )
+        self.rule.initialize(cfn)
+
+    def test_validate(self):
+        self.assertEqual(len(list(self.rule.validate("1", ["A", "B"]))), 0)
+        self.assertEqual(len(list(self.rule.validate("1", ["B", "C"]))), 1)
+        self.assertEqual(len(list(self.rule.validate("2", [1, 2]))), 0)
+        self.assertEqual(len(list(self.rule.validate("2", [2, 3]))), 1)
+        # allowed values
+        self.assertEqual(len(list(self.rule.validate("3", ["A", "B"]))), 0)
+        self.assertEqual(len(list(self.rule.validate("3", ["B", "C"]))), 1)
+        self.assertEqual(len(list(self.rule.validate("4", [1, 2]))), 0)
+        self.assertEqual(len(list(self.rule.validate("4", [2, 3]))), 1)

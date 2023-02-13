@@ -18,8 +18,9 @@ import os
 import sys
 from io import BytesIO
 from typing import Dict, List
-from urllib.request import Request, urlopen
+from urllib.request import Request, urlopen, urlretrieve
 
+import jsonpatch
 import regex as re
 
 from cfnlint.data import CloudSpecs
@@ -216,14 +217,7 @@ class RegexDict(dict):
     def __getitem__(self, item):
         possible_items = {}
         for k, v in self.items():
-            if isinstance(v, dict):
-                if v.get("Type") == "MODULE":
-                    if re.match(k, item):
-                        possible_items[k] = v
-                else:
-                    if k == item:
-                        possible_items[k] = v
-            elif re.match(k, item):
+            if re.fullmatch(k, item):
                 possible_items[k] = v
         if not possible_items:
             raise KeyError
@@ -327,6 +321,34 @@ def get_url_content(url, caching=False):
     return content
 
 
+def get_url_retrieve(url: str, caching: bool = False) -> str:
+    """Get the contents of a zip file and returns
+    a string representing the file
+
+    Args:
+        url (str): The url to retrieve
+        caching (bool): If we can cache the results (default: False)
+    Returns:
+        str: A string representing the file object that was retrieved
+    """
+
+    if caching:
+        # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
+        req = Request(url, method="HEAD")
+        with urlopen(req) as res:
+            if res.info().get("ETag"):
+                metadata_filename = get_metadata_filename(url)
+                # Load in all existing values
+                metadata = load_metadata(metadata_filename)
+                metadata["etag"] = res.info().get("ETag")
+                metadata["url"] = url  # To make it obvious which url the Tag relates to
+                save_metadata(metadata, metadata_filename)
+
+    fileobject, _ = urlretrieve(url)
+
+    return fileobject
+
+
 def load_metadata(filename):
     """Get the contents of the download metadata file"""
     metadata = {}
@@ -361,7 +383,6 @@ def load_resource(package, filename="us-east-1.json"):
     return json.loads(pkg_resources.read_text(package, filename, encoding="utf-8"))
 
 
-RESOURCE_SPECS: Dict[str, dict] = {}
 REGISTRY_SCHEMAS: List[dict] = []
 
 
@@ -376,55 +397,6 @@ def merge_spec(source, destination):
             destination[key] = value
 
     return destination
-
-
-def set_specs(override_spec_data):
-    """Override Resource Specs"""
-
-    excludes = []
-    includes = []
-
-    # Extract the exclude list from the override file
-    if "ExcludeResourceTypes" in override_spec_data:
-        excludes = override_spec_data.pop("ExcludeResourceTypes")
-    if "IncludeResourceTypes" in override_spec_data:
-        includes = override_spec_data.pop("IncludeResourceTypes")
-
-    for region, spec in RESOURCE_SPECS.items():
-        # Merge override spec file into the AWS Resource specification
-        if override_spec_data:
-            RESOURCE_SPECS[region] = merge_spec(override_spec_data, spec)
-
-        # Grab a list of all resources
-        all_resources = list(RESOURCE_SPECS[region]["ResourceTypes"].keys())[:]
-
-        resources = []
-
-        # Remove unsupported resource using includes
-        if includes:
-            for include in includes:
-                regex = re.compile(include.replace("*", "(.*)") + "$")
-                matches = [
-                    string for string in all_resources if re.match(regex, string)
-                ]
-
-                resources.extend(matches)
-        else:
-            resources = all_resources[:]
-
-        # Remove unsupported resources using the excludes
-        if excludes:
-            for exclude in excludes:
-                regex = re.compile(exclude.replace("*", "(.*)") + "$")
-                matches = [string for string in resources if re.match(regex, string)]
-
-                for match in matches:
-                    resources.remove(match)
-
-        # Remove unsupported resources
-        for resource in all_resources:
-            if resource not in resources:
-                del RESOURCE_SPECS[region]["ResourceTypes"][resource]
 
 
 def is_custom_resource(resource_type):
@@ -445,30 +417,6 @@ def bool_compare(first, second):
         second = bool(second.lower() in ["true", "True"])
 
     return first is second
-
-
-def initialize_specs():
-    """Reload Resource Specs"""
-
-    def load_region(region):
-        spec = load_resource(CloudSpecs, filename=f"{region}.json")
-
-        for section, section_values in spec.items():
-            if section in ["ResourceTypes", "PropertyTypes", "ValueTypes"]:
-                for key, value in section_values.items():
-                    if value == "CACHED" and RESOURCE_SPECS["us-east-1"][section].get(
-                        key
-                    ):
-                        spec[section][key] = RESOURCE_SPECS["us-east-1"][section][key]
-        return spec
-
-    RESOURCE_SPECS["us-east-1"] = load_region("us-east-1")
-    for region in REGIONS:
-        if region != "us-east-1":
-            RESOURCE_SPECS[region] = load_region(region)
-
-
-initialize_specs()
 
 
 def format_json_string(json_string):
@@ -546,28 +494,19 @@ def load_plugins(directory):
     return result
 
 
-def override_specs(override_spec_file):
-    """Override specs file"""
-    try:
-        filename = override_spec_file
-        with open(filename, encoding="utf-8") as fp:
-            custom_spec_data = json.load(fp)
+def apply_json_patch(data: Dict, patches: List[Dict], region: str) -> Dict:
+    # Process the generic patches 1 by 1 so we can "ignore" failed ones
+    for patch in patches:
+        try:
+            jsonpatch.JsonPatch([patch]).apply(data, in_place=True)
+        except jsonpatch.JsonPatchConflict:
+            LOGGER.debug("Patch (%s) not applied in region %s", patch, region)
+        except jsonpatch.JsonPointerException:
+            # Debug as the parent element isn't supported in the region
+            LOGGER.debug(
+                "Parent element not found for patch (%s) in region %s",
+                patches,
+                region,
+            )
 
-        set_specs(custom_spec_data)
-    except IOError as e:
-        if e.errno == 2:
-            LOGGER.error("Override spec file not found: %s", filename)
-            sys.exit(1)
-        elif e.errno == 21:
-            LOGGER.error(
-                "Override spec file references a directory, not a file: %s", filename
-            )
-            sys.exit(1)
-        elif e.errno == 13:
-            LOGGER.error(
-                "Permission denied when accessing override spec file: %s", filename
-            )
-            sys.exit(1)
-    except ValueError as err:
-        LOGGER.error("Override spec file %s is malformed: %s", filename, err)
-        sys.exit(1)
+    return data
