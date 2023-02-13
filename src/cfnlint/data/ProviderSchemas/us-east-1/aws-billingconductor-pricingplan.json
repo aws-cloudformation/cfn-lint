@@ -1,0 +1,134 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "PricingRuleArn": {
+   "description": "Pricing Rule ARN",
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingrule/[a-zA-Z0-9]{10}",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Pricing Plan enables you to customize your billing details consistent with the usage that accrues in each of your billing groups.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "billingconductor:CreatePricingPlan",
+    "billingconductor:AssociatePricingRules"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "billingconductor:DeletePricingPlan"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "billingconductor:ListPricingPlans",
+    "billingconductor:ListPricingRulesAssociatedToPricingPlan",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "billingconductor:ListPricingPlans",
+    "billingconductor:ListPricingRulesAssociatedToPricingPlan",
+    "billingconductor:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "billingconductor:ListPricingPlans",
+    "billingconductor:UpdatePricingPlan",
+    "billingconductor:ListPricingRulesAssociatedToPricingPlan",
+    "billingconductor:AssociatePricingRules",
+    "billingconductor:DisassociatePricingRules",
+    "billingconductor:TagResource",
+    "billingconductor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "Pricing Plan ARN",
+   "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingplan/[a-zA-Z0-9]{10}",
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "Creation timestamp in UNIX epoch time format",
+   "type": "integer"
+  },
+  "Description": {
+   "maxLength": 1024,
+   "type": "string"
+  },
+  "LastModifiedTime": {
+   "description": "Latest modified timestamp in UNIX epoch time format",
+   "type": "integer"
+  },
+  "Name": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
+   "type": "string"
+  },
+  "PricingRuleArns": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/PricingRuleArn"
+   },
+   "type": "array"
+  },
+  "Size": {
+   "description": "Number of associated pricing rules",
+   "type": "integer"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Size",
+  "/properties/CreationTime",
+  "/properties/LastModifiedTime"
+ ],
+ "required": [
+  "Name"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::BillingConductor::PricingPlan"
+}

@@ -1,0 +1,94 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResolverQueryLogConfigId",
+  "/properties/ResourceId"
+ ],
+ "description": "Resource schema for AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "resolverquerylogging:AssociateConfig",
+    "resolverquerylogging:GetConfigAssociation"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resolverquerylogging:DisassociateConfig",
+    "resolverquerylogging:ListConfigAssociation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resolverquerylogging:ListConfigAssociation"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resolverquerylogging:GetConfigAssociation"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "CreationTime": {
+   "description": "Rfc3339TimeString",
+   "maxLength": 40,
+   "minLength": 20,
+   "type": "string"
+  },
+  "Error": {
+   "description": "ResolverQueryLogConfigAssociationError",
+   "enum": [
+    "NONE",
+    "DESTINATION_NOT_FOUND",
+    "ACCESS_DENIED"
+   ],
+   "type": "string"
+  },
+  "ErrorMessage": {
+   "description": "ResolverQueryLogConfigAssociationErrorMessage",
+   "type": "string"
+  },
+  "Id": {
+   "description": "Id",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResolverQueryLogConfigId": {
+   "description": "ResolverQueryLogConfigId",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "ResourceId",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Status": {
+   "description": "ResolverQueryLogConfigAssociationStatus",
+   "enum": [
+    "CREATING",
+    "ACTIVE",
+    "ACTION_NEEDED",
+    "DELETING",
+    "FAILED",
+    "OVERRIDDEN"
+   ],
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Status",
+  "/properties/Error",
+  "/properties/ErrorMessage",
+  "/properties/CreationTime",
+  "/properties/Id"
+ ],
+ "typeName": "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation"
+}

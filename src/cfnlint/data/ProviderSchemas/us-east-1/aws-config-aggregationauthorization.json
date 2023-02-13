@@ -1,0 +1,107 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AuthorizedAccountId",
+  "/properties/AuthorizedAwsRegion"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Config::AggregationAuthorization",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:PutAggregationAuthorization",
+    "config:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:DeleteAggregationAuthorization",
+    "config:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "config:DescribeAggregationAuthorizations",
+    "config:TagResource",
+    "config:UntagResource",
+    "config:ListTagsForResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AuthorizedAccountId",
+  "/properties/AuthorizedAwsRegion"
+ ],
+ "properties": {
+  "AggregationAuthorizationArn": {
+   "description": "The ARN of the AggregationAuthorization.",
+   "type": "string"
+  },
+  "AuthorizedAccountId": {
+   "description": "The 12-digit account ID of the account authorized to aggregate data.",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  },
+  "AuthorizedAwsRegion": {
+   "description": "The region authorized to collect aggregated data.",
+   "maxLength": 64,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the AggregationAuthorization.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AggregationAuthorizationArn"
+ ],
+ "required": [
+  "AuthorizedAccountId",
+  "AuthorizedAwsRegion"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+ "typeName": "AWS::Config::AggregationAuthorization"
+}

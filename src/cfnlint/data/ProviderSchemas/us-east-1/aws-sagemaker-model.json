@@ -1,0 +1,183 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ExecutionRoleArn",
+  "/properties/EnableNetworkIsolation",
+  "/properties/InferenceExecutionConfig",
+  "/properties/PrimaryContainer",
+  "/properties/ModelName",
+  "/properties/VpcConfig",
+  "/properties/Containers"
+ ],
+ "definitions": {
+  "ContainerDefinition": {
+   "additionalProperties": false,
+   "properties": {
+    "ContainerHostname": {
+     "type": "string"
+    },
+    "Environment": {
+     "type": "object"
+    },
+    "Image": {
+     "type": "string"
+    },
+    "ImageConfig": {
+     "$ref": "#/definitions/ImageConfig"
+    },
+    "InferenceSpecificationName": {
+     "type": "string"
+    },
+    "Mode": {
+     "type": "string"
+    },
+    "ModelDataUrl": {
+     "type": "string"
+    },
+    "ModelPackageName": {
+     "type": "string"
+    },
+    "MultiModelConfig": {
+     "$ref": "#/definitions/MultiModelConfig"
+    }
+   },
+   "type": "object"
+  },
+  "ImageConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryAccessMode": {
+     "type": "string"
+    },
+    "RepositoryAuthConfig": {
+     "$ref": "#/definitions/RepositoryAuthConfig"
+    }
+   },
+   "required": [
+    "RepositoryAccessMode"
+   ],
+   "type": "object"
+  },
+  "InferenceExecutionConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "Mode": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Mode"
+   ],
+   "type": "object"
+  },
+  "MultiModelConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ModelCacheSetting": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RepositoryAuthConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "RepositoryCredentialsProviderArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "RepositoryCredentialsProviderArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VpcConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Subnets": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Subnets",
+    "SecurityGroupIds"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::SageMaker::Model",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Containers": {
+   "items": {
+    "$ref": "#/definitions/ContainerDefinition"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "EnableNetworkIsolation": {
+   "type": "boolean"
+  },
+  "ExecutionRoleArn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "InferenceExecutionConfig": {
+   "$ref": "#/definitions/InferenceExecutionConfig"
+  },
+  "ModelName": {
+   "type": "string"
+  },
+  "PrimaryContainer": {
+   "$ref": "#/definitions/ContainerDefinition"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcConfig": {
+   "$ref": "#/definitions/VpcConfig"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ExecutionRoleArn"
+ ],
+ "typeName": "AWS::SageMaker::Model"
+}
