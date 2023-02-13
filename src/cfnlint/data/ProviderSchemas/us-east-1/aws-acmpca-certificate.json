@@ -1,0 +1,464 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApiPassthrough",
+  "/properties/CertificateAuthorityArn",
+  "/properties/CertificateSigningRequest",
+  "/properties/SigningAlgorithm",
+  "/properties/TemplateArn",
+  "/properties/Validity",
+  "/properties/ValidityNotBefore"
+ ],
+ "definitions": {
+  "ApiPassthrough": {
+   "additionalProperties": false,
+   "description": "Structure that specifies fields to be overridden in a certificate at the time of issuance. These requires an API Passthrough template be used or they will be ignored.",
+   "properties": {
+    "Extensions": {
+     "$ref": "#/definitions/Extensions"
+    },
+    "Subject": {
+     "$ref": "#/definitions/Subject"
+    }
+   },
+   "type": "object"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CertificatePolicyList": {
+   "items": {
+    "$ref": "#/definitions/PolicyInformation"
+   },
+   "type": "array"
+  },
+  "CustomAttribute": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.500 attribute type and value.",
+   "properties": {
+    "ObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectIdentifier",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CustomAttributeList": {
+   "description": "Array of X.500 attribute type and value. CustomAttributes cannot be used along with pre-defined attributes.",
+   "items": {
+    "$ref": "#/definitions/CustomAttribute"
+   },
+   "type": "array"
+  },
+  "CustomExtension": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 extension information for a certificate.",
+   "properties": {
+    "Critical": {
+     "type": "boolean"
+    },
+    "ObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ObjectIdentifier",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "CustomExtensionList": {
+   "description": "Array of X.509 extensions for a certificate.",
+   "items": {
+    "$ref": "#/definitions/CustomExtension"
+   },
+   "type": "array"
+  },
+  "CustomObjectIdentifier": {
+   "description": "String that contains X.509 ObjectIdentifier information.",
+   "type": "string"
+  },
+  "DnsName": {
+   "description": "String that contains X.509 DnsName information.",
+   "type": "string"
+  },
+  "EdiPartyName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 EdiPartyName information.",
+   "properties": {
+    "NameAssigner": {
+     "type": "string"
+    },
+    "PartyName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PartyName",
+    "NameAssigner"
+   ],
+   "type": "object"
+  },
+  "ExtendedKeyUsage": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 ExtendedKeyUsage information.",
+   "properties": {
+    "ExtendedKeyUsageObjectIdentifier": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "ExtendedKeyUsageType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ExtendedKeyUsageList": {
+   "items": {
+    "$ref": "#/definitions/ExtendedKeyUsage"
+   },
+   "type": "array"
+  },
+  "Extensions": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.500 extensions for a Certificate.",
+   "properties": {
+    "CertificatePolicies": {
+     "$ref": "#/definitions/CertificatePolicyList"
+    },
+    "CustomExtensions": {
+     "$ref": "#/definitions/CustomExtensionList"
+    },
+    "ExtendedKeyUsage": {
+     "$ref": "#/definitions/ExtendedKeyUsageList"
+    },
+    "KeyUsage": {
+     "$ref": "#/definitions/KeyUsage"
+    },
+    "SubjectAlternativeNames": {
+     "$ref": "#/definitions/GeneralNameList"
+    }
+   },
+   "type": "object"
+  },
+  "GeneralName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 GeneralName information. Assign one and ONLY one field.",
+   "properties": {
+    "DirectoryName": {
+     "$ref": "#/definitions/Subject"
+    },
+    "DnsName": {
+     "$ref": "#/definitions/DnsName"
+    },
+    "EdiPartyName": {
+     "$ref": "#/definitions/EdiPartyName"
+    },
+    "IpAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "OtherName": {
+     "$ref": "#/definitions/OtherName"
+    },
+    "RegisteredId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Rfc822Name": {
+     "$ref": "#/definitions/Rfc822Name"
+    },
+    "UniformResourceIdentifier": {
+     "$ref": "#/definitions/UniformResourceIdentifier"
+    }
+   },
+   "type": "object"
+  },
+  "GeneralNameList": {
+   "items": {
+    "$ref": "#/definitions/GeneralName"
+   },
+   "type": "array"
+  },
+  "IpAddress": {
+   "description": "String that contains X.509 IpAddress information.",
+   "type": "string"
+  },
+  "KeyUsage": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 KeyUsage information.",
+   "properties": {
+    "CRLSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DataEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DecipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "DigitalSignature": {
+     "default": false,
+     "type": "boolean"
+    },
+    "EncipherOnly": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyAgreement": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyCertSign": {
+     "default": false,
+     "type": "boolean"
+    },
+    "KeyEncipherment": {
+     "default": false,
+     "type": "boolean"
+    },
+    "NonRepudiation": {
+     "default": false,
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "OtherName": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 OtherName information.",
+   "properties": {
+    "TypeId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "TypeId",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "PolicyInformation": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 Policy information.",
+   "properties": {
+    "CertPolicyId": {
+     "$ref": "#/definitions/CustomObjectIdentifier"
+    },
+    "PolicyQualifiers": {
+     "$ref": "#/definitions/PolicyQualifierInfoList"
+    }
+   },
+   "required": [
+    "CertPolicyId"
+   ],
+   "type": "object"
+  },
+  "PolicyQualifierInfo": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.509 Policy qualifier information.",
+   "properties": {
+    "PolicyQualifierId": {
+     "type": "string"
+    },
+    "Qualifier": {
+     "$ref": "#/definitions/Qualifier"
+    }
+   },
+   "required": [
+    "PolicyQualifierId",
+    "Qualifier"
+   ],
+   "type": "object"
+  },
+  "PolicyQualifierInfoList": {
+   "items": {
+    "$ref": "#/definitions/PolicyQualifierInfo"
+   },
+   "type": "array"
+  },
+  "Qualifier": {
+   "additionalProperties": false,
+   "description": "Structure that contains a X.509 policy qualifier.",
+   "properties": {
+    "CpsUri": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "CpsUri"
+   ],
+   "type": "object"
+  },
+  "Rfc822Name": {
+   "description": "String that contains X.509 Rfc822Name information.",
+   "type": "string"
+  },
+  "Subject": {
+   "additionalProperties": false,
+   "description": "Structure that contains X.500 distinguished name information.",
+   "properties": {
+    "CommonName": {
+     "type": "string"
+    },
+    "Country": {
+     "type": "string"
+    },
+    "CustomAttributes": {
+     "$ref": "#/definitions/CustomAttributeList"
+    },
+    "DistinguishedNameQualifier": {
+     "type": "string"
+    },
+    "GenerationQualifier": {
+     "type": "string"
+    },
+    "GivenName": {
+     "type": "string"
+    },
+    "Initials": {
+     "type": "string"
+    },
+    "Locality": {
+     "type": "string"
+    },
+    "Organization": {
+     "type": "string"
+    },
+    "OrganizationalUnit": {
+     "type": "string"
+    },
+    "Pseudonym": {
+     "type": "string"
+    },
+    "SerialNumber": {
+     "type": "string"
+    },
+    "State": {
+     "type": "string"
+    },
+    "Surname": {
+     "type": "string"
+    },
+    "Title": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UniformResourceIdentifier": {
+   "description": "String that contains X.509 UniformResourceIdentifier information.",
+   "type": "string"
+  },
+  "Validity": {
+   "additionalProperties": false,
+   "description": "Validity for a certificate.",
+   "properties": {
+    "Type": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "number"
+    }
+   },
+   "required": [
+    "Value",
+    "Type"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A certificate issued via a private certificate authority",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "acm-pca:IssueCertificate",
+    "acm-pca:GetCertificate"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "acm-pca:GetCertificate"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "acm-pca:GetCertificate"
+   ]
+  },
+  "update": {
+   "permissions": []
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn",
+  "/properties/CertificateAuthorityArn"
+ ],
+ "properties": {
+  "ApiPassthrough": {
+   "$ref": "#/definitions/ApiPassthrough",
+   "description": "These are fields to be overridden in a certificate at the time of issuance. These requires an API_Passthrough template be used or they will be ignored."
+  },
+  "Arn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The ARN of the issued certificate."
+  },
+  "Certificate": {
+   "description": "The issued certificate in base 64 PEM-encoded format.",
+   "type": "string"
+  },
+  "CertificateAuthorityArn": {
+   "$ref": "#/definitions/Arn",
+   "description": "The Amazon Resource Name (ARN) for the private CA to issue the certificate."
+  },
+  "CertificateSigningRequest": {
+   "description": "The certificate signing request (CSR) for the Certificate.",
+   "minLength": 1,
+   "type": "string"
+  },
+  "SigningAlgorithm": {
+   "description": "The name of the algorithm that will be used to sign the Certificate.",
+   "type": "string"
+  },
+  "TemplateArn": {
+   "$ref": "#/definitions/Arn",
+   "description": "Specifies a custom configuration template to use when issuing a certificate. If this parameter is not provided, ACM Private CA defaults to the EndEntityCertificate/V1 template."
+  },
+  "Validity": {
+   "$ref": "#/definitions/Validity",
+   "description": "The time before which the Certificate will be valid."
+  },
+  "ValidityNotBefore": {
+   "$ref": "#/definitions/Validity",
+   "description": "The time after which the Certificate will be valid."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Certificate"
+ ],
+ "required": [
+  "CertificateAuthorityArn",
+  "CertificateSigningRequest",
+  "SigningAlgorithm",
+  "Validity"
+ ],
+ "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+ "typeName": "AWS::ACMPCA::Certificate",
+ "writeOnlyProperties": [
+  "/properties/ApiPassthrough",
+  "/properties/CertificateSigningRequest"
+ ]
+}

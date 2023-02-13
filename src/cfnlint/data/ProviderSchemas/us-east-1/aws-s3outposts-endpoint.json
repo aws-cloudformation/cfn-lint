@@ -1,0 +1,150 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/OutpostId",
+  "/properties/SecurityGroupId",
+  "/properties/SubnetId",
+  "/properties/AccessType",
+  "/properties/CustomerOwnedIpv4Pool"
+ ],
+ "definitions": {
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "description": "The container for the network interface.",
+   "properties": {
+    "NetworkInterfaceId": {
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "NetworkInterfaceId"
+   ],
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "description": "The date value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ssZ)",
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "description": "Resource Type Definition for AWS::S3Outposts::Endpoint",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "s3-outposts:CreateEndpoint"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "s3-outposts:DeleteEndpoint"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "s3-outposts:ListEndpoints"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "s3-outposts:ListEndpoints"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "AccessType": {
+   "default": "Private",
+   "description": "The type of access for the on-premise network connectivity for the Outpost endpoint. To access endpoint from an on-premises network, you must specify the access type and provide the customer owned Ipv4 pool.",
+   "enum": [
+    "CustomerOwnedIp",
+    "Private"
+   ],
+   "type": "string"
+  },
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the endpoint.",
+   "maxLength": 500,
+   "minLength": 5,
+   "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/endpoint/[a-zA-Z0-9]{19}$",
+   "type": "string"
+  },
+  "CidrBlock": {
+   "description": "The VPC CIDR committed by this endpoint.",
+   "maxLength": 20,
+   "minLength": 1,
+   "type": "string"
+  },
+  "CreationTime": {
+   "$ref": "#/definitions/iso8601UTC",
+   "description": "The time the endpoint was created."
+  },
+  "CustomerOwnedIpv4Pool": {
+   "description": "The ID of the customer-owned IPv4 pool for the Endpoint. IP addresses will be allocated from this pool for the endpoint.",
+   "pattern": "^ipv4pool-coip-([0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The ID of the endpoint.",
+   "maxLength": 500,
+   "minLength": 5,
+   "pattern": "^[a-zA-Z0-9]{19}$",
+   "type": "string"
+  },
+  "NetworkInterfaces": {
+   "description": "The network interfaces of the endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/NetworkInterface"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OutpostId": {
+   "description": "The id of the customer outpost on which the bucket resides.",
+   "pattern": "^(op-[a-f0-9]{17}|\\d{12}|ec2)$",
+   "type": "string"
+  },
+  "SecurityGroupId": {
+   "description": "The ID of the security group to use with the endpoint.",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^sg-([0-9a-f]{8}|[0-9a-f]{17})$",
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "Available",
+    "Pending",
+    "Deleting"
+   ],
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The ID of the subnet in the selected VPC. The subnet must belong to the Outpost.",
+   "maxLength": 100,
+   "minLength": 1,
+   "pattern": "^subnet-([0-9a-f]{8}|[0-9a-f]{17})$",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CidrBlock",
+  "/properties/CreationTime",
+  "/properties/Id",
+  "/properties/NetworkInterfaces",
+  "/properties/Status"
+ ],
+ "required": [
+  "OutpostId",
+  "SecurityGroupId",
+  "SubnetId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
+ "taggable": false,
+ "typeName": "AWS::S3Outposts::Endpoint"
+}
