@@ -15,7 +15,7 @@ import logging
 
 import boto3
 
-LOGGER = logging.getLogger("cfnlint")
+LOGGER = logging.getLogger('cfnlint')
 
 
 region_map = {
