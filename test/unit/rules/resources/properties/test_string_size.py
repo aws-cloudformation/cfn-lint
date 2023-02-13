@@ -3,7 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from collections import deque
 from test.unit.rules import BaseRuleTestCase
+
+from jsonschema import Draft7Validator, ValidationError
 
 from cfnlint.rules.resources.properties.StringSize import (
     StringSize,  # pylint: disable=E0401
@@ -13,17 +16,22 @@ from cfnlint.rules.resources.properties.StringSize import (
 class TestStringSize(BaseRuleTestCase):
     """Test List Size Property Configuration"""
 
-    def setUp(self):
-        """Setup"""
-        super(TestStringSize, self).setUp()
-        self.collection.register(StringSize())
-
     def test_file_positive(self):
         """Test Positive"""
-        self.helper_file_positive()
-
-    def test_file_negative_string_size(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/properties/string_size.yaml", 3
+        rule = StringSize()
+        validator = Draft7Validator(
+            {
+                "type": "string",
+                "maxLength": 3,
+            }
+        )
+        self.assertEqual(list(rule.maxLength(validator, 3, "a", {})), [])
+        self.assertEqual(len(list(rule.maxLength(validator, 3, "abcd", {}))), 1)
+        self.assertEqual(len(list(rule.maxLength(validator, 10, {"a": "b"}, {}))), 0)
+        self.assertEqual(len(list(rule.maxLength(validator, 3, {"a": "bcd"}, {}))), 1)
+        self.assertEqual(
+            len(list(rule.maxLength(validator, 10, {"a": {"Fn::Sub": "b"}}, {}))), 0
+        )
+        self.assertEqual(
+            len(list(rule.maxLength(validator, 10, {"a": {"Fn::Sub": "bcd"}}, {}))), 1
         )

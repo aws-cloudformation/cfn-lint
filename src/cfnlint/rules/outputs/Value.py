@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.helpers import RESOURCE_SPECS
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
+from cfnlint.template.template import Template
 
 
 class Value(CloudFormationLintRule):
@@ -16,16 +17,7 @@ class Value(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs"]
 
-    def __init__(self):
-        """Init"""
-        super().__init__()
-        self.resourcetypes = []
-
-    def initialize(self, cfn):
-        resourcespecs = RESOURCE_SPECS[cfn.regions[0]]
-        self.resourcetypes = resourcespecs["ResourceTypes"]
-
-    def match(self, cfn):
+    def match(self, cfn: Template):
         matches = []
 
         template = cfn.template
@@ -44,22 +36,25 @@ class Value(CloudFormationLintRule):
                         objtype = (
                             template.get("Resources", {}).get(obj[0], {}).get("Type")
                         )
-                        if objtype and isinstance(obj[1], str):
-                            attribute = (
-                                self.resourcetypes.get(objtype, {})
-                                .get("Attributes", {})
-                                .get(obj[1], {})
-                                .get("Type")
+                        if objtype:
+                            res_schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                                cfn.regions[0], objtype
                             )
-                            if attribute == "List":
-                                if getatt[-4] != "Fn::Join" and getatt[-3] != 1:
-                                    message = "Output {0} value {1} is of type list"
-                                    matches.append(
-                                        RuleMatch(
-                                            getatt,
-                                            message.format(getatt[1], "/".join(obj)),
+                            attribute = res_schema.get_atts().get(obj[1])
+                            # Bad schema or bad attribute.  Skip if either is true
+                            if attribute:
+                                attribute_type = attribute.get("type")
+                                if attribute_type == "array":
+                                    if getatt[-4] != "Fn::Join" and getatt[-3] != 1:
+                                        message = "Output {0} value {1} is of type list"
+                                        matches.append(
+                                            RuleMatch(
+                                                getatt,
+                                                message.format(
+                                                    getatt[1], "/".join(obj)
+                                                ),
+                                            )
                                         )
-                                    )
 
         # If using a ref for an output make sure it isn't a
         # Parameter of Type List
