@@ -28,6 +28,6 @@ class TestRegexDict(BaseTestCase):
     def test_return_longest(self):
         obj = RegexDict()
         obj["^Test"] = False
-        obj["^TestLonger"] = True
+        obj["^TestLonger.*"] = True
 
         self.assertTrue(obj["TestLongerObject"])

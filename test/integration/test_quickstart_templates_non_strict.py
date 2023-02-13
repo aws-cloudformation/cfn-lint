@@ -24,7 +24,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
         {
             "filename": "test/fixtures/templates/quickstart/openshift.yaml",
             "results_filename": "test/fixtures/results/quickstart/non_strict/openshift.json",
-            "exit_code": 12,
+            "exit_code": 14,
         },
         {
             "filename": "test/fixtures/templates/quickstart/cis_benchmark.yaml",
