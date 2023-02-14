@@ -10,7 +10,7 @@ from jsonschema import Draft7Validator
 from jsonschema.exceptions import best_match
 from jsonschema.validators import extend
 
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import ValidationError, _utils
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -26,19 +26,12 @@ class GetAtt(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html"
     tags = ["functions", "getatt"]
 
-    def _unbool(self, element, true=object(), false=object()):
-        if element is True:
-            return true
-        if element is False:
-            return false
-        return element
-
     # pylint: disable=unused-argument
     def _enum(self, validator, enums, instance, schema):
         enums.sort()
         if instance in (0, 1):
-            unbooled = self._unbool(instance)
-            if all(unbooled != self._unbool(each) for each in enums):
+            unbooled = _utils.unbool(instance)
+            if all(unbooled != _utils.unbool(each) for each in enums):
                 yield ValidationError(f"{instance!r} is not one of {enums!r}")
         elif instance not in enums:
             if validator.is_type(instance, "string"):
