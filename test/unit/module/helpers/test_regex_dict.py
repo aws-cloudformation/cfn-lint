@@ -31,3 +31,12 @@ class TestRegexDict(BaseTestCase):
         obj["^TestLonger.*"] = True
 
         self.assertTrue(obj["TestLongerObject"])
+
+    def test_contains_object(self):
+        obj = RegexDict()
+        obj["^Test"] = False
+        obj["^TestLonger.*"] = True
+
+        self.assertTrue("TestLongerObject" in obj)
+        self.assertFalse("NotIn" in obj)
+        self.assertFalse({"a": "b"} in obj)
