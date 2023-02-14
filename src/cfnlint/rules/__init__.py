@@ -54,9 +54,6 @@ def matching(match_type: Any):
             if match_type == "match_resource_properties":
                 if args[1] not in self.resource_property_types:
                     return []
-            elif match_type == "match_resource_sub_properties":
-                if args[1] not in self.resource_sub_property_types:
-                    return []
 
             start = datetime.now()
             LOGGER.debug("Starting match function for rule %s at %s", self.id, start)
@@ -220,7 +217,6 @@ class CloudFormationLintRule:
 
     match: Callable[[Template], List[RuleMatch]] = None  # type: ignore
     match_resource_properties: Callable[[Dict, str, List[str], Template], List[RuleMatch]] = None  # type: ignore
-    match_resource_sub_properties: Callable[[Dict, str, List[str], Template], List[RuleMatch]] = None  # type: ignore
 
     @matching("match")
     # pylint: disable=W0613
@@ -235,16 +231,6 @@ class CloudFormationLintRule:
     ):
         """Check for resource properties type"""
         return self.match_resource_properties(  # pylint: disable=E1102
-            resource_properties, property_type, path, cfn
-        )
-
-    @matching("match_resource_sub_properties")
-    # pylint: disable=W0613
-    def matchall_resource_sub_properties(
-        self, filename, cfn, resource_properties, property_type, path
-    ):
-        """Check for resource properties type"""
-        return self.match_resource_sub_properties(  # pylint: disable=E1102
             resource_properties, property_type, path, cfn
         )
 
