@@ -31,15 +31,15 @@ class Properties(CloudFormationLintRule):
                     break
                 if len(v) == 3:
                     yield from validator.descend(
-                        v[0],
+                        v[1],
                         schema,
-                        path=k[0] if len(k) > 0 else "Fn::If",
+                        path="Fn::If",
                         schema_path=None,
                     )
                     yield from validator.descend(
-                        v[1],
+                        v[2],
                         schema,
-                        path=k[0] if len(k) > 0 else "Fn::If",
+                        path="Fn::If",
                         schema_path=None,
                     )
                 return

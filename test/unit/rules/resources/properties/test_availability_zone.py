@@ -5,26 +5,70 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+from jsonschema import Draft7Validator
+
 from cfnlint.rules.resources.properties.AvailabilityZone import (
     AvailabilityZone,  # pylint: disable=E0401
 )
 
 
-class TestPropertyAvailabilityZone(BaseRuleTestCase):
+class TestAvailabilityZone(BaseRuleTestCase):
     """Test Password Property Configuration"""
 
     def setUp(self):
         """Setup"""
-        super(TestPropertyAvailabilityZone, self).setUp()
-        self.collection.register(AvailabilityZone())
-        self.success_templates = [
-            "test/fixtures/templates/good/resources/properties/az.yaml"
-        ]
+        self.rule = AvailabilityZone()
 
-    def test_file_positive(self):
-        """Success test"""
-        self.helper_file_positive()
+    def test_availability_zones(self):
+        validator = Draft7Validator({})
 
-    def test_file_negative(self):
-        """Failure test"""
-        self.helper_file_negative("test/fixtures/templates/bad/properties_az.yaml", 3)
+        # hard coded string
+        self.assertEqual(
+            len(list(self.rule.availabilityzones(validator, {}, ["us-east-1"], {}))), 1
+        )
+
+        # proper function
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.availabilityzones(
+                        validator, {}, {"Fn::GetAZs": "us-east-1"}, {}
+                    )
+                )
+            ),
+            0,
+        )
+
+        # not a string
+        self.assertEqual(
+            len(list(self.rule.availabilityzones(validator, {}, True, {}))), 0
+        )
+
+        # not a string
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.availabilityzones(
+                        validator, {}, [{"Ref": "Parameter"}], {}
+                    )
+                )
+            ),
+            0,
+        )
+
+        # exception
+        self.assertEqual(
+            len(list(self.rule.availabilityzones(validator, {}, ["all"], {}))), 0
+        )
+
+        # more than 1
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.availabilityzones(
+                        validator, {}, ["us-east-1", "us-west-2"], {}
+                    )
+                )
+            ),
+            2,
+        )

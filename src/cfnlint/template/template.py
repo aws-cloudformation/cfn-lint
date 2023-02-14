@@ -243,7 +243,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         for pseudoparam in cfnlint.PSEUDOPARAMS:
             element = {}
             element["Type"] = "Pseudo"
-            element["From"] = "Pseduo"
+            element["From"] = "Pseudo"
             results[pseudoparam] = element
         return results
 
