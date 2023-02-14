@@ -28,7 +28,7 @@ class Configuration(CloudFormationLintRule):
         self.regions = []
         self.validator = create_validator(
             validators={
-                "cfnType": self._cfnType,
+                "awsType": self._awsType,
             },
             cfn=None,
             rules=None,
@@ -39,7 +39,7 @@ class Configuration(CloudFormationLintRule):
         self.regions = cfn.regions
 
     # pylint: disable=unused-argument
-    def _cfnType(self, validator, iT, instance, schema):
+    def _awsType(self, validator, iT, instance, schema):
         if not validator.is_type(instance, "string"):
             return
         for region in self.regions:
