@@ -14,3 +14,11 @@ class Unset:
 
     def __repr__(self):
         return "<unset>"
+
+
+def unbool(element, true=object(), false=object()):
+    if element is True:
+        return true
+    if element is False:
+        return false
+    return element
