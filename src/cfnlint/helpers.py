@@ -17,13 +17,11 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import Dict, List
+from typing import List
 from urllib.request import Request, urlopen, urlretrieve
 
-import jsonpatch
 import regex as re
 
-from cfnlint.data import CloudSpecs
 
 LOGGER = logging.getLogger(__name__)
 
@@ -115,16 +113,20 @@ FUNCTION_NOT = "Fn::Not"
 FUNCTION_EQUALS = "Fn::Equals"
 FUNCTION_FOR_EACH = re.compile(r"^Fn::ForEach::[a-zA-Z0-9]+$")
 
-PSEUDOPARAMS = [
+PSEUDOPARAMS_SINGLE = [
     "AWS::AccountId",
-    "AWS::NotificationARNs",
-    "AWS::NoValue",
     "AWS::Partition",
     "AWS::Region",
     "AWS::StackId",
     "AWS::StackName",
     "AWS::URLSuffix",
 ]
+
+PSEUDOPARAMS_MULTIPLE = [
+    "AWS::NotificationARNs",
+]
+
+PSEUDOPARAMS = ["AWS::NoValue"] + PSEUDOPARAMS_SINGLE + PSEUDOPARAMS_MULTIPLE
 
 LIMITS = {
     "Mappings": {"number": 200, "attributes": 200, "name": 255},  # in characters
@@ -225,15 +227,10 @@ class RegexDict(dict):
         return possible_items[longest_match]
 
     def __contains__(self, item):
-        for k, v in self.items():
-            if isinstance(v, dict):
-                if v.get("Type") == "MODULE":
-                    if re.match(k, item):
-                        return True
-                else:
-                    if k == item:
-                        return True
-            elif re.match(k, item):
+        if isinstance(item, (dict, list)):
+            return False
+        for k, _ in self.items():
+            if re.fullmatch(k, item):
                 return True
         return False
 
@@ -333,7 +330,6 @@ def get_url_retrieve(url: str, caching: bool = False) -> str:
     """
 
     if caching:
-        # Need to wrap this in a try, as URLLib2 in Python2 doesn't support HEAD requests
         req = Request(url, method="HEAD")
         with urlopen(req) as res:
             if res.info().get("ETag"):
@@ -383,19 +379,6 @@ def load_resource(package, filename="us-east-1.json"):
 
 
 REGISTRY_SCHEMAS: List[dict] = []
-
-
-def merge_spec(source, destination):
-    """Recursive merge spec dict"""
-
-    for key, value in source.items():
-        if isinstance(value, dict):
-            node = destination.setdefault(key, {})
-            merge_spec(value, node)
-        else:
-            destination[key] = value
-
-    return destination
 
 
 def is_custom_resource(resource_type):
@@ -491,21 +474,3 @@ def load_plugins(directory):
                 result.extend(create_rules(mod))
 
     return result
-
-
-def apply_json_patch(data: Dict, patches: List[Dict], region: str) -> Dict:
-    # Process the generic patches 1 by 1 so we can "ignore" failed ones
-    for patch in patches:
-        try:
-            jsonpatch.JsonPatch([patch]).apply(data, in_place=True)
-        except jsonpatch.JsonPatchConflict:
-            LOGGER.debug("Patch (%s) not applied in region %s", patch, region)
-        except jsonpatch.JsonPointerException:
-            # Debug as the parent element isn't supported in the region
-            LOGGER.debug(
-                "Parent element not found for patch (%s) in region %s",
-                patches,
-                region,
-            )
-
-    return data
