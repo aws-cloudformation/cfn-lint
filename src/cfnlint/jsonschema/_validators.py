@@ -15,10 +15,10 @@ from jsonschema._utils import (
     equal,
     extras_msg,
     find_additional_properties,
-    unbool,
     uniq,
 )
 
+from cfnlint.jsonschema._utils import unbool
 from cfnlint.jsonschema.exceptions import ValidationError
 
 
