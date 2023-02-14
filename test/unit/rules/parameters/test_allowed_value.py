@@ -34,6 +34,8 @@ class TestAllowedValue(BaseRuleTestCase):
                             2,
                         ],
                     },
+                    "5": [],
+                    "6:": {"Type": "String", "AllowedValues": {"foo": "bar"}},
                 }
             },
             regions=["us-east-1"],
@@ -50,3 +52,7 @@ class TestAllowedValue(BaseRuleTestCase):
         self.assertEqual(len(list(self.rule.validate("3", ["B", "C"]))), 1)
         self.assertEqual(len(list(self.rule.validate("4", [1, 2]))), 0)
         self.assertEqual(len(list(self.rule.validate("4", [2, 3]))), 1)
+
+        # bad structure on parameter
+        self.assertEqual(len(list(self.rule.validate("5", ["foo"]))), 0)
+        self.assertEqual(len(list(self.rule.validate("6", ["foo"]))), 0)
