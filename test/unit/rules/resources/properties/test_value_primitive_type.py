@@ -11,6 +11,7 @@ from cfnlint.rules.resources.properties.ValuePrimitiveType import (  # pylint: d
     ValidationError,
     ValuePrimitiveType,
 )
+from cfnlint.template import Template
 
 
 class TestResourceValuePrimitiveTypeCheckValue(BaseRuleTestCase):
@@ -156,9 +157,32 @@ class TestResourceValuePrimitiveTypeJsonSchemaValidate(BaseRuleTestCase):
                 "string": jsonschema._types.is_string,
             },
         )
+        template = Template(
+            "",
+            {
+                "Parameters": {
+                    "aString": {
+                        "Type": "String",
+                    },
+                    "aList": {
+                        "Type": "List<String>",
+                    },
+                },
+                "Resources": {
+                    "aResource": {
+                        "Type": "Custom::Resource",
+                    },
+                    "aModule": {
+                        "Type": "A::Module",
+                    },
+                },
+            },
+            regions=["us-east-1"],
+        )
+        self.rule.validate_configure(template)
 
     def test_validation(self):
-        """Test Positive"""
+        """Test type function for json schema"""
         # sub is a string boolean
         self.assertEqual(
             len(
@@ -192,6 +216,11 @@ class TestResourceValuePrimitiveTypeJsonSchemaValidate(BaseRuleTestCase):
             ),
             0,
         )
+        # array type with singular value
+        self.assertEqual(
+            len(list(self.rule.type(self.validator, ["array"], {"Fn::Sub": ""}, {}))),
+            1,
+        )
         # two types the second being valid
         self.assertEqual(
             len(
@@ -213,4 +242,147 @@ class TestResourceValuePrimitiveTypeJsonSchemaValidate(BaseRuleTestCase):
                 )
             ),
             1,
+        )
+
+    def test_validation_with_condition(self):
+        """Test type function for json schema"""
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["string"],
+                        {"Fn::If": ["Condition", "foo", "bar"]},
+                        {},
+                    )
+                )
+            ),
+            0,
+        )
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["array"],
+                        {"Fn::If": ["Condition", "foo", "bar"]},
+                        {},
+                    )
+                )
+            ),
+            2,
+        )
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["array"],
+                        {"Fn::If": ["Condition", "foo", "bar", "extra"]},
+                        {},
+                    )
+                )
+            ),
+            0,
+        )
+
+    def test_validation_ref(self):
+        """Test type function for json schema"""
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["string"],
+                        {"Ref": ["Condition", "foo", "bar"]},
+                        {},
+                    )
+                )
+            ),
+            0,
+        )
+        self.assertEqual(
+            len(list(self.rule.type(self.validator, ["string"], {"Ref": "aList"}, {}))),
+            1,
+        )
+        self.assertEqual(
+            len(
+                list(self.rule.type(self.validator, ["string"], {"Ref": "aString"}, {}))
+            ),
+            0,
+        )
+
+        self.assertEqual(
+            len(list(self.rule.type(self.validator, ["array"], {"Ref": "aList"}, {}))),
+            0,
+        )
+        self.assertEqual(
+            len(
+                list(self.rule.type(self.validator, ["array"], {"Ref": "aString"}, {}))
+            ),
+            1,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator, ["array"], {"Ref": "AWS::AccountId"}, {}
+                    )
+                )
+            ),
+            1,
+        )
+
+        self.assertEqual(
+            list(
+                self.rule.type(
+                    self.validator, ["array"], {"Ref": "AWS::NotificationARNs"}, {}
+                )
+            ),
+            [],
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator, ["string"], {"Ref": "AWS::NotificationARNs"}, {}
+                    )
+                )
+            ),
+            1,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator, ["string"], {"Ref": "AWS::AccountId"}, {}
+                    )
+                )
+            ),
+            0,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator, ["object"], {"Ref": "AWS::NotificationARNs"}, {}
+                    )
+                )
+            ),
+            0,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator, ["object"], {"Ref": "AWS::AccountId"}, {}
+                    )
+                )
+            ),
+            0,
         )

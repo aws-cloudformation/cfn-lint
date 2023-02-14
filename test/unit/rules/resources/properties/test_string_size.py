@@ -13,6 +13,11 @@ from cfnlint.rules.resources.properties.StringSize import (
 )
 
 
+class Unserializable:
+    def __init__(self) -> None:
+        self.foo = "bar"
+
+
 class TestStringSize(BaseRuleTestCase):
     """Test List Size Property Configuration"""
 
@@ -33,5 +38,11 @@ class TestStringSize(BaseRuleTestCase):
             len(list(rule.maxLength(validator, 10, {"a": {"Fn::Sub": "b"}}, {}))), 0
         )
         self.assertEqual(
-            len(list(rule.maxLength(validator, 10, {"a": {"Fn::Sub": "bcd"}}, {}))), 1
+            len(list(rule.maxLength(validator, 3, {"Fn::Sub": "bcd"}, {}))), 1
         )
+        self.assertEqual(
+            len(list(rule.maxLength(validator, 3, {"Fn::Sub": ["abcd", {}]}, {}))), 1
+        )
+
+        with self.assertRaises(TypeError):
+            list(rule.maxLength(validator, 10, {"foo": Unserializable()}, {}))

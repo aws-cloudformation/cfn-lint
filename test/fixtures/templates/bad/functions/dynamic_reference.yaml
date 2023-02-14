@@ -31,3 +31,10 @@ Resources:
         # DB User Not Supported for secure strings
         DbUser: !Sub '{{resolve:ssm-secure:MyUsername:1}}'
         RdsDbInstanceArn: String
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '{{resolve:ssm-secure:MyUsername:1}}'
+Outputs:
+  Test:
+    Value: !Sub '{{resolve:ssm-secure:MyUsername:1}}'
