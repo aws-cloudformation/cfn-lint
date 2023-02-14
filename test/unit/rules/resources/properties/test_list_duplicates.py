@@ -66,6 +66,9 @@ class TestListDuplicates(BaseRuleTestCase):
             len(list(rule.uniqueItems(validator, True, [["a"], ["a"]], {}))), 1
         )
         self.assertEqual(
+            len(list(rule.uniqueItems(validator, True, [["a"], ["a", "b"]], {}))), 0
+        )
+        self.assertEqual(
             len(list(rule.uniqueItems(validator, True, [["a"], ["b"]], {}))), 0
         )
 
