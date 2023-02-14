@@ -623,10 +623,12 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_sub_parameters(self, sub_string):
         """Gets the parameters out of a Sub String"""
+        results = []
+        if not isinstance(sub_string, str):
+            return results
         regex = re.compile(r"\${[^!].*?}")
         string_params = regex.findall(sub_string)
 
-        results = []
         for string_param in string_params:
             results.append(string_param[2:-1].strip())
 

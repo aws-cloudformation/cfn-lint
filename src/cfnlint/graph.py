@@ -265,7 +265,10 @@ class Graph:
     def _find_parameter(self, string):
         """Search string for tokenized fields"""
         regex = re.compile(r"\${([a-zA-Z0-9.]*)}")
-        return regex.findall(string)
+        if isinstance(string, str):
+            return regex.findall(string)
+
+        return []
 
     # pylint: disable=import-outside-toplevel,unused-variable
     def to_dot(self, path):
