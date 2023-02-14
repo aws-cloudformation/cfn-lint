@@ -5,7 +5,12 @@ SPDX-License-Identifier: MIT-0
 
 from typing import Any, List
 
-from cfnlint.helpers import FUNCTIONS, FUNCTIONS_MULTIPLE
+from cfnlint.helpers import (
+    FUNCTIONS,
+    FUNCTIONS_MULTIPLE,
+    PSEUDOPARAMS_MULTIPLE,
+    PSEUDOPARAMS_SINGLE,
+)
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.template.template import Template
@@ -130,12 +135,29 @@ class ValuePrimitiveType(CloudFormationLintRule):
                                 if t == "array":
                                     if v in valid_refs:
                                         ref_type = valid_refs.get(v).get("Type")
-                                        if "List" in ref_type:
+                                        ref_from = valid_refs.get(v).get("From")
+                                        if ref_from == "Pseudo":
+                                            if v in PSEUDOPARAMS_MULTIPLE:
+                                                return
+                                        if (
+                                            "List" in ref_type
+                                            and ref_from == "Parameters"
+                                        ):
                                             return
                                 elif t in ["string", "number", "integer", "boolean"]:
                                     if v in valid_refs:
                                         ref_type = valid_refs.get(v).get("Type")
-                                        if "List" not in ref_type:
+                                        ref_from = valid_refs.get(v).get("From")
+                                        if ref_from == "Pseudo":
+                                            if v in PSEUDOPARAMS_SINGLE:
+                                                return
+                                        if ref_from == "Resources":
+                                            # Ref to resource are always singular
+                                            return
+                                        if (
+                                            "List" not in ref_type
+                                            and ref_from == "Parameters"
+                                        ):
                                             return
                             if v not in valid_refs:
                                 # Picked up by another rule
