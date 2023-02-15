@@ -113,6 +113,7 @@ class Transform:
                     "DefinitionBody" not in resource_dict
                     and "Auth" not in resource_dict
                     and "Cors" not in resource_dict
+                    and "DisableExecuteApiEndpoint" not in resource_dict
                 ):
                     Transform._update_to_s3_uri("DefinitionUri", resource_dict)
                 else:
