@@ -126,7 +126,11 @@ class TestCli(BaseTestCase):
         yaml_mock.side_effect = [{}, {}]
 
         filename = "test/fixtures/templates/good/core/config_parameters.yaml"
-        (args, _, _,) = cfnlint.core.get_args_filenames(
+        (
+            args,
+            _,
+            _,
+        ) = cfnlint.core.get_args_filenames(
             ["--template", filename, "--ignore-bad-template"]
         )
 
@@ -150,7 +154,11 @@ class TestCli(BaseTestCase):
 
     def test_output_file(self):
         filename = "test/fixtures/templates/good/core/config_parameters.yaml"
-        (args, _, _,) = cfnlint.core.get_args_filenames(
+        (
+            args,
+            _,
+            _,
+        ) = cfnlint.core.get_args_filenames(
             ["--template", filename, "--output-file", "test_output.txt"]
         )
 

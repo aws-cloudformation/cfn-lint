@@ -23,7 +23,6 @@ class LimitValue(CloudFormationLintRule):
         # There are no real "Values" in the template, check the "meta" information
         # (Default, AllowedValue and MaxLength) against the limit
         for paramname, paramvalue in cfn.get_parameters().items():
-
             # Check Default value
             default_value = paramvalue.get("Default")
 

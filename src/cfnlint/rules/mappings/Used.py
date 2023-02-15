@@ -21,11 +21,9 @@ class Used(CloudFormationLintRule):
         mappings = cfn.template.get("Mappings", {})
 
         if mappings:
-
             # Get all "FindInMaps" that reference a Mapping
             maptrees = cfn.transform_pre["Fn::FindInMap"]
             for maptree in maptrees:
-
                 if isinstance(maptree[-1], list):
                     map_name = maptree[-1][0]
                     if isinstance(map_name, dict):

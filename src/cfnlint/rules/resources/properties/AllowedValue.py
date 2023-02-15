@@ -35,7 +35,6 @@ class AllowedValue(CloudFormationLintRule):
         allowed_value_specs = kwargs.get("value_specs", {}).get("AllowedValues", {})
 
         if allowed_value_specs:
-
             # Ignore values with dynamic references. Simple check to prevent false-positives
             # See: https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html
             if "{{resolve:" not in str(value):

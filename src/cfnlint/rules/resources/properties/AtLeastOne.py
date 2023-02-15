@@ -38,7 +38,7 @@ class AtLeastOne(CloudFormationLintRule):
         matches = []
 
         for atleastoneprop in atleastoneprops:
-            for (safe_properties, safe_path) in properties.items_safe(path):
+            for safe_properties, safe_path in properties.items_safe(path):
                 property_sets = cfn.get_object_without_conditions(
                     safe_properties, atleastoneprop
                 )
