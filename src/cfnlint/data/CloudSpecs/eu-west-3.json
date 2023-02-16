@@ -246,7 +246,17 @@
   "AWS::ApiGatewayV2::Integration.ResponseParameterList": "CACHED",
   "AWS::ApiGatewayV2::Integration.TlsConfig": "CACHED",
   "AWS::ApiGatewayV2::Route.ParameterConstraints": "CACHED",
-  "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": "CACHED",
+  "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-routeresponse-parameterconstraints.html",
+   "Properties": {
+    "Required": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-routeresponse-parameterconstraints.html#cfn-apigatewayv2-routeresponse-parameterconstraints-required",
+     "PrimitiveType": "Boolean",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
   "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
   "AWS::AppConfig::Application.Tags": "CACHED",
@@ -3122,6 +3132,7 @@
   "AWS::Synthetics::Canary.Schedule": "CACHED",
   "AWS::Synthetics::Canary.VPCConfig": "CACHED",
   "AWS::Synthetics::Canary.VisualReference": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Credential": "CACHED",
   "AWS::Transfer::Connector.As2Config": "CACHED",
   "AWS::Transfer::Server.As2Transport": "CACHED",
   "AWS::Transfer::Server.EndpointDetails": "CACHED",
@@ -3367,7 +3378,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "111.0.0",
+ "ResourceSpecificationVersion": "112.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3412,7 +3423,47 @@
   "AWS::ApiGatewayV2::IntegrationResponse": "CACHED",
   "AWS::ApiGatewayV2::Model": "CACHED",
   "AWS::ApiGatewayV2::Route": "CACHED",
-  "AWS::ApiGatewayV2::RouteResponse": "CACHED",
+  "AWS::ApiGatewayV2::RouteResponse": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html",
+   "Properties": {
+    "ApiId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-apiid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ModelSelectionExpression": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-modelselectionexpression",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ResponseModels": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-responsemodels",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ResponseParameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-responseparameters",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RouteId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-routeid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RouteResponseKey": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-routeresponse.html#cfn-apigatewayv2-routeresponse-routeresponsekey",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApiGatewayV2::Stage": "CACHED",
   "AWS::ApiGatewayV2::VpcLink": "CACHED",
   "AWS::AppConfig::Application": "CACHED",
@@ -3682,7 +3733,9 @@
   "AWS::EC2::KeyPair": "CACHED",
   "AWS::EC2::LaunchTemplate": "CACHED",
   "AWS::EC2::LocalGatewayRoute": "CACHED",
+  "AWS::EC2::LocalGatewayRouteTable": "CACHED",
   "AWS::EC2::LocalGatewayRouteTableVPCAssociation": "CACHED",
+  "AWS::EC2::LocalGatewayRouteTableVirtualInterfaceGroupAssociation": "CACHED",
   "AWS::EC2::NatGateway": "CACHED",
   "AWS::EC2::NetworkAcl": "CACHED",
   "AWS::EC2::NetworkAclEntry": "CACHED",
@@ -3733,7 +3786,26 @@
   "AWS::EC2::VPCGatewayAttachment": "CACHED",
   "AWS::EC2::VPCPeeringConnection": "CACHED",
   "AWS::EC2::VPNConnection": "CACHED",
-  "AWS::EC2::VPNConnectionRoute": "CACHED",
+  "AWS::EC2::VPNConnectionRoute": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html",
+   "Properties": {
+    "DestinationCidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html#cfn-ec2-vpnconnectionroute-cidrblock",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "VpnConnectionId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html#cfn-ec2-vpnconnectionroute-connectionid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::VPNGateway": "CACHED",
   "AWS::EC2::VPNGatewayRoutePropagation": "CACHED",
   "AWS::EC2::Volume": "CACHED",
@@ -3799,6 +3871,7 @@
   "AWS::FIS::ExperimentTemplate": "CACHED",
   "AWS::FMS::NotificationChannel": "CACHED",
   "AWS::FMS::Policy": "CACHED",
+  "AWS::FMS::ResourceSet": "CACHED",
   "AWS::FSx::DataRepositoryAssociation": "CACHED",
   "AWS::FSx::FileSystem": "CACHED",
   "AWS::FSx::Snapshot": "CACHED",
@@ -4218,6 +4291,7 @@
   "AWS::NetworkManager::LinkAssociation": "CACHED",
   "AWS::NetworkManager::Site": "CACHED",
   "AWS::NetworkManager::SiteToSiteVpnAttachment": "CACHED",
+  "AWS::NetworkManager::TransitGatewayPeering": "CACHED",
   "AWS::NetworkManager::TransitGatewayRegistration": "CACHED",
   "AWS::NetworkManager::VpcAttachment": "CACHED",
   "AWS::Oam::Link": "CACHED",
@@ -4233,6 +4307,7 @@
   "AWS::Organizations::Account": "CACHED",
   "AWS::Organizations::OrganizationalUnit": "CACHED",
   "AWS::Organizations::Policy": "CACHED",
+  "AWS::Organizations::ResourcePolicy": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
   "AWS::QuickSight::Analysis": "CACHED",
   "AWS::QuickSight::Dashboard": "CACHED",
@@ -4466,6 +4541,7 @@
   "AWS::StepFunctions::StateMachine": "CACHED",
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::Synthetics::Group": "CACHED",
+  "AWS::SystemsManagerSAP::Application": "CACHED",
   "AWS::Transfer::Agreement": "CACHED",
   "AWS::Transfer::Certificate": "CACHED",
   "AWS::Transfer::Connector": "CACHED",
@@ -5377,6 +5453,10 @@
   "AWS::FMS::Policy.SecurityServicePolicyData.ManagedServiceData": "CACHED",
   "AWS::FMS::Policy.SecurityServicePolicyData.Type": "CACHED",
   "AWS::FMS::Policy.ThirdPartyFirewallPolicy.FirewallDeploymentModel": "CACHED",
+  "AWS::FMS::ResourceSet.Description": "CACHED",
+  "AWS::FMS::ResourceSet.Name": "CACHED",
+  "AWS::FMS::ResourceSet.ResourceTypeList": "CACHED",
+  "AWS::FMS::ResourceSet.Resources": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events": "CACHED",
   "AWS::FSx::FileSystem.StorageCapacity": "CACHED",
@@ -5542,7 +5622,6 @@
   "AWS::IAM::Role.MaxSessionDuration": "CACHED",
   "AWS::IAM::Role.Name": "CACHED",
   "AWS::IAM::Role.NameOrArn": "CACHED",
-  "AWS::IAM::Role.Policy.PolicyName": "CACHED",
   "AWS::IAM::SAMLProvider.Name": "CACHED",
   "AWS::IAM::SAMLProvider.SamlMetadataDocument": "CACHED",
   "AWS::IAM::ServerCertificate.CertificateBody": "CACHED",
@@ -6994,6 +7073,14 @@
   "AWS::Synthetics::Canary.Name": "CACHED",
   "AWS::Synthetics::Group.Name": "CACHED",
   "AWS::Synthetics::Group.ResourceArns": "CACHED",
+  "AWS::SystemsManagerSAP::Application.ApplicationId": "CACHED",
+  "AWS::SystemsManagerSAP::Application.ApplicationType": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Credential.CredentialType": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Credential.DatabaseName": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Credential.SecretId": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Instances": "CACHED",
+  "AWS::SystemsManagerSAP::Application.SapInstanceNumber": "CACHED",
+  "AWS::SystemsManagerSAP::Application.Sid": "CACHED",
   "AWS::Transfer::Agreement.AccessRole": "CACHED",
   "AWS::Transfer::Agreement.BaseDirectory": "CACHED",
   "AWS::Transfer::Agreement.Description": "CACHED",
