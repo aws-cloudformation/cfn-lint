@@ -1294,6 +1294,8 @@
   "AWS::Config::ConfigRule.Scope": "CACHED",
   "AWS::Config::ConfigRule.Source": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail": "CACHED",
+  "AWS::Config::ConfigurationAggregator.AccountAggregationSource": "CACHED",
+  "AWS::Config::ConfigurationAggregator.OrganizationAggregationSource": "CACHED",
   "AWS::Config::ConfigurationRecorder.RecordingGroup": "CACHED",
   "AWS::Config::DeliveryChannel.ConfigSnapshotDeliveryProperties": "CACHED",
   "AWS::DMS::Endpoint.DocDbSettings": "CACHED",
@@ -3049,7 +3051,7 @@
   "AWS::XRay::SamplingRule.TagsItems": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "111.0.0",
+ "ResourceSpecificationVersion": "112.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4135,9 +4137,12 @@
   "AWS::CodeDeploy::Application": "CACHED",
   "AWS::CodeDeploy::DeploymentConfig": "CACHED",
   "AWS::CodeDeploy::DeploymentGroup": "CACHED",
+  "AWS::Config::AggregationAuthorization": "CACHED",
   "AWS::Config::ConfigRule": "CACHED",
+  "AWS::Config::ConfigurationAggregator": "CACHED",
   "AWS::Config::ConfigurationRecorder": "CACHED",
   "AWS::Config::DeliveryChannel": "CACHED",
+  "AWS::Config::StoredQuery": "CACHED",
   "AWS::DMS::Certificate": "CACHED",
   "AWS::DMS::Endpoint": {
    "Attributes": {
@@ -4911,7 +4916,26 @@
   "AWS::EC2::VPCGatewayAttachment": "CACHED",
   "AWS::EC2::VPCPeeringConnection": "CACHED",
   "AWS::EC2::VPNConnection": "CACHED",
-  "AWS::EC2::VPNConnectionRoute": "CACHED",
+  "AWS::EC2::VPNConnectionRoute": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html",
+   "Properties": {
+    "DestinationCidrBlock": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html#cfn-ec2-vpnconnectionroute-cidrblock",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "CidrIp"
+     }
+    },
+    "VpnConnectionId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-connection-route.html#cfn-ec2-vpnconnectionroute-connectionid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::VPNGateway": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpn-gateway.html",
    "Properties": {
@@ -5364,6 +5388,7 @@
   "AWS::Organizations::Account": "CACHED",
   "AWS::Organizations::OrganizationalUnit": "CACHED",
   "AWS::Organizations::Policy": "CACHED",
+  "AWS::Organizations::ResourcePolicy": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
   "AWS::RAM::ResourceShare": "CACHED",
   "AWS::RDS::DBCluster": "CACHED",
@@ -6336,11 +6361,17 @@
   "AWS::Cognito::UserPoolClient.RefreshTokenValidity": "CACHED",
   "AWS::Cognito::UserPoolUser.DesiredDeliveryMediums": "CACHED",
   "AWS::Cognito::UserPoolUser.MessageAction": "CACHED",
+  "AWS::Config::AggregationAuthorization.AuthorizedAccountId": "CACHED",
+  "AWS::Config::AggregationAuthorization.AuthorizedAwsRegion": "CACHED",
   "AWS::Config::ConfigRule.Description": "CACHED",
   "AWS::Config::ConfigRule.MaximumExecutionFrequency": "CACHED",
   "AWS::Config::ConfigRule.Source.Owner": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.EventSource": "CACHED",
   "AWS::Config::ConfigRule.SourceDetail.MessageType": "CACHED",
+  "AWS::Config::ConfigurationAggregator.ConfigurationAggregatorName": "CACHED",
+  "AWS::Config::StoredQuery.QueryDescription": "CACHED",
+  "AWS::Config::StoredQuery.QueryExpression": "CACHED",
+  "AWS::Config::StoredQuery.QueryName": "CACHED",
   "AWS::DataSync::Agent.ActivationKey": "CACHED",
   "AWS::DataSync::Agent.AgentName": "CACHED",
   "AWS::DataSync::Agent.SecurityGroupArns": "CACHED",
@@ -6572,7 +6603,6 @@
   "AWS::IAM::Role.MaxSessionDuration": "CACHED",
   "AWS::IAM::Role.Name": "CACHED",
   "AWS::IAM::Role.NameOrArn": "CACHED",
-  "AWS::IAM::Role.Policy.PolicyName": "CACHED",
   "AWS::IAM::SAMLProvider.Name": "CACHED",
   "AWS::IAM::SAMLProvider.SamlMetadataDocument": "CACHED",
   "AWS::IAM::ServerCertificate.CertificateBody": "CACHED",
