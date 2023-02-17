@@ -1,3 +1,12 @@
+### v0.73.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `112.0.0` (pull #[2580](https://github.com/aws-cloudformation/cfn-lint/pull/2580))
+###### Fixes
+- Updated rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) by adding `ItemProcessor` to `Map` (pull #[2577](https://github.com/aws-cloudformation/cfn-lint/pull/2577))
+- Relax `networkx` dependency (pull #[2584](https://github.com/aws-cloudformation/cfn-lint/pull/2584))
+- Validate sub string checks are strings before running regex in graph and template (pull #[2589](https://github.com/aws-cloudformation/cfn-lint/pull/2589))
+- Update SAM transform pre-work to include `DefinitionBody` when `DisableExecuteApiEndpoint` is specified (pull #[2590](https://github.com/aws-cloudformation/cfn-lint/pull/2590))
+
 ### v0.73.1
 ###### CloudFormation Specifications
 - Patch back in `TargetRole` for `AWS::RDS::DBProxyEndpoint` (pull #[2581](https://github.com/aws-cloudformation/cfn-lint/pull/2581))
