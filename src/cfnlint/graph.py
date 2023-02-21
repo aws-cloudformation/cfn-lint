@@ -265,7 +265,10 @@ class Graph:
     def _find_parameter(self, string):
         """Search string for tokenized fields"""
         regex = re.compile(r"\${([a-zA-Z0-9.]*)}")
-        return regex.findall(string)
+        if isinstance(string, str):
+            return regex.findall(string)
+
+        return []
 
     # pylint: disable=import-outside-toplevel,unused-variable
     def to_dot(self, path):
@@ -279,6 +282,7 @@ class Graph:
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore", category=PendingDeprecationWarning)
+                    warnings.simplefilter("ignore", category=DeprecationWarning)
                     import pydot  # pylint: disable=unused-import
 
                     networkx.drawing.nx_pydot.write_dot(view, path)

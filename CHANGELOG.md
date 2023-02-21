@@ -1,3 +1,31 @@
+### v0.73.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `112.0.0` (pull #[2580](https://github.com/aws-cloudformation/cfn-lint/pull/2580))
+###### Fixes
+- Updated rule [E2532](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E2532) by adding `ItemProcessor` to `Map` (pull #[2577](https://github.com/aws-cloudformation/cfn-lint/pull/2577))
+- Relax `networkx` dependency (pull #[2584](https://github.com/aws-cloudformation/cfn-lint/pull/2584))
+- Validate sub string checks are strings before running regex in graph and template (pull #[2589](https://github.com/aws-cloudformation/cfn-lint/pull/2589))
+- Update SAM transform pre-work to include `DefinitionBody` when `DisableExecuteApiEndpoint` is specified (pull #[2590](https://github.com/aws-cloudformation/cfn-lint/pull/2590))
+
+### v0.73.1
+###### CloudFormation Specifications
+- Patch back in `TargetRole` for `AWS::RDS::DBProxyEndpoint` (pull #[2581](https://github.com/aws-cloudformation/cfn-lint/pull/2581))
+
+### v0.73.0
+###### CloudFormation Specifications
+- Update CloudFormation specs to `111.0.0` (pull #[2572](https://github.com/aws-cloudformation/cfn-lint/pull/2572))
+- Add region `ap-southeast-4` (pull #[2568](https://github.com/aws-cloudformation/cfn-lint/pull/2568))
+- Remove `AWS::RDS::DBCluster` `MasterUsername` and `MasterUserPassword` from Inclusive (pull #[2571](https://github.com/aws-cloudformation/cfn-lint/pull/2571))
+###### Fixes
+- Update SAM Translator version based on the SAM CLI requirement (pull #[2570](https://github.com/aws-cloudformation/cfn-lint/pull/2570))
+
+### v0.72.10
+###### CloudFormation Specifications
+- Update CloudFormation specs to `108.0.0` (pull #[2557](https://github.com/aws-cloudformation/cfn-lint/pull/2557))
+- Add `AWS::Organizations::Account` to `StatefulResources` (pull #[2560](https://github.com/aws-cloudformation/cfn-lint/pull/2560))
+###### Fixes
+- Update rule [I3100](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#I3100) regex family string matching (pull #[2558](https://github.com/aws-cloudformation/cfn-lint/pull/2558))
+
 ### v0.72.9
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `107.0.0` (pull #[2546](https://github.com/aws-cloudformation/cfn-lint/pull/2550))

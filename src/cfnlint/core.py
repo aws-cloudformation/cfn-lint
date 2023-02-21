@@ -355,7 +355,7 @@ def run_checks(
         errors.extend(runner.run())
     except Exception as err:  # pylint: disable=W0703
         msg = f"Tried to process rules on file {filename} but got an error: {str(err)}"
-        UnexpectedRuleException(msg, 1)
+        raise UnexpectedRuleException(msg, 1) from err
     errors.sort(key=lambda x: (x.filename, x.linenumber, x.rule.id))
 
     return errors

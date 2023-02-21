@@ -26,7 +26,6 @@ class NestedStackParameters(CloudFormationLintRule):
         self.resource_property_types.append("AWS::CloudFormation::Stack")
 
     def __get_template_parameters(self, filename):
-
         try:
             (tmp, matches) = decode(filename)
         except:  # pylint: disable=bare-except

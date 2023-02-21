@@ -55,7 +55,6 @@ class NoEcho(CloudFormationLintRule):
                     if param in no_echo_params:
                         if len(sub) > 2:
                             if sub[0] == "Resources" and sub[2] == "Metadata":
-
                                 matches.append(
                                     RuleMatch(
                                         sub[:-1],

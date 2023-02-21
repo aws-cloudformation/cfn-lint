@@ -60,6 +60,8 @@ class StateMachine(CloudFormationLintRule):
                 "MaxConcurrency",
                 "Iterator",
                 "ItemsPath",
+                "ItemProcessor",
+                "ItemSelector",
                 "ResultPath",
                 "ResultSelector",
                 "Retry",

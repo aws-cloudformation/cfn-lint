@@ -20,7 +20,21 @@ Resources:
       - MasterUsername: admin
         MasterUserPassword: test
         Engine: test
-  LoadBalancer:
+  LoadBalancer1:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      Fn::If:
+      - cPrimaryRegion
+      - PolicyName: Test
+        ScalableDimension: Test
+        ResourceId: Id
+        PolicyType: StepScaling
+      - PolicyName: Test
+        ScalableDimension: Test
+        ResourceId: Id
+        PolicyType: StepScaling
+        ServiceNamespace: !Ref "AWS::NoValue"
+  LoadBalancer2:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties:
       PolicyName: Test

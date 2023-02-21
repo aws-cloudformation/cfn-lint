@@ -25,7 +25,6 @@ class Runner:
         verbosity=0,
         mandatory_rules: Union[Sequence[str], None] = None,
     ):
-
         self.rules = rules
         self.filename = filename
         self.verbosity = verbosity
