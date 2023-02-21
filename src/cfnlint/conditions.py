@@ -86,12 +86,14 @@ class Condition:
     Not = None
     Equals = None
     Influenced_Equals = None
+    Name = None
 
     def __init__(self, template, name=None, sub_condition=None):
         self.And = []
         self.Or = []
         self.Not = []
         self.Influenced_Equals = {}
+        self.Name = name
         if name is not None:
             value = template.get("Conditions", {}).get(name, {})
             try:
@@ -105,6 +107,11 @@ class Condition:
             except ConditionParseError:
                 LOGGER.debug("Error parsing condition: %s", name)
                 self.Equals = None
+
+    def __eq__(self, __o: object) -> bool:
+        if self.Name is None:
+            return False
+        return self.Name == __o.Name
 
     def test(self, scenarios):
         """Test a condition based on a scenario"""
@@ -441,9 +448,10 @@ class Conditions:
         if matched_conditions:
             scenarios = []
             for con_hash, sets in matched_equals.items():
-                scenarios = multiply_equals(
-                    scenarios, con_hash, sets, self.Parameters.get(con_hash)
-                )
+                if len(scenarios) < 20:
+                    scenarios = multiply_equals(
+                        scenarios, con_hash, sets, self.Parameters.get(con_hash)
+                    )
 
         for scenario in scenarios:
             r_condition = {}
