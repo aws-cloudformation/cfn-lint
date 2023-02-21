@@ -8,6 +8,7 @@ from copy import copy, deepcopy
 from typing import Union
 
 import cfnlint.conditions
+import cfnlint.conditionsv2
 import cfnlint.helpers
 from cfnlint.graph import Graph
 
@@ -42,6 +43,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Fn::FindInMap"] = self.search_deep_keys("Fn::FindInMap")
         self.transform_pre["Transform"] = self.template.get("Transform", [])
         self.conditions = cfnlint.conditions.Conditions(self)
+        self.conditionsv2 = cfnlint.conditionsv2.Conditions(self)
         self.__cache_search_deep_class = {}
         self.graph: Union[Graph, None] = None
         try:
@@ -819,28 +821,30 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.template.get("Resources", {}).get(resource, {}).get("Condition")
         )
         if resource_condition:
-            # resource conditions are always true.  If the same resource condition exists in the path
-            # with the same True value then nothing else matters
-            test_path_conditions = copy(path_conditions)
-            if not test_path_conditions.get(resource_condition):
-                test_path_conditions[resource_condition] = set()
-                if True not in test_path_conditions.get(resource_condition):
-                    scenarios = self.conditions.get_scenarios(
-                        test_path_conditions.keys()
-                    )
-                    for scenario in scenarios:
-                        # We care about when the resource condition is false but the REF would still exist
-                        if not scenario.get(resource_condition):
-                            scenario_count = 0
-                            for (
-                                path_condition,
-                                path_values,
-                            ) in test_path_conditions.items():
-                                if scenario.get(path_condition) in path_values:
-                                    scenario_count += 1
+            # if path conditions are empty that means its always true
+            if not path_conditions:
+                return [{resource_condition: False}]
 
-                            if scenario_count == len(path_conditions):
-                                results.append(scenario)
+            # resource conditions are always true.  If the same resource condition exists in the path
+            # with the True then nothing else matters
+            if True in path_conditions.get(resource_condition, {False}):
+                return []
+
+            # resource conditions are always true.  If the same resource condition exists in the path
+            # with the False then nothing else matters
+            if False in path_conditions.get(resource_condition, {True}):
+                return [path_conditions]
+
+            # if any condition paths loop back on themselves with the opposite then its unreachable code
+            scenario = {}
+            for condition_name, condition_bool in path_conditions.items():
+                if len(condition_bool) > 1:
+                    return results
+                else:
+                    scenario[condition_name] = list(condition_bool)[0]
+
+            if self.conditionsv2.check_implies(scenario, resource_condition):
+                return [{**{resource_condition: False}, **scenario}]
 
         # if resource condition isn't available then the resource is available
         return results
@@ -1028,7 +1032,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         else:
                             results[condition_name] = condition_values
 
-        return self.conditions.get_scenarios(results.keys())
+        return list(self.conditionsv2.build_scenarios(list(results.keys())))
 
     def get_conditions_scenarios_from_object(self, objs):
         """
@@ -1078,7 +1082,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     else:
                         con = con.union(get_conditions_from_property(v))
 
-        return self.conditions.get_scenarios(list(con))
+        return list(self.conditionsv2.build_scenarios(list(con)))
 
     def get_conditions_from_path(
         self,

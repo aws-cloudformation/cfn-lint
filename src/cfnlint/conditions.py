@@ -448,10 +448,10 @@ class Conditions:
         if matched_conditions:
             scenarios = []
             for con_hash, sets in matched_equals.items():
-                if len(scenarios) < 20:
-                    scenarios = multiply_equals(
-                        scenarios, con_hash, sets, self.Parameters.get(con_hash)
-                    )
+                # if len(scenarios) < 20:
+                scenarios = multiply_equals(
+                    scenarios, con_hash, sets, self.Parameters.get(con_hash)
+                )
 
         for scenario in scenarios:
             r_condition = {}
