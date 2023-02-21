@@ -41,8 +41,10 @@ class TaskDefinitionEssentialContainer(CloudFormationLintRule):
                     has_essential_container = True
 
             if not has_essential_container:
-                message = "No essential containers defined for {0}"
-                rule_match = RuleMatch(path, message.format("/".join(map(str, path))))
+                error_message = (
+                    f"No essential containers defined for {'/'.join(map(str, path))}"
+                )
+                rule_match = RuleMatch(path, error_message)
                 matches.append(rule_match)
 
         return matches
