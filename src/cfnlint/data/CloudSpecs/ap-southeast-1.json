@@ -247,6 +247,7 @@
   "AWS::ApiGatewayV2::Integration.ResponseParameterList": "CACHED",
   "AWS::ApiGatewayV2::Integration.TlsConfig": "CACHED",
   "AWS::ApiGatewayV2::Route.ParameterConstraints": "CACHED",
+  "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
   "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
   "AWS::AppConfig::Application.Tags": "CACHED",
@@ -2260,6 +2261,29 @@
   "AWS::Lambda::EventInvokeConfig.OnSuccess": "CACHED",
   "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.DestinationConfig": "CACHED",
+  "AWS::Lambda::EventSourceMapping.DocumentDBEventSourceConfig": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-documentdbeventsourceconfig.html",
+   "Properties": {
+    "CollectionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-documentdbeventsourceconfig.html#cfn-lambda-eventsourcemapping-documentdbeventsourceconfig-collectionname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DatabaseName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-documentdbeventsourceconfig.html#cfn-lambda-eventsourcemapping-documentdbeventsourceconfig-databasename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "FullDocument": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-eventsourcemapping-documentdbeventsourceconfig.html#cfn-lambda-eventsourcemapping-documentdbeventsourceconfig-fulldocument",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lambda::EventSourceMapping.Endpoints": "CACHED",
   "AWS::Lambda::EventSourceMapping.Filter": "CACHED",
   "AWS::Lambda::EventSourceMapping.FilterCriteria": "CACHED",
@@ -2740,6 +2764,7 @@
   "AWS::NetworkManager::Link.Bandwidth": "CACHED",
   "AWS::NetworkManager::Site.Location": "CACHED",
   "AWS::NetworkManager::SiteToSiteVpnAttachment.ProposedSegmentChange": "CACHED",
+  "AWS::NetworkManager::TransitGatewayRouteTableAttachment.ProposedSegmentChange": "CACHED",
   "AWS::NetworkManager::VpcAttachment.ProposedSegmentChange": "CACHED",
   "AWS::NetworkManager::VpcAttachment.VpcOptions": "CACHED",
   "AWS::Omics::AnnotationStore.ReferenceItem": "CACHED",
@@ -3833,7 +3858,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "112.0.0",
+ "ResourceSpecificationVersion": "113.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4481,6 +4506,7 @@
   "AWS::ImageBuilder::ImageRecipe": "CACHED",
   "AWS::ImageBuilder::InfrastructureConfiguration": "CACHED",
   "AWS::InspectorV2::Filter": "CACHED",
+  "AWS::InternetMonitor::Monitor": "CACHED",
   "AWS::IoT::AccountAuditConfiguration": "CACHED",
   "AWS::IoT::Authorizer": "CACHED",
   "AWS::IoT::CACertificate": "CACHED",
@@ -4549,7 +4575,195 @@
   "AWS::Lambda::Alias": "CACHED",
   "AWS::Lambda::CodeSigningConfig": "CACHED",
   "AWS::Lambda::EventInvokeConfig": "CACHED",
-  "AWS::Lambda::EventSourceMapping": "CACHED",
+  "AWS::Lambda::EventSourceMapping": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html",
+   "Properties": {
+    "AmazonManagedKafkaEventSourceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-amazonmanagedkafkaeventsourceconfig",
+     "Required": false,
+     "Type": "AmazonManagedKafkaEventSourceConfig",
+     "UpdateType": "Immutable"
+    },
+    "BatchSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-batchsize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.BatchSize"
+     }
+    },
+    "BisectBatchOnFunctionError": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-bisectbatchonfunctionerror",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DestinationConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-destinationconfig",
+     "Required": false,
+     "Type": "DestinationConfig",
+     "UpdateType": "Mutable"
+    },
+    "DocumentDBEventSourceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-documentdbeventsourceconfig",
+     "Required": false,
+     "Type": "DocumentDBEventSourceConfig",
+     "UpdateType": "Mutable"
+    },
+    "Enabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-enabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "EventSourceArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-eventsourcearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.EventSourceArn"
+     }
+    },
+    "FilterCriteria": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-filtercriteria",
+     "Required": false,
+     "Type": "FilterCriteria",
+     "UpdateType": "Mutable"
+    },
+    "FunctionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionName"
+     }
+    },
+    "FunctionResponseTypes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-functionresponsetypes",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.FunctionResponseTypes"
+     }
+    },
+    "MaximumBatchingWindowInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumbatchingwindowinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumBatchingWindowInSeconds"
+     }
+    },
+    "MaximumRecordAgeInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumrecordageinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRecordAgeInSeconds"
+     }
+    },
+    "MaximumRetryAttempts": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-maximumretryattempts",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.MaximumRetryAttempts"
+     }
+    },
+    "ParallelizationFactor": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-parallelizationfactor",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.ParallelizationFactor"
+     }
+    },
+    "Queues": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-queues",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.Queues"
+     }
+    },
+    "ScalingConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-scalingconfig",
+     "Required": false,
+     "Type": "ScalingConfig",
+     "UpdateType": "Mutable"
+    },
+    "SelfManagedEventSource": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedeventsource",
+     "Required": false,
+     "Type": "SelfManagedEventSource",
+     "UpdateType": "Immutable"
+    },
+    "SelfManagedKafkaEventSourceConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-selfmanagedkafkaeventsourceconfig",
+     "Required": false,
+     "Type": "SelfManagedKafkaEventSourceConfig",
+     "UpdateType": "Immutable"
+    },
+    "SourceAccessConfigurations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-sourceaccessconfigurations",
+     "DuplicatesAllowed": false,
+     "ItemType": "SourceAccessConfiguration",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "StartingPosition": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingposition",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.StartingPosition"
+     }
+    },
+    "StartingPositionTimestamp": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-startingpositiontimestamp",
+     "PrimitiveType": "Double",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Topics": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-topics",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::EventSourceMapping.Topics"
+     }
+    },
+    "TumblingWindowInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-eventsourcemapping.html#cfn-lambda-eventsourcemapping-tumblingwindowinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Lambda::Function": "CACHED",
   "AWS::Lambda::LayerVersion": "CACHED",
   "AWS::Lambda::LayerVersionPermission": "CACHED",
@@ -4659,6 +4873,7 @@
   "AWS::NetworkManager::SiteToSiteVpnAttachment": "CACHED",
   "AWS::NetworkManager::TransitGatewayPeering": "CACHED",
   "AWS::NetworkManager::TransitGatewayRegistration": "CACHED",
+  "AWS::NetworkManager::TransitGatewayRouteTableAttachment": "CACHED",
   "AWS::NetworkManager::VpcAttachment": "CACHED",
   "AWS::Oam::Link": "CACHED",
   "AWS::Oam::Sink": "CACHED",
@@ -6432,6 +6647,11 @@
   "AWS::InspectorV2::Filter.Name": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Comparison": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Value": "CACHED",
+  "AWS::InternetMonitor::Monitor.MonitorName": "CACHED",
+  "AWS::InternetMonitor::Monitor.Resources": "CACHED",
+  "AWS::InternetMonitor::Monitor.ResourcesToAdd": "CACHED",
+  "AWS::InternetMonitor::Monitor.ResourcesToRemove": "CACHED",
+  "AWS::InternetMonitor::Monitor.Status": "CACHED",
   "AWS::IoT::AccountAuditConfiguration.AccountId": "CACHED",
   "AWS::IoT::AccountAuditConfiguration.AuditNotificationTarget.RoleArn": "CACHED",
   "AWS::IoT::AccountAuditConfiguration.RoleArn": "CACHED",
@@ -6557,13 +6777,11 @@
   "AWS::IoTSiteWise::AssetModel.VariableValue.HierarchyLogicalId": "CACHED",
   "AWS::IoTSiteWise::AssetModel.VariableValue.PropertyLogicalId": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.ComponentTypeId": "CACHED",
-  "AWS::IoTTwinMaker::ComponentType.Error.Code": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.ExtendsFrom": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.Status.State": "CACHED",
   "AWS::IoTTwinMaker::ComponentType.WorkspaceId": "CACHED",
   "AWS::IoTTwinMaker::Entity.EntityId": "CACHED",
   "AWS::IoTTwinMaker::Entity.EntityName": "CACHED",
-  "AWS::IoTTwinMaker::Entity.Error.Code": "CACHED",
   "AWS::IoTTwinMaker::Entity.ParentEntityId": "CACHED",
   "AWS::IoTTwinMaker::Entity.Status.State": "CACHED",
   "AWS::IoTTwinMaker::Entity.WorkspaceId": "CACHED",
@@ -9137,6 +9355,15 @@
     "c6i.large",
     "c6i.metal",
     "c6i.xlarge",
+    "c6in.12xlarge",
+    "c6in.16xlarge",
+    "c6in.24xlarge",
+    "c6in.2xlarge",
+    "c6in.32xlarge",
+    "c6in.4xlarge",
+    "c6in.8xlarge",
+    "c6in.large",
+    "c6in.xlarge",
     "d2.2xlarge",
     "d2.4xlarge",
     "d2.8xlarge",
@@ -9323,6 +9550,24 @@
     "m6i.large",
     "m6i.metal",
     "m6i.xlarge",
+    "m6idn.12xlarge",
+    "m6idn.16xlarge",
+    "m6idn.24xlarge",
+    "m6idn.2xlarge",
+    "m6idn.32xlarge",
+    "m6idn.4xlarge",
+    "m6idn.8xlarge",
+    "m6idn.large",
+    "m6idn.xlarge",
+    "m6in.12xlarge",
+    "m6in.16xlarge",
+    "m6in.24xlarge",
+    "m6in.2xlarge",
+    "m6in.32xlarge",
+    "m6in.4xlarge",
+    "m6in.8xlarge",
+    "m6in.large",
+    "m6in.xlarge",
     "mac1.metal",
     "mac2.metal",
     "p2.16xlarge",
@@ -9431,6 +9676,24 @@
     "r6i.large",
     "r6i.metal",
     "r6i.xlarge",
+    "r6idn.12xlarge",
+    "r6idn.16xlarge",
+    "r6idn.24xlarge",
+    "r6idn.2xlarge",
+    "r6idn.32xlarge",
+    "r6idn.4xlarge",
+    "r6idn.8xlarge",
+    "r6idn.large",
+    "r6idn.xlarge",
+    "r6in.12xlarge",
+    "r6in.16xlarge",
+    "r6in.24xlarge",
+    "r6in.2xlarge",
+    "r6in.32xlarge",
+    "r6in.4xlarge",
+    "r6in.8xlarge",
+    "r6in.large",
+    "r6in.xlarge",
     "t1.micro",
     "t2.2xlarge",
     "t2.large",
