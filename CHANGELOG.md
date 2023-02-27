@@ -1,3 +1,11 @@
+### v0.74.0
+###### Features
+- Add rule [E3044](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3044) to validate the scheduling strategy for Fargate services (pull #[2559](https://github.com/aws-cloudformation/cfn-lint/pull/2559))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `113.0.0` (pull #[2591](https://github.com/aws-cloudformation/cfn-lint/pull/2591))
+###### Fixes
+- Updated condition logic to limit the number of conditions that are processed (pull #[2598](https://github.com/aws-cloudformation/cfn-lint/pull/2598))
+
 ### v0.73.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `112.0.0` (pull #[2580](https://github.com/aws-cloudformation/cfn-lint/pull/2580))
