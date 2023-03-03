@@ -2280,6 +2280,7 @@
   "AWS::Lambda::EventInvokeConfig.OnSuccess": "CACHED",
   "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.DestinationConfig": "CACHED",
+  "AWS::Lambda::EventSourceMapping.DocumentDBEventSourceConfig": "CACHED",
   "AWS::Lambda::EventSourceMapping.Endpoints": "CACHED",
   "AWS::Lambda::EventSourceMapping.Filter": "CACHED",
   "AWS::Lambda::EventSourceMapping.FilterCriteria": "CACHED",
@@ -3445,6 +3446,7 @@
   "AWS::WAFv2::RuleGroup.TextTransformation": "CACHED",
   "AWS::WAFv2::RuleGroup.VisibilityConfig": "CACHED",
   "AWS::WAFv2::RuleGroup.XssMatchStatement": "CACHED",
+  "AWS::WAFv2::WebACL.AWSManagedRulesATPRuleSet": "CACHED",
   "AWS::WAFv2::WebACL.AWSManagedRulesBotControlRuleSet": "CACHED",
   "AWS::WAFv2::WebACL.AllowAction": "CACHED",
   "AWS::WAFv2::WebACL.AndStatement": "CACHED",
@@ -3485,6 +3487,12 @@
   "AWS::WAFv2::WebACL.RateBasedStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexMatchStatement": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement": "CACHED",
+  "AWS::WAFv2::WebACL.RequestInspection": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspection": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionBodyContains": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionHeader": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionJson": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionStatusCode": "CACHED",
   "AWS::WAFv2::WebACL.Rule": "CACHED",
   "AWS::WAFv2::WebACL.RuleAction": "CACHED",
   "AWS::WAFv2::WebACL.RuleActionOverride": "CACHED",
@@ -3510,7 +3518,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "113.0.0",
+ "ResourceSpecificationVersion": "114.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4834,7 +4842,128 @@
   "AWS::DocDB::DBInstance": "CACHED",
   "AWS::DocDB::DBSubnetGroup": "CACHED",
   "AWS::DynamoDB::GlobalTable": "CACHED",
-  "AWS::DynamoDB::Table": "CACHED",
+  "AWS::DynamoDB::Table": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "StreamArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html",
+   "Properties": {
+    "AttributeDefinitions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-attributedefinitions",
+     "DuplicatesAllowed": false,
+     "ItemType": "AttributeDefinition",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "BillingMode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-billingmode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::DynamoDB::Table.BillingMode"
+     }
+    },
+    "ContributorInsightsSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-contributorinsightsspecification",
+     "Required": false,
+     "Type": "ContributorInsightsSpecification",
+     "UpdateType": "Mutable"
+    },
+    "GlobalSecondaryIndexes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-globalsecondaryindexes",
+     "DuplicatesAllowed": true,
+     "ItemType": "GlobalSecondaryIndex",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ImportSourceSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-importsourcespecification",
+     "Required": false,
+     "Type": "ImportSourceSpecification",
+     "UpdateType": "Immutable"
+    },
+    "KeySchema": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-keyschema",
+     "DuplicatesAllowed": false,
+     "ItemType": "KeySchema",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "KinesisStreamSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-kinesisstreamspecification",
+     "Required": false,
+     "Type": "KinesisStreamSpecification",
+     "UpdateType": "Mutable"
+    },
+    "LocalSecondaryIndexes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-localsecondaryindexes",
+     "DuplicatesAllowed": true,
+     "ItemType": "LocalSecondaryIndex",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PointInTimeRecoverySpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-pointintimerecoveryspecification",
+     "Required": false,
+     "Type": "PointInTimeRecoverySpecification",
+     "UpdateType": "Mutable"
+    },
+    "ProvisionedThroughput": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-provisionedthroughput",
+     "Required": false,
+     "Type": "ProvisionedThroughput",
+     "UpdateType": "Mutable"
+    },
+    "SSESpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-ssespecification",
+     "Required": false,
+     "Type": "SSESpecification",
+     "UpdateType": "Mutable"
+    },
+    "StreamSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-streamspecification",
+     "Required": false,
+     "Type": "StreamSpecification",
+     "UpdateType": "Mutable"
+    },
+    "TableClass": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tableclass",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "TableName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tablename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TimeToLiveSpecification": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-dynamodb-table.html#cfn-dynamodb-table-timetolivespecification",
+     "Required": false,
+     "Type": "TimeToLiveSpecification",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::CapacityReservation": "CACHED",
   "AWS::EC2::CapacityReservationFleet": "CACHED",
   "AWS::EC2::ClientVpnAuthorizationRule": "CACHED",
@@ -5722,57 +5851,80 @@
   "AWS::RDS::DBInstance": "CACHED",
   "AWS::RDS::DBParameterGroup": "CACHED",
   "AWS::RDS::DBProxy": "CACHED",
-  "AWS::RDS::DBProxyEndpoint": "CACHED",
-  "AWS::RDS::DBProxyTargetGroup": {
+  "AWS::RDS::DBProxyEndpoint": {
    "Attributes": {
-    "TargetGroupArn": {
+    "DBProxyEndpointArn": {
+     "PrimitiveType": "String"
+    },
+    "Endpoint": {
+     "PrimitiveType": "String"
+    },
+    "IsDefault": {
+     "PrimitiveType": "Boolean"
+    },
+    "TargetRole": {
+     "PrimitiveType": "String"
+    },
+    "VpcId": {
      "PrimitiveType": "String"
     }
    },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html",
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html",
    "Properties": {
-    "ConnectionPoolConfigurationInfo": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html#cfn-rds-dbproxytargetgroup-connectionpoolconfigurationinfo",
-     "Required": false,
-     "Type": "ConnectionPoolConfigurationInfoFormat",
-     "UpdateType": "Mutable"
-    },
-    "DBClusterIdentifiers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html#cfn-rds-dbproxytargetgroup-dbclusteridentifiers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "DBInstanceIdentifiers": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html#cfn-rds-dbproxytargetgroup-dbinstanceidentifiers",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "DBProxyName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html#cfn-rds-dbproxytargetgroup-dbproxyname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::RDS::DBProxyTargetGroup.DBProxyName"
-     }
-    },
-    "TargetGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxytargetgroup.html#cfn-rds-dbproxytargetgroup-targetgroupname",
+    "DBProxyEndpointName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-dbproxyendpointname",
      "PrimitiveType": "String",
      "Required": true,
      "UpdateType": "Immutable",
      "Value": {
-      "ValueType": "AWS::RDS::DBProxyTargetGroup.TargetGroupName"
+      "ValueType": "AWS::RDS::DBProxyEndpoint.DBProxyEndpointName"
      }
+    },
+    "DBProxyName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-dbproxyname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::RDS::DBProxyEndpoint.DBProxyName"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "TagFormat",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TargetRole": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-targetrole",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::RDS::DBProxyEndpoint.TargetRole"
+     }
+    },
+    "VpcSecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-vpcsecuritygroupids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcSubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-rds-dbproxyendpoint.html#cfn-rds-dbproxyendpoint-vpcsubnetids",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Immutable"
     }
    }
   },
+  "AWS::RDS::DBProxyTargetGroup": "CACHED",
   "AWS::RDS::DBSecurityGroup": "CACHED",
   "AWS::RDS::DBSecurityGroupIngress": "CACHED",
   "AWS::RDS::DBSubnetGroup": "CACHED",
@@ -7206,6 +7358,7 @@
   "AWS::InspectorV2::Filter.Name": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Comparison": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter.Value": "CACHED",
+  "AWS::InternetMonitor::Monitor.MaxCityNetworksToMonitor": "CACHED",
   "AWS::InternetMonitor::Monitor.MonitorName": "CACHED",
   "AWS::InternetMonitor::Monitor.Resources": "CACHED",
   "AWS::InternetMonitor::Monitor.ResourcesToAdd": "CACHED",
@@ -7460,6 +7613,9 @@
   "AWS::Lambda::CodeSigningConfig.CodeSigningPolicies.UntrustedArtifactOnDeployment": "CACHED",
   "AWS::Lambda::EventSourceMapping.AmazonManagedKafkaEventSourceConfig.ConsumerGroupId": "CACHED",
   "AWS::Lambda::EventSourceMapping.BatchSize": "CACHED",
+  "AWS::Lambda::EventSourceMapping.DocumentDBEventSourceConfig.CollectionName": "CACHED",
+  "AWS::Lambda::EventSourceMapping.DocumentDBEventSourceConfig.DatabaseName": "CACHED",
+  "AWS::Lambda::EventSourceMapping.DocumentDBEventSourceConfig.FullDocument": "CACHED",
   "AWS::Lambda::EventSourceMapping.Endpoints.KafkaBootstrapServers": "CACHED",
   "AWS::Lambda::EventSourceMapping.EventSourceArn": "CACHED",
   "AWS::Lambda::EventSourceMapping.Filter.Pattern": "CACHED",
@@ -7527,7 +7683,6 @@
   "AWS::Logs::Destination.DestinationName": "CACHED",
   "AWS::Logs::LogGroup.KmsKeyId": "CACHED",
   "AWS::Logs::LogGroup.LogGroupName": "CACHED",
-  "AWS::Logs::LogGroup.Retention": "CACHED",
   "AWS::Logs::MetricFilter.Dimension.Key": "CACHED",
   "AWS::Logs::MetricFilter.Dimension.Value": "CACHED",
   "AWS::Logs::MetricFilter.FilterName": "CACHED",
@@ -8803,6 +8958,15 @@
   "AWS::WAFv2::WebACL.RateBasedStatement.Limit": "CACHED",
   "AWS::WAFv2::WebACL.RegexMatchStatement.RegexString": "CACHED",
   "AWS::WAFv2::WebACL.RegexPatternSetReferenceStatement.Arn": "CACHED",
+  "AWS::WAFv2::WebACL.RequestInspection.PayloadType": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.FailureStrings": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionBodyContains.SuccessStrings": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionHeader.FailureValues": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionHeader.Name": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionHeader.SuccessValues": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionJson.FailureValues": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionJson.Identifier": "CACHED",
+  "AWS::WAFv2::WebACL.ResponseInspectionJson.SuccessValues": "CACHED",
   "AWS::WAFv2::WebACL.Rule.Name": "CACHED",
   "AWS::WAFv2::WebACL.RuleActionOverride.Name": "CACHED",
   "AWS::WAFv2::WebACL.RuleGroupReferenceStatement.Arn": "CACHED",
