@@ -20,13 +20,18 @@ class FargateDeploymentSchedulingStrategy(CloudFormationLintRule):
             path = ecs_service["Path"]
             properties = ecs_service["Value"]
             if isinstance(properties, dict):
-                launch_type = properties.get("LaunchType", None)
-                if isinstance(launch_type, str) and launch_type == "Fargate":
-                    scheduling_strategy = properties.get("SchedulingStrategy", None)
-                    if (
-                        isinstance(scheduling_strategy, str)
-                        and scheduling_strategy != "REPLICA"
-                    ):
-                        error_message = f"Fargate service only support REPLICA as scheduling strategy at {'/'.join(map(str, path))}"
-                        matches.append(RuleMatch(path, error_message))
+                scenarios = cfn.get_object_without_conditions(
+                    properties, ["LaunchType", "SchedulingStrategy"]
+                )
+                for scenario in scenarios:
+                    props = scenario.get("Object")
+                    launch_type = props.get("LaunchType", None)
+                    if isinstance(launch_type, str) and launch_type == "FARGATE":
+                        scheduling_strategy = props.get("SchedulingStrategy", None)
+                        if (
+                            isinstance(scheduling_strategy, str)
+                            and scheduling_strategy != "REPLICA"
+                        ):
+                            error_message = f"Fargate service only support REPLICA as scheduling strategy at {'/'.join(map(str, path))}"
+                            matches.append(RuleMatch(path, error_message))
         return matches
