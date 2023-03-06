@@ -7,8 +7,8 @@ import logging
 
 import cfnlint.conditions
 import cfnlint.helpers
-import cfnlint.rules
-from cfnlint.decode.node import TemplateAttributeError, dict_node
+from cfnlint.decode.exceptions import TemplateAttributeError
+from cfnlint.decode.node import dict_node
 from cfnlint.decorators.refactored import refactored
 from cfnlint.graph import Graph
 from cfnlint.helpers import PSEUDOPARAMS
@@ -22,6 +22,9 @@ from cfnlint.rules import TransformError as _TransformError
 from cfnlint.runner import Runner as _Runner
 from cfnlint.template import Template as _Template
 from cfnlint.template.transforms._sam import Transform
+
+# Prevent a cyclical dependency issue
+import cfnlint.rules  # isort:skip
 
 LOGGER = logging.getLogger(__name__)
 
