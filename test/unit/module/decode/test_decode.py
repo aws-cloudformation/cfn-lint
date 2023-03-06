@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, patch
 import yaml
 from yaml.scanner import ScannerError
 
-import cfnlint.decode.decode  # pylint: disable=E0401
+import cfnlint.decode  # pylint: disable=E0401
 
 
 class TestDecode(BaseTestCase):
