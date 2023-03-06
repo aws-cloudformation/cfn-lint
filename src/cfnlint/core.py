@@ -297,7 +297,7 @@ def get_template_rules(
         ):
             ignore_bad_template = True
 
-    (template, errors) = decode.decode(filename)
+    (template, errors) = decode(filename)
 
     if errors:
         _build_rule_cache(args)
