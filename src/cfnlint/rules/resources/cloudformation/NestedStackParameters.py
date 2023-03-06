@@ -28,7 +28,7 @@ class NestedStackParameters(CloudFormationLintRule):
 
     def __get_template_parameters(self, filename):
         try:
-            (tmp, matches) = decode.decode(filename)
+            (tmp, matches) = decode(filename)
         except:  # pylint: disable=bare-except
             return None
         if matches:
