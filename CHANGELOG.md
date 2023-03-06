@@ -1,3 +1,8 @@
+### v0.74.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `114.0.0` (pull #[2601](https://github.com/aws-cloudformation/cfn-lint/pull/2601))
+- Remove `AWS::Logs::LogGroup.RetentionInDays` `AllowedValues` (pull #[2604](https://github.com/aws-cloudformation/cfn-lint/pull/2604))
+
 ### v0.74.0
 ###### Features
 - Add rule [E3044](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3044) to validate the scheduling strategy for Fargate services (pull #[2559](https://github.com/aws-cloudformation/cfn-lint/pull/2559))
