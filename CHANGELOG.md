@@ -1,3 +1,7 @@
+### v1.0.0.a1
+###### Features
+- Large re-write to migrate from CloudFormation specs to CloudFormation resource provider schemas (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
+
 ### v0.85.0
 ###### Feature
 - Update rule [E3027](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3027) to validate rate periods (pull #[3017](https://github.com/aws-cloudformation/cfn-lint/pull/3017))
@@ -199,6 +203,9 @@
 - Pin `jsonschema` to be under `4.18` (pull #[2792](https://github.com/aws-cloudformation/cfn-lint/pull/2792))
 - Fix using `include_experimental` in metadata (pull #[2785](https://github.com/aws-cloudformation/cfn-lint/pull/2785))
 - Fix rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1024) to better handle conditions (pull #[2780](https://github.com/aws-cloudformation/cfn-lint/pull/2780))
+### v1.0.0.a1
+###### Features
+- Large re-write to migrate from CloudFormation specs to CloudFormation resource provider schemas (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
 
 ### v0.77.10
 ###### CloudFormation Specifications
