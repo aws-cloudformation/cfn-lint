@@ -1,3 +1,7 @@
+### v1.0.0.a1
+###### Features
+- Large re-write to migrate from CloudFormation specs to CloudFormation resource provider schemas (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
+
 ### v0.74.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `114.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
