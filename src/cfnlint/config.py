@@ -7,8 +7,8 @@ import copy
 import glob
 import json
 import logging
-import sys
 import os
+import sys
 from pathlib import Path
 from typing import Dict
 
