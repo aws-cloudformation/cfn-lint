@@ -12,11 +12,18 @@ from yaml.scanner import ScannerError
 
 import cfnlint.decode.decode  # pylint: disable=E0401
 
-LOGGER = logging.getLogger("cfnlint.decode.decode")
-logging.disable(logging.CRITICAL)
-
 
 class TestDecode(BaseTestCase):
+    def tearDown(self) -> None:
+        super().tearDown()
+        logger = logging.getLogger("cfnlint.decode.decode")
+        logger.disabled = False
+
+    def setUp(self):
+        """Setup"""
+        logger = logging.getLogger("cfnlint.decode.decode")
+        logger.disabled = True
+
     @patch("cfnlint.decode.cfn_yaml.load")
     def test_decode_permission_error(self, mock_cfn_yaml):
         mock_cfn_yaml.side_effect = OSError(13, "Permission denied")
