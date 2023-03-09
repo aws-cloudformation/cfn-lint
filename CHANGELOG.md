@@ -1,3 +1,7 @@
+### v1.0.0.a1
+###### Features
+- Large re-write to migrate from CloudFormation specs to CloudFormation resource provider schemas (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
+
 ### v0.77.0
 ###### Features
 - Convert from `re` to `regex` (pull #[2643](https://github.com/aws-cloudformation/cfn-lint/pull/2643))
