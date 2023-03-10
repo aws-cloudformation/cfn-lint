@@ -132,8 +132,8 @@ def CreateNotEqualsRule(rule_id, resourceType, prop, value, error_message):
 def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_value, path):
         matches = []
-        if checkInt(value.strip()) and checkInt(str(expected_value).strip()):
-            if value.strip().lower() < str(expected_value).strip().lower():
+        if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
+            if int(str(value).strip()) < int(str(expected_value).strip()):
                 matches.append(
                     cfnlint.rules.RuleMatch(
                         path, error_message or "Greater than check failed"
@@ -163,8 +163,8 @@ def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
 def CreateLesserRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_value, path):
         matches = []
-        if checkInt(value.strip()) and checkInt(str(expected_value).strip()):
-            if value.strip().lower() > str(expected_value).strip().lower():
+        if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
+            if int(str(value).strip()) > int(str(expected_value).strip()):
                 matches.append(
                     cfnlint.rules.RuleMatch(
                         path, error_message or "Lesser than check failed"
