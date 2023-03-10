@@ -5846,6 +5846,7 @@
     "DescribeTransaction",
     "ExtendTransaction",
     "GetDataAccess",
+    "GetDataCellsFilter",
     "GetDataLakeSettings",
     "GetEffectivePermissionsForPath",
     "GetLFTag",
@@ -5870,6 +5871,7 @@
     "SearchTablesByLFTags",
     "StartQueryPlanning",
     "StartTransaction",
+    "UpdateDataCellsFilter",
     "UpdateLFTag",
     "UpdateResource",
     "UpdateTableObjects",
@@ -11352,8 +11354,8 @@
    ]
   },
   "Amazon DevOps Guru": {
-   "ARNFormat": "arn:aws:devops-guru:${Region}:${Account}:",
-   "ARNRegex": "^arn:aws:devops-guru:.+:.+:",
+   "ARNFormat": "arn:aws:devops-guru:${Region}:${Account}:${ResourceType}/${ResourceName}",
+   "ARNRegex": "^arn:aws:devops-guru:.+:.+:.+/.+",
    "Actions": [
     "AddNotificationChannel",
     "DeleteInsight",
@@ -11388,7 +11390,10 @@
     "UpdateServiceIntegration"
    ],
    "HasResource": true,
-   "StringPrefix": "devops-guru"
+   "StringPrefix": "devops-guru",
+   "conditionKeys": [
+    "devops-guru:ServiceNames"
+   ]
   },
   "Amazon DocumentDB Elastic Clusters": {
    "ARNFormat": "arn:aws:docdb-elastic:${Region}:${Account}:${ResourceType}/${ResourceId}",
@@ -15347,6 +15352,7 @@
     "DeleteMLEndpoint",
     "DeleteStatistics",
     "GetEngineStatus",
+    "GetGraphSummary",
     "GetLoaderJobStatus",
     "GetMLDataProcessingJobStatus",
     "GetMLEndpointStatus",
