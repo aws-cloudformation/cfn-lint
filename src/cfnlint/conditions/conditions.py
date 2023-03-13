@@ -18,7 +18,9 @@ class Conditions:
         self._conditions = {}
         try:
             self._init_conditions(cfn=cfn)
-
+            self._solver, self._solver_params = self._build_solver(
+                list(self._conditions.keys())
+            )
         except Exception as err:  # pylint: disable=W0703
             traceback.print_exc()
             LOGGER.debug("While processing conditions got error: %s", err)
@@ -74,52 +76,62 @@ class Conditions:
             yield {condition_names[0]: False}
             return
 
-        solver, solver_params = self._build_solver(condition_names)
+        # solver, solver_params = self._build_solver(condition_names)
 
         # build a large matric of True/False options based on the provided conditions
         for p in itertools.product([True, False], repeat=len(condition_names)):
             params = dict(zip(condition_names, p))
-            solver.push()
+            self._solver.push()
             for condition_name, opt in params.items():
                 if opt:
-                    solver.add(
+                    self._solver.add(
                         self._conditions[condition_name].build_true_solver(
-                            solver_params
+                            self._solver_params
                         )
                     )
                 else:
-                    solver.add(
+                    self._solver.add(
                         self._conditions[condition_name].build_false_solver(
-                            solver_params
+                            self._solver_params
                         )
                     )
 
             # if the scenario can be satisfied then return it
-            if solver.check() == sat:
+            if self._solver.check() == sat:
                 yield params
-            solver.pop()
+            self._solver.pop()
 
     def check_implies(self, scenarios: Dict[str, bool], implies: str) -> Bool:
         # Based on a bunch of conditions and their Truth/False value
         # determine if implies condition is True any time the scenarios are satisfied
-        solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
+        # solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
 
+        self._solver.push()
         conditions = []
         for condition_name, opt in scenarios.items():
             if opt:
                 conditions.append(
-                    self._conditions[condition_name].build_true_solver(solver_params)
+                    self._conditions[condition_name].build_true_solver(
+                        self._solver_params
+                    )
                 )
             else:
                 conditions.append(
-                    self._conditions[condition_name].build_false_solver(solver_params)
+                    self._conditions[condition_name].build_false_solver(
+                        self._solver_params
+                    )
                 )
 
-        implies_condition = self._conditions[implies].build_true_solver(solver_params)
+        implies_condition = self._conditions[implies].build_true_solver(
+            self._solver_params
+        )
 
         and_condition = And(conditions)
-        solver.add(and_condition)
-        solver.add(Not(Implies(and_condition, implies_condition)))
-        if solver.check() == sat:
+        self._solver.add(and_condition)
+        self._solver.add(Not(Implies(and_condition, implies_condition)))
+        if self._solver.check() == sat:
+            self._solver.pop()
             return True
+
+        self._solver.pop()
         return False

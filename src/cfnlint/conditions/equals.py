@@ -3,6 +3,7 @@ import logging
 from typing import Any, Dict, List, Union
 
 from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions.exceptions import ConditionParseError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -39,6 +40,8 @@ class Equal:
             self._right = self._init_parameter(equal_s[1])
 
             self.hash = get_hash([self._left, self._right])
+            return
+        raise ConditionParseError("Equals isn't a list of 2 values")
 
     def _init_parameter(
         self, parameter: Union[Dict, str]
