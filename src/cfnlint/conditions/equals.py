@@ -3,8 +3,8 @@ from typing import List, Union, Dict, Any, Optional
 from functools import cmp_to_key
 import cfnlint.helpers
 import json
-from cfnlint.conditionsv2._utils import get_hash
-from cfnlint.conditionsv2.exceptions import ConditionParseError
+from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions.exceptions import ConditionParseError
 
 LOGGER = logging.getLogger(__name__)
 

@@ -4,9 +4,9 @@ from typing import List, Dict, Optional, MutableSet, Set, Tuple, Any, Iterator
 import cfnlint.helpers
 import traceback
 import itertools
-from cfnlint.conditionsv2.condition import Condition, ConditionNamed, ConditionPath
-from cfnlint.conditionsv2._utils import get_hash
-from cfnlint.conditionsv2.equals import Equal, EqualParameter
+from cfnlint.conditions.condition import Condition, ConditionNamed, ConditionPath
+from cfnlint.conditions._utils import get_hash
+from cfnlint.conditions.equals import Equal, EqualParameter
 
 LOGGER = logging.getLogger(__name__)
 

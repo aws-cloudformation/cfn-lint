@@ -8,7 +8,6 @@ from copy import copy, deepcopy
 from typing import Union
 
 import cfnlint.conditions
-import cfnlint.conditionsv2
 import cfnlint.helpers
 from cfnlint.graph import Graph
 
@@ -43,7 +42,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Fn::FindInMap"] = self.search_deep_keys("Fn::FindInMap")
         self.transform_pre["Transform"] = self.template.get("Transform", [])
         self.conditions = cfnlint.conditions.Conditions(self)
-        self.conditionsv2 = cfnlint.conditionsv2.Conditions(self)
         self.__cache_search_deep_class = {}
         self.graph: Union[Graph, None] = None
         try:
@@ -843,7 +841,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 else:
                     scenario[condition_name] = list(condition_bool)[0]
 
-            if self.conditionsv2.check_implies(scenario, resource_condition):
+            if self.conditions.check_implies(scenario, resource_condition):
                 return [{**{resource_condition: False}, **scenario}]
 
         # if resource condition isn't available then the resource is available
@@ -1032,7 +1030,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         else:
                             results[condition_name] = condition_values
 
-        return list(self.conditionsv2.build_scenarios(list(results.keys())))
+        return list(self.conditions.build_scenarios(list(results.keys())))
 
     def get_conditions_scenarios_from_object(self, objs):
         """
@@ -1082,7 +1080,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     else:
                         con = con.union(get_conditions_from_property(v))
 
-        return list(self.conditionsv2.build_scenarios(list(con)))
+        return list(self.conditions.build_scenarios(list(con)))
 
     def get_conditions_from_path(
         self,

@@ -1,8 +1,8 @@
 import dataclasses
 from z3 import Solver, Not, And, Or
 from typing import Any, Optional, List, Dict, Union, Tuple
-from cfnlint.conditionsv2.equals import Equal, EqualParameter
-from cfnlint.conditionsv2.scenario import Scenario
+from cfnlint.conditions.equals import Equal, EqualParameter
+from cfnlint.conditions.scenario import Scenario
 from copy import deepcopy
 
 
