@@ -1,10 +1,8 @@
-import logging
-from typing import List, Union, Dict, Any, Optional
-from functools import cmp_to_key
-import cfnlint.helpers
 import json
+import logging
+from typing import Any, Dict, List, Union
+
 from cfnlint.conditions._utils import get_hash
-from cfnlint.conditions.exceptions import ConditionParseError
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +32,7 @@ class Equal:
     def __init__(self, equal: List[Union[str, dict]]) -> None:
         if isinstance(equal, list) and len(equal) == 2:
             # sort to keep consistancy from random ordering
+            # pylint: disable=unnecessary-lambda
             equal_s = sorted(equal, key=lambda value: json.dumps(value))
 
             self._left = self._init_parameter(equal_s[0])
@@ -46,11 +45,7 @@ class Equal:
     ) -> Union[EqualParameter, str]:
         if isinstance(parameter, dict):
             return EqualParameter(parameter)
-        elif isinstance(parameter, (str, int)):
-            return str(parameter)
-
-    def get_value_hashes(self) -> List[str]:
-        return [self._left.get_hash(), self._right.get_hash()]
+        return str(parameter)
 
     def get_parameters(self) -> List[EqualParameter]:
         params = []

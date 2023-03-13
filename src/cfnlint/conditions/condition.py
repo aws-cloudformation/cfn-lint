@@ -1,24 +1,14 @@
-import dataclasses
-from z3 import Solver, Not, And, Or
-from typing import Any, Optional, List, Dict, Union, Tuple
+from typing import Any, Dict, List, Optional, Union
+
+from z3 import And, Not, Or
+
 from cfnlint.conditions.equals import Equal, EqualParameter
-from cfnlint.conditions.scenario import Scenario
-from copy import deepcopy
-
-
-@dataclasses.dataclass
-class ConditionPath:
-    condition: Any
-    path: List[Union[str, int]]
 
 
 class Condition:
     def __init__(self) -> None:
         self._fn_equals: Optional[Equal] = None
-        self._fn_and: Optional[ConditionAnd] = None
-        self._fn_or: Optional[ConditionOr] = None
-        self._fn_not: Optional[Condition] = None
-        self._condition: Optional[ConditionNamed] = None
+        self._condition: Optional[Union[ConditionList, ConditionNamed]] = None
 
     def _init_condition(
         self, condition: Dict[str, dict], all_conditions: Dict[str, dict]
@@ -28,66 +18,31 @@ class Condition:
                 if k == "Fn::Equals":
                     self._fn_equals = Equal(v)
                 elif k == "Fn::And":
-                    self._fn_and = ConditionAnd(v, all_conditions)
+                    self._condition = ConditionAnd(v, all_conditions)
                 elif k == "Fn::Or":
-                    self._fn_or = ConditionOr(v, all_conditions)
+                    self._condition = ConditionOr(v, all_conditions)
                 elif k == "Fn::Not":
-                    self._fn_not = ConditionNot(v, all_conditions)
+                    self._condition = ConditionNot(v, all_conditions)
                 elif k == "Condition":
                     self._condition = ConditionNamed(v, all_conditions)
                 else:
                     raise ValueError(f"Unknown key ({k}) in condition")
         else:
-            raise ValueError(f"Condition value must be an object of length 1")
-
-    def get_parameters(self) -> List[EqualParameter]:
-        if self._fn_equals:
-            return self._fn_equals.get_parameters()
-        if self._fn_not:
-            return self._fn_not.get_parameters()
-        if self._fn_and:
-            return self._fn_and.get_parameters()
-        if self._fn_or:
-            return self._fn_or.get_parameters()
-        if self._condition:
-            return self._condition.get_parameters()
-        return []
+            raise ValueError("Condition value must be an object of length 1")
 
     def get_equals(self) -> List[Equal]:
         if self._fn_equals:
             return [self._fn_equals]
-        if self._fn_not:
-            return self._fn_not.get_equals()
-        if self._fn_and:
-            return self._fn_and.get_equals()
-        if self._fn_or:
-            return self._fn_or.get_equals()
         if self._condition:
             return self._condition.get_equals()
         return []
 
-    def get_children(self) -> List[ConditionPath]:
-        if self._fn_not:
-            return self._fn_not.get_children()
-        if self._fn_and:
-            return self._fn_and.get_children()
-        if self._fn_or:
-            return self._fn_or.get_children()
+    def build_solver(self, params: Dict[str, Any]) -> Any:
         if self._condition:
-            return [ConditionPath(self._condition, [])] + self._condition.get_children()
-        return []
-
-    def build_solver(self, vars: Dict[str, Any]) -> None:
-        if self._fn_not:
-            return self._fn_not.build_solver(vars)
-        if self._fn_and:
-            return self._fn_and.build_solver(vars)
-        if self._fn_or:
-            return self._fn_or.build_solver(vars)
-        if self._condition:
-            return self._condition.build_solver(vars)
+            return self._condition.build_solver(params)
         if self._fn_equals:
-            return vars.get(self._fn_equals.hash)
+            return params.get(self._fn_equals.hash)
+        return None
 
 
 class ConditionList(Condition):
@@ -98,25 +53,11 @@ class ConditionList(Condition):
         for condition in conditions:
             self._conditions.append(ConditionUnnammed(condition, all_conditions))
 
-    def get_parameters(self) -> List[EqualParameter]:
-        params: List[EqualParameter] = []
-        for condition in self._conditions:
-            params.extend(condition.get_parameters())
-        return params
-
     def get_equals(self) -> List[EqualParameter]:
         equals: List[Equal] = []
         for condition in self._conditions:
             equals.extend(condition.get_equals())
         return equals
-
-    def get_children(self) -> List[ConditionPath]:
-        children: List[ConditionPath] = []
-        for idx, condition in enumerate(self._conditions):
-            for child in condition.get_children():
-                child.path = [self._prefix_path, idx] + child.path
-                children.append(child)
-        return children
 
 
 class ConditionAnd(ConditionList):
@@ -124,10 +65,10 @@ class ConditionAnd(ConditionList):
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::And"
 
-    def build_solver(self, vars: Dict[str, Any]) -> Any:
+    def build_solver(self, params: Dict[str, Any]) -> Any:
         conditions: List[Any] = []
         for child in self._conditions:
-            conditions.append(child.build_solver(vars))
+            conditions.append(child.build_solver(params))
 
         return And(conditions)
 
@@ -137,11 +78,11 @@ class ConditionNot(ConditionList):
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Not"
         if len(conditions) != 1:
-            ValueError("Condition length must be 1")
+            raise ValueError("Condition length must be 1")
 
-    def build_solver(self, vars: Dict[str, Any]) -> Any:
+    def build_solver(self, params: Dict[str, Any]) -> Any:
         for child in self._conditions:
-            return Not(child.build_solver(vars))
+            return Not(child.build_solver(params))
 
 
 class ConditionOr(ConditionList):
@@ -149,10 +90,10 @@ class ConditionOr(ConditionList):
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Or"
 
-    def build_solver(self, vars: Dict[str, Any]) -> Any:
+    def build_solver(self, params: Dict[str, Any]) -> Any:
         conditions: List[Any] = []
         for child in self._conditions:
-            conditions.append(child.build_solver(vars))
+            conditions.append(child.build_solver(params))
         return Or(conditions)
 
 
@@ -163,7 +104,7 @@ class ConditionUnnammed(Condition):
         if isinstance(condition, dict):
             self._init_condition(condition, all_conditions)
         else:
-            raise ValueError(f"Condition must have a value that is an object")
+            raise ValueError("Condition must have a value that is an object")
 
 
 class ConditionNamed(Condition):
@@ -177,14 +118,8 @@ class ConditionNamed(Condition):
         else:
             raise ValueError(f"Condition {name} must have a value that is an object")
 
-    def __eq__(self, __o: object) -> bool:
-        return self.__name == __o.name
+    def build_true_solver(self, params: Dict[str, Any]) -> Any:
+        return self.build_solver(params)
 
-    def __repr__(self) -> str:
-        return self._name
-
-    def build_true_solver(self, vars: Dict[str, Any]) -> Any:
-        return self.build_solver(vars)
-
-    def build_false_solver(self, vars: Dict[str, Any]) -> Any:
-        return Not(self.build_solver(vars))
+    def build_false_solver(self, params: Dict[str, Any]) -> Any:
+        return Not(self.build_solver(params))

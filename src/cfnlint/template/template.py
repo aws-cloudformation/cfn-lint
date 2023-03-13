@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import re
-from copy import copy, deepcopy
+from copy import deepcopy
 from typing import Union
 
 import cfnlint.conditions
@@ -838,8 +838,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             for condition_name, condition_bool in path_conditions.items():
                 if len(condition_bool) > 1:
                     return results
-                else:
-                    scenario[condition_name] = list(condition_bool)[0]
+                scenario[condition_name] = list(condition_bool)[0]
 
             if self.conditions.check_implies(scenario, resource_condition):
                 return [{**{resource_condition: False}, **scenario}]
