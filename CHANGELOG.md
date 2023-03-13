@@ -1,3 +1,10 @@
+### v0.74.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `114.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
+###### Fixes
+- Fix custom rule inequality comparison (pull #[2614](https://github.com/aws-cloudformation/cfn-lint/pull/2614))
+- Restructure the decode module (pull #[2607](https://github.com/aws-cloudformation/cfn-lint/pull/2607))
+
 ### v0.74.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `114.0.0` (pull #[2601](https://github.com/aws-cloudformation/cfn-lint/pull/2601))
