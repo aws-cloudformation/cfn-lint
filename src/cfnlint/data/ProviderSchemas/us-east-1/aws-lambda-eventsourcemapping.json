@@ -42,6 +42,33 @@
    },
    "type": "object"
   },
+  "DocumentDBEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Document db event source config.",
+   "properties": {
+    "CollectionName": {
+     "description": "The collection name to connect to.",
+     "maxLength": 57,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "description": "The database name to connect to.",
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FullDocument": {
+     "description": "Include full document in change stream response. The default option will only send the changes made to documents to Lambda. If you want the complete document sent to Lambda, set this to UpdateLookup.",
+     "enum": [
+      "UpdateLookup",
+      "Default"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "Endpoints": {
    "additionalProperties": false,
    "description": "The endpoints used by AWS Lambda to access a self-managed event source.",
@@ -228,6 +255,10 @@
   "DestinationConfig": {
    "$ref": "#/definitions/DestinationConfig",
    "description": "(Streams) An Amazon SQS queue or Amazon SNS topic destination for discarded records."
+  },
+  "DocumentDBEventSourceConfig": {
+   "$ref": "#/definitions/DocumentDBEventSourceConfig",
+   "description": "Document db event source config."
   },
   "Enabled": {
    "description": "Disables the event source mapping to pause polling and invocation.",
