@@ -15,7 +15,7 @@ class TestPatches(BaseCliTestCase):
     def test_patches(self):
         """Test ignoring certain rules"""
         for root, _, files in os.walk(
-            "src/cfnlint/data/ExtendedProviderSchema", topdown=True
+            "src/cfnlint/data/ExtendedProviderSchemas", topdown=True
         ):
             for name in files:
                 if name.endswith(".json"):
