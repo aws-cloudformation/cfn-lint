@@ -450,6 +450,12 @@
    "additionalProperties": false,
    "description": "A custom vocabulary item that contains the phrase to recognize and a weight to give the boost.",
    "properties": {
+    "DisplayAs": {
+     "description": "Defines how you want your phrase to look in your transcription output.",
+     "maxLength": 100,
+     "minLength": 1,
+     "type": "string"
+    },
     "Phrase": {
      "description": "Phrase that should be recognized.",
      "maxLength": 100,
@@ -457,9 +463,9 @@
      "type": "string"
     },
     "Weight": {
-     "description": "The degree to which the phrase recognition is boosted.",
+     "description": "The degree to which the phrase recognition is boosted. The weight 0 means that no boosting will be applied and the entry will only be used for performing replacements using the displayAs field.",
      "maximum": 3,
-     "minimum": 1,
+     "minimum": 0,
      "type": "integer"
     }
    },
