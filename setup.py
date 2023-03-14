@@ -33,10 +33,11 @@ that could potentially be improved'),
     url='https://github.com/aws-cloudformation/cfn-python-lint',
     package_dir={'': 'src'},
     package_data={'cfnlint': [
-        'data/CloudSpecs/*.json',
+        'data/AdditionalSchemas/*/*.json',
+        'data/ProviderSchemas/*/*.json',
+        'data/ExtendendProviderSchemas/*/*.json',
         'data/AdditionalSpecs/*.json',
         'data/Serverless/*.json',
-        'data/ExtendedSpecs/*/*.json',
         'data/CfnLintCli/config/schema.json'
     ]},
     packages=find_packages('src'),
