@@ -1,6 +1,39 @@
 {
  "additionalProperties": false,
  "definitions": {
+  "CodeStarParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactPath": {
+     "type": "string"
+    },
+    "Branch": {
+     "type": "string"
+    },
+    "ConnectionArn": {
+     "type": "string"
+    },
+    "Repository": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactPath",
+    "Repository",
+    "Branch",
+    "ConnectionArn"
+   ],
+   "type": "object"
+  },
+  "ConnectionParameters": {
+   "additionalProperties": false,
+   "properties": {
+    "CodeStar": {
+     "$ref": "#/definitions/CodeStarParameters"
+    }
+   },
+   "type": "object"
+  },
   "ProvisioningArtifactProperties": {
    "additionalProperties": false,
    "properties": {
@@ -19,6 +52,22 @@
    },
    "required": [
     "Info"
+   ],
+   "type": "object"
+  },
+  "SourceConnection": {
+   "additionalProperties": false,
+   "properties": {
+    "ConnectionParameters": {
+     "$ref": "#/definitions/ConnectionParameters"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "ConnectionParameters"
    ],
    "type": "object"
   },
@@ -81,6 +130,9 @@
   "ReplaceProvisioningArtifacts": {
    "type": "boolean"
   },
+  "SourceConnection": {
+   "$ref": "#/definitions/SourceConnection"
+  },
   "SupportDescription": {
    "type": "string"
   },
@@ -106,8 +158,7 @@
  ],
  "required": [
   "Owner",
-  "Name",
-  "ProvisioningArtifactParameters"
+  "Name"
  ],
  "typeName": "AWS::ServiceCatalog::CloudFormationProduct"
 }

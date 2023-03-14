@@ -5,12 +5,39 @@
   "/properties/UserName",
   "/properties/Engine"
  ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with 'aws:'. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
  "description": "Resource Type definition for AWS::ElastiCache::User",
  "handlers": {
   "create": {
    "permissions": [
     "elasticache:CreateUser",
-    "elasticache:DescribeUsers"
+    "elasticache:DescribeUsers",
+    "elasticache:ListTagsForResource"
    ]
   },
   "delete": {
@@ -21,18 +48,23 @@
   },
   "list": {
    "permissions": [
-    "elasticache:DescribeUsers"
+    "elasticache:DescribeUsers",
+    "elasticache:ListTagsForResource"
    ]
   },
   "read": {
    "permissions": [
-    "elasticache:DescribeUsers"
+    "elasticache:DescribeUsers",
+    "elasticache:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
     "elasticache:ModifyUser",
-    "elasticache:DescribeUsers"
+    "elasticache:DescribeUsers",
+    "elasticache:ListTagsForResource",
+    "elasticache:AddTagsToResource",
+    "elasticache:RemoveTagsFromResource"
    ]
   }
  },
@@ -101,6 +133,16 @@
    "description": "Indicates the user status. Can be \"active\", \"modifying\" or \"deleting\".",
    "type": "string"
   },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this user.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
   "UserId": {
    "description": "The ID of the user.",
    "pattern": "[a-z][a-z0-9\\\\-]*",
@@ -121,6 +163,13 @@
   "Engine"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticache",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::ElastiCache::User",
  "writeOnlyProperties": [
   "/properties/Passwords",
