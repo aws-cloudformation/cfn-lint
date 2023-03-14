@@ -1,4 +1,5 @@
 {
+ "$schema": "https://raw.githubusercontent.com/aws-cloudformation/cloudformation-resource-schema/master/src/main/resources/schema/provider.definition.schema.v1.json",
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Path",
@@ -18,8 +19,6 @@
     },
     "PolicyName": {
      "description": "The friendly name (not ARN) identifying the policy.",
-     "maxLength": 128,
-     "minLength": 1,
      "type": "string"
     }
    },
@@ -35,14 +34,10 @@
    "properties": {
     "Key": {
      "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-     "maxLength": 128,
-     "minLength": 1,
      "type": "string"
     },
     "Value": {
      "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-     "maxLength": 256,
-     "minLength": 0,
      "type": "string"
     }
    },
@@ -71,7 +66,9 @@
     "iam:DeleteRole",
     "iam:DetachRolePolicy",
     "iam:DeleteRolePolicy",
-    "iam:GetRole"
+    "iam:GetRole",
+    "iam:ListAttachedRolePolicies",
+    "iam:ListRolePolicies"
    ]
   },
   "list": {
@@ -125,7 +122,6 @@
   },
   "Description": {
    "description": "A description of the role that you provide.",
-   "maxLength": 1000,
    "type": "string"
   },
   "ManagedPolicyArns": {
@@ -139,8 +135,6 @@
   },
   "MaxSessionDuration": {
    "description": "The maximum session duration (in seconds) that you want to set for the specified role. If you do not specify a value for this setting, the default maximum of one hour is applied. This setting can have a value from 1 hour to 12 hours. ",
-   "maximum": 43200,
-   "minimum": 3600,
    "type": "integer"
   },
   "Path": {
@@ -166,7 +160,6 @@
   },
   "RoleName": {
    "description": "A name for the IAM role, up to 64 characters in length.",
-   "maxLength": 64,
    "type": "string"
   },
   "Tags": {
@@ -187,6 +180,12 @@
   "AssumeRolePolicyDocument"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iam.git",
- "taggable": true,
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::IAM::Role"
 }

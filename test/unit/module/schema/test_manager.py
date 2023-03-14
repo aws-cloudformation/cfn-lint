@@ -37,7 +37,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.os.listdir")
     @patch("cfnlint.schema.manager.os.path.isfile")
     @patch("cfnlint.schema.manager.os.remove")
-    @patch("cfnlint.schema.manager.os.symlink")
     @patch("cfnlint.schema.manager.os.walk")
     @patch("cfnlint.schema.manager.filecmp.cmp")
     @patch("cfnlint.schema.manager.load_resource")
@@ -46,7 +45,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
         mock_load_resource,
         mock_filecmp_cmp,
         mock_os_walk,
-        mock_os_symlink,
         mock_os_remove,
         mock_os_path_isfile,
         mock_os_listdir,
@@ -93,7 +91,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
             mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
             mock_filecmp_cmp.assert_not_called()
             mock_os_remove.assert_not_called()
-            mock_os_symlink.assert_not_called()
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
@@ -104,14 +101,12 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.os.listdir")
     @patch("cfnlint.schema.manager.os.path.isfile")
     @patch("cfnlint.schema.manager.os.remove")
-    @patch("cfnlint.schema.manager.os.symlink")
     @patch("cfnlint.schema.manager.os.walk")
     @patch("cfnlint.schema.manager.filecmp.cmp")
     def test_update_resource_spec_cache(
         self,
         mock_filecmp_cmp,
         mock_os_walk,
-        mock_os_symlink,
         mock_os_remove,
         mock_os_path_isfile,
         mock_os_listdir,
@@ -161,7 +156,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
             mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
             mock_filecmp_cmp.assert_called_once()
             mock_os_remove.assert_called_once()
-            mock_os_symlink.assert_called_once()
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
