@@ -313,21 +313,32 @@
    "additionalProperties": false,
    "properties": {
     "Error": {
-     "additionalProperties": false,
-     "properties": {
-      "Code": {
-       "enum": [
-        "VALIDATION_ERROR",
-        "INTERNAL_FAILURE"
-       ],
-       "type": "string"
+     "anyOf": [
+      {
+       "additionalProperties": false,
+       "description": "Empty Error object.",
+       "type": "object"
       },
-      "Message": {
-       "maxLength": 2048,
-       "minLength": 0,
-       "type": "string"
+      {
+       "additionalProperties": false,
+       "description": "Error object with Message and Code.",
+       "properties": {
+        "Code": {
+         "enum": [
+          "VALIDATION_ERROR",
+          "INTERNAL_FAILURE"
+         ],
+         "type": "string"
+        },
+        "Message": {
+         "maxLength": 2048,
+         "minLength": 0,
+         "type": "string"
+        }
+       },
+       "type": "object"
       }
-     },
+     ],
      "type": "object"
     },
     "State": {

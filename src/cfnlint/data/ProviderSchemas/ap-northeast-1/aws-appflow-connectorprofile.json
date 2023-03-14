@@ -122,6 +122,11 @@
    "maxLength": 128,
    "type": "string"
   },
+  "BusinessUnitId": {
+   "maxLength": 18,
+   "pattern": "\\S+",
+   "type": "string"
+  },
   "ClientCredentialsArn": {
    "maxLength": 2048,
    "pattern": "arn:aws:secretsmanager:.*:[0-9]+:.*",
@@ -197,6 +202,9 @@
     "Marketo": {
      "$ref": "#/definitions/MarketoConnectorProfileCredentials"
     },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorProfileCredentials"
+    },
     "Redshift": {
      "$ref": "#/definitions/RedshiftConnectorProfileCredentials"
     },
@@ -248,6 +256,9 @@
     "Marketo": {
      "$ref": "#/definitions/MarketoConnectorProfileProperties"
     },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorProfileProperties"
+    },
     "Redshift": {
      "$ref": "#/definitions/RedshiftConnectorProfileProperties"
     },
@@ -278,6 +289,7 @@
   "ConnectorType": {
    "enum": [
     "Salesforce",
+    "Pardot",
     "Singular",
     "Slack",
     "Redshift",
@@ -626,6 +638,47 @@
    },
    "type": "object"
   },
+  "PardotConnectorProfileCredentials": {
+   "properties": {
+    "AccessToken": {
+     "$ref": "#/definitions/AccessToken",
+     "description": "The credentials used to access protected resources."
+    },
+    "ClientCredentialsArn": {
+     "$ref": "#/definitions/ClientCredentialsArn",
+     "description": "The client credentials to fetch access token and refresh token."
+    },
+    "ConnectorOAuthRequest": {
+     "$ref": "#/definitions/ConnectorOAuthRequest",
+     "description": "The oauth needed to request security tokens from the connector endpoint."
+    },
+    "RefreshToken": {
+     "$ref": "#/definitions/RefreshToken",
+     "description": "The credentials used to acquire new access tokens."
+    }
+   },
+   "type": "object"
+  },
+  "PardotConnectorProfileProperties": {
+   "properties": {
+    "BusinessUnitId": {
+     "$ref": "#/definitions/BusinessUnitId",
+     "description": "The Business unit id of Salesforce Pardot instance to be connected"
+    },
+    "InstanceUrl": {
+     "$ref": "#/definitions/InstanceUrl",
+     "description": "The location of the Salesforce Pardot resource"
+    },
+    "IsSandboxEnvironment": {
+     "description": "Indicates whether the connector profile applies to a demo or production environment",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "BusinessUnitId"
+   ],
+   "type": "object"
+  },
   "Password": {
    "maxLength": 512,
    "pattern": "\\S+",
@@ -811,6 +864,7 @@
      "description": "The location of the Salesforce resource"
     },
     "isSandboxEnvironment": {
+     "description": "Indicates whether the connector profile applies to a sandbox or production environment",
      "type": "boolean"
     }
    },
