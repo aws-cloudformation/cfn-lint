@@ -166,6 +166,7 @@
     "rds:CreateDBCluster",
     "rds:CreateDBInstance",
     "rds:DescribeDBClusters",
+    "rds:DescribeEvents",
     "rds:ModifyDBCluster",
     "rds:RestoreDBClusterFromSnapshot",
     "rds:RestoreDBClusterToPointInTime",
@@ -201,6 +202,7 @@
     "rds:AddTagsToResource",
     "rds:DescribeDBClusters",
     "rds:DescribeDBSubnetGroups",
+    "rds:DescribeEvents",
     "rds:DescribeGlobalClusters",
     "rds:ModifyDBCluster",
     "rds:ModifyDBInstance",
@@ -234,8 +236,10 @@
    "type": "boolean"
   },
   "AvailabilityZones": {
+   "awsType": "AvailabilityZones",
    "description": "A list of Availability Zones (AZs) where instances in the DB cluster can be created. For information on AWS Regions and Availability Zones, see Choosing the Regions and Availability Zones in the Amazon Aurora User Guide.",
    "items": {
+    "awsType": "AvailabilityZone",
     "type": "string"
    },
    "type": "array",
@@ -482,9 +486,10 @@
   "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)",
   "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
   "/properties/EnableHttpEndpoint": "$lowercase($string(EngineMode)) = 'serverless' ? EnableHttpEndpoint : false",
+  "/properties/Engine": "$lowercase(Engine)",
   "/properties/EngineVersion": "$join([$string(EngineVersion), \".*\"])",
   "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
-  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
+  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", MasterUserSecret.KmsKeyId])",
   "/properties/PerformanceInsightsKmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", PerformanceInsightsKmsKeyId])",
   "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)",
   "/properties/SnapshotIdentifier": "$lowercase(SnapshotIdentifier)",

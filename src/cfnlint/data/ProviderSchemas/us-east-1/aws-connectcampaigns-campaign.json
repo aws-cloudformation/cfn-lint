@@ -4,6 +4,20 @@
   "/properties/ConnectInstanceArn"
  ],
  "definitions": {
+  "AnswerMachineDetectionConfig": {
+   "additionalProperties": false,
+   "description": "The configuration used for answering machine detection during outbound calls",
+   "properties": {
+    "EnableAnswerMachineDetection": {
+     "description": "Flag to decided whether outbound calls should have answering machine detection enabled or not",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "EnableAnswerMachineDetection"
+   ],
+   "type": "object"
+  },
   "DialerConfig": {
    "additionalProperties": false,
    "description": "The possible types of dialer config parameters",
@@ -34,18 +48,7 @@
    "description": "The configuration used for outbound calls.",
    "properties": {
     "AnswerMachineDetectionConfig": {
-     "additionalProperties": false,
-     "description": "The configuration used for answering machine detection during outbound calls",
-     "properties": {
-      "EnableAnswerMachineDetection": {
-       "description": "Flag to decided whether outbound calls should have answering machine detection enabled or not",
-       "type": "boolean"
-      }
-     },
-     "required": [
-      "EnableAnswerMachineDetection"
-     ],
-     "type": "object"
+     "$ref": "#/definitions/AnswerMachineDetectionConfig"
     },
     "ConnectContactFlowArn": {
      "description": "The identifier of the contact flow for the outbound call.",
