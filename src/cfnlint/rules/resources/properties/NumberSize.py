@@ -79,6 +79,12 @@ class NumberSize(CloudFormationLintRule):
                             .get("ValueTypes")
                             .get(value_type, {})
                         )
+                        if value_specs == "CACHED":
+                            value_specs = (
+                                RESOURCE_SPECS.get("us-east-1")
+                                .get("ValueTypes")
+                                .get(value_type, {})
+                            )
                         if (
                             value_specs.get("NumberMax") is not None
                             and value_specs.get("NumberMin") is not None
