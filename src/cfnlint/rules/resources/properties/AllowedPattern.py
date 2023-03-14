@@ -93,15 +93,24 @@ class AllowedPattern(CloudFormationLintRule):
                         property_type = (
                             property_specs.get("Properties").get(prop).get("Type")
                         )
+                        value_specs = (
+                            RESOURCE_SPECS.get(cfn.regions[0])
+                            .get("ValueTypes")
+                            .get(value_type, {})
+                        )
+                        if value_specs == "CACHED":
+                            value_specs = (
+                                RESOURCE_SPECS.get("us-east-1")
+                                .get("ValueTypes")
+                                .get(value_type, {})
+                            )
                         matches.extend(
                             cfn.check_value(
                                 p_value,
                                 prop,
                                 p_path,
                                 check_value=self.check_value,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get("ValueTypes")
-                                .get(value_type, {}),
+                                value_specs=value_specs,
                                 cfn=cfn,
                                 property_type=property_type,
                                 property_name=prop,
