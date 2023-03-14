@@ -5,6 +5,25 @@
   "/properties/Scope"
  ],
  "definitions": {
+  "AWSManagedRulesATPRuleSet": {
+   "additionalProperties": false,
+   "description": "Configures how to use the Account Takeover Prevention managed rule group in the web ACL",
+   "properties": {
+    "LoginPath": {
+     "type": "string"
+    },
+    "RequestInspection": {
+     "$ref": "#/definitions/RequestInspection"
+    },
+    "ResponseInspection": {
+     "$ref": "#/definitions/ResponseInspection"
+    }
+   },
+   "required": [
+    "LoginPath"
+   ],
+   "type": "object"
+  },
   "AWSManagedRulesBotControlRuleSet": {
    "additionalProperties": false,
    "description": "Configures how to use the Bot Control managed rule group in the web ACL",
@@ -684,6 +703,9 @@
    "additionalProperties": false,
    "description": "ManagedRuleGroupConfig.",
    "properties": {
+    "AWSManagedRulesATPRuleSet": {
+     "$ref": "#/definitions/AWSManagedRulesATPRuleSet"
+    },
     "AWSManagedRulesBotControlRuleSet": {
      "$ref": "#/definitions/AWSManagedRulesBotControlRuleSet"
     },
@@ -909,6 +931,31 @@
    ],
    "type": "object"
   },
+  "RequestInspection": {
+   "additionalProperties": false,
+   "description": "Configures the inspection of login requests",
+   "properties": {
+    "PasswordField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    },
+    "PayloadType": {
+     "enum": [
+      "JSON",
+      "FORM_ENCODED"
+     ],
+     "type": "string"
+    },
+    "UsernameField": {
+     "$ref": "#/definitions/FieldIdentifier"
+    }
+   },
+   "required": [
+    "PayloadType",
+    "UsernameField",
+    "PasswordField"
+   ],
+   "type": "object"
+  },
   "ResourceArn": {
    "description": "ARN of the WAF entity.",
    "maxLength": 2048,
@@ -929,6 +976,169 @@
     "APPLICATION_JSON"
    ],
    "type": "string"
+  },
+  "ResponseInspection": {
+   "additionalProperties": false,
+   "description": "Configures the inspection of login responses",
+   "properties": {
+    "BodyContains": {
+     "$ref": "#/definitions/ResponseInspectionBodyContains"
+    },
+    "Header": {
+     "$ref": "#/definitions/ResponseInspectionHeader"
+    },
+    "Json": {
+     "$ref": "#/definitions/ResponseInspectionJson"
+    },
+    "StatusCode": {
+     "$ref": "#/definitions/ResponseInspectionStatusCode"
+    }
+   },
+   "type": "object"
+  },
+  "ResponseInspectionBodyContains": {
+   "additionalProperties": false,
+   "description": "Response body contents that indicate success or failure of a login request",
+   "properties": {
+    "FailureStrings": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SuccessStrings": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SuccessStrings",
+    "FailureStrings"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionHeader": {
+   "additionalProperties": false,
+   "description": "Response headers that indicate success or failure of a login request",
+   "properties": {
+    "FailureValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Name": {
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SuccessValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Name",
+    "SuccessValues",
+    "FailureValues"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionJson": {
+   "additionalProperties": false,
+   "description": "Response JSON that indicate success or failure of a login request",
+   "properties": {
+    "FailureValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    },
+    "Identifier": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": ".*\\S.*",
+     "type": "string"
+    },
+    "SuccessValues": {
+     "items": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Identifier",
+    "SuccessValues",
+    "FailureValues"
+   ],
+   "type": "object"
+  },
+  "ResponseInspectionStatusCode": {
+   "additionalProperties": false,
+   "description": "Response status codes that indicate success or failure of a login request",
+   "properties": {
+    "FailureCodes": {
+     "items": {
+      "maxLength": 999,
+      "minLength": 0,
+      "type": "integer"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    },
+    "SuccessCodes": {
+     "items": {
+      "maxLength": 999,
+      "minLength": 0,
+      "type": "integer"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "SuccessCodes",
+    "FailureCodes"
+   ],
+   "type": "object"
   },
   "ResponseStatusCode": {
    "description": "Custom response code.",
