@@ -87,10 +87,17 @@ class ProviderSchemaManager:
                 f"cfnlint.data.ProviderSchemas.{region}", fromlist=[""]
             )
             # load the schema
+            if f"{rt}.json" in self._provider_schema_modules[region].cached:
+                self._schemas[region][resource_type] = self.get_resource_schema(
+                    region="us-east-1",
+                    resource_type=resource_type,
+                )
+                return self._schemas[region][resource_type]
             try:
                 self._schemas[region][resource_type] = Schema(
                     load_resource(
-                        self._provider_schema_modules[region], filename=(f"{rt}.json")
+                        self._provider_schema_modules[region],
+                        filename=(f"{rt}.json"),
                     )
                 )
             except Exception as e:
@@ -106,12 +113,24 @@ class ProviderSchemaManager:
         Returns:
             List[str]: returns a list of resource types
         """
-
+        if "us-east-1" not in self._provider_schema_modules:
+            self._provider_schema_modules["us-east-1"] = __import__(
+                "cfnlint.data.ProviderSchemas.us-east-1", fromlist=[""]
+            )
         if not self._cache["ResourceTypes"][region]:
             if region not in self._provider_schema_modules:
                 self._provider_schema_modules[region] = __import__(
                     f"cfnlint.data.ProviderSchemas.{region}", fromlist=[""]
                 )
+            for filename in self._provider_schema_modules[region].cached:
+                schema = load_resource(
+                    self._provider_schema_modules["us-east-1"], filename=(filename)
+                )
+                resource_type = schema.get("typeName")
+                if resource_type in self._cache["RemovedTypes"]:
+                    continue
+                self._schemas[region][resource_type] = Schema(schema)
+                self._cache["ResourceTypes"][region].append(resource_type)
             for filename in resource_listdir(
                 "cfnlint", resource_name=f"data/ProviderSchemas/{region}"
             ):
@@ -192,6 +211,7 @@ class ProviderSchemaManager:
             # if the region is not us-east-1 compare the files to those in us-east-1
             # symlink if the files are the same
             if region != "us-east-1":
+                cached = []
                 directory_us_east_1 = os.path.join(f"{self._root_path}/us-east-1/")
                 for filename in os.listdir(directory):
                     if filename != "__init__.py":
@@ -200,11 +220,8 @@ class ProviderSchemaManager:
                                 f"{directory}{filename}",
                                 f"{directory_us_east_1}{filename}",
                             ):
+                                cached.append(filename)
                                 os.remove(f"{directory}{filename}")
-                                os.symlink(
-                                    f"{directory_us_east_1}{filename}",
-                                    f"{directory}{filename}",
-                                )
                         except Exception as e:  # pylint: disable=broad-except
                             # Exceptions will typically be the file doesn't exist in us-east-1
                             multiprocessing_logger.debug(
@@ -213,6 +230,14 @@ class ProviderSchemaManager:
                                 f"{directory_us_east_1}{filename}",
                                 e,
                             )
+                with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
+                    f.write("# pylint: disable=too-many-lines\ncached = [\n")
+                    for cache_file in cached:
+                        f.write(f'    "{cache_file}",\n')
+                    f.write("]\n")
+            else:
+                with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
+                    f.write("cached = []\n")
 
         except Exception:  # pylint: disable=broad-except
             multiprocessing_logger.debug("Issuing updating schemas for %s", region)
