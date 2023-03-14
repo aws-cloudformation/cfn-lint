@@ -40,7 +40,7 @@ class ProviderSchemaManager:
             os.path.dirname(__file__),
             "..",
             "data",
-            "ExtendedProviderSchema",
+            "ExtendedProviderSchemas",
         )
         self._root_path = os.path.join(
             os.path.dirname(__file__),
@@ -243,7 +243,7 @@ class ProviderSchemaManager:
                     LOGGER.info("Processing patch in %s.%s", module, file_path)
                     jsonpatch.JsonPatch(
                         load_resource(
-                            f"cfnlint.data.ExtendedProviderSchema.{module}", file_path
+                            f"cfnlint.data.ExtendedProviderSchemas.{module}", file_path
                         )
                     ).apply(content, in_place=True)
 
