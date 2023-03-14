@@ -263,6 +263,7 @@
    "type": "boolean"
   },
   "AvailabilityZone": {
+   "awsType": "AvailabilityZone",
    "description": "The Availability Zone (AZ) where the database will be created. For information on AWS Regions and Availability Zones.",
    "type": "string"
   },
@@ -572,14 +573,17 @@
   "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
   "/properties/DBClusterSnapshotIdentifier": "$lowercase(DBClusterSnapshotIdentifier)",
   "/properties/DBInstanceIdentifier": "$lowercase(DBInstanceIdentifier)",
+  "/properties/DBName": "$lowercase(DBName) $OR $uppercase(DBName)",
   "/properties/DBParameterGroupName": "$lowercase(DBParameterGroupName)",
   "/properties/DBSnapshotIdentifier": "$lowercase(DBSnapshotIdentifier)",
   "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
+  "/properties/Engine": "$lowercase(Engine)",
   "/properties/EngineVersion": "$join([$string(EngineVersion), \".*\"])",
   "/properties/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
-  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", KmsKeyId])",
+  "/properties/MasterUserSecret/KmsKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", MasterUserSecret.KmsKeyId])",
   "/properties/OptionGroupName": "$lowercase(OptionGroupName)",
   "/properties/PerformanceInsightsKMSKeyId": "$join([\"arn:(aws)[-]{0,1}[a-z]{0,2}[-]{0,1}[a-z]{0,3}:kms:[a-z]{2}[-]{1}[a-z]{3,10}[-]{0,1}[a-z]{0,10}[-]{1}[1-3]{1}:[0-9]{12}[:]{1}key\\/\", PerformanceInsightsKMSKeyId])",
+  "/properties/PreferredMaintenanceWindow": "$lowercase(PreferredMaintenanceWindow)",
   "/properties/SourceDBInstanceAutomatedBackupsArn": "$lowercase(SourceDBInstanceAutomatedBackupsArn)",
   "/properties/SourceDBInstanceIdentifier": "$lowercase(SourceDBInstanceIdentifier)"
  },
@@ -597,7 +601,10 @@
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
  "typeName": "AWS::RDS::DBInstance",
  "writeOnlyProperties": [
+  "/properties/AllowMajorVersionUpgrade",
+  "/properties/CertificateRotationRestart",
   "/properties/DBSnapshotIdentifier",
+  "/properties/DeleteAutomatedBackups",
   "/properties/MasterUserPassword",
   "/properties/Port",
   "/properties/RestoreTime",
@@ -606,7 +613,6 @@
   "/properties/SourceDbiResourceId",
   "/properties/SourceRegion",
   "/properties/TdeCredentialPassword",
-  "/properties/UseLatestRestorableTime",
-  "/properties/CertificateRotationRestart"
+  "/properties/UseLatestRestorableTime"
  ]
 }

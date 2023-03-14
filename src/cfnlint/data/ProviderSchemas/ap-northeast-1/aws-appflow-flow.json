@@ -81,6 +81,9 @@
     "Marketo": {
      "$ref": "#/definitions/MarketoConnectorOperator"
     },
+    "Pardot": {
+     "$ref": "#/definitions/PardotConnectorOperator"
+    },
     "S3": {
      "$ref": "#/definitions/S3ConnectorOperator"
     },
@@ -121,6 +124,7 @@
    "enum": [
     "SAPOData",
     "Salesforce",
+    "Pardot",
     "Singular",
     "Slack",
     "Redshift",
@@ -626,6 +630,37 @@
    ],
    "type": "string"
   },
+  "PardotConnectorOperator": {
+   "enum": [
+    "PROJECTION",
+    "EQUAL_TO",
+    "NO_OP",
+    "ADDITION",
+    "MULTIPLICATION",
+    "DIVISION",
+    "SUBTRACTION",
+    "MASK_ALL",
+    "MASK_FIRST_N",
+    "MASK_LAST_N",
+    "VALIDATE_NON_NULL",
+    "VALIDATE_NON_ZERO",
+    "VALIDATE_NON_NEGATIVE",
+    "VALIDATE_NUMERIC"
+   ],
+   "type": "string"
+  },
+  "PardotSourceProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "Object": {
+     "$ref": "#/definitions/Object"
+    }
+   },
+   "required": [
+    "Object"
+   ],
+   "type": "object"
+  },
   "PathPrefix": {
    "enum": [
     "EXECUTION_ID",
@@ -1121,6 +1156,9 @@
     },
     "Marketo": {
      "$ref": "#/definitions/MarketoSourceProperties"
+    },
+    "Pardot": {
+     "$ref": "#/definitions/PardotSourceProperties"
     },
     "S3": {
      "$ref": "#/definitions/S3SourceProperties"
