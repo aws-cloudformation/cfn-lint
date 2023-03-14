@@ -1,4 +1,9 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/Id"
+  ]
+ ],
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/Name"
@@ -106,7 +111,7 @@
    "properties": {
     "DimensionKeys": {
      "additionalProperties": false,
-     "description": "Use this field only if you are sending the metric to CloudWatch.\n\nThis field is a map of field paths to dimension names. It defines the dimensions to associate with this metric in CloudWatch. Valid values for the entries in this field are the following:\n\n\"metadata.pageId\": \"PageId\"\n\n\"metadata.browserName\": \"BrowserName\"\n\n\"metadata.deviceType\": \"DeviceType\"\n\n\"metadata.osName\": \"OSName\"\n\n\"metadata.countryCode\": \"CountryCode\"\n\n\"event_details.fileType\": \"FileType\"\n\nAll dimensions listed in this field must also be included in EventPattern.",
+     "description": "Use this field only if you are sending the metric to CloudWatch.\n\nThis field is a map of field paths to dimension names. It defines the dimensions to associate with this metric in CloudWatch. For extended metrics, valid values for the entries in this field are the following:\n\n\"metadata.pageId\": \"PageId\"\n\n\"metadata.browserName\": \"BrowserName\"\n\n\"metadata.deviceType\": \"DeviceType\"\n\n\"metadata.osName\": \"OSName\"\n\n\"metadata.countryCode\": \"CountryCode\"\n\n\"event_details.fileType\": \"FileType\"\n\nAll dimensions listed in this field must also be included in EventPattern.",
      "patternProperties": {
       "^(?!:).*[^\\s].*": {
        "maxLength": 255,
@@ -124,9 +129,16 @@
      "type": "string"
     },
     "Name": {
-     "description": "The name for the metric that is defined in this structure. Valid values are the following:\n\nPerformanceNavigationDuration\n\nPerformanceResourceDuration\n\nNavigationSatisfiedTransaction\n\nNavigationToleratedTransaction\n\nNavigationFrustratedTransaction\n\nWebVitalsCumulativeLayoutShift\n\nWebVitalsFirstInputDelay\n\nWebVitalsLargestContentfulPaint\n\nJsErrorCount\n\nHttpErrorCount\n\nSessionCount",
+     "description": "The name for the metric that is defined in this structure. For extended metrics, valid values are the following:\n\nPerformanceNavigationDuration\n\nPerformanceResourceDuration\n\nNavigationSatisfiedTransaction\n\nNavigationToleratedTransaction\n\nNavigationFrustratedTransaction\n\nWebVitalsCumulativeLayoutShift\n\nWebVitalsFirstInputDelay\n\nWebVitalsLargestContentfulPaint\n\nJsErrorCount\n\nHttpErrorCount\n\nSessionCount",
      "maxLength": 255,
      "minLength": 1,
+     "type": "string"
+    },
+    "Namespace": {
+     "description": "The namespace used by CloudWatch Metrics for the metric that is defined in this structure",
+     "maxLength": 237,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-._/#:]+$",
      "type": "string"
     },
     "UnitLabel": {
@@ -368,6 +380,13 @@
    "pattern": "^(localhost)|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))|^(\\*\\.)(?![-.])([A-Za-z0-9-\\.\\-]{0,63})((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))\\.(?![-])[A-Za-z-0-9]{1,63}((?![-])([a-zA-Z0-9]{1}|^[a-zA-Z0-9]{0,1}))",
    "type": "string"
   },
+  "Id": {
+   "description": "The unique ID of the new app monitor.",
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$",
+   "type": "string"
+  },
   "Name": {
    "description": "A name for the app monitor",
    "maxLength": 255,
@@ -379,6 +398,9 @@
    "$ref": "#/definitions/TagDef"
   }
  },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
  "required": [
   "Name",
   "Domain"
