@@ -111,6 +111,23 @@
    ],
    "type": "string"
   },
+  "MaintenanceWindow": {
+   "additionalProperties": false,
+   "description": "Specifies a start time and duration for a scheduled Job.",
+   "properties": {
+    "DurationInMinutes": {
+     "maximum": 1430,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "StartTime": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
   "MaximumPerMinute": {
    "minimum": 1,
    "type": "integer"
@@ -295,6 +312,13 @@
    "minLength": 1,
    "pattern": "[a-zA-Z0-9_-]+",
    "type": "string"
+  },
+  "MaintenanceWindows": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/MaintenanceWindow"
+   },
+   "type": "array"
   },
   "PresignedUrlConfig": {
    "additionalProperties": false,

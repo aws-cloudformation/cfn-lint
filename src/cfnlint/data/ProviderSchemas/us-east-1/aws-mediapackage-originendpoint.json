@@ -552,6 +552,13 @@
    "type": "object"
   }
  },
+ "deprecatedProperties": [
+  "/properties/HlsPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Audio",
+  "/properties/HlsPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Video",
+  "/properties/MssPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Audio",
+  "/properties/MssPackage/Encryption/SpekeKeyProvider/EncryptionContractConfiguration/PresetSpeke20Video",
+  "/properties/CmafPackage/HlsManifests/*/Url"
+ ],
  "description": "Resource schema for AWS::MediaPackage::OriginEndpoint",
  "handlers": {
   "create": {
@@ -584,6 +591,28 @@
    ]
   }
  },
+ "oneOf": [
+  {
+   "required": [
+    "HlsPackage"
+   ]
+  },
+  {
+   "required": [
+    "DashPackage"
+   ]
+  },
+  {
+   "required": [
+    "MssPackage"
+   ]
+  },
+  {
+   "required": [
+    "CmafPackage"
+   ]
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
