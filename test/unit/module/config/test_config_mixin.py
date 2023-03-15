@@ -80,6 +80,16 @@ class TestConfigMixIn(BaseTestCase):
         # CLI args win
         self.assertEqual(config.output_file, "test_output_2.txt")
 
+    @patch.dict(
+        os.environ,
+        {
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_default_region(self, yaml_mock):
         """Test precedence in"""
@@ -89,6 +99,49 @@ class TestConfigMixIn(BaseTestCase):
 
         # test defaults
         self.assertEqual(config.regions, ["us-east-1"])
+
+    @patch.dict(
+        os.environ,
+        {
+            "AWS_REGION": "us-west-2",
+            "AWS_DEFAULT_REGION": "us-west-1",
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_region_from_AWS_REGION_envvar(self, yaml_mock):
+        """Test precedence in"""
+
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn([])
+
+        # test defaults
+        self.assertEqual(config.regions, ["us-west-2"])
+
+    @patch.dict(
+        os.environ,
+        {
+            "AWS_DEFAULT_REGION": "us-west-1",
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
+    @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    def test_config_region_from_AWS_DEFAULT_REGION_envvar(self, yaml_mock):
+        """Test precedence in"""
+
+        yaml_mock.side_effect = [{}, {}]
+        config = cfnlint.config.ConfigMixIn([])
+
+        # test defaults
+        self.assertEqual(config.regions, ["us-west-1"])
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_all_regions(self, yaml_mock):
