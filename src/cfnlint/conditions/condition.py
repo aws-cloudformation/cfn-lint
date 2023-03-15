@@ -6,6 +6,8 @@ from cfnlint.conditions.equals import Equal, EqualParameter
 
 
 class Condition:
+    """The generic class to represent any type of Condition"""
+
     def __init__(self) -> None:
         self._fn_equals: Optional[Equal] = None
         self._condition: Optional[Union[ConditionList, ConditionNamed]] = None
@@ -31,6 +33,13 @@ class Condition:
             raise ValueError("Condition value must be an object of length 1")
 
     def get_equals(self) -> List[Equal]:
+        """Returns a List of the Equals that make up the Condition
+
+        Args: None
+
+        Returns:
+            List[Equal]: The Equal that are part of the condition
+        """
         if self._fn_equals:
             return [self._fn_equals]
         if self._condition:
@@ -38,6 +47,15 @@ class Condition:
         return []
 
     def build_solver(self, params: Dict[str, Any]) -> Any:
+        """Build a z3 solver based on the provided params
+
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+
+        Returns:
+            Any: Any number of different z3 solver equations
+        """
         if self._condition:
             return self._condition.build_solver(params)
         if self._fn_equals:
@@ -46,6 +64,10 @@ class Condition:
 
 
 class ConditionList(Condition):
+    """The generic class to represent any type of List condition
+    List conditions are And, Or, Not
+    """
+
     def __init__(self, conditions: List[dict], all_conditions) -> None:
         super().__init__()
         self._conditions: List[ConditionUnnammed] = []
@@ -54,6 +76,13 @@ class ConditionList(Condition):
             self._conditions.append(ConditionUnnammed(condition, all_conditions))
 
     def get_equals(self) -> List[EqualParameter]:
+        """Returns a List of the Equals that make up the Condition
+
+        Args: None
+
+        Returns:
+            List[Equal]: The Equal that are part of the condition
+        """
         equals: List[Equal] = []
         for condition in self._conditions:
             equals.extend(condition.get_equals())
@@ -61,11 +90,20 @@ class ConditionList(Condition):
 
 
 class ConditionAnd(ConditionList):
-    def __init__(self, conditions: dict, all_conditions: Dict) -> None:
+    """Represents the logic specific to an And Condition"""
+
+    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::And"
 
     def build_solver(self, params: Dict[str, Any]) -> Any:
+        """Build a z3 solver based on the provided params
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+        Returns:
+            Any: Any number of different z3 solver equations
+        """
         conditions: List[Any] = []
         for child in self._conditions:
             conditions.append(child.build_solver(params))
@@ -74,23 +112,40 @@ class ConditionAnd(ConditionList):
 
 
 class ConditionNot(ConditionList):
-    def __init__(self, conditions: dict, all_conditions: Dict) -> None:
+    """Represents the logic specific to an Not Condition"""
+
+    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Not"
         if len(conditions) != 1:
             raise ValueError("Condition length must be 1")
 
     def build_solver(self, params: Dict[str, Any]) -> Any:
-        for child in self._conditions:
-            return Not(child.build_solver(params))
+        """Build a z3 solver based on the provided params
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+        Returns:
+            Any: Any number of different z3 solver equations
+        """
+        return Not(self._conditions[0].build_solver(params))
 
 
 class ConditionOr(ConditionList):
-    def __init__(self, conditions: dict, all_conditions: Dict) -> None:
+    """Represents the logic specific to an Or Condition"""
+
+    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Or"
 
     def build_solver(self, params: Dict[str, Any]) -> Any:
+        """Build a z3 solver based on the provided params
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+        Returns:
+            Any: Any number of different z3 solver equations
+        """
         conditions: List[Any] = []
         for child in self._conditions:
             conditions.append(child.build_solver(params))
@@ -98,6 +153,8 @@ class ConditionOr(ConditionList):
 
 
 class ConditionUnnammed(Condition):
+    """Represents an unnamed condition which is basically a nested Equals"""
+
     def __init__(self, condition: Any, all_conditions: Dict) -> None:
         super().__init__()
         self._equals = []
@@ -108,6 +165,8 @@ class ConditionUnnammed(Condition):
 
 
 class ConditionNamed(Condition):
+    """The parent condition that directly represents a named condition in a template"""
+
     def __init__(self, name: str, all_conditions: Dict) -> None:
         super().__init__()
         self._equals = []
@@ -119,7 +178,21 @@ class ConditionNamed(Condition):
             raise ValueError(f"Condition {name} must have a value that is an object")
 
     def build_true_solver(self, params: Dict[str, Any]) -> Any:
+        """Build a z3 solver for a True based scenario
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+        Returns:
+            Any: a z3 solver equation
+        """
         return self.build_solver(params)
 
     def build_false_solver(self, params: Dict[str, Any]) -> Any:
-        return Not(self.build_solver(params))
+        """Build a z3 solver for a False based scenario
+        Args:
+            params Dict[str, Any]: params is a dict that represents
+                    the the hash of an Equal and the z3 boolean equation
+        Returns:
+            Any: a z3 solver equation
+        """
+        return Not(self.build_true_solver(params))

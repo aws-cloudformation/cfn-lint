@@ -14,14 +14,8 @@ class EqualParameter:
         self._value = value
         self.hash: str = get_hash(value)
 
-    def to_json(self):
-        return json.dumps(self._value)
-
     def __eq__(self, __o: Any):
         return self.hash == __o.hash
-
-    def __hash__(self):
-        return hash(self.hash)
 
 
 class Equal:
@@ -50,15 +44,17 @@ class Equal:
         return str(parameter)
 
     def get_parameters(self) -> List[EqualParameter]:
+        """Returns a List of the EqualParameter that make up the Condition
+
+        Args: None
+
+        Returns:
+            List[Equal]: A list of the left and right equal parameters if they are
+                         of type EqualParameter
+        """
         params = []
         if isinstance(self._left, EqualParameter):
             params.append(self._left)
         if isinstance(self._right, EqualParameter):
             params.append(self._right)
         return params
-
-    def __eq__(self, __o: object) -> bool:
-        return self._left == __o._left and self._right == __o._right
-
-    def __hash__(self):
-        return hash(self.hash)

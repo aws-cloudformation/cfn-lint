@@ -197,6 +197,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                             },
                         ]
                     },
+                    "isNotPrimary": {"Fn::Not": [{"Condition": "isPrimary"}]},
                 },
                 "Resources": {
                     "LambdaExecutionRole": {
@@ -217,12 +218,46 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                             },
                         },
                     },
+                    "AMIIDLookupBackup": {
+                        "Type": "AWS::Lambda::Function",
+                        "Properties": {
+                            "Handler": "index.handler",
+                            "Role": {
+                                "Fn::If": [
+                                    "isPrimary",
+                                    {
+                                        "Fn::If": [
+                                            "isPrimary",
+                                            {"Ref": "AWS::NoValue"},
+                                            {"Fn::GetAtt": "LambdaExecutionRole.Arn"},
+                                        ]
+                                    },
+                                    {"Fn::GetAtt": "LambdaExecutionRole.Arn"},
+                                ]
+                            },
+                        },
+                    },
                 },
                 "Outputs": {
                     "lambdaArn": {
                         "Condition": "isPrimary",
                         "Value": {"Fn::GetAtt": "LambdaExecutionRole.Arn"},
-                    }
+                    },
+                    "AMIIDLookupBackup": {
+                        "Value": {
+                            "Fn::If": [
+                                "isNotPrimary",
+                                {
+                                    "Fn::If": [
+                                        "isNotPrimary",
+                                        {"Ref": "AWS::NoValue"},
+                                        {"Fn::GetAtt": "LambdaExecutionRole.Arn"},
+                                    ]
+                                },
+                                {"Fn::GetAtt": "LambdaExecutionRole.Arn"},
+                            ]
+                        }
+                    },
                 },
             }
         )
@@ -237,6 +272,41 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
                     "Role",
                     "Fn::If",
                     1,
+                    "Fn::GetAtt",
+                    ["LambdaExecutionRole", "Arn"],
+                ],
+                "LambdaExecutionRole",
+            ),
+            [],
+        )
+        # Failure when the opposite of the resource condition is used
+        self.assertEqual(
+            template.is_resource_available(
+                [
+                    "Resources",
+                    "AMIIDLookupBackup",
+                    "Properties",
+                    "Role",
+                    "Fn::If",
+                    2,
+                    "Fn::GetAtt",
+                    ["LambdaExecutionRole", "Arn"],
+                ],
+                "LambdaExecutionRole",
+            ),
+            [{"isPrimary": {False}}],
+        )
+        # No error when the condition has both true/false use cases
+        self.assertEqual(
+            template.is_resource_available(
+                [
+                    "Outputs",
+                    "AMIIDLookupBackup",
+                    "Value",
+                    "Fn::If",
+                    1,
+                    "Fn::If",
+                    2,
                     "Fn::GetAtt",
                     ["LambdaExecutionRole", "Arn"],
                 ],
