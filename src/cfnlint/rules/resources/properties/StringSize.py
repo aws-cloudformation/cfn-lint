@@ -66,7 +66,12 @@ class StringSize(CloudFormationLintRule):
                             .get("ValueTypes")
                             .get(value_type, {})
                         )
-
+                        if value_specs == "CACHED":
+                            value_specs = (
+                                RESOURCE_SPECS.get("us-east-1")
+                                .get("ValueTypes")
+                                .get(value_type, {})
+                            )
                         if value_specs.get("StringMax") and value_specs.get(
                             "StringMin"
                         ):
