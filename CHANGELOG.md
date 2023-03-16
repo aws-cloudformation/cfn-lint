@@ -1,3 +1,9 @@
+### v0.75.0
+###### Features
+- Read the default region from Env Vars (pull #[2618](https://github.com/aws-cloudformation/cfn-lint/pull/2618))
+###### Fixes
+- Update rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2030) and [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3008) to read `ValueTypes` from `us-east-1` when `CACHED` (pull #[2635](https://github.com/aws-cloudformation/cfn-lint/pull/2635))
+
 ### v0.74.3
 ###### Fixes
 - Update rule [W2031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2031), [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031), [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3030), [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3034), and [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to read `ValueTypes` from `us-east-1` when `CACHED` (pull #[2628](https://github.com/aws-cloudformation/cfn-lint/pull/2628))
