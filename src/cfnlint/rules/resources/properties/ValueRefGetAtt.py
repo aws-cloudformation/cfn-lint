@@ -234,6 +234,14 @@ class ValueRefGetAtt(CloudFormationLintRule):
 
         return matches
 
+    def _get_value_specs(self, value_type, region):
+        value_specs = RESOURCE_SPECS.get(region).get("ValueTypes").get(value_type, {})
+        if value_specs == "CACHED":
+            value_specs = (
+                RESOURCE_SPECS.get("us-east-1").get("ValueTypes").get(value_type, {})
+            )
+        return value_specs
+
     def check(self, cfn, properties, value_specs, property_specs, path):
         """Check itself"""
         matches = []
@@ -247,6 +255,12 @@ class ValueRefGetAtt(CloudFormationLintRule):
                         property_type = (
                             property_specs.get("Properties").get(prop).get("Type")
                         )
+                        value_type_specs = self._get_value_specs(
+                            value_type, cfn.regions[0]
+                        )
+                        list_value_specs = self._get_value_specs(
+                            list_value_type, cfn.regions[0]
+                        )
                         matches.extend(
                             cfn.check_value(
                                 p_value,
@@ -254,12 +268,8 @@ class ValueRefGetAtt(CloudFormationLintRule):
                                 p_path,
                                 check_ref=self.check_value_ref,
                                 check_get_att=self.check_value_getatt,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get("ValueTypes")
-                                .get(value_type, {}),
-                                list_value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get("ValueTypes")
-                                .get(list_value_type, {}),
+                                value_specs=value_type_specs,
+                                list_value_specs=list_value_specs,
                                 cfn=cfn,
                                 property_type=property_type,
                                 property_name=prop,

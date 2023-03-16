@@ -28,6 +28,14 @@ class AllowedValue(CloudFormationLintRule):
         ):
             self.resource_sub_property_types.append(property_type_spec)
 
+    def _get_value_specs(self, value_type, region):
+        value_specs = RESOURCE_SPECS.get(region).get("ValueTypes").get(value_type, {})
+        if value_specs == "CACHED":
+            value_specs = (
+                RESOURCE_SPECS.get("us-east-1").get("ValueTypes").get(value_type, {})
+            )
+        return value_specs
+
     def check_value_ref(self, value, path, **kwargs):
         """Check Ref"""
         matches = []
@@ -111,15 +119,14 @@ class AllowedValue(CloudFormationLintRule):
                         property_type = (
                             property_specs.get("Properties").get(prop).get("Type")
                         )
+                        type_specs = self._get_value_specs(value_type, cfn.regions[0])
                         matches.extend(
                             cfn.check_value(
                                 p_value,
                                 prop,
                                 p_path,
                                 check_ref=self.check_value_ref,
-                                value_specs=RESOURCE_SPECS.get(cfn.regions[0])
-                                .get("ValueTypes")
-                                .get(value_type, {}),
+                                value_specs=type_specs,
                                 cfn=cfn,
                                 property_type=property_type,
                                 property_name=prop,
