@@ -154,7 +154,9 @@ class JsonSchema(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
-        yield from self._cfnSchema(validator, schema_paths, instance, schema, self.region)
+        yield from self._cfnSchema(
+            validator, schema_paths, instance, schema, self.region
+        )
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
