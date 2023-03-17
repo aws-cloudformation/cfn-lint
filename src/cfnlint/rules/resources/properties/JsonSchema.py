@@ -43,6 +43,7 @@ _rule_set = {
     "oneOf": "E2523",
     "awsType": "E3008",
     "cfnSchema": "E3017",
+    "cfnRegionSchema": "E3018",
 }
 
 
@@ -67,6 +68,7 @@ class JsonSchema(CloudFormationLintRule):
         "E3037": None,
         "E3008": None,
         "E3017": None,
+        "E3018": None,
     }
 
     def __init__(self):
@@ -75,6 +77,7 @@ class JsonSchema(CloudFormationLintRule):
         self.cfn = {}
         self.validator = None
         self.rules = {}
+        self.region = None
         for name, _ in _rule_set.items():
             self.rules[name] = None
 
@@ -125,13 +128,14 @@ class JsonSchema(CloudFormationLintRule):
             validators={
                 "awsType": None,
                 "cfnSchema": self._cfnSchema,
+                "cfnRegionSchema": self._cfnRegionSchema,
             },
             cfn=cfn,
             rules=self.rules,
         )
 
     # pylint: disable=unused-argument
-    def _cfnSchema(self, validator, schema_paths, instance, schema):
+    def _cfnSchema(self, validator, schema_paths, instance, schema, region=None):
         if isinstance(schema_paths, str):
             schema_paths = [schema_paths]
 
@@ -147,6 +151,10 @@ class JsonSchema(CloudFormationLintRule):
                     yield ValidationError(cfn_schema.get("description"))
             else:
                 yield from cfn_validator.iter_errors(instance)
+
+    # pylint: disable=unused-argument
+    def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
+        yield from self._cfnSchema(validator, schema_paths, instance, schema, self.region)
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
@@ -186,6 +194,7 @@ class JsonSchema(CloudFormationLintRule):
                 t = "AWS::CloudFormation::CustomResource"
             if t:
                 for region in cfn.regions:
+                    self.region = region
                     schema = {}
                     try:
                         schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
