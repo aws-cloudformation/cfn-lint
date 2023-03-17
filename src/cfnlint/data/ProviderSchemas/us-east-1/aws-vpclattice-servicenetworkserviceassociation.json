@@ -86,7 +86,7 @@
   "Arn": {
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:servicenetworkserviceassociation/snsa-[0-9a-z]{17}$",
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkserviceassociation/snsa-[0-9a-z]{17}$",
    "type": "string"
   },
   "CreatedAt": {
@@ -104,7 +104,7 @@
   "ServiceArn": {
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:service/svc-[0-9a-z]{17}$",
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}$",
    "type": "string"
   },
   "ServiceId": {
@@ -116,19 +116,19 @@
   "ServiceIdentifier": {
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "^((svc-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:service/svc-[0-9a-z]{17}))$",
+   "pattern": "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$",
    "type": "string"
   },
   "ServiceName": {
    "maxLength": 40,
    "minLength": 3,
-   "pattern": "^(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "pattern": "^(?!svc-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
    "type": "string"
   },
   "ServiceNetworkArn": {
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "^arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:servicenetwork/sn-[0-9a-z]{17}$",
+   "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$",
    "type": "string"
   },
   "ServiceNetworkId": {
@@ -140,20 +140,19 @@
   "ServiceNetworkIdentifier": {
    "maxLength": 2048,
    "minLength": 20,
-   "pattern": "^((sn-[0-9a-z]{17})|(arn(:[a-z0-9]+([.-][a-z0-9]+)*){2}(:([a-z0-9]+([.-][a-z0-9]+)*)?){2}:servicenetwork/sn-[0-9a-z]{17}))$",
+   "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
    "type": "string"
   },
   "ServiceNetworkName": {
    "maxLength": 63,
    "minLength": 3,
-   "pattern": "^(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
+   "pattern": "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
    "type": "string"
   },
   "Status": {
    "enum": [
     "CREATE_IN_PROGRESS",
     "ACTIVE",
-    "UPDATE_IN_PROGRESS",
     "DELETE_IN_PROGRESS",
     "CREATE_FAILED",
     "DELETE_FAILED"
