@@ -8,10 +8,9 @@ import json
 import logging
 
 import boto3
-from samtranslator.translator.managed_policy_translator import \
-    ManagedPolicyLoader
+from samtranslator.translator.managed_policy_translator import ManagedPolicyLoader
 
-LOGGER = logging.getLogger('cfnlint')
+LOGGER = logging.getLogger("cfnlint")
 
 
 def main():
