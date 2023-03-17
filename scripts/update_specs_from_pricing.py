@@ -15,7 +15,7 @@ import logging
 
 import boto3
 
-LOGGER = logging.getLogger('cfnlint')
+LOGGER = logging.getLogger("cfnlint")
 
 
 region_map = {
@@ -76,19 +76,6 @@ def configure_logging():
     for handler in LOGGER.handlers:
         LOGGER.removeHandler(handler)
     LOGGER.addHandler(ch)
-
-
-def update_outputs(key, values, outputs):
-    """update outputs with appropriate results"""
-    for region in values:
-        element = {
-            "op": "add",
-            "path": "/ValueTypes/%s/AllowedValues" % key,
-            "value": sorted(values[region]),
-        }
-        outputs[region].append(element)
-
-    return outputs
 
 
 def get_paginator(service):
@@ -270,83 +257,75 @@ def get_results(service, product_families):
     return results
 
 
+def write_output(resource, filename, obj):
+    filename = f"src/cfnlint/data/AdditionalSchemas/{resource}/{filename}.json"
+    output = {
+        "_description": "Automatically updated using update_specs_from_pricing",
+    }
+    for region, values in obj.items():
+        output[region] = {"enum": list(values)}
+
+    with open(filename, "w+", encoding="utf-8") as f:
+        json.dump(output, f, indent=1, sort_keys=True, separators=(",", ": "))
+
+
 def main():
     """main function"""
     configure_logging()
 
-    outputs = {}
-    for region in region_map.values():
-        outputs[region] = []
-
-    outputs = update_outputs(
-        "Ec2InstanceType",
-        get_results("AmazonEC2", ["Compute Instance", "Compute Instance (bare metal)"]),
-        outputs,
-    )
-    outputs = update_outputs(
-        "AWS::AmazonMQ::Broker.HostInstanceType", get_mq_pricing(), outputs
-    )
-    outputs = update_outputs(
-        "AWS::RDS::DBInstance.DBInstanceClass", get_rds_pricing(), outputs
-    )
-    outputs = update_outputs(
-        "RedshiftInstanceType",
+    # write_output('EC2InstanceType', get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)']))
+    write_output("aws-amazonmq-broker", "instancetype-enum", get_mq_pricing())
+    write_output("aws-rds-dbinstance", "dbinstanceclass-enum", get_rds_pricing())
+    write_output(
+        "aws-redshift-cluster",
+        "nodetype-enum",
         get_results("AmazonRedshift", ["Compute Instance"]),
-        outputs,
     )
-    outputs = update_outputs("DAXInstanceType", get_dax_pricing(), outputs)
-    outputs = update_outputs(
-        "DocumentDBInstanceClass",
+    write_output("aws-dax-cluster", "nodetype-enum", get_dax_pricing())
+    write_output(
+        "aws-docdb-dbinstance",
+        "dbinstanceclass-enum",
         get_results("AmazonDocDB", ["Database Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "NeptuneInstanceClass",
+    write_output(
+        "aws-neptune-dbinstance",
+        "dbinstanceclass-enum",
         get_results("AmazonNeptune", ["Database Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "ElastiCacheInstanceType",
+    write_output(
+        "aws-elasticache-cachecluster",
+        "cachenodetype-enum",
         get_results("AmazonElastiCache", ["Cache Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "ElasticsearchInstanceType",
+    write_output(
+        "aws-elasticsearch-domain",
+        "elasticsearchclusterconfig-instancetype-enum",
         get_results("AmazonES", ["Elastic Search Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "EMRInstanceType",
+    write_output(
+        "aws-emr-cluster",
+        "instancetypeconfig-instancetype-enum",
         get_results("ElasticMapReduce", ["Elastic Map Reduce Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "BlockchainInstanceType",
+    write_output(
+        "aws-managedblockchain-node",
+        "nodeconfiguration-instancetype-enum",
         get_results("AmazonManagedBlockchain", ["Blockchain Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "AWS::GameLift::Fleet.EC2InstanceType",
+    write_output(
+        "aws-gamelift-fleet",
+        "ec2instancetype-enum",
         get_results("AmazonGameLift", ["GameLift EC2 Instance"]),
-        outputs,
     )
-    outputs = update_outputs(
-        "AppStreamInstanceType",
+    write_output(
+        "aws-appstream-fleet",
+        "instancetype-enum",
         get_results("AmazonAppStream", ["Streaming Instance"]),
-        outputs,
     )
-
-    LOGGER.info("Updating spec files")
-    for region, patches in outputs.items():
-        filename = (
-            "src/cfnlint/data/ExtendedSpecs/%s/05_pricing_property_values.json" % region
-        )
-        with open(filename, "w+", encoding="utf-8") as f:
-            json.dump(patches, f, indent=1, sort_keys=True, separators=(",", ": "))
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (ValueError, TypeError):
-        LOGGER.error(ValueError)
+    except (ValueError, TypeError) as e:
+        LOGGER.error(e)
