@@ -254,8 +254,6 @@ class ProviderSchemaManager:
         Returns:
             Dict: returns the patched content
         """
-        LOGGER.info('Patching provider schema file for region "%s"', region)
-
         append_dir = os.path.join(self._patch_path, region)
         for dirpath, _, filenames in os.walk(append_dir):
             filenames.sort()
