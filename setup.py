@@ -34,6 +34,7 @@ that could potentially be improved'),
     package_dir={'': 'src'},
     package_data={'cfnlint': [
         'data/AdditionalSchemas/*/*.json',
+        'data/AwsTypes/*.json',
         'data/ProviderSchemas/*/*.json',
         'data/ExtendendProviderSchemas/*/*.json',
         'data/AdditionalSpecs/*.json',
