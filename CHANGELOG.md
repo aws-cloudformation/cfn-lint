@@ -1,3 +1,8 @@
+### v0.75.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `116.0.0` (pull #[2620](https://github.com/aws-cloudformation/cfn-lint/pull/2620))
+- Add string length for `AWS::WAFRegional::RegexPatternSet.RegexPatternStrings` and `AWS::WAFv2::RegexPatternSet.RegularExpressionList` (pull #[2637](https://github.com/aws-cloudformation/cfn-lint/pull/2616), (pull #[2639](https://github.com/aws-cloudformation/cfn-lint/pull/2639))
+
 ### v0.75.0
 ###### Features
 - Read the default region from Env Vars (pull #[2618](https://github.com/aws-cloudformation/cfn-lint/pull/2618))
@@ -10,7 +15,7 @@
 
 ### v0.74.2
 ###### CloudFormation Specifications
-- Update CloudFormation specs to `114.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
+- Update CloudFormation specs to `115.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
 ###### Fixes
 - Fix custom rule inequality comparison (pull #[2614](https://github.com/aws-cloudformation/cfn-lint/pull/2614))
 - Restructure the decode module (pull #[2607](https://github.com/aws-cloudformation/cfn-lint/pull/2607))
