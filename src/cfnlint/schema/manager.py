@@ -24,6 +24,7 @@ from cfnlint.helpers import (
     url_has_newer_version,
 )
 from cfnlint.schema.exceptions import ResourceNotFoundError
+from cfnlint.schema.getatts import GetAtt
 from cfnlint.schema.patch import SchemaPatch
 from cfnlint.schema.schema import Schema
 
@@ -345,7 +346,7 @@ class ProviderSchemaManager:
                 continue
             schema.patch(patches=patches)
 
-    def get_type_getatts(self, resource_type: str, region: str) -> Dict[str, Dict]:
+    def get_type_getatts(self, resource_type: str, region: str) -> Dict[str, GetAtt]:
         """Get the GetAtts for a type in a region
 
         Args:
