@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from cfnlint.helpers import PSEUDOPARAMS, VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Sub(CloudFormationLintRule):
@@ -108,7 +109,7 @@ class Sub(CloudFormationLintRule):
 
         return matches
 
-    def _test_parameter(self, parameter, cfn, parameters, tree):
+    def _test_parameter(self, parameter, cfn: Template, parameters, tree):
         """Test a parameter"""
 
         matches = []
@@ -135,7 +136,7 @@ class Sub(CloudFormationLintRule):
             if not found:
                 try:
                     d = get_atts.match(cfn.regions[0], parameter)
-                    if d.get("type") == "array":
+                    if d.type == "array":
                         message = "Fn::Sub cannot use list {0} at {1}"
                         matches.append(
                             RuleMatch(
