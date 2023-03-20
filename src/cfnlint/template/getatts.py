@@ -1,12 +1,18 @@
 from typing import Dict, Iterable, List, Optional, Tuple, Union
 
 from cfnlint.helpers import RegexDict
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
+from cfnlint.schema import (
+    PROVIDER_SCHEMA_MANAGER,
+    GetAtt,
+    GetAttType,
+    ResourceNotFoundError,
+)
 
 
 class GetAtts:
     # [region][resource_name][attribute][JsonSchema Dict]
-    _getatts: Dict[str, Dict[str, RegexDict]]
+    # Dict[str, RegexDict[str, RegexDict[str, GetAtt]]]
+    _getatts: Dict[str, Dict[str, Dict[str, GetAtt]]]
 
     _astrik_string_types = ("AWS::CloudFormation::Stack",)
     _astrik_unknown_types = (
@@ -19,24 +25,28 @@ class GetAtts:
         self._regions = regions
         self._getatts = {}
         for region in self._regions:
-            self._getatts[region] = {}
+            self._getatts[region] = RegexDict()
 
     def add(self, resource_name: str, resource_type: str) -> None:
         for region in self._regions:
             if resource_name not in self._getatts[region]:
                 if resource_type.endswith("::MODULE"):
                     self._getatts[region][f"{resource_name}.*"] = RegexDict()
-                    self._getatts[region][f"{resource_name}.*"][".*"] = {}
+                    self._getatts[region][f"{resource_name}.*"][".*"] = GetAtt(
+                        schema={}, getatt_type=GetAttType.ReadOnly
+                    )
                     continue
 
                 self._getatts[region][resource_name] = RegexDict()
 
                 if resource_type.startswith(self._astrik_string_types):
-                    self._getatts[region][resource_name]["Outputs..*"] = {
-                        "type": "string"
-                    }
+                    self._getatts[region][resource_name]["Outputs\\..*"] = GetAtt(
+                        schema={"type": "string"}, getatt_type=GetAttType.ReadOnly
+                    )
                 elif resource_type.startswith(self._astrik_unknown_types):
-                    self._getatts[region][resource_name][".*"] = {}
+                    self._getatts[region][resource_name][".*"] = GetAtt(
+                        schema={}, getatt_type=GetAttType.ReadOnly
+                    )
                 else:
                     try:
                         for (
@@ -109,7 +119,7 @@ class GetAtts:
         schema["oneOf"].append(schema_strings)
         return schema
 
-    def match(self, region: str, getatt: Union[str, List[str]]) -> Dict:
+    def match(self, region: str, getatt: Union[str, List[str]]) -> GetAtt:
         if isinstance(getatt, str):
             getatt = getatt.split(".", 1)
 
@@ -128,7 +138,7 @@ class GetAtts:
         else:
             raise TypeError("Invalid GetAtt structure")
 
-    def items(self, region: Optional[str] = None) -> Iterable[Tuple[str, Dict]]:
+    def items(self, region: Optional[str] = None) -> Iterable[Tuple[str, GetAtt]]:
         if region is None:
             region = self._regions[0]
             for k, v in self._getatts.get(region, {}).items():
