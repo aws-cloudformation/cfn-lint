@@ -3,11 +3,11 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from copy import deepcopy
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 import jsonpatch
 
-from cfnlint.schema._pointer import resolve_pointer
+from cfnlint.schema.getatts import GetAtt, GetAtts
 
 # Can't use a dataclass because its hard to parse in json
 # with optional fields without addtional help
@@ -20,6 +20,7 @@ class Schema:
         self.schema = deepcopy(schema)
         self._json_schema = self._cleanse_schema(schema=schema)
         self.type_name = schema["typeName"]
+        self._getatts = GetAtts(self.schema)
 
     def _cleanse_schema(self, schema) -> Dict:
         for ro_prop in schema.get("readOnlyProperties", []):
@@ -43,30 +44,6 @@ class Schema:
         """
         return self._json_schema
 
-    def _flatten_getatts(self, ptr: str) -> Tuple[Dict[str, Dict], bool]:
-        getatts = {}
-        name = ".".join(ptr.split("/")[2:])
-        obj = resolve_pointer(self.schema, ptr)
-        is_object = False
-        if "$ref" in obj:
-            subs, sub_is_object = self._flatten_getatts(obj.get("$ref"))
-            for sub_name, sub in subs.items():
-                cp = deepcopy(obj)
-                del cp["$ref"]
-                cp.update(sub)
-                if sub_is_object:
-                    getatts[f"{name}.{sub_name}"] = cp
-                else:
-                    getatts[name] = cp
-        elif obj.get("type") == "object":
-            is_object = True
-            for prop, value in obj.get("properties", {}).items():
-                getatts[prop] = value
-        else:
-            getatts[name] = obj
-
-        return getatts, is_object
-
     def patch(self, patches: List[Dict]) -> None:
         """Patches the schema file
 
@@ -77,20 +54,13 @@ class Schema:
         """
         jsonpatch.JsonPatch(patches).apply(self._json_schema, in_place=True)
 
-    def get_atts(self) -> Dict[str, dict]:
+    def get_atts(self) -> Dict[str, GetAtt]:
         """Get the valid GetAtts for this schema. Schemas are defined in property
             readOnlyProperties and we need to build definitions of those properties
 
         Args:
         Returns:
-            Dict[str, dict]: Dict of keys with valid strings and the json schema
+            Dict[str, GetAtt]: Dict of keys with valid strings and the json schema
             object for the property
         """
-        attrs = {}
-        for ro_attr in self.schema.get("readOnlyProperties", []):
-            try:
-                attrs.update(self._flatten_getatts(ro_attr)[0].items())
-            except KeyError:
-                pass
-
-        return attrs
+        return self._getatts.attrs
