@@ -6,6 +6,7 @@ from typing import Union
 
 from cfnlint.helpers import VALID_PARAMETER_TYPES_LIST
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import GetAtts, Template
 
 
 class Join(CloudFormationLintRule):
@@ -101,11 +102,11 @@ class Join(CloudFormationLintRule):
             return True
         return False
 
-    def _is_getatt_a_list(self, parameter, get_atts) -> Union[bool, None]:
+    def _is_getatt_a_list(self, parameter, get_atts: GetAtts) -> Union[bool, None]:
         """Is a GetAtt a List"""
         try:
             getatt = get_atts.match("us-east-1", parameter)
-            if getatt.get("type") == "array" or not getatt:
+            if getatt.type == "array" or getatt.type is None:
                 return True
             return False
         except:  # pylint: disable=bare-except
@@ -113,7 +114,7 @@ class Join(CloudFormationLintRule):
             # covered by another rule
             return None
 
-    def _match_string_objs(self, join_string_objs, cfn, path):
+    def _match_string_objs(self, join_string_objs, cfn: Template, path):
         """Check join list"""
 
         matches = []
@@ -202,7 +203,7 @@ class Join(CloudFormationLintRule):
 
         return matches
 
-    def match(self, cfn):
+    def match(self, cfn: Template):
         matches = []
 
         join_objs = cfn.search_deep_keys("Fn::Join")
