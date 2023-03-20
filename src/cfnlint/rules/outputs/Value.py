@@ -42,8 +42,7 @@ class Value(CloudFormationLintRule):
                             attribute = res_schema.get_atts().get(obj[1])
                             # Bad schema or bad attribute.  Skip if either is true
                             if attribute:
-                                attribute_type = attribute.get("type")
-                                if attribute_type == "array":
+                                if attribute.type == "array":
                                     if getatt[-4] != "Fn::Join" and getatt[-3] != 1:
                                         message = "Output {0} value {1} is of type list"
                                         matches.append(
