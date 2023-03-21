@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Optional, Union
 
-from z3 import And, Not, Or
+from sympy import And, Not, Or, Symbol
+from sympy.logic.boolalg import BooleanFunction
 
 from cfnlint.conditions.equals import Equal, EqualParameter
 
@@ -46,18 +47,20 @@ class Condition:
             return self._condition.get_equals()
         return []
 
-    def build_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver based on the provided params
+    def build_cnf(
+        self, params: Dict[str, Symbol]
+    ) -> Optional[Union[BooleanFunction, Symbol]]:
+        """Build a SymPy CNF based on the provided params
 
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbols
 
         Returns:
-            Any: Any number of different z3 solver equations
+            Any: Any number of different SymPy CNF clauses
         """
         if self._condition:
-            return self._condition.build_solver(params)
+            return self._condition.build_cnf(params)
         if self._fn_equals:
             return params.get(self._fn_equals.hash)
         return None
@@ -96,19 +99,19 @@ class ConditionAnd(ConditionList):
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::And"
 
-    def build_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver based on the provided params
+    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+        """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbols
         Returns:
-            Any: Any number of different z3 solver equations
+            BooleanFunction: An And SymPy BooleanFunction
         """
         conditions: List[Any] = []
         for child in self._conditions:
-            conditions.append(child.build_solver(params))
+            conditions.append(child.build_cnf(params))
 
-        return And(conditions)
+        return And(*conditions)
 
 
 class ConditionNot(ConditionList):
@@ -120,15 +123,15 @@ class ConditionNot(ConditionList):
         if len(conditions) != 1:
             raise ValueError("Condition length must be 1")
 
-    def build_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver based on the provided params
+    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+        """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbol
         Returns:
-            Any: Any number of different z3 solver equations
+            BooleanFunction: A Not SymPy BooleanFunction
         """
-        return Not(self._conditions[0].build_solver(params))
+        return Not(self._conditions[0].build_cnf(params))
 
 
 class ConditionOr(ConditionList):
@@ -138,18 +141,18 @@ class ConditionOr(ConditionList):
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Or"
 
-    def build_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver based on the provided params
+    def build_cnf(self, params: Dict[str, Symbol]) -> BooleanFunction:
+        """Build a SymPy CNF solver based on the provided params
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbols
         Returns:
-            Any: Any number of different z3 solver equations
+            BooleanFunction: An Or SymPy BooleanFunction
         """
         conditions: List[Any] = []
         for child in self._conditions:
-            conditions.append(child.build_solver(params))
-        return Or(conditions)
+            conditions.append(child.build_cnf(params))
+        return Or(*conditions)
 
 
 class ConditionUnnammed(Condition):
@@ -177,22 +180,22 @@ class ConditionNamed(Condition):
         else:
             raise ValueError(f"Condition {name} must have a value that is an object")
 
-    def build_true_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver for a True based scenario
+    def build_true_cnf(self, params: Dict[str, Symbol]) -> Any:
+        """Build a SymPy CNF for a True based scenario
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy Symbols
         Returns:
-            Any: a z3 solver equation
+            Any: A SymPy CNF clause
         """
-        return self.build_solver(params)
+        return self.build_cnf(params)
 
-    def build_false_solver(self, params: Dict[str, Any]) -> Any:
-        """Build a z3 solver for a False based scenario
+    def build_false_cnf(self, params: Dict[str, Symbol]) -> Any:
+        """Build a SymPy CNF for a False based scenario
         Args:
-            params Dict[str, Any]: params is a dict that represents
-                    the the hash of an Equal and the z3 boolean equation
+            params Dict[str, Symbol]: params is a dict that represents
+                    the hash of an Equal and the SymPy CNF Symbols
         Returns:
-            Any: a z3 solver equation
+            Any: A Not SymPy CNF clause
         """
-        return Not(self.build_true_solver(params))
+        return Not(self.build_true_cnf(params))

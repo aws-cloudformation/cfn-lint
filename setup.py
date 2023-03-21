@@ -50,7 +50,7 @@ that could potentially be improved'),
         'junit-xml~=1.9',
         'jschema_to_python~=1.2.3',
         'sarif-om~=1.0.4',
-        'z3-solver~=4.12.1.0',
+        'sympy>=1.0.0',
     ],
     python_requires='>=3.7, <=4.0, !=4.0',
     entry_points={

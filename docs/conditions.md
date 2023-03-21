@@ -65,7 +65,5 @@ Outputs:
 
 # Handling conditions
 
-## Z3
-`z3-solver` is a python package that allows you to build formulas and calculate if a scenario is a legitimate scenario. For instance cfn-lint will build a solver for conditions `IsProduction` and `IsDevelopment` that will calculate the following possibilites `True`/`False`, `False`/`True`, or `False`/`False`. To build a solver cfn-lint will build formulas accordingly `Fn::And` is converted to `And`, `Fn::Or` is converted to `Or`, and `Fn::Not` is converted to `Not`. It will understand `Fn::Equals` that use the same parameter and create a `Not(And(...))` formula that will make sure that the equals in the `And` are no never `True` together.
-
-
+## SymPy
+[SymPy](https://docs.sympy.org/) is a python package that allows you to build formulas and calculate if a scenario is a legitimate scenario. For instance cfn-lint will build a solver for conditions `IsProduction` and `IsDevelopment` that will calculate the following possibilites `True`/`False`, `False`/`True`, or `False`/`False`. To build a solver cfn-lint will build formulas accordingly `Fn::And` is converted to `And`, `Fn::Or` is converted to `Or`, and `Fn::Not` is converted to `Not`. It will understand `Fn::Equals` that use the same parameter and create a `Not(And(...))` formula that will make sure that the equals in the `And` are no never `True` together.
