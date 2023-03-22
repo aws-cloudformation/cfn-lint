@@ -7,6 +7,7 @@ import copy
 import glob
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Dict
@@ -654,7 +655,8 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
     def regions(self):
         results = self._get_argument_value("regions", True, True)
         if not results:
-            return ["us-east-1"]
+            default_region_env = os.environ.get("AWS_DEFAULT_REGION", "us-east-1")
+            return [os.environ.get("AWS_REGION", default_region_env)]
         if "ALL_REGIONS" in results:
             return REGIONS
         return results

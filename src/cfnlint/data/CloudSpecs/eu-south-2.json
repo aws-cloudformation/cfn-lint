@@ -2332,7 +2332,7 @@
   "AWS::XRay::SamplingRule.TagsItems": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "115.0.0",
+ "ResourceSpecificationVersion": "116.0.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::ApiGateway::Account": {
@@ -3076,6 +3076,7 @@
   "AWS::AutoScaling::WarmPool": "CACHED",
   "AWS::CDK::Metadata": "CACHED",
   "AWS::CertificateManager::Certificate": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration": "CACHED",
   "AWS::CloudFormation::CustomResource": "CACHED",
   "AWS::CloudFormation::Macro": "CACHED",
@@ -3987,7 +3988,121 @@
   },
   "AWS::EC2::VPCCidrBlock": "CACHED",
   "AWS::EC2::VPCDHCPOptionsAssociation": "CACHED",
-  "AWS::EC2::VPCEndpoint": "CACHED",
+  "AWS::EC2::VPCEndpoint": {
+   "Attributes": {
+    "CreationTimestamp": {
+     "PrimitiveType": "String"
+    },
+    "DnsEntries": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "NetworkInterfaceIds": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html",
+   "Properties": {
+    "PolicyDocument": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-policydocument",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "PrivateDnsEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-privatednsenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RouteTableIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-routetableids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SecurityGroupIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-securitygroupids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ServiceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-servicename",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "SubnetIds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-subnetids",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpcEndpointType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcendpointtype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPCEndpoint.VpcEndpointType"
+     }
+    },
+    "VpcId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpoint.html#cfn-ec2-vpcendpoint-vpcid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::EC2::VPC.Id"
+     }
+    }
+   }
+  },
+  "AWS::EC2::VPCEndpointService": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html",
+   "Properties": {
+    "AcceptanceRequired": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-acceptancerequired",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ContributorInsightsEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-contributorinsightsenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "GatewayLoadBalancerArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-gatewayloadbalancerarns",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "NetworkLoadBalancerArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-networkloadbalancerarns",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PayerResponsibility": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservice.html#cfn-ec2-vpcendpointservice-payerresponsibility",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::EC2::VPCGatewayAttachment": "CACHED",
   "AWS::EC2::VPCPeeringConnection": "CACHED",
   "AWS::EC2::VPNConnection": {
@@ -5352,6 +5467,14 @@
   "AWS::Budgets::Budget.Threshold": "CACHED",
   "AWS::Budgets::Budget.ThresholdType": "CACHED",
   "AWS::Budgets::Budget.TimeUnit": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.ConfigurationName": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.GuardrailPolicies": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.IamRoleArn": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.LoggingLevel": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.SnsTopicArns": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.TeamId": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.TeamsChannelId": "CACHED",
+  "AWS::Chatbot::MicrosoftTeamsChannelConfiguration.TeamsTenantId": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration.ConfigurationName": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration.GuardrailPolicies": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration.IamRoleArn": "CACHED",
@@ -5572,6 +5695,7 @@
   "AWS::EC2::SpotFleet.SpotFleetTagSpecification.ResourceType": "CACHED",
   "AWS::EC2::SpotFleet.SpotPlacement.Tenancy": "CACHED",
   "AWS::EC2::VPC.Id": "CACHED",
+  "AWS::EC2::VPCEndpoint.VpcEndpointType": "CACHED",
   "AWS::ECR::PullThroughCacheRule.EcrRepositoryPrefix": "CACHED",
   "AWS::ECR::ReplicationConfiguration.ReplicationDestination.Region": "CACHED",
   "AWS::ECR::ReplicationConfiguration.ReplicationDestination.RegistryId": "CACHED",
@@ -5950,6 +6074,8 @@
   "AWS::StepFunctions::StateMachine.TagsEntry.Value": "CACHED",
   "AWS::Synthetics::Canary.ArtifactS3Location": "CACHED",
   "AWS::Synthetics::Canary.Name": "CACHED",
+  "AWS::WAFRegional::RegexPatternSet.RegexPatternStrings": "CACHED",
+  "AWS::WAFv2::RegexPatternSet.RegularExpressionList": "CACHED",
   "AWS::WorkSpaces::Workspace.ComputeTypeName": "CACHED",
   "AWS::WorkSpaces::Workspace.RunningMode": "CACHED",
   "AWS::XRay::Group.GroupName": "CACHED",

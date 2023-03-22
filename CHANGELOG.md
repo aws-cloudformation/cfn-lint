@@ -1,10 +1,21 @@
+### v0.75.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `116.0.0` (pull #[2620](https://github.com/aws-cloudformation/cfn-lint/pull/2620))
+- Add string length for `AWS::WAFRegional::RegexPatternSet.RegexPatternStrings` and `AWS::WAFv2::RegexPatternSet.RegularExpressionList` (pull #[2637](https://github.com/aws-cloudformation/cfn-lint/pull/2616), (pull #[2639](https://github.com/aws-cloudformation/cfn-lint/pull/2639))
+
+### v0.75.0
+###### Features
+- Read the default region from Env Vars (pull #[2618](https://github.com/aws-cloudformation/cfn-lint/pull/2618))
+###### Fixes
+- Update rule [W2030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2030) and [E3008](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3008) to read `ValueTypes` from `us-east-1` when `CACHED` (pull #[2635](https://github.com/aws-cloudformation/cfn-lint/pull/2635))
+
 ### v0.74.3
 ###### Fixes
 - Update rule [W2031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2031), [E3031](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3031), [E3030](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3030), [E3034](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3034), and [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to read `ValueTypes` from `us-east-1` when `CACHED` (pull #[2628](https://github.com/aws-cloudformation/cfn-lint/pull/2628))
 
 ### v0.74.2
 ###### CloudFormation Specifications
-- Update CloudFormation specs to `114.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
+- Update CloudFormation specs to `115.0.0` (pull #[2616](https://github.com/aws-cloudformation/cfn-lint/pull/2616))
 ###### Fixes
 - Fix custom rule inequality comparison (pull #[2614](https://github.com/aws-cloudformation/cfn-lint/pull/2614))
 - Restructure the decode module (pull #[2607](https://github.com/aws-cloudformation/cfn-lint/pull/2607))
