@@ -1,3 +1,7 @@
+"""
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 from typing import Any, Dict, List, Optional, Union
 
 from sympy import And, Not, Or, Symbol

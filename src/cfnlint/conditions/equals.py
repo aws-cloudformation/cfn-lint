@@ -1,3 +1,7 @@
+"""
+Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 import json
 import logging
 from typing import Any, Dict, List, Union
