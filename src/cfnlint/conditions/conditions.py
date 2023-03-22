@@ -5,8 +5,10 @@ from typing import Any, Dict, Iterator, List, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
+from sympy.logic.boolalg import BooleanFalse, BooleanTrue
 from sympy.logic.inference import satisfiable
 
+from cfnlint.conditions._utils import get_hash
 from cfnlint.conditions.condition import ConditionNamed
 from cfnlint.conditions.equals import Equal
 
@@ -16,12 +18,15 @@ LOGGER = logging.getLogger(__name__)
 class Conditions:
     """Conditions provides the logic for relating individual condition together"""
 
-    _conditions: Dict[str, ConditionNamed] = {}
-    _max_scenarios: int = 120  # equivalent to 5!
+    _conditions: Dict[str, ConditionNamed]
+    _parameters: Dict[str, List[str]]  # Dict of parameters with AllowedValues hashed
+    _max_scenarios: int = 128  # equivalent to 2^7
 
     def __init__(self, cfn):
         self._conditions = {}
+        self._parameters = {}
         self._init_conditions(cfn=cfn)
+        self._init_parameters(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
 
     def _init_conditions(self, cfn):
@@ -45,6 +50,23 @@ class Conditions:
                         error_message,
                     )
 
+    def _init_parameters(self, cfn: Any) -> None:
+        parameters = cfn.template.get("Parameters")
+        if not isinstance(parameters, dict):
+            return
+        for parameter_name, parameter in parameters.items():
+            if not isinstance(parameter, dict):
+                continue
+            allowed_values = parameter.get("AllowedValues")
+            if not allowed_values or not isinstance(allowed_values, list):
+                continue
+
+            param_hash = get_hash({"Ref": parameter_name})
+            self._parameters[param_hash] = []
+            for allowed_value in allowed_values:
+                if isinstance(allowed_value, (str, int, float, bool)):
+                    self._parameters[param_hash].append(get_hash(str(allowed_value)))
+
     def _build_cnf(
         self, condition_names: List[str]
     ) -> Tuple[EncodedCNF, Dict[str, Any]]:
@@ -61,17 +83,60 @@ class Conditions:
                 if c_equal.hash in equal_vars:
                     continue
 
-                equal_vars[c_equal.hash] = Symbol(c_equal.hash)
-                # See if parameter in this equals is the same as another equals
-                for param in c_equal.get_parameters():
-                    for e_hash, e_equals in equals.items():
-                        if param in e_equals.get_parameters():
-                            # equivalent to NAND logic. We want to make sure that both equals
-                            # are not both True at the same time
-                            cnf.add_prop(
-                                ~(equal_vars[c_equal.hash] & equal_vars[e_hash])
-                            )
+                if c_equal.is_static() is not None:
+                    if c_equal.is_static():
+                        equal_vars[c_equal.hash] = BooleanTrue()
+                    else:
+                        equal_vars[c_equal.hash] = BooleanFalse()
+                else:
+                    equal_vars[c_equal.hash] = Symbol(
+                        c_equal.hash, real=c_equal.is_static()
+                    )
+                    # See if parameter in this equals is the same as another equals
+                    for param in c_equal.get_parameters():
+                        for e_hash, e_equals in equals.items():
+                            if param in e_equals.get_parameters():
+                                # equivalent to NAND logic. We want to make sure that both equals
+                                # are not both True at the same time
+                                cnf.add_prop(
+                                    ~(equal_vars[c_equal.hash] & equal_vars[e_hash])
+                                )
                 equals[c_equal.hash] = c_equal
+
+        # Determine if a set of conditions can never be all false
+        allowed_values = self._parameters.copy()
+        if allowed_values:
+            # iteration 1 cleans up all the hash values from allowed_values to know if we
+            # used them all
+            for _, equal_1 in equals.items():
+                for param in equal_1.get_parameters():
+                    if param.hash not in allowed_values:
+                        continue
+                    if isinstance(equal_1.left, str):
+                        allowed_values[param.hash].remove(get_hash(equal_1.left))
+                    if isinstance(equal_1.right, str):
+                        allowed_values[param.hash].remove(get_hash(equal_1.right))
+
+            # iteration 2 builds the cnf formulas to make sure any empty lists
+            # are now full not equals
+            for allowed_hash, allowed_value in allowed_values.items():
+                # means the list is empty and all allowed values are validated
+                # so not all equals can be false
+                if not allowed_value:
+                    prop = None
+                    for _, equal_1 in equals.items():
+                        for param in equal_1.get_parameters():
+                            if allowed_hash == param.hash:
+                                if prop is None:
+                                    prop = Not(equal_vars[equal_1.hash])
+                                else:
+                                    prop = prop & Not(equal_vars[equal_1.hash])
+                    # Need to make sure they aren't all False
+                    # So Not(Not(Equal1) & Not(Equal2))
+                    # When Equal1 False and Equal2 False
+                    # Not(True & True) = False allowing this not to happen
+                    if prop is not None:
+                        cnf.add_prop(Not(prop))
 
         return (cnf, equal_vars)
 

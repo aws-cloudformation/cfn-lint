@@ -5,7 +5,6 @@ SPDX-License-Identifier: MIT-0
 import string
 from unittest import TestCase
 
-from cfnlint.conditions import Conditions
 from cfnlint.decode import decode_str
 from cfnlint.template import Template
 
@@ -57,7 +56,7 @@ class TestConditions(TestCase):
         )
 
     def test_check_implies(self):
-        """We cap runaway scenarios"""
+        """We properly validate implies scenarios"""
         template = {
             "Parameters": {},
             "Conditions": {},
@@ -83,4 +82,72 @@ class TestConditions(TestCase):
             cfn.conditions.check_implies(
                 {"aCondition": True, "bCondition": False}, "aCondition"
             )
+        )
+
+    def test_check_always_true_or_false(self):
+        """We properly validate static equals"""
+        template = decode_str(
+            """
+        Parameters:
+          FalseParameter:
+            Default: "false"
+            Type: String
+        Conditions:
+          IsTrue: !Equals ["true", "true"]
+          IsFalse: !Equals [!Ref FalseParameter, !Ref FalseParameter]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 2)
+        # test coverage for KeyErrors in the following functions
+        self.assertFalse(cfn.conditions.check_implies({"IsTrue": True}, "IsFalse"))
+
+    def test_check_never_false(self):
+        """With allowed values two conditions can not both be false"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev"]
+        Conditions:
+          IsProd: !Equals [!Ref Environment, "prod"]
+          IsDev: !Equals [!Ref Environment, "dev"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 2)
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios(["IsProd", "IsDev"])),
+            [
+                {"IsProd": True, "IsDev": False},
+                {"IsProd": False, "IsDev": True},
+            ],
+        )
+
+    def test_check_can_be_salfe(self):
+        """With allowed values two conditions can both be false"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev", "stage"]
+        Conditions:
+          IsProd: !Equals [!Ref Environment, "prod"]
+          IsDev: !Equals [!Ref Environment, "dev"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 2)
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios(["IsProd", "IsDev"])),
+            [
+                {"IsProd": True, "IsDev": False},
+                {"IsProd": False, "IsDev": True},
+                {"IsProd": False, "IsDev": False},
+            ],
         )
