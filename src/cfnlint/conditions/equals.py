@@ -51,6 +51,7 @@ class Equal:
             return EqualParameter(parameter)
         return str(parameter)
 
+    @property
     def is_static(self) -> Union[bool, None]:
         """Returns a boolean value if the result is always True or False or None if
             it isn't a static boolean
@@ -63,7 +64,8 @@ class Equal:
         """
         return self._is_static
 
-    def get_parameters(self) -> List[EqualParameter]:
+    @property
+    def parameters(self) -> List[EqualParameter]:
         """Returns a List of the EqualParameter that make up the Condition
 
         Args: None

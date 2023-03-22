@@ -77,25 +77,23 @@ class Conditions:
 
         equals: Dict[str, Equal] = {}
         for condition_name in condition_names:
-            c_equals = self._conditions[condition_name].get_equals()
+            c_equals = self._conditions[condition_name].equals
             for c_equal in c_equals:
                 # check to see if equals already matches another one
                 if c_equal.hash in equal_vars:
                     continue
 
-                if c_equal.is_static() is not None:
-                    if c_equal.is_static():
+                if c_equal.is_static is not None:
+                    if c_equal.is_static:
                         equal_vars[c_equal.hash] = BooleanTrue()
                     else:
                         equal_vars[c_equal.hash] = BooleanFalse()
                 else:
-                    equal_vars[c_equal.hash] = Symbol(
-                        c_equal.hash, real=c_equal.is_static()
-                    )
+                    equal_vars[c_equal.hash] = Symbol(c_equal.hash)
                     # See if parameter in this equals is the same as another equals
-                    for param in c_equal.get_parameters():
+                    for param in c_equal.parameters:
                         for e_hash, e_equals in equals.items():
-                            if param in e_equals.get_parameters():
+                            if param in e_equals.parameters:
                                 # equivalent to NAND logic. We want to make sure that both equals
                                 # are not both True at the same time
                                 cnf.add_prop(
@@ -109,7 +107,7 @@ class Conditions:
             # iteration 1 cleans up all the hash values from allowed_values to know if we
             # used them all
             for _, equal_1 in equals.items():
-                for param in equal_1.get_parameters():
+                for param in equal_1.parameters:
                     if param.hash not in allowed_values:
                         continue
                     if isinstance(equal_1.left, str):
@@ -125,7 +123,7 @@ class Conditions:
                 if not allowed_value:
                     prop = None
                     for _, equal_1 in equals.items():
-                        for param in equal_1.get_parameters():
+                        for param in equal_1.parameters:
                             if allowed_hash == param.hash:
                                 if prop is None:
                                     prop = Not(equal_vars[equal_1.hash])

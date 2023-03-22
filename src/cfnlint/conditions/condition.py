@@ -33,7 +33,8 @@ class Condition:
         else:
             raise ValueError("Condition value must be an object of length 1")
 
-    def get_equals(self) -> List[Equal]:
+    @property
+    def equals(self) -> List[Equal]:
         """Returns a List of the Equals that make up the Condition
 
         Args: None
@@ -44,7 +45,7 @@ class Condition:
         if self._fn_equals:
             return [self._fn_equals]
         if self._condition:
-            return self._condition.get_equals()
+            return self._condition.equals
         return []
 
     def build_cnf(
@@ -78,7 +79,8 @@ class ConditionList(Condition):
         for condition in conditions:
             self._conditions.append(ConditionUnnammed(condition, all_conditions))
 
-    def get_equals(self) -> List[EqualParameter]:
+    @property
+    def equals(self) -> List[EqualParameter]:
         """Returns a List of the Equals that make up the Condition
 
         Args: None
@@ -88,7 +90,7 @@ class ConditionList(Condition):
         """
         equals: List[Equal] = []
         for condition in self._conditions:
-            equals.extend(condition.get_equals())
+            equals.extend(condition.equals)
         return equals
 
 
