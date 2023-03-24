@@ -1607,6 +1607,8 @@
   "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": "CACHED",
   "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": "CACHED",
   "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.FeatureAdditionalConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.FeatureConfigurations": "CACHED",
   "AWS::GuardDuty::Filter.Condition": "CACHED",
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
   "AWS::IAM::Group.Policy": "CACHED",
@@ -2095,10 +2097,14 @@
   "AWS::OpenSearchService::Domain.LogPublishingOption": "CACHED",
   "AWS::OpenSearchService::Domain.MasterUserOptions": "CACHED",
   "AWS::OpenSearchService::Domain.NodeToNodeEncryptionOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.OffPeakWindow": "CACHED",
+  "AWS::OpenSearchService::Domain.OffPeakWindowOptions": "CACHED",
   "AWS::OpenSearchService::Domain.SAMLOptions": "CACHED",
   "AWS::OpenSearchService::Domain.ServiceSoftwareOptions": "CACHED",
   "AWS::OpenSearchService::Domain.SnapshotOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.SoftwareUpdateOptions": "CACHED",
   "AWS::OpenSearchService::Domain.VPCOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.WindowStartTime": "CACHED",
   "AWS::OpenSearchService::Domain.ZoneAwarenessConfig": "CACHED",
   "AWS::OpsWorks::App.DataSource": "CACHED",
   "AWS::OpsWorks::App.EnvironmentVariable": "CACHED",
@@ -2311,6 +2317,7 @@
   "AWS::S3::StorageLens.SSEKMS": "CACHED",
   "AWS::S3::StorageLens.SelectionCriteria": "CACHED",
   "AWS::S3::StorageLens.StorageLensConfiguration": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.AwsLambda": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ContentTransformation": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ObjectLambdaConfiguration": "CACHED",
@@ -2978,7 +2985,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "116.0.0",
+ "ResourceSpecificationVersion": "117.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3512,7 +3519,96 @@
   "AWS::Inspector::AssessmentTemplate": "CACHED",
   "AWS::Inspector::ResourceGroup": "CACHED",
   "AWS::InspectorV2::Filter": "CACHED",
-  "AWS::InternetMonitor::Monitor": "CACHED",
+  "AWS::InternetMonitor::Monitor": {
+   "Attributes": {
+    "CreatedAt": {
+     "PrimitiveType": "String"
+    },
+    "ModifiedAt": {
+     "PrimitiveType": "String"
+    },
+    "MonitorArn": {
+     "PrimitiveType": "String"
+    },
+    "ProcessingStatus": {
+     "PrimitiveType": "String"
+    },
+    "ProcessingStatusInfo": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html",
+   "Properties": {
+    "MaxCityNetworksToMonitor": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-maxcitynetworkstomonitor",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.MaxCityNetworksToMonitor"
+     }
+    },
+    "MonitorName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-monitorname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.MonitorName"
+     }
+    },
+    "Resources": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resources",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.Resources"
+     }
+    },
+    "ResourcesToAdd": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resourcestoadd",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.ResourcesToAdd"
+     }
+    },
+    "ResourcesToRemove": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resourcestoremove",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.ResourcesToRemove"
+     }
+    },
+    "Status": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-status",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::InternetMonitor::Monitor.Status"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::IoT::AccountAuditConfiguration": "CACHED",
   "AWS::IoT::Authorizer": "CACHED",
   "AWS::IoT::CACertificate": "CACHED",
@@ -4000,51 +4096,7 @@
   "AWS::SSM::PatchBaseline": "CACHED",
   "AWS::SSM::ResourceDataSync": "CACHED",
   "AWS::SSM::ResourcePolicy": "CACHED",
-  "AWS::SSMContacts::Contact": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html",
-   "Properties": {
-    "Alias": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-alias",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.Alias"
-     }
-    },
-    "DisplayName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-displayname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.DisplayName"
-     }
-    },
-    "Plan": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-plan",
-     "DuplicatesAllowed": true,
-     "ItemType": "Stage",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.Type"
-     }
-    }
-   }
-  },
+  "AWS::SSMContacts::Contact": "CACHED",
   "AWS::SSMContacts::ContactChannel": "CACHED",
   "AWS::SSMIncidents::ReplicationSet": "CACHED",
   "AWS::SSMIncidents::ResponsePlan": "CACHED",
@@ -4110,7 +4162,97 @@
   "AWS::Signer::ProfilePermission": "CACHED",
   "AWS::Signer::SigningProfile": "CACHED",
   "AWS::StepFunctions::Activity": "CACHED",
-  "AWS::StepFunctions::StateMachine": "CACHED",
+  "AWS::StepFunctions::StateMachine": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    },
+    "StateMachineRevisionId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html",
+   "Properties": {
+    "Definition": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definition",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DefinitionS3Location": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitions3location",
+     "Required": false,
+     "Type": "S3Location",
+     "UpdateType": "Mutable"
+    },
+    "DefinitionString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionstring",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.DefinitionString"
+     }
+    },
+    "DefinitionSubstitutions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
+     "PrimitiveItemType": "Json",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "LoggingConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-loggingconfiguration",
+     "Required": false,
+     "Type": "LoggingConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.RoleArn"
+     }
+    },
+    "StateMachineName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineName"
+     }
+    },
+    "StateMachineType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineType"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "TagsEntry",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TracingConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tracingconfiguration",
+     "Required": false,
+     "Type": "TracingConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::Synthetics::Group": "CACHED",
   "AWS::SystemsManagerSAP::Application": "CACHED",
@@ -6131,6 +6273,8 @@
   "AWS::S3::StorageLens.S3BucketDestination.Format": "CACHED",
   "AWS::S3::StorageLens.S3BucketDestination.OutputSchemaVersion": "CACHED",
   "AWS::S3::StorageLens.StorageLensConfiguration.Id": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias.Status": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias.Value": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.Name": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ObjectLambdaConfiguration.SupportingAccessPoint": "CACHED",
   "AWS::S3ObjectLambda::AccessPointPolicy.ObjectLambdaAccessPoint": "CACHED",

@@ -1795,6 +1795,8 @@
   "AWS::GuardDuty::Detector.CFNMalwareProtectionConfiguration": "CACHED",
   "AWS::GuardDuty::Detector.CFNS3LogsConfiguration": "CACHED",
   "AWS::GuardDuty::Detector.CFNScanEc2InstanceWithFindingsConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.FeatureAdditionalConfiguration": "CACHED",
+  "AWS::GuardDuty::Detector.FeatureConfigurations": "CACHED",
   "AWS::GuardDuty::Filter.Condition": "CACHED",
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
   "AWS::IAM::Group.Policy": "CACHED",
@@ -2515,10 +2517,14 @@
   "AWS::OpenSearchService::Domain.LogPublishingOption": "CACHED",
   "AWS::OpenSearchService::Domain.MasterUserOptions": "CACHED",
   "AWS::OpenSearchService::Domain.NodeToNodeEncryptionOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.OffPeakWindow": "CACHED",
+  "AWS::OpenSearchService::Domain.OffPeakWindowOptions": "CACHED",
   "AWS::OpenSearchService::Domain.SAMLOptions": "CACHED",
   "AWS::OpenSearchService::Domain.ServiceSoftwareOptions": "CACHED",
   "AWS::OpenSearchService::Domain.SnapshotOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.SoftwareUpdateOptions": "CACHED",
   "AWS::OpenSearchService::Domain.VPCOptions": "CACHED",
+  "AWS::OpenSearchService::Domain.WindowStartTime": "CACHED",
   "AWS::OpenSearchService::Domain.ZoneAwarenessConfig": "CACHED",
   "AWS::OpsWorks::App.DataSource": "CACHED",
   "AWS::OpsWorks::App.EnvironmentVariable": "CACHED",
@@ -2650,7 +2656,29 @@
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationCredentials": "CACHED",
   "AWS::Pipes::Pipe.SelfManagedKafkaAccessConfigurationVpc": "CACHED",
   "AWS::QLDB::Stream.KinesisConfiguration": "CACHED",
-  "AWS::QuickSight::Analysis.AnalysisError": "CACHED",
+  "AWS::QuickSight::Analysis.AnalysisError": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-analysiserror.html",
+   "Properties": {
+    "Message": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-analysiserror.html#cfn-quicksight-analysis-analysiserror-message",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.AnalysisError.Message"
+     }
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-analysiserror.html#cfn-quicksight-analysis-analysiserror-type",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.AnalysisError.Type"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Analysis.AnalysisSourceEntity": "CACHED",
   "AWS::QuickSight::Analysis.AnalysisSourceTemplate": "CACHED",
   "AWS::QuickSight::Analysis.DataSetReference": "CACHED",
@@ -2658,12 +2686,77 @@
   "AWS::QuickSight::Analysis.DecimalParameter": "CACHED",
   "AWS::QuickSight::Analysis.IntegerParameter": "CACHED",
   "AWS::QuickSight::Analysis.Parameters": "CACHED",
-  "AWS::QuickSight::Analysis.ResourcePermission": "CACHED",
+  "AWS::QuickSight::Analysis.ResourcePermission": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html",
+   "Properties": {
+    "Actions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html#cfn-quicksight-analysis-resourcepermission-actions",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Principal": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-resourcepermission.html#cfn-quicksight-analysis-resourcepermission-principal",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.ResourcePermission.Principal"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Analysis.Sheet": "CACHED",
   "AWS::QuickSight::Analysis.StringParameter": "CACHED",
   "AWS::QuickSight::Dashboard.AdHocFilteringOption": "CACHED",
-  "AWS::QuickSight::Dashboard.DashboardError": "CACHED",
-  "AWS::QuickSight::Dashboard.DashboardPublishOptions": "CACHED",
+  "AWS::QuickSight::Dashboard.DashboardError": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboarderror.html",
+   "Properties": {
+    "Message": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboarderror.html#cfn-quicksight-dashboard-dashboarderror-message",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DashboardError.Message"
+     }
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboarderror.html#cfn-quicksight-dashboard-dashboarderror-type",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DashboardError.Type"
+     }
+    }
+   }
+  },
+  "AWS::QuickSight::Dashboard.DashboardPublishOptions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboardpublishoptions.html",
+   "Properties": {
+    "AdHocFilteringOption": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboardpublishoptions.html#cfn-quicksight-dashboard-dashboardpublishoptions-adhocfilteringoption",
+     "Required": false,
+     "Type": "AdHocFilteringOption",
+     "UpdateType": "Mutable"
+    },
+    "ExportToCSVOption": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboardpublishoptions.html#cfn-quicksight-dashboard-dashboardpublishoptions-exporttocsvoption",
+     "Required": false,
+     "Type": "ExportToCSVOption",
+     "UpdateType": "Mutable"
+    },
+    "SheetControlsOption": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-dashboardpublishoptions.html#cfn-quicksight-dashboard-dashboardpublishoptions-sheetcontrolsoption",
+     "Required": false,
+     "Type": "SheetControlsOption",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.DashboardSourceEntity": "CACHED",
   "AWS::QuickSight::Dashboard.DashboardSourceTemplate": "CACHED",
   "AWS::QuickSight::Dashboard.DashboardVersion": "CACHED",
@@ -2673,7 +2766,28 @@
   "AWS::QuickSight::Dashboard.ExportToCSVOption": "CACHED",
   "AWS::QuickSight::Dashboard.IntegerParameter": "CACHED",
   "AWS::QuickSight::Dashboard.Parameters": "CACHED",
-  "AWS::QuickSight::Dashboard.ResourcePermission": "CACHED",
+  "AWS::QuickSight::Dashboard.ResourcePermission": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html",
+   "Properties": {
+    "Actions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html#cfn-quicksight-dashboard-resourcepermission-actions",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Principal": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-resourcepermission.html#cfn-quicksight-dashboard-resourcepermission-principal",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.ResourcePermission.Principal"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.Sheet": "CACHED",
   "AWS::QuickSight::Dashboard.SheetControlsOption": "CACHED",
   "AWS::QuickSight::Dashboard.StringParameter": "CACHED",
@@ -2738,9 +2852,52 @@
   "AWS::QuickSight::Template.DataSetConfiguration": "CACHED",
   "AWS::QuickSight::Template.DataSetReference": "CACHED",
   "AWS::QuickSight::Template.DataSetSchema": "CACHED",
-  "AWS::QuickSight::Template.ResourcePermission": "CACHED",
+  "AWS::QuickSight::Template.ResourcePermission": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html",
+   "Properties": {
+    "Actions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html#cfn-quicksight-template-resourcepermission-actions",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Principal": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-resourcepermission.html#cfn-quicksight-template-resourcepermission-principal",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.ResourcePermission.Principal"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Template.Sheet": "CACHED",
-  "AWS::QuickSight::Template.TemplateError": "CACHED",
+  "AWS::QuickSight::Template.TemplateError": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-templateerror.html",
+   "Properties": {
+    "Message": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-templateerror.html#cfn-quicksight-template-templateerror-message",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.TemplateError.Message"
+     }
+    },
+    "Type": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-templateerror.html#cfn-quicksight-template-templateerror-type",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.TemplateError.Type"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Template.TemplateSourceAnalysis": "CACHED",
   "AWS::QuickSight::Template.TemplateSourceEntity": "CACHED",
   "AWS::QuickSight::Template.TemplateSourceTemplate": "CACHED",
@@ -2903,6 +3060,7 @@
   "AWS::S3::StorageLens.SSEKMS": "CACHED",
   "AWS::S3::StorageLens.SelectionCriteria": "CACHED",
   "AWS::S3::StorageLens.StorageLensConfiguration": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.AwsLambda": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ContentTransformation": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ObjectLambdaConfiguration": "CACHED",
@@ -3261,98 +3419,17 @@
   "AWS::Transfer::User.HomeDirectoryMapEntry": "CACHED",
   "AWS::Transfer::User.PosixProfile": "CACHED",
   "AWS::Transfer::User.SshPublicKey": "CACHED",
-  "AWS::Transfer::Workflow.CopyStepDetails": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html",
-   "Properties": {
-    "DestinationFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-destinationfilelocation",
-     "Required": false,
-     "Type": "InputFileLocation",
-     "UpdateType": "Immutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.Name"
-     }
-    },
-    "OverwriteExisting": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-overwriteexisting",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.OverwriteExisting"
-     }
-    },
-    "SourceFileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-copystepdetails.html#cfn-transfer-workflow-copystepdetails-sourcefilelocation",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.CopyStepDetails.SourceFileLocation"
-     }
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.CopyStepDetails": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.InputFileLocation": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html",
-   "Properties": {
-    "S3FileLocation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-inputfilelocation.html#cfn-transfer-workflow-inputfilelocation-s3filelocation",
-     "Required": false,
-     "Type": "S3InputFileLocation",
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.EfsInputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.InputFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.S3FileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation": "CACHED",
   "AWS::Transfer::Workflow.S3Tag": "CACHED",
   "AWS::Transfer::Workflow.TagStepDetails": "CACHED",
-  "AWS::Transfer::Workflow.WorkflowStep": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html",
-   "Properties": {
-    "CopyStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-copystepdetails",
-     "Required": false,
-     "Type": "CopyStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "CustomStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-customstepdetails",
-     "Required": false,
-     "Type": "CustomStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "DeleteStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-deletestepdetails",
-     "Required": false,
-     "Type": "DeleteStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "TagStepDetails": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-tagstepdetails",
-     "Required": false,
-     "Type": "TagStepDetails",
-     "UpdateType": "Immutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-transfer-workflow-workflowstep.html#cfn-transfer-workflow-workflowstep-type",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Transfer::Workflow.WorkflowStep.Type"
-     }
-    }
-   }
-  },
+  "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
   "AWS::VoiceID::Domain.ServerSideEncryptionConfiguration": "CACHED",
   "AWS::WAF::ByteMatchSet.ByteMatchTuple": "CACHED",
   "AWS::WAF::ByteMatchSet.FieldToMatch": "CACHED",
@@ -3505,7 +3582,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "116.0.0",
+ "ResourceSpecificationVersion": "117.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4444,11 +4521,342 @@
   "AWS::Pinpoint::VoiceChannel": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
   "AWS::QLDB::Stream": "CACHED",
-  "AWS::QuickSight::Analysis": "CACHED",
-  "AWS::QuickSight::Dashboard": "CACHED",
+  "AWS::QuickSight::Analysis": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "DataSetArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "LastUpdatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Sheets": {
+     "ItemType": "Sheet",
+     "Type": "List"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html",
+   "Properties": {
+    "AnalysisId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-analysisid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.AnalysisId"
+     }
+    },
+    "AwsAccountId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-awsaccountid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.AwsAccountId"
+     }
+    },
+    "Errors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-errors",
+     "DuplicatesAllowed": true,
+     "ItemType": "AnalysisError",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.Name"
+     }
+    },
+    "Parameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-parameters",
+     "Required": false,
+     "Type": "Parameters",
+     "UpdateType": "Mutable"
+    },
+    "Permissions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-permissions",
+     "DuplicatesAllowed": true,
+     "ItemType": "ResourcePermission",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SourceEntity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-sourceentity",
+     "Required": true,
+     "Type": "AnalysisSourceEntity",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ThemeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-analysis.html#cfn-quicksight-analysis-themearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::QuickSight::Dashboard": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "LastPublishedTime": {
+     "PrimitiveType": "String"
+    },
+    "LastUpdatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Version": {
+     "Type": "DashboardVersion"
+    },
+    "Version.Arn": {
+     "PrimitiveType": "String"
+    },
+    "Version.CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Version.DataSetArns": {
+     "PrimitiveItemType": "String",
+     "Type": "List"
+    },
+    "Version.Description": {
+     "PrimitiveType": "String"
+    },
+    "Version.Errors": {
+     "ItemType": "DashboardError",
+     "Type": "List"
+    },
+    "Version.Sheets": {
+     "ItemType": "Sheet",
+     "Type": "List"
+    },
+    "Version.SourceEntityArn": {
+     "PrimitiveType": "String"
+    },
+    "Version.Status": {
+     "PrimitiveType": "String"
+    },
+    "Version.ThemeArn": {
+     "PrimitiveType": "String"
+    },
+    "Version.VersionNumber": {
+     "PrimitiveType": "Double"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html",
+   "Properties": {
+    "AwsAccountId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-awsaccountid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.AwsAccountId"
+     }
+    },
+    "DashboardId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-dashboardid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.DashboardId"
+     }
+    },
+    "DashboardPublishOptions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-dashboardpublishoptions",
+     "Required": false,
+     "Type": "DashboardPublishOptions",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.Name"
+     }
+    },
+    "Parameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-parameters",
+     "Required": false,
+     "Type": "Parameters",
+     "UpdateType": "Mutable"
+    },
+    "Permissions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-permissions",
+     "DuplicatesAllowed": true,
+     "ItemType": "ResourcePermission",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SourceEntity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-sourceentity",
+     "Required": true,
+     "Type": "DashboardSourceEntity",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ThemeArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-themearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "VersionDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-dashboard.html#cfn-quicksight-dashboard-versiondescription",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.VersionDescription"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::DataSet": "CACHED",
   "AWS::QuickSight::DataSource": "CACHED",
-  "AWS::QuickSight::Template": "CACHED",
+  "AWS::QuickSight::Template": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "LastUpdatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Version": {
+     "Type": "TemplateVersion"
+    },
+    "Version.CreatedTime": {
+     "PrimitiveType": "String"
+    },
+    "Version.DataSetConfigurations": {
+     "ItemType": "DataSetConfiguration",
+     "Type": "List"
+    },
+    "Version.Description": {
+     "PrimitiveType": "String"
+    },
+    "Version.Errors": {
+     "ItemType": "TemplateError",
+     "Type": "List"
+    },
+    "Version.Sheets": {
+     "ItemType": "Sheet",
+     "Type": "List"
+    },
+    "Version.SourceEntityArn": {
+     "PrimitiveType": "String"
+    },
+    "Version.Status": {
+     "PrimitiveType": "String"
+    },
+    "Version.ThemeArn": {
+     "PrimitiveType": "String"
+    },
+    "Version.VersionNumber": {
+     "PrimitiveType": "Double"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html",
+   "Properties": {
+    "AwsAccountId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-awsaccountid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.AwsAccountId"
+     }
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.Name"
+     }
+    },
+    "Permissions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-permissions",
+     "DuplicatesAllowed": true,
+     "ItemType": "ResourcePermission",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "SourceEntity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-sourceentity",
+     "Required": true,
+     "Type": "TemplateSourceEntity",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TemplateId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-templateid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.TemplateId"
+     }
+    },
+    "VersionDescription": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-quicksight-template.html#cfn-quicksight-template-versiondescription",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.VersionDescription"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Theme": "CACHED",
   "AWS::RAM::ResourceShare": "CACHED",
   "AWS::RDS::DBCluster": "CACHED",
@@ -4535,51 +4943,7 @@
   "AWS::SSM::PatchBaseline": "CACHED",
   "AWS::SSM::ResourceDataSync": "CACHED",
   "AWS::SSM::ResourcePolicy": "CACHED",
-  "AWS::SSMContacts::Contact": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html",
-   "Properties": {
-    "Alias": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-alias",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.Alias"
-     }
-    },
-    "DisplayName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-displayname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.DisplayName"
-     }
-    },
-    "Plan": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-plan",
-     "DuplicatesAllowed": true,
-     "ItemType": "Stage",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssmcontacts-contact.html#cfn-ssmcontacts-contact-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::SSMContacts::Contact.Type"
-     }
-    }
-   }
-  },
+  "AWS::SSMContacts::Contact": "CACHED",
   "AWS::SSMContacts::ContactChannel": "CACHED",
   "AWS::SSMIncidents::ReplicationSet": "CACHED",
   "AWS::SSMIncidents::ResponsePlan": "CACHED",
@@ -4645,7 +5009,97 @@
   "AWS::Signer::ProfilePermission": "CACHED",
   "AWS::Signer::SigningProfile": "CACHED",
   "AWS::StepFunctions::Activity": "CACHED",
-  "AWS::StepFunctions::StateMachine": "CACHED",
+  "AWS::StepFunctions::StateMachine": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "Name": {
+     "PrimitiveType": "String"
+    },
+    "StateMachineRevisionId": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html",
+   "Properties": {
+    "Definition": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definition",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DefinitionS3Location": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitions3location",
+     "Required": false,
+     "Type": "S3Location",
+     "UpdateType": "Mutable"
+    },
+    "DefinitionString": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionstring",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.DefinitionString"
+     }
+    },
+    "DefinitionSubstitutions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
+     "PrimitiveItemType": "Json",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "LoggingConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-loggingconfiguration",
+     "Required": false,
+     "Type": "LoggingConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.RoleArn"
+     }
+    },
+    "StateMachineName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineName"
+     }
+    },
+    "StateMachineType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineType"
+     }
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "TagsEntry",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TracingConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tracingconfiguration",
+     "Required": false,
+     "Type": "TracingConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::Synthetics::Group": "CACHED",
   "AWS::SystemsManagerSAP::Application": "CACHED",
@@ -7333,6 +7787,8 @@
   "AWS::S3::StorageLens.S3BucketDestination.Format": "CACHED",
   "AWS::S3::StorageLens.S3BucketDestination.OutputSchemaVersion": "CACHED",
   "AWS::S3::StorageLens.StorageLensConfiguration.Id": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias.Status": "CACHED",
+  "AWS::S3ObjectLambda::AccessPoint.Alias.Value": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.Name": "CACHED",
   "AWS::S3ObjectLambda::AccessPoint.ObjectLambdaConfiguration.SupportingAccessPoint": "CACHED",
   "AWS::S3ObjectLambda::AccessPointPolicy.ObjectLambdaAccessPoint": "CACHED",
@@ -7846,9 +8302,15 @@
   "AWS::Transfer::Workflow.CustomStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.Target": "CACHED",
   "AWS::Transfer::Workflow.CustomStepDetails.TimeoutSeconds": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Name": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.OverwriteExisting": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.SourceFileLocation": "CACHED",
+  "AWS::Transfer::Workflow.DecryptStepDetails.Type": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.Name": "CACHED",
   "AWS::Transfer::Workflow.DeleteStepDetails.SourceFileLocation": "CACHED",
   "AWS::Transfer::Workflow.Description": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.FileSystemId": "CACHED",
+  "AWS::Transfer::Workflow.EfsInputFileLocation.Path": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Bucket": "CACHED",
   "AWS::Transfer::Workflow.S3InputFileLocation.Key": "CACHED",
   "AWS::Transfer::Workflow.S3Tag.Key": "CACHED",
