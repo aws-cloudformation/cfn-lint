@@ -266,7 +266,6 @@ def patch_spec(content, region):
             module = dirpath.replace(f"{append_dir}", f"{region}").replace(
                 os.path.sep, "."
             )
-            LOGGER.info("Processing %s/%s", module, file_path)
             all_patches = jsonpatch.JsonPatch(
                 cfnlint.helpers.load_resource(
                     f"cfnlint.data.ExtendedSpecs.{module}", file_path
@@ -410,12 +409,6 @@ def get_schema_value_types():
                         results[".".join(names + [propname])] = {}
                 if propdetails.get("pattern"):
                     p = propdetails.get("pattern")
-                    if (
-                        ".".join(names + [propname])
-                        == "AWS::OpsWorksCM::Server.CustomPrivateKey"
-                    ):
-                        # one off exception to handle a weird parsing issue in python 2.7
-                        continue
                     # python 3 has the ability to test isascii
                     # python 3.7 introduces is ascii so switching to encode
                     try:
@@ -423,8 +416,6 @@ def get_schema_value_types():
                     except UnicodeEncodeError:
                         continue
                     try:
-                        if "\\p{" in p:
-                            continue
                         re.compile(p, re.UNICODE)
                         results[".".join(names + [propname])].update(
                             {"AllowedPatternRegex": p}
