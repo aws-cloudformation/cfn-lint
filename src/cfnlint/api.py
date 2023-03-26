@@ -47,6 +47,7 @@ def lint(s: str, rules: RulesCollection, regions: List[str]) -> Matches:
         verbosity=0,
         mandatory_rules=None,
     )
+    runner.transform()
     return runner.run()
 
 
