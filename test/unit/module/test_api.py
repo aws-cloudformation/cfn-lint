@@ -66,3 +66,8 @@ class TestLint(TestCase):
         filename = "test/fixtures/templates/bad/issues.yaml"
         matches = self.helper_lint_string_from_file(filename)
         self.assertEqual(["E1012"], [match.rule.id for match in matches])
+
+    def test_sam_template(self):
+        filename = "test/fixtures/templates/good/transform/list_transform_many.yaml"
+        matches = self.helper_lint_string_from_file(filename)
+        self.assertEqual([], matches)
