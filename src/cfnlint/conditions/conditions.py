@@ -115,9 +115,15 @@ class Conditions:
                     if param.hash not in allowed_values:
                         continue
                     if isinstance(equal_1.left, str):
-                        allowed_values[param.hash].remove(get_hash(equal_1.left))
+                        if get_hash(equal_1.left) in allowed_values[param.hash]:
+                            allowed_values[param.hash].remove(get_hash(equal_1.left))
+                        else:
+                            equal_vars[equal_1.hash] = BooleanFalse()
                     if isinstance(equal_1.right, str):
-                        allowed_values[param.hash].remove(get_hash(equal_1.right))
+                        if get_hash(equal_1.right) in allowed_values[param.hash]:
+                            allowed_values[param.hash].remove(get_hash(equal_1.right))
+                        else:
+                            equal_vars[equal_1.hash] = BooleanFalse()
 
             # iteration 2 builds the cnf formulas to make sure any empty lists
             # are now full not equals
@@ -157,10 +163,10 @@ class Conditions:
             return
 
         # if only one condition we will assume its True/False
-        if len(condition_names) == 1:
-            yield {condition_names[0]: True}
-            yield {condition_names[0]: False}
-            return
+        # if len(condition_names) == 1:
+        #    yield {condition_names[0]: True}
+        #    yield {condition_names[0]: False}
+        #    return
 
         try:
             # build a large matric of True/False options based on the provided conditions
