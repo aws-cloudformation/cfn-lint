@@ -1,3 +1,12 @@
+### v0.76.0
+###### Features
+- Convert conditions to SymPy (pull #[2624](https://github.com/aws-cloudformation/cfn-lint/pull/2624))
+- Include tests in sdist (pull #[2630](https://github.com/aws-cloudformation/cfn-lint/pull/2630))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `117.0.0` (pull #[2642](https://github.com/aws-cloudformation/cfn-lint/pull/2642))
+###### Fixes
+- Fix SAM templates treated as normal by api (pull #[2646](https://github.com/aws-cloudformation/cfn-lint/pull/2646))
+
 ### v0.75.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `116.0.0` (pull #[2620](https://github.com/aws-cloudformation/cfn-lint/pull/2620))
