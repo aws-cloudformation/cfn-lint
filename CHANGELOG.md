@@ -1,3 +1,7 @@
+### v0.76.1
+###### Fixes
+- Fix an issue with Conditions when a `Fn::Equals` has a string that isn't in a Parameters `AllowedValues` (pull #[2649](https://github.com/aws-cloudformation/cfn-lint/pull/2649))
+
 ### v0.76.0
 ###### Features
 - Convert conditions to SymPy (pull #[2624](https://github.com/aws-cloudformation/cfn-lint/pull/2624))

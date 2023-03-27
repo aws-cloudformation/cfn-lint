@@ -127,7 +127,7 @@ class TestConditions(TestCase):
             ],
         )
 
-    def test_check_can_be_salfe(self):
+    def test_check_can_be_false(self):
         """With allowed values two conditions can both be false"""
         template = decode_str(
             """
@@ -149,5 +149,34 @@ class TestConditions(TestCase):
                 {"IsProd": True, "IsDev": False},
                 {"IsProd": False, "IsDev": True},
                 {"IsProd": False, "IsDev": False},
+            ],
+        )
+
+    def test_check_can_be_good_when_condition_value(self):
+        """Some times a condition Equals doesn't match to allowed values"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev", "stage"]
+        Conditions:
+          IsGamma: !Equals [!Ref Environment, "gamma"]
+          IsBeta: !Equals ["beta", !Ref Environment]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 2)
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios(["IsGamma", "IsBeta"])),
+            [
+                {"IsBeta": False, "IsGamma": False},
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios(["IsGamma"])),
+            [
+                {"IsGamma": False},
             ],
         )
