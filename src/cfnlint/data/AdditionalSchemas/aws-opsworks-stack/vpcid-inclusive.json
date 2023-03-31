@@ -1,22 +1,24 @@
 {
-  "type": "object",
-  "description": "When you specify 'VpcId' you must specify 'DefaultSubnetId'",
-  "properties": {},
-  "if": {
-    "properties": {
-      "VpcId": {
-        "type": "string"
-      }
-    }
+ "additionalProperties": true,
+ "description": "When you specify 'VpcId' you must specify 'DefaultSubnetId'",
+ "else": {},
+ "if": {
+  "properties": {
+   "VpcId": {
+    "type": "string"
+   }
+  }
+ },
+ "properties": {},
+ "then": {
+  "properties": {
+   "DefaultSubnetId": {
+    "type": "string"
+   }
   },
-  "then": {
-    "properties": {
-      "DefaultSubnetId": {
-        "type": "string"
-      }
-    },
-    "required": ["DefaultSubnetId"]
-  },
-  "else": {},
-  "additionalProperties": true
+  "required": [
+   "DefaultSubnetId"
+  ]
+ },
+ "type": "object"
 }
