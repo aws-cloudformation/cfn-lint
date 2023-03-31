@@ -31,7 +31,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
+    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.zipfile.ZipFile")
     @patch("cfnlint.schema.manager.os.listdir")
@@ -95,7 +95,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.url_has_newer_version")
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.json.dump")
-    @patch("cfnlint.schema.manager.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
+    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
     @patch("cfnlint.schema.manager.load_resource")
     @patch("cfnlint.schema.manager.zipfile.ZipFile")
     @patch("cfnlint.schema.manager.os.listdir")
@@ -161,7 +161,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.get_url_retrieve")
     @patch("cfnlint.schema.manager.json.dump")
     @patch("cfnlint.schema.manager.ProviderSchemaManager._patch_provider_schema")
-    @patch("cfnlint.schema.manager.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
+    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
     def test_do_not_update_resource_spec(
         self,
         mock_provider_schema,
@@ -181,7 +181,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
     @patch("cfnlint.schema.manager.multiprocessing.Pool")
     @patch("cfnlint.schema.manager.ProviderSchemaManager._update_provider_schema")
-    @patch("cfnlint.schema.manager.SPEC_REGIONS", {"us-east-1": "http://foo.badurl"})
+    @patch("cfnlint.schema.manager.REGIONS", ["us-east-1"])
     def test_update_resource_specs_python(self, mock_update_resource_spec, mock_pool):
         fake_pool = MagicMock()
         mock_pool.return_value.__enter__.return_value = fake_pool
