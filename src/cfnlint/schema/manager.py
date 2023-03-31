@@ -18,7 +18,6 @@ from pkg_resources import resource_listdir
 
 from cfnlint.helpers import (
     REGIONS,
-    SPEC_REGIONS,
     get_url_retrieve,
     load_resource,
     url_has_newer_version,
@@ -160,9 +159,7 @@ class ProviderSchemaManager:
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             # Patch from registry schema
-            provider_pool_tuple = [
-                (k, force) for k, v in SPEC_REGIONS.items() if k != "us-east-1"
-            ]
+            provider_pool_tuple = [(k, force) for k in REGIONS if k != "us-east-1"]
             pool.starmap(self._update_provider_schema, provider_pool_tuple)
 
     def _update_provider_schema(self, region: str, force: bool = False) -> None:
