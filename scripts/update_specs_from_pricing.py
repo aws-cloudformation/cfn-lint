@@ -14,6 +14,7 @@ import json
 import logging
 
 import boto3
+from botocore.client import Config
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -58,7 +59,8 @@ region_map = {
 }
 
 session = boto3.session.Session()
-client = session.client("pricing", region_name="us-east-1")
+config = Config(retries={"max_attempts": 10})
+client = session.client("pricing", region_name="us-east-1", config=config)
 
 
 def configure_logging():
@@ -275,7 +277,11 @@ def main():
     """main function"""
     configure_logging()
 
-    # write_output('EC2InstanceType', get_results('AmazonEC2', ['Compute Instance', 'Compute Instance (bare metal)']))
+    write_output(
+        "aws-ec2-instance",
+        "instancetype-enum",
+        get_results("AmazonEC2", ["Compute Instance", "Compute Instance (bare metal)"]),
+    )
     write_output("aws-amazonmq-broker", "instancetype-enum", get_mq_pricing())
     write_output("aws-rds-dbinstance", "dbinstanceclass-enum", get_rds_pricing())
     write_output(
