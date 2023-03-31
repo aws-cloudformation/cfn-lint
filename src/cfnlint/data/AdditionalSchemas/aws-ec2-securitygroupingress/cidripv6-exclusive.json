@@ -1,29 +1,29 @@
 {
-  "type": "object",
-  "description": "When you specify 'CidrIpv6' do not specify 'SourceSecurityGroupName' or 'SourceSecurityGroupId'",
-  "properties": {},
-  "not": {
-    "allOf": [
-      {
-        "required": [
-          "CidrIpv6"
-        ]
-      },
-      {
-        "anyOf": [
-          {
-            "required": [
-              "SourceSecurityGroupName"
-            ]
-          },
-          {
-            "required": [
-              "SourceSecurityGroupId"
-            ]
-          }
-        ]
-      }
+ "additionalProperties": true,
+ "description": "When you specify 'CidrIpv6' do not specify 'SourceSecurityGroupName' or 'SourceSecurityGroupId'",
+ "not": {
+  "allOf": [
+   {
+    "required": [
+     "CidrIpv6"
     ]
-  },
-  "additionalProperties": true
+   },
+   {
+    "anyOf": [
+     {
+      "required": [
+       "SourceSecurityGroupName"
+      ]
+     },
+     {
+      "required": [
+       "SourceSecurityGroupId"
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "properties": {},
+ "type": "object"
 }
