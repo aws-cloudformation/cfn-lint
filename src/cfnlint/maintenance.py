@@ -6,14 +6,6 @@ import json
 import logging
 import os
 import subprocess
-import warnings
-import zipfile
-from copy import deepcopy
-from io import BytesIO
-from urllib.request import Request, urlopen
-
-import jsonpatch
-import regex as re
 
 import cfnlint
 import cfnlint.data.AdditionalSpecs
