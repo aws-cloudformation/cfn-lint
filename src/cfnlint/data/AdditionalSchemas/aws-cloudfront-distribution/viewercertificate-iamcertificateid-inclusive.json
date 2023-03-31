@@ -1,22 +1,24 @@
 {
-  "type": "object",
-  "description": "When you specify 'IamCertificateId' you must specify 'SslSupportMethod'",
-  "properties": {},
-  "if": {
-    "properties": {
-      "IamCertificateId": {
-        "type": "string"
-      }
-    }
+ "additionalProperties": true,
+ "description": "When you specify 'IamCertificateId' you must specify 'SslSupportMethod'",
+ "else": {},
+ "if": {
+  "properties": {
+   "IamCertificateId": {
+    "type": "string"
+   }
+  }
+ },
+ "properties": {},
+ "then": {
+  "properties": {
+   "SslSupportMethod": {
+    "type": "string"
+   }
   },
-  "then": {
-    "properties": {
-      "SslSupportMethod": {
-        "type": "string"
-      }
-    },
-    "required": ["SslSupportMethod"]
-  },
-  "else": {},
-  "additionalProperties": true
+  "required": [
+   "SslSupportMethod"
+  ]
+ },
+ "type": "object"
 }
