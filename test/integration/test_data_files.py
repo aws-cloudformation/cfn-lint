@@ -17,9 +17,10 @@ class TestDataFileFormats(TestCase):
 
     def setUp(self) -> None:
         self.modules = [
-            "ExtendedSpecs",
+            "AdditionalSchemas",
             "AdditionalSpecs",
             "CfnLintCli",
+            "ExtendedProviderSchemas",
             "Serverless",
             "AdditionalSpecs",
         ]

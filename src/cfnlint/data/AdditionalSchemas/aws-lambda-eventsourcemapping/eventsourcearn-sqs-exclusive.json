@@ -1,23 +1,25 @@
 {
-  "type": "object",
-  "description": "When 'EventSourceArn' is associate to SQS don't specify 'StartingPosition'",
-  "if": {
-    "properties": {
-      "EventSourceArn": {
-        "pattern": "arn:aws.*:sqs:.*"
-      }
+ "additionalProperties": true,
+ "description": "When 'EventSourceArn' is associate to SQS don't specify 'StartingPosition'",
+ "else": {},
+ "if": {
+  "properties": {
+   "EventSourceArn": {
+    "pattern": "arn:aws.*:sqs:.*"
+   }
+  }
+ },
+ "then": {
+  "not": {
+   "properties": {
+    "StartingPosition": {
+     "type": "string"
     }
-  },
-  "then": {
-    "not": {
-      "properties": {
-        "StartingPosition": {
-          "type": "string"
-        }
-      },
-      "required": ["StartingPosition"]
-    }
-  },
-  "else": {},
-  "additionalProperties": true
+   },
+   "required": [
+    "StartingPosition"
+   ]
+  }
+ },
+ "type": "object"
 }
