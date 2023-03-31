@@ -1,23 +1,27 @@
 {
-  "type": "object",
-  "description": "When you specify 'SecurityGroupEgress' you must specify 'VpcId'",
-  "properties": {},
-  "if": {
-    "properties": {
-      "SecurityGroupEgress": {
-        "type": "array"
-      }
-    },
-    "required": ["SecurityGroupEgress"]
+ "additionalProperties": true,
+ "description": "When you specify 'SecurityGroupEgress' you must specify 'VpcId'",
+ "else": {},
+ "if": {
+  "properties": {
+   "SecurityGroupEgress": {
+    "type": "array"
+   }
   },
-  "then": {
-    "properties": {
-      "VpcId": {
-        "type": "string"
-      }
-    },
-    "required": ["VpcId"]
+  "required": [
+   "SecurityGroupEgress"
+  ]
+ },
+ "properties": {},
+ "then": {
+  "properties": {
+   "VpcId": {
+    "type": "string"
+   }
   },
-  "else": {},
-  "additionalProperties": true
+  "required": [
+   "VpcId"
+  ]
+ },
+ "type": "object"
 }
