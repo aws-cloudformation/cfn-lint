@@ -1,0 +1,36 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Testing for IS NOT_DEFINED rule
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+  LambdaFunctionTestNotDefined1:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code: ./
+      Runtime: nodejs18.x
+  LambdaFunctionTestNotDefined2:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          OTHER_VARS: ""
+      Code: ./
+      Runtime: nodejs18.x

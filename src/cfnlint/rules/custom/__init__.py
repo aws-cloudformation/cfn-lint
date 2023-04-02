@@ -88,6 +88,14 @@ def make_rule(line, lineNumber):
             return cfnlint.rules.custom.Operators.CreateLesserRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
+        if operator == "IS":
+            if value in ["DEFINED", "NOT_DEFINED"]:
+                return cfnlint.rules.custom.Operators.CreateCustomIsDefinedRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            return cfnlint.rules.custom.Operators.CreateInvalidRule(
+                "E" + str(rule_id), f"{operator} {value}"
+            )
 
     return cfnlint.rules.custom.Operators.CreateInvalidRule(
         "E" + str(rule_id), operator

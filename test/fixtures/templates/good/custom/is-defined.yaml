@@ -1,0 +1,29 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Testing for IS DEFINED rule
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+  LambdaFunctionTestDefined:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Environment:
+        Variables:
+          NODE_ENV: ""
+      Code: ./
+      Runtime: nodejs18.x
