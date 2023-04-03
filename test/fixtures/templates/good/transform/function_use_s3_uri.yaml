@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform:
+  - 'AWS::LanguageExtensions'
+  - 'AWS::Serverless-2016-10-31'
+
+Description: cfn-lint test case
+
+Mappings:
+  RegionMap:
+    us-east-1:
+      InsightsArn: arn:aws:lambda:us-east-1:580247275435:layer:LambdaInsightsExtension:21
+    us-west-2:
+      InsightsArn: arn:aws:lambda:us-west-2:580247275435:layer:LambdaInsightsExtension:21
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "my-custom-authorizer-${AWS::Region}"
+      Description: Custom authorizer for APIGW
+      Runtime: nodejs16.x
+      Handler: index.handler
+      CodeUri: !Sub "s3://custom-authz-${AWS::AccountId}-${AWS::Region}/function-v1.0.zip"
+      Policies:
+        - arn:aws:iam::aws:policy/CloudWatchLambdaInsightsExecutionRolePolicy
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Layers:
+        - !FindInMap [RegionMap, !Ref AWS::Region, "InsightsArn"]
