@@ -183,7 +183,6 @@
   "AWS::ApiGatewayV2::Integration.ResponseParameter": "CACHED",
   "AWS::ApiGatewayV2::Integration.ResponseParameterList": "CACHED",
   "AWS::ApiGatewayV2::Integration.TlsConfig": "CACHED",
-  "AWS::ApiGatewayV2::Route.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
   "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
@@ -345,26 +344,29 @@
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerResourceRequirements": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerSecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerVolumeMount": "CACHED",
+  "AWS::Batch::JobDefinition.EksEmptyDir": "CACHED",
+  "AWS::Batch::JobDefinition.EksHostPath": "CACHED",
   "AWS::Batch::JobDefinition.EksProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EksSecret": "CACHED",
   "AWS::Batch::JobDefinition.EksVolume": "CACHED",
-  "AWS::Batch::JobDefinition.EmptyDir": "CACHED",
   "AWS::Batch::JobDefinition.Environment": "CACHED",
+  "AWS::Batch::JobDefinition.EphemeralStorage": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
-  "AWS::Batch::JobDefinition.HostPath": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.Metadata": "CACHED",
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
   "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
   "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
-  "AWS::Batch::JobDefinition.Resources": "CACHED",
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
-  "AWS::Batch::JobDefinition.SecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -963,6 +965,7 @@
   "AWS::EC2::SpotFleet.VCpuCountRangeRequest": "CACHED",
   "AWS::EC2::Subnet.PrivateDnsNameOptionsOnLaunch": "CACHED",
   "AWS::EC2::TrafficMirrorFilterRule.TrafficMirrorPortRange": "CACHED",
+  "AWS::EC2::TransitGatewayAttachment.Options": "CACHED",
   "AWS::EC2::TransitGatewayConnect.TransitGatewayConnectOptions": "CACHED",
   "AWS::EC2::TransitGatewayMulticastDomain.Options": "CACHED",
   "AWS::EC2::TransitGatewayPeeringAttachment.PeeringAttachmentStatus": "CACHED",
@@ -2557,7 +2560,7 @@
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "117.0.0",
+ "ResourceSpecificationVersion": "118.1.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -3610,6 +3613,14 @@
   "AWS::EC2::TrafficMirrorSession": "CACHED",
   "AWS::EC2::TrafficMirrorTarget": "CACHED",
   "AWS::EC2::TransitGateway": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "TransitGatewayArn": {
+     "PrimitiveType": "String"
+    }
+   },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html",
    "Properties": {
     "AmazonSideAsn": {
@@ -3618,11 +3629,17 @@
      "Required": false,
      "UpdateType": "Immutable"
     },
+    "AssociationDefaultRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-associationdefaultroutetableid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
     "AutoAcceptSharedAttachments": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-autoacceptsharedattachments",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
+     "UpdateType": "Mutable",
      "Value": {
       "ValueType": "TransitGatewayEnabled"
      }
@@ -3631,7 +3648,7 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-defaultroutetableassociation",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
+     "UpdateType": "Mutable",
      "Value": {
       "ValueType": "TransitGatewayEnabled"
      }
@@ -3640,7 +3657,7 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-defaultroutetablepropagation",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
+     "UpdateType": "Mutable",
      "Value": {
       "ValueType": "TransitGatewayEnabled"
      }
@@ -3649,13 +3666,13 @@
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-description",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable"
+     "UpdateType": "Mutable"
     },
     "DnsSupport": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-dnssupport",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
+     "UpdateType": "Mutable",
      "Value": {
       "ValueType": "TransitGatewayEnabled"
      }
@@ -3666,58 +3683,40 @@
      "Required": false,
      "UpdateType": "Immutable"
     },
+    "PropagationDefaultRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-propagationdefaultroutetableid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
     "Tags": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-tags",
+     "DuplicatesAllowed": true,
      "ItemType": "Tag",
      "Required": false,
      "Type": "List",
-     "UpdateType": "Immutable"
+     "UpdateType": "Mutable"
+    },
+    "TransitGatewayCidrBlocks": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-transitgatewaycidrblocks",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
     },
     "VpnEcmpSupport": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-vpnecmpsupport",
      "PrimitiveType": "String",
      "Required": false,
-     "UpdateType": "Immutable",
+     "UpdateType": "Mutable",
      "Value": {
       "ValueType": "TransitGatewayEnabled"
      }
     }
    }
   },
-  "AWS::EC2::TransitGatewayAttachment": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html",
-   "Properties": {
-    "SubnetIds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html#cfn-ec2-transitgatewayattachment-subnetids",
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html#cfn-ec2-transitgatewayattachment-tags",
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "TransitGatewayId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html#cfn-ec2-transitgatewayattachment-transitgatewayid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "VpcId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgatewayattachment.html#cfn-ec2-transitgatewayattachment-vpcid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::VPC.Id"
-     }
-    }
-   }
-  },
+  "AWS::EC2::TransitGatewayAttachment": "CACHED",
   "AWS::EC2::TransitGatewayConnect": "CACHED",
   "AWS::EC2::TransitGatewayMulticastDomain": "CACHED",
   "AWS::EC2::TransitGatewayMulticastDomainAssociation": "CACHED",
@@ -4279,7 +4278,50 @@
   "AWS::Logs::MetricFilter": "CACHED",
   "AWS::Logs::QueryDefinition": "CACHED",
   "AWS::Logs::ResourcePolicy": "CACHED",
-  "AWS::Logs::SubscriptionFilter": "CACHED",
+  "AWS::Logs::SubscriptionFilter": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html",
+   "Properties": {
+    "DestinationArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-destinationarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "Distribution": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-distribution",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Logs::SubscriptionFilter.Distribution"
+     }
+    },
+    "FilterName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-filtername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "FilterPattern": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-filterpattern",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "LogGroupName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-loggroupname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-subscriptionfilter.html#cfn-logs-subscriptionfilter-rolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::MSK::BatchScramSecret": "CACHED",
   "AWS::MSK::Cluster": "CACHED",
   "AWS::MSK::Configuration": "CACHED",
