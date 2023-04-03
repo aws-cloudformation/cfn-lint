@@ -1,3 +1,7 @@
+### v0.76.2
+###### CloudFormation Specifications
+- Update CloudFormation specs to `118.1.0` (pull #[2644](https://github.com/aws-cloudformation/cfn-lint/pull/2644))
+
 ### v0.76.1
 ###### Fixes
 - Fix an issue with Conditions when a `Fn::Equals` has a string that isn't in a Parameters `AllowedValues` (pull #[2649](https://github.com/aws-cloudformation/cfn-lint/pull/2649))
