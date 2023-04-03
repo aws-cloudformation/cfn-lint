@@ -90,6 +90,21 @@ class TestTransform(BaseTestCase):
             {"Bucket": "bucket", "Key": "value"},
         )
 
+    def test_conversion_of_serverless_function_uri(self):
+        """Tests that the a serverless function can convert a CodeUri Sub"""
+        filename = "test/fixtures/templates/good/transform/function_use_s3_uri.yaml"
+        region = "us-east-1"
+        template = cfn_yaml.load(filename)
+        transformed_template = Transform(filename, template, region)
+        transformed_template.transform_template()
+        self.assertDictEqual(
+            transformed_template._template.get("Resources")
+            .get("Function")
+            .get("Properties")
+            .get("Code"),
+            {"S3Bucket": "bucket", "S3Key": "value"},
+        )
+
     def test_parameter_for_autopublish_version_bad(self):
         """Test Parameter is created for autopublish version run"""
         filename = "test/fixtures/templates/bad/transform/auto_publish_alias.yaml"
