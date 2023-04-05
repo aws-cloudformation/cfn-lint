@@ -14,11 +14,12 @@ import inspect
 import json
 import logging
 import os
-import re
 import sys
 from io import BytesIO
 from typing import Dict, List
 from urllib.request import Request, urlopen
+
+import regex as re
 
 from cfnlint.data import CloudSpecs
 from cfnlint.decode.node import dict_node, list_node, str_node

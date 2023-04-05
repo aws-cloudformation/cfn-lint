@@ -5,10 +5,10 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import json
 import operator
-import re
 import sys
 from typing import List
 
+import regex as re
 import sarif_om as sarif
 from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
