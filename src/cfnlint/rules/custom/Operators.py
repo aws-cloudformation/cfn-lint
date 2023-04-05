@@ -2,10 +2,22 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+
 # pylint: disable=cyclic-import
 import cfnlint.rules
 
-OPERATOR = ["EQUALS", "NOT_EQUALS", "==", "!=", "IN", "NOT_IN", ">=", "<="]
+OPERATOR = [
+    "EQUALS",
+    "NOT_EQUALS",
+    "==",
+    "!=",
+    "IN",
+    "NOT_IN",
+    ">=",
+    "<=",
+    "IS DEFINED",
+    "IS NOT_DEFINED",
+]
 
 
 def CreateCustomRule(
@@ -78,6 +90,109 @@ def CreateCustomRule(
         description,
         shortdesc,
         rule_func,
+    )
+
+
+def CreateCustomIsDefinedRule(rule_id, resourceType, prop, value, error_message):
+    class CustomIsDefinedRule(cfnlint.rules.CloudFormationLintRule):
+        def __init__(
+            self,
+            rule_id,
+            resourceType,
+            prop,
+            value,
+            error_message,
+            description,
+            shortdesc,
+        ):
+            super().__init__()
+            self.id = rule_id
+            self.resource_property_types.append(resourceType)
+            self.property_chain = prop.split(".")
+            if value == "DEFINED":
+                self.is_defined = True
+            elif value == "NOT_DEFINED":
+                self.is_defined = False
+            else:
+                raise ValueError("IS must follow either DEFINED or NOT_DEFINED")
+            self.error_message = error_message
+            self.description = description
+            self.shortdesc = shortdesc
+
+        def _split_inset_properties(self, property_chain):
+            if property_chain:
+                if len(property_chain) > 1:
+                    return property_chain[0], property_chain[1:]
+                return property_chain[0], []
+
+            return None, []
+
+        def _check_value(self, value, path, property_chain, cfn):
+            matches = []
+            child_property, new_property_chain = self._split_inset_properties(
+                property_chain
+            )
+            if self.is_defined and (
+                value is None or value.get(child_property, None) is None
+            ):
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or f"{path} must be defined"
+                    )
+                )
+            if child_property is not None:
+                matches.extend(
+                    cfn.check_value(
+                        value,
+                        child_property,
+                        path,
+                        check_value=self._check_value,
+                        property_chain=new_property_chain,
+                        cfn=cfn,
+                    )
+                )
+                return matches
+            if not self.is_defined and value is not None:
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or f"{path} must not be defined"
+                    )
+                )
+            return matches
+
+        def match_resource_properties(self, properties, _, path, cfn):
+            child_property, new_property_chain = self._split_inset_properties(
+                self.property_chain
+            )
+            matches = []
+            # here does nothing when the value is not defined, this is checked separately below
+            matches.extend(
+                cfn.check_value(
+                    properties,
+                    child_property,
+                    path,
+                    check_value=self._check_value,
+                    property_chain=new_property_chain,
+                    cfn=cfn,
+                )
+            )
+            # check child exists separately when checking is_defined
+            if self.is_defined and properties.get(child_property, None) is None:
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or f"{path} must be defined"
+                    )
+                )
+            return matches
+
+    return CustomIsDefinedRule(
+        rule_id,
+        resourceType,
+        prop,
+        value,
+        error_message,
+        shortdesc=f"Custom rule to check for value is {value}",
+        description=f"Created from the custom rules parameter. This rule will check if a property value is {value}",
     )
 
 

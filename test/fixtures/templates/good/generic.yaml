@@ -157,6 +157,21 @@ Resources:
       ResourceSignal:
         Timeout: PT15M
         Count: 1
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          exports.handler = function(event, context) {
+            console.log('Hello World');
+            context.done(null, 'Hello World');
+          };
+      Environment:
+        Variables:
+          NODE_ENV: !Ref pEnvironment
+      Handler: index.handler
+      Role: "arn:aws:iam::123456789012:role/lambda_basic_execution"
+      Runtime: nodejs18.x
 Outputs:
   ElasticIP:
     Value: !Sub "${ElasticIP}/32"

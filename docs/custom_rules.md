@@ -45,12 +45,15 @@ The specified operator to be used for this rule. The supported values are define
 | NOT_IN | Checks the specified property is not equal to or not contained by the array value |
 | \>= | Checks the specified property is greater than or equal to the value given |
 | <= | Checks the specified property is less than or equal to the value given |
+| IS | Checks the specified property is defined or not defined, the value must be one of DEFINED or NOT_DEFINED |
 
 #### Value
 
 The value which the operator is comparing against (e.g `CompareMe`).
 
 Multi-word inputs are accepted  (e.g `Compare Me`). Array inputs are also accepted for set operations (e.g `[Apples, Oranges, Pears]`).
+
+For operator `IS`, the value must be one of `DEFINED` or `NOT_DEFINED`.
 
 #### Error Level (Optional)
 
@@ -69,6 +72,12 @@ This rule validates all EC2 instances in a template aren’t using the instance 
 
 ```
 AWS::EC2::Instance InstanceType != "p3.2xlarge"
+```
+
+This rule specify all lambda function in a template must specify environment variable `NODE_ENV`.
+
+```
+AWS::Lambda::Function Environment.Variables.NODE_ENV IS DEFINED
 ```
 
 To include this rules, include your custom rules text file using the `-z custom_rules.txt` argument when running cfn-lint.

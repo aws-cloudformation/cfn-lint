@@ -49,6 +49,7 @@ ElasticLoadBalancer [color=black, label="ElasticLoadBalancer\\n<AWS::ElasticLoad
 IamPipeline [color=black, label="IamPipeline\\n<AWS::CloudFormation::Stack>", shape=ellipse, type=Resource];
 CustomResource [color=black, label="CustomResource\\n<Custom::Function>", shape=ellipse, type=Resource];
 WaitCondition [color=black, label="WaitCondition\\n<AWS::CloudFormation::WaitCondition>", shape=ellipse, type=Resource];
+LambdaFunction [color=black, label="LambdaFunction\\n<AWS::Lambda::Function>", shape=ellipse, type=Resource];
 RolePolicies -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 RootInstanceProfile -> RootRole  [color=black, key=0, label=Ref, source_paths="['Properties', 'Roles', 0]"];
 MyEC2Instance -> RootInstanceProfile  [color=black, key=0, label=Ref, source_paths="['Properties', 'IamInstanceProfile']"];
@@ -71,7 +72,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_resources_success(self):
         """Test Success on Get Resources"""
-        valid_resource_count = 12
+        valid_resource_count = 13
         resources = self.template.get_resources()
         assert (
             len(resources) == valid_resource_count
@@ -121,7 +122,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_valid_refs(self):
         """Get Valid REFs"""
-        valid_ref_count = 27
+        valid_ref_count = 28
         refs = self.template.get_valid_refs()
         assert len(refs) == valid_ref_count, "Expected {} refs, got {}".format(
             valid_ref_count, len(refs)
