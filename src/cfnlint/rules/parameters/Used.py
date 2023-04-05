@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from __future__ import unicode_literals
 
-import re
+import regex as re
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 

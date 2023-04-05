@@ -3,8 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import copy
-import re
 from functools import reduce  # pylint: disable=redefined-builtin
+
+import regex as re
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
