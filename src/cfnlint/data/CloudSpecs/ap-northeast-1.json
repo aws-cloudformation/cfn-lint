@@ -246,7 +246,6 @@
   "AWS::ApiGatewayV2::Integration.ResponseParameter": "CACHED",
   "AWS::ApiGatewayV2::Integration.ResponseParameterList": "CACHED",
   "AWS::ApiGatewayV2::Integration.TlsConfig": "CACHED",
-  "AWS::ApiGatewayV2::Route.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
   "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
@@ -660,26 +659,29 @@
   "AWS::Batch::JobDefinition.EfsVolumeConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.EksContainer": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerEnvironmentVariable": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerResourceRequirements": "CACHED",
+  "AWS::Batch::JobDefinition.EksContainerSecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.EksContainerVolumeMount": "CACHED",
+  "AWS::Batch::JobDefinition.EksEmptyDir": "CACHED",
+  "AWS::Batch::JobDefinition.EksHostPath": "CACHED",
   "AWS::Batch::JobDefinition.EksProperties": "CACHED",
+  "AWS::Batch::JobDefinition.EksSecret": "CACHED",
   "AWS::Batch::JobDefinition.EksVolume": "CACHED",
-  "AWS::Batch::JobDefinition.EmptyDir": "CACHED",
   "AWS::Batch::JobDefinition.Environment": "CACHED",
+  "AWS::Batch::JobDefinition.EphemeralStorage": "CACHED",
   "AWS::Batch::JobDefinition.EvaluateOnExit": "CACHED",
   "AWS::Batch::JobDefinition.FargatePlatformConfiguration": "CACHED",
-  "AWS::Batch::JobDefinition.HostPath": "CACHED",
   "AWS::Batch::JobDefinition.LinuxParameters": "CACHED",
   "AWS::Batch::JobDefinition.LogConfiguration": "CACHED",
+  "AWS::Batch::JobDefinition.Metadata": "CACHED",
   "AWS::Batch::JobDefinition.MountPoints": "CACHED",
   "AWS::Batch::JobDefinition.NetworkConfiguration": "CACHED",
   "AWS::Batch::JobDefinition.NodeProperties": "CACHED",
   "AWS::Batch::JobDefinition.NodeRangeProperty": "CACHED",
   "AWS::Batch::JobDefinition.PodProperties": "CACHED",
   "AWS::Batch::JobDefinition.ResourceRequirement": "CACHED",
-  "AWS::Batch::JobDefinition.Resources": "CACHED",
   "AWS::Batch::JobDefinition.RetryStrategy": "CACHED",
   "AWS::Batch::JobDefinition.Secret": "CACHED",
-  "AWS::Batch::JobDefinition.SecurityContext": "CACHED",
   "AWS::Batch::JobDefinition.Timeout": "CACHED",
   "AWS::Batch::JobDefinition.Tmpfs": "CACHED",
   "AWS::Batch::JobDefinition.Ulimit": "CACHED",
@@ -5113,9 +5115,11 @@
   "AWS::Transfer::Workflow.WorkflowStep": "CACHED",
   "AWS::VoiceID::Domain.ServerSideEncryptionConfiguration": "CACHED",
   "AWS::VpcLattice::Listener.DefaultAction": "CACHED",
+  "AWS::VpcLattice::Listener.FixedResponse": "CACHED",
   "AWS::VpcLattice::Listener.Forward": "CACHED",
   "AWS::VpcLattice::Listener.WeightedTargetGroup": "CACHED",
   "AWS::VpcLattice::Rule.Action": "CACHED",
+  "AWS::VpcLattice::Rule.FixedResponse": "CACHED",
   "AWS::VpcLattice::Rule.Forward": "CACHED",
   "AWS::VpcLattice::Rule.HeaderMatch": "CACHED",
   "AWS::VpcLattice::Rule.HeaderMatchType": "CACHED",
@@ -5287,7 +5291,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "117.0.0",
+ "ResourceSpecificationVersion": "118.1.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5543,6 +5547,7 @@
   "AWS::DataSync::Task": "CACHED",
   "AWS::Detective::Graph": "CACHED",
   "AWS::Detective::MemberInvitation": "CACHED",
+  "AWS::DevOpsGuru::LogAnomalyDetectionIntegration": "CACHED",
   "AWS::DevOpsGuru::NotificationChannel": "CACHED",
   "AWS::DevOpsGuru::ResourceCollection": "CACHED",
   "AWS::DirectoryService::MicrosoftAD": "CACHED",
@@ -5745,7 +5750,156 @@
   "AWS::Glue::Table": "CACHED",
   "AWS::Glue::Trigger": "CACHED",
   "AWS::Glue::Workflow": "CACHED",
-  "AWS::Grafana::Workspace": "CACHED",
+  "AWS::Grafana::Workspace": {
+   "Attributes": {
+    "CreationTimestamp": {
+     "PrimitiveType": "String"
+    },
+    "Endpoint": {
+     "PrimitiveType": "String"
+    },
+    "GrafanaVersion": {
+     "PrimitiveType": "String"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "ModificationTimestamp": {
+     "PrimitiveType": "String"
+    },
+    "SamlConfigurationStatus": {
+     "PrimitiveType": "String"
+    },
+    "SsoClientId": {
+     "PrimitiveType": "String"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html",
+   "Properties": {
+    "AccountAccessType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-accountaccesstype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.AccountAccessType"
+     }
+    },
+    "AuthenticationProviders": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-authenticationproviders",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.AuthenticationProviders"
+     }
+    },
+    "ClientToken": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-clienttoken",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.ClientToken"
+     }
+    },
+    "DataSources": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-datasources",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.DataSources"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.Name"
+     }
+    },
+    "NotificationDestinations": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-notificationdestinations",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.NotificationDestinations"
+     }
+    },
+    "OrganizationRoleName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-organizationrolename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.OrganizationRoleName"
+     }
+    },
+    "OrganizationalUnits": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-organizationalunits",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "PermissionType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-permissiontype",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.PermissionType"
+     }
+    },
+    "RoleArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-rolearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::Grafana::Workspace.RoleArn"
+     }
+    },
+    "SamlConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-samlconfiguration",
+     "Required": false,
+     "Type": "SamlConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "StackSetName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-stacksetname",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "VpcConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-grafana-workspace.html#cfn-grafana-workspace-vpcconfiguration",
+     "Required": false,
+     "Type": "VpcConfiguration",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Greengrass::ConnectorDefinition": "CACHED",
   "AWS::Greengrass::ConnectorDefinitionVersion": "CACHED",
   "AWS::Greengrass::CoreDefinition": "CACHED",
@@ -5911,58 +6065,7 @@
   "AWS::Location::Map": "CACHED",
   "AWS::Location::PlaceIndex": "CACHED",
   "AWS::Location::RouteCalculator": "CACHED",
-  "AWS::Location::Tracker": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "CreateTime": {
-     "PrimitiveType": "String"
-    },
-    "TrackerArn": {
-     "PrimitiveType": "String"
-    },
-    "UpdateTime": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-location-tracker.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-location-tracker.html#cfn-location-tracker-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "KmsKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-location-tracker.html#cfn-location-tracker-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Location::Tracker.KmsKeyId"
-     }
-    },
-    "PositionFiltering": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-location-tracker.html#cfn-location-tracker-positionfiltering",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Location::Tracker.PositionFiltering"
-     }
-    },
-    "TrackerName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-location-tracker.html#cfn-location-tracker-trackername",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::Location::Tracker.TrackerName"
-     }
-    }
-   }
-  },
+  "AWS::Location::Tracker": "CACHED",
   "AWS::Location::TrackerConsumer": "CACHED",
   "AWS::Logs::Destination": "CACHED",
   "AWS::Logs::LogGroup": "CACHED",
@@ -6101,90 +6204,10 @@
   "AWS::NimbleStudio::StudioComponent": "CACHED",
   "AWS::Oam::Link": "CACHED",
   "AWS::Oam::Sink": "CACHED",
-  "AWS::OpenSearchServerless::AccessPolicy": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-accesspolicy.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-accesspolicy.html#cfn-opensearchserverless-accesspolicy-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::AccessPolicy.Description"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-accesspolicy.html#cfn-opensearchserverless-accesspolicy-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::AccessPolicy.Name"
-     }
-    },
-    "Policy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-accesspolicy.html#cfn-opensearchserverless-accesspolicy-policy",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::AccessPolicy.Policy"
-     }
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-accesspolicy.html#cfn-opensearchserverless-accesspolicy-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::AccessPolicy.Type"
-     }
-    }
-   }
-  },
+  "AWS::OpenSearchServerless::AccessPolicy": "CACHED",
   "AWS::OpenSearchServerless::Collection": "CACHED",
   "AWS::OpenSearchServerless::SecurityConfig": "CACHED",
-  "AWS::OpenSearchServerless::SecurityPolicy": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-securitypolicy.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-securitypolicy.html#cfn-opensearchserverless-securitypolicy-description",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::SecurityPolicy.Description"
-     }
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-securitypolicy.html#cfn-opensearchserverless-securitypolicy-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::SecurityPolicy.Name"
-     }
-    },
-    "Policy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-securitypolicy.html#cfn-opensearchserverless-securitypolicy-policy",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::SecurityPolicy.Policy"
-     }
-    },
-    "Type": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-opensearchserverless-securitypolicy.html#cfn-opensearchserverless-securitypolicy-type",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::OpenSearchServerless::SecurityPolicy.Type"
-     }
-    }
-   }
-  },
+  "AWS::OpenSearchServerless::SecurityPolicy": "CACHED",
   "AWS::OpenSearchServerless::VpcEndpoint": "CACHED",
   "AWS::OpenSearchService::Domain": "CACHED",
   "AWS::OpsWorks::App": "CACHED",
@@ -11700,6 +11723,7 @@
   "AWS::VpcLattice::AccessLogSubscription.DestinationArn": "CACHED",
   "AWS::VpcLattice::AccessLogSubscription.ResourceIdentifier": "CACHED",
   "AWS::VpcLattice::AuthPolicy.ResourceIdentifier": "CACHED",
+  "AWS::VpcLattice::Listener.FixedResponse.StatusCode": "CACHED",
   "AWS::VpcLattice::Listener.Name": "CACHED",
   "AWS::VpcLattice::Listener.Port": "CACHED",
   "AWS::VpcLattice::Listener.Protocol": "CACHED",
@@ -11707,6 +11731,7 @@
   "AWS::VpcLattice::Listener.WeightedTargetGroup.TargetGroupIdentifier": "CACHED",
   "AWS::VpcLattice::Listener.WeightedTargetGroup.Weight": "CACHED",
   "AWS::VpcLattice::ResourcePolicy.ResourceArn": "CACHED",
+  "AWS::VpcLattice::Rule.FixedResponse.StatusCode": "CACHED",
   "AWS::VpcLattice::Rule.HeaderMatch.Name": "CACHED",
   "AWS::VpcLattice::Rule.HeaderMatchType.Contains": "CACHED",
   "AWS::VpcLattice::Rule.HeaderMatchType.Exact": "CACHED",
@@ -11734,12 +11759,15 @@
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthCheckIntervalSeconds": "CACHED",
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthCheckTimeoutSeconds": "CACHED",
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.HealthyThresholdCount": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Path": "CACHED",
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Port": "CACHED",
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.Protocol": "CACHED",
+  "AWS::VpcLattice::TargetGroup.HealthCheckConfig.ProtocolVersion": "CACHED",
   "AWS::VpcLattice::TargetGroup.HealthCheckConfig.UnhealthyThresholdCount": "CACHED",
   "AWS::VpcLattice::TargetGroup.Matcher.HttpCode": "CACHED",
   "AWS::VpcLattice::TargetGroup.Name": "CACHED",
   "AWS::VpcLattice::TargetGroup.Target.Port": "CACHED",
+  "AWS::VpcLattice::TargetGroup.TargetGroupConfig.IpAddressType": "CACHED",
   "AWS::VpcLattice::TargetGroup.TargetGroupConfig.Port": "CACHED",
   "AWS::VpcLattice::TargetGroup.TargetGroupConfig.Protocol": "CACHED",
   "AWS::VpcLattice::TargetGroup.TargetGroupConfig.ProtocolVersion": "CACHED",

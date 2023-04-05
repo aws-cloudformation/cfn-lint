@@ -218,7 +218,7 @@ class Transform:
         if isinstance(uri_property, dict):
             if len(uri_property) == 1:
                 for k in uri_property.keys():
-                    if k == "Ref":
+                    if k in ["Ref", "Fn::Sub"]:
                         resource_property_dict[property_key] = s3_uri_value
             return
         if Transform.is_s3_uri(uri_property):
