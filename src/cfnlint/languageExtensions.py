@@ -29,7 +29,11 @@ class LanguageExtensions:
     ):
         if isinstance(fn_object_val, dict):
             ref = "Ref"
-            ref_list = [val[ref] for key, val in fn_object_val.items() if ref in val]
+            ref_list = [
+                val[ref]
+                for key, val in fn_object_val.items()
+                if hasattr(val, "__iter__") and ref in val
+            ]
             for ref in ref_list:
                 if ref in pseudo_params:
                     message = (
