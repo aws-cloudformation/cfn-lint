@@ -10,6 +10,7 @@ import os
 import subprocess
 import warnings
 import zipfile
+from copy import deepcopy
 from io import BytesIO
 from urllib.request import Request, urlopen
 
@@ -57,7 +58,7 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
     filename = os.path.join(
         os.path.dirname(cfnlint.__file__), f"data/CloudSpecs/{region}.json"
     )
-
+    schema_cache = deepcopy(schema_cache)
     multiprocessing_logger = multiprocessing.log_to_stderr()
 
     multiprocessing_logger.debug("Downloading template %s into %s", url, filename)
@@ -115,6 +116,9 @@ def update_resource_spec(region, url, schema_cache, force: bool = False):
             LOGGER.debug(
                 "Parent element not found for patch (%s) in region %s", patch, region
             )
+
+    # Patch provider schema data
+    spec = patch_spec(spec, "all", "ProviderSchemasPatches")
 
     botocore_cache = {}
 
@@ -252,13 +256,11 @@ def update_documentation(rules):
         new_file.write("\n\\* experimental rules\n")
 
 
-def patch_spec(content, region):
+def patch_spec(content, region, patch_types="ExtendedSpecs"):
     """Patch the spec file"""
     LOGGER.info('Patching spec file for region "%s"', region)
 
-    append_dir = os.path.join(
-        os.path.dirname(__file__), "data", "ExtendedSpecs", region
-    )
+    append_dir = os.path.join(os.path.dirname(__file__), "data", patch_types, region)
     for dirpath, _, filenames in os.walk(append_dir):
         filenames.sort()
         for filename in fnmatch.filter(filenames, "*.json"):
@@ -268,7 +270,7 @@ def patch_spec(content, region):
             )
             all_patches = jsonpatch.JsonPatch(
                 cfnlint.helpers.load_resource(
-                    f"cfnlint.data.ExtendedSpecs.{module}", file_path
+                    f"cfnlint.data.{patch_types}.{module}", file_path
                 )
             )
 

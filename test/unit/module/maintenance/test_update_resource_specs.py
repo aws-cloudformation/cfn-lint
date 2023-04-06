@@ -13,11 +13,9 @@ LOGGER = logging.getLogger("cfnlint.maintenance")
 LOGGER.addHandler(logging.NullHandler())
 
 
-class TestUpdateResourceSpecs(BaseTestCase):
-    """Used for Testing Resource Specs"""
-
-    side_effect = [
-        {
+def patch_spec_sideffect(content, region, patch_types="ExtendedSpecs"):
+    if region == "all" and patch_types == "ExtendedSpecs":
+        return {
             "PropertyTypes": {
                 "AWS::Lambda::CodeSigningConfig.AllowedPublishers": {
                     "Properties": {
@@ -48,8 +46,9 @@ class TestUpdateResourceSpecs(BaseTestCase):
                 }
             },
             "ValueTypes": {},
-        },
-        {
+        }
+    if region in ["us-east-1", "us-west-2"] and patch_types == "ExtendedSpecs":
+        return {
             "PropertyTypes": {
                 "AWS::Lambda::CodeSigningConfig.AllowedPublishers": {
                     "Properties": {
@@ -82,8 +81,13 @@ class TestUpdateResourceSpecs(BaseTestCase):
             "ValueTypes": {
                 "AWS::EC2::Instance.Types": ["m2.medium"],
             },
-        },
-    ]
+        }
+
+    return content
+
+
+class TestUpdateResourceSpecs(BaseTestCase):
+    """Used for Testing Resource Specs"""
 
     @patch("cfnlint.maintenance.url_has_newer_version")
     @patch("cfnlint.maintenance.get_url_content")
@@ -103,7 +107,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = True
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
-        mock_patch_spec.side_effect = self.side_effect
+        mock_patch_spec.side_effect = patch_spec_sideffect
 
         cm = MagicMock()
         cm.getcode.return_value = 200
@@ -199,7 +203,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = True
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
-        mock_patch_spec.side_effect = self.side_effect
+        mock_patch_spec.side_effect = patch_spec_sideffect
 
         cm = MagicMock()
         cm.getcode.return_value = 200
@@ -334,7 +338,7 @@ class TestUpdateResourceSpecs(BaseTestCase):
 
         mock_url_newer_version.return_value = False
         mock_content.return_value = '{"PropertyTypes": {}, "ResourceTypes": {}}'
-        mock_patch_spec.side_effect = self.side_effect
+        mock_patch_spec.side_effect = patch_spec_sideffect
 
         mock_urlresponse = Mock()
         cm = MagicMock()
