@@ -21,6 +21,7 @@ class TestDataFileFormats(TestCase):
             "AdditionalSpecs",
             "CfnLintCli",
             "Serverless",
+            "AdditionalSpecs",
         ]
         super().setUp()
 

@@ -18,6 +18,7 @@ modules = [
     "AdditionalSpecs",
     "CfnLintCli",
     "Serverless",
+    "ProviderSchemasPatches",
 ]
 
 for module in modules:
