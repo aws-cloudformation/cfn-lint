@@ -31,7 +31,7 @@ class LanguageExtensions:
             ref = "Ref"
             ref_list = [
                 val[ref]
-                for key, val in fn_object_val.items()
+                for _, val in fn_object_val.items()
                 if hasattr(val, "__iter__") and ref in val
             ]
             for ref in ref_list:
