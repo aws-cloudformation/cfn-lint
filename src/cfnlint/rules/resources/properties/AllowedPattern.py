@@ -18,9 +18,19 @@ class AllowedPattern(CloudFormationLintRule):
     description = "Check if properties have a valid value in case of a pattern (Regular Expression)"
     source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["resources", "property", "allowed pattern", "regex"]
+    child_rules = {
+        "W2031": None,
+    }
 
     # pylint: disable=unused-argument
     def pattern(self, validator, patrn, instance, schema):
+        if isinstance(instance, dict):
+            if len(instance) == 1:
+                for k, v in instance.items():
+                    if k == "Ref":
+                        if self.child_rules.get("W2031"):
+                            yield from self.child_rules["W2031"].validate(v, patrn)
+                        return
         if validator.is_type(instance, "string"):
             # skip any dynamic reference strings
             if REGEX_DYN_REF.findall(instance):
