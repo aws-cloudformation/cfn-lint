@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: 2010-09-09
+Conditions:
+  IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+Resources:
+  ExampleLambda:
+    Properties:
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            console.log('Hello World');
+            return 'Hello World';
+          };
+      Environment:
+        Variables:
+          - Key: A
+            Value: B
+          - C: d
+      Handler: src/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::123456789012:role/MyRole
+    Type: AWS::Lambda::Function
+  ExampleLambda1:
+    Properties:
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            console.log('Hello World');
+            return 'Hello World';
+          };
+      Environment:
+        Variables:
+          Fn::If:
+          - IsUsEast1
+          - - Key: A
+              Value: B
+            - C: d
+          - !Ref AWS::NoValue
+      Handler: src/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::123456789012:role/MyRole
+    Type: AWS::Lambda::Function
