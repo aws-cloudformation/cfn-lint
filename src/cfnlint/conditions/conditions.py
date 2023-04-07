@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import logging
 import traceback
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Any, Dict, Generator, Iterator, List, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
@@ -162,12 +162,6 @@ class Conditions:
         if len(condition_names) == 0:
             return
 
-        # if only one condition we will assume its True/False
-        # if len(condition_names) == 1:
-        #    yield {condition_names[0]: True}
-        #    yield {condition_names[0]: False}
-        #    return
-
         try:
             # build a large matric of True/False options based on the provided conditions
             scenarios_returned = 0
@@ -255,3 +249,41 @@ class Conditions:
             # KeyError is because the listed condition doesn't exist because of bad
             #  formatting or just the wrong condition name
             return True
+
+    def build_scenerios_on_region(
+        self, condition_name: str, region: str
+    ) -> Generator[bool, None, None]:
+        """Based on a region validate if the condition_name coudle be true
+
+        Args:
+            condition_name (str): The name of the condition we are validating against
+            region (str): the name of the region
+
+        Returns:
+            Generator[bool]: Returns True, False, or True and False depending on if the
+               condition could be True, False or both based on the region parameter
+        """
+        if not isinstance(condition_name, str):
+            return
+        cnf_region = self._cnf.copy()
+        for eql in self._conditions[condition_name].equals:
+            is_region, equal_region = eql.is_region
+            if is_region:
+                if equal_region == region:
+                    cnf_region.add_prop(And(self._solver_params[eql.hash]))
+                else:
+                    cnf_region.add_prop(Not(self._solver_params[eql.hash]))
+
+        cnf_test = cnf_region.copy()
+        cnf_test.add_prop(
+            self._conditions[condition_name].build_true_cnf(self._solver_params)
+        )
+        if satisfiable(cnf_test):
+            yield True
+
+        cnf_test = cnf_region.copy()
+        cnf_test.add_prop(
+            self._conditions[condition_name].build_false_cnf(self._solver_params)
+        )
+        if satisfiable(cnf_test):
+            yield False

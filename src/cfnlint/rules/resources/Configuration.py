@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import cfnlint.helpers
 from cfnlint.helpers import REGISTRY_SCHEMAS
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.template import Template
 
 
 class Configuration(CloudFormationLintRule):
@@ -18,7 +19,7 @@ class Configuration(CloudFormationLintRule):
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources"]
 
-    def _check_resource(self, cfn, resource_name, resource_values):
+    def _check_resource(self, cfn: Template, resource_name, resource_values):
         """Check Resource"""
 
         valid_attributes = [
@@ -110,6 +111,11 @@ class Configuration(CloudFormationLintRule):
             self.logger.debug("Check resource types by region...")
             for region, specs in cfnlint.helpers.RESOURCE_SPECS.items():
                 if region in cfn.regions:
+                    if condition:
+                        if False in cfn.conditions.build_scenerios_on_region(
+                            condition, region
+                        ):
+                            continue
                     if resource_type not in specs[
                         "ResourceTypes"
                     ] and resource_type not in [

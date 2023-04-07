@@ -4,11 +4,12 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 import logging
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Tuple, Union
 
 from cfnlint.conditions._utils import get_hash
 
 LOGGER = logging.getLogger(__name__)
+REF_REGION = get_hash({"Ref": "AWS::Region"})
 
 
 class EqualParameter:
@@ -27,6 +28,7 @@ class Equal:
     _left: Union[EqualParameter, str]
     _right: Union[EqualParameter, str]
     _is_static: Union[bool, None]
+    _is_region: Tuple[bool, str]
 
     def __init__(self, equal: List[Union[str, dict]]) -> None:
         self._is_static = None
@@ -45,6 +47,15 @@ class Equal:
                 self._right, EqualParameter
             ):
                 self._is_static = self._left == self._right
+
+            self._is_region = (False, "")
+            if isinstance(self._left, EqualParameter):
+                if self._left.hash == REF_REGION and isinstance(self._right, str):
+                    self._is_region = (True, self._right)
+            if isinstance(self._right, EqualParameter):
+                if self._right.hash == REF_REGION and isinstance(self._left, str):
+                    self._is_region = (True, self._left)
+
             return
         raise ValueError("Equals has to be a list of two values")
 
@@ -84,6 +95,19 @@ class Equal:
         if isinstance(self._right, EqualParameter):
             params.append(self._right)
         return params
+
+    @property
+    def is_region(self) -> Tuple[bool, str]:
+        """Returns a Tuple if the condition is comparing a region to a string
+
+        Args: None
+
+        Returns:
+            Tuple[bool, str]: Tuple where the boolean is True if the condition
+              is using Ref: AWS::Region and the second element is for the region
+              being compared
+        """
+        return self._is_region
 
     @property
     def left(self):
