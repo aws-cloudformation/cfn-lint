@@ -2,7 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Generator, Iterable
+from typing import Generator, List, Union
 
 import regex as re
 
@@ -29,8 +29,8 @@ class AllowedPattern(CloudFormationLintRule):
         self.parameters = cfn.get_parameters()
 
     def _pattern(
-        self, instance: str, patrn: str, path: Iterable[str]
-    ) -> Generator[ValidationError]:
+        self, instance: str, patrn: str, path: List[Union[str, int]]
+    ) -> Generator[ValidationError, None, None]:
         if not re.search(patrn, instance):
             yield ValidationError(
                 f"{instance!r} does not match {patrn!r}",
