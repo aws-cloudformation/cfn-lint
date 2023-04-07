@@ -192,6 +192,28 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
         return matches
 
+    def _check_map(self, m, path):
+        matches = []
+        if isinstance(m, dict):
+            if len(m) == 1:
+                for k, v in m.items():
+                    if k == "Fn::If":
+                        if isinstance(v, list) and len(v) == 3:
+                            matches.extend(
+                                self._check_map(v[1], path[:] + ["Fn::If", 1])
+                            )
+                            matches.extend(
+                                self._check_map(v[2], path[:] + ["Fn::If", 2])
+                            )
+        else:
+            matches.append(
+                RuleMatch(
+                    path,
+                    "Map must be an object of key-value pairs",
+                )
+            )
+        return matches
+
     def check(self, cfn, properties, specs, spec_type, path):
         """Check itself"""
         matches = []
@@ -201,6 +223,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
                 primitive_type = specs.get(prop).get("PrimitiveType")
                 if not primitive_type:
                     primitive_type = specs.get(prop).get("PrimitiveItemType")
+                if specs.get(prop).get("Type") == "Map":
+                    matches.extend(
+                        self._check_map(properties.get(prop), path[:] + [prop])
+                    )
                 if specs.get(prop).get("Type") in ["List", "Map"]:
                     item_type = specs.get(prop).get("Type")
                 else:

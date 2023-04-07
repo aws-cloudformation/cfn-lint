@@ -46,6 +46,13 @@ class TestResourceValuePrimitiveType(BaseRuleTestCase):
             4,
         )
 
+    def test_bad_map_values(self):
+        """Test strict false"""
+        self.helper_file_negative(
+            "test/fixtures/templates/bad/resources/properties/primitive_types_map.yaml",
+            2,
+        )
+
     def test_file_negative_nist_high_main(self):
         """Generic Test failure"""
         self.helper_file_rule_config(
