@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  MyCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: userpool
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      UsernameAttributes:
+        - email
+      Schema:
+        - AttributeDataType: String
+          Name: email
+          Required: false
+      UserPoolTags:
+        - Key: Key1
+          Value: Value1
+        - Key: Key2
+          Value: Value2

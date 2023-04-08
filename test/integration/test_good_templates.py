@@ -91,6 +91,38 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 0,
         },
         {
+            "filename": "test/fixtures/templates/good/resources_cognito_userpool_tag_is_string_map.yaml",
+            "results": [],
+            "exit_code": 0,
+        },
+        {
+            "filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
+            "results": [
+                {
+                    "Filename": "test/fixtures/templates/bad/resources_cognito_userpool_tag_is_list.yaml",
+                    "Level": "Error",
+                    "Location": {
+                        "Start": {"ColumnNumber": 7, "LineNumber": 16},
+                        "End": {"ColumnNumber": 19, "LineNumber": 16},
+                        "Path": [
+                            "Resources",
+                            "MyCognitoUserPool",
+                            "Properties",
+                            "UserPoolTags",
+                        ],
+                    },
+                    "Message": "Map must be an object of key-value pairs",
+                    "Rule": {
+                        "Description": "Checks resource property values with Primitive Types for values that match those types.",
+                        "Id": "E3012",
+                        "ShortDescription": "Check resource properties values",
+                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype",
+                    },
+                }
+            ],
+            "exit_code": 2,
+        },
+        {
             "filename": "test/fixtures/templates/good/transform_serverless_api.yaml",
             "results": [],
             "exit_code": 0,
