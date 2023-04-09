@@ -1,0 +1,159 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": [
+  "aws_ec2_securitygroup/securitygroupegress_inclusive"
+ ],
+ "createOnlyProperties": [
+  "/properties/GroupDescription",
+  "/properties/GroupName",
+  "/properties/VpcId"
+ ],
+ "definitions": {
+  "Egress": {
+   "additionalProperties": false,
+   "cfnSchema": [
+    "aws_ec2_securitygroup/egress_onlyone"
+   ],
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "DestinationPrefixListId": {
+     "type": "string"
+    },
+    "DestinationSecurityGroupId": {
+     "type": "string"
+    },
+    "FromPort": {
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "type": "object"
+  },
+  "Ingress": {
+   "additionalProperties": false,
+   "cfnSchema": [
+    "aws_ec2_securitygroup/ingress_cidrip_exclusive",
+    "aws_ec2_securitygroup/ingress_cidripv6_exclusive",
+    "aws_ec2_securitygroup/ingress_sourcesecuritygroupid_exclusive"
+   ],
+   "properties": {
+    "CidrIp": {
+     "type": "string"
+    },
+    "CidrIpv6": {
+     "type": "string"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "FromPort": {
+     "type": "integer"
+    },
+    "IpProtocol": {
+     "type": "string"
+    },
+    "SourcePrefixListId": {
+     "type": "string"
+    },
+    "SourceSecurityGroupId": {
+     "type": "string"
+    },
+    "SourceSecurityGroupName": {
+     "type": "string"
+    },
+    "SourceSecurityGroupOwnerId": {
+     "type": "string"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "IpProtocol"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::SecurityGroup",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "GroupDescription": {
+   "type": "string"
+  },
+  "GroupId": {
+   "type": "string"
+  },
+  "GroupName": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "SecurityGroupEgress": {
+   "items": {
+    "$ref": "#/definitions/Egress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecurityGroupIngress": {
+   "items": {
+    "$ref": "#/definitions/Ingress"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VpcId": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/GroupId"
+ ],
+ "required": [
+  "GroupDescription"
+ ],
+ "typeName": "AWS::EC2::SecurityGroup"
+}
