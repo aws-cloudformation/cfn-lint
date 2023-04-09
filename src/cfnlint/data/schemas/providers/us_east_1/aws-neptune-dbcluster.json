@@ -1,0 +1,282 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/AvailabilityZones",
+  "/properties/DBClusterIdentifier",
+  "/properties/DBSubnetGroupName",
+  "/properties/EngineVersion",
+  "/properties/KmsKeyId",
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/StorageEncrypted",
+  "/properties/UseLatestRestorableTime"
+ ],
+ "definitions": {
+  "DBClusterRole": {
+   "additionalProperties": false,
+   "description": "Describes an AWS Identity and Access Management (IAM) role that is associated with a DB cluster.",
+   "properties": {
+    "FeatureName": {
+     "description": "The name of the feature associated with the AWS Identity and Access Management (IAM) role. For the list of supported feature names, see DBEngineVersion in the Amazon Neptune API Reference.",
+     "type": "string"
+    },
+    "RoleArn": {
+     "description": "The Amazon Resource Name (ARN) of the IAM role that is associated with the DB cluster.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "RoleArn"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::Neptune::DBCluster resource creates an Amazon Neptune DB cluster.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "rds:AddRoleToDBCluster",
+    "rds:AddTagsToResource",
+    "rds:CreateDBCluster",
+    "rds:CreateDBInstance",
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBCluster",
+    "rds:RestoreDBClusterFromSnapshot",
+    "rds:RestoreDBClusterToPointInTime"
+   ],
+   "timeoutInMinutes": 2160
+  },
+  "delete": {
+   "permissions": [
+    "rds:DeleteDBCluster",
+    "rds:DeleteDBInstance",
+    "rds:DescribeDBClusters",
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource",
+    "rds:RemoveFromGlobalCluster"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "rds:DescribeDBClusters",
+    "rds:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:DescribeSecurityGroups",
+    "iam:PassRole",
+    "rds:AddRoleToDBCluster",
+    "rds:AddTagsToResource",
+    "rds:DescribeDBClusters",
+    "rds:DescribeDBSubnetGroups",
+    "rds:DescribeGlobalClusters",
+    "rds:ListTagsForResource",
+    "rds:ModifyDBCluster",
+    "rds:ModifyDBInstance",
+    "rds:RemoveFromGlobalCluster",
+    "rds:RemoveRoleFromDBCluster",
+    "rds:RemoveTagsFromResource"
+   ],
+   "timeoutInMinutes": 2160
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DBClusterIdentifier"
+ ],
+ "properties": {
+  "AssociatedRoles": {
+   "description": "Provides a list of the AWS Identity and Access Management (IAM) roles that are associated with the DB cluster. IAM roles that are associated with a DB cluster grant permission for the DB cluster to access other AWS services on your behalf.",
+   "insertionOrder": true,
+   "items": {
+    "$ref": "#/definitions/DBClusterRole"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AvailabilityZones": {
+   "description": "Provides the list of EC2 Availability Zones that instances in the DB cluster can be created in.",
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "BackupRetentionPeriod": {
+   "default": 1,
+   "description": "Specifies the number of days for which automatic DB snapshots are retained.",
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ClusterResourceId": {
+   "description": "The resource id for the DB cluster. For example: `cluster-ABCD1234EFGH5678IJKL90MNOP`. The cluster ID uniquely identifies the cluster and is used in things like IAM authentication policies.",
+   "type": "string"
+  },
+  "DBClusterIdentifier": {
+   "description": "The DB cluster identifier. Contains a user-supplied DB cluster identifier. This identifier is the unique key that identifies a DB cluster stored as a lowercase string.",
+   "maxLength": 63,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z]{1}(?:-?[a-zA-Z0-9]){0,62}$",
+   "type": "string"
+  },
+  "DBClusterParameterGroupName": {
+   "description": "Provides the name of the DB cluster parameter group.",
+   "type": "string"
+  },
+  "DBSubnetGroupName": {
+   "description": "Specifies information on the subnet group associated with the DB cluster, including the name, description, and subnets in the subnet group.",
+   "type": "string"
+  },
+  "DeletionProtection": {
+   "description": "Indicates whether or not the DB cluster has deletion protection enabled. The database can't be deleted when deletion protection is enabled.",
+   "type": "boolean"
+  },
+  "EnableCloudwatchLogsExports": {
+   "description": "Specifies a list of log types that are enabled for export to CloudWatch Logs.",
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Endpoint": {
+   "description": "The connection endpoint for the DB cluster. For example: mystack-mydbcluster-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com",
+   "type": "string"
+  },
+  "EngineVersion": {
+   "description": "Indicates the database engine version.",
+   "type": "string"
+  },
+  "IamAuthEnabled": {
+   "description": "True if mapping of Amazon Identity and Access Management (IAM) accounts to database accounts is enabled, and otherwise false.",
+   "type": "boolean"
+  },
+  "KmsKeyId": {
+   "description": "If `StorageEncrypted` is true, the Amazon KMS key identifier for the encrypted DB cluster.",
+   "type": "string"
+  },
+  "Port": {
+   "description": "Specifies the port that the database engine is listening on.",
+   "type": "string"
+  },
+  "PreferredBackupWindow": {
+   "description": "Specifies the daily time range during which automated backups are created if automated backups are enabled, as determined by the BackupRetentionPeriod.",
+   "type": "string"
+  },
+  "PreferredMaintenanceWindow": {
+   "description": "Specifies the weekly time range during which system maintenance can occur, in Universal Coordinated Time (UTC).",
+   "type": "string"
+  },
+  "ReadEndpoint": {
+   "description": "The reader endpoint for the DB cluster. For example: mystack-mydbcluster-ro-1apw1j4phylrk.cg034hpkmmjt.us-east-2.rds.amazonaws.com",
+   "type": "string"
+  },
+  "RestoreToTime": {
+   "description": "Creates a new DB cluster from a DB snapshot or DB cluster snapshot.\n\nIf a DB snapshot is specified, the target DB cluster is created from the source DB snapshot with a default configuration and default security group.\n\nIf a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point with the same configuration as the original source DB cluster, except that the new DB cluster is created with the default security group.",
+   "type": "string"
+  },
+  "RestoreType": {
+   "default": "full-copy",
+   "description": "Creates a new DB cluster from a DB snapshot or DB cluster snapshot.\n\nIf a DB snapshot is specified, the target DB cluster is created from the source DB snapshot with a default configuration and default security group.\n\nIf a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point with the same configuration as the original source DB cluster, except that the new DB cluster is created with the default security group.",
+   "type": "string"
+  },
+  "SnapshotIdentifier": {
+   "description": "Specifies the identifier for a DB cluster snapshot. Must match the identifier of an existing snapshot.\n\nAfter you restore a DB cluster using a SnapshotIdentifier, you must specify the same SnapshotIdentifier for any future updates to the DB cluster. When you specify this property for an update, the DB cluster is not restored from the snapshot again, and the data in the database is not changed.\n\nHowever, if you don't specify the SnapshotIdentifier, an empty DB cluster is created, and the original DB cluster is deleted. If you specify a property that is different from the previous snapshot restore property, the DB cluster is restored from the snapshot specified by the SnapshotIdentifier, and the original DB cluster is deleted.",
+   "type": "string"
+  },
+  "SourceDBClusterIdentifier": {
+   "description": "Creates a new DB cluster from a DB snapshot or DB cluster snapshot.\n\nIf a DB snapshot is specified, the target DB cluster is created from the source DB snapshot with a default configuration and default security group.\n\nIf a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point with the same configuration as the original source DB cluster, except that the new DB cluster is created with the default security group.",
+   "type": "string"
+  },
+  "StorageEncrypted": {
+   "description": "Indicates whether the DB cluster is encrypted.\n\nIf you specify the `DBClusterIdentifier`, `DBSnapshotIdentifier`, or `SourceDBInstanceIdentifier` property, don't specify this property. The value is inherited from the cluster, snapshot, or source DB instance. If you specify the KmsKeyId property, you must enable encryption.\n\nIf you specify the KmsKeyId, you must enable encryption by setting StorageEncrypted to true.",
+   "type": "boolean"
+  },
+  "Tags": {
+   "description": "The tags assigned to this cluster.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "UseLatestRestorableTime": {
+   "description": "Creates a new DB cluster from a DB snapshot or DB cluster snapshot.\n\nIf a DB snapshot is specified, the target DB cluster is created from the source DB snapshot with a default configuration and default security group.\n\nIf a DB cluster snapshot is specified, the target DB cluster is created from the source DB cluster restore point with the same configuration as the original source DB cluster, except that the new DB cluster is created with the default security group.",
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "description": "Provides a list of VPC security groups that the DB cluster belongs to.",
+   "insertionOrder": true,
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "propertyTransform": {
+  "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+  "/properties/DBClusterParameterGroupName": "$lowercase(DBClusterParameterGroupName)",
+  "/properties/DBSubnetGroupName": "$lowercase(DBSubnetGroupName)",
+  "/properties/SnapshotIdentifier": "$lowercase(SnapshotIdentifier)",
+  "/properties/SourceDBClusterIdentifier": "$lowercase(SourceDBClusterIdentifier)"
+ },
+ "readOnlyProperties": [
+  "/properties/Endpoint",
+  "/properties/ReadEndpoint",
+  "/properties/ClusterResourceId",
+  "/properties/Port"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-neptune",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Neptune::DBCluster",
+ "writeOnlyProperties": [
+  "/properties/RestoreToTime",
+  "/properties/RestoreType",
+  "/properties/SnapshotIdentifier",
+  "/properties/SourceDBClusterIdentifier",
+  "/properties/UseLatestRestorableTime"
+ ]
+}
