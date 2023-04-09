@@ -1,36 +1,54 @@
----
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   Testing for IS NOT_DEFINED rule
 Resources:
   LambdaExecutionRole:
-    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
         Statement:
-          - Effect: Allow
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
             Principal:
               Service:
                 - lambda.amazonaws.com
                 - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
+        Version: "2012-10-17"
       Path: "/"
-  LambdaFunctionTestNotDefined1:
-    Type: AWS::Lambda::Function
+    Type: AWS::IAM::Role
+  LambdaFunctionTestNotDefinedFromParent:
     Properties:
-      Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
       Code: ./
-      Runtime: nodejs18.x
-  LambdaFunctionTestNotDefined2:
-    Type: AWS::Lambda::Function
-    Properties:
+      Environment:
+        Variables: !GetAtt "LambdaExecutionRole.Arn"
       Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestNotDefinedFromProperties:
+    Properties:
+      Code: ./
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestNotDefinedRefAWSNoValue:
+    Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV: !Ref "AWS::NoValue"
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestNotDefinedWithSiblings:
+    Properties:
+      Code: ./
       Environment:
         Variables:
           OTHER_VARS: ""
-      Code: ./
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
       Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
