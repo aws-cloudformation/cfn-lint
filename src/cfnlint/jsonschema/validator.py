@@ -121,7 +121,7 @@ def create(
         VALIDATORS = dict(validators_arg)
         META_SCHEMA = dict(
             load_resource(
-                "cfnlint.data.AdditionalSchemas.json-schema", filename=("draft7.json")
+                "cfnlint.data.schemas.extensions.json_schema", filename=("draft7.json")
             )
         )
         TYPE_CHECKER = _types.cfn_type_checker
