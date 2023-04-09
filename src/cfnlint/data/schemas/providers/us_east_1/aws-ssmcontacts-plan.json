@@ -1,0 +1,174 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ContactId"
+ ],
+ "definitions": {
+  "ChannelTargetInfo": {
+   "additionalProperties": false,
+   "description": "Information about the contact channel that SSM Incident Manager uses to engage the contact.",
+   "properties": {
+    "ChannelId": {
+     "description": "The Amazon Resource Name (ARN) of the contact channel.",
+     "type": "string"
+    },
+    "RetryIntervalInMinutes": {
+     "description": "The number of minutes to wait to retry sending engagement in the case the engagement initially fails.",
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ChannelId",
+    "RetryIntervalInMinutes"
+   ],
+   "type": "object"
+  },
+  "ContactTargetInfo": {
+   "additionalProperties": false,
+   "description": "The contact that SSM Incident Manager is engaging during an incident.",
+   "properties": {
+    "ContactId": {
+     "description": "The Amazon Resource Name (ARN) of the contact.",
+     "type": "string"
+    },
+    "IsEssential": {
+     "description": "A Boolean value determining if the contact's acknowledgement stops the progress of stages in the plan.",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "ContactId",
+    "IsEssential"
+   ],
+   "type": "object"
+  },
+  "Stage": {
+   "additionalProperties": false,
+   "description": "A set amount of time that an escalation plan or engagement plan engages the specified contacts or contact methods.",
+   "properties": {
+    "DurationInMinutes": {
+     "description": "The time to wait until beginning the next stage.",
+     "type": "integer"
+    },
+    "Targets": {
+     "description": "The contacts or contact methods that the escalation plan or engagement plan is engaging.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Targets"
+     },
+     "type": "array"
+    }
+   },
+   "required": [
+    "DurationInMinutes"
+   ],
+   "type": "object"
+  },
+  "Targets": {
+   "additionalProperties": false,
+   "description": "The contacts or contact methods that the escalation plan or engagement plan is engaging.",
+   "oneOf": [
+    {
+     "required": [
+      "ChannelTargetInfo"
+     ]
+    },
+    {
+     "required": [
+      "ContactTargetInfo"
+     ]
+    }
+   ],
+   "properties": {
+    "ChannelTargetInfo": {
+     "$ref": "#/definitions/ChannelTargetInfo"
+    },
+    "ContactTargetInfo": {
+     "$ref": "#/definitions/ContactTargetInfo"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Engagement Plan for a SSM Incident Manager Contact.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ssm-contacts:UpdateContact"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ssm-contacts:UpdateContact"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ssm-contacts:GetContact"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ssm-contacts:UpdateContact"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "ContactId",
+    "Stages"
+   ]
+  },
+  {
+   "required": [
+    "ContactId",
+    "RotationIds"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Arn"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the contact.",
+   "type": "string"
+  },
+  "ContactId": {
+   "description": "Contact ID for the AWS SSM Incident Manager Contact to associate the plan.",
+   "pattern": "arn:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]+:[-\\w+=\\/,.@]*:[0-9]+:([\\w+=\\/,.@:-]+)*",
+   "type": "string"
+  },
+  "RotationIds": {
+   "description": "Rotation Ids to associate with Oncall Contact for engagement.",
+   "insertionOrder": false,
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Stages": {
+   "description": "The stages that an escalation plan or engagement plan engages contacts and contact methods in.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Stage"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SSMContacts::Plan",
+ "writeOnlyProperties": [
+  "/properties/RotationIds"
+ ]
+}

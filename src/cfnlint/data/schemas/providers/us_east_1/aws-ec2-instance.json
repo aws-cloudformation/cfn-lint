@@ -1,0 +1,549 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": [
+  "aws_ec2_instance/required",
+  "aws_ec2_instance/exclusive"
+ ],
+ "createOnlyProperties": [
+  "/properties/ElasticGpuSpecifications",
+  "/properties/Ipv6Addresses",
+  "/properties/PlacementGroupName",
+  "/properties/HostResourceGroupArn",
+  "/properties/ImageId",
+  "/properties/CpuOptions",
+  "/properties/PrivateIpAddress",
+  "/properties/ElasticInferenceAccelerators",
+  "/properties/EnclaveOptions",
+  "/properties/HibernationOptions",
+  "/properties/KeyName",
+  "/properties/LicenseSpecifications",
+  "/properties/NetworkInterfaces",
+  "/properties/AvailabilityZone",
+  "/properties/SubnetId",
+  "/properties/LaunchTemplate",
+  "/properties/SecurityGroups",
+  "/properties/Ipv6AddressCount"
+ ],
+ "definitions": {
+  "AssociationParameter": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "BlockDeviceMapping": {
+   "additionalProperties": false,
+   "cfnSchema": [
+    "aws_ec2_instance/blockdevicemapping_virtualname_exclusive",
+    "aws_ec2_instance/blockdevicemapping_onlyone"
+   ],
+   "properties": {
+    "DeviceName": {
+     "type": "string"
+    },
+    "Ebs": {
+     "$ref": "#/definitions/Ebs"
+    },
+    "NoDevice": {
+     "$ref": "#/definitions/NoDevice"
+    },
+    "VirtualName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeviceName"
+   ],
+   "type": "object"
+  },
+  "CpuOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CoreCount": {
+     "type": "integer"
+    },
+    "ThreadsPerCore": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "CreditSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "CPUCredits": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Ebs": {
+   "additionalProperties": false,
+   "properties": {
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Encrypted": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    },
+    "SnapshotId": {
+     "type": "string"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticGpuSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ElasticInferenceAccelerator": {
+   "additionalProperties": false,
+   "properties": {
+    "Count": {
+     "type": "integer"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "EnclaveOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "HibernationOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Configured": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "InstanceIpv6Address": {
+   "additionalProperties": false,
+   "properties": {
+    "Ipv6Address": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Ipv6Address"
+   ],
+   "type": "object"
+  },
+  "LaunchTemplateSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LaunchTemplateId": {
+     "type": "string"
+    },
+    "LaunchTemplateName": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Version"
+   ],
+   "type": "object"
+  },
+  "LicenseSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "LicenseConfigurationArn": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LicenseConfigurationArn"
+   ],
+   "type": "object"
+  },
+  "NetworkInterface": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociateCarrierIpAddress": {
+     "type": "boolean"
+    },
+    "AssociatePublicIpAddress": {
+     "type": "boolean"
+    },
+    "DeleteOnTermination": {
+     "type": "boolean"
+    },
+    "Description": {
+     "type": "string"
+    },
+    "DeviceIndex": {
+     "type": "string"
+    },
+    "GroupSet": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "Ipv6AddressCount": {
+     "type": "integer"
+    },
+    "Ipv6Addresses": {
+     "items": {
+      "$ref": "#/definitions/InstanceIpv6Address"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NetworkInterfaceId": {
+     "type": "string"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    },
+    "PrivateIpAddresses": {
+     "items": {
+      "$ref": "#/definitions/PrivateIpAddressSpecification"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "SecondaryPrivateIpAddressCount": {
+     "type": "integer"
+    },
+    "SubnetId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeviceIndex"
+   ],
+   "type": "object"
+  },
+  "NoDevice": {
+   "additionalProperties": false,
+   "type": "object"
+  },
+  "PrivateDnsNameOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "EnableResourceNameDnsAAAARecord": {
+     "type": "boolean"
+    },
+    "EnableResourceNameDnsARecord": {
+     "type": "boolean"
+    },
+    "HostnameType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "PrivateIpAddressSpecification": {
+   "additionalProperties": false,
+   "properties": {
+    "Primary": {
+     "type": "boolean"
+    },
+    "PrivateIpAddress": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "PrivateIpAddress",
+    "Primary"
+   ],
+   "type": "object"
+  },
+  "SsmAssociation": {
+   "additionalProperties": false,
+   "properties": {
+    "AssociationParameters": {
+     "items": {
+      "$ref": "#/definitions/AssociationParameter"
+     },
+     "type": "array",
+     "uniqueItems": false
+    },
+    "DocumentName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DocumentName"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "Volume": {
+   "additionalProperties": false,
+   "properties": {
+    "Device": {
+     "type": "string"
+    },
+    "VolumeId": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "VolumeId",
+    "Device"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::EC2::Instance",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AdditionalInfo": {
+   "type": "string"
+  },
+  "Affinity": {
+   "type": "string"
+  },
+  "AvailabilityZone": {
+   "awsType": "AvailabilityZone",
+   "type": "string"
+  },
+  "BlockDeviceMappings": {
+   "items": {
+    "$ref": "#/definitions/BlockDeviceMapping"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CpuOptions": {
+   "$ref": "#/definitions/CpuOptions"
+  },
+  "CreditSpecification": {
+   "$ref": "#/definitions/CreditSpecification"
+  },
+  "DisableApiTermination": {
+   "type": "boolean"
+  },
+  "EbsOptimized": {
+   "type": "boolean"
+  },
+  "ElasticGpuSpecifications": {
+   "items": {
+    "$ref": "#/definitions/ElasticGpuSpecification"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ElasticInferenceAccelerators": {
+   "items": {
+    "$ref": "#/definitions/ElasticInferenceAccelerator"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "EnclaveOptions": {
+   "$ref": "#/definitions/EnclaveOptions"
+  },
+  "HibernationOptions": {
+   "$ref": "#/definitions/HibernationOptions"
+  },
+  "HostId": {
+   "type": "string"
+  },
+  "HostResourceGroupArn": {
+   "type": "string"
+  },
+  "IamInstanceProfile": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ImageId": {
+   "type": "string"
+  },
+  "InstanceInitiatedShutdownBehavior": {
+   "type": "string"
+  },
+  "InstanceType": {
+   "type": "string"
+  },
+  "Ipv6AddressCount": {
+   "type": "integer"
+  },
+  "Ipv6Addresses": {
+   "items": {
+    "$ref": "#/definitions/InstanceIpv6Address"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "KernelId": {
+   "type": "string"
+  },
+  "KeyName": {
+   "type": "string"
+  },
+  "LaunchTemplate": {
+   "$ref": "#/definitions/LaunchTemplateSpecification"
+  },
+  "LicenseSpecifications": {
+   "items": {
+    "$ref": "#/definitions/LicenseSpecification"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Monitoring": {
+   "type": "boolean"
+  },
+  "NetworkInterfaces": {
+   "items": {
+    "$ref": "#/definitions/NetworkInterface"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "PlacementGroupName": {
+   "type": "string"
+  },
+  "PrivateDnsName": {
+   "type": "string"
+  },
+  "PrivateDnsNameOptions": {
+   "$ref": "#/definitions/PrivateDnsNameOptions"
+  },
+  "PrivateIp": {
+   "type": "string"
+  },
+  "PrivateIpAddress": {
+   "type": "string"
+  },
+  "PropagateTagsToVolumeOnCreation": {
+   "type": "boolean"
+  },
+  "PublicDnsName": {
+   "type": "string"
+  },
+  "PublicIp": {
+   "type": "string"
+  },
+  "RamdiskId": {
+   "type": "string"
+  },
+  "SecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SecurityGroups": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SourceDestCheck": {
+   "type": "boolean"
+  },
+  "SsmAssociations": {
+   "items": {
+    "$ref": "#/definitions/SsmAssociation"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "SubnetId": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tenancy": {
+   "type": "string"
+  },
+  "UserData": {
+   "type": "string"
+  },
+  "Volumes": {
+   "items": {
+    "$ref": "#/definitions/Volume"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/PublicIp",
+  "/properties/Id",
+  "/properties/PublicDnsName",
+  "/properties/PrivateDnsName",
+  "/properties/PrivateIp"
+ ],
+ "typeName": "AWS::EC2::Instance"
+}
