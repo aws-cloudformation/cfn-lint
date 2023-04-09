@@ -1,0 +1,60 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "AccountId": {
+   "description": "User account id, used as the primary identifier for the resource",
+   "pattern": "^\\d{12}$",
+   "type": "string"
+  }
+ },
+ "description": "This resource schema represents the LogAnomalyDetectionIntegration resource in the Amazon DevOps Guru.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "devops-guru:UpdateServiceIntegration",
+    "logs:TagLogGroup",
+    "logs:UntagLogGroup"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "devops-guru:UpdateServiceIntegration",
+    "logs:TagLogGroup",
+    "logs:UntagLogGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "devops-guru:DescribeServiceIntegration"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "devops-guru:DescribeServiceIntegration"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "devops-guru:UpdateServiceIntegration",
+    "logs:TagLogGroup",
+    "logs:UntagLogGroup"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AccountId"
+ ],
+ "properties": {
+  "AccountId": {
+   "$ref": "#/definitions/AccountId"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AccountId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::DevOpsGuru::LogAnomalyDetectionIntegration"
+}
