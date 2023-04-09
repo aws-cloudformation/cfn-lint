@@ -9,6 +9,7 @@ import logging
 import multiprocessing
 import os
 import re
+import shutil
 import sys
 import zipfile
 from typing import Any, Dict, List, Sequence, Union
@@ -17,7 +18,9 @@ import jsonpatch
 from pkg_resources import resource_listdir
 
 from cfnlint.helpers import (
+    REGION_PRIMARY,
     REGIONS,
+    ToPy,
     get_url_retrieve,
     load_resource,
     url_has_newer_version,
@@ -30,24 +33,38 @@ from cfnlint.schema.schema import Schema
 LOGGER = logging.getLogger(__name__)
 
 
+class _FileLocation:
+    def __init__(self, path: List[str]):
+        self.path_relative = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            *path,
+        )
+        self.module = ".".join(["cfnlint"] + path[:])
+        self.path = path
+
+
 class ProviderSchemaManager:
     _schemas: Dict[str, Schema] = {}
     _provider_schema_modules: Dict[str, Any] = {}
     _cache: Dict[str, Union[Sequence, str]] = {}
 
     def __init__(self) -> None:
-        self._patch_path = os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "data",
-            "ExtendedProviderSchemas",
+        self._root = _FileLocation(
+            [
+                "data",
+                "schemas",
+                "providers",
+            ]
         )
-        self._root_path = os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "data",
-            "ProviderSchemas",
+        self._patches = _FileLocation(
+            [
+                "data",
+                "schemas",
+                "patches",
+            ]
         )
+        self._region_primary = ToPy(REGION_PRIMARY)
 
         self.reset()
 
@@ -79,30 +96,32 @@ class ProviderSchemaManager:
         if resource_type in self._cache["RemovedTypes"]:
             raise ResourceNotFoundError(resource_type, region)
 
-        rt = resource_type.replace("::", "-").lower()
+        reg = ToPy(region)
+        rt = ToPy(resource_type)
+
         schema = self._schemas[region].get(resource_type)
         if schema is None:
             # dynamically import the modules as needed
-            self._provider_schema_modules[region] = __import__(
-                f"cfnlint.data.ProviderSchemas.{region}", fromlist=[""]
+            self._provider_schema_modules[reg.name] = __import__(
+                f"{self._root.module}.{reg.py}", fromlist=[""]
             )
             # load the schema
-            if f"{rt}.json" in self._provider_schema_modules[region].cached:
-                self._schemas[region][resource_type] = self.get_resource_schema(
-                    region="us-east-1",
-                    resource_type=resource_type,
+            if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
+                self._schemas[reg.name][rt.name] = self.get_resource_schema(
+                    region=self._region_primary.name,
+                    resource_type=rt.name,
                 )
-                return self._schemas[region][resource_type]
+                return self._schemas[reg.name][rt.name]
             try:
-                self._schemas[region][resource_type] = Schema(
+                self._schemas[reg.name][rt.name] = Schema(
                     load_resource(
-                        self._provider_schema_modules[region],
-                        filename=(f"{rt}.json"),
+                        self._provider_schema_modules[reg.name],
+                        filename=(f"{rt.provider}.json"),
                     )
                 )
             except Exception as e:
-                raise ResourceNotFoundError(resource_type, region) from e
-            return self._schemas[region][resource_type]
+                raise ResourceNotFoundError(rt.name, region) from e
+            return self._schemas[reg.name][rt.name]
         return schema
 
     def get_resource_types(self, region: str) -> List[str]:
@@ -113,39 +132,42 @@ class ProviderSchemaManager:
         Returns:
             List[str]: returns a list of resource types
         """
-        if "us-east-1" not in self._provider_schema_modules:
-            self._provider_schema_modules["us-east-1"] = __import__(
-                "cfnlint.data.ProviderSchemas.us-east-1", fromlist=[""]
+        reg = ToPy(region)
+
+        if self._region_primary.name not in self._provider_schema_modules:
+            self._provider_schema_modules[self._region_primary.name] = __import__(
+                f"{self._root.module}.{self._region_primary.py}", fromlist=[""]
             )
         if not self._cache["ResourceTypes"][region]:
-            if region not in self._provider_schema_modules:
+            if reg.name not in self._provider_schema_modules:
                 self._provider_schema_modules[region] = __import__(
-                    f"cfnlint.data.ProviderSchemas.{region}", fromlist=[""]
+                    f"{self._root.module}.{reg.py}", fromlist=[""]
                 )
-            for filename in self._provider_schema_modules[region].cached:
+            for filename in self._provider_schema_modules[reg.name].cached:
                 schema = load_resource(
-                    self._provider_schema_modules["us-east-1"], filename=(filename)
+                    self._provider_schema_modules[self._region_primary.name],
+                    filename=(filename),
                 )
                 resource_type = schema.get("typeName")
                 if resource_type in self._cache["RemovedTypes"]:
                     continue
-                self._schemas[region][resource_type] = Schema(schema)
+                self._schemas[reg.name][resource_type] = Schema(schema)
                 self._cache["ResourceTypes"][region].append(resource_type)
             for filename in resource_listdir(
-                "cfnlint", resource_name=f"data/ProviderSchemas/{region}"
+                "cfnlint", resource_name=f"{'/'.join(self._root.path)}/{reg.py}"
             ):
                 if not filename.endswith(".json"):
                     continue
                 schema = load_resource(
-                    self._provider_schema_modules[region], filename=(filename)
+                    self._provider_schema_modules[reg.name], filename=(filename)
                 )
                 resource_type = schema.get("typeName")
                 if resource_type in self._cache["RemovedTypes"]:
                     continue
-                self._schemas[region][resource_type] = Schema(schema)
-                self._cache["ResourceTypes"][region].append(resource_type)
+                self._schemas[reg.name][resource_type] = Schema(schema)
+                self._cache["ResourceTypes"][reg.name].append(resource_type)
 
-        return self._cache["ResourceTypes"][region].copy()
+        return self._cache["ResourceTypes"][reg.name].copy()
 
     def update(self, force: bool) -> None:
         """Update ever regions provider schemas
@@ -155,11 +177,13 @@ class ProviderSchemaManager:
         Returns:
             None: returns when complete
         """
-        self._update_provider_schema("us-east-1", force=force)
+        self._update_provider_schema(self._region_primary.name, force=force)
         # pylint: disable=not-context-manager
         with multiprocessing.Pool() as pool:
             # Patch from registry schema
-            provider_pool_tuple = [(k, force) for k in REGIONS if k != "us-east-1"]
+            provider_pool_tuple = [
+                (k, force) for k in REGIONS if k != self._region_primary.name
+            ]
             pool.starmap(self._update_provider_schema, provider_pool_tuple)
 
     def _update_provider_schema(self, region: str, force: bool = False) -> None:
@@ -174,7 +198,11 @@ class ProviderSchemaManager:
         # China regions in .com.cn
         suffix = ".cn" if region in ["cn-north-1", "cn-northwest-1"] else ""
         url = f"https://schema.cloudformation.{region}.amazonaws.com{suffix}/CloudformationSchema.zip"
-        directory = os.path.join(f"{self._root_path}/{region}/")
+        reg = ToPy(region)
+        directory = os.path.join(f"{self._root.path_relative}/{reg.py}/")
+        directory_pr = os.path.join(
+            f"{self._root.path_relative}/{self._region_primary.py}/"
+        )
 
         multiprocessing_logger = multiprocessing.log_to_stderr()
 
@@ -184,8 +212,13 @@ class ProviderSchemaManager:
         if not (url_has_newer_version(url) or force):
             return
 
+        if not os.path.exists(directory):
+            os.mkdir(directory)
+
         try:
             filehandle = get_url_retrieve(url, caching=True)
+            # clean folder
+            shutil.rmtree(directory)
             with zipfile.ZipFile(filehandle, "r") as zip_ref:
                 zip_ref.extractall(directory)
 
@@ -197,35 +230,48 @@ class ProviderSchemaManager:
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
-                    spec = self._patch_provider_schema(spec, filename, "all")
+                    try:
+                        spec = self._patch_provider_schema(spec, filename, "all")
+                    except Exception as e:  # pylint: disable=broad-except
+                        LOGGER.info(
+                            "Issuing patching schema for %s in %s: %s",
+                            filename,
+                            reg.name,
+                            e,
+                        )
                     # Back to zero to write spec
                     fh.seek(0)
                     json.dump(
-                        spec, fh, indent=1, separators=(",", ": "), sort_keys=True
+                        spec,
+                        fh,
+                        indent=1,
+                        separators=(",", ": "),
+                        sort_keys=True,
                     )
                     # Resize doc as needed
                     fh.truncate()
 
             # if the region is not us-east-1 compare the files to those in us-east-1
             # symlink if the files are the same
-            if region != "us-east-1":
+            if reg.name != self._region_primary.name:
                 cached = []
-                directory_us_east_1 = os.path.join(f"{self._root_path}/us-east-1/")
                 for filename in os.listdir(directory):
                     if filename != "__init__.py":
                         try:
                             if filecmp.cmp(
                                 f"{directory}{filename}",
-                                f"{directory_us_east_1}{filename}",
+                                f"{directory_pr}{filename}",
                             ):
                                 cached.append(filename)
                                 os.remove(f"{directory}{filename}")
+                        except FileNotFoundError:
+                            pass
                         except Exception as e:  # pylint: disable=broad-except
-                            # Exceptions will typically be the file doesn't exist in us-east-1
-                            multiprocessing_logger.debug(
+                            # Exceptions will typically be the file doesn't exist in primary region
+                            LOGGER.info(
                                 "Issuing comparing %s into %s: %s",
                                 f"{directory}{filename}",
-                                f"{directory_us_east_1}{filename}",
+                                f"{directory_pr}{filename}",
                                 e,
                             )
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
@@ -237,8 +283,8 @@ class ProviderSchemaManager:
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
                     f.write("cached = []\n")
 
-        except Exception:  # pylint: disable=broad-except
-            multiprocessing_logger.debug("Issuing updating schemas for %s", region)
+        except Exception as e:  # pylint: disable=broad-except
+            LOGGER.info("Issuing updating schemas for %s: %s", region, e)
 
     def _patch_provider_schema(
         self, content: Dict, source_filename: str, region: str
@@ -252,21 +298,23 @@ class ProviderSchemaManager:
         Returns:
             Dict: returns the patched content
         """
-        append_dir = os.path.join(self._patch_path, region)
-        for dirpath, _, filenames in os.walk(append_dir):
-            filenames.sort()
-            for filename in fnmatch.filter(filenames, "*.json"):
-                if filename == source_filename:
-                    file_path = os.path.basename(filename)
-                    module = dirpath.replace(f"{append_dir}", f"{region}").replace(
-                        os.path.sep, "."
-                    )
-                    LOGGER.info("Processing patch in %s.%s", module, file_path)
-                    jsonpatch.JsonPatch(
-                        load_resource(
-                            f"cfnlint.data.ExtendedProviderSchemas.{module}", file_path
+        for patch_type in ["extensions", "providers"]:
+            append_dir = os.path.join(self._patches.path_relative, patch_type, region)
+            for dirpath, _, filenames in os.walk(append_dir):
+                filenames.sort()
+                for filename in fnmatch.filter(filenames, "*.json"):
+                    # those files come as - and we use _
+                    if filename == source_filename.replace("-", "_"):
+                        file_path = os.path.basename(filename)
+                        module = dirpath.replace(f"{append_dir}", f"{region}").replace(
+                            os.path.sep, "."
                         )
-                    ).apply(content, in_place=True)
+                        jsonpatch.JsonPatch(
+                            load_resource(
+                                f"{self._patches.module}.{patch_type}.{module}",
+                                file_path,
+                            )
+                        ).apply(content, in_place=True)
 
         return content
 
