@@ -142,7 +142,7 @@ class JsonSchema(CloudFormationLintRule):
         for schema_path in schema_paths:
             schema_details = schema_path.split("/")
             cfn_schema = load_resource(
-                f"cfnlint.data.AdditionalSchemas.{schema_details[0]}",
+                f"cfnlint.data.schemas.extensions.{schema_details[0]}",
                 filename=(f"{schema_details[1]}.json"),
             )
             cfn_validator = self.validator(cfn_schema)
