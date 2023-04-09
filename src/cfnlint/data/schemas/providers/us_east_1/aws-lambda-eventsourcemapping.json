@@ -1,0 +1,402 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": [
+  "aws_lambda_eventsourcemapping/eventsourcearn_sqs_exclusive",
+  "aws_lambda_eventsourcemapping/eventsourcearn_stream_inclusive"
+ ],
+ "createOnlyProperties": [
+  "/properties/EventSourceArn",
+  "/properties/StartingPosition",
+  "/properties/StartingPositionTimestamp",
+  "/properties/SelfManagedEventSource",
+  "/properties/AmazonManagedKafkaEventSourceConfig",
+  "/properties/SelfManagedKafkaEventSourceConfig"
+ ],
+ "definitions": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for an MSK event source.",
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId",
+     "description": "The identifier for the Kafka Consumer Group to join."
+    }
+   },
+   "type": "object"
+  },
+  "ConsumerGroupId": {
+   "description": "The identifier for the Kafka Consumer Group to join.",
+   "maxLength": 200,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+   "type": "string"
+  },
+  "DestinationConfig": {
+   "additionalProperties": false,
+   "description": "(Streams) An Amazon SQS queue or Amazon SNS topic destination for discarded records.",
+   "properties": {
+    "OnFailure": {
+     "$ref": "#/definitions/OnFailure",
+     "description": "The destination configuration for failed invocations."
+    }
+   },
+   "type": "object"
+  },
+  "DocumentDBEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Document db event source config.",
+   "properties": {
+    "CollectionName": {
+     "description": "The collection name to connect to.",
+     "maxLength": 57,
+     "minLength": 1,
+     "type": "string"
+    },
+    "DatabaseName": {
+     "description": "The database name to connect to.",
+     "maxLength": 63,
+     "minLength": 1,
+     "type": "string"
+    },
+    "FullDocument": {
+     "description": "Include full document in change stream response. The default option will only send the changes made to documents to Lambda. If you want the complete document sent to Lambda, set this to UpdateLookup.",
+     "enum": [
+      "UpdateLookup",
+      "Default"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Endpoints": {
+   "additionalProperties": false,
+   "description": "The endpoints used by AWS Lambda to access a self-managed event source.",
+   "properties": {
+    "KafkaBootstrapServers": {
+     "description": "A list of Kafka server endpoints.",
+     "items": {
+      "description": "The URL of a Kafka server.",
+      "maxLength": 300,
+      "minLength": 1,
+      "pattern": "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9]):[0-9]{1,5}",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Filter": {
+   "additionalProperties": false,
+   "description": "The filter object that defines parameters for ESM filtering.",
+   "properties": {
+    "Pattern": {
+     "description": "The filter pattern that defines which events should be passed for invocations.",
+     "maxLength": 4096,
+     "minLength": 0,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "FilterCriteria": {
+   "additionalProperties": false,
+   "description": "The filter criteria to control event filtering.",
+   "properties": {
+    "Filters": {
+     "description": "List of filters of this FilterCriteria",
+     "items": {
+      "$ref": "#/definitions/Filter"
+     },
+     "maxItems": 20,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "MaximumConcurrency": {
+   "description": "The maximum number of concurrent functions that an event source can invoke.",
+   "maximum": 1000,
+   "minimum": 2,
+   "type": "integer"
+  },
+  "OnFailure": {
+   "additionalProperties": false,
+   "description": "A destination for events that failed processing.",
+   "properties": {
+    "Destination": {
+     "description": "The Amazon Resource Name (ARN) of the destination resource.",
+     "maxLength": 1024,
+     "minLength": 12,
+     "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ScalingConfig": {
+   "additionalProperties": false,
+   "description": "The scaling configuration for the event source.",
+   "properties": {
+    "MaximumConcurrency": {
+     "$ref": "#/definitions/MaximumConcurrency",
+     "description": "The maximum number of concurrent functions that the event source can invoke."
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedEventSource": {
+   "additionalProperties": false,
+   "description": "The configuration used by AWS Lambda to access a self-managed event source.",
+   "properties": {
+    "Endpoints": {
+     "$ref": "#/definitions/Endpoints",
+     "description": "The endpoints for a self-managed event source."
+    }
+   },
+   "type": "object"
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "additionalProperties": false,
+   "description": "Specific configuration settings for a Self-Managed Apache Kafka event source.",
+   "properties": {
+    "ConsumerGroupId": {
+     "$ref": "#/definitions/ConsumerGroupId",
+     "description": "The identifier for the Kafka Consumer Group to join."
+    }
+   },
+   "type": "object"
+  },
+  "SourceAccessConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration used by AWS Lambda to access event source",
+   "properties": {
+    "Type": {
+     "description": "The type of source access configuration.",
+     "enum": [
+      "BASIC_AUTH",
+      "VPC_SUBNET",
+      "VPC_SECURITY_GROUP",
+      "SASL_SCRAM_512_AUTH",
+      "SASL_SCRAM_256_AUTH",
+      "VIRTUAL_HOST",
+      "CLIENT_CERTIFICATE_TLS_AUTH",
+      "SERVER_ROOT_CA_CERTIFICATE"
+     ],
+     "type": "string"
+    },
+    "URI": {
+     "description": "The URI for the source access configuration resource.",
+     "maxLength": 200,
+     "minLength": 1,
+     "pattern": "[a-zA-Z0-9-\\/*:_+=.@-]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Lambda::EventSourceMapping",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:CreateEventSourceMapping",
+    "lambda:GetEventSourceMapping"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:DeleteEventSourceMapping",
+    "lambda:GetEventSourceMapping"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lambda:ListEventSourceMappings"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetEventSourceMapping"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "lambda:UpdateEventSourceMapping",
+    "lambda:GetEventSourceMapping"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AmazonManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/AmazonManagedKafkaEventSourceConfig",
+   "description": "Specific configuration settings for an MSK event source."
+  },
+  "BatchSize": {
+   "description": "The maximum number of items to retrieve in a single batch.",
+   "maximum": 10000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "BisectBatchOnFunctionError": {
+   "description": "(Streams) If the function returns an error, split the batch in two and retry.",
+   "type": "boolean"
+  },
+  "DestinationConfig": {
+   "$ref": "#/definitions/DestinationConfig",
+   "description": "(Streams) An Amazon SQS queue or Amazon SNS topic destination for discarded records."
+  },
+  "DocumentDBEventSourceConfig": {
+   "$ref": "#/definitions/DocumentDBEventSourceConfig",
+   "description": "Document db event source config."
+  },
+  "Enabled": {
+   "description": "Disables the event source mapping to pause polling and invocation.",
+   "type": "boolean"
+  },
+  "EventSourceArn": {
+   "description": "The Amazon Resource Name (ARN) of the event source.",
+   "maxLength": 1024,
+   "minLength": 12,
+   "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
+   "type": "string"
+  },
+  "FilterCriteria": {
+   "$ref": "#/definitions/FilterCriteria",
+   "description": "The filter criteria to control event filtering."
+  },
+  "FunctionName": {
+   "description": "The name of the Lambda function.",
+   "maxLength": 140,
+   "minLength": 1,
+   "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?",
+   "type": "string"
+  },
+  "FunctionResponseTypes": {
+   "description": "(Streams) A list of response types supported by the function.",
+   "items": {
+    "enum": [
+     "ReportBatchItemFailures"
+    ],
+    "type": "string"
+   },
+   "maxLength": 1,
+   "minLength": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "description": "Event Source Mapping Identifier UUID.",
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}",
+   "type": "string"
+  },
+  "MaximumBatchingWindowInSeconds": {
+   "description": "(Streams) The maximum amount of time to gather records before invoking the function, in seconds.",
+   "maximum": 300,
+   "minimum": 0,
+   "type": "integer"
+  },
+  "MaximumRecordAgeInSeconds": {
+   "description": "(Streams) The maximum age of a record that Lambda sends to a function for processing.",
+   "maximum": 604800,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "MaximumRetryAttempts": {
+   "description": "(Streams) The maximum number of times to retry when the function returns an error.",
+   "maximum": 10000,
+   "minimum": -1,
+   "type": "integer"
+  },
+  "ParallelizationFactor": {
+   "description": "(Streams) The number of batches to process from each shard concurrently.",
+   "maximum": 10,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Queues": {
+   "description": "(ActiveMQ) A list of ActiveMQ queues.",
+   "items": {
+    "maxLength": 1000,
+    "minLength": 1,
+    "pattern": "[\\s\\S]*",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ScalingConfig": {
+   "$ref": "#/definitions/ScalingConfig",
+   "description": "The scaling configuration for the event source."
+  },
+  "SelfManagedEventSource": {
+   "$ref": "#/definitions/SelfManagedEventSource",
+   "description": "Self-managed event source endpoints."
+  },
+  "SelfManagedKafkaEventSourceConfig": {
+   "$ref": "#/definitions/SelfManagedKafkaEventSourceConfig",
+   "description": "Specific configuration settings for a Self-Managed Apache Kafka event source."
+  },
+  "SourceAccessConfigurations": {
+   "description": "A list of SourceAccessConfiguration.",
+   "items": {
+    "$ref": "#/definitions/SourceAccessConfiguration"
+   },
+   "maxItems": 22,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "StartingPosition": {
+   "description": "The position in a stream from which to start reading. Required for Amazon Kinesis and Amazon DynamoDB Streams sources.",
+   "maxLength": 12,
+   "minLength": 6,
+   "pattern": "(LATEST|TRIM_HORIZON|AT_TIMESTAMP)+",
+   "type": "string"
+  },
+  "StartingPositionTimestamp": {
+   "description": "With StartingPosition set to AT_TIMESTAMP, the time from which to start reading, in Unix time seconds.",
+   "type": "number"
+  },
+  "Topics": {
+   "description": "(Kafka) A list of Kafka topics.",
+   "items": {
+    "maxLength": 249,
+    "minLength": 1,
+    "pattern": "^[^.]([a-zA-Z0-9\\-_.]+)",
+    "type": "string"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TumblingWindowInSeconds": {
+   "description": "(Streams) Tumbling window (non-overlapping time window) duration to perform aggregations.",
+   "maximum": 900,
+   "minimum": 0,
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "FunctionName"
+ ],
+ "typeName": "AWS::Lambda::EventSourceMapping"
+}

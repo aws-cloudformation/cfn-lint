@@ -1,0 +1,318 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName"
+ ],
+ "definitions": {
+  "AdvancedSecurityOptionsInput": {
+   "additionalProperties": false,
+   "properties": {
+    "AnonymousAuthEnabled": {
+     "type": "boolean"
+    },
+    "Enabled": {
+     "type": "boolean"
+    },
+    "InternalUserDatabaseEnabled": {
+     "type": "boolean"
+    },
+    "MasterUserOptions": {
+     "$ref": "#/definitions/MasterUserOptions"
+    }
+   },
+   "type": "object"
+  },
+  "CognitoOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "IdentityPoolId": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "UserPoolId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ColdStorageOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "DomainEndpointOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "CustomEndpoint": {
+     "type": "string"
+    },
+    "CustomEndpointCertificateArn": {
+     "type": "string"
+    },
+    "CustomEndpointEnabled": {
+     "type": "boolean"
+    },
+    "EnforceHTTPS": {
+     "type": "boolean"
+    },
+    "TLSSecurityPolicy": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "EBSOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "EBSEnabled": {
+     "type": "boolean"
+    },
+    "Iops": {
+     "type": "integer"
+    },
+    "VolumeSize": {
+     "type": "integer"
+    },
+    "VolumeType": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "ElasticsearchClusterConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ColdStorageOptions": {
+     "$ref": "#/definitions/ColdStorageOptions"
+    },
+    "DedicatedMasterCount": {
+     "type": "integer"
+    },
+    "DedicatedMasterEnabled": {
+     "type": "boolean"
+    },
+    "DedicatedMasterType": {
+     "type": "string"
+    },
+    "InstanceCount": {
+     "type": "integer"
+    },
+    "InstanceType": {
+     "cfnRegionalSchema": "aws_elasticsearch_domain/elasticsearchclusterconfig_instancetype_enum",
+     "type": "string"
+    },
+    "WarmCount": {
+     "type": "integer"
+    },
+    "WarmEnabled": {
+     "type": "boolean"
+    },
+    "WarmType": {
+     "type": "string"
+    },
+    "ZoneAwarenessConfig": {
+     "$ref": "#/definitions/ZoneAwarenessConfig"
+    },
+    "ZoneAwarenessEnabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "EncryptionAtRestOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    },
+    "KmsKeyId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LogPublishingOption": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsLogGroupArn": {
+     "type": "string"
+    },
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "MasterUserOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "MasterUserARN": {
+     "type": "string"
+    },
+    "MasterUserName": {
+     "type": "string"
+    },
+    "MasterUserPassword": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "NodeToNodeEncryptionOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "Enabled": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "SnapshotOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "AutomatedSnapshotStartHour": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "VPCOptions": {
+   "additionalProperties": false,
+   "properties": {
+    "SecurityGroupIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "SubnetIds": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "ZoneAwarenessConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AvailabilityZoneCount": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::Elasticsearch::Domain",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AccessPolicies": {
+   "type": "object"
+  },
+  "AdvancedOptions": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "AdvancedSecurityOptions": {
+   "$ref": "#/definitions/AdvancedSecurityOptionsInput"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "CognitoOptions": {
+   "$ref": "#/definitions/CognitoOptions"
+  },
+  "DomainArn": {
+   "type": "string"
+  },
+  "DomainEndpoint": {
+   "type": "string"
+  },
+  "DomainEndpointOptions": {
+   "$ref": "#/definitions/DomainEndpointOptions"
+  },
+  "DomainName": {
+   "type": "string"
+  },
+  "EBSOptions": {
+   "$ref": "#/definitions/EBSOptions"
+  },
+  "ElasticsearchClusterConfig": {
+   "$ref": "#/definitions/ElasticsearchClusterConfig"
+  },
+  "ElasticsearchVersion": {
+   "type": "string"
+  },
+  "EncryptionAtRestOptions": {
+   "$ref": "#/definitions/EncryptionAtRestOptions"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LogPublishingOptions": {
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "$ref": "#/definitions/LogPublishingOption"
+    }
+   },
+   "type": "object"
+  },
+  "NodeToNodeEncryptionOptions": {
+   "$ref": "#/definitions/NodeToNodeEncryptionOptions"
+  },
+  "SnapshotOptions": {
+   "$ref": "#/definitions/SnapshotOptions"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "VPCOptions": {
+   "$ref": "#/definitions/VPCOptions"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/DomainArn",
+  "/properties/DomainEndpoint",
+  "/properties/Arn"
+ ],
+ "typeName": "AWS::Elasticsearch::Domain"
+}
