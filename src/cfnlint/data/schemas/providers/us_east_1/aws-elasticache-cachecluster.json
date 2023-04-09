@@ -1,0 +1,224 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Port",
+  "/properties/SnapshotArns",
+  "/properties/SnapshotName",
+  "/properties/CacheSubnetGroupName",
+  "/properties/ClusterName",
+  "/properties/NetworkType",
+  "/properties/Engine"
+ ],
+ "definitions": {
+  "CloudWatchLogsDestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "LogGroup": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogGroup"
+   ],
+   "type": "object"
+  },
+  "DestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsDetails": {
+     "$ref": "#/definitions/CloudWatchLogsDestinationDetails"
+    },
+    "KinesisFirehoseDetails": {
+     "$ref": "#/definitions/KinesisFirehoseDestinationDetails"
+    }
+   },
+   "type": "object"
+  },
+  "KinesisFirehoseDestinationDetails": {
+   "additionalProperties": false,
+   "properties": {
+    "DeliveryStream": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "DeliveryStream"
+   ],
+   "type": "object"
+  },
+  "LogDeliveryConfigurationRequest": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationDetails": {
+     "$ref": "#/definitions/DestinationDetails"
+    },
+    "DestinationType": {
+     "type": "string"
+    },
+    "LogFormat": {
+     "type": "string"
+    },
+    "LogType": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "LogFormat",
+    "LogType",
+    "DestinationType",
+    "DestinationDetails"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ElastiCache::CacheCluster",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AZMode": {
+   "type": "string"
+  },
+  "AutoMinorVersionUpgrade": {
+   "type": "boolean"
+  },
+  "CacheNodeType": {
+   "cfnRegionalSchema": "aws_elasticache_cachecluster/cachenodetype_enum",
+   "type": "string"
+  },
+  "CacheParameterGroupName": {
+   "type": "string"
+  },
+  "CacheSecurityGroupNames": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "CacheSubnetGroupName": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "type": "string"
+  },
+  "ConfigurationEndpointAddress": {
+   "type": "string"
+  },
+  "ConfigurationEndpointPort": {
+   "type": "string"
+  },
+  "Engine": {
+   "type": "string"
+  },
+  "EngineVersion": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "IpDiscovery": {
+   "type": "string"
+  },
+  "LogDeliveryConfigurations": {
+   "items": {
+    "$ref": "#/definitions/LogDeliveryConfigurationRequest"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "NetworkType": {
+   "type": "string"
+  },
+  "NotificationTopicArn": {
+   "type": "string"
+  },
+  "NumCacheNodes": {
+   "type": "integer"
+  },
+  "Port": {
+   "type": "integer"
+  },
+  "PreferredAvailabilityZone": {
+   "type": "string"
+  },
+  "PreferredAvailabilityZones": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "PreferredMaintenanceWindow": {
+   "type": "string"
+  },
+  "RedisEndpointAddress": {
+   "type": "string"
+  },
+  "RedisEndpointPort": {
+   "type": "string"
+  },
+  "SnapshotArns": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "SnapshotName": {
+   "type": "string"
+  },
+  "SnapshotRetentionLimit": {
+   "type": "integer"
+  },
+  "SnapshotWindow": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "TransitEncryptionEnabled": {
+   "type": "boolean"
+  },
+  "VpcSecurityGroupIds": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array",
+   "uniqueItems": false
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ConfigurationEndpoint.Address",
+  "/properties/Id",
+  "/properties/ConfigurationEndpoint.Port",
+  "/properties/RedisEndpoint.Port",
+  "/properties/RedisEndpoint.Address"
+ ],
+ "required": [
+  "CacheNodeType",
+  "NumCacheNodes",
+  "Engine"
+ ],
+ "typeName": "AWS::ElastiCache::CacheCluster"
+}

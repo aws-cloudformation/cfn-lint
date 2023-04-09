@@ -1,0 +1,289 @@
+{
+ "additionalProperties": false,
+ "cfnSchema": "aws_codepipeline_pipeline/artifactstore_onlyone",
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "ActionDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "ActionTypeId": {
+     "$ref": "#/definitions/ActionTypeId"
+    },
+    "Configuration": {
+     "type": "object"
+    },
+    "InputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/InputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    },
+    "Namespace": {
+     "type": "string"
+    },
+    "OutputArtifacts": {
+     "items": {
+      "$ref": "#/definitions/OutputArtifact"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Region": {
+     "type": "string"
+    },
+    "RoleArn": {
+     "type": "string"
+    },
+    "RunOrder": {
+     "type": "integer"
+    }
+   },
+   "required": [
+    "ActionTypeId",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "ActionTypeId": {
+   "additionalProperties": false,
+   "properties": {
+    "Category": {
+     "type": "string"
+    },
+    "Owner": {
+     "type": "string"
+    },
+    "Provider": {
+     "type": "string"
+    },
+    "Version": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Owner",
+    "Category",
+    "Version",
+    "Provider"
+   ],
+   "type": "object"
+  },
+  "ArtifactStore": {
+   "additionalProperties": false,
+   "properties": {
+    "EncryptionKey": {
+     "$ref": "#/definitions/EncryptionKey"
+    },
+    "Location": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Location"
+   ],
+   "type": "object"
+  },
+  "ArtifactStoreMap": {
+   "additionalProperties": false,
+   "properties": {
+    "ArtifactStore": {
+     "$ref": "#/definitions/ArtifactStore"
+    },
+    "Region": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ArtifactStore",
+    "Region"
+   ],
+   "type": "object"
+  },
+  "BlockerDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "EncryptionKey": {
+   "additionalProperties": false,
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Type": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type",
+    "Id"
+   ],
+   "type": "object"
+  },
+  "InputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "OutputArtifact": {
+   "additionalProperties": false,
+   "properties": {
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StageDeclaration": {
+   "additionalProperties": false,
+   "properties": {
+    "Actions": {
+     "items": {
+      "$ref": "#/definitions/ActionDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Blockers": {
+     "items": {
+      "$ref": "#/definitions/BlockerDeclaration"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Actions",
+    "Name"
+   ],
+   "type": "object"
+  },
+  "StageTransition": {
+   "additionalProperties": false,
+   "properties": {
+    "Reason": {
+     "type": "string"
+    },
+    "StageName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "StageName",
+    "Reason"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::CodePipeline::Pipeline",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "ArtifactStore": {
+   "$ref": "#/definitions/ArtifactStore"
+  },
+  "ArtifactStores": {
+   "items": {
+    "$ref": "#/definitions/ArtifactStoreMap"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "DisableInboundStageTransitions": {
+   "items": {
+    "$ref": "#/definitions/StageTransition"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "RestartExecutionOnUpdate": {
+   "type": "boolean"
+  },
+  "RoleArn": {
+   "type": "string"
+  },
+  "Stages": {
+   "items": {
+    "$ref": "#/definitions/StageDeclaration"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Version": {
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Version"
+ ],
+ "required": [
+  "Stages",
+  "RoleArn"
+ ],
+ "typeName": "AWS::CodePipeline::Pipeline"
+}
