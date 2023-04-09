@@ -1,0 +1,163 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/Arn"
+  ],
+  [
+   "/properties/Name"
+  ]
+ ],
+ "additionalProperties": false,
+ "definitions": {
+  "Criterion": {
+   "description": "Map of filter criteria.",
+   "patternProperties": {
+    "\\w": {
+     "$ref": "#/definitions/CriterionAdditionalProperties"
+    }
+   },
+   "type": "object"
+  },
+  "CriterionAdditionalProperties": {
+   "properties": {
+    "eq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "gt": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "gte": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "lt": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "lte": {
+     "format": "int64",
+     "type": "integer"
+    },
+    "neq": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "FindingCriteria": {
+   "properties": {
+    "Criterion": {
+     "$ref": "#/definitions/Criterion"
+    }
+   },
+   "type": "object"
+  },
+  "FindingFilterAction": {
+   "enum": [
+    "ARCHIVE",
+    "NOOP"
+   ],
+   "type": "string"
+  },
+  "FindingsFilterListItem": {
+   "description": "Returned by ListHandler representing filter name and ID.",
+   "properties": {
+    "Id": {
+     "type": "string"
+    },
+    "Name": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Macie FindingsFilter resource schema.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "macie2:GetFindingsFilter",
+    "macie2:CreateFindingsFilter"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "macie2:DeleteFindingsFilter"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "macie2:ListFindingsFilters"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "macie2:GetFindingsFilter"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "macie2:GetFindingsFilter",
+    "macie2:UpdateFindingsFilter"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Action": {
+   "$ref": "#/definitions/FindingFilterAction",
+   "description": "Findings filter action."
+  },
+  "Arn": {
+   "description": "Findings filter ARN.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "Findings filter description",
+   "type": "string"
+  },
+  "FindingCriteria": {
+   "$ref": "#/definitions/FindingCriteria",
+   "description": "Findings filter criteria."
+  },
+  "FindingsFilterListItems": {
+   "description": "Findings filters list.",
+   "items": {
+    "$ref": "#/definitions/FindingsFilterListItem"
+   },
+   "type": "array"
+  },
+  "Id": {
+   "description": "Findings filter ID.",
+   "type": "string"
+  },
+  "Name": {
+   "description": "Findings filter name",
+   "type": "string"
+  },
+  "Position": {
+   "description": "Findings filter position.",
+   "type": "integer"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn",
+  "/properties/FindingsFilterListItems"
+ ],
+ "required": [
+  "Name",
+  "FindingCriteria"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+ "typeName": "AWS::Macie::FindingsFilter"
+}
