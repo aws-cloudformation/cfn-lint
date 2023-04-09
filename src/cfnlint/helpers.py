@@ -58,6 +58,7 @@ REGIONS = [
     "us-west-2",
 ]
 
+REGION_PRIMARY = "us-east-1"
 TAG_MAP = "tag:yaml.org,2002:map"
 UNCONVERTED_SUFFIXES = ["Ref", "Condition"]
 FN_PREFIX = "Fn::"
@@ -471,3 +472,15 @@ def load_plugins(directory):
                 result.extend(create_rules(mod))
 
     return result
+
+
+class ToPy:
+    """
+    Conversion of a string into Python friendly naming
+    """
+
+    def __init__(self, name: str):
+        self.name = name
+        self.py = name.replace("::", "_").replace("-", "_").lower()
+        # provider zips has filenames with -
+        self.provider = name.replace("::", "-").lower()

@@ -1,0 +1,174 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/MonitorName"
+ ],
+ "definitions": {
+  "MonitorConfigState": {
+   "enum": [
+    "PENDING",
+    "ACTIVE",
+    "INACTIVE",
+    "ERROR"
+   ],
+   "type": "string"
+  },
+  "MonitorProcessingStatusCode": {
+   "enum": [
+    "OK",
+    "INACTIVE",
+    "COLLECTING_DATA",
+    "INSUFFICIENT_DATA",
+    "FAULT_SERVICE",
+    "FAULT_ACCESS_CLOUDWATCH"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "The metadata that you apply to the cluster to help you categorize and organize them. Each tag consists of a key and an optional value, both of which you define.",
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "iso8601UTC": {
+   "description": "The date value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ssZ)",
+   "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
+   "type": "string"
+  }
+ },
+ "description": "Represents a monitor, which defines the monitoring boundaries for measurements that Internet Monitor publishes information about for an application",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "internetmonitor:CreateMonitor",
+    "internetmonitor:TagResource",
+    "internetmonitor:UntagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "internetmonitor:DeleteMonitor"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "internetmonitor:ListMonitors"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "internetmonitor:GetMonitor",
+    "internetmonitor:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "internetmonitor:CreateMonitor",
+    "internetmonitor:UpdateMonitor",
+    "internetmonitor:TagResource",
+    "internetmonitor:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MonitorName"
+ ],
+ "properties": {
+  "CreatedAt": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "MaxCityNetworksToMonitor": {
+   "maximum": 500000,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "ModifiedAt": {
+   "$ref": "#/definitions/iso8601UTC"
+  },
+  "MonitorArn": {
+   "maxLength": 512,
+   "minLength": 20,
+   "pattern": "^arn:.*",
+   "type": "string"
+  },
+  "MonitorName": {
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "ProcessingStatus": {
+   "$ref": "#/definitions/MonitorProcessingStatusCode"
+  },
+  "ProcessingStatusInfo": {
+   "type": "string"
+  },
+  "Resources": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "pattern": "^arn:.*",
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ResourcesToAdd": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "ResourcesToRemove": {
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 20,
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Status": {
+   "$ref": "#/definitions/MonitorConfigState"
+  },
+  "Tags": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/ModifiedAt",
+  "/properties/MonitorArn",
+  "/properties/ProcessingStatus",
+  "/properties/ProcessingStatusInfo"
+ ],
+ "required": [
+  "MonitorName"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": false,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::InternetMonitor::Monitor",
+ "writeOnlyProperties": [
+  "/properties/ResourcesToAdd",
+  "/properties/ResourcesToRemove"
+ ]
+}
