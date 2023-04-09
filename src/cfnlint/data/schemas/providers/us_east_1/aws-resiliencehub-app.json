@@ -1,0 +1,206 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name"
+ ],
+ "definitions": {
+  "PhysicalResourceId": {
+   "additionalProperties": false,
+   "properties": {
+    "AwsAccountId": {
+     "pattern": "^[0-9]{12}$",
+     "type": "string"
+    },
+    "AwsRegion": {
+     "pattern": "^[a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]$",
+     "type": "string"
+    },
+    "Identifier": {
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Type": {
+     "pattern": "Arn|Native",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Identifier",
+    "Type"
+   ],
+   "type": "object"
+  },
+  "ResourceMapping": {
+   "additionalProperties": false,
+   "description": "Resource mapping is used to map logical resources from template to physical resource",
+   "properties": {
+    "LogicalStackName": {
+     "type": "string"
+    },
+    "MappingType": {
+     "pattern": "CfnStack|Resource|Terraform",
+     "type": "string"
+    },
+    "PhysicalResourceId": {
+     "$ref": "#/definitions/PhysicalResourceId"
+    },
+    "ResourceName": {
+     "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+     "type": "string"
+    },
+    "TerraformSourceName": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "MappingType",
+    "PhysicalResourceId"
+   ],
+   "type": "object"
+  },
+  "TagMap": {
+   "additionalProperties": false,
+   "patternProperties": {
+    ".{1,128}": {
+     "$ref": "#/definitions/TagValue"
+    }
+   },
+   "type": "object"
+  },
+  "TagValue": {
+   "maxLength": 256,
+   "type": "string"
+  }
+ },
+ "description": "Resource Type Definition for AWS::ResilienceHub::App.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:ListStackResources",
+    "s3:GetBucketLocation",
+    "s3:GetObject",
+    "s3:ListAllMyBuckets",
+    "autoscaling:DescribeAutoScalingGroups",
+    "apigateway:GET",
+    "ec2:Describe*",
+    "ecs:DescribeServices",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "lambda:GetFunction",
+    "rds:Describe*",
+    "dynamodb:Describe*",
+    "sqs:GetQueueAttributes",
+    "sns:GetTopicAttributes",
+    "route53:List*",
+    "resiliencehub:*"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "resiliencehub:DeleteApp",
+    "resiliencehub:UntagResource",
+    "resiliencehub:ListApps"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "resiliencehub:ListApps"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "resiliencehub:DescribeApp",
+    "resiliencehub:DescribeAppVersionTemplate",
+    "resiliencehub:ListAppVersionResourceMappings",
+    "resiliencehub:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cloudformation:DescribeStacks",
+    "cloudformation:ListStackResources",
+    "s3:GetBucketLocation",
+    "s3:GetObject",
+    "s3:ListAllMyBuckets",
+    "autoscaling:DescribeAutoScalingGroups",
+    "apigateway:GET",
+    "ec2:Describe*",
+    "ecs:DescribeServices",
+    "elasticfilesystem:DescribeFileSystems",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "lambda:GetFunction",
+    "rds:Describe*",
+    "dynamodb:Describe*",
+    "sqs:GetQueueAttributes",
+    "sns:GetTopicAttributes",
+    "route53:List*",
+    "resiliencehub:*"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AppArn"
+ ],
+ "properties": {
+  "AppArn": {
+   "description": "Amazon Resource Name (ARN) of the App.",
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "AppAssessmentSchedule": {
+   "description": "Assessment execution schedule.",
+   "enum": [
+    "Disabled",
+    "Daily"
+   ],
+   "type": "string"
+  },
+  "AppTemplateBody": {
+   "description": "A string containing full ResilienceHub app template body.",
+   "maxLength": 5000,
+   "minLength": 0,
+   "pattern": "^[\\w\\s:,-\\.'{}\\[\\]:\"]+$",
+   "type": "string"
+  },
+  "Description": {
+   "description": "App description.",
+   "maxLength": 500,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Name": {
+   "description": "Name of the app.",
+   "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
+   "type": "string"
+  },
+  "ResiliencyPolicyArn": {
+   "description": "Amazon Resource Name (ARN) of the Resiliency Policy.",
+   "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9][A-Za-z0-9:_/+=,@.-]{0,1023}$",
+   "type": "string"
+  },
+  "ResourceMappings": {
+   "description": "An array of ResourceMapping objects.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ResourceMapping"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "Tags": {
+   "$ref": "#/definitions/TagMap"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/AppArn"
+ ],
+ "required": [
+  "Name",
+  "AppTemplateBody",
+  "ResourceMappings"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-resiliencehub",
+ "typeName": "AWS::ResilienceHub::App"
+}
