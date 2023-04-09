@@ -40,8 +40,10 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.os.walk")
     @patch("cfnlint.schema.manager.filecmp.cmp")
     @patch("cfnlint.schema.manager.load_resource")
+    @patch("cfnlint.schema.manager.shutil.rmtree")
     def test_update_resource_spec(
         self,
+        mock_shutil_rmtree,
         mock_load_resource,
         mock_filecmp_cmp,
         mock_os_walk,
@@ -61,13 +63,13 @@ class TestUpdateResourceSchemas(BaseTestCase):
         mock_get_url_retrieve.return_value = self.schema_zip
         mock_zipfile.return_value = MagicMock()
         mock_os_listdir.return_value = [
-            "aws-lambda-codesigningconfig.json",
+            "aws_lambda_codesigningconfig.json",
             "__init__.py",
         ]
         mock_os_path_isfile.side_effect = [True, True]
         mock_load_resource.return_value = self.schema_patch
         mock_os_walk.return_value = iter(
-            [("all", [], ["aws-lambda-codesigningconfig.json"])]
+            [("all", [], ["aws_lambda_codesigningconfig.json"])]
         )
         builtin_module_name = "builtins"
 
@@ -85,7 +87,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
             )
             mock_os_listdir.assert_has_calls(
                 [
-                    call(f"{self.manager._root_path}/us-east-1/"),
+                    call(f"{self.manager._root.path_relative}/us_east_1/"),
                 ]
             )
             mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
@@ -103,8 +105,10 @@ class TestUpdateResourceSchemas(BaseTestCase):
     @patch("cfnlint.schema.manager.os.remove")
     @patch("cfnlint.schema.manager.os.walk")
     @patch("cfnlint.schema.manager.filecmp.cmp")
+    @patch("cfnlint.schema.manager.shutil.rmtree")
     def test_update_resource_spec_cache(
         self,
+        mock_shutil_rmtree,
         mock_filecmp_cmp,
         mock_os_walk,
         mock_os_remove,
@@ -131,7 +135,7 @@ class TestUpdateResourceSchemas(BaseTestCase):
         mock_filecmp_cmp.side_effect = [True]
         mock_load_resource.return_value = self.schema_patch
         mock_os_walk.return_value = iter(
-            [("all", [], ["aws-lambda-codesigningconfig.json"])]
+            [("all", [], ["aws_lambda_codesigningconfig.json"])]
         )
         builtin_module_name = "builtins"
 
@@ -149,8 +153,8 @@ class TestUpdateResourceSchemas(BaseTestCase):
             )
             mock_os_listdir.assert_has_calls(
                 [
-                    call(f"{self.manager._root_path}/us-west-2/"),
-                    call(f"{self.manager._root_path}/us-west-2/"),
+                    call(f"{self.manager._root.path_relative}/us_west_2/"),
+                    call(f"{self.manager._root.path_relative}/us_west_2/"),
                 ]
             )
             mock_zipfile.assert_has_calls([call(self.schema_zip, "r")])
