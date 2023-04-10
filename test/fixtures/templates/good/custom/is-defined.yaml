@@ -1,29 +1,84 @@
----
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
   Testing for IS DEFINED rule
+Parameter:
+  NodeEnv:
+    Type: String
 Resources:
   LambdaExecutionRole:
-    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
         Statement:
-          - Effect: Allow
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
             Principal:
               Service:
                 - lambda.amazonaws.com
                 - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
+        Version: "2012-10-17"
       Path: "/"
-  LambdaFunctionTestDefined:
-    Type: AWS::Lambda::Function
+    Type: AWS::IAM::Role
+  LambdaFunctionTestDefinedArray:
     Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV:
+            - 1
+            - 2
       Handler: index.handler
-      Role: !GetAtt LambdaExecutionRole.Arn
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestDefinedEmpty:
+    Properties:
+      Code: ./
       Environment:
         Variables:
           NODE_ENV: ""
-      Code: ./
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
       Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestDefinedGetAttr:
+    Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV: !GetAtt "LambdaExecutionRole.Arn"
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestDefinedObject:
+    Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV:
+            A: 1
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestDefinedRef:
+    Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV: !Ref 'NodeEnv'
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
+  LambdaFunctionTestDefinedValue:
+    Properties:
+      Code: ./
+      Environment:
+        Variables:
+          NODE_ENV: value
+      Handler: index.handler
+      Role: !GetAtt "LambdaExecutionRole.Arn"
+      Runtime: nodejs18.x
+    Type: AWS::Lambda::Function
