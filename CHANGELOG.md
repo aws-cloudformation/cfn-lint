@@ -1,3 +1,17 @@
+### v0.77.0
+###### Features
+- Convert from `re` to `regex` (pull #[2643](https://github.com/aws-cloudformation/cfn-lint/pull/2643))
+- Implement `IS DEFINED` in custom rules (pull #[2656](https://github.com/aws-cloudformation/cfn-lint/pull/2656))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `119.0.0` (pull #[2660](https://github.com/aws-cloudformation/cfn-lint/pull/2660))
+- Patch `AWS::S3::Bucket.InventoryConfiguration.OptionalFields` to include `ChecksumAlgorithm` (pull #[2666](https://github.com/aws-cloudformation/cfn-lint/pull/2666))
+- Patch `AWS::Cognito::UserPool.UserPollTags` to be a map of strings (pull #[2671](https://github.com/aws-cloudformation/cfn-lint/pull/2671))
+###### Fixes
+- Update SAM translation to substitute for a sub in `CodeUri` (pull #[2661](https://github.com/aws-cloudformation/cfn-lint/pull/2661))
+- Update language extensions to validate if a ref is iterable before assuming it is (pull #[2665](https://github.com/aws-cloudformation/cfn-lint/pull/2665))
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3001) to consider a resource level condition when evaluating if the resource type exists (pull #[2668](https://github.com/aws-cloudformation/cfn-lint/pull/2668))
+- Update rule [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3001) to validate if a map is actually a map (pull #[2669](https://github.com/aws-cloudformation/cfn-lint/pull/2669))
+
 ### v0.76.2
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `118.1.0` (pull #[2644](https://github.com/aws-cloudformation/cfn-lint/pull/2644))
