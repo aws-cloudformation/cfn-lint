@@ -32,5 +32,5 @@ class TestIsDefinedRule(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/good/custom/is-not-defined.yaml", 2
+            "test/fixtures/templates/good/custom/is-not-defined.yaml", 4
         )

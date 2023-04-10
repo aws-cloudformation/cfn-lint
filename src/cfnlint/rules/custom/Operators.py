@@ -127,42 +127,95 @@ def CreateCustomIsDefinedRule(rule_id, resourceType, prop, value, error_message)
 
             return None, []
 
-        def _check_value(self, value, path, property_chain, cfn):
+        def _check_value_defined(self, value, path, property_chain, cfn, **_):
             matches = []
             child_property, new_property_chain = self._split_inset_properties(
                 property_chain
             )
-            if self.is_defined and (
-                value is None or value.get(child_property, None) is None
+            # Specific for !Ref AWS::NoValue, no callback even for pass_if_null=True
+            if len(property_chain) == 1 and value == {
+                child_property: {"Ref": "AWS::NoValue"}
+            }:
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or f"{path} must be defined"
+                    )
+                )
+                return matches
+            if value is None or (
+                isinstance(value, dict) and value.get("Ref", None) == "AWS::NoValue"
             ):
                 matches.append(
                     cfnlint.rules.RuleMatch(
                         path, error_message or f"{path} must be defined"
                     )
                 )
+                return matches
+
             if child_property is not None:
                 matches.extend(
                     cfn.check_value(
                         value,
                         child_property,
                         path,
-                        check_value=self._check_value,
+                        check_value=self._check_value_defined,
+                        check_ref=self._check_value_defined,
+                        check_get_att=self._check_value_defined,
+                        check_find_in_map=self._check_value_defined,
+                        check_split=self._check_value_defined,
+                        check_join=self._check_value_defined,
+                        check_import_value=self._check_value_defined,
+                        check_sub=self._check_value_defined,
+                        pass_if_null=True,
                         property_chain=new_property_chain,
                         cfn=cfn,
                     )
                 )
+            return matches
+
+        def _check_value_not_defined(self, value, path, property_chain, cfn, **_):
+            matches = []
+            if value is None:
                 return matches
-            if not self.is_defined and value is not None:
+            if len(property_chain) == 0 and value is not None:
                 matches.append(
                     cfnlint.rules.RuleMatch(
                         path, error_message or f"{path} must not be defined"
                     )
                 )
+                return matches
+
+            child_property, new_property_chain = self._split_inset_properties(
+                property_chain
+            )
+            matches.extend(
+                cfn.check_value(
+                    value,
+                    child_property,
+                    path,
+                    check_value=self._check_value_not_defined,
+                    check_ref=self._check_value_not_defined,
+                    check_get_att=self._check_value_not_defined,
+                    check_find_in_map=self._check_value_not_defined,
+                    check_split=self._check_value_not_defined,
+                    check_join=self._check_value_not_defined,
+                    check_import_value=self._check_value_not_defined,
+                    check_sub=self._check_value_not_defined,
+                    property_chain=new_property_chain,
+                    cfn=cfn,
+                    pass_if_null=True,
+                )
+            )
             return matches
 
         def match_resource_properties(self, properties, _, path, cfn):
             child_property, new_property_chain = self._split_inset_properties(
                 self.property_chain
+            )
+            check_fn = (
+                self._check_value_defined
+                if self.is_defined
+                else self._check_value_not_defined
             )
             matches = []
             # here does nothing when the value is not defined, this is checked separately below
@@ -171,18 +224,19 @@ def CreateCustomIsDefinedRule(rule_id, resourceType, prop, value, error_message)
                     properties,
                     child_property,
                     path,
-                    check_value=self._check_value,
+                    check_value=check_fn,
+                    check_ref=check_fn,
+                    check_get_att=check_fn,
+                    check_find_in_map=check_fn,
+                    check_split=check_fn,
+                    check_join=check_fn,
+                    check_import_value=check_fn,
+                    check_sub=check_fn,
                     property_chain=new_property_chain,
                     cfn=cfn,
+                    pass_if_null=True,
                 )
             )
-            # check child exists separately when checking is_defined
-            if self.is_defined and properties.get(child_property, None) is None:
-                matches.append(
-                    cfnlint.rules.RuleMatch(
-                        path, error_message or f"{path} must be defined"
-                    )
-                )
             return matches
 
     return CustomIsDefinedRule(
