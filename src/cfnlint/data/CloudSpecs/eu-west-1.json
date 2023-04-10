@@ -246,17 +246,6 @@
   "AWS::ApiGatewayV2::Integration.ResponseParameter": "CACHED",
   "AWS::ApiGatewayV2::Integration.ResponseParameterList": "CACHED",
   "AWS::ApiGatewayV2::Integration.TlsConfig": "CACHED",
-  "AWS::ApiGatewayV2::Route.ParameterConstraints": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-route-parameterconstraints.html",
-   "Properties": {
-    "Required": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-apigatewayv2-route-parameterconstraints.html#cfn-apigatewayv2-route-parameterconstraints-required",
-     "PrimitiveType": "Boolean",
-     "Required": true,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
   "AWS::ApiGatewayV2::RouteResponse.ParameterConstraints": "CACHED",
   "AWS::ApiGatewayV2::Stage.AccessLogSettings": "CACHED",
   "AWS::ApiGatewayV2::Stage.RouteSettings": "CACHED",
@@ -1786,11 +1775,17 @@
   "AWS::GroundStation::Config.TrackingConfig": "CACHED",
   "AWS::GroundStation::Config.UplinkEchoConfig": "CACHED",
   "AWS::GroundStation::Config.UplinkSpectrumConfig": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.AwsGroundStationAgentEndpoint": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.ConnectionDetails": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup.DataflowEndpoint": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup.EndpointDetails": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.IntegerRange": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.RangedConnectionDetails": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.RangedSocketAddress": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup.SecurityDetails": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup.SocketAddress": "CACHED",
   "AWS::GroundStation::MissionProfile.DataflowEdge": "CACHED",
+  "AWS::GroundStation::MissionProfile.StreamsKmsKey": "CACHED",
   "AWS::GuardDuty::Detector.CFNDataSourceConfigurations": "CACHED",
   "AWS::GuardDuty::Detector.CFNKubernetesAuditLogsConfiguration": "CACHED",
   "AWS::GuardDuty::Detector.CFNKubernetesConfiguration": "CACHED",
@@ -2541,7 +2536,6 @@
   "AWS::Macie::AllowList.S3WordsList": "CACHED",
   "AWS::Macie::FindingsFilter.CriterionAdditionalProperties": "CACHED",
   "AWS::Macie::FindingsFilter.FindingCriteria": "CACHED",
-  "AWS::Macie::FindingsFilter.FindingsFilterListItem": "CACHED",
   "AWS::ManagedBlockchain::Member.ApprovalThresholdPolicy": "CACHED",
   "AWS::ManagedBlockchain::Member.MemberConfiguration": "CACHED",
   "AWS::ManagedBlockchain::Member.MemberFabricConfiguration": "CACHED",
@@ -4667,6 +4661,15 @@
   "AWS::SSMContacts::Contact.ContactTargetInfo": "CACHED",
   "AWS::SSMContacts::Contact.Stage": "CACHED",
   "AWS::SSMContacts::Contact.Targets": "CACHED",
+  "AWS::SSMContacts::Plan.ChannelTargetInfo": "CACHED",
+  "AWS::SSMContacts::Plan.ContactTargetInfo": "CACHED",
+  "AWS::SSMContacts::Plan.Stage": "CACHED",
+  "AWS::SSMContacts::Plan.Targets": "CACHED",
+  "AWS::SSMContacts::Rotation.CoverageTime": "CACHED",
+  "AWS::SSMContacts::Rotation.MonthlySetting": "CACHED",
+  "AWS::SSMContacts::Rotation.RecurrenceSettings": "CACHED",
+  "AWS::SSMContacts::Rotation.ShiftCoverage": "CACHED",
+  "AWS::SSMContacts::Rotation.WeeklySetting": "CACHED",
   "AWS::SSMIncidents::ReplicationSet.RegionConfiguration": "CACHED",
   "AWS::SSMIncidents::ReplicationSet.ReplicationRegion": "CACHED",
   "AWS::SSMIncidents::ResponsePlan.Action": "CACHED",
@@ -4742,7 +4745,71 @@
   "AWS::SageMaker::EndpointConfig.ClarifyTextConfig": "CACHED",
   "AWS::SageMaker::EndpointConfig.DataCaptureConfig": "CACHED",
   "AWS::SageMaker::EndpointConfig.ExplainerConfig": "CACHED",
-  "AWS::SageMaker::EndpointConfig.ProductionVariant": "CACHED",
+  "AWS::SageMaker::EndpointConfig.ProductionVariant": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html",
+   "Properties": {
+    "AcceleratorType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-acceleratortype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ContainerStartupHealthCheckTimeoutInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-containerstartuphealthchecktimeoutinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "InitialInstanceCount": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-initialinstancecount",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "InitialVariantWeight": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-initialvariantweight",
+     "PrimitiveType": "Double",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "InstanceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-instancetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ModelDataDownloadTimeoutInSeconds": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-modeldatadownloadtimeoutinseconds",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "ModelName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-modelname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ServerlessConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-serverlessconfig",
+     "Required": false,
+     "Type": "ServerlessConfig",
+     "UpdateType": "Mutable"
+    },
+    "VariantName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-variantname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "VolumeSizeInGB": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-volumesizeingb",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::SageMaker::EndpointConfig.ServerlessConfig": "CACHED",
   "AWS::SageMaker::FeatureGroup.DataCatalogConfig": "CACHED",
   "AWS::SageMaker::FeatureGroup.FeatureDefinition": "CACHED",
@@ -5165,96 +5232,7 @@
   "AWS::WorkSpaces::Workspace.WorkspaceProperties": "CACHED",
   "AWS::XRay::Group.InsightsConfiguration": "CACHED",
   "AWS::XRay::Group.TagsItems": "CACHED",
-  "AWS::XRay::SamplingRule.SamplingRule": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html",
-   "Properties": {
-    "Attributes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-attributes",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "FixedRate": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-fixedrate",
-     "PrimitiveType": "Double",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "HTTPMethod": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-httpmethod",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Host": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-host",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Priority": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-priority",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::XRay::SamplingRule.SamplingRule.Priority"
-     }
-    },
-    "ReservoirSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-reservoirsize",
-     "PrimitiveType": "Integer",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "ResourceARN": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-resourcearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RuleARN": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-rulearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RuleName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-rulename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::XRay::SamplingRule.SamplingRule.RuleName"
-     }
-    },
-    "ServiceName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-servicename",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "ServiceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-servicetype",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "URLPath": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-urlpath",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "Version": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html#cfn-xray-samplingrule-samplingrule-version",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRuleRecord": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRuleUpdate": "CACHED",
   "AWS::XRay::SamplingRule.TagsItems": "CACHED",
@@ -5263,7 +5241,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "118.1.0",
+ "ResourceSpecificationVersion": "119.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5309,84 +5287,7 @@
   "AWS::ApiGatewayV2::Integration": "CACHED",
   "AWS::ApiGatewayV2::IntegrationResponse": "CACHED",
   "AWS::ApiGatewayV2::Model": "CACHED",
-  "AWS::ApiGatewayV2::Route": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html",
-   "Properties": {
-    "ApiId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-apiid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "ApiKeyRequired": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-apikeyrequired",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizationScopes": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-authorizationscopes",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "AuthorizationType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-authorizationtype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "AuthorizerId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-authorizerid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "ModelSelectionExpression": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-modelselectionexpression",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "OperationName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-operationname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RequestModels": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-requestmodels",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RequestParameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-requestparameters",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RouteKey": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-routekey",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "RouteResponseSelectionExpression": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-routeresponseselectionexpression",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Target": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-apigatewayv2-route.html#cfn-apigatewayv2-route-target",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::ApiGatewayV2::Route": "CACHED",
   "AWS::ApiGatewayV2::RouteResponse": "CACHED",
   "AWS::ApiGatewayV2::Stage": "CACHED",
   "AWS::ApiGatewayV2::VpcLink": "CACHED",
@@ -6418,6 +6319,8 @@
   "AWS::SSM::ResourcePolicy": "CACHED",
   "AWS::SSMContacts::Contact": "CACHED",
   "AWS::SSMContacts::ContactChannel": "CACHED",
+  "AWS::SSMContacts::Plan": "CACHED",
+  "AWS::SSMContacts::Rotation": "CACHED",
   "AWS::SSMIncidents::ReplicationSet": "CACHED",
   "AWS::SSMIncidents::ResponsePlan": "CACHED",
   "AWS::SSO::Assignment": "CACHED",
@@ -7806,6 +7709,9 @@
   "AWS::GroundStation::Config.SpectrumConfig.Polarization": "CACHED",
   "AWS::GroundStation::Config.TrackingConfig.Autotrack": "CACHED",
   "AWS::GroundStation::Config.UplinkSpectrumConfig.Polarization": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.AwsGroundStationAgentEndpoint.AgentStatus": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.AwsGroundStationAgentEndpoint.AuditResults": "CACHED",
+  "AWS::GroundStation::DataflowEndpointGroup.AwsGroundStationAgentEndpoint.Name": "CACHED",
   "AWS::GroundStation::DataflowEndpointGroup.DataflowEndpoint.Name": "CACHED",
   "AWS::GroundStation::MissionProfile.Name": "CACHED",
   "AWS::GuardDuty::Detector.FindingPublishingFrequency": "CACHED",
@@ -10839,6 +10745,18 @@
   "AWS::SSMContacts::ContactChannel.ChannelName": "CACHED",
   "AWS::SSMContacts::ContactChannel.ChannelType": "CACHED",
   "AWS::SSMContacts::ContactChannel.ContactId": "CACHED",
+  "AWS::SSMContacts::Plan.ContactId": "CACHED",
+  "AWS::SSMContacts::Rotation.CoverageTime.EndTime": "CACHED",
+  "AWS::SSMContacts::Rotation.CoverageTime.StartTime": "CACHED",
+  "AWS::SSMContacts::Rotation.MonthlySetting.DayOfMonth": "CACHED",
+  "AWS::SSMContacts::Rotation.MonthlySetting.HandOffTime": "CACHED",
+  "AWS::SSMContacts::Rotation.Name": "CACHED",
+  "AWS::SSMContacts::Rotation.RecurrenceSettings.DailySettings": "CACHED",
+  "AWS::SSMContacts::Rotation.RecurrenceSettings.RecurrenceMultiplier": "CACHED",
+  "AWS::SSMContacts::Rotation.ShiftCoverage.DayOfWeek": "CACHED",
+  "AWS::SSMContacts::Rotation.StartTime": "CACHED",
+  "AWS::SSMContacts::Rotation.WeeklySetting.DayOfWeek": "CACHED",
+  "AWS::SSMContacts::Rotation.WeeklySetting.HandOffTime": "CACHED",
   "AWS::SSMIncidents::ReplicationSet.RegionConfiguration.SseKmsKeyId": "CACHED",
   "AWS::SSMIncidents::ResponsePlan.ChatChannel.ChatbotSns": "CACHED",
   "AWS::SSMIncidents::ResponsePlan.DisplayName": "CACHED",
