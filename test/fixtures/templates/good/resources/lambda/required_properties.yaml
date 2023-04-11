@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Properties.
+Resources:
+  Function1:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: python3.9
+  Function2:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        ZipFile: |
+          var aws = require('aws-sdk')
+          exports.handler = function(event, context) {}
+      Runtime: nodejs16.x
+  Function3:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        ImageUri : 111122223333.dkr.ecr.us-east-1.amazonaws.com/hello-world:latest
+      Runtime: nodejs16.x
+      PackageType: Image
