@@ -22,6 +22,24 @@ class AllowedPattern(CloudFormationLintRule):
         "W2031": None,
     }
 
+    def __init__(self):
+        """Init"""
+        super().__init__()
+        self.config_definition = {
+            "exceptions": {
+                "default": [],
+                "type": "list",
+                "itemtype": "string",
+            }
+        }
+        self.configure()
+
+    def _is_exception(self, instance: str) -> bool:
+        for exception in self.config["exceptions"]:
+            if re.match(exception, instance):
+                return True
+        return False
+
     # pylint: disable=unused-argument
     def pattern(self, validator, patrn, instance, schema):
         if isinstance(instance, dict):
@@ -36,4 +54,5 @@ class AllowedPattern(CloudFormationLintRule):
             if REGEX_DYN_REF.findall(instance):
                 return
             if not re.search(patrn, instance):
-                yield ValidationError(f"{instance!r} does not match {patrn!r}")
+                if not self._is_exception(instance):
+                    yield ValidationError(f"{instance!r} does not match {patrn!r}")
