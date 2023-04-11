@@ -282,6 +282,7 @@ cached = [
     "aws-servicecatalogappregistry-application.json",
     "aws-networkmanager-site.json",
     "aws-glue-database.json",
+    "aws-neptune-dbcluster.json",
     "aws-backup-backupvault.json",
     "aws-ec2-customergateway.json",
     "aws-scheduler-schedule.json",
