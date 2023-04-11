@@ -14,12 +14,10 @@ import cfnlint.core
 from cfnlint.helpers import format_json_string
 
 modules = [
-    "AdditionalSchemas",
     "AdditionalSpecs",
     "CfnLintCli",
-    "ExtendedProviderSchemas",
     "Serverless",
-    "ProviderSchemasPatches",
+    "schemas",
 ]
 
 for module in modules:

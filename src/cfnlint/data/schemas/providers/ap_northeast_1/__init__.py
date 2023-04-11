@@ -185,7 +185,6 @@ cached = [
     "aws-s3objectlambda-accesspointpolicy.json",
     "aws-codegurureviewer-repositoryassociation.json",
     "aws-robomaker-simulationapplication.json",
-    "aws-networkmanager-transitgatewayregistration.json",
     "aws-amplify-app.json",
     "aws-inspectorv2-filter.json",
     "aws-elasticache-replicationgroup.json",
