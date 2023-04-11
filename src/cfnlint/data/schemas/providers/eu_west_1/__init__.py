@@ -425,6 +425,7 @@ cached = [
     "aws-omics-variantstore.json",
     "aws-appsync-apikey.json",
     "aws-cloudformation-typeactivation.json",
+    "aws-groundstation-dataflowendpointgroup.json",
     "aws-location-map.json",
     "aws-acmpca-certificateauthorityactivation.json",
     "aws-msk-serverlesscluster.json",
