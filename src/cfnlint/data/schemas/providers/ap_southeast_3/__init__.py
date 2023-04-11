@@ -45,6 +45,7 @@ cached = [
     "aws-appsync-domainname.json",
     "aws-fms-policy.json",
     "aws-cloudfront-realtimelogconfig.json",
+    "aws-sagemaker-pipeline.json",
     "aws-cloudtrail-channel.json",
     "aws-lakeformation-datacellsfilter.json",
     "aws-datasync-locationhdfs.json",
