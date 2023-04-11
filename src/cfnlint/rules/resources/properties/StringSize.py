@@ -64,9 +64,21 @@ class StringSize(CloudFormationLintRule):
         if len(json.dumps(j, separators=(",", ":"), default=self._serialize_date)) > mL:
             yield ValidationError("Item is too long")
 
+    def _non_string_min_length(self, instance, mL):
+        j = self._remove_functions(instance)
+        if len(json.dumps(j, separators=(",", ":"), default=self._serialize_date)) < mL:
+            yield ValidationError("Item is too short")
+
     # pylint: disable=unused-argument
     def maxLength(self, validator, mL, instance, schema):
         if validator.is_type(instance, "object"):
             yield from self._non_string_max_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) > mL:
             yield ValidationError(f"{instance!r} is too long")
+
+    # pylint: disable=unused-argument
+    def minLength(self, validator, mL, instance, schema):
+        if validator.is_type(instance, "object"):
+            yield from self._non_string_min_length(instance, mL)
+        elif validator.is_type(instance, "string") and len(instance) < mL:
+            yield ValidationError(f"{instance!r} is too short")
