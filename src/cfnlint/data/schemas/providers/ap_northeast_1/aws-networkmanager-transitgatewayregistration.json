@@ -1,0 +1,63 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId",
+  "/properties/TransitGatewayArn"
+ ],
+ "description": "The AWS::NetworkManager::TransitGatewayRegistration type registers a transit gateway in your global network. The transit gateway can be in any AWS Region, but it must be owned by the same AWS account that owns the global network. You cannot register a transit gateway in more than one global network.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:RegisterTransitGateway"
+   ],
+   "timeoutInMinutes": 30
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeregisterTransitGateway"
+   ],
+   "timeoutInMinutes": 30
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "GlobalNetworkId": {
+      "$ref": "resource-schema.json#/properties/GlobalNetworkId"
+     }
+    },
+    "required": [
+     "GlobalNetworkId"
+    ]
+   },
+   "permissions": [
+    "networkmanager:GetTransitGatewayRegistrations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRegistrations"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/GlobalNetworkId",
+  "/properties/TransitGatewayArn"
+ ],
+ "properties": {
+  "GlobalNetworkId": {
+   "description": "The ID of the global network.",
+   "type": "string"
+  },
+  "TransitGatewayArn": {
+   "description": "The Amazon Resource Name (ARN) of the transit gateway.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "GlobalNetworkId",
+  "TransitGatewayArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager.git",
+ "taggable": false,
+ "typeName": "AWS::NetworkManager::TransitGatewayRegistration"
+}
