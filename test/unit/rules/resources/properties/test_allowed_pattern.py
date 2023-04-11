@@ -31,3 +31,17 @@ class TestAllowedPattern(BaseRuleTestCase):
             ),
             0,
         )
+
+    def test_allowed_pattern(self):
+        validator = Draft7Validator({"type": "string"})
+
+        self.rule.configure({"exceptions": ["AWS::"]})
+
+        self.assertEqual(
+            len(list(self.rule.pattern(validator, "foo", "Another AWS::Instance", {}))),
+            1,
+        )
+        self.assertEqual(
+            len(list(self.rule.pattern(validator, "foo", "AWS::Dummy::Resource", {}))),
+            0,
+        )
