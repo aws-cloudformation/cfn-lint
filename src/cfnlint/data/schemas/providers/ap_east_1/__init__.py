@@ -73,6 +73,7 @@ cached = [
     "aws-glue-connection.json",
     "aws-appmesh-route.json",
     "aws-iam-group.json",
+    "aws-macie-findingsfilter.json",
     "aws-organizations-resourcepolicy.json",
     "aws-wafregional-webaclassociation.json",
     "aws-ec2-transitgatewaymulticastgroupsource.json",
