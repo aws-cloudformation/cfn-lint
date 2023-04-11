@@ -17,12 +17,10 @@ class TestDataFileFormats(TestCase):
 
     def setUp(self) -> None:
         self.modules = [
-            "AdditionalSchemas",
             "AdditionalSpecs",
             "CfnLintCli",
-            "ExtendedProviderSchemas",
             "Serverless",
-            "AdditionalSpecs",
+            "schemas",
         ]
         super().setUp()
 
