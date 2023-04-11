@@ -99,7 +99,6 @@ cached = [
     "aws-sagemaker-app.json",
     "aws-ec2-vpcgatewayattachment.json",
     "aws-cloudtrail-trail.json",
-    "aws-gamelift-gameservergroup.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
     "aws-wafv2-ipset.json",
