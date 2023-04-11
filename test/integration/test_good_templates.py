@@ -116,7 +116,7 @@ class TestQuickStartTemplates(BaseCliTestCase):
                             "UserPoolTags",
                         ],
                     },
-                    "Message": "Map must be an object of key-value pairs",
+                    "Message": "[{'Key': 'Key1', 'Value': 'Value1'}, {'Key': 'Key2', 'Value': 'Value2'}] is not of type 'object'",
                     "Rule": {
                         "Description": "Checks resource property values with Primitive Types for values that match those types.",
                         "Id": "E3012",
