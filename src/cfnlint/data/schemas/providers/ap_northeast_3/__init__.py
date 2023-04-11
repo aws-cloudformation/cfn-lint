@@ -68,6 +68,7 @@ cached = [
     "aws-cloudtrail-channel.json",
     "aws-lakeformation-datacellsfilter.json",
     "aws-datasync-locationhdfs.json",
+    "aws-events-archive.json",
     "aws-msk-cluster.json",
     "aws-ec2-vpcendpointconnectionnotification.json",
     "aws-codepipeline-pipeline.json",
