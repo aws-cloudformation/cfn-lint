@@ -1,13 +1,12 @@
 {
  "additionalProperties": false,
  "createOnlyProperties": [
-  "/properties/AppNetworkAccessType",
-  "/properties/AuthMode",
-  "/properties/DomainName",
-  "/properties/DomainSettings/RStudioServerProDomainSettings/DefaultResourceSpec",
-  "/properties/KmsKeyId",
-  "/properties/SubnetIds",
-  "/properties/VpcId",
+  "/properties/DomainId",
+  "/properties/UserProfileName",
+  "/properties/SingleSignOnUserIdentifier",
+  "/properties/SingleSignOnUserValue",
+  "/properties/UserSettings/RStudioServerProAppSettings/AccessStatus",
+  "/properties/UserSettings/RStudioServerProAppSettings/UserGroup",
   "/properties/Tags"
  ],
  "definitions": {
@@ -39,67 +38,6 @@
    ],
    "type": "object"
   },
-  "DefaultSpaceSettings": {
-   "additionalProperties": false,
-   "description": "A collection of settings that apply to spaces of Amazon SageMaker Studio. These settings are specified when the Create/Update Domain API is called.",
-   "properties": {
-    "ExecutionRole": {
-     "description": "The execution role for the space.",
-     "maxLength": 2048,
-     "minLength": 20,
-     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
-     "type": "string"
-    },
-    "JupyterServerAppSettings": {
-     "$ref": "#/definitions/JupyterServerAppSettings",
-     "description": "The Jupyter server's app settings."
-    },
-    "KernelGatewayAppSettings": {
-     "$ref": "#/definitions/KernelGatewayAppSettings",
-     "description": "The kernel gateway app settings."
-    },
-    "SecurityGroups": {
-     "description": "The security groups for the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
-     "insertionOrder": false,
-     "items": {
-      "maxLength": 32,
-      "pattern": "[-0-9a-zA-Z]+",
-      "type": "string"
-     },
-     "maxItems": 5,
-     "minItems": 0,
-     "type": "array",
-     "uniqueItems": false
-    }
-   },
-   "required": [
-    "ExecutionRole"
-   ],
-   "type": "object"
-  },
-  "DomainSettings": {
-   "additionalProperties": false,
-   "description": "A collection of Domain settings.",
-   "properties": {
-    "RStudioServerProDomainSettings": {
-     "$ref": "#/definitions/RStudioServerProDomainSettings"
-    },
-    "SecurityGroupIds": {
-     "description": "The security groups for the Amazon Virtual Private Cloud that the Domain uses for communication between Domain-level apps and user apps.",
-     "insertionOrder": false,
-     "items": {
-      "maxLength": 32,
-      "pattern": "[-0-9a-zA-Z]+",
-      "type": "string"
-     },
-     "maxItems": 3,
-     "minItems": 1,
-     "type": "array",
-     "uniqueItems": false
-    }
-   },
-   "type": "object"
-  },
   "JupyterServerAppSettings": {
    "additionalProperties": false,
    "description": "The JupyterServer app settings.",
@@ -116,7 +54,6 @@
    "properties": {
     "CustomImages": {
      "description": "A list of custom SageMaker images that are configured to run as a KernelGateway app.",
-     "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/CustomImage"
      },
@@ -128,27 +65,6 @@
     "DefaultResourceSpec": {
      "$ref": "#/definitions/ResourceSpec",
      "description": "The default instance type and the Amazon Resource Name (ARN) of the default SageMaker image used by the KernelGateway app."
-    }
-   },
-   "type": "object"
-  },
-  "RSessionAppSettings": {
-   "additionalProperties": false,
-   "description": "A collection of settings that apply to an RSessionGateway app.",
-   "properties": {
-    "CustomImages": {
-     "description": "A list of custom SageMaker images that are configured to run as a KernelGateway app.",
-     "insertionOrder": false,
-     "items": {
-      "$ref": "#/definitions/CustomImage"
-     },
-     "maxItems": 30,
-     "minItems": 0,
-     "type": "array",
-     "uniqueItems": false
-    },
-    "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec"
     }
    },
    "type": "object"
@@ -174,36 +90,6 @@
      "type": "string"
     }
    },
-   "type": "object"
-  },
-  "RStudioServerProDomainSettings": {
-   "additionalProperties": false,
-   "description": "A collection of settings that update the current configuration for the RStudioServerPro Domain-level app.",
-   "properties": {
-    "DefaultResourceSpec": {
-     "$ref": "#/definitions/ResourceSpec"
-    },
-    "DomainExecutionRoleArn": {
-     "description": "The ARN of the execution role for the RStudioServerPro Domain-level app.",
-     "maxLength": 2048,
-     "minLength": 20,
-     "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
-     "type": "string"
-    },
-    "RStudioConnectUrl": {
-     "description": "A URL pointing to an RStudio Connect server.",
-     "pattern": "^(https:|http:|www\\.)\\S*",
-     "type": "string"
-    },
-    "RStudioPackageManagerUrl": {
-     "description": "A URL pointing to an RStudio Package Manager server.",
-     "pattern": "^(https:|http:|www\\.)\\S*",
-     "type": "string"
-    }
-   },
-   "required": [
-    "DomainExecutionRoleArn"
-   ],
    "type": "object"
   },
   "ResourceSpec": {
@@ -273,20 +159,14 @@
      ],
      "type": "string"
     },
-    "LifecycleConfigArn": {
-     "description": "The Amazon Resource Name (ARN) of the Lifecycle Configuration to attach to the Resource.",
-     "maxLength": 256,
-     "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:studio-lifecycle-config/.*",
-     "type": "string"
-    },
     "SageMakerImageArn": {
-     "description": "The Amazon Resource Name (ARN) of the SageMaker image that the image version belongs to.",
+     "description": "The ARN of the SageMaker image that the image version belongs to.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image/[a-z0-9]([-.]?[a-z0-9])*$",
      "type": "string"
     },
     "SageMakerImageVersionArn": {
-     "description": "The Amazon Resource Name (ARN) of the image version created on the instance.",
+     "description": "The ARN of the image version created on the instance.",
      "maxLength": 256,
      "pattern": "^arn:aws(-[\\w]+)*:sagemaker:.+:[0-9]{12}:image-version/[a-z0-9]([-.]?[a-z0-9])*/[0-9]+$",
      "type": "string"
@@ -346,7 +226,7 @@
    "description": "A collection of settings that apply to users of Amazon SageMaker Studio. These settings are specified when the CreateUserProfile API is called, and as DefaultUserSettings when the CreateDomain API is called.",
    "properties": {
     "ExecutionRole": {
-     "description": "The execution role for the user.",
+     "description": "The user profile Amazon Resource Name (ARN).",
      "maxLength": 2048,
      "minLength": 20,
      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
@@ -360,15 +240,11 @@
      "$ref": "#/definitions/KernelGatewayAppSettings",
      "description": "The kernel gateway app settings."
     },
-    "RSessionAppSettings": {
-     "$ref": "#/definitions/RSessionAppSettings"
-    },
     "RStudioServerProAppSettings": {
      "$ref": "#/definitions/RStudioServerProAppSettings"
     },
     "SecurityGroups": {
      "description": "The security groups for the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
-     "insertionOrder": false,
      "items": {
       "maxLength": 32,
       "pattern": "[-0-9a-zA-Z]+",
@@ -384,52 +260,40 @@
      "description": "The sharing settings."
     }
    },
-   "required": [
-    "ExecutionRole"
-   ],
    "type": "object"
   }
  },
- "description": "Resource Type definition for AWS::SageMaker::Domain",
+ "description": "Resource Type definition for AWS::SageMaker::UserProfile",
  "handlers": {
   "create": {
    "permissions": [
-    "sagemaker:CreateApp",
-    "sagemaker:CreateDomain",
-    "sagemaker:DescribeDomain",
+    "sagemaker:CreateUserProfile",
+    "sagemaker:DescribeUserProfile",
     "sagemaker:DescribeImage",
     "sagemaker:DescribeImageVersion",
-    "iam:CreateServiceLinkedRole",
-    "iam:PassRole",
-    "efs:CreateFileSystem",
-    "kms:CreateGrant",
-    "kms:Decrypt",
-    "kms:DescribeKey",
-    "kms:GenerateDataKeyWithoutPlainText"
+    "iam:PassRole"
    ]
   },
   "delete": {
    "permissions": [
-    "sagemaker:DeleteApp",
-    "sagemaker:DeleteDomain",
-    "sagemaker:DescribeDomain"
+    "sagemaker:DeleteUserProfile",
+    "sagemaker:DescribeUserProfile"
    ]
   },
   "list": {
    "permissions": [
-    "sagemaker:ListDomains"
+    "sagemaker:ListUserProfiles"
    ]
   },
   "read": {
    "permissions": [
-    "sagemaker:DescribeDomain"
+    "sagemaker:DescribeUserProfile"
    ]
   },
   "update": {
    "permissions": [
-    "sagemaker:CreateApp",
-    "sagemaker:UpdateDomain",
-    "sagemaker:DescribeDomain",
+    "sagemaker:UpdateUserProfile",
+    "sagemaker:DescribeUserProfile",
     "sagemaker:DescribeImage",
     "sagemaker:DescribeImageVersion",
     "iam:PassRole"
@@ -437,100 +301,29 @@
   }
  },
  "primaryIdentifier": [
+  "/properties/UserProfileName",
   "/properties/DomainId"
  ],
  "properties": {
-  "AppNetworkAccessType": {
-   "description": "Specifies the VPC used for non-EFS traffic. The default value is PublicInternetOnly.",
-   "enum": [
-    "PublicInternetOnly",
-    "VpcOnly"
-   ],
-   "type": "string"
-  },
-  "AppSecurityGroupManagement": {
-   "description": "The entity that creates and manages the required security groups for inter-app communication in VPCOnly mode. Required when CreateDomain.AppNetworkAccessType is VPCOnly and DomainSettings.RStudioServerProDomainSettings.DomainExecutionRoleArn is provided.",
-   "enum": [
-    "Service",
-    "Customer"
-   ],
-   "type": "string"
-  },
-  "AuthMode": {
-   "description": "The mode of authentication that members use to access the domain.",
-   "enum": [
-    "SSO",
-    "IAM"
-   ],
-   "type": "string"
-  },
-  "DefaultSpaceSettings": {
-   "$ref": "#/definitions/DefaultSpaceSettings",
-   "description": "The default space settings."
-  },
-  "DefaultUserSettings": {
-   "$ref": "#/definitions/UserSettings",
-   "description": "The default user settings."
-  },
-  "DomainArn": {
-   "description": "The Amazon Resource Name (ARN) of the created domain.",
-   "maxLength": 256,
-   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:domain/.*",
-   "type": "string"
-  },
   "DomainId": {
-   "description": "The domain name.",
+   "description": "The ID of the associated Domain.",
    "maxLength": 63,
-   "pattern": "^d-(-*[a-z0-9])+",
+   "minLength": 1,
    "type": "string"
   },
-  "DomainName": {
-   "description": "A name for the domain.",
-   "maxLength": 63,
-   "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}",
+  "SingleSignOnUserIdentifier": {
+   "description": "A specifier for the type of value specified in SingleSignOnUserValue. Currently, the only supported value is \"UserName\". If the Domain's AuthMode is SSO, this field is required. If the Domain's AuthMode is not SSO, this field cannot be specified.",
+   "pattern": "UserName",
    "type": "string"
   },
-  "DomainSettings": {
-   "$ref": "#/definitions/DomainSettings"
-  },
-  "HomeEfsFileSystemId": {
-   "description": "The ID of the Amazon Elastic File System (EFS) managed by this Domain.",
-   "maxLength": 32,
-   "type": "string"
-  },
-  "KmsKeyId": {
-   "description": "SageMaker uses AWS KMS to encrypt the EFS volume attached to the domain with an AWS managed customer master key (CMK) by default.",
-   "maxLength": 2048,
-   "pattern": ".*",
-   "type": "string"
-  },
-  "SecurityGroupIdForDomainBoundary": {
-   "description": "The ID of the security group that authorizes traffic between the RSessionGateway apps and the RStudioServerPro app.",
-   "maxLength": 32,
-   "pattern": "[-0-9a-zA-Z]+",
-   "type": "string"
-  },
-  "SingleSignOnManagedApplicationInstanceId": {
-   "description": "The SSO managed application instance ID.",
+  "SingleSignOnUserValue": {
+   "description": "The username of the associated AWS Single Sign-On User for this UserProfile. If the Domain's AuthMode is SSO, this field is required, and must match a valid username of a user in your directory. If the Domain's AuthMode is not SSO, this field cannot be specified.",
    "maxLength": 256,
+   "minLength": 1,
    "type": "string"
-  },
-  "SubnetIds": {
-   "description": "The VPC subnets that Studio uses for communication.",
-   "insertionOrder": false,
-   "items": {
-    "maxLength": 32,
-    "pattern": "[-0-9a-zA-Z]+",
-    "type": "string"
-   },
-   "maxItems": 16,
-   "minItems": 1,
-   "type": "array",
-   "uniqueItems": false
   },
   "Tags": {
    "description": "A list of tags to apply to the user profile.",
-   "insertionOrder": false,
    "items": {
     "$ref": "#/definitions/Tag"
    },
@@ -539,34 +332,34 @@
    "type": "array",
    "uniqueItems": false
   },
-  "Url": {
-   "description": "The URL to the created domain.",
-   "maxLength": 1024,
+  "UserProfileArn": {
+   "description": "The user profile Amazon Resource Name (ARN).",
+   "maxLength": 256,
+   "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:user-profile/.*",
    "type": "string"
   },
-  "VpcId": {
-   "description": "The ID of the Amazon Virtual Private Cloud (VPC) that Studio uses for communication.",
-   "maxLength": 32,
-   "pattern": "[-0-9a-zA-Z]+",
+  "UserProfileName": {
+   "description": "A name for the UserProfile.",
+   "maxLength": 63,
+   "minLength": 1,
    "type": "string"
+  },
+  "UserSettings": {
+   "$ref": "#/definitions/UserSettings",
+   "description": "A collection of settings.",
+   "maxItems": 50,
+   "minItems": 0,
+   "uniqueItems": false
   }
  },
  "readOnlyProperties": [
-  "/properties/DomainArn",
-  "/properties/Url",
-  "/properties/DomainId",
-  "/properties/HomeEfsFileSystemId",
-  "/properties/SecurityGroupIdForDomainBoundary",
-  "/properties/SingleSignOnManagedApplicationInstanceId"
+  "/properties/UserProfileArn"
  ],
  "required": [
-  "AuthMode",
-  "DefaultUserSettings",
-  "DomainName",
-  "SubnetIds",
-  "VpcId"
+  "DomainId",
+  "UserProfileName"
  ],
- "typeName": "AWS::SageMaker::Domain",
+ "typeName": "AWS::SageMaker::UserProfile",
  "writeOnlyProperties": [
   "/properties/Tags"
  ]
