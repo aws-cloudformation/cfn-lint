@@ -20,8 +20,8 @@ class Unserializable:
 class TestStringSize(BaseRuleTestCase):
     """Test List Size Property Configuration"""
 
-    def test_file_positive(self):
-        """Test Positive"""
+    def test_max_length(self):
+        """Test max length"""
         rule = StringSize()
         validator = Draft7Validator(
             {
@@ -45,3 +45,29 @@ class TestStringSize(BaseRuleTestCase):
 
         with self.assertRaises(TypeError):
             list(rule.maxLength(validator, 10, {"foo": Unserializable()}, {}))
+
+    def test_min_length(self):
+        """Test min length"""
+        rule = StringSize()
+        validator = Draft7Validator(
+            {
+                "type": "string",
+                "minLength": 3,
+            }
+        )
+        self.assertEqual(list(rule.minLength(validator, 3, "abcde", {})), [])
+        self.assertEqual(len(list(rule.minLength(validator, 3, "ab", {}))), 1)
+        self.assertEqual(len(list(rule.minLength(validator, 5, {"a": "b"}, {}))), 0)
+        self.assertEqual(len(list(rule.minLength(validator, 12, {"a": "bcd"}, {}))), 1)
+        self.assertEqual(
+            len(list(rule.minLength(validator, 9, {"a": {"Fn::Sub": "b"}}, {}))), 0
+        )
+        self.assertEqual(
+            len(list(rule.minLength(validator, 6, {"Fn::Sub": "bcd"}, {}))), 1
+        )
+        self.assertEqual(
+            len(list(rule.minLength(validator, 7, {"Fn::Sub": ["abcd", {}]}, {}))), 1
+        )
+
+        with self.assertRaises(TypeError):
+            list(rule.minLength(validator, 10, {"foo": Unserializable()}, {}))
