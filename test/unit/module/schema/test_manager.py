@@ -7,7 +7,7 @@ import logging
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import ANY, MagicMock, Mock, call, mock_open, patch
 
-from cfnlint.schema.manager import ProviderSchemaManager
+from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
 
 LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
@@ -246,3 +246,27 @@ class TestManagerPatch(BaseTestCase):
                 self.manager.patch("bad", regions=["us-east-1"])
                 self.assertEqual(mock_exit.type, SystemExit)
                 self.assertEqual(mock_exit.value.code == 1)
+
+
+class TestManagerGetResourceSchema(BaseTestCase):
+    """Test get resource schema"""
+
+    def setUp(self) -> None:
+        super().setUp()
+
+        self.manager = ProviderSchemaManager()
+
+    def test_getting_cached_schema(self):
+        rt = "AWS::EC2::VPC"
+
+        self.manager.get_resource_schema("us-east-1", rt)
+        schema = self.manager.get_resource_schema("us-west-2", rt)
+
+        self.assertTrue(schema.is_cached)
+
+    def test_removed_types(self):
+        rt = "AWS::EC2::VPC"
+        self.manager._cache["RemovedTypes"].append(rt)
+
+        with self.assertRaises(ResourceNotFoundError):
+            self.manager.get_resource_schema("us-east-1", rt)
