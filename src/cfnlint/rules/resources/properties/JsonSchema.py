@@ -11,6 +11,7 @@ from cfnlint.helpers import (
     FN_PREFIX,
     PSEUDOPARAMS,
     REGEX_DYN_REF,
+    REGION_PRIMARY,
     REGISTRY_SCHEMAS,
     UNCONVERTED_SUFFIXES,
     load_resource,
@@ -195,18 +196,22 @@ class JsonSchema(CloudFormationLintRule):
             if t.startswith("Custom::"):
                 t = "AWS::CloudFormation::CustomResource"
             if t:
+                cached_validation_run = []
                 for region in cfn.regions:
                     self.region = region
                     schema = {}
                     try:
-                        schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
-                            region, t
-                        ).json_schema()
+                        schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(region, t)
                     except ResourceNotFoundError as e:
                         LOGGER.info(e)
                         continue
-                    if schema:
-                        cfn_validator = self.validator(schema)
+                    if schema.json_schema():
+                        if t in cached_validation_run or region == REGION_PRIMARY:
+                            if schema.is_cached:
+                                # if its cached we already ran the same validation lets not run it again
+                                continue
+                            cached_validation_run.append(t)
+                        cfn_validator = self.validator(schema.json_schema())
                         path = ["Resources", n, "Properties"]
                         for scenario in cfn.get_object_without_nested_conditions(
                             p, path
