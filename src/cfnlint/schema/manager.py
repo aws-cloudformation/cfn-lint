@@ -12,6 +12,7 @@ import re
 import shutil
 import sys
 import zipfile
+from copy import copy
 from typing import Any, Dict, List, Sequence, Union
 
 import jsonpatch
@@ -45,7 +46,7 @@ class _FileLocation:
 
 
 class ProviderSchemaManager:
-    _schemas: Dict[str, Schema] = {}
+    _schemas: Dict[str, Dict[str, Schema]] = {}
     _provider_schema_modules: Dict[str, Any] = {}
     _cache: Dict[str, Union[Sequence, str]] = {}
 
@@ -74,7 +75,7 @@ class ProviderSchemaManager:
         Important function when processing many templates
         and using spec patching
         """
-        self._schemas: Dict[str, Schema] = {}
+        self._schemas: Dict[str, Dict[str, Schema]] = {}
         self._cache["ResourceTypes"] = {}
         self._cache["GetAtts"] = {}
         self._cache["RemovedTypes"] = []
@@ -107,10 +108,14 @@ class ProviderSchemaManager:
             )
             # load the schema
             if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
-                self._schemas[reg.name][rt.name] = self.get_resource_schema(
-                    region=self._region_primary.name,
-                    resource_type=rt.name,
+                schema_cached = copy(
+                    self.get_resource_schema(
+                        region=self._region_primary.name,
+                        resource_type=rt.name,
+                    )
                 )
+                schema_cached.is_cached = True
+                self._schemas[reg.name][rt.name] = schema_cached
                 return self._schemas[reg.name][rt.name]
             try:
                 self._schemas[reg.name][rt.name] = Schema(
@@ -151,7 +156,7 @@ class ProviderSchemaManager:
                 resource_type = schema.get("typeName")
                 if resource_type in self._cache["RemovedTypes"]:
                     continue
-                self._schemas[reg.name][resource_type] = Schema(schema)
+                self._schemas[reg.name][resource_type] = Schema(schema, True)
                 self._cache["ResourceTypes"][region].append(resource_type)
             for filename in resource_listdir(
                 "cfnlint", resource_name=f"{'/'.join(self._root.path)}/{reg.py}"
