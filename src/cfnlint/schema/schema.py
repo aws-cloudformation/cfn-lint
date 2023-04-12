@@ -16,9 +16,10 @@ from cfnlint.schema.getatts import GetAtt, GetAtts
 class Schema:
     _json_schema: Dict
 
-    def __init__(self, schema) -> None:
+    def __init__(self, schema: Dict, is_cached: bool = False) -> None:
+        self.is_cached = is_cached
         self.schema = deepcopy(schema)
-        self._json_schema = self._cleanse_schema(schema=schema)
+        self._json_schema = self._cleanse_schema(schema=deepcopy(schema))
         self.type_name = schema["typeName"]
         self._getatts = GetAtts(self.schema)
 
