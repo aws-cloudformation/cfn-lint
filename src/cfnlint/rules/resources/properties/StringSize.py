@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import datetime
 import json
+from typing import Any
 
 import regex as re
 
@@ -24,12 +25,10 @@ class StringSize(CloudFormationLintRule):
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
-        raise TypeError(
-            f"Object of type {obj.__class__.__name__} is not JSON serializable"
-        )
+        return json.JSONEncoder.default(self, o=obj)
 
     # pylint: disable=too-many-return-statements
-    def _remove_functions(self, obj):
+    def _remove_functions(self, obj: Any) -> Any:
         """Replaces intrinsic functions with string"""
         if isinstance(obj, dict):
             new_obj = {}
@@ -70,14 +69,20 @@ class StringSize(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def maxLength(self, validator, mL, instance, schema):
-        if validator.is_type(instance, "object"):
+        if (
+            validator.is_type(instance, "object")
+            and validator.schema.get("type") == "object"
+        ):
             yield from self._non_string_max_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) > mL:
             yield ValidationError(f"{instance!r} is too long")
 
     # pylint: disable=unused-argument
     def minLength(self, validator, mL, instance, schema):
-        if validator.is_type(instance, "object"):
+        if (
+            validator.is_type(instance, "object")
+            and validator.schema.get("type") == "object"
+        ):
             yield from self._non_string_min_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) < mL:
             yield ValidationError(f"{instance!r} is too short")
