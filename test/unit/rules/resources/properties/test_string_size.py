@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import datetime
 from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
@@ -31,6 +32,16 @@ class TestStringSize(BaseRuleTestCase):
         )
         self.assertEqual(list(rule.maxLength(validator, 3, "a", {})), [])
         self.assertEqual(len(list(rule.maxLength(validator, 3, "abcd", {}))), 1)
+
+    def test_max_object_length(self):
+        """Test object max length"""
+        rule = StringSize()
+        validator = Draft7Validator(
+            {
+                "type": "object",
+                "maxLength": 3,
+            }
+        )
         self.assertEqual(len(list(rule.maxLength(validator, 10, {"a": "b"}, {}))), 0)
         self.assertEqual(len(list(rule.maxLength(validator, 3, {"a": "bcd"}, {}))), 1)
         self.assertEqual(
@@ -41,6 +52,16 @@ class TestStringSize(BaseRuleTestCase):
         )
         self.assertEqual(
             len(list(rule.maxLength(validator, 3, {"Fn::Sub": ["abcd", {}]}, {}))), 1
+        )
+        self.assertEqual(
+            len(
+                list(rule.maxLength(validator, 100, {"now": datetime.date.today()}, {}))
+            ),
+            0,
+        )
+        self.assertEqual(
+            len(list(rule.maxLength(validator, 100, {"now": {"Ref": "date"}}, {}))),
+            0,
         )
 
         with self.assertRaises(TypeError):
@@ -57,6 +78,16 @@ class TestStringSize(BaseRuleTestCase):
         )
         self.assertEqual(list(rule.minLength(validator, 3, "abcde", {})), [])
         self.assertEqual(len(list(rule.minLength(validator, 3, "ab", {}))), 1)
+
+    def test_min_object_length(self):
+        """Test min object length"""
+        rule = StringSize()
+        validator = Draft7Validator(
+            {
+                "type": "object",
+                "minLength": 3,
+            }
+        )
         self.assertEqual(len(list(rule.minLength(validator, 5, {"a": "b"}, {}))), 0)
         self.assertEqual(len(list(rule.minLength(validator, 12, {"a": "bcd"}, {}))), 1)
         self.assertEqual(
