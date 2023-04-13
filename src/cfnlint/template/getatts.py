@@ -11,7 +11,7 @@ from cfnlint.schema import (
 
 class GetAtts:
     # [region][resource_name][attribute][JsonSchema Dict]
-    # Dict[str, RegexDict[str, RegexDict[str, GetAtt]]]
+    # Dict[str, Dict[str, RegexDict[str, GetAtt]]]
     _getatts: Dict[str, Dict[str, Dict[str, GetAtt]]]
 
     _astrik_string_types = ("AWS::CloudFormation::Stack",)
@@ -25,7 +25,7 @@ class GetAtts:
         self._regions = regions
         self._getatts = {}
         for region in self._regions:
-            self._getatts[region] = RegexDict()
+            self._getatts[region] = {}
 
     def add(self, resource_name: str, resource_type: str) -> None:
         for region in self._regions:
