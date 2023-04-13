@@ -1,0 +1,37 @@
+{
+ "additionalProperties": true,
+ "description": "Using the ZipFile attribute requires a javascript or python runtime to be specified",
+ "if": {
+  "properties": {
+   "Code": {
+    "additionalProperties": true,
+    "properties": {
+     "ZipFile": {
+      "type": [
+       "object",
+       "string"
+      ]
+     }
+    },
+    "required": [
+     "ZipFile"
+    ],
+    "type": "object"
+   },
+   "Runtime": {
+    "type": "string"
+   }
+  }
+ },
+ "properties": {},
+ "then": {
+  "properties": {
+   "Runtime": {
+    "pattern": "^(nodejs.*|python.*)$",
+    "type": "string"
+   },
+   "required": true
+  }
+ },
+ "type": "object"
+}
