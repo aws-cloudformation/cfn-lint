@@ -22,3 +22,12 @@ def unbool(element, true=object(), false=object()):
     if element is False:
         return false
     return element
+
+
+def equal(one, two) -> bool:
+    try:
+        one = str(one)
+        two = str(two)
+        return one == two
+    except ValueError:
+        return True
