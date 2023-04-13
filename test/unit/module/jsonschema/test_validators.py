@@ -207,6 +207,21 @@ class TestValidators(unittest.TestCase):
         # wrong type so no errors
         self.no_error(instance=[], schema=schema)
 
+    def test_exlusive_minimum_string(self):
+        schema = {"exclusiveMinimum": 5}
+        message = self.message_for(
+            instance="3",
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'3' is less than or equal to the minimum of 5",
+        )
+
+    def test_exclusive_minimum_str_non_number(self):
+        schema = {"exclusiveMinimum": 5}
+        self.no_error(instance="A", schema=schema)
+
     def test_exlusive_maximum(self):
         schema = {"exclusiveMaximum": 5}
         message = self.message_for(
@@ -221,6 +236,21 @@ class TestValidators(unittest.TestCase):
         self.no_error(instance=3, schema=schema)
         # wrong type so no errors
         self.no_error(instance=[], schema=schema)
+
+    def test_exlusive_maximum_string(self):
+        schema = {"exclusiveMaximum": 5}
+        message = self.message_for(
+            instance="6",
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'6' is greater than or equal to the maximum of 5",
+        )
+
+    def test_exclusive_maximum_str_non_number(self):
+        schema = {"exclusiveMaximum": 5}
+        self.no_error(instance="a", schema=schema)
 
     def test_minimum(self):
         schema = {"minimum": 5}
@@ -237,6 +267,21 @@ class TestValidators(unittest.TestCase):
         # wrong type so no errors
         self.no_error(instance=[], schema=schema)
 
+    def test_minimum_string(self):
+        schema = {"minimum": 5}
+        message = self.message_for(
+            instance="3",
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'3' is less than the minimum of 5",
+        )
+
+    def test_minimum_str_non_number(self):
+        schema = {"minimum": 5}
+        self.no_error(instance="a", schema=schema)
+
     def test_maximum(self):
         schema = {"maximum": 5}
         message = self.message_for(
@@ -251,6 +296,21 @@ class TestValidators(unittest.TestCase):
         self.no_error(instance=5, schema=schema)
         # wrong type so no errors
         self.no_error(instance=[], schema=schema)
+
+    def test_maximum_string(self):
+        schema = {"maximum": 5}
+        message = self.message_for(
+            instance="6",
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'6' is greater than the maximum of 5",
+        )
+
+    def test_maximum_str_non_number(self):
+        schema = {"maximum": 5}
+        self.no_error(instance="a", schema=schema)
 
     def test_multiple_of_number(self):
         schema = {"typeOf": "number", "multipleOf": 5}
@@ -379,6 +439,17 @@ class TestValidators(unittest.TestCase):
             "1 is not one of [0]",
         )
 
+        self.no_error(instance=0, schema=schema)
+
+    def test_enum_number_from_string(self):
+        schema = {"enum": [0]}
+        self.no_error(instance="0", schema=schema)
+
+    def test_enum_string_from_number(self):
+        schema = {"enum": ["10"]}
+        self.no_error(instance=10, schema=schema)
+
+        schema = {"enum": ["0"]}
         self.no_error(instance=0, schema=schema)
 
     def test_min_properties(self):
