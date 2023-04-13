@@ -1,0 +1,38 @@
+{
+    "additionalProperties": true,
+    "description": "Both 'Ipv4IpamPoolId' and 'Ipv4NetmaskLength' must be provided",
+    "definitions": {
+        "Ipv4IpamPoolId": {
+            "properties": {
+                "Ipv4IpamPoolId": {
+                    "type": ["string", "object"]
+                }
+            },
+            "required": [
+                "Ipv4IpamPoolId"
+            ]
+        },
+        "Ipv4NetmaskLength": {"properties": {
+            "Ipv4NetmaskLength": {
+                "type": ["string", "object", "number"]
+            }
+        },
+        "required": [
+            "Ipv4NetmaskLength"
+        ]}
+    },
+    "if": {
+        "$ref": "#/definitions/Ipv4IpamPoolId"
+    },
+    "then": {
+        "$ref": "#/definitions/Ipv4NetmaskLength"
+    },
+    "else": {
+        "if": {
+            "$ref": "#/definitions/Ipv4NetmaskLength"
+        },
+        "then": {
+            "$ref": "#/definitions/Ipv4IpamPoolId"
+        }
+    }
+}
