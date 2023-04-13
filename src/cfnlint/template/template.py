@@ -189,7 +189,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
         return results
 
-    def get_valid_refs(self):
+    def get_valid_refs(self) -> cfnlint.helpers.RegexDict:
         results = cfnlint.helpers.RegexDict()
         parameters = self.template.get("Parameters", {})
         if parameters:
