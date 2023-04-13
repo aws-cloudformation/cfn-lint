@@ -6,6 +6,7 @@ import logging
 import re
 
 import jsonschema
+from jsonschema.exceptions import best_match
 
 from cfnlint.helpers import (
     FN_PREFIX,
@@ -147,11 +148,14 @@ class JsonSchema(CloudFormationLintRule):
                 filename=(f"{schema_details[1]}.json"),
             )
             cfn_validator = self.validator(cfn_schema)
-            if cfn_schema.get("description"):
-                if not cfn_validator.is_valid(instance):
-                    yield ValidationError(cfn_schema.get("description"))
-            else:
-                yield from cfn_validator.iter_errors(instance)
+            errs = list(cfn_validator.iter_errors(instance))
+            if errs:
+                if cfn_schema.get("description"):
+                    err = best_match(errs)
+                    err.message = cfn_schema.get("description")
+                    yield err
+                else:
+                    yield errs
 
     # pylint: disable=unused-argument
     def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
