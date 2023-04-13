@@ -1,0 +1,24 @@
+{
+ "additionalProperties": true,
+ "description": "Period < 60 not supported for namespaces with the following prefix: AWS/",
+ "if": {
+  "properties": {
+   "Namespace": {
+    "pattern": "^AWS/.*$",
+    "type": "string"
+   }
+  }
+ },
+ "then": {
+  "properties": {
+   "Period": {
+    "minimum": 60,
+    "type": [
+     "number",
+     "string"
+    ]
+   }
+  }
+ },
+ "type": "object"
+}
