@@ -11,7 +11,7 @@ from jsonschema import Draft7Validator
 from jsonschema.exceptions import best_match
 from jsonschema.validators import extend
 
-from cfnlint.jsonschema import ValidationError, _utils
+from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -30,11 +30,7 @@ class GetAtt(CloudFormationLintRule):
     # pylint: disable=unused-argument
     def _enum(self, validator, enums, instance, schema):
         enums.sort()
-        if instance in (0, 1):
-            unbooled = _utils.unbool(instance)
-            if all(unbooled != _utils.unbool(each) for each in enums):
-                yield ValidationError(f"{instance!r} is not one of {enums!r}")
-        elif instance not in enums:
+        if instance not in enums:
             if validator.is_type(instance, "string"):
                 for enum in enums:
                     _rex = re.compile(enum)
