@@ -3,7 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from cfnlint.jsonschema import ValidationError, _utils
+from cfnlint.jsonschema import _validators
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -28,9 +28,4 @@ class AllowedValue(CloudFormationLintRule):
                         if self.child_rules.get("W2030"):
                             yield from self.child_rules["W2030"].validate(v, enums)
                         return
-        if instance in (0, 1):
-            unbooled = _utils.unbool(instance)
-            if all(unbooled != _utils.unbool(each) for each in enums):
-                yield ValidationError(f"{instance!r} is not one of {enums!r}")
-        elif instance not in enums:
-            yield ValidationError(f"{instance!r} is not one of {enums!r}")
+        yield from _validators.enum(validator, enums, instance, schema)
