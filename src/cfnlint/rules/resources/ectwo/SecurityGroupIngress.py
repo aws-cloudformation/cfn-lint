@@ -36,19 +36,6 @@ class SecurityGroupIngress(CloudFormationLintRule):
                     )
                 )
 
-        else:
-            if properties.get("SourceSecurityGroupId", None):
-                path_error = path[:] + ["SourceSecurityGroupId"]
-                message = (
-                    "SourceSecurityGroupId shouldn't be specified for "
-                    "Non-Vpc Security Group at {0}"
-                )
-                matches.append(
-                    RuleMatch(
-                        path_error, message.format("/".join(map(str, path_error)))
-                    )
-                )
-
         return matches
 
     def match(self, cfn):
