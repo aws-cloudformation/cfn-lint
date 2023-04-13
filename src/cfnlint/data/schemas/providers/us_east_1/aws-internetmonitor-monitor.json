@@ -4,6 +4,15 @@
   "/properties/MonitorName"
  ],
  "definitions": {
+  "InternetMeasurementsLogDelivery": {
+   "additionalProperties": false,
+   "properties": {
+    "S3Config": {
+     "$ref": "#/definitions/S3Config"
+    }
+   },
+   "type": "object"
+  },
   "MonitorConfigState": {
    "enum": [
     "PENDING",
@@ -23,6 +32,26 @@
     "FAULT_ACCESS_CLOUDWATCH"
    ],
    "type": "string"
+  },
+  "S3Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "minLength": 3,
+     "type": "string"
+    },
+    "BucketPrefix": {
+     "type": "string"
+    },
+    "LogDeliveryStatus": {
+     "enum": [
+      "ENABLED",
+      "DISABLED"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "Tag": {
    "additionalProperties": false,
@@ -83,6 +112,9 @@
  "properties": {
   "CreatedAt": {
    "$ref": "#/definitions/iso8601UTC"
+  },
+  "InternetMeasurementsLogDelivery": {
+   "$ref": "#/definitions/InternetMeasurementsLogDelivery"
   },
   "MaxCityNetworksToMonitor": {
    "maximum": 500000,
