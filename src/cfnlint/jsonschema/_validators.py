@@ -6,8 +6,8 @@ Originally taken from https://github.com/python-jsonschema/jsonschema/blob/main/
 and https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/_legacy_validators.py
 adapted for CloudFormation usage
 """
-
 import re
+from copy import deepcopy
 from fractions import Fraction
 
 from jsonschema._utils import (
@@ -18,6 +18,7 @@ from jsonschema._utils import (
     uniq,
 )
 
+from cfnlint.jsonschema._utils import equal as s_equal
 from cfnlint.jsonschema._utils import unbool
 from cfnlint.jsonschema.exceptions import ValidationError
 
@@ -168,10 +169,16 @@ def const(validator, c, instance, schema):
 
 # pylint: disable=unused-argument
 def exclusiveMinimum(validator, m, instance, schema):
-    if not validator.is_type(instance, "number"):
+    t_instance = deepcopy(instance)
+    if validator.is_type(t_instance, "string"):
+        try:
+            t_instance = float(t_instance)
+        except ValueError:
+            return
+    if not validator.is_type(t_instance, "number"):
         return
 
-    if instance <= m:
+    if t_instance <= m:
         yield ValidationError(
             f"{instance!r} is less than or equal to " f"the minimum of {m!r}",
         )
@@ -179,10 +186,16 @@ def exclusiveMinimum(validator, m, instance, schema):
 
 # pylint: disable=unused-argument
 def exclusiveMaximum(validator, m, instance, schema):
-    if not validator.is_type(instance, "number"):
+    t_instance = deepcopy(instance)
+    if validator.is_type(t_instance, "string"):
+        try:
+            t_instance = float(t_instance)
+        except ValueError:
+            return
+    if not validator.is_type(t_instance, "number"):
         return
 
-    if instance >= m:
+    if t_instance >= m:
         yield ValidationError(
             f"{instance!r} is greater than or equal " f"to the maximum of {m!r}",
         )
@@ -190,20 +203,32 @@ def exclusiveMaximum(validator, m, instance, schema):
 
 # pylint: disable=unused-argument
 def minimum(validator, m, instance, schema):
-    if not validator.is_type(instance, "number"):
+    t_instance = deepcopy(instance)
+    if validator.is_type(t_instance, "string"):
+        try:
+            t_instance = float(t_instance)
+        except ValueError:
+            return
+    if not validator.is_type(t_instance, "number"):
         return
 
-    if instance < m:
+    if t_instance < m:
         message = f"{instance!r} is less than the minimum of {m!r}"
         yield ValidationError(message)
 
 
 # pylint: disable=unused-argument
 def maximum(validator, m, instance, schema):
-    if not validator.is_type(instance, "number"):
+    t_instance = deepcopy(instance)
+    if validator.is_type(t_instance, "string"):
+        try:
+            t_instance = float(t_instance)
+        except:  # pylint: disable=bare-except
+            return
+    if not validator.is_type(t_instance, "number"):
         return
 
-    if instance > m:
+    if t_instance > m:
         message = f"{instance!r} is greater than the maximum of {m!r}"
         yield ValidationError(message)
 
@@ -276,10 +301,11 @@ def maxLength(validator, mL, instance, schema):
 def enum(validator, enums, instance, schema):
     if instance in (0, 1):
         unbooled = unbool(instance)
-        if all(unbooled != unbool(each) for each in enums):
+        if all(not (s_equal(unbooled, unbool(each))) for each in enums):
             yield ValidationError(f"{instance!r} is not one of {enums!r}")
-    elif instance not in enums:
-        yield ValidationError(f"{instance!r} is not one of {enums!r}")
+    else:
+        if all(not (s_equal(instance, each)) for each in enums):
+            yield ValidationError(f"{instance!r} is not one of {enums!r}")
 
 
 # pylint: disable=unused-argument
