@@ -3,40 +3,25 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import re
-from typing import Dict, Any
+from typing import Any, Dict, Optional
 
-import jsonschema
-from jsonschema.exceptions import best_match
-
-from cfnlint.helpers import (
-    FN_PREFIX,
-    PSEUDOPARAMS,
-    REGEX_DYN_REF,
-    REGION_PRIMARY,
-    REGISTRY_SCHEMAS,
-    UNCONVERTED_SUFFIXES,
-    load_resource,
-)
-from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validator import create as create_validator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
-from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 from cfnlint.template.template import Template
 
-LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")
+LOGGER = logging.getLogger("cfnlint.rules.JsonSchema")
 
 
 class BaseJsonSchema(CloudFormationLintRule):
     """The base JSON schema package"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Init"""
         super().__init__()
         self.validator = None
-        self.rules: Dict[str, str] = {}
+        self.rules: Dict[str, Any] = {}
         self.rule_set: Dict[str, str] = {}
-        self.region: str = None
+        self.region: Optional[str] = None
         self.validators: Dict[str, Any] = {}
 
     def json_schema_validate(self, validator, properties, path):

@@ -13,11 +13,11 @@
    ]
   },
   "AwsArn": {
-   "pattern": "^arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*:(?:\\d{12}|\\*)?:.+$",
+   "pattern": "^(arn:(aws|aws-cn|aws-us-gov):[^:]+:[^:]*:(?:\\d{12}|\\*)?:.+|\\*)$",
    "type": "string"
   },
   "AwsPrincipalArn": {
-   "pattern": "^arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)",
+   "pattern": "^(arn:(aws|aws-cn|aws-us-gov):iam::\\d{12}:(?:root|user|group|role)|\\*)",
    "type": "string"
   },
   "Condition": {
@@ -148,9 +148,6 @@
       "AWS": {
        "anyOf": [
         {
-         "$ref": "#/definitions/Wildcard"
-        },
-        {
          "$ref": "#/definitions/AwsPrincipalArn"
         },
         {
@@ -174,9 +171,6 @@
   },
   "Resource": {
    "anyOf": [
-    {
-     "$ref": "#/definitions/Wildcard"
-    },
     {
      "$ref": "#/definitions/AwsArn"
     },

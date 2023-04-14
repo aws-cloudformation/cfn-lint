@@ -192,11 +192,11 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     "expected_type": reprs,
                 }
                 # JSON types are listed as objects but will take a string
-                if "object" in types and "properties" not in "schema":
+                if "object" in types and "properties" not in schema:
                     if validator.is_type(instance, "string"):
                         try:
                             json.loads(instance)
-                        except Exception as e:
+                        except json.JSONDecodeError:
                             yield ValidationError(
                                 f"{instance!r} is not of type {reprs}",
                                 extra_args=extra_args,

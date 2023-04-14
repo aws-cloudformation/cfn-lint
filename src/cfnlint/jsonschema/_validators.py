@@ -10,13 +10,6 @@ import re
 from copy import deepcopy
 from fractions import Fraction
 
-from cfnlint.helpers import (
-    FUNCTIONS_MULTIPLE,
-    PSEUDOPARAMS_MULTIPLE,
-    FUNCTIONS_SINGLE,
-    PSEUDOPARAMS_SINGLE,
-)
-
 from jsonschema._utils import (
     ensure_list,
     equal,
@@ -25,6 +18,12 @@ from jsonschema._utils import (
     uniq,
 )
 
+from cfnlint.helpers import (
+    FUNCTIONS_MULTIPLE,
+    FUNCTIONS_SINGLE,
+    PSEUDOPARAMS_MULTIPLE,
+    PSEUDOPARAMS_SINGLE,
+)
 from cfnlint.jsonschema._utils import equal as s_equal
 from cfnlint.jsonschema._utils import unbool
 from cfnlint.jsonschema.exceptions import ValidationError
@@ -334,6 +333,7 @@ def ref(validator, r, instance, schema):
 # pylint: disable=unused-argument,redefined-builtin
 def cfn_type(validator, tS, instance, schema):
     tS = ensure_list(tS)
+    reprs = ", ".join(repr(type) for type in tS)
     if not any(validator.is_type(instance, type) for type in tS):
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
@@ -343,7 +343,7 @@ def cfn_type(validator, tS, instance, schema):
                             for i in range(1, 3):
                                 for v_err in cfn_type(
                                     validator=validator,
-                                    types=tS,
+                                    tS=tS,
                                     instance=v[i],
                                     schema=schema,
                                 ):
@@ -373,20 +373,19 @@ def cfn_type(validator, tS, instance, schema):
                         yield ValidationError(
                             f"{instance!r} is not of type {reprs}", extra_args={}
                         )
-                        return
-                    if k in FUNCTIONS_SINGLE:
+                    elif k in FUNCTIONS_SINGLE:
                         for t in tS:
                             if t in ["string", "integer", "boolean"]:
                                 return
                         yield ValidationError(
                             f"{instance!r} is not of type {reprs}", extra_args={}
                         )
-                        return
-                    yield ValidationError(
-                        f"{instance!r} is not of type {reprs}", extra_args={}
-                    )
+                    else:
+                        yield ValidationError(
+                            f"{instance!r} is not of type {reprs}", extra_args={}
+                        )
                     return
-        reprs = ", ".join(repr(type) for type in tS)
+
         yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 

@@ -6,6 +6,7 @@ import cfnlint.helpers
 from cfnlint.data.schemas.extensions import resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema import create as create_validator
+from cfnlint.jsonschema._validators import type as validator_type
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
@@ -28,6 +29,7 @@ class Configuration(CloudFormationLintRule):
         self.validator = create_validator(
             validators={
                 "awsType": self._awsType,
+                "type": validator_type,
             },
             cfn=None,
             rules=None,

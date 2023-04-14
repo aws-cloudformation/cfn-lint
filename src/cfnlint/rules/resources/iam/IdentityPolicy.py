@@ -3,13 +3,15 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
+
 from jsonschema import RefResolver
 from jsonschema.exceptions import best_match
-from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 
 from cfnlint.helpers import load_resource
+from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema._validators import cfn_type as validator_cfn_type
+from cfnlint.jsonschema._validators import type as validator_type
+from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 
 
 class IdentityPolicy(BaseJsonSchema):
@@ -27,6 +29,7 @@ class IdentityPolicy(BaseJsonSchema):
         self.validators = {
             "anyOf": self._any_of,
             "oneOf": self._one_of,
+            "type": validator_cfn_type,
         }
         policy_schema = load_resource("cfnlint.data.schemas.nested", "iam_policy.json")
         self.identity_schema = load_resource(
@@ -84,15 +87,17 @@ class IdentityPolicy(BaseJsonSchema):
     def iamidentitypolicy(self, validator, _, policy, schema):
         # First time child rules are configured against the rule
         # so we can run this now
-        self.setup_validator(
-            cfn=self.cfn,
-        )
 
         if isinstance(policy, str):
             try:
+                self.validators["type"] = validator_type
                 policy = json.loads(policy)
-            except Exception:
+            except json.JSONDecodeError:
                 return
+
+        self.setup_validator(
+            cfn=self.cfn,
+        )
         cfn_validator = self.validator(self.identity_schema, resolver=self.resolver)
 
         for err in cfn_validator.iter_errors(policy):

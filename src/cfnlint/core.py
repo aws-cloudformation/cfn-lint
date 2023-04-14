@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 from typing import Dict, Iterator, List, Optional, Sequence, Tuple, Union
-import traceback
+
 import cfnlint.config
 import cfnlint.decode
 import cfnlint.formatters

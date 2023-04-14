@@ -18,11 +18,9 @@ from cfnlint.helpers import (
     load_resource,
 )
 from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema.validator import create as create_validator
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules import RuleMatch
 from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
-from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")
 
@@ -35,21 +33,6 @@ class JsonSchema(BaseJsonSchema):
     description = "Making sure that resources properties comply with their JSON schema"
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties"
     tags = ["resources"]
-    child_rules = {
-        "E2523": None,
-        "E3002": None,
-        "E3003": None,
-        "E3012": None,
-        "E3030": None,
-        "E3031": None,
-        "E3032": None,
-        "E3033": None,
-        "E3034": None,
-        "E3037": None,
-        "E3008": None,
-        "E3017": None,
-        "E3018": None,
-    }
 
     def __init__(self):
         """Init"""
@@ -80,6 +63,7 @@ class JsonSchema(BaseJsonSchema):
             "cfnSchema": "E3017",
             "cfnRegionSchema": "E3018",
         }
+        self.child_rules = dict.fromkeys(list(self.rule_set.values()))
 
     # pylint: disable=unused-argument
     def _cfnSchema(self, validator, schema_paths, instance, schema, region=None):
