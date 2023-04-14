@@ -22,7 +22,6 @@ from cfnlint.rules.resources.properties import StringSize as RuleStringSize
 from cfnlint.rules.resources.properties import ValuePrimitiveType as RuleType
 from cfnlint.rules.resources.properties.JsonSchema import (  # pylint: disable=E0401
     JsonSchema,
-    _rule_set,
 )
 
 
@@ -43,7 +42,7 @@ class TestJsonSchema(BaseRuleTestCase):
             build_key("F"): 5,
             build_key("G"): ["A", "A"],
         }
-        self.ruleset = _rule_set.copy()
+        self.ruleset = self.rule.rule_set.copy()
 
         self.rule.child_rules = {
             "E3002": RuleProperties.Properties(),
@@ -59,7 +58,7 @@ class TestJsonSchema(BaseRuleTestCase):
         }
         self.cfn = Mock()
         self.cfn.get_valid_refs = {}
-        self.rule._setup_validator(self.cfn)
+        self.rule.setup_validator(self.cfn)
         self.path = ["Resources", "Table", "Properties"]
 
     def build_result(

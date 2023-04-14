@@ -20,36 +20,14 @@ from cfnlint.helpers import (
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema.validator import create as create_validator
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")
 
 
-_rule_set = {
-    "additionalProperties": "E3002",
-    "properties": "E3002",
-    "required": "E3003",
-    "enum": "E3030",
-    "type": "E3012",
-    "minLength": "E3033",
-    "maxLength": "E3033",
-    "uniqueItems": "E3037",
-    "maximum": "E3034",
-    "minimum": "E3034",
-    "exclusiveMaximum": "E3034",
-    "exclusiveMinimum": "E3034",
-    "maxItems": "E3032",
-    "minItems": "E3032",
-    "pattern": "E3031",
-    "oneOf": "E2523",
-    "awsType": "E3008",
-    "cfnSchema": "E3017",
-    "cfnRegionSchema": "E3018",
-}
-
-
-class JsonSchema(CloudFormationLintRule):
+class JsonSchema(BaseJsonSchema):
     """Check Base Resource Configuration"""
 
     id = "E3000"
@@ -76,65 +54,32 @@ class JsonSchema(CloudFormationLintRule):
     def __init__(self):
         """Init"""
         super().__init__()
-        self.cfn = {}
-        self.validator = None
-        self.rules = {}
-        self.region = None
-        for name, _ in _rule_set.items():
-            self.rules[name] = None
-
-    def json_schema_validate(self, validator, properties, path):
-        matches = []
-        for e in validator.iter_errors(properties):
-            kwargs = {}
-            if hasattr(e, "extra_args"):
-                kwargs = getattr(e, "extra_args")
-            e_path = path + list(e.path)
-            if len(e.path) > 0:
-                e_path_override = getattr(e, "path_override", None)
-                if e_path_override:
-                    e_path = list(e.path_override)
-                else:
-                    key = e.path[-1]
-                    if hasattr(key, "start_mark"):
-                        kwargs["location"] = (
-                            key.start_mark.line,
-                            key.start_mark.column,
-                            key.end_mark.line,
-                            key.end_mark.column,
-                        )
-
-            e_rule = None
-            if hasattr(e, "rule"):
-                if e.rule:
-                    e_rule = e.rule
-            if not e_rule:
-                e_rule = self.rules.get(e.validator, self)
-
-            matches.append(
-                RuleMatch(
-                    e_path,
-                    e.message,
-                    rule=e_rule,
-                    **kwargs,
-                )
-            )
-
-        return matches
-
-    def _setup_validator(self, cfn: Template):
-        for name, rule_id in _rule_set.items():
-            self.rules[name] = self.child_rules.get(rule_id)
-
-        self.validator = create_validator(
-            validators={
-                "awsType": None,
-                "cfnSchema": self._cfnSchema,
-                "cfnRegionSchema": self._cfnRegionSchema,
-            },
-            cfn=cfn,
-            rules=self.rules,
-        )
+        self.validators = {
+            "awsType": None,
+            "cfnSchema": self._cfnSchema,
+            "cfnRegionSchema": self._cfnRegionSchema,
+        }
+        self.rule_set = {
+            "additionalProperties": "E3002",
+            "properties": "E3002",
+            "required": "E3003",
+            "enum": "E3030",
+            "type": "E3012",
+            "minLength": "E3033",
+            "maxLength": "E3033",
+            "uniqueItems": "E3037",
+            "maximum": "E3034",
+            "minimum": "E3034",
+            "exclusiveMaximum": "E3034",
+            "exclusiveMinimum": "E3034",
+            "maxItems": "E3032",
+            "minItems": "E3032",
+            "pattern": "E3031",
+            "oneOf": "E2523",
+            "awsType": "E3008",
+            "cfnSchema": "E3017",
+            "cfnRegionSchema": "E3018",
+        }
 
     # pylint: disable=unused-argument
     def _cfnSchema(self, validator, schema_paths, instance, schema, region=None):
@@ -166,7 +111,11 @@ class JsonSchema(CloudFormationLintRule):
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = []
-        self.cfn = cfn
+        # First time child rules are configured against the rule
+        # so we can run this now
+        self.setup_validator(
+            cfn=cfn,
+        )
 
         for schema in REGISTRY_SCHEMAS:
             resource_type = schema["typeName"]
@@ -191,8 +140,6 @@ class JsonSchema(CloudFormationLintRule):
                                 ["Resources", resource_name, "Properties"], e.message
                             )
                         )
-
-        self._setup_validator(cfn=cfn)
 
         for n, values in cfn.get_resources().items():
             p = values.get("Properties", {})

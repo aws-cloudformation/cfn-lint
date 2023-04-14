@@ -2,6 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 from typing import Any, List
 
 from cfnlint.helpers import (
@@ -110,7 +111,7 @@ class ValuePrimitiveType(CloudFormationLintRule):
         types = ensure_list(types)
         reprs = ", ".join(repr(type) for type in types)
         if not any(validator.is_type(instance, type) for type in types):
-            if isinstance(instance, dict):
+            if validator.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
                         # Most conditions should be eliminated but sometimes they trickle through because
@@ -190,6 +191,17 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     "actual_type": type(instance).__name__,
                     "expected_type": reprs,
                 }
+                # JSON types are listed as objects but will take a string
+                if "object" in types and "properties" not in "schema":
+                    if validator.is_type(instance, "string"):
+                        try:
+                            json.loads(instance)
+                        except Exception as e:
+                            yield ValidationError(
+                                f"{instance!r} is not of type {reprs}",
+                                extra_args=extra_args,
+                            )
+                        return
                 yield ValidationError(
                     f"{instance!r} is not of type {reprs}", extra_args=extra_args
                 )

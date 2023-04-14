@@ -10,6 +10,13 @@ import re
 from copy import deepcopy
 from fractions import Fraction
 
+from cfnlint.helpers import (
+    FUNCTIONS_MULTIPLE,
+    PSEUDOPARAMS_MULTIPLE,
+    FUNCTIONS_SINGLE,
+    PSEUDOPARAMS_SINGLE,
+)
+
 from jsonschema._utils import (
     ensure_list,
     equal,
@@ -322,6 +329,65 @@ def ref(validator, r, instance, schema):
             yield from validator.descend(instance, resolved)
         finally:
             validator.resolver.pop_scope()
+
+
+# pylint: disable=unused-argument,redefined-builtin
+def cfn_type(validator, tS, instance, schema):
+    tS = ensure_list(tS)
+    if not any(validator.is_type(instance, type) for type in tS):
+        if validator.is_type(instance, "object"):
+            if len(instance) == 1:
+                for k, v in instance.items():
+                    if k == "Fn::If":
+                        if len(v) == 3:
+                            for i in range(1, 3):
+                                for v_err in cfn_type(
+                                    validator=validator,
+                                    types=tS,
+                                    instance=v[i],
+                                    schema=schema,
+                                ):
+                                    v_err.path.append("Fn::If")
+                                    v_err.path.append(i)
+                                    yield v_err
+                        return
+                    if k == "Ref":
+                        for t in tS:
+                            if t == "array":
+                                if v in PSEUDOPARAMS_SINGLE:
+                                    yield ValidationError(
+                                        f"{instance!r} is not of type {reprs}",
+                                        extra_args={},
+                                    )
+                            elif t in ["string", "number", "integer", "boolean"]:
+                                if v in PSEUDOPARAMS_MULTIPLE:
+                                    yield ValidationError(
+                                        f"{instance!r} is not of type {reprs}",
+                                        extra_args={},
+                                    )
+                        return
+                    if k in FUNCTIONS_MULTIPLE:
+                        for t in tS:
+                            if t == "array":
+                                return
+                        yield ValidationError(
+                            f"{instance!r} is not of type {reprs}", extra_args={}
+                        )
+                        return
+                    if k in FUNCTIONS_SINGLE:
+                        for t in tS:
+                            if t in ["string", "integer", "boolean"]:
+                                return
+                        yield ValidationError(
+                            f"{instance!r} is not of type {reprs}", extra_args={}
+                        )
+                        return
+                    yield ValidationError(
+                        f"{instance!r} is not of type {reprs}", extra_args={}
+                    )
+                    return
+        reprs = ", ".join(repr(type) for type in tS)
+        yield ValidationError(f"{instance!r} is not of type {reprs}")
 
 
 # pylint: disable=unused-argument,redefined-builtin

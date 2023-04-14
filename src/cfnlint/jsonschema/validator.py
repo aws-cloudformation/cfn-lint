@@ -53,7 +53,7 @@ _cfn_validators: Dict[str, Callable[[Any, Any, Any, Any], Any]] = {
     "properties": _validators.properties,
     "propertyNames": _validators.propertyNames,
     "required": _validators.required,
-    "type": _validators.type,
+    "type": _validators.cfn_type,
     "uniqueItems": _validators.uniqueItems,
 }
 
