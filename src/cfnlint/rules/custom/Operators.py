@@ -3,16 +3,21 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+import regex as re
+
 # pylint: disable=cyclic-import
 import cfnlint.rules
 
 OPERATOR = [
     "EQUALS",
     "NOT_EQUALS",
+    "REGEX_MATCH",
     "==",
     "!=",
     "IN",
     "NOT_IN",
+    ">",
+    "<",
     ">=",
     "<=",
     "IS DEFINED",
@@ -298,7 +303,29 @@ def CreateNotEqualsRule(rule_id, resourceType, prop, value, error_message):
     )
 
 
-def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
+def CreateRegexMatchRule(rule_id, resourceType, prop, value, error_message):
+    def rule_func(value, expected_values, path):
+        matches = []
+        if not re.match(expected_values.strip(), str(value).strip()):
+            matches.append(
+                cfnlint.rules.RuleMatch(path, error_message or "Regex does not match")
+            )
+
+        return matches
+
+    return CreateCustomRule(
+        rule_id,
+        resourceType,
+        prop,
+        value,
+        error_message,
+        shortdesc="Custom rule to check for regex match",
+        description="Created from the custom rules parameter. This rule will check if a property value match the provided regex pattern.",
+        rule_func=rule_func,
+    )
+
+
+def CreateGreaterEqualRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_value, path):
         matches = []
         if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
@@ -329,7 +356,69 @@ def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
     )
 
 
+def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
+    def rule_func(value, expected_value, path):
+        matches = []
+        if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
+            if int(str(value).strip()) <= int(str(expected_value).strip()):
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or "Greater than check failed"
+                    )
+                )
+        else:
+            matches.append(
+                cfnlint.rules.RuleMatch(
+                    path, error_message or "Given values are not numeric"
+                )
+            )
+
+        return matches
+
+    return CreateCustomRule(
+        rule_id,
+        resourceType,
+        prop,
+        value,
+        error_message,
+        shortdesc="Custom rule to check for if a value is greater than the specified value",
+        description="Created from the custom rules parameter. This rule will check if a property value is greater than the specified value.",
+        rule_func=rule_func,
+    )
+
+
 def CreateLesserRule(rule_id, resourceType, prop, value, error_message):
+    def rule_func(value, expected_value, path):
+        matches = []
+        if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
+            if int(str(value).strip()) >= int(str(expected_value).strip()):
+                matches.append(
+                    cfnlint.rules.RuleMatch(
+                        path, error_message or "Lesser than check failed"
+                    )
+                )
+        else:
+            matches.append(
+                cfnlint.rules.RuleMatch(
+                    path, error_message or "Given values are not numeric"
+                )
+            )
+
+        return matches
+
+    return CreateCustomRule(
+        rule_id,
+        resourceType,
+        prop,
+        value,
+        error_message,
+        shortdesc="Custom rule to check for if a value is lesser than the specified value",
+        description="Created from the custom rules parameter. This rule will check if a property value is lesser than the specified value.",
+        rule_func=rule_func,
+    )
+
+
+def CreateLesserEqualRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_value, path):
         matches = []
         if checkInt(str(value).strip()) and checkInt(str(expected_value).strip()):
