@@ -452,7 +452,9 @@ def CreateLesserEqualRule(rule_id, resourceType, prop, value, error_message):
 def CreateInSetRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_values, path):
         matches = []
-        if value not in expected_values:
+        if isinstance(expected_values, list):
+            expected_values = [str(x) for x in expected_values]
+        if str(value) not in expected_values:
             matches.append(
                 cfnlint.rules.RuleMatch(path, error_message or "In set check failed")
             )
@@ -474,7 +476,9 @@ def CreateInSetRule(rule_id, resourceType, prop, value, error_message):
 def CreateNotInSetRule(rule_id, resourceType, prop, value, error_message):
     def rule_func(value, expected_values, path):
         matches = []
-        if value in expected_values:
+        if isinstance(expected_values, list):
+            expected_values = [str(x) for x in expected_values]
+        if str(value) in expected_values:
             matches.append(
                 cfnlint.rules.RuleMatch(
                     path, error_message or "Not in set check failed"
