@@ -38,7 +38,6 @@ class JsonSchema(BaseJsonSchema):
         """Init"""
         super().__init__()
         self.validators = {
-            "awsType": None,
             "cfnSchema": self._cfnSchema,
             "cfnRegionSchema": self._cfnRegionSchema,
         }
@@ -76,7 +75,8 @@ class JsonSchema(BaseJsonSchema):
                 f"cfnlint.data.schemas.extensions.{schema_details[0]}",
                 filename=(f"{schema_details[1]}.json"),
             )
-            cfn_validator = self.validator(cfn_schema)
+            cfn_validator = self.setup_validator(schema=cfn_schema)
+            # cfn_validator = validator.evolve(schema=cfn_schema)
             errs = list(cfn_validator.iter_errors(instance))
             if errs:
                 if cfn_schema.get("description"):
@@ -95,11 +95,6 @@ class JsonSchema(BaseJsonSchema):
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = []
-        # First time child rules are configured against the rule
-        # so we can run this now
-        self.setup_validator(
-            cfn=cfn,
-        )
 
         for schema in REGISTRY_SCHEMAS:
             resource_type = schema["typeName"]
@@ -146,7 +141,9 @@ class JsonSchema(BaseJsonSchema):
                                 # if its cached we already ran the same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
-                        cfn_validator = self.validator(schema.json_schema())
+                        cfn_validator = self.setup_validator(
+                            schema=schema.json_schema()
+                        )
                         path = ["Resources", n, "Properties"]
                         for scenario in cfn.get_object_without_nested_conditions(
                             p, path

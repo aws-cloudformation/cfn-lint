@@ -39,6 +39,8 @@ class IdentityPolicy(BaseJsonSchema):
             "policy": policy_schema,
             "identity": self.identity_schema,
         }
+        # To reduce reduntant schemas use a schema resolver
+        # this is deprecated in 4.18 of jsonschema
         self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
 
     def initialize(self, cfn):
@@ -59,7 +61,10 @@ class IdentityPolicy(BaseJsonSchema):
             all_errors.extend(errs)
         else:
             best_err = best_match(all_errors, key=self._match_longer_path)
-            yield best_err
+            schema_path = best_err.schema_path[0]
+            for err in all_errors:
+                if err.schema_path[0] == schema_path:
+                    yield err
 
         more_valid = [
             each
@@ -84,22 +89,26 @@ class IdentityPolicy(BaseJsonSchema):
             yield best_err
 
     # pylint: disable=unused-argument
-    def iamidentitypolicy(self, validator, _, policy, schema):
+    def iamidentitypolicy(self, validator, policy_type, policy, schema):
         # First time child rules are configured against the rule
         # so we can run this now
 
-        if isinstance(policy, str):
+        if validator.is_type(policy, "string"):
             try:
+                # Since the policy is a string we cannot
+                # use functions so switch the type
+                # validator to the stricter type validation
                 self.validators["type"] = validator_type
                 policy = json.loads(policy)
             except json.JSONDecodeError:
                 return
+        elif validator.is_type(policy, "object"):
+            self.validators["type"] = validator_cfn_type
 
-        self.setup_validator(
-            cfn=self.cfn,
-        )
-        cfn_validator = self.validator(self.identity_schema, resolver=self.resolver)
+        iam_validator = self.setup_validator(
+            schema=self.identity_schema,
+        ).evolve(resolver=self.resolver)
 
-        for err in cfn_validator.iter_errors(policy):
+        for err in iam_validator.iter_errors(policy):
             err.rule = self
             yield err

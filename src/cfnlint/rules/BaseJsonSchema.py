@@ -5,9 +5,10 @@ SPDX-License-Identifier: MIT-0
 import logging
 from typing import Any, Dict, Optional
 
-from cfnlint.jsonschema.validator import create as create_validator
+from jsonschema import Draft7Validator, Validator
+from jsonschema.validators import extend
+
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
-from cfnlint.template.template import Template
 
 LOGGER = logging.getLogger("cfnlint.rules.JsonSchema")
 
@@ -18,7 +19,6 @@ class BaseJsonSchema(CloudFormationLintRule):
     def __init__(self) -> None:
         """Init"""
         super().__init__()
-        self.validator = None
         self.rules: Dict[str, Any] = {}
         self.rule_set: Dict[str, str] = {}
         self.region: Optional[str] = None
@@ -44,13 +44,12 @@ class BaseJsonSchema(CloudFormationLintRule):
                             key.end_mark.line,
                             key.end_mark.column,
                         )
-
             e_rule = None
             if hasattr(e, "rule"):
                 if e.rule:
                     e_rule = e.rule
             if not e_rule:
-                e_rule = self.rules.get(e.validator, self)
+                e_rule = self.child_rules.get(self.rule_set.get(e.validator), self)
 
             matches.append(
                 RuleMatch(
@@ -63,12 +62,20 @@ class BaseJsonSchema(CloudFormationLintRule):
 
         return matches
 
-    def setup_validator(self, cfn: Template):
-        for name, rule_id in self.rule_set.items():
-            self.rules[name] = self.child_rules.get(rule_id)
+    def setup_validator(self, schema: Any) -> Validator:
+        validators = self.validators.copy()
+        if self.child_rules is not None:
+            for name, rule_id in self.rule_set.items():
+                rule = self.child_rules.get(rule_id)
+                if rule is not None:
+                    if hasattr(rule, "validate_configure") and callable(
+                        getattr(rule, "validate_configure")
+                    ):
+                        rule.validate_configure()
+                    if hasattr(rule, name) and callable(getattr(rule, name)):
+                        validators[name] = getattr(rule, name)
 
-        self.validator = create_validator(
-            validators=self.validators,
-            cfn=cfn,
-            rules=self.rules,
+        validator = extend(validator=Draft7Validator, validators=validators)(
+            schema=schema
         )
+        return validator

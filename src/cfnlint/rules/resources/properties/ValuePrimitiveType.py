@@ -13,7 +13,6 @@ from cfnlint.helpers import (
 )
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
-from cfnlint.template.template import Template
 
 
 class ValuePrimitiveType(CloudFormationLintRule):
@@ -38,6 +37,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
         }
         self.configure()
         self.cfn = None
+
+    def initialize(self, cfn):
+        self.cfn = cfn
+        return super().initialize(cfn)
 
     # pylint: disable=too-many-return-statements
     def _schema_value_check(
@@ -102,9 +105,6 @@ class ValuePrimitiveType(CloudFormationLintRule):
                     result = True
 
         return result
-
-    def validate_configure(self, cfn: Template):
-        self.cfn = cfn
 
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
@@ -203,7 +203,8 @@ class ValuePrimitiveType(CloudFormationLintRule):
                             )
                         return
                 yield ValidationError(
-                    f"{instance!r} is not of type {reprs}", extra_args=extra_args
+                    f"{instance!r} is not of type {reprs}",
+                    extra_args=extra_args,
                 )
 
 

@@ -58,7 +58,6 @@ class TestJsonSchema(BaseRuleTestCase):
         }
         self.cfn = Mock()
         self.cfn.get_valid_refs = {}
-        self.rule.setup_validator(self.cfn)
         self.path = ["Resources", "Table", "Properties"]
 
     def build_result(
@@ -78,12 +77,11 @@ class TestJsonSchema(BaseRuleTestCase):
         )
 
     def validate(self, schema, expected, object=None):
+        validator = self.rule.setup_validator(schema=schema)
         if object is None:
             object = self.table
 
-        matches = self.rule.json_schema_validate(
-            self.rule.validator(schema), object, self.path
-        )
+        matches = self.rule.json_schema_validate(validator, object, self.path)
 
         self.assertListEqual(list(map(vars, expected)), list(map(vars, matches)))
 
