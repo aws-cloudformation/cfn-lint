@@ -1,0 +1,97 @@
+{
+ "$id": "identity",
+ "additionalProperties": false,
+ "definitions": {
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Action"
+       ]
+      },
+      {
+       "required": [
+        "NotAction"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Resource"
+       ]
+      },
+      {
+       "required": [
+        "NotResource"
+       ]
+      }
+     ]
+    },
+    {
+     "required": [
+      "Effect"
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "Condition": {
+     "$ref": "policy#/definitions/Condition"
+    },
+    "Effect": {
+     "enum": [
+      "Allow",
+      "Deny"
+     ],
+     "type": "string"
+    },
+    "NotAction": {
+     "$ref": "policy#/definitions/Action"
+    },
+    "NotResource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Resource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Sid": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Id": {
+   "type": "policy#/properties/Id"
+  },
+  "Statement": {
+   "oneOf": [
+    {
+     "$ref": "#/definitions/Statement"
+    },
+    {
+     "items": {
+      "$ref": "#/definitions/Statement"
+     },
+     "type": "array"
+    }
+   ]
+  },
+  "Version": {
+   "$ref": "policy#/properties/Version"
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}
