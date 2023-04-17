@@ -56,6 +56,9 @@ class TestCustomRuleParsing(BaseTestCase):
         self.invalid_less_than = (
             "test/fixtures/custom_rules/bad/custom_rule_invalid_less_than.txt"
         )
+        self.invalid_regex = (
+            "test/fixtures/custom_rules/bad/custom_rule_invalid_regex.txt"
+        )
 
     def test_perfect_parse(self):
         """Test Successful Custom_Rule Parsing"""
@@ -99,6 +102,13 @@ class TestCustomRuleParsing(BaseTestCase):
         """Test Successful Custom_Rule Parsing"""
         assert (
             self.run_tests(self.invalid_less_than)[0].message.find("Lesser than check")
+            > -1
+        )
+
+    def test_invalid_regex(self):
+        """Test Successful Custom_Rule Parsing"""
+        assert (
+            self.run_tests(self.invalid_regex)[0].message.find("Regex does not match")
             > -1
         )
 
