@@ -193,6 +193,7 @@
   "AWS::AppConfig::DeploymentStrategy.Tags": "CACHED",
   "AWS::AppConfig::Environment.Monitors": "CACHED",
   "AWS::AppConfig::Environment.Tags": "CACHED",
+  "AWS::AppConfig::Extension.Parameter": "CACHED",
   "AWS::AppFlow::ConnectorProfile.CredentialsMap": "CACHED",
   "AWS::AppFlow::ConnectorProfile.ProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.TokenUrlCustomProperties": "CACHED",
@@ -1209,6 +1210,13 @@
   "AWS::Events::Rule.SqsParameters": "CACHED",
   "AWS::Events::Rule.Tag": "CACHED",
   "AWS::Events::Rule.Target": "CACHED",
+  "AWS::FMS::Policy.IEMap": "CACHED",
+  "AWS::FMS::Policy.NetworkFirewallPolicy": "CACHED",
+  "AWS::FMS::Policy.PolicyOption": "CACHED",
+  "AWS::FMS::Policy.PolicyTag": "CACHED",
+  "AWS::FMS::Policy.ResourceTag": "CACHED",
+  "AWS::FMS::Policy.SecurityServicePolicyData": "CACHED",
+  "AWS::FMS::Policy.ThirdPartyFirewallPolicy": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.S3": "CACHED",
@@ -1257,13 +1265,93 @@
   "AWS::Glue::Crawler.S3Target": "CACHED",
   "AWS::Glue::Crawler.Schedule": "CACHED",
   "AWS::Glue::Crawler.SchemaChangePolicy": "CACHED",
-  "AWS::Glue::Crawler.Targets": "CACHED",
+  "AWS::Glue::Crawler.Targets": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html",
+   "Properties": {
+    "CatalogTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-catalogtargets",
+     "ItemType": "CatalogTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "DynamoDBTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-dynamodbtargets",
+     "ItemType": "DynamoDBTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "JdbcTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-jdbctargets",
+     "ItemType": "JdbcTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "MongoDBTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-mongodbtargets",
+     "ItemType": "MongoDBTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "S3Targets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-s3targets",
+     "ItemType": "S3Target",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::DataCatalogEncryptionSettings.ConnectionPasswordEncryption": "CACHED",
   "AWS::Glue::DataCatalogEncryptionSettings.DataCatalogEncryptionSettings": "CACHED",
   "AWS::Glue::DataCatalogEncryptionSettings.EncryptionAtRest": "CACHED",
   "AWS::Glue::Database.DataLakePrincipal": "CACHED",
   "AWS::Glue::Database.DatabaseIdentifier": "CACHED",
-  "AWS::Glue::Database.DatabaseInput": "CACHED",
+  "AWS::Glue::Database.DatabaseInput": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html",
+   "Properties": {
+    "CreateTableDefaultPermissions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-createtabledefaultpermissions",
+     "ItemType": "PrincipalPrivileges",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "LocationUri": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-locationuri",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Parameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-parameters",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "TargetDatabase": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-targetdatabase",
+     "Required": false,
+     "Type": "DatabaseIdentifier",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Database.PrincipalPrivileges": "CACHED",
   "AWS::Glue::Job.ConnectionsList": "CACHED",
   "AWS::Glue::Job.ExecutionProperty": "CACHED",
@@ -1757,7 +1845,12 @@
   "AWS::LakeFormation::DataCellsFilter.ColumnWildcard": "CACHED",
   "AWS::LakeFormation::DataCellsFilter.RowFilter": "CACHED",
   "AWS::LakeFormation::DataLakeSettings.Admins": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.CreateDatabaseDefaultPermissions": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.CreateTableDefaultPermissions": "CACHED",
   "AWS::LakeFormation::DataLakeSettings.DataLakePrincipal": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.ExternalDataFilteringAllowList": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.Permissions": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.PrincipalPermissions": "CACHED",
   "AWS::LakeFormation::Permissions.ColumnWildcard": "CACHED",
   "AWS::LakeFormation::Permissions.DataLakePrincipal": "CACHED",
   "AWS::LakeFormation::Permissions.DataLocationResource": "CACHED",
@@ -2377,6 +2470,9 @@
   "AWS::SageMaker::MonitoringSchedule.VpcConfig": "CACHED",
   "AWS::SageMaker::NotebookInstance.InstanceMetadataServiceConfiguration": "CACHED",
   "AWS::SageMaker::NotebookInstanceLifecycleConfig.NotebookInstanceLifecycleHook": "CACHED",
+  "AWS::SageMaker::Pipeline.ParallelismConfiguration": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineDefinition": "CACHED",
+  "AWS::SageMaker::Pipeline.S3Location": "CACHED",
   "AWS::SageMaker::UserProfile.CustomImage": "CACHED",
   "AWS::SageMaker::UserProfile.JupyterServerAppSettings": "CACHED",
   "AWS::SageMaker::UserProfile.KernelGatewayAppSettings": "CACHED",
@@ -2578,7 +2674,7 @@
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "119.0.0",
+ "ResourceSpecificationVersion": "119.1.0",
  "ResourceTypes": {
   "AWS::AccessAnalyzer::Analyzer": "CACHED",
   "AWS::AmazonMQ::Broker": "CACHED",
@@ -2651,6 +2747,8 @@
   "AWS::AppConfig::Deployment": "CACHED",
   "AWS::AppConfig::DeploymentStrategy": "CACHED",
   "AWS::AppConfig::Environment": "CACHED",
+  "AWS::AppConfig::Extension": "CACHED",
+  "AWS::AppConfig::ExtensionAssociation": "CACHED",
   "AWS::AppConfig::HostedConfigurationVersion": "CACHED",
   "AWS::AppSync::ApiCache": "CACHED",
   "AWS::AppSync::ApiKey": "CACHED",
@@ -4009,120 +4107,13 @@
   "AWS::Events::EventBus": "CACHED",
   "AWS::Events::EventBusPolicy": "CACHED",
   "AWS::Events::Rule": "CACHED",
+  "AWS::FMS::Policy": "CACHED",
   "AWS::FSx::DataRepositoryAssociation": "CACHED",
   "AWS::FSx::FileSystem": "CACHED",
   "AWS::GameLift::Alias": "CACHED",
   "AWS::GameLift::Build": "CACHED",
   "AWS::GameLift::Fleet": "CACHED",
-  "AWS::GameLift::GameServerGroup": {
-   "Attributes": {
-    "AutoScalingGroupArn": {
-     "PrimitiveType": "String"
-    },
-    "GameServerGroupArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html",
-   "Properties": {
-    "AutoScalingPolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-autoscalingpolicy",
-     "Required": false,
-     "Type": "AutoScalingPolicy",
-     "UpdateType": "Mutable"
-    },
-    "BalancingStrategy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-balancingstrategy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.BalancingStrategy"
-     }
-    },
-    "DeleteOption": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-deleteoption",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.DeleteOption"
-     }
-    },
-    "GameServerGroupName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-gameservergroupname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.GameServerGroupName"
-     }
-    },
-    "GameServerProtectionPolicy": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-gameserverprotectionpolicy",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.GameServerProtectionPolicy"
-     }
-    },
-    "InstanceDefinitions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-instancedefinitions",
-     "DuplicatesAllowed": true,
-     "ItemType": "InstanceDefinition",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "LaunchTemplate": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-launchtemplate",
-     "Required": false,
-     "Type": "LaunchTemplate",
-     "UpdateType": "Mutable"
-    },
-    "MaxSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-maxsize",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "MinSize": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-minsize",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-rolearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.RoleArn"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "VpcSubnets": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-gamelift-gameservergroup.html#cfn-gamelift-gameservergroup-vpcsubnets",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::GameLift::GameServerGroup.VpcSubnets"
-     }
-    }
-   }
-  },
+  "AWS::GameLift::GameServerGroup": "CACHED",
   "AWS::GameLift::GameSessionQueue": "CACHED",
   "AWS::GameLift::MatchmakingConfiguration": "CACHED",
   "AWS::GameLift::MatchmakingRuleSet": "CACHED",
@@ -4975,6 +4966,7 @@
   "AWS::SageMaker::MonitoringSchedule": "CACHED",
   "AWS::SageMaker::NotebookInstance": "CACHED",
   "AWS::SageMaker::NotebookInstanceLifecycleConfig": "CACHED",
+  "AWS::SageMaker::Pipeline": "CACHED",
   "AWS::SageMaker::UserProfile": "CACHED",
   "AWS::SageMaker::Workteam": "CACHED",
   "AWS::SecretsManager::ResourcePolicy": "CACHED",
@@ -5609,6 +5601,20 @@
   "AWS::Events::EventBusPolicy.Action": "CACHED",
   "AWS::Events::EventBusPolicy.Condition.Key": "CACHED",
   "AWS::Events::EventBusPolicy.Condition.Type": "CACHED",
+  "AWS::FMS::Policy.IEMap.ACCOUNT": "CACHED",
+  "AWS::FMS::Policy.IEMap.ORGUNIT": "CACHED",
+  "AWS::FMS::Policy.NetworkFirewallPolicy.FirewallDeploymentModel": "CACHED",
+  "AWS::FMS::Policy.PolicyDescription": "CACHED",
+  "AWS::FMS::Policy.PolicyName": "CACHED",
+  "AWS::FMS::Policy.PolicyTag.Key": "CACHED",
+  "AWS::FMS::Policy.PolicyTag.Value": "CACHED",
+  "AWS::FMS::Policy.ResourceSetIds": "CACHED",
+  "AWS::FMS::Policy.ResourceTag.Key": "CACHED",
+  "AWS::FMS::Policy.ResourceType": "CACHED",
+  "AWS::FMS::Policy.ResourceTypeList": "CACHED",
+  "AWS::FMS::Policy.SecurityServicePolicyData.ManagedServiceData": "CACHED",
+  "AWS::FMS::Policy.SecurityServicePolicyData.Type": "CACHED",
+  "AWS::FMS::Policy.ThirdPartyFirewallPolicy.FirewallDeploymentModel": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoExportPolicy.Events": "CACHED",
   "AWS::FSx::DataRepositoryAssociation.AutoImportPolicy.Events": "CACHED",
   "AWS::FSx::FileSystem.StorageCapacity": "CACHED",
@@ -6663,6 +6669,9 @@
   "AWS::SageMaker::MonitoringSchedule.VpcConfig.SecurityGroupIds": "CACHED",
   "AWS::SageMaker::MonitoringSchedule.VpcConfig.Subnets": "CACHED",
   "AWS::SageMaker::NotebookInstance.VolumeSizeInGB": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineDisplayName": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineName": "CACHED",
+  "AWS::SageMaker::Pipeline.RoleArn": "CACHED",
   "AWS::SageMaker::UserProfile.CustomImage.AppImageConfigName": "CACHED",
   "AWS::SageMaker::UserProfile.CustomImage.ImageName": "CACHED",
   "AWS::SageMaker::UserProfile.DomainId": "CACHED",
