@@ -2,11 +2,14 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.config
+from cfnlint.formatters import JsonFormatter
 from cfnlint.rules import RulesCollection
 from cfnlint.runner import Runner
+
+formatter = JsonFormatter()
 
 
 class BaseRuleTestCase(BaseTestCase):
@@ -61,3 +64,12 @@ class BaseRuleTestCase(BaseTestCase):
         bad_runner.transform()
         errs = bad_runner.run()
         self.assertEqual(err_count, len(errs))
+
+    def run_file_negative(self, filename, regions=None):
+        """Failure test"""
+        regions = regions or ["us-east-1"]
+        template = self.load_template(filename)
+        bad_runner = Runner(self.collection, filename, template, regions, [])
+        bad_runner.transform()
+        errs = bad_runner.run()
+        return json.loads(formatter.print_matches(errs))

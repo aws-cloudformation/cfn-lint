@@ -72,6 +72,10 @@ def make_rule(line, lineNumber):
             return cfnlint.rules.custom.Operators.CreateNotEqualsRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
+        if operator == "REGEX_MATCH":
+            return cfnlint.rules.custom.Operators.CreateRegexMatchRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
         if operator == "IN":
             return cfnlint.rules.custom.Operators.CreateInSetRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
@@ -80,12 +84,20 @@ def make_rule(line, lineNumber):
             return cfnlint.rules.custom.Operators.CreateNotInSetRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == ">=":
+        if operator == ">":
             return cfnlint.rules.custom.Operators.CreateGreaterRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
-        if operator == "<=":
+        if operator == ">=":
+            return cfnlint.rules.custom.Operators.CreateGreaterEqualRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
+        if operator == "<":
             return cfnlint.rules.custom.Operators.CreateLesserRule(
+                error_level + str(rule_id), resourceType, prop, value, error_message
+            )
+        if operator == "<=":
+            return cfnlint.rules.custom.Operators.CreateLesserEqualRule(
                 error_level + str(rule_id), resourceType, prop, value, error_message
             )
         if operator == "IS":

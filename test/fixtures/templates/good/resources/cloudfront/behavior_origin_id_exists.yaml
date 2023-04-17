@@ -1,0 +1,37 @@
+Resources:
+  ReverseProxyCloudfrontDistribution:
+    Properties:
+      DistributionConfig:
+        CacheBehaviors:
+          - AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            Compress: "true"
+            ForwardedValues:
+              QueryString: true
+            PathPattern: "/api/*"
+            TargetOriginId: proxy-to-backend-orm
+            ViewerProtocolPolicy: allow-all
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: "true"
+          ForwardedValues:
+            QueryString: true
+          TargetOriginId: proxy-to-react-project
+          ViewerProtocolPolicy: allow-all
+        Enabled: true
+        HttpVersion: http2
+        Origins:
+          - CustomOriginConfig:
+              OriginProtocolPolicy: "https-only"
+            DomainName: example.com
+            Id: proxy-to-react-project
+          - CustomOriginConfig:
+              OriginProtocolPolicy: "https-only"
+            DomainName: "staging.mywebsite.com"
+            Id: proxy-to-backend-orm
+    Type: "AWS::CloudFront::Distribution"

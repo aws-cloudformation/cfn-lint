@@ -41,9 +41,12 @@ The specified operator to be used for this rule. The supported values are define
 | == | Identical to `EQUALS` |
 | NOT_EQUALS | Checks the specified property is not equal to the value given |
 | != | Identical to `NOT_EQUALS` |
+| REGEX_MATCH | Checks the specified property matches regex given (using python `regex` module) |
 | IN | Checks the specified property is equal to or contained by the array value |
 | NOT_IN | Checks the specified property is not equal to or not contained by the array value |
 | \>= | Checks the specified property is greater than or equal to the value given |
+| \> | Checks the specified property is greater than the value given |
+| < | Checks the specified property is less than the value given |
 | <= | Checks the specified property is less than or equal to the value given |
 | IS | Checks the specified property is defined or not defined, the value must be one of DEFINED or NOT_DEFINED |
 

@@ -1,0 +1,14 @@
+Resources:
+  GoZipFile:
+    Properties:
+      Code:
+        ZipFile: !Sub
+          - |
+            def handler(event, context):
+              return "Hello World ${Region}"
+          - Region: !Ref "AWS::Region"
+      Handler: index.handler
+      PackageType: Zip
+      Runtime: go1.x
+      Role: arn:aws:iam::123456789012:role/lambda-role
+    Type: AWS::Lambda::Function
