@@ -19,11 +19,13 @@ class AwsType(CloudFormationLintRule):
 
         self.child_rules = {
             "W3010": None,
+            "E3510": None,
         }
 
         self.types = {
             "AvailabilityZone": "W3010",
             "AvailabilityZones": "W3010",
+            "IamIdentityPolicy": "E3510",
         }
 
     def initialize(self, cfn):
