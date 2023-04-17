@@ -1,0 +1,100 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Statement": {
+   "additionalProperties": false,
+   "allOf": [
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Action"
+       ]
+      },
+      {
+       "required": [
+        "NotAction"
+       ]
+      }
+     ]
+    },
+    {
+     "oneOf": [
+      {
+       "required": [
+        "Resource"
+       ]
+      },
+      {
+       "required": [
+        "NotResource"
+       ]
+      }
+     ]
+    },
+    {
+     "required": [
+      "Effect"
+     ]
+    }
+   ],
+   "properties": {
+    "Action": {
+     "$ref": "policy#/defintions/Action"
+    },
+    "Condition": {
+     "$ref": "policy#/definitions/Condition"
+    },
+    "Effect": {
+     "$ref": "policy#/defintions/Statement/properties/Effect"
+    },
+    "NotAction": {
+     "$ref": "policy#/defintions/Version"
+    },
+    "NotPrincipal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "NotResource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Principal": {
+     "$ref": "policy#/definitions/Principal"
+    },
+    "Resource": {
+     "$ref": "policy#/definitions/Resource"
+    },
+    "Sid": {
+     "$ref": "policy#/defintions/Statement/properties/Sid"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "properties": {
+  "Id": {
+   "type": "policy#/properties/Id"
+  },
+  "Statement": {
+   "Statement": {
+    "oneOf": [
+     {
+      "$ref": "#/definitions/Statement"
+     },
+     {
+      "items": {
+       "$ref": "#/definitions/Statement"
+      },
+      "type": "array"
+     }
+    ]
+   }
+  },
+  "Version": {
+   "$ref": "policy#/properties/Version"
+  }
+ },
+ "required": [
+  "Statement"
+ ],
+ "type": "object"
+}

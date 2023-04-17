@@ -18,7 +18,7 @@ class Properties(CloudFormationLintRule):
     tags = ["resources"]
 
     # pylint: disable=unused-argument
-    def properties(self, validator, properties, instance, schema):
+    def properties(self, validator, props, instance, schema):
         if not validator.is_type(instance, "object"):
             return
 
@@ -43,7 +43,7 @@ class Properties(CloudFormationLintRule):
                     )
                 return
 
-        for p, subschema in properties.items():
+        for p, subschema in props.items():
             # use the instance keys because it gives us the start_mark
             k = [k for k in instance.keys() if k == p]
             if p in instance:
