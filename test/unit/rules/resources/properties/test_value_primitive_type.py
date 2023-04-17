@@ -178,7 +178,7 @@ class TestResourceValuePrimitiveTypeJsonSchemaValidate(BaseRuleTestCase):
             },
             regions=["us-east-1"],
         )
-        self.rule.validate_configure(template)
+        self.rule.initialize(template)
 
     def test_validation(self):
         """Test type function for json schema"""
@@ -384,4 +384,39 @@ class TestResourceValuePrimitiveTypeJsonSchemaValidate(BaseRuleTestCase):
                 )
             ),
             0,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["object"],
+                        "{}",
+                        {
+                            "type": ["object"],
+                        },
+                    )
+                )
+            ),
+            0,
+        )
+
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.type(
+                        self.validator,
+                        ["object"],
+                        "{}",
+                        {
+                            "type": ["object"],
+                            "properties": {
+                                "key": {},
+                            },
+                        },
+                    )
+                )
+            ),
+            1,
         )
