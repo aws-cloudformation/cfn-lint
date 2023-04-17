@@ -48,7 +48,7 @@ class ValidationError(exceptions.ValidationError):
         self.rule = rule
         self.path_override = path_override
 
-    def set(self, type_checker=None, **kwargs):
+    def _set(self, type_checker=None, **kwargs):
         if type_checker is not None and self._type_checker is _unset:
             self._type_checker = type_checker
 
