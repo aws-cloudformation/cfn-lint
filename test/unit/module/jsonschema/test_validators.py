@@ -4,15 +4,29 @@ SPDX-License-Identifier: MIT-0
 """
 import unittest
 
-from cfnlint.jsonschema.validator import CfnValidator
+from jsonschema import Draft7Validator
+from jsonschema.validators import extend
+
+from cfnlint.jsonschema import _validators
 
 
 class TestValidators(unittest.TestCase):
     """Test JSON Schema validators"""
 
     def run_validation(self, instance, schema, *args, **kwargs):
-        cls = kwargs.pop("cls", CfnValidator)
-        validator = cls(schema, *args, **kwargs)
+        # cls = kwargs.pop("cls", Draft7Validator)
+        # validator = cls(schema, *args, **kwargs)
+        validator = extend(
+            validator=Draft7Validator,
+            validators={
+                "minimum": _validators.minimum,
+                "maximum": _validators.maximum,
+                "exclusiveMaximum": _validators.exclusiveMaximum,
+                "exclusiveMinimum": _validators.exclusiveMinimum,
+                "additionalProperties": _validators.additionalProperties,
+                "enum": _validators.enum,
+            },
+        )(schema=schema)
         return list(validator.iter_errors(instance))
 
     def message_for(self, instance, schema, *args, **kwargs):
@@ -29,42 +43,6 @@ class TestValidators(unittest.TestCase):
         errors = self.run_validation(instance, schema, *args, **kwargs)
         self.assertEqual(len(errors), 0)
 
-    def test_dependencies_array(self):
-        depend, on = "bar", "foo"
-        schema = {"dependencies": {depend: [on]}}
-        message = self.message_for(
-            instance={"bar": 2},
-            schema=schema,
-        )
-        self.assertEqual(message, "'foo' is a dependency of 'bar'")
-
-        self.no_error(instance={"bar": 2, "foo": 1}, schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
-
-    def test_dependencies_object(self):
-        depend, on = "bar", "foo"
-        schema = {"dependencies": {depend: {"properties": {on: {"type": "number"}}}}}
-        message = self.message_for(
-            instance={"bar": 2, "foo": "a"},
-            schema=schema,
-        )
-        self.assertEqual(message, "'a' is not of type 'number'")
-
-        self.no_error(instance={"bar": 2, "foo": 1}, schema=schema)
-
-    def test_contains(self):
-        schema = {"contains": {"type": "number"}}
-        message = self.message_for(
-            instance=["a"],
-            schema=schema,
-        )
-        self.assertEqual(message, "None of ['a'] are valid under the given schema")
-
-        self.no_error(instance=[1], schema=schema)
-        # wrong type so no errors
-        self.no_error(instance={}, schema=schema)
-
     def test_pattern_properties(self):
         schema = {
             "patternProperties": {
@@ -80,22 +58,6 @@ class TestValidators(unittest.TestCase):
         self.no_error(instance={"bar": "a"}, schema=schema)
         # wrong type so no errors
         self.no_error(instance=[], schema=schema)
-
-    def test_property_names(self):
-        schema = {
-            "propertyNames": {
-                "pattern": "^bar$",
-            },
-        }
-        message = self.message_for(
-            instance={"foo": 2},
-            schema=schema,
-        )
-        self.assertEqual(message, "'foo' does not match '^bar$'")
-
-        self.no_error(instance={"bar": "a"}, schema=schema)
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
 
     def test_additional_properties_single_failure(self):
         additional = "foo"
@@ -142,55 +104,11 @@ class TestValidators(unittest.TestCase):
         self.assertEqual(message, "'foo' does not match any of the regexes: '^bar$'")
         self.no_error(instance={"bar": "a"}, schema=schema)
 
-    def test_additional_items(self):
-        first, additional = "foo", "bar"
-        schema = {"items": [{"type": "string"}], "additionalItems": {"type": "string"}}
-        message = self.message_for(instance=[first, 1], schema=schema)
-        self.assertEqual(message, "1 is not of type 'string'")
-        self.no_error(instance=[first, additional], schema=schema)
-
-    def test_additional_items_false(self):
-        schema = {"items": [{"type": "string"}], "additionalItems": False}
-        message = self.message_for(instance=["a", 1], schema=schema)
-        self.assertEqual(message, "Additional items are not allowed (1 was unexpected)")
-
-        self.no_error(instance=["a"], schema=schema)
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
     def test_additional_properties_no_error(self):
         additional = "foo"
         schema = {"additionalProperties": True}
 
         self.no_error(instance={additional: 2}, schema=schema)
-
-    def test_required(self):
-        schema = {"properties": {"foo": {"type": "string"}}, "required": ["foo"]}
-        message = self.message_for(instance={}, schema=schema)
-        self.assertEqual(message, "'foo' is a required property")
-        self.no_error(instance=[{"foo": "bar"}], schema=schema)
-
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
-    def test_properties(self):
-        schema = {"properties": {"foo": {"type": "string"}}}
-        message = self.message_for(instance={"foo": 1}, schema=schema)
-        self.assertEqual(message, "1 is not of type 'string'")
-        self.no_error(instance=[{"foo": 1}], schema=schema)
-
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
-    def test_const(self):
-        schema = {"const": 12}
-        message = self.message_for(
-            instance={"foo": "bar"},
-            schema=schema,
-        )
-        self.assertIn("12 was expected", message)
-
-        self.no_error(instance=12, schema=schema)
 
     def test_exlusive_minimum(self):
         schema = {"exclusiveMinimum": 5}
@@ -312,109 +230,6 @@ class TestValidators(unittest.TestCase):
         schema = {"maximum": 5}
         self.no_error(instance="a", schema=schema)
 
-    def test_multiple_of_number(self):
-        schema = {"typeOf": "number", "multipleOf": 5}
-        message = self.message_for(
-            instance=6,
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "6 is not a multiple of 5",
-        )
-
-        self.no_error(instance=5, schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
-
-    def test_multiple_of_float(self):
-        schema = {"typeOf": "number", "multipleOf": 5.2}
-        message = self.message_for(
-            instance=6,
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "6 is not a multiple of 5.2",
-        )
-
-        self.no_error(instance=10.4, schema=schema)
-
-    def test_min_items(self):
-        schema = {"minItems": 2}
-        message = self.message_for(
-            instance=["foo"],
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "['foo'] is too short",
-        )
-
-        self.no_error(instance=["foo", "bar"], schema=schema)
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
-    def test_max_items(self):
-        schema = {"maxItems": 1}
-        message = self.message_for(
-            instance=["foo", "bar"],
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "['foo', 'bar'] is too long",
-        )
-
-        self.no_error(instance=["foo"], schema=schema)
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
-    def test_min_length(self):
-        schema = {"minLength": 2}
-        message = self.message_for(
-            instance="a",
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "'a' is too short",
-        )
-
-        self.no_error(instance="foo", schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
-
-    def test_max_length(self):
-        schema = {"maxLength": 2}
-        message = self.message_for(
-            instance="foo",
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "'foo' is too long",
-        )
-
-        self.no_error(instance="a", schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
-
-    def test_unique_items(self):
-        schema = {"uniqueItems": True}
-        message = self.message_for(
-            instance=["foo", "foo"],
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "['foo', 'foo'] has non-unique elements",
-        )
-
-        self.no_error(instance=["foo", "bar"], schema=schema)
-        # wrong type so no errors
-        self.no_error(instance="a", schema=schema)
-
     def test_enum(self):
         schema = {"enum": ["foo"]}
         message = self.message_for(
@@ -452,86 +267,156 @@ class TestValidators(unittest.TestCase):
         schema = {"enum": ["0"]}
         self.no_error(instance=0, schema=schema)
 
-    def test_min_properties(self):
-        schema = {"minProperties": 1}
-        message = self.message_for(
-            instance={},
-            schema=schema,
-        )
-        self.assertEqual(
-            message,
-            "{} does not have enough properties",
-        )
 
-        self.no_error(instance={"foo": "bar"}, schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
+class TestValidatorsCfnType(unittest.TestCase):
+    """Test JSON Schema validators"""
 
-    def test_max_properties(self):
-        schema = {"maxProperties": 1}
-        message = self.message_for(
-            instance={
-                "foo": "foo",
-                "bar": "bar",
+    def run_validation(self, instance, schema, *args, **kwargs):
+        # cls = kwargs.pop("cls", Draft7Validator)
+        # validator = cls(schema, *args, **kwargs)
+        validator = extend(
+            validator=Draft7Validator,
+            validators={
+                "minimum": _validators.minimum,
+                "maximum": _validators.maximum,
+                "exclusiveMaximum": _validators.exclusiveMaximum,
+                "exclusiveMinimum": _validators.exclusiveMinimum,
+                "additionalProperties": _validators.additionalProperties,
+                "enum": _validators.enum,
+                "type": _validators.cfn_type,
             },
+        )(schema=schema)
+        return list(validator.iter_errors(instance))
+
+    def message_for(self, instance, schema, *args, **kwargs):
+        errors = self.run_validation(instance, schema, *args, **kwargs)
+        self.assertTrue(errors, msg=f"No errors were raised for {instance!r}")
+        self.assertEqual(
+            len(errors),
+            1,
+            msg=f"Expected exactly one error, found {errors!r}",
+        )
+        return errors[0].message
+
+    def no_error(self, instance, schema, *args, **kwargs):
+        errors = self.run_validation(instance, schema, *args, **kwargs)
+        self.assertEqual(len(errors), 0)
+
+    def test_cfn_type_object(self):
+        schema = {"type": "string"}
+        self.no_error(instance={"Ref": "AWS::Region"}, schema=schema)
+        self.no_error(
+            instance={"Fn::Join": [",", {"Fn::GetAzs": "us-east-1"}]}, schema=schema
+        )
+        self.no_error(instance={"Ref": "Unknown"}, schema=schema)
+
+        message = self.message_for(
+            instance={"Fn::GetAZs": "us-east-1"},
             schema=schema,
         )
         self.assertEqual(
             message,
-            "{'foo': 'foo', 'bar': 'bar'} has too many properties",
+            "{'Fn::GetAZs': 'us-east-1'} is not of type 'string'",
         )
 
-        self.no_error(instance={"foo": "bar"}, schema=schema)
-        # wrong type so no errors
-        self.no_error(instance=[], schema=schema)
+        message = self.message_for(
+            instance={"Foo": "Bar"},
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "{'Foo': 'Bar'} is not of type 'string'",
+        )
 
-    def test_not(self):
-        schema = {
-            "not": {
-                "type": "string",
-            }
-        }
+        message = self.message_for(
+            instance={"Ref": "AWS::NotificationARNs"},
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "{'Ref': 'AWS::NotificationARNs'} is not of type 'string'",
+        )
+
+    def test_cfn_type_list(self):
+        schema = {"type": "array", "items": {"type": "string"}}
+        self.no_error(instance={"Fn::GetAZs": "us-east-1"}, schema=schema)
+
+        message = self.message_for(
+            instance={"Ref": "AWS::Region"},
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "{'Ref': 'AWS::Region'} is not of type 'array'",
+        )
+
+        message = self.message_for(
+            instance={"Fn::Join": [",", {"Fn::GetAzs": "us-east-1"}]},
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "{'Fn::Join': [',', {'Fn::GetAzs': 'us-east-1'}]} is not of type 'array'",
+        )
+
+    def test_cfn_type_number(self):
+        schema = {"type": "number"}
+        self.no_error(instance="1", schema=schema)
+
         message = self.message_for(
             instance="a",
             schema=schema,
         )
         self.assertEqual(
             message,
-            "'a' should not be valid under {'type': 'string'}",
+            "'a' is not of type 'number'",
         )
 
-        self.no_error(instance=1, schema=schema)
+    def test_cfn_type_integer(self):
+        schema = {"type": "integer"}
+        self.no_error(instance="1", schema=schema)
 
-    def test_one_of(self):
-        schema = {
-            "oneOf": [
-                {"type": "string"},
-                {"type": "number"},
-            ]
-        }
         message = self.message_for(
-            instance=True,
+            instance=1.2,
             schema=schema,
         )
         self.assertEqual(
             message,
-            "True is not valid under any of the given schemas",
+            "1.2 is not of type 'integer'",
         )
 
-        self.no_error(instance="a", schema=schema)
-
-    def test_one_of_multiple(self):
-        schema = {
-            "oneOf": [
-                {"type": "string"},
-                {"type": "string"},
-            ]
-        }
         message = self.message_for(
             instance="a",
             schema=schema,
         )
         self.assertEqual(
             message,
-            "'a' is valid under each of {'type': 'string'}, {'type': 'string'}",
+            "'a' is not of type 'integer'",
+        )
+
+    def test_cfn_type_boolean(self):
+        schema = {"type": "boolean"}
+        self.no_error(instance="true", schema=schema)
+        self.no_error(instance="false", schema=schema)
+
+        message = self.message_for(
+            instance="a",
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'a' is not of type 'boolean'",
+        )
+
+    def test_cfn_type_if(self):
+        schema = {"type": "integer"}
+        self.no_error(instance={"Fn::If": ["Unknown", "3", 2]}, schema=schema)
+
+        message = self.message_for(
+            instance={"Fn::If": ["Unknown", "3", "a"]},
+            schema=schema,
+        )
+        self.assertEqual(
+            message,
+            "'a' is not of type 'integer'",
         )
