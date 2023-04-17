@@ -1,3 +1,10 @@
+### v0.77.1
+###### CloudFormation Specifications
+- Update CloudFormation specs to `119.1.0` (pull #[2678](https://github.com/aws-cloudformation/cfn-lint/pull/2678))
+- Update allowed values for `AWS::RDS::DBInstance.PerformanceInsightsRetentionPeriod` (pull #[2696](https://github.com/aws-cloudformation/cfn-lint/pull/2696))
+###### Fixes
+- Update rule [E3001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3001) to evaluate if a resource with a condition is affected by the region (pull #[2691](https://github.com/aws-cloudformation/cfn-lint/pull/2691))
+
 ### v0.77.0
 ###### Features
 - Convert from `re` to `regex` (pull #[2643](https://github.com/aws-cloudformation/cfn-lint/pull/2643))
