@@ -94,6 +94,39 @@
    },
    "type": "object"
   },
+  "NetworkAccessControl": {
+   "additionalProperties": false,
+   "description": "The configuration settings for Network Access Control.",
+   "properties": {
+    "PrefixListIds": {
+     "description": "The list of prefix list IDs. A prefix list is a list of CIDR ranges of IP addresses. The IP addresses specified are allowed to access your workspace. If the list is not included in the configuration then no IP addresses will be allowed to access the workspace.",
+     "insertionOrder": false,
+     "items": {
+      "description": "Prefix List Ids",
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "VpceIds": {
+     "description": "The list of Amazon VPC endpoint IDs for the workspace. If a NetworkAccessConfiguration is specified then only VPC endpoints specified here will be allowed to access the workspace.",
+     "insertionOrder": false,
+     "items": {
+      "description": "VPCE Ids",
+      "minLength": 1,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
   "NotificationDestinationType": {
    "description": "These enums represent valid AWS notification destinations that the Grafana workspace has permission to use. These notification destinations are primarily used to help customers visualize which destinations have been added to a service managed IAM role.",
    "enum": [
@@ -248,6 +281,7 @@
     "organizations:DescribeOrganization",
     "sso:GetSharedSsoConfiguration",
     "iam:PassRole",
+    "ec2:GetManagedPrefixListEntries",
     "ec2:DescribeSecurityGroups",
     "ec2:DescribeSubnets",
     "ec2:DescribeVpcs",
@@ -281,6 +315,7 @@
     "grafana:UpdateWorkspaceAuthentication",
     "sso:DescribeRegisteredRegions",
     "sso:CreateManagedApplicationInstance",
+    "ec2:GetManagedPrefixListEntries",
     "iam:PassRole",
     "ec2:DescribeSecurityGroups",
     "ec2:DescribeSubnets",
@@ -358,6 +393,9 @@
    "description": "The user friendly name of a workspace.",
    "pattern": "^[a-zA-Z0-9-._~]{1,255}$",
    "type": "string"
+  },
+  "NetworkAccessControl": {
+   "$ref": "#/definitions/NetworkAccessControl"
   },
   "NotificationDestinations": {
    "description": "List of notification destinations on the customers service managed IAM role that the Grafana workspace can query.",
