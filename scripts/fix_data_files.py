@@ -28,12 +28,15 @@ for module in modules:
     )
     for dirpath, _, filenames in os.walk(append_dir):
         for filename in fnmatch.filter(filenames, "*.json"):
-            string_content = ""
-            with open(os.path.join(dirpath, filename), encoding="utf8") as input_file:
-                string_content = "".join(input_file.readlines())
+            try:
+                string_content = ""
+                with open(os.path.join(dirpath, filename), encoding="utf8") as input_file:
+                    string_content = "".join(input_file.readlines())
 
-            pretty_content = format_json_string(json.loads(string_content))
-            with open(
-                os.path.join(dirpath, filename), encoding="utf8", mode="w"
-            ) as output_file:
-                output_file.write(pretty_content)
+                pretty_content = format_json_string(json.loads(string_content))
+                with open(
+                    os.path.join(dirpath, filename), encoding="utf8", mode="w"
+                ) as output_file:
+                    output_file.write(pretty_content)
+            except Exception as e:
+                print(dirpath, filename, e)
