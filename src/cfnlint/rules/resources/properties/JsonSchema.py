@@ -76,15 +76,19 @@ class JsonSchema(BaseJsonSchema):
                 filename=(f"{schema_details[1]}.json"),
             )
             cfn_validator = self.setup_validator(schema=cfn_schema)
-            # cfn_validator = validator.evolve(schema=cfn_schema)
-            errs = list(cfn_validator.iter_errors(instance))
-            if errs:
-                if cfn_schema.get("description"):
-                    err = best_match(errs)
-                    err.message = cfn_schema.get("description")
-                    yield err
-                else:
-                    yield errs
+
+            # if the schema has a description will only replace the message with that
+            # description and use the best error for the location information
+            if cfn_schema.get("description"):
+                err = best_match(list(cfn_validator.iter_errors(instance)))
+                # best_match will return None if the list is empty.  There is no best match
+                if not err:
+                    return
+                err.message = cfn_schema.get("description")
+                yield err
+                return
+
+            yield from cfn_validator.iter_errors(instance)
 
     # pylint: disable=unused-argument
     def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
