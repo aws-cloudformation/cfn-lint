@@ -9,6 +9,7 @@ cached = [
     "aws-guardduty-filter.json",
     "aws-ecs-service.json",
     "aws-ram-resourceshare.json",
+    "aws-memorydb-cluster.json",
     "aws-dynamodb-table.json",
     "aws-ec2-securitygroupegress.json",
     "aws-ec2-localgatewayroutetablevpcassociation.json",
