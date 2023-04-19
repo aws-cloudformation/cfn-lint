@@ -1,3 +1,9 @@
+### v0.77.2
+###### Features
+- Add custom operators for regex, gt, lt (pull #[2694](https://github.com/aws-cloudformation/cfn-lint/pull/2694))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `119.1.0` (pull #[2698](https://github.com/aws-cloudformation/cfn-lint/pull/2698))
+
 ### v0.77.1
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `119.1.0` (pull #[2678](https://github.com/aws-cloudformation/cfn-lint/pull/2678))
