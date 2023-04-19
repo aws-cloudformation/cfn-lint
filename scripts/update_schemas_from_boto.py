@@ -127,6 +127,16 @@ patches.extend(
             ],
         ),
         resource_patch(
+            resource_type="AWS::AutoScaling::LaunchConfiguration",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="VolumeType",
+                    path="/definitions/BlockDevice/properties/VolumeType",
+                ),
+            ],
+        ),
+        resource_patch(
             resource_type="AWS::AutoScaling::ScalingPolicy",
             patches=[
                 patch(
@@ -198,6 +208,16 @@ patches.extend(
                     source=["budgets", "2016-10-20"],
                     shape="SubscriptionType",
                     path="/definitions/Subscriber/properties/SubscriptionType",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::CertificateManager::Certificate",
+            patches=[
+                patch(
+                    source=["acm", "2015-12-08"],
+                    shape="ValidationMethod",
+                    path="/properties/PermissionModel",
                 ),
             ],
         ),
@@ -507,6 +527,51 @@ patches.extend(
             ],
         ),
         resource_patch(
+            resource_type="AWS::DirectoryService::MicrosoftAD",
+            patches=[
+                patch(
+                    source=["ds", "2015-04-16"],
+                    shape="DirectoryEdition",
+                    path="/properties/Edition",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::DirectoryService::SimpleAD",
+            patches=[
+                patch(
+                    source=["ds", "2015-04-16"],
+                    shape="DirectorySize",
+                    path="/properties/Size",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::DLM::LifecyclePolicy",
+            patches=[
+                patch(
+                    source=["dlm", "2018-01-12"],
+                    shape="ResourceTypeValues",
+                    path="/definitions/PolicyDetails/properties/ResourceTypes/items",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::DMS::Endpoint",
+            patches=[
+                patch(
+                    source=["dms", "2016-01-01"],
+                    shape="DmsSslModeValue",
+                    path="/properties/SslMode",
+                ),
+                patch(
+                    source=["dms", "2016-01-01"],
+                    shape="ReplicationEndpointTypeValue",
+                    path="/properties/EndpointType",
+                ),
+            ],
+        ),
+        resource_patch(
             resource_type="AWS::DynamoDB::Table",
             patches=[
                 patch(
@@ -537,12 +602,192 @@ patches.extend(
             ],
         ),
         resource_patch(
+            resource_type="AWS::EC2::CapacityReservation",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="EndDateType",
+                    path="/properties/EndDateType",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="InstanceMatchCriteria",
+                    path="/properties/InstanceMatchCriteria",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="CapacityReservationInstancePlatform",
+                    path="/properties/InstancePlatform",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::CustomerGateway",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="GatewayType",
+                    path="/properties/Type",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::EIP",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="DomainType",
+                    path="/properties/Domain",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::EC2Fleet",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="FleetOnDemandAllocationStrategy",
+                    path="/definitions/OnDemandOptionsRequest/properties/AllocationStrategy",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::Host",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="AutoPlacement",
+                    path="/properties/AutoPlacement",
+                ),
+            ],
+        ),
+        resource_patch(
             resource_type="AWS::EC2::Instance",
             patches=[
                 patch(
                     source=["ec2", "2016-11-15"],
                     shape="Affinity",
                     path="/properties/Affinity",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="Tenancy",
+                    path="/properties/Tenancy",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::LaunchTemplate",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="ShutdownBehavior",
+                    path="/definitions/LaunchTemplateData/properties/InstanceInitiatedShutdownBehavior",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="MarketType",
+                    path="/definitions/InstanceMarketOptions/properties/MarketType",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="SpotInstanceInterruptionBehavior",
+                    path="/definitions/SpotOptions/properties/InstanceInterruptionBehavior",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="SpotInstanceType",
+                    path="/definitions/SpotOptions/properties/SpotInstanceType",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="VolumeType",
+                    path="/definitions/Ebs/properties/VolumeType",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="Tenancy",
+                    path="/definitions/Placement/properties/Tenancy",
+                ),
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="ResourceType",
+                    path="/definitions/TagSpecification/properties/ResourceType",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::NetworkAclEntry",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="RuleAction",
+                    path="/properties/RuleAction",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::NetworkInterfacePermission",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="InterfacePermissionType",
+                    path="/properties/Permission",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::PlacementGroup",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="PlacementGroupStrategy",
+                    path="/properties/Strategy",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EC2::SpotFleet",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="VolumeType",
+                    path="/definitions/EbsBlockDevice/properties/VolumeType",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::ECS::TaskDefinition",
+            patches=[
+                patch(
+                    source=["ecs", "2014-11-13"],
+                    shape="NetworkMode",
+                    path="/properties/NetworkMode",
+                ),
+                patch(
+                    source=["ecs", "2014-11-13"],
+                    shape="ProxyConfigurationType",
+                    path="/definitions/ProxyConfiguration/properties/Type",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::EFS::FileSystem",
+            patches=[
+                patch(
+                    source=["efs", "2015-02-01"],
+                    shape="TransitionToIARules",
+                    path="/definitions/LifecyclePolicy/properties/TransitionToIA",
+                ),
+                patch(
+                    source=["efs", "2015-02-01"],
+                    shape="PerformanceMode",
+                    path="/properties/PerformanceMode",
+                ),
+                patch(
+                    source=["efs", "2015-02-01"],
+                    shape="ThroughputMode",
+                    path="/properties/ThroughputMode",
                 ),
             ],
         ),
@@ -652,12 +897,112 @@ patches.extend(
             ],
         ),
         resource_patch(
+            resource_type="AWS::Lambda::Function",
+            patches=[
+                patch(
+                    source=["lambda", "2015-03-31"],
+                    shape="Runtime",
+                    path="/properties/Runtime",
+                ),
+            ],
+        ),
+        resource_patch(
             resource_type="AWS::Lambda::EventSourceMapping",
             patches=[
                 patch(
                     source=["lambda", "2015-03-31"],
                     shape="EventSourcePosition",
                     path="/properties/StartingPosition",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::OpsWorks::Instance",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="VolumeType",
+                    path="/definitions/EbsBlockDevice/properties/VolumeType",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::OpsWorks::Layer",
+            patches=[
+                patch(
+                    source=["ec2", "2016-11-15"],
+                    shape="VolumeType",
+                    path="/definitions/VolumeConfiguration/properties/VolumeType",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::Route53::RecordSetGroup",
+            patches=[
+                patch(
+                    source=["route53", "2013-04-01"],
+                    shape="ResourceRecordSetFailover",
+                    path="/definitions/RecordSet/properties/Failover",
+                ),
+                patch(
+                    source=["route53", "2013-04-01"],
+                    shape="RRType",
+                    path="/definitions/RecordSet/properties/Type",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::Route53Resolver::ResolverEndpoint",
+            patches=[
+                patch(
+                    source=["route53resolver", "2018-04-01"],
+                    shape="ResolverEndpointDirection",
+                    path="/properties/Direction",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::ServiceDiscovery::Service",
+            patches=[
+                patch(
+                    source=["servicediscovery", "2017-03-14"],
+                    shape="RecordType",
+                    path="/definitions/DnsRecord/properties/Type",
+                ),
+                patch(
+                    source=["servicediscovery", "2017-03-14"],
+                    shape="HealthCheckType",
+                    path="/definitions/HealthCheckConfig/properties/Type",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::SES::ReceiptRule",
+            patches=[
+                patch(
+                    source=["ses", "2010-12-01"],
+                    shape="TlsPolicy",
+                    path="/definitions/Rule/properties/TlsPolicy",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::WAFRegional::Rule",
+            patches=[
+                patch(
+                    source=["waf", "2015-08-24"],
+                    shape="PredicateType",
+                    path="/definitions/Predicate/properties/Type",
+                ),
+            ],
+        ),
+        resource_patch(
+            resource_type="AWS::WAF::Rule",
+            patches=[
+                patch(
+                    source=["waf", "2015-08-24"],
+                    shape="PredicateType",
+                    path="/definitions/Predicate/properties/Type",
                 ),
             ],
         ),
@@ -736,7 +1081,7 @@ def build_resource_type_patches(dir: str, resource_patches: resource_patch):
         f"{resource_name}.json",
     )
 
-    mode = 'r+' if os.path.exists(output_file) else 'w+'
+    mode = "r+" if os.path.exists(output_file) else "w+"
     with open(output_file, mode) as fh:
         fh.seek(0)
         try:
