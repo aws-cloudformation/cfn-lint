@@ -291,6 +291,7 @@ cached = [
     "aws-evidently-project.json",
     "aws-lex-botalias.json",
     "aws-identitystore-group.json",
+    "aws-ram-permission.json",
     "aws-datasync-task.json",
     "aws-ecs-taskdefinition.json",
     "aws-sagemaker-model.json",
