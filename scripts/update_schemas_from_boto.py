@@ -48,12 +48,7 @@ patches.extend(
                     source=["apigateway", "2015-07-09"],
                     shape="ApiKeySourceType",
                     path="/properties/ApiKeySourceType",
-                ),
-                patch(
-                    source=["apigateway", "2015-07-09"],
-                    shape="GatewayResponseType",
-                    path="/properties/GatewayResponseType",
-                ),
+                )
             ],
         ),
         resource_patch(
@@ -63,11 +58,6 @@ patches.extend(
                     source=["apigateway", "2015-07-09"],
                     shape="AuthorizerType",
                     path="/properties/Type",
-                ),
-                patch(
-                    source=["apigateway", "2015-07-09"],
-                    shape="GatewayResponseType",
-                    path="/properties/GatewayResponseType",
                 ),
             ],
         ),
@@ -382,22 +372,22 @@ patches.extend(
                 patch(
                     source=["codedeploy", "2014-10-06"],
                     shape="AutoRollbackEvent",
-                    path="/properties/AutoRollbackConfiguration/properties/Events/items",
+                    path="/definitions/AutoRollbackConfiguration/properties/Events/items",
                 ),
                 patch(
                     source=["codedeploy", "2014-10-06"],
                     shape="DeploymentOption",
-                    path="/properties/DeploymentStyle/properties/DeploymentOption",
+                    path="/definitions/DeploymentStyle/properties/DeploymentOption",
                 ),
                 patch(
                     source=["codedeploy", "2014-10-06"],
                     shape="DeploymentType",
-                    path="/properties/DeploymentStyle/properties/DeploymentType",
+                    path="/definitions/DeploymentStyle/properties/DeploymentType",
                 ),
                 patch(
                     source=["codedeploy", "2014-10-06"],
                     shape="TriggerEventType",
-                    path="/properties/TriggerConfig/properties/TriggerEvents",
+                    path="/definitions/TriggerConfig/properties/TriggerEvents",
                 ),
             ],
         ),
