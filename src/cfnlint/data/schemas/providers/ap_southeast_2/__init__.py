@@ -102,7 +102,6 @@ cached = [
     "aws-amplifyuibuilder-form.json",
     "aws-elasticache-securitygroup.json",
     "aws-backup-framework.json",
-    "aws-appflow-connectorprofile.json",
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
