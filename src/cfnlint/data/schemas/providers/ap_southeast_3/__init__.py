@@ -191,6 +191,7 @@ cached = [
     "aws-kms-key.json",
     "aws-route53resolver-firewallrulegroupassociation.json",
     "aws-route53resolver-resolverqueryloggingconfig.json",
+    "aws-ec2-subnet.json",
     "aws-cloudtrail-resourcepolicy.json",
     "aws-s3objectlambda-accesspoint.json",
     "aws-elasticbeanstalk-configurationtemplate.json",
