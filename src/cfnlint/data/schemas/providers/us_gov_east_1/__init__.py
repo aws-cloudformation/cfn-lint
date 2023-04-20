@@ -221,6 +221,7 @@ cached = [
     "aws-route53resolver-resolverdnssecconfig.json",
     "aws-route53resolver-firewallrulegroupassociation.json",
     "aws-route53resolver-resolverqueryloggingconfig.json",
+    "aws-ec2-subnet.json",
     "aws-s3objectlambda-accesspoint.json",
     "aws-waf-rule.json",
     "aws-sqs-queuepolicy.json",
