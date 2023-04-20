@@ -314,12 +314,31 @@ class ProviderSchemaManager:
                         module = dirpath.replace(f"{append_dir}", f"{region}").replace(
                             os.path.sep, "."
                         )
-                        jsonpatch.JsonPatch(
-                            load_resource(
-                                f"{self._patches.module}.{patch_type}.{module}",
+                        try:
+                            jsonpatch.JsonPatch(
+                                load_resource(
+                                    f"{self._patches.module}.{patch_type}.{module}",
+                                    file_path,
+                                )
+                            ).apply(content, in_place=True)
+                        except jsonpatch.JsonPatchConflict as e:
+                            LOGGER.info(
+                                "Patch already applied %s: %s",
                                 file_path,
+                                str(e),
                             )
-                        ).apply(content, in_place=True)
+                        except jsonpatch.JsonPatchException as e:
+                            LOGGER.info(
+                                "Patch exception raised for %s: %s",
+                                file_path,
+                                str(e),
+                            )
+                        except Exception as e:  # pylint: disable=broad-exception-caught
+                            LOGGER.info(
+                                "Unknown exception raised applying patch %s: %s",
+                                file_path,
+                                str(e),
+                            )
 
         return content
 
