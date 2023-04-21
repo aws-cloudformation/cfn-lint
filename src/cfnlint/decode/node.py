@@ -96,7 +96,7 @@ def create_dict_node_class(cls):
                                 if isinstance(p_v, dict):
                                     if len(p_v) == 1:
                                         for l_k in p_v.keys():
-                                            if l_k == "Fn::FindInMap":
+                                            if l_k in ["Fn::FindInMap", "Fn::GetAtt"]:
                                                 return True
 
             return False
