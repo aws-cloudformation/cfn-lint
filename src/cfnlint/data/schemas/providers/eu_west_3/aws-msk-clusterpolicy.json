@@ -1,0 +1,68 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterArn"
+ ],
+ "definitions": {},
+ "description": "Resource Type definition for AWS::MSK::ClusterPolicy",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "kafka:PutClusterPolicy",
+    "kafka:GetClusterPolicy"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "kafka:DeleteClusterPolicy",
+    "kafka:GetClusterPolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "kafka:GetClusterPolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "kafka:GetClusterPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "kafka:PutClusterPolicy",
+    "kafka:GetClusterPolicy"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterArn"
+ ],
+ "properties": {
+  "ClusterArn": {
+   "description": "The arn of the cluster for the resource policy.",
+   "pattern": "^arn:[\\w-]+:kafka:[\\w-]+:\\d+:cluster.*\\Z",
+   "type": "string"
+  },
+  "CurrentVersion": {
+   "description": "The current version of the policy attached to the specified cluster",
+   "pattern": "^(K)([a-zA-Z0-9]+)\\Z",
+   "type": "string"
+  },
+  "Policy": {
+   "description": "A policy document containing permissions to add to the specified cluster.",
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CurrentVersion"
+ ],
+ "required": [
+  "Policy",
+  "ClusterArn"
+ ],
+ "tagging": {
+  "taggable": false
+ },
+ "typeName": "AWS::MSK::ClusterPolicy"
+}
