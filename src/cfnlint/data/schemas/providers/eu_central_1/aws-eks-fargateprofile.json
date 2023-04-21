@@ -1,0 +1,179 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName",
+  "/properties/PodExecutionRoleArn",
+  "/properties/Subnets",
+  "/properties/Selectors"
+ ],
+ "definitions": {
+  "Label": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a pod.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the label.",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the label. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Selector": {
+   "additionalProperties": false,
+   "properties": {
+    "Labels": {
+     "items": {
+      "$ref": "#/definitions/Label"
+     },
+     "type": "array"
+    },
+    "Namespace": {
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Namespace"
+   ],
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 127,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 255,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Schema for AWS::EKS::FargateProfile",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "eks:CreateFargateProfile",
+    "eks:DescribeFargateProfile",
+    "iam:GetRole",
+    "iam:PassRole",
+    "iam:CreateServiceLinkedRole",
+    "eks:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "eks:DeleteFargateProfile",
+    "eks:DescribeFargateProfile"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "ClusterName": {
+      "$ref": "resource-schema.json#/properties/ClusterName"
+     }
+    },
+    "required": [
+     "ClusterName"
+    ]
+   },
+   "permissions": [
+    "eks:ListFargateProfiles"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "eks:DescribeFargateProfile"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "eks:DescribeFargateProfile",
+    "eks:ListTagsForResource",
+    "eks:TagResource",
+    "eks:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ClusterName",
+  "/properties/FargateProfileName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "ClusterName": {
+   "description": "Name of the Cluster",
+   "minLength": 1,
+   "type": "string"
+  },
+  "FargateProfileName": {
+   "description": "Name of FargateProfile",
+   "minLength": 1,
+   "type": "string"
+  },
+  "PodExecutionRoleArn": {
+   "description": "The IAM policy arn for pods",
+   "minLength": 1,
+   "type": "string"
+  },
+  "Selectors": {
+   "items": {
+    "$ref": "#/definitions/Selector"
+   },
+   "minItems": 1,
+   "type": "array"
+  },
+  "Subnets": {
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn"
+ ],
+ "required": [
+  "ClusterName",
+  "PodExecutionRoleArn",
+  "Selectors"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+ "typeName": "AWS::EKS::FargateProfile"
+}
