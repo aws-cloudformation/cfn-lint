@@ -31,9 +31,9 @@ class IdentityPolicy(BaseJsonSchema):
             "oneOf": self._one_of,
             "type": validator_cfn_type,
         }
-        policy_schema = load_resource("cfnlint.data.schemas.nested", "iam_policy.json")
+        policy_schema = load_resource("cfnlint.data.schemas.other.iam", "policy.json")
         self.identity_schema = load_resource(
-            "cfnlint.data.schemas.nested", "iam_policy_identity.json"
+            "cfnlint.data.schemas.other.iam", "policy_identity.json"
         )
         store = {
             "policy": policy_schema,
