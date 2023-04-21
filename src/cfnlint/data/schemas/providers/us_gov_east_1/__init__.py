@@ -89,7 +89,6 @@ cached = [
     "aws-ec2-gatewayroutetableassociation.json",
     "aws-wafv2-ipset.json",
     "aws-ssm-document.json",
-    "aws-dms-endpoint.json",
     "aws-apigateway-apikey.json",
     "aws-kinesisanalyticsv2-application.json",
     "aws-lambda-alias.json",
