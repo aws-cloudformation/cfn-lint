@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 import cfnlint.helpers
-from cfnlint.data.schemas.extensions import resource
+from cfnlint.data.schemas.other import resource
 from cfnlint.jsonschema import ValidationError
 from cfnlint.jsonschema._validators import additionalProperties
 from cfnlint.jsonschema._validators import type as validator_type
