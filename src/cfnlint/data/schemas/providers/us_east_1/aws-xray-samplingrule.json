@@ -184,27 +184,37 @@
    },
    "type": "object"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
-    "additionalProperties": false,
-    "properties": {
-     "Key": {
-      "type": "string"
-     },
-     "Value": {
-      "type": "string"
-     }
-    },
-    "required": [
-     "Key",
-     "Value"
-    ],
-    "type": "object"
+    "$ref": "#/definitions/Tag"
    },
    "type": "array"
   }
  },
+ "deprecatedProperties": [
+  "/properties/SamplingRuleRecord",
+  "/properties/SamplingRuleUpdate"
+ ],
  "description": "This schema provides construct and validation rules for AWS-XRay SamplingRule resource parameters.",
  "handlers": {
   "create": {
@@ -218,9 +228,16 @@
     "xray:DeleteSamplingRule"
    ]
   },
+  "list": {
+   "permissions": [
+    "xray:GetSamplingRules",
+    "xray:ListTagsForResource"
+   ]
+  },
   "read": {
    "permissions": [
-    "xray:GetSamplingRules"
+    "xray:GetSamplingRules",
+    "xray:ListTagsForResource"
    ]
   },
   "update": {
