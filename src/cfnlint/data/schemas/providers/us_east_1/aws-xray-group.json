@@ -15,23 +15,29 @@
    },
    "type": "object"
   },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
   "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
    "insertionOrder": false,
    "items": {
-    "additionalProperties": false,
-    "properties": {
-     "Key": {
-      "type": "string"
-     },
-     "Value": {
-      "type": "string"
-     }
-    },
-    "required": [
-     "Key",
-     "Value"
-    ],
-    "type": "object"
+    "$ref": "#/definitions/Tag"
    },
    "type": "array"
   }
@@ -49,9 +55,16 @@
     "xray:DeleteGroup"
    ]
   },
+  "list": {
+   "permissions": [
+    "xray:GetGroups",
+    "xray:ListTagsForResource"
+   ]
+  },
   "read": {
    "permissions": [
-    "xray:GetGroup"
+    "xray:GetGroup",
+    "xray:ListTagsForResource"
    ]
   },
   "update": {
