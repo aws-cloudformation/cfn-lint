@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import json
 import logging
 import os
 import sys
@@ -15,7 +14,7 @@ import cfnlint.formatters
 import cfnlint.maintenance
 import cfnlint.runner
 from cfnlint.decode import decode
-from cfnlint.helpers import REGIONS, REGISTRY_SCHEMAS
+from cfnlint.helpers import REGIONS
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import Match, ParseError, RulesCollection, TransformError
 from cfnlint.schema import PROVIDER_SCHEMA_MANAGER
@@ -73,6 +72,7 @@ def run_cli(
     if registry_schemas:
         for path in registry_schemas:
             if path and os.path.isdir(os.path.expanduser(path)):
+<<<<<<< HEAD
                 for f in os.listdir(path):
                     if not f.endswith(".json"):
                         continue
@@ -81,6 +81,9 @@ def run_cli(
                         continue
                     with open(filename, encoding="utf-8") as schema:
                         REGISTRY_SCHEMAS.append(json.load(schema))
+=======
+                PROVIDER_SCHEMA_MANAGER.load_registry_schemas(path)
+>>>>>>> 1033a18a5 (Allow for integration the configuration of additional registry schemas (#2710))
 
     return run_checks(filename, template, rules, regions, mandatory_rules)
 
