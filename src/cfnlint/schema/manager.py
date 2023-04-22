@@ -16,7 +16,6 @@ from copy import copy
 from typing import Any, Dict, List, Sequence, Union
 
 import jsonpatch
-from pkg_resources import resource_listdir
 
 from cfnlint.helpers import (
     REGION_PRIMARY,
@@ -66,7 +65,7 @@ class ProviderSchemaManager:
             ]
         )
         self._region_primary = ToPy(REGION_PRIMARY)
-
+        self._registry_schemas: Dict[str, Schema] = {}
         self.reset()
 
     def reset(self):
@@ -79,11 +78,24 @@ class ProviderSchemaManager:
         self._cache["ResourceTypes"] = {}
         self._cache["GetAtts"] = {}
         self._cache["RemovedTypes"] = []
-        self._provider_schema_modules: Dict[str, Any] = {}
         for region in REGIONS:
             self._schemas[region] = {}
             self._cache["ResourceTypes"][region] = []
             self._cache["GetAtts"][region] = {}
+
+    def load_registry_schemas(self, path: str) -> None:
+        """Load extra registry schemas from a directory
+
+        Args:
+            path (str): the directory to load schema files from
+        Returns:
+            None: None
+        """
+        for dirpath, _, filenames in os.walk(path):
+            for filename in fnmatch.filter(filenames, "*.json"):
+                with open(os.path.join(dirpath, filename), "r", encoding="utf-8") as fh:
+                    schema = Schema(json.load(fh))
+                    self._registry_schemas[schema.type_name] = schema
 
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
         """Get the provider resource shcema and cache it to speed up future lookups
@@ -106,6 +118,11 @@ class ProviderSchemaManager:
             self._provider_schema_modules[reg.name] = __import__(
                 f"{self._root.module}.{reg.py}", fromlist=[""]
             )
+            # check cfn-lint provided schemas
+            if resource_type in self._registry_schemas:
+                self._schemas[reg.name][rt.name] = self._registry_schemas[rt.name]
+                return self._schemas[reg.name][rt.name]
+
             # load the schema
             if f"{rt.provider}.json" in self._provider_schema_modules[reg.name].cached:
                 schema_cached = copy(
@@ -148,29 +165,14 @@ class ProviderSchemaManager:
                 self._provider_schema_modules[region] = __import__(
                     f"{self._root.module}.{reg.py}", fromlist=[""]
                 )
-            for filename in self._provider_schema_modules[reg.name].cached:
-                schema = load_resource(
-                    self._provider_schema_modules[self._region_primary.name],
-                    filename=(filename),
-                )
-                resource_type = schema.get("typeName")
-                if resource_type in self._cache["RemovedTypes"]:
-                    continue
-                self._schemas[reg.name][resource_type] = Schema(schema, True)
-                self._cache["ResourceTypes"][region].append(resource_type)
-            for filename in resource_listdir(
-                "cfnlint", resource_name=f"{'/'.join(self._root.path)}/{reg.py}"
-            ):
-                if not filename.endswith(".json"):
-                    continue
-                schema = load_resource(
-                    self._provider_schema_modules[reg.name], filename=(filename)
-                )
-                resource_type = schema.get("typeName")
-                if resource_type in self._cache["RemovedTypes"]:
-                    continue
-                self._schemas[reg.name][resource_type] = Schema(schema)
-                self._cache["ResourceTypes"][reg.name].append(resource_type)
+            self._cache["ResourceTypes"][reg.name].extend(
+                rt
+                for rt in self._provider_schema_modules[reg.name].types
+                if rt not in self._cache["RemovedTypes"]
+            )
+            self._cache["ResourceTypes"][reg.name].extend(
+                list(self._registry_schemas.keys())
+            )
 
         return self._cache["ResourceTypes"][reg.name].copy()
 
@@ -232,9 +234,11 @@ class ProviderSchemaManager:
                 for f in os.listdir(directory)
                 if os.path.isfile(os.path.join(directory, f)) and f != "__init__.py"
             ]
+            all_types = []
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
+                    all_types.append(spec["typeName"])
                     try:
                         spec = self._patch_provider_schema(spec, filename, "all")
                     except Exception as e:  # pylint: disable=broad-except
@@ -280,13 +284,19 @@ class ProviderSchemaManager:
                                 e,
                             )
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
-                    f.write("# pylint: disable=too-many-lines\ncached = [\n")
+                    f.write("# pylint: disable=too-many-lines\ntypes = [\n")
+                    for rt in all_types:
+                        f.write(f'    "{rt}",\n')
+                    f.write("]\n\n# pylint: disable=too-many-lines\ncached = [\n")
                     for cache_file in cached:
                         f.write(f'    "{cache_file}",\n')
                     f.write("]\n")
             else:
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
-                    f.write("cached = []\n")
+                    f.write("# pylint: disable=too-many-lines\ntypes = [\n")
+                    for rt in all_types:
+                        f.write(f'    "{rt}",\n')
+                    f.write("]\ncached = []\n")
 
         except Exception as e:  # pylint: disable=broad-except
             LOGGER.info("Issuing updating schemas for %s: %s", region, e)
@@ -402,7 +412,6 @@ class ProviderSchemaManager:
         for resource in all_resource_types:
             if resource not in resource_types:
                 self._cache["RemovedTypes"].append(resource)
-                del self._schemas[region][resource]
                 self._cache["ResourceTypes"][region].remove(resource)
 
         for resource_type, patches in patch.patches.items():

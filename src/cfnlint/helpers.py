@@ -16,7 +16,6 @@ import logging
 import os
 import sys
 from io import BytesIO
-from typing import List
 from urllib.request import Request, urlopen, urlretrieve
 
 import regex as re
@@ -373,9 +372,6 @@ def load_resource(package, filename="us-east-1.json"):
             .read_text(encoding="utf-8")
         )
     return json.loads(pkg_resources.read_text(package, filename, encoding="utf-8"))
-
-
-REGISTRY_SCHEMAS: List[dict] = []
 
 
 def is_custom_resource(resource_type):
