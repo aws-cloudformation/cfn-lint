@@ -3,22 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import re
 
-import jsonschema
 from jsonschema.exceptions import best_match
 
-from cfnlint.helpers import (
-    FN_PREFIX,
-    PSEUDOPARAMS,
-    REGEX_DYN_REF,
-    REGION_PRIMARY,
-    REGISTRY_SCHEMAS,
-    UNCONVERTED_SUFFIXES,
-    load_resource,
-)
-from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import RuleMatch
+from cfnlint.helpers import REGION_PRIMARY, load_resource
 from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
@@ -99,30 +87,6 @@ class JsonSchema(BaseJsonSchema):
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = []
-
-        for schema in REGISTRY_SCHEMAS:
-            resource_type = schema["typeName"]
-            for resource_name, resource_values in cfn.get_resources(
-                [resource_type]
-            ).items():
-                properties = resource_values.get("Properties", {})
-                # ignoring resources with CloudFormation template syntax in Properties
-                if (
-                    not re.match(REGEX_DYN_REF, str(properties))
-                    and not any(
-                        x in str(properties)
-                        for x in PSEUDOPARAMS + UNCONVERTED_SUFFIXES
-                    )
-                    and FN_PREFIX not in str(properties)
-                ):
-                    try:
-                        jsonschema.validate(properties, schema)
-                    except ValidationError as e:
-                        matches.append(
-                            RuleMatch(
-                                ["Resources", resource_name, "Properties"], e.message
-                            )
-                        )
 
         for n, values in cfn.get_resources().items():
             p = values.get("Properties", {})
