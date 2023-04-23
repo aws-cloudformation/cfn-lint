@@ -1,3 +1,15 @@
+### v1.0.0.a3
+###### Features
+- Large rewrite and simplification to JSON Schema validation (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
+- Allow for integration the configuration of additional registry schemas (pull #[2710](https://github.com/aws-cloudformation/cfn-lint/issues/2710))
+- Validate schema configuration (pull #[2708](https://github.com/aws-cloudformation/cfn-lint/issues/2708))
+- Add in `enum` values from botocore (pull #[2705](https://github.com/aws-cloudformation/cfn-lint/issues/2705) and #[2702](https://github.com/aws-cloudformation/cfn-lint/issues/2702))
+- Add many JSON schemas to provide additional validation (pull #[2693](https://github.com/aws-cloudformation/cfn-lint/issues/2693) and #[2687](https://github.com/aws-cloudformation/cfn-lint/issues/2687))
+- Add json schema for CW Alarm period when in the AWS namespace (pull #[2685](https://github.com/aws-cloudformation/cfn-lint/issues/2685))
+- Include launch template security group schema (pull #[2681](https://github.com/aws-cloudformation/cfn-lint/issues/2681))
+- Update rule E3033 to include minLength (pull #[2680](https://github.com/aws-cloudformation/cfn-lint/issues/2680))
+
+
 ### v1.0.0.a2
 ###### Features
 - Fix packaging missing new json files (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
