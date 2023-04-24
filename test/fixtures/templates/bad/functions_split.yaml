@@ -24,3 +24,10 @@ Resources:
         - ','
         - !GetAZs ""
         - !Ref AWS::Region
+  myInstance3:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      AvailabilityZone: !Select
+      - 0
+      - Fn::Split: {Ref: AWS::Region}
