@@ -1,3 +1,9 @@
+### v0.77.3
+###### CloudFormation Specifications
+- Update CloudFormation specs to `119.2.0` (pull #[2703](https://github.com/aws-cloudformation/cfn-lint/pull/2703))
+###### Fixes
+- GetAtt can return objects along with FindInMap (pull #[2709](https://github.com/aws-cloudformation/cfn-lint/pull/2709))
+
 ### v0.77.2
 ###### Features
 - Add custom operators for regex, gt, lt (pull #[2694](https://github.com/aws-cloudformation/cfn-lint/pull/2694))
