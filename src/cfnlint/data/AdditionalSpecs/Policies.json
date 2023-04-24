@@ -2300,6 +2300,19 @@
    "HasResource": false,
    "StringPrefix": "awsconnector"
   },
+  "AWS Console Mobile App": {
+   "ARNFormat": "arn:aws:consoleapp:${Region}:${Account}:${ResourceType}",
+   "ARNRegex": "^arn:aws:consoleapp:.+:.+:.+",
+   "Actions": [
+    "GetDeviceIdentity",
+    "ListDeviceIdentities"
+   ],
+   "HasResource": true,
+   "StringPrefix": "consoleapp",
+   "conditionKeys": [
+    "consoleapp:DeviceIdentityArn"
+   ]
+  },
   "AWS Consolidated Billing": {
    "ARNFormat": "arn:${Partition}:consolidatedbilling::${Account}:${ResourceType}/${ResourceId}",
    "ARNRegex": "^arn:${Partition}:consolidatedbilling::.+:.+",
@@ -7292,14 +7305,18 @@
     "aws:TagKeys"
    ]
   },
-  "AWS Resource Access Manager": {
-   "ARNFormat": "arn:aws:ram:${Region}:${AccountId}:resource-share/${ResourceUUID}",
+  "AWS Resource Access Manager (RAM)": {
+   "ARNFormat": "arn:aws:ram:${Region}:${Account}:resource-share/${ResourceUUID}",
    "ARNRegex": "^arn:aws:ram:.+:.+:.+",
    "Actions": [
     "AcceptResourceShareInvitation",
     "AssociateResourceShare",
     "AssociateResourceSharePermission",
+    "CreatePermission",
+    "CreatePermissionVersion",
     "CreateResourceShare",
+    "DeletePermission",
+    "DeletePermissionVersion",
     "DeleteResourceShare",
     "DisassociateResourceShare",
     "DisassociateResourceSharePermission",
@@ -7310,14 +7327,19 @@
     "GetResourceShareInvitations",
     "GetResourceShares",
     "ListPendingInvitationResources",
+    "ListPermissionAssociations",
     "ListPermissionVersions",
     "ListPermissions",
     "ListPrincipals",
+    "ListReplacePermissionAssociationsWork",
     "ListResourceSharePermissions",
     "ListResourceTypes",
     "ListResources",
+    "PromotePermissionCreatedFromPolicy",
     "PromoteResourceShareCreatedFromPolicy",
     "RejectResourceShareInvitation",
+    "ReplacePermissionAssociations",
+    "SetDefaultPermissionVersion",
     "TagResource",
     "UntagResource",
     "UpdateResourceShare"
@@ -7336,6 +7358,7 @@
     "ram:RequestedResourceType",
     "ram:ResourceArn",
     "ram:ResourceShareName",
+    "ram:ResourceTag/${TagKey}",
     "ram:ShareOwnerAccountId"
    ]
   },
@@ -8902,6 +8925,68 @@
    ],
    "HasResource": true,
    "StringPrefix": "trustedadvisor"
+  },
+  "AWS User Notifications": {
+   "ARNFormat": "arn:aws:notifications::${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:notifications:.*:.+:.+",
+   "Actions": [
+    "AssociateChannel",
+    "CreateEventRule",
+    "CreateNotificationConfiguration",
+    "DeleteEventRule",
+    "DeleteNotificationConfiguration",
+    "DeregisterNotificationHub",
+    "DisassociateChannel",
+    "GetEventRule",
+    "GetNotificationConfiguration",
+    "GetNotificationEvent",
+    "ListChannels",
+    "ListEventRules",
+    "ListNotificationConfigurations",
+    "ListNotificationEvents",
+    "ListNotificationHubs",
+    "ListTagsForResource",
+    "RegisterNotificationHub",
+    "TagResource",
+    "UntagResource",
+    "UpdateEventRule",
+    "UpdateNotificationConfiguration"
+   ],
+   "HasResource": true,
+   "StringPrefix": "notifications",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
+    "notifications:ChannelArn",
+    "notifications:ChannelNotificationConfigurationArn",
+    "notifications:EventRuleArn",
+    "notifications:NotificationConfigurationArn",
+    "notifications:NotificationEventArn"
+   ]
+  },
+  "AWS User Notifications Contacts": {
+   "ARNFormat": "arn:aws:notifications-contacts::${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:notifications-contacts::.+:.+",
+   "Actions": [
+    "ActivateEmailContact",
+    "CreateEmailContact",
+    "DeleteEmailContact",
+    "GetEmailContact",
+    "ListEmailContacts",
+    "ListTagsForResource",
+    "SendActivationCode",
+    "TagResource",
+    "UntagResource"
+   ],
+   "HasResource": true,
+   "StringPrefix": "notifications-contacts",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys",
+    "notifications-contacts:EmailContactResourceArn"
+   ]
   },
   "AWS WAF": {
    "ARNFormat": "arn:aws:waf::${Account}:${ResourceId}/${Id}",
@@ -11121,6 +11206,7 @@
     "CreateHoursOfOperation",
     "CreateInstance",
     "CreateIntegrationAssociation",
+    "CreateParticipant",
     "CreateQueue",
     "CreateQuickConnect",
     "CreateRoutingProfile",
@@ -12676,7 +12762,7 @@
    ]
   },
   "Amazon EC2 Instance Connect": {
-   "ARNFormat": "arn:aws:ec2:<region>:<account>:<resourceType>/<resourcePath>",
+   "ARNFormat": "arn:aws:ec2:${Region}:${Account}:${ResourceType}/${ResourcePath}",
    "ARNRegex": "^arn:aws:ec2:.+",
    "Actions": [
     "SendSSHPublicKey",
