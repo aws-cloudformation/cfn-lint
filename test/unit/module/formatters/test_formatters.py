@@ -54,7 +54,7 @@ class TestFormatters(BaseTestCase):
                 27,
                 self.filename,
                 ValuePrimitiveType(),
-                "Property Resources/myTable/Properties/ProvisionedThroughput/WriteCapacityUnits should be of type Integer",
+                "'5' is not of type 'integer'",
             ),
         ]
 
