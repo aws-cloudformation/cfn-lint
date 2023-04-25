@@ -26,6 +26,22 @@ class TestAllowedPattern(BaseRuleTestCase):
             len(
                 list(
                     self.rule.pattern(
+                        validator,
+                        "foo",
+                        {
+                            "Ref": "foo",
+                            "Fn::GetAtt": "bar",
+                        },
+                        {},
+                    )
+                )
+            ),
+            0,
+        )
+        self.assertEqual(
+            len(
+                list(
+                    self.rule.pattern(
                         validator, "foo", "{{resolve:ssm:S3AccessControl:2}}", {}
                     )
                 )
@@ -33,7 +49,7 @@ class TestAllowedPattern(BaseRuleTestCase):
             0,
         )
 
-    def test_allowed_pattern(self):
+    def test_allowed_pattern_exceptions(self):
         validator = Draft7Validator({"type": "string"})
 
         self.rule.configure({"exceptions": ["AWS::"]})
