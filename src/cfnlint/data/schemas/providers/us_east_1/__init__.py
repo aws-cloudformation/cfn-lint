@@ -1,5 +1,6 @@
 # pylint: disable=too-many-lines
 types = [
+    "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
     "AWS::Pinpoint::App",
     "AWS::Connect::UserHierarchyGroup",
@@ -472,6 +473,7 @@ types = [
     "AWS::RedshiftServerless::Workgroup",
     "AWS::Macie::AllowList",
     "AWS::EC2::VPC",
+    "AWS::MSK::VpcConnection",
     "AWS::DAX::Cluster",
     "AWS::IoTSiteWise::Asset",
     "AWS::Logs::LogStream",
@@ -867,6 +869,7 @@ types = [
     "AWS::SSM::Association",
     "AWS::EC2::ClientVpnEndpoint",
     "AWS::CloudFront::ResponseHeadersPolicy",
+    "AWS::MSK::ClusterPolicy",
     "AWS::GuardDuty::Master",
     "AWS::KMS::Alias",
     "AWS::FraudDetector::Label",

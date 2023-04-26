@@ -234,7 +234,8 @@ class ProviderSchemaManager:
                 for f in os.listdir(directory)
                 if os.path.isfile(os.path.join(directory, f)) and f != "__init__.py"
             ]
-            all_types = []
+            # There is no schema for CDK but its an allowable type
+            all_types = ["AWS::CDK::Metadata"]
             for filename in filenames:
                 with open(f"{directory}{filename}", "r+", encoding="utf-8") as fh:
                     spec = json.load(fh)
