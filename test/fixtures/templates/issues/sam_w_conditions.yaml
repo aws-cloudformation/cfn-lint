@@ -1,0 +1,413 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  # Deploy Engine parameters
+  Zone:
+    Type: String
+  Site:
+    Type: String
+  Solution:
+    Type: String
+  Environment:
+    Type: String
+  GlobalPrefix:
+    Type: String
+  RegionalPrefix:
+    Type: String
+  Component:
+    Type: String
+  ComponentShortName:
+    Type: String
+  Version:
+    Type: String
+  Tenant:
+    Type: String
+  TenantAwsResource:
+    Type: String
+  # VMD Event Source
+  VmdEnabled:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+  VmdEventsSourceArn:
+    Type: String
+  VmdEventsSourceRegion:
+    Type: String
+  VmdSubscriptionEnabled:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+  # DMD Event Source
+  DmdEnabled:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+  DmdEventsSourceArn:
+    Type: String
+  DmdEventsSourceRegion:
+    Type: String
+  DmdSubscriptionEnabled:
+    Type: String
+    AllowedValues:
+      - true
+      - false
+  ConfigS3ReloadInterval:
+    Type: String
+    Default: 120
+  AliasName:
+    Type: String
+    Default: Active
+
+Conditions:
+  IsNotProd: !Not [ !Equals [ !Ref Environment, prod ] ]
+  # VMD
+  VmdEnabled:
+    !Equals [ true, !Ref VmdEnabled ]
+  VmdSubscriptionEnabled: !And
+    - !Condition VmdEnabled
+    - !Equals [ true, !Ref VmdSubscriptionEnabled ]
+  # DMD
+  DmdEnabled:
+    !Equals [ true, !Ref DmdEnabled ]
+  DmdSubscriptionEnabled: !And
+    - !Condition DmdEnabled
+    - !Equals [ true, !Ref DmdSubscriptionEnabled ]
+
+Globals:
+  Function:
+    Runtime: java11
+    MemorySize: 1024
+    Timeout: 60
+    CodeUri: functions-java.zip
+    AutoPublishAlias: Active
+    Environment:
+      Variables:
+        JAVA_TOOL_OPTIONS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
+        SITE: !Ref Site
+        SOLUTION: !Ref Solution
+        ENVIRONMENT: !Ref Environment
+        VERSION: !Ref Version
+        ACCOUNT_ID: !Sub ${AWS::AccountId}
+        COMPONENT_SHORT: !Ref ComponentShortName
+        COMPONENT_LONG: !Ref Component
+        COMPONENT_VERSION: !Ref Version
+        TENANT: !Ref Tenant
+        CONFIG_LIB_COMPONENT_SHORT_NAME: !Ref ComponentShortName
+        CONFIG_LIB_SOLUTION: !Ref Solution
+        CONFIG_LIB_ENVIRONMENT: !Ref Environment
+        CONFIG_LIB_SITE: !Ref Site
+        CONFIG_LIB_S3_BUCKET:
+          Fn::ImportValue: !Sub ${RegionalPrefix}-ccerscb-ConfigS3BucketName
+        CONFIG_LIB_S3_KEY: !Sub ${ComponentShortName}/application.yml
+        CONFIG_LIB_S3_PLATFORM_BUCKET:
+          Fn::ImportValue: !Sub ${RegionalPrefix}-ccerscb-ConfigS3BucketName
+        CONFIG_LIB_S3_PLATFORM_KEY: platform/application.yml
+        CONFIG_LIB_S3_RELOAD_INTERVAL: !Ref ConfigS3ReloadInterval
+
+Resources:
+  ####################
+  # Generic Policies #
+  ####################
+  DeniedPolicies:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: !Sub ${GlobalPrefix}-${ComponentShortName}-DeniedPolicies-${TenantAwsResource}
+      Description: Policy for  monitoring
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Deny
+            Action:
+              - aws-portal:*
+              - cloudtrail:*Logging
+              - directconnect:Delete*
+            Resource: '*'
+  LogMonitoringPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W13
+            reason: "TODO: [WPF-29001] Temporarily suppressing wildcard resource warning until fixed by this ticket"
+    Properties:
+      ManagedPolicyName: !Sub ${GlobalPrefix}-${ComponentShortName}-LogMonitoringPolicy-${TenantAwsResource}
+      Description: Policy for monitoring
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - cloudwatch:PutMetricData
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: '*'
+  TenantInfoReadPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: Policy to read Tenant Info secret from Secrets Manager
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+              - secretsmanager:DescribeSecret
+            Resource:
+              - !Sub arn:${AWS::Partition}:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:tenant-info_*
+
+  ##########################
+  # VMD Events Integration #
+  ##########################
+  VmdEventsLambda:
+    Type: AWS::Serverless::Function
+    Condition: VmdEnabled
+    Properties:
+      Description: Function handling VMD VehicleData image events sent via the VMD Events SQS Queue
+      FunctionName: !Sub ${RegionalPrefix}-${ComponentShortName}-VmdEventsLambda-${TenantAwsResource}
+      Handler: com.example.VmdEventHandler::handleRequest
+      DeploymentPreference:
+        Enabled: true
+        PassthroughCondition: true
+        Type: !If [ IsNotProd, AllAtOnce, Canary10Percent10Minutes ]
+        Alarms:
+          - !Ref VmdEventsLambdaErrorsGreaterThanZeroAlarm
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 1
+      Timeout: 20
+      Environment:
+        Variables:
+          HANDLER_NAME: VmdEventsLambda
+      Policies:
+        - !Ref DeniedPolicies
+        - !Ref LogMonitoringPolicy
+        - !Ref TenantInfoReadPolicy
+        - Fn::ImportValue: !Sub ${Zone}-${Site}-${Solution}-${Environment}-cce-remote-service-db-ReadPolicy
+        - Fn::ImportValue: !Sub ${Zone}-${Site}-${Solution}-${Environment}-cce-remote-service-db-WritePolicy
+        - Fn::ImportValue: !Sub ${RegionalPrefix}-ccerscb-ConfigS3BucketReadPolicy
+      Events:
+        Batch:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt VmdEventsQueue.Arn
+            BatchSize: 10
+            Enabled: true
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+  VmdEventsQueue:
+    Type: AWS::SQS::Queue
+    Condition: VmdEnabled
+    Properties:
+      QueueName: !Sub ${Solution}-${Environment}-${ComponentShortName}-VmdEventsQueue-${TenantAwsResource}.fifo
+      MessageRetentionPeriod: 10800 # 3 hours
+      FifoQueue: true
+      KmsMasterKeyId: alias/sqs-key
+      RedrivePolicy:
+        maxReceiveCount: 3
+        deadLetterTargetArn: !GetAtt VmdEventsDeadLetterQueue.Arn
+  VmdEventsDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Condition: VmdEnabled
+    Properties:
+      QueueName: !Sub ${Solution}-${Environment}-${ComponentShortName}-VmdEventsDeadLetterQueue-${TenantAwsResource}.fifo
+      MessageRetentionPeriod: 345600 # 4 days
+      FifoQueue: true
+      FifoThroughputLimit: perMessageGroupId
+      KmsMasterKeyId: alias/sqs-key
+      ContentBasedDeduplication: true
+      DeduplicationScope: messageGroup
+      Tags:
+        - Key: queueType
+          Value: dlq
+  VmdEventsQueueRetryPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Condition: VmdEnabled
+    Properties:
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sqs.amazonaws.com
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+          Resource:
+            !GetAtt VmdEventsQueue.Arn
+      Queues:
+        - !Ref VmdEventsDeadLetterQueue
+  VmdEventsQueueSourcePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Condition: VmdSubscriptionEnabled
+    Properties:
+      Queues:
+        - !Ref VmdEventsQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+            - sqs:SendMessage
+          Resource: !GetAtt VmdEventsQueue.Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref VmdEventsSourceArn
+  VmdEventsSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: VmdSubscriptionEnabled
+    Properties:
+      Protocol: sqs
+      Endpoint: !GetAtt VmdEventsQueue.Arn
+      Region: !Ref VmdEventsSourceRegion
+      TopicArn: !Ref VmdEventsSourceArn
+      RawMessageDelivery: true
+
+  VmdEventsLambdaErrorsGreaterThanZeroAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: VmdEnabled
+    Properties:
+      AlarmDescription: VMD Events Lambda Function Error > 0
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref VmdEventsLambda
+        - Name: Resource
+          Value: !Sub ${VmdEventsLambda}:${AliasName}
+      TreatMissingData: notBreaching
+      Statistic: Sum
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      Period: 60
+
+  ##########################
+  # DMD Events Integration #
+  ##########################
+  DmdEventsLambda:
+    Type: AWS::Serverless::Function
+    Condition: DmdEnabled
+    Properties:
+      Description: Function handling DMD DeviceData image events sent via the DMD Events SQS Queue
+      FunctionName: !Sub ${RegionalPrefix}-${ComponentShortName}-DmdEventsLambda-${TenantAwsResource}
+      Handler: com.example.DmdEventHandler::handleRequest
+      DeploymentPreference:
+        Enabled: true
+        PassthroughCondition: true
+        Type: !If [ IsNotProd, AllAtOnce, Canary10Percent10Minutes ]
+        Alarms:
+          - !Ref DmdEventsLambdaErrorsGreaterThanZeroAlarm
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 1
+      Timeout: 20
+      Environment:
+        Variables:
+          HANDLER_NAME: DmdEventsLambda
+      Policies:
+        - !Ref DeniedPolicies
+        - !Ref LogMonitoringPolicy
+        - !Ref TenantInfoReadPolicy
+        - Fn::ImportValue: !Sub ${Zone}-${Site}-${Solution}-${Environment}-cce-remote-service-db-ReadPolicy
+        - Fn::ImportValue: !Sub ${Zone}-${Site}-${Solution}-${Environment}-cce-remote-service-db-WritePolicy
+        - Fn::ImportValue: !Sub ${RegionalPrefix}-ccerscb-ConfigS3BucketReadPolicy
+      Events:
+        Batch:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt DmdEventsQueue.Arn
+            BatchSize: 10
+            Enabled: true
+            FunctionResponseTypes:
+              - ReportBatchItemFailures
+  DmdEventsQueue:
+    Type: AWS::SQS::Queue
+    Condition: DmdEnabled
+    Properties:
+      QueueName: !Sub ${Solution}-${Environment}-${ComponentShortName}-DmdEventsQueue-${TenantAwsResource}.fifo
+      MessageRetentionPeriod: 10800 # 3 hours
+      FifoQueue: true
+      KmsMasterKeyId: alias/sqs-key
+      RedrivePolicy:
+        maxReceiveCount: 3
+        deadLetterTargetArn: !GetAtt DmdEventsDeadLetterQueue.Arn
+  DmdEventsDeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Condition: DmdEnabled
+    Properties:
+      QueueName: !Sub ${Solution}-${Environment}-${ComponentShortName}-DmdEventsDeadLetterQueue-${TenantAwsResource}.fifo
+      MessageRetentionPeriod: 345600 # 4 days
+      FifoQueue: true
+      FifoThroughputLimit: perMessageGroupId
+      KmsMasterKeyId: alias/sqs-key
+      ContentBasedDeduplication: true
+      DeduplicationScope: messageGroup
+      Tags:
+        - Key: queueType
+          Value: dlq
+  DmdEventsQueueRetryPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Condition: DmdEnabled
+    Properties:
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sqs.amazonaws.com
+          Action:
+            - sqs:SendMessage
+            - sqs:ReceiveMessage
+          Resource:
+            !GetAtt DmdEventsQueue.Arn
+      Queues:
+        - !Ref DmdEventsDeadLetterQueue
+  DmdEventsQueueSourcePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Condition: DmdSubscriptionEnabled
+    Properties:
+      Queues:
+        - !Ref DmdEventsQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+            - sqs:SendMessage
+          Resource: !GetAtt DmdEventsQueue.Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref DmdEventsSourceArn
+  DmdEventsSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: DmdSubscriptionEnabled
+    Properties:
+      Protocol: sqs
+      Endpoint: !GetAtt DmdEventsQueue.Arn
+      Region: !Ref DmdEventsSourceRegion
+      TopicArn: !Ref DmdEventsSourceArn
+      RawMessageDelivery: true
+
+  DmdEventsLambdaErrorsGreaterThanZeroAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: DmdEnabled
+    Properties:
+      AlarmDescription: DMD Events Lambda Function Error > 0
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref DmdEventsLambda
+        - Name: Resource
+          Value: !Sub ${DmdEventsLambda}:${AliasName}
+      TreatMissingData: notBreaching
+      Statistic: Sum
+      Threshold: 0
+      ComparisonOperator: GreaterThanThreshold
+      EvaluationPeriods: 1
+      Period: 60
