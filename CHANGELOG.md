@@ -1,3 +1,10 @@
+### v0.77.4
+###### CloudFormation Specifications
+- Update CloudFormation specs to `120.0.0` (pull #[2714](https://github.com/aws-cloudformation/cfn-lint/pull/2714))
+###### Fixes
+- Fix Conditions logic when checking a condition against a region. Now return True and False when the condition has no basis on region (pull #[2721](https://github.com/aws-cloudformation/cfn-lint/pull/2721))
+- Rebuild conditions inside the Template class when doing a Transform (pull #[2721](https://github.com/aws-cloudformation/cfn-lint/pull/2721))
+
 ### v0.77.3
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `119.2.0` (pull #[2703](https://github.com/aws-cloudformation/cfn-lint/pull/2703))
