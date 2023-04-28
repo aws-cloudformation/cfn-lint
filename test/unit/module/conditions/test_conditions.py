@@ -180,3 +180,52 @@ class TestConditions(TestCase):
                 {"IsGamma": False},
             ],
         )
+
+    def test_check_condition_region(self):
+        """Regional based condition testing"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev", "stage"]
+        Conditions:
+          IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+          IsUsWest2: !Equals ["us-west-2", !Ref AWS::Region]
+          IsProd: !Equals [!Ref Environment, "prod"]
+        """
+        )[0]
+
+        cfn = Template("", template)
+        self.assertEqual(len(cfn.conditions._conditions), 3)
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-east-1")),
+            [
+                True,
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsUsEast1", "us-west-2")),
+            [
+                False,
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-west-2")),
+            [
+                True,
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsUsWest2", "us-east-1")),
+            [
+                False,
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenerios_on_region("IsProd", "us-east-1")),
+            [
+                True,
+                False,
+            ],
+        )
