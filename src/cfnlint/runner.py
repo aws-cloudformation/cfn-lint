@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import logging
 from typing import List, Optional, Sequence, Union
 
+from cfnlint.conditions import Conditions
 from cfnlint.graph import Graph
 from cfnlint.rules import Match, RulesCollection
 from cfnlint.template import Template
@@ -53,6 +54,7 @@ class Runner:
         matches = transform.transform_template()
         self.cfn.template = transform.template()
         self.cfn.graph = Graph(self.cfn)
+        self.cfn.conditions = Conditions(self.cfn)
         return matches
 
     def run(self) -> List[Match]:
