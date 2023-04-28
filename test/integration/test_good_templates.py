@@ -27,6 +27,11 @@ class TestQuickStartTemplates(BaseCliTestCase):
             "exit_code": 0,
         },
         {
+            "filename": "test/fixtures/templates/issues/sam_w_conditions.yaml",
+            "results": [],
+            "exit_code": 0,
+        },
+        {
             "filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
             "results": [
                 {
