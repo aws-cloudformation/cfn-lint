@@ -1,3 +1,7 @@
+### v1.0.0.rc1
+###### Fixes
+- Test schemas and patch as needed (pull #[2725](https://github.com/aws-cloudformation/cfn-lint/issues/2725))
+
 ### v1.0.0.a3
 ###### Features
 - Large rewrite and simplification to JSON Schema validation (pull #[2606](https://github.com/aws-cloudformation/cfn-lint/issues/2606))
@@ -8,7 +12,6 @@
 - Add json schema for CW Alarm period when in the AWS namespace (pull #[2685](https://github.com/aws-cloudformation/cfn-lint/issues/2685))
 - Include launch template security group schema (pull #[2681](https://github.com/aws-cloudformation/cfn-lint/issues/2681))
 - Update rule E3033 to include minLength (pull #[2680](https://github.com/aws-cloudformation/cfn-lint/issues/2680))
-
 
 ### v1.0.0.a2
 ###### Features
