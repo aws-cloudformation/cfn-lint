@@ -1,0 +1,81 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/BasePath"
+ ],
+ "description": "Resource Type definition for AWS::ApiGateway::BasePathMapping",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:POST",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PATCH"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/BasePath"
+ ],
+ "properties": {
+  "BasePath": {
+   "description": "The base path name that callers of the API must provide in the URL after the domain name.",
+   "type": "string"
+  },
+  "DomainName": {
+   "description": "The DomainName of an AWS::ApiGateway::DomainName resource.",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The ID of the API.",
+   "type": "string"
+  },
+  "Stage": {
+   "description": "The name of the API's stage.",
+   "type": "string"
+  }
+ },
+ "required": [
+  "DomainName"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::BasePathMapping"
+}
