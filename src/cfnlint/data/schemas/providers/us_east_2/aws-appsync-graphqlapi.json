@@ -1,0 +1,206 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Visibility"
+ ],
+ "definitions": {
+  "AdditionalAuthenticationProvider": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthenticationType": {
+     "type": "string"
+    },
+    "LambdaAuthorizerConfig": {
+     "$ref": "#/definitions/LambdaAuthorizerConfig"
+    },
+    "OpenIDConnectConfig": {
+     "$ref": "#/definitions/OpenIDConnectConfig"
+    },
+    "UserPoolConfig": {
+     "$ref": "#/definitions/CognitoUserPoolConfig"
+    }
+   },
+   "required": [
+    "AuthenticationType"
+   ],
+   "type": "object"
+  },
+  "CognitoUserPoolConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIdClientRegex": {
+     "type": "string"
+    },
+    "AwsRegion": {
+     "type": "string"
+    },
+    "UserPoolId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaAuthorizerConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthorizerResultTtlInSeconds": {
+     "type": "number"
+    },
+    "AuthorizerUri": {
+     "type": "string"
+    },
+    "IdentityValidationExpression": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LogConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "CloudWatchLogsRoleArn": {
+     "type": "string"
+    },
+    "ExcludeVerboseContent": {
+     "type": "boolean"
+    },
+    "FieldLogLevel": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "OpenIDConnectConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AuthTTL": {
+     "type": "number"
+    },
+    "ClientId": {
+     "type": "string"
+    },
+    "IatTTL": {
+     "type": "number"
+    },
+    "Issuer": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "type": "string"
+    },
+    "Value": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  },
+  "UserPoolConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AppIdClientRegex": {
+     "type": "string"
+    },
+    "AwsRegion": {
+     "type": "string"
+    },
+    "DefaultAction": {
+     "type": "string"
+    },
+    "UserPoolId": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::AppSync::GraphQLApi",
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "AdditionalAuthenticationProviders": {
+   "items": {
+    "$ref": "#/definitions/AdditionalAuthenticationProvider"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "ApiId": {
+   "type": "string"
+  },
+  "Arn": {
+   "type": "string"
+  },
+  "AuthenticationType": {
+   "cfnSchema": "aws_appsync_graphqlapi/boto_authenticationtype_enum",
+   "type": "string"
+  },
+  "GraphQLDns": {
+   "type": "string"
+  },
+  "GraphQLUrl": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "LambdaAuthorizerConfig": {
+   "$ref": "#/definitions/LambdaAuthorizerConfig"
+  },
+  "LogConfig": {
+   "$ref": "#/definitions/LogConfig"
+  },
+  "Name": {
+   "type": "string"
+  },
+  "OpenIDConnectConfig": {
+   "$ref": "#/definitions/OpenIDConnectConfig"
+  },
+  "RealtimeDns": {
+   "type": "string"
+  },
+  "RealtimeUrl": {
+   "type": "string"
+  },
+  "Tags": {
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": false
+  },
+  "UserPoolConfig": {
+   "$ref": "#/definitions/UserPoolConfig"
+  },
+  "Visibility": {
+   "type": "string"
+  },
+  "XrayEnabled": {
+   "type": "boolean"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ApiId",
+  "/properties/Id",
+  "/properties/GraphQLDns",
+  "/properties/GraphQLUrl",
+  "/properties/RealtimeDns",
+  "/properties/RealtimeUrl",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Name",
+  "AuthenticationType"
+ ],
+ "typeName": "AWS::AppSync::GraphQLApi"
+}
