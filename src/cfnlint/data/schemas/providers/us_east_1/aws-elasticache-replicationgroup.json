@@ -151,11 +151,16 @@
   "CacheSubnetGroupName": {
    "type": "string"
   },
-  "ConfigurationEndPointAddress": {
-   "type": "string"
-  },
-  "ConfigurationEndPointPort": {
-   "type": "string"
+  "ConfigurationEndPoint": {
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "DataTieringEnabled": {
    "type": "boolean"
@@ -223,37 +228,44 @@
   "PrimaryClusterId": {
    "type": "string"
   },
-  "PrimaryEndPointAddress": {
-   "type": "string"
-  },
-  "PrimaryEndPointPort": {
-   "type": "string"
-  },
-  "ReadEndPointAddresses": {
-   "type": "string"
-  },
-  "ReadEndPointAddressesList": {
-   "items": {
-    "type": "string"
+  "PrimaryEndPoint": {
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "object"
   },
-  "ReadEndPointPorts": {
-   "type": "string"
-  },
-  "ReadEndPointPortsList": {
-   "items": {
-    "type": "string"
+  "ReadEndPoint": {
+   "properties": {
+    "Addresses": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Ports": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    }
    },
-   "type": "array",
-   "uniqueItems": false
+   "type": "object"
   },
-  "ReaderEndPointAddress": {
-   "type": "string"
-  },
-  "ReaderEndPointPort": {
-   "type": "string"
+  "ReaderEndPoint": {
+   "properties": {
+    "Address": {
+     "type": "string"
+    },
+    "Port": {
+     "type": "string"
+    }
+   },
+   "type": "object"
   },
   "ReplicasPerNodeGroup": {
    "cfnSchema": [
@@ -315,16 +327,14 @@
   }
  },
  "readOnlyProperties": [
-  "/properties/ConfigurationEndPoint.Address",
-  "/properties/PrimaryEndPoint.Address",
-  "/properties/PrimaryEndPoint.Port",
-  "/properties/ReaderEndPoint.Address",
-  "/properties/ConfigurationEndPoint.Port",
-  "/properties/ReadEndPoint.Addresses.List",
-  "/properties/ReadEndPoint.Ports.List",
-  "/properties/ReaderEndPoint.Port",
-  "/properties/ReadEndPoint.Addresses",
-  "/properties/ReadEndPoint.Ports",
+  "/properties/ConfigurationEndPoint/Address",
+  "/properties/PrimaryEndPoint/Address",
+  "/properties/PrimaryEndPoint/Port",
+  "/properties/ReaderEndPoint/Address",
+  "/properties/ConfigurationEndPoint/Port",
+  "/properties/ReaderEndPoint/Port",
+  "/properties/ReadEndPoint/Addresses",
+  "/properties/ReadEndPoint/Ports",
   "/properties/ReplicationGroupId"
  ],
  "required": [
