@@ -241,6 +241,9 @@ class ProviderSchemaManager:
                     all_types.append(spec["typeName"])
                     try:
                         spec = self._patch_provider_schema(spec, filename, "all")
+                        spec = self._patch_provider_schema(
+                            spec, filename, region=reg.py
+                        )
                     except Exception as e:  # pylint: disable=broad-except
                         LOGGER.info(
                             "Issuing patching schema for %s in %s: %s",
@@ -314,41 +317,42 @@ class ProviderSchemaManager:
             Dict: returns the patched content
         """
         for patch_type in ["extensions", "providers"]:
-            append_dir = os.path.join(self._patches.path_relative, patch_type, region)
+            source_dir = source_filename.replace("-", "_").replace(".json", "")
+            append_dir = os.path.join(
+                self._patches.path_relative, patch_type, region, source_dir
+            )
             for dirpath, _, filenames in os.walk(append_dir):
                 filenames.sort()
                 for filename in fnmatch.filter(filenames, "*.json"):
-                    # those files come as - and we use _
-                    if filename == source_filename.replace("-", "_"):
-                        file_path = os.path.basename(filename)
-                        module = dirpath.replace(f"{append_dir}", f"{region}").replace(
-                            os.path.sep, "."
+                    file_path = os.path.basename(filename)
+                    module = dirpath.replace(f"{append_dir}", f"{region}").replace(
+                        os.path.sep, "."
+                    )
+                    try:
+                        jsonpatch.JsonPatch(
+                            load_resource(
+                                f"{self._patches.module}.{patch_type}.{module}.{source_dir}",
+                                file_path,
+                            )
+                        ).apply(content, in_place=True)
+                    except jsonpatch.JsonPatchConflict as e:
+                        LOGGER.info(
+                            "Patch already applied %s: %s",
+                            os.path.join(append_dir, file_path),
+                            str(e),
                         )
-                        try:
-                            jsonpatch.JsonPatch(
-                                load_resource(
-                                    f"{self._patches.module}.{patch_type}.{module}",
-                                    file_path,
-                                )
-                            ).apply(content, in_place=True)
-                        except jsonpatch.JsonPatchConflict as e:
-                            LOGGER.info(
-                                "Patch already applied %s: %s",
-                                file_path,
-                                str(e),
-                            )
-                        except jsonpatch.JsonPatchException as e:
-                            LOGGER.info(
-                                "Patch exception raised for %s: %s",
-                                file_path,
-                                str(e),
-                            )
-                        except Exception as e:  # pylint: disable=broad-exception-caught
-                            LOGGER.info(
-                                "Unknown exception raised applying patch %s: %s",
-                                file_path,
-                                str(e),
-                            )
+                    except jsonpatch.JsonPatchException as e:
+                        LOGGER.info(
+                            "Patch exception raised for %s: %s",
+                            os.path.join(append_dir, file_path),
+                            str(e),
+                        )
+                    except Exception as e:  # pylint: disable=broad-exception-caught
+                        LOGGER.info(
+                            "Unknown exception raised applying patch %s: %s",
+                            os.path.join(append_dir, file_path),
+                            str(e),
+                        )
 
         return content
 
