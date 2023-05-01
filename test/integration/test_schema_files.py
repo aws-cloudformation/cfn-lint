@@ -5,11 +5,11 @@ SPDX-License-Identifier: MIT-0
 import fnmatch
 import json
 import os
-import re
 from typing import Any, Generator
 from unittest import TestCase
 
 import jsonschema
+import regex as re
 from jsonschema._utils import ensure_list, extras_msg, find_additional_properties
 from jsonschema.validators import extend
 
@@ -54,6 +54,12 @@ class TestSchemaFiles(TestCase):
         for dirpath, _, filenames in os.walk(dir):
             for filename in fnmatch.filter(filenames, "*.json"):
                 yield dirpath, filename
+
+    def pattern(self, validator, patrn, instance, schema):
+        try:
+            re.compile(patrn)
+        except Exception as e:
+            yield jsonschema.ValidationError(f"Pattern doesn't compile: {patrn}")
 
     def cfn_schema(self, validator, cSs, schemas, schema):
         schemas = ensure_list(schemas)
@@ -106,10 +112,12 @@ class TestSchemaFiles(TestCase):
             validators={
                 "cfnSchema": self.cfn_schema,
                 "cfnRegionalSchema": self.cfn_schema,
+                "pattern": self.pattern,
             },
         )(schema=store["provider.definition.schema.v1.json"]).evolve(resolver=resolver)
 
         validator.VALIDATORS["cfnSchema"] = self.cfn_schema
+        validator.VALIDATORS["pattern"] = self.pattern
 
         for region in REGIONS:
             dir = os.path.join(
