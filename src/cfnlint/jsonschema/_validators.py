@@ -6,9 +6,9 @@ Originally taken from https://github.com/python-jsonschema/jsonschema/blob/main/
 and https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/_legacy_validators.py
 adapted for CloudFormation usage
 """
-import re
 from copy import deepcopy
 
+import regex as re
 from jsonschema._utils import ensure_list, find_additional_properties
 
 from cfnlint.helpers import (
