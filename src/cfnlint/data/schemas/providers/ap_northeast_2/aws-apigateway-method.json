@@ -1,0 +1,319 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "definitions": {
+  "Integration": {
+   "additionalProperties": false,
+   "properties": {
+    "CacheKeyParameters": {
+     "description": "A list of request parameters whose values API Gateway caches.",
+     "items": {
+      "type": "string"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "CacheNamespace": {
+     "description": "An API-specific tag group of related cached parameters.",
+     "type": "string"
+    },
+    "ConnectionId": {
+     "description": "The ID of the VpcLink used for the integration when connectionType=VPC_LINK, otherwise undefined.",
+     "type": "string"
+    },
+    "ConnectionType": {
+     "description": "The type of the network connection to the integration endpoint.",
+     "enum": [
+      "INTERNET",
+      "VPC_LINK"
+     ],
+     "type": "string"
+    },
+    "ContentHandling": {
+     "description": "Specifies how to handle request payload content type conversions.",
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "Credentials": {
+     "description": "The credentials that are required for the integration.",
+     "type": "string"
+    },
+    "IntegrationHttpMethod": {
+     "description": "The integration's HTTP method type.",
+     "type": "string"
+    },
+    "IntegrationResponses": {
+     "description": "The response that API Gateway provides after a method's backend completes processing a request.",
+     "items": {
+      "$ref": "#/definitions/IntegrationResponse"
+     },
+     "type": "array",
+     "uniqueItems": true
+    },
+    "PassthroughBehavior": {
+     "description": "Indicates when API Gateway passes requests to the targeted backend.",
+     "enum": [
+      "WHEN_NO_MATCH",
+      "WHEN_NO_TEMPLATES",
+      "NEVER"
+     ],
+     "type": "string"
+    },
+    "RequestParameters": {
+     "additionalProperties": false,
+     "description": "The request parameters that API Gateway sends with the backend request.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "RequestTemplates": {
+     "additionalProperties": false,
+     "description": "A map of Apache Velocity templates that are applied on the request payload.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "TimeoutInMillis": {
+     "description": "Custom timeout between 50 and 29,000 milliseconds.",
+     "maximum": 29000,
+     "minimum": 50,
+     "type": "integer"
+    },
+    "Type": {
+     "description": "The type of backend that your method is running.",
+     "enum": [
+      "AWS",
+      "AWS_PROXY",
+      "HTTP",
+      "HTTP_PROXY",
+      "MOCK"
+     ],
+     "type": "string"
+    },
+    "Uri": {
+     "description": "The Uniform Resource Identifier (URI) for the integration.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "IntegrationResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "ContentHandling": {
+     "description": "Specifies how to handle request payload content type conversions.",
+     "enum": [
+      "CONVERT_TO_BINARY",
+      "CONVERT_TO_TEXT"
+     ],
+     "type": "string"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "description": "The response parameters from the backend response that API Gateway sends to the method response.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseTemplates": {
+     "additionalProperties": false,
+     "description": "The templates that are used to transform the integration response body. Specify templates as key-value pairs (string-to-string mappings), with a content type as the key and a template as the value.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "SelectionPattern": {
+     "description": "A regular expression that specifies which error strings or status codes from the backend map to the integration response.",
+     "type": "string"
+    },
+    "StatusCode": {
+     "description": "The status code that API Gateway uses to map the integration response to a MethodResponse status code.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  },
+  "MethodResponse": {
+   "additionalProperties": false,
+   "properties": {
+    "ResponseModels": {
+     "additionalProperties": false,
+     "description": "The resources used for the response's content type. Specify response models as key-value pairs (string-to-string maps), with a content type as the key and a Model resource name as the value.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "ResponseParameters": {
+     "additionalProperties": false,
+     "description": "Response parameters that API Gateway sends to the client that called a method. Specify response parameters as key-value pairs (string-to-Boolean maps), with a destination as the key and a Boolean as the value.",
+     "patternProperties": {
+      "[a-zA-Z0-9]+": {
+       "type": "boolean"
+      }
+     },
+     "type": "object"
+    },
+    "StatusCode": {
+     "description": "The method response's status code, which you map to an IntegrationResponse.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "StatusCode"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApiGateway::Method",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "apigateway:PUT",
+    "apigateway:GET"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "apigateway:DELETE"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "apigateway:GET"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "apigateway:GET",
+    "apigateway:DELETE",
+    "apigateway:PUT"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/RestApiId",
+  "/properties/ResourceId",
+  "/properties/HttpMethod"
+ ],
+ "properties": {
+  "ApiKeyRequired": {
+   "description": "Indicates whether the method requires clients to submit a valid API key.",
+   "type": "boolean"
+  },
+  "AuthorizationScopes": {
+   "description": "A list of authorization scopes configured on the method.",
+   "items": {
+    "type": "string"
+   },
+   "type": "array"
+  },
+  "AuthorizationType": {
+   "description": "The method's authorization type.",
+   "enum": [
+    "NONE",
+    "AWS_IAM",
+    "CUSTOM",
+    "COGNITO_USER_POOLS"
+   ],
+   "type": "string"
+  },
+  "AuthorizerId": {
+   "description": "The identifier of the authorizer to use on this method.",
+   "type": "string"
+  },
+  "HttpMethod": {
+   "description": "The backend system that the method calls when it receives a request.",
+   "type": "string"
+  },
+  "Integration": {
+   "$ref": "#/definitions/Integration",
+   "description": "The backend system that the method calls when it receives a request."
+  },
+  "MethodResponses": {
+   "description": "The responses that can be sent to the client who calls the method.",
+   "items": {
+    "$ref": "#/definitions/MethodResponse"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "OperationName": {
+   "description": "A friendly operation name for the method.",
+   "type": "string"
+  },
+  "RequestModels": {
+   "additionalProperties": false,
+   "description": "The resources that are used for the request's content type. Specify request models as key-value pairs (string-to-string mapping), with a content type as the key and a Model resource name as the value.",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequestParameters": {
+   "additionalProperties": false,
+   "description": "The request parameters that API Gateway accepts. Specify request parameters as key-value pairs (string-to-Boolean mapping), with a source as the key and a Boolean as the value.",
+   "patternProperties": {
+    "[a-zA-Z0-9]+": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "RequestValidatorId": {
+   "description": "The ID of the associated request validator.",
+   "type": "string"
+  },
+  "ResourceId": {
+   "description": "The ID of an API Gateway resource.",
+   "type": "string"
+  },
+  "RestApiId": {
+   "description": "The ID of the RestApi resource in which API Gateway creates the method.",
+   "type": "string"
+  }
+ },
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "RestApiId",
+  "ResourceId",
+  "HttpMethod"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApiGateway::Method"
+}
