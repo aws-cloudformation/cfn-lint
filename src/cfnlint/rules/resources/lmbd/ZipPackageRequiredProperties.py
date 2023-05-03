@@ -19,46 +19,57 @@ class ZipPackageRequiredProperties(CloudFormationLintRule):
     tags = ["resources", "lambda"]
 
     def match(self, cfn):
-        """Basic Rule Matching"""
         matches = []
         required_properties = [
             "Handler",
             "Runtime",
         ]  # required if package is a .zip file
 
-        resources = cfn.get_resources(
-            ["AWS::Lambda::Function", "AWS::Serverless::Function"]
-        )
+        resources = cfn.get_resources(["AWS::Lambda::Function"])
+
         for resource_name, resource in resources.items():
             properties = resource.get("Properties")
-            if not properties:
+            if not isinstance(properties, dict):
                 continue
 
-            path = ["Resources", resource_name, "Properties"]
+            for scenario in cfn.get_object_without_conditions(
+                properties, ["PackageType", "Code", "Handler", "Runtime"]
+            ):
+                props = scenario.get("Object")
+                path = ["Resources", resource_name, "Properties"]
 
-            is_zip_deployment = True
-            if properties.get("PackageType") == "Zip":
-                path.append("PackageType")
-            elif properties.get("Code", {}).get("ZipFile") or properties.get(
-                "Code", {}
-            ).get("S3Key", "").endswith(".zip"):
-                path.append("Code")
-            else:
-                is_zip_deployment = False
+                # check is zip deployment
+                is_zip_deployment = True
+                code = props.get("Code")
 
-            if not is_zip_deployment:
-                continue
+                if props.get("PackageType") == "Zip":
+                    path.append("PackageType")
+                elif isinstance(code, dict) and (code.get("ZipFile") or code.get("S3Key")):
+                    path.append("Code")
+                else:
+                    is_zip_deployment = False
 
-            # check required properties for zip deployment
-            missing_properties = []
-            for p in required_properties:
-                if properties.get(p) is None:
-                    missing_properties.append(p)
+                if not is_zip_deployment:
+                    continue
 
-            if len(missing_properties) > 0:
-                message = (
-                    "Missing required properties for Lambda zip file deployment: {0}"
-                )
-                matches.append(RuleMatch(path, message.format(missing_properties)))
+                # check required properties for zip deployment
+                missing_properties = []
+                for p in required_properties:
+                    if props.get(p) is None:
+                        missing_properties.append(p)
+
+                if len(missing_properties) > 0:
+                    message = "Properties {0} missing for zip file deployment at {1}"
+                    matches.append(
+                        RuleMatch(
+                            path,
+                            message.format(
+                                missing_properties,
+                                "/".join(
+                                    map(str, ["Resources", resource_name, "Properties"])
+                                ),
+                            ),
+                        )
+                    )
 
         return matches

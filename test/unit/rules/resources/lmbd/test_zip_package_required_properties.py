@@ -10,7 +10,7 @@ from cfnlint.rules.resources.lmbd.ZipPackageRequiredProperties import (
 
 
 class TestZipPackageRequiredProperties(BaseRuleTestCase):
-    """Test template parameter configurations"""
+    """Test required properties"""
 
     def setUp(self):
         super(TestZipPackageRequiredProperties, self).setUp()
@@ -24,6 +24,6 @@ class TestZipPackageRequiredProperties(BaseRuleTestCase):
 
     def test_file_negative(self):
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources/lambda/zipfile_required_properties.yaml",
+            "test/fixtures/templates/bad/resources/lambda/required_properties.yaml",
             err_count=3,
         )
