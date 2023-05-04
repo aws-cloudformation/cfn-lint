@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from cfnlint.jsonschema import _validators
 from cfnlint.rules import CloudFormationLintRule
-
+from cfnlint.helpers import FUNCTIONS
 
 class AllowedValue(CloudFormationLintRule):
     """Check if properties have a valid value"""
@@ -26,5 +26,12 @@ class AllowedValue(CloudFormationLintRule):
                     if k == "Ref":
                         if self.child_rules.get("W2030"):
                             yield from self.child_rules["W2030"].validate(v, enums)
+                        return
+                    if k == "Fn::If":
+                        if len(v) == 3:
+                            yield from self.enum(validator, enums, v[1], schema)
+                            yield from self.enum(validator, enums, v[2], schema)
+                        return
+                    if k in FUNCTIONS:
                         return
         yield from _validators.enum(validator, enums, instance, schema)

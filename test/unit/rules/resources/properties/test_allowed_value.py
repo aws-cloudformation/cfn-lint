@@ -75,5 +75,5 @@ class TestAllowedValue(BaseRuleTestCase):
                     )
                 )
             ),
-            1,
+            0,
         )
