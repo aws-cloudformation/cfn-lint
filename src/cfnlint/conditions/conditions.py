@@ -266,13 +266,23 @@ class Conditions:
         if not isinstance(condition_name, str):
             return
         cnf_region = self._cnf.copy()
+        found_region = False
         for eql in self._conditions[condition_name].equals:
             is_region, equal_region = eql.is_region
             if is_region:
+                found_region = True
                 if equal_region == region:
                     cnf_region.add_prop(And(self._solver_params[eql.hash]))
                 else:
                     cnf_region.add_prop(Not(self._solver_params[eql.hash]))
+
+        # The condition doesn't use a region parameter so it can be True or False
+        # Note: It is possible its a hard coded condition but
+        # for now we will return True and False
+        if not found_region:
+            yield True
+            yield False
+            return
 
         cnf_test = cnf_region.copy()
         cnf_test.add_prop(

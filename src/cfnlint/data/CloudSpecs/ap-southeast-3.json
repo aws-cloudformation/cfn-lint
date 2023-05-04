@@ -568,6 +568,7 @@
   "AWS::AppConfig::DeploymentStrategy.Tags": "CACHED",
   "AWS::AppConfig::Environment.Monitors": "CACHED",
   "AWS::AppConfig::Environment.Tags": "CACHED",
+  "AWS::AppConfig::Extension.Parameter": "CACHED",
   "AWS::AppFlow::ConnectorProfile.CredentialsMap": "CACHED",
   "AWS::AppFlow::ConnectorProfile.ProfileProperties": "CACHED",
   "AWS::AppFlow::ConnectorProfile.TokenUrlCustomProperties": "CACHED",
@@ -896,35 +897,87 @@
   "AWS::CloudTrail::Channel.Destination": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedEventSelector": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector": "CACHED",
-  "AWS::CloudTrail::Trail.DataResource": "CACHED",
-  "AWS::CloudTrail::Trail.EventSelector": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-eventselector.html",
+  "AWS::CloudTrail::Trail.AdvancedEventSelector": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html",
    "Properties": {
-    "DataResources": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-eventselector.html#cfn-cloudtrail-trail-eventselector-dataresources",
+    "FieldSelectors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html#cfn-cloudtrail-trail-advancedeventselector-fieldselectors",
      "DuplicatesAllowed": false,
-     "ItemType": "DataResource",
+     "ItemType": "AdvancedFieldSelector",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html#cfn-cloudtrail-trail-advancedeventselector-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html",
+   "Properties": {
+    "EndsWith": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-endswith",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
      "Required": false,
      "Type": "List",
      "UpdateType": "Mutable"
     },
-    "IncludeManagementEvents": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-eventselector.html#cfn-cloudtrail-trail-eventselector-includemanagementevents",
-     "PrimitiveType": "Boolean",
+    "Equals": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-equals",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
      "Required": false,
+     "Type": "List",
      "UpdateType": "Mutable"
     },
-    "ReadWriteType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-eventselector.html#cfn-cloudtrail-trail-eventselector-readwritetype",
+    "Field": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-field",
      "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "NotEndsWith": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notendswith",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
      "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.EventSelector.ReadWriteType"
-     }
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "NotEquals": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notequals",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "NotStartsWith": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notstartswith",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "StartsWith": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-startswith",
+     "DuplicatesAllowed": false,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
     }
    }
   },
+  "AWS::CloudTrail::Trail.DataResource": "CACHED",
+  "AWS::CloudTrail::Trail.EventSelector": "CACHED",
+  "AWS::CloudTrail::Trail.InsightSelector": "CACHED",
   "AWS::CloudWatch::Alarm.Dimension": "CACHED",
   "AWS::CloudWatch::Alarm.Metric": "CACHED",
   "AWS::CloudWatch::Alarm.MetricDataQuery": "CACHED",
@@ -939,7 +992,31 @@
   "AWS::CloudWatch::AnomalyDetector.Range": "CACHED",
   "AWS::CloudWatch::AnomalyDetector.SingleMetricAnomalyDetector": "CACHED",
   "AWS::CloudWatch::InsightRule.Tags": "CACHED",
-  "AWS::CloudWatch::MetricStream.MetricStreamFilter": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamFilter": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-metricstream-metricstreamfilter.html",
+   "Properties": {
+    "MetricNames": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-metricstream-metricstreamfilter.html#cfn-cloudwatch-metricstream-metricstreamfilter-metricnames",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::CloudWatch::MetricStream.MetricStreamFilter.MetricNames"
+     }
+    },
+    "Namespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-metricstream-metricstreamfilter.html#cfn-cloudwatch-metricstream-metricstreamfilter-namespace",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::CloudWatch::MetricStream.MetricStreamFilter.Namespace"
+     }
+    }
+   }
+  },
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsConfiguration": "CACHED",
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric": "CACHED",
   "AWS::CodeBuild::Project.Artifacts": {
@@ -2206,6 +2283,7 @@
    }
   },
   "AWS::Glue::Crawler.CatalogTarget": "CACHED",
+  "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.JdbcTarget": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
@@ -2236,6 +2314,7 @@
   "AWS::Glue::Database.DataLakePrincipal": "CACHED",
   "AWS::Glue::Database.DatabaseIdentifier": "CACHED",
   "AWS::Glue::Database.DatabaseInput": "CACHED",
+  "AWS::Glue::Database.FederatedDatabase": "CACHED",
   "AWS::Glue::Database.PrincipalPrivileges": "CACHED",
   "AWS::Glue::Job.ConnectionsList": "CACHED",
   "AWS::Glue::Job.ExecutionProperty": "CACHED",
@@ -2528,7 +2607,12 @@
   "AWS::LakeFormation::DataCellsFilter.ColumnWildcard": "CACHED",
   "AWS::LakeFormation::DataCellsFilter.RowFilter": "CACHED",
   "AWS::LakeFormation::DataLakeSettings.Admins": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.CreateDatabaseDefaultPermissions": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.CreateTableDefaultPermissions": "CACHED",
   "AWS::LakeFormation::DataLakeSettings.DataLakePrincipal": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.ExternalDataFilteringAllowList": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.Permissions": "CACHED",
+  "AWS::LakeFormation::DataLakeSettings.PrincipalPermissions": "CACHED",
   "AWS::LakeFormation::Permissions.ColumnWildcard": "CACHED",
   "AWS::LakeFormation::Permissions.DataLakePrincipal": "CACHED",
   "AWS::LakeFormation::Permissions.DataLocationResource": "CACHED",
@@ -3157,71 +3241,7 @@
   "AWS::SageMaker::EndpointConfig.ClarifyTextConfig": "CACHED",
   "AWS::SageMaker::EndpointConfig.DataCaptureConfig": "CACHED",
   "AWS::SageMaker::EndpointConfig.ExplainerConfig": "CACHED",
-  "AWS::SageMaker::EndpointConfig.ProductionVariant": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html",
-   "Properties": {
-    "AcceleratorType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-acceleratortype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ContainerStartupHealthCheckTimeoutInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-containerstartuphealthchecktimeoutinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "InitialInstanceCount": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-initialinstancecount",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "InitialVariantWeight": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-initialvariantweight",
-     "PrimitiveType": "Double",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "InstanceType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-instancetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ModelDataDownloadTimeoutInSeconds": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-modeldatadownloadtimeoutinseconds",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "ModelName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-modelname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "ServerlessConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-serverlessconfig",
-     "Required": false,
-     "Type": "ServerlessConfig",
-     "UpdateType": "Mutable"
-    },
-    "VariantName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-variantname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "VolumeSizeInGB": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sagemaker-endpointconfig-productionvariant.html#cfn-sagemaker-endpointconfig-productionvariant-volumesizeingb",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Immutable"
-    }
-   }
-  },
+  "AWS::SageMaker::EndpointConfig.ProductionVariant": "CACHED",
   "AWS::SageMaker::EndpointConfig.ServerlessConfig": "CACHED",
   "AWS::SageMaker::Model.ContainerDefinition": "CACHED",
   "AWS::SageMaker::Model.ImageConfig": "CACHED",
@@ -3248,6 +3268,9 @@
   "AWS::SageMaker::ModelCard.TrainingMetric": "CACHED",
   "AWS::SageMaker::ModelCard.UserContext": "CACHED",
   "AWS::SageMaker::NotebookInstance.InstanceMetadataServiceConfiguration": "CACHED",
+  "AWS::SageMaker::Pipeline.ParallelismConfiguration": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineDefinition": "CACHED",
+  "AWS::SageMaker::Pipeline.S3Location": "CACHED",
   "AWS::SageMaker::Space.CustomImage": "CACHED",
   "AWS::SageMaker::Space.JupyterServerAppSettings": "CACHED",
   "AWS::SageMaker::Space.KernelGatewayAppSettings": "CACHED",
@@ -3533,7 +3556,23 @@
   "AWS::WAFv2::WebACL.VisibilityConfig": "CACHED",
   "AWS::WAFv2::WebACL.XssMatchStatement": "CACHED",
   "AWS::XRay::Group.InsightsConfiguration": "CACHED",
-  "AWS::XRay::Group.TagsItems": "CACHED",
+  "AWS::XRay::Group.TagsItems": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-tagsitems.html",
+   "Properties": {
+    "Key": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-tagsitems.html#cfn-xray-group-tagsitems-key",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Value": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-group-tagsitems.html#cfn-xray-group-tagsitems-value",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::XRay::SamplingRule.SamplingRule": {
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrule.html",
    "Properties": {
@@ -3624,12 +3663,133 @@
     }
    }
   },
-  "AWS::XRay::SamplingRule.SamplingRuleRecord": "CACHED",
-  "AWS::XRay::SamplingRule.SamplingRuleUpdate": "CACHED",
-  "AWS::XRay::SamplingRule.TagsItems": "CACHED",
+  "AWS::XRay::SamplingRule.SamplingRuleRecord": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html",
+   "Properties": {
+    "CreatedAt": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-createdat",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ModifiedAt": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-modifiedat",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SamplingRule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingrulerecord.html#cfn-xray-samplingrule-samplingrulerecord-samplingrule",
+     "Required": false,
+     "Type": "SamplingRule",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::XRay::SamplingRule.SamplingRuleUpdate": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html",
+   "Properties": {
+    "Attributes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-attributes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "Map",
+     "UpdateType": "Mutable"
+    },
+    "FixedRate": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-fixedrate",
+     "PrimitiveType": "Double",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "HTTPMethod": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-httpmethod",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Host": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-host",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Priority": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-priority",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::XRay::SamplingRule.SamplingRuleUpdate.Priority"
+     }
+    },
+    "ReservoirSize": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-reservoirsize",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ResourceARN": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-resourcearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RuleARN": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-rulearn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "RuleName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-rulename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::XRay::SamplingRule.SamplingRuleUpdate.RuleName"
+     }
+    },
+    "ServiceName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-servicename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ServiceType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-servicetype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "URLPath": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-samplingruleupdate.html#cfn-xray-samplingrule-samplingruleupdate-urlpath",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::XRay::SamplingRule.TagsItems": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-tagsitems.html",
+   "Properties": {
+    "Key": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-tagsitems.html#cfn-xray-samplingrule-tagsitems-key",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Value": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-xray-samplingrule-tagsitems.html#cfn-xray-samplingrule-tagsitems-value",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "119.0.0",
+ "ResourceSpecificationVersion": "120.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4375,6 +4535,8 @@
   "AWS::AppConfig::Deployment": "CACHED",
   "AWS::AppConfig::DeploymentStrategy": "CACHED",
   "AWS::AppConfig::Environment": "CACHED",
+  "AWS::AppConfig::Extension": "CACHED",
+  "AWS::AppConfig::ExtensionAssociation": "CACHED",
   "AWS::AppConfig::HostedConfigurationVersion": "CACHED",
   "AWS::AppMesh::GatewayRoute": "CACHED",
   "AWS::AppMesh::Mesh": "CACHED",
@@ -4451,6 +4613,14 @@
    },
    "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html",
    "Properties": {
+    "AdvancedEventSelectors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-advancedeventselectors",
+     "DuplicatesAllowed": false,
+     "ItemType": "AdvancedEventSelector",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
     "CloudWatchLogsLogGroupArn": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-cloudwatchlogsloggrouparn",
      "PrimitiveType": "String",
@@ -4483,6 +4653,14 @@
      "Required": false,
      "UpdateType": "Mutable"
     },
+    "InsightSelectors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-insightselectors",
+     "DuplicatesAllowed": false,
+     "ItemType": "InsightSelector",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
     "IsLogging": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-islogging",
      "PrimitiveType": "Boolean",
@@ -4491,6 +4669,12 @@
     },
     "IsMultiRegionTrail": {
      "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-ismultiregiontrail",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "IsOrganizationTrail": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-isorganizationtrail",
      "PrimitiveType": "Boolean",
      "Required": false,
      "UpdateType": "Mutable"
@@ -4765,6 +4949,7 @@
   "AWS::Config::DeliveryChannel": "CACHED",
   "AWS::Config::RemediationConfiguration": "CACHED",
   "AWS::Config::StoredQuery": "CACHED",
+  "AWS::ControlTower::EnabledControl": "CACHED",
   "AWS::DMS::Certificate": "CACHED",
   "AWS::DMS::Endpoint": {
    "Attributes": {
@@ -5337,6 +5522,24 @@
   "AWS::EC2::VPCDHCPOptionsAssociation": "CACHED",
   "AWS::EC2::VPCEndpoint": "CACHED",
   "AWS::EC2::VPCEndpointService": "CACHED",
+  "AWS::EC2::VPCEndpointServicePermissions": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservicepermissions.html",
+   "Properties": {
+    "AllowedPrincipals": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservicepermissions.html#cfn-ec2-vpcendpointservicepermissions-allowedprincipals",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ServiceId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-vpcendpointservicepermissions.html#cfn-ec2-vpcendpointservicepermissions-serviceid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::EC2::VPCGatewayAttachment": "CACHED",
   "AWS::EC2::VPCPeeringConnection": "CACHED",
   "AWS::EC2::VPNConnection": "CACHED",
@@ -6527,7 +6730,9 @@
   },
   "AWS::MSK::BatchScramSecret": "CACHED",
   "AWS::MSK::Cluster": "CACHED",
+  "AWS::MSK::ClusterPolicy": "CACHED",
   "AWS::MSK::Configuration": "CACHED",
+  "AWS::MSK::VpcConnection": "CACHED",
   "AWS::NetworkFirewall::Firewall": "CACHED",
   "AWS::NetworkFirewall::FirewallPolicy": "CACHED",
   "AWS::NetworkFirewall::LoggingConfiguration": "CACHED",
@@ -6540,6 +6745,7 @@
   "AWS::Organizations::Policy": "CACHED",
   "AWS::Organizations::ResourcePolicy": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
+  "AWS::RAM::Permission": "CACHED",
   "AWS::RAM::ResourceShare": "CACHED",
   "AWS::RDS::DBCluster": "CACHED",
   "AWS::RDS::DBClusterParameterGroup": "CACHED",
@@ -7093,6 +7299,7 @@
   "AWS::SageMaker::Model": "CACHED",
   "AWS::SageMaker::ModelCard": "CACHED",
   "AWS::SageMaker::NotebookInstance": "CACHED",
+  "AWS::SageMaker::Pipeline": "CACHED",
   "AWS::SageMaker::Space": "CACHED",
   "AWS::SageMaker::UserProfile": "CACHED",
   "AWS::SageMaker::Workteam": "CACHED",
@@ -7137,97 +7344,7 @@
   "AWS::ServiceDiscovery::PublicDnsNamespace": "CACHED",
   "AWS::ServiceDiscovery::Service": "CACHED",
   "AWS::StepFunctions::Activity": "CACHED",
-  "AWS::StepFunctions::StateMachine": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "Name": {
-     "PrimitiveType": "String"
-    },
-    "StateMachineRevisionId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html",
-   "Properties": {
-    "Definition": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definition",
-     "PrimitiveType": "Json",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "DefinitionS3Location": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitions3location",
-     "Required": false,
-     "Type": "S3Location",
-     "UpdateType": "Mutable"
-    },
-    "DefinitionString": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionstring",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::StepFunctions::StateMachine.DefinitionString"
-     }
-    },
-    "DefinitionSubstitutions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-definitionsubstitutions",
-     "PrimitiveItemType": "Json",
-     "Required": false,
-     "Type": "Map",
-     "UpdateType": "Mutable"
-    },
-    "LoggingConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-loggingconfiguration",
-     "Required": false,
-     "Type": "LoggingConfiguration",
-     "UpdateType": "Mutable"
-    },
-    "RoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-rolearn",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::StepFunctions::StateMachine.RoleArn"
-     }
-    },
-    "StateMachineName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinename",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineName"
-     }
-    },
-    "StateMachineType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-statemachinetype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::StepFunctions::StateMachine.StateMachineType"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "TagsEntry",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TracingConfiguration": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-stepfunctions-statemachine.html#cfn-stepfunctions-statemachine-tracingconfiguration",
-     "Required": false,
-     "Type": "TracingConfiguration",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::StepFunctions::StateMachine": "CACHED",
   "AWS::Synthetics::Canary": "CACHED",
   "AWS::SystemsManagerSAP::Application": "CACHED",
   "AWS::Transfer::Agreement": "CACHED",
@@ -7280,7 +7397,51 @@
   "AWS::WAFv2::WebACLAssociation": "CACHED",
   "AWS::XRay::Group": "CACHED",
   "AWS::XRay::ResourcePolicy": "CACHED",
-  "AWS::XRay::SamplingRule": "CACHED"
+  "AWS::XRay::SamplingRule": {
+   "Attributes": {
+    "RuleARN": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html",
+   "Properties": {
+    "RuleName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-rulename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::XRay::SamplingRule.RuleName"
+     }
+    },
+    "SamplingRule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingrule",
+     "Required": false,
+     "Type": "SamplingRule",
+     "UpdateType": "Mutable"
+    },
+    "SamplingRuleRecord": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingrulerecord",
+     "Required": false,
+     "Type": "SamplingRuleRecord",
+     "UpdateType": "Mutable"
+    },
+    "SamplingRuleUpdate": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-samplingruleupdate",
+     "Required": false,
+     "Type": "SamplingRuleUpdate",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-xray-samplingrule.html#cfn-xray-samplingrule-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  }
  },
  "ValueTypes": {
   "AWS::AccessAnalyzer::Analyzer.AnalyzerName": "CACHED",
@@ -7491,6 +7652,10 @@
   "AWS::CloudWatch::Alarm.TreatMissingData": "CACHED",
   "AWS::CloudWatch::Alarm.Unit": "CACHED",
   "AWS::CloudWatch::MetricStream.FirehoseArn": "CACHED",
+  "AWS::CloudWatch::MetricStream.MetricStreamFilter.MetricNames": {
+   "StringMax": 255,
+   "StringMin": 1
+  },
   "AWS::CloudWatch::MetricStream.MetricStreamFilter.Namespace": "CACHED",
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric.MetricName": "CACHED",
   "AWS::CloudWatch::MetricStream.MetricStreamStatisticsMetric.Namespace": "CACHED",
@@ -7537,6 +7702,8 @@
   "AWS::Config::StoredQuery.QueryDescription": "CACHED",
   "AWS::Config::StoredQuery.QueryExpression": "CACHED",
   "AWS::Config::StoredQuery.QueryName": "CACHED",
+  "AWS::ControlTower::EnabledControl.ControlIdentifier": "CACHED",
+  "AWS::ControlTower::EnabledControl.TargetIdentifier": "CACHED",
   "AWS::DataSync::Agent.ActivationKey": "CACHED",
   "AWS::DataSync::Agent.AgentName": "CACHED",
   "AWS::DataSync::Agent.SecurityGroupArns": "CACHED",
@@ -8043,6 +8210,12 @@
   "AWS::MSK::Cluster.KafkaVersion": "CACHED",
   "AWS::MSK::Cluster.PublicAccess.Type": "CACHED",
   "AWS::MSK::Cluster.StorageMode": "CACHED",
+  "AWS::MSK::ClusterPolicy.ClusterArn": "CACHED",
+  "AWS::MSK::VpcConnection.Authentication": "CACHED",
+  "AWS::MSK::VpcConnection.ClientSubnets": "CACHED",
+  "AWS::MSK::VpcConnection.SecurityGroups": "CACHED",
+  "AWS::MSK::VpcConnection.TargetClusterArn": "CACHED",
+  "AWS::MSK::VpcConnection.VpcId": "CACHED",
   "AWS::NetworkFirewall::Firewall.Description": "CACHED",
   "AWS::NetworkFirewall::Firewall.FirewallName": "CACHED",
   "AWS::NetworkFirewall::Firewall.FirewallPolicyArn": "CACHED",
@@ -8468,6 +8641,9 @@
   "AWS::SageMaker::ModelCard.TrainingHyperParameter.Value": "CACHED",
   "AWS::SageMaker::ModelCard.TrainingMetric.Name": "CACHED",
   "AWS::SageMaker::NotebookInstance.VolumeSizeInGB": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineDisplayName": "CACHED",
+  "AWS::SageMaker::Pipeline.PipelineName": "CACHED",
+  "AWS::SageMaker::Pipeline.RoleArn": "CACHED",
   "AWS::SageMaker::Space.CustomImage.AppImageConfigName": "CACHED",
   "AWS::SageMaker::Space.CustomImage.ImageName": "CACHED",
   "AWS::SageMaker::Space.DomainId": "CACHED",
@@ -8735,8 +8911,14 @@
   "AWS::XRay::SamplingRule.RuleName": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRule.Priority": "CACHED",
   "AWS::XRay::SamplingRule.SamplingRule.RuleName": "CACHED",
-  "AWS::XRay::SamplingRule.SamplingRuleUpdate.Priority": "CACHED",
-  "AWS::XRay::SamplingRule.SamplingRuleUpdate.RuleName": "CACHED",
+  "AWS::XRay::SamplingRule.SamplingRuleUpdate.Priority": {
+   "NumberMax": 9999,
+   "NumberMin": 1
+  },
+  "AWS::XRay::SamplingRule.SamplingRuleUpdate.RuleName": {
+   "StringMax": 32,
+   "StringMin": 1
+  },
   "AppStreamInstanceType": {},
   "AvailabilityZone": "CACHED",
   "AvailabilityZoneWithAll": "CACHED",

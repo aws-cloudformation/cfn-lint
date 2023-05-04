@@ -22,5 +22,29 @@ class TestRulesSelect(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/functions_select.yaml", 3
+            "test/fixtures/templates/bad/functions_select.yaml", 4
         )
+
+    def test_select_parts(self):
+        rule = Select()
+        # can't be a list
+        self.assertEqual(len(rule._test_index_obj([], [])), 1)
+        # can't be a string
+        self.assertEqual(len(rule._test_index_obj("a", [])), 1)
+        # can be a valid fn
+        self.assertEqual(len(rule._test_index_obj({"Ref": "Test"}, [])), 0)
+        # can't be an invalid fn
+        self.assertEqual(len(rule._test_index_obj({"Foo": "Bar"}, [])), 1)
+        # can't be a dict of many values
+        self.assertEqual(
+            len(rule._test_index_obj({"Ref": "Test", "Foo": "Bar"}, [])), 1
+        )
+
+        self.assertEqual(len(rule._test_index_obj({}, [])), 1)
+
+        # supported function
+        self.assertEqual(len(rule._test_list_obj({"Ref": "Test"}, [])), 0)
+        # Unsupported function
+        self.assertEqual(len(rule._test_list_obj({"Foo": "Bar"}, [])), 1)
+        # Unsupported type
+        self.assertEqual(len(rule._test_list_obj("foo", [])), 1)

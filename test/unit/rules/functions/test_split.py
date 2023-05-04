@@ -21,4 +21,14 @@ class TestRulesSplit(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/functions_split.yaml", 2)
+        self.helper_file_negative("test/fixtures/templates/bad/functions_split.yaml", 3)
+
+    def test_split_parts(self):
+        rule = Split()
+        self.assertEqual(len(rule._test_delimiter({}, [])), 1)
+        self.assertEqual(len(rule._test_string({}, [])), 1)
+
+        # supported function
+        self.assertEqual(len(rule._test_string({"Ref": "Test"}, [])), 0)
+        # Unsupported function
+        self.assertEqual(len(rule._test_string({"Foo": "Bar"}, [])), 1)
