@@ -2,8 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from cfnlint.rules import CloudFormationLintRule
-from cfnlint.rules import RuleMatch
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class ZipPackageRequiredProperties(CloudFormationLintRule):
@@ -44,7 +43,9 @@ class ZipPackageRequiredProperties(CloudFormationLintRule):
 
                 if props.get("PackageType") == "Zip":
                     path.append("PackageType")
-                elif isinstance(code, dict) and (code.get("ZipFile") or code.get("S3Key")):
+                elif isinstance(code, dict) and (
+                    code.get("ZipFile") or code.get("S3Key")
+                ):
                     path.append("Code")
                 else:
                     is_zip_deployment = False
