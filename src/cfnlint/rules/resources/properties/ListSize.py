@@ -17,23 +17,23 @@ class ListSize(BaseJsonSchemaValidator):
 
     # pylint: disable=unused-argument
     def validate_value(
-        self, validator, enums, instance, schema, **kwargs
+        self, validator, mI, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        yield from kwargs["fn"](validator, enums, instance, schema)
+        yield from kwargs["fn"](validator, mI, instance, schema)
 
     # pylint: disable=unused-argument
     def validate_if(
-        self, validator, enums, instance, schema, **kwargs
+        self, validator, mI, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
         if validator.is_type(instance, "array") and len(instance, 3):
-            yield from kwargs["r_fn"](validator, enums, instance[1], schema)
-            yield from kwargs["r_fn"](validator, enums, instance[2], schema)
+            yield from kwargs["r_fn"](validator, mI, instance[1], schema)
+            yield from kwargs["r_fn"](validator, mI, instance[2], schema)
 
     # pylint: disable=unused-argument
-    def maxItems(self, validator, enums, instance, schema):
+    def maxItems(self, validator, mI, instance, schema):
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=mI,
             instance=instance,
             schema=schema,
             fn=_validators.maxItems,
@@ -41,10 +41,11 @@ class ListSize(BaseJsonSchemaValidator):
         )
 
     # pylint: disable=unused-argument
-    def minItems(self, validator, enums, instance, schema):
+    def minItems(self, validator, mI, instance, schema):
+        print(instance)
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=mI,
             instance=instance,
             schema=schema,
             fn=_validators.minItems,
