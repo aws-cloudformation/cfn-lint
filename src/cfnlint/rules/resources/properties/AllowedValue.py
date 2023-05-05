@@ -35,7 +35,7 @@ class AllowedValue(BaseJsonSchemaValidator):
     def validate_if(
         self, validator, enums, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        if validator.is_type(instance, "array") and len(instance, 3):
+        if validator.is_type(instance, "array") and len(instance) == 3:
             yield from self.enum(validator, enums, instance[1], schema)
             yield from self.enum(validator, enums, instance[2], schema)
 

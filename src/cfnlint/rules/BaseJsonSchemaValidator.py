@@ -58,7 +58,6 @@ class BaseJsonSchemaValidator(CloudFormationLintRule):
             FindInMap=self.validate_findinmap,
             Select=self.validate_select,
             If=self.validate_if,
-            Contains=self.validate_contains,
             Sub=self.validate_sub,
             Cidr=self.validate_cidr,
             Length=self.validate_length,
@@ -70,70 +69,70 @@ class BaseJsonSchemaValidator(CloudFormationLintRule):
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_ref(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_getatt(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_base64(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_getazs(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_importvalue(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_join(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_split(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_findinmap(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_select(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     def validate_if(
         self, validator, s, instance, schema, **kwargs
@@ -147,39 +146,32 @@ class BaseJsonSchemaValidator(CloudFormationLintRule):
             )
 
     # pylint: disable=unused-argument
-    def validate_contains(
-        self, validator, s, instance, schema, **kwargs
-    ) -> Generator[ValidationError, None, None]:
-        return
-        yield
-
-    # pylint: disable=unused-argument
     def validate_sub(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_cidr(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_length(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     # pylint: disable=unused-argument
     def validate_tojsonstring(
         self, validator, s, instance, schema, **kwargs
     ) -> Generator[ValidationError, None, None]:
         return
-        yield
+        yield  # pragma: no cover
 
     def validate_instance(
         self,

@@ -25,7 +25,7 @@ class ListSize(BaseJsonSchemaValidator):
     def validate_if(
         self, validator, mI, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        if validator.is_type(instance, "array") and len(instance, 3):
+        if validator.is_type(instance, "array") and len(instance) == 3:
             yield from kwargs["r_fn"](validator, mI, instance[1], schema)
             yield from kwargs["r_fn"](validator, mI, instance[2], schema)
 
@@ -42,7 +42,6 @@ class ListSize(BaseJsonSchemaValidator):
 
     # pylint: disable=unused-argument
     def minItems(self, validator, mI, instance, schema):
-        print(instance)
         yield from self.validate_instance(
             validator=validator,
             s=mI,

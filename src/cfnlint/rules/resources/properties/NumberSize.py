@@ -17,23 +17,23 @@ class NumberSize(BaseJsonSchemaValidator):
 
     # pylint: disable=unused-argument
     def validate_value(
-        self, validator, enums, instance, schema, **kwargs
+        self, validator, m, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        yield from kwargs["fn"](validator, enums, instance, schema)
+        yield from kwargs["fn"](validator, m, instance, schema)
 
     # pylint: disable=unused-argument
     def validate_if(
-        self, validator, enums, instance, schema, **kwargs
+        self, validator, m, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        if validator.is_type(instance, "array") and len(instance, 3):
-            yield from kwargs["r_fn"](validator, enums, instance[1], schema)
-            yield from kwargs["r_fn"](validator, enums, instance[2], schema)
+        if validator.is_type(instance, "array") and len(instance) == 3:
+            yield from kwargs["r_fn"](validator, m, instance[1], schema)
+            yield from kwargs["r_fn"](validator, m, instance[2], schema)
 
     # pylint: disable=unused-argument
-    def maximum(self, validator, enums, instance, schema):
+    def maximum(self, validator, m, instance, schema):
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=m,
             instance=instance,
             schema=schema,
             fn=_validators.maximum,
@@ -41,10 +41,10 @@ class NumberSize(BaseJsonSchemaValidator):
         )
 
     # pylint: disable=unused-argument
-    def minimum(self, validator, enums, instance, schema):
+    def minimum(self, validator, m, instance, schema):
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=m,
             instance=instance,
             schema=schema,
             fn=_validators.minimum,
@@ -52,10 +52,10 @@ class NumberSize(BaseJsonSchemaValidator):
         )
 
     # pylint: disable=unused-argument
-    def exclusiveMaximum(self, validator, enums, instance, schema):
+    def exclusiveMaximum(self, validator, m, instance, schema):
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=m,
             instance=instance,
             schema=schema,
             fn=_validators.exclusiveMaximum,
@@ -63,10 +63,10 @@ class NumberSize(BaseJsonSchemaValidator):
         )
 
     # pylint: disable=unused-argument
-    def exclusiveMinimum(self, validator, enums, instance, schema):
+    def exclusiveMinimum(self, validator, m, instance, schema):
         yield from self.validate_instance(
             validator=validator,
-            s=enums,
+            s=m,
             instance=instance,
             schema=schema,
             fn=_validators.exclusiveMinimum,

@@ -3,9 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.schema import ResourceNotFoundError
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
-from cfnlint.schema import ResourceNotFoundError
+
 
 class Value(CloudFormationLintRule):
     """Check if Outputs have string values"""
@@ -35,8 +36,10 @@ class Value(CloudFormationLintRule):
                         )
                         if objtype:
                             try:
-                                res_schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
-                                    cfn.regions[0], objtype
+                                res_schema = (
+                                    PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                                        cfn.regions[0], objtype
+                                    )
                                 )
                             except ResourceNotFoundError:
                                 continue

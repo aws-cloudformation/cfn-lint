@@ -32,7 +32,7 @@ class StringSize(BaseJsonSchemaValidator):
     def validate_if(
         self, validator, sS, instance, schema, **kwargs
     ):  # pylint: disable=arguments-renamed
-        if validator.is_type(instance, "array") and len(instance, 3):
+        if validator.is_type(instance, "array") and len(instance) == 3:
             yield from kwargs["r_fn"](validator, sS, instance[1], schema)
             yield from kwargs["r_fn"](validator, sS, instance[2], schema)
 

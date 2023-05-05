@@ -77,3 +77,20 @@ class TestAllowedValue(BaseRuleTestCase):
             ),
             0,
         )
+
+    def test_list_if(self):
+        """Test if"""
+        rule = AllowedValue()
+        validator = Draft7Validator({"type": "string", "enum": ["a", "b"]})
+        self.assertEqual(
+            len(
+                list(
+                    rule.validate_if(validator, ["a", "b"], ["Condition", "c", "d"], {})
+                )
+            ),
+            2,
+        )
+        self.assertEqual(
+            len(list(rule.validate_if(validator, 1, ["Condition", 2], {}))),
+            0,
+        )
