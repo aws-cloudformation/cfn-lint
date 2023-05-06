@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.schema import ResourceNotFoundError
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 from cfnlint.template.template import Template
 
@@ -37,9 +38,14 @@ class Value(CloudFormationLintRule):
                             template.get("Resources", {}).get(obj[0], {}).get("Type")
                         )
                         if objtype:
-                            res_schema = PROVIDER_SCHEMA_MANAGER.get_resource_schema(
-                                cfn.regions[0], objtype
-                            )
+                            try:
+                                res_schema = (
+                                    PROVIDER_SCHEMA_MANAGER.get_resource_schema(
+                                        cfn.regions[0], objtype
+                                    )
+                                )
+                            except ResourceNotFoundError:
+                                continue
                             attribute = res_schema.get_atts().get(obj[1])
                             # Bad schema or bad attribute.  Skip if either is true
                             if attribute:
