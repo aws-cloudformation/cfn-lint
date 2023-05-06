@@ -3,10 +3,10 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from cfnlint.jsonschema import _validators
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.BaseJsonSchemaValidator import BaseJsonSchemaValidator
 
 
-class AllowedValue(CloudFormationLintRule):
+class AllowedValue(BaseJsonSchemaValidator):
     """Check if properties have a valid value"""
 
     id = "E3030"
@@ -19,12 +19,31 @@ class AllowedValue(CloudFormationLintRule):
     }
 
     # pylint: disable=unused-argument
-    def enum(self, validator, enums, instance, schema):
-        if isinstance(instance, dict):
-            if len(instance) == 1:
-                for k, v in instance.items():
-                    if k == "Ref":
-                        if self.child_rules.get("W2030"):
-                            yield from self.child_rules["W2030"].validate(v, enums)
-                        return
+    def validate_value(
+        self, validator, enums, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
         yield from _validators.enum(validator, enums, instance, schema)
+
+    # pylint: disable=unused-argument
+    def validate_ref(
+        self, validator, enums, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        if self.child_rules.get("W2030"):
+            yield from self.child_rules["W2030"].validate(instance, enums)
+
+    # pylint: disable=unused-argument
+    def validate_if(
+        self, validator, enums, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        if validator.is_type(instance, "array") and len(instance) == 3:
+            yield from self.enum(validator, enums, instance[1], schema)
+            yield from self.enum(validator, enums, instance[2], schema)
+
+    # pylint: disable=unused-argument
+    def enum(self, validator, enums, instance, schema):
+        yield from self.validate_instance(
+            validator=validator,
+            s=enums,
+            instance=instance,
+            schema=schema,
+        )
