@@ -88,6 +88,18 @@ def exclusiveMaximum(validator, m, instance, schema):
 
 
 # pylint: disable=unused-argument
+def minItems(validator, mI, instance, schema):
+    if validator.is_type(instance, "array") and len(instance) < mI:
+        yield ValidationError(f"{instance!r} is too short")
+
+
+# pylint: disable=unused-argument
+def maxItems(validator, mI, instance, schema):
+    if validator.is_type(instance, "array") and len(instance) > mI:
+        yield ValidationError(f"{instance!r} is too long")
+
+
+# pylint: disable=unused-argument
 def minimum(validator, m, instance, schema):
     t_instance = deepcopy(instance)
     if validator.is_type(t_instance, "string"):

@@ -271,8 +271,14 @@ class Conditions:
             return
         cnf_region = self._cnf.copy()
         found_region = False
+
+        # validate the condition name exists
+        # return True/False if it doesn't
         if condition_name not in self._conditions:
+            yield True
+            yield False
             return
+
         for eql in self._conditions[condition_name].equals:
             is_region, equal_region = eql.is_region
             if is_region:
