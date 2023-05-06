@@ -103,3 +103,36 @@ class TestStringSize(BaseRuleTestCase):
 
         with self.assertRaises(TypeError):
             list(rule.minLength(validator, 10, {"foo": Unserializable()}, {}))
+
+    def test_if_min(self):
+        rule = StringSize()
+        validator = Draft7Validator(
+            {
+                "type": "string",
+                "maxLength": 1,
+            }
+        )
+        self.assertEqual(
+            len(
+                list(
+                    rule.validate_if(
+                        validator,
+                        1,
+                        ["Condition", "foo", "bar"],
+                        {},
+                        r_fn=rule.maxLength,
+                    )
+                )
+            ),
+            2,
+        )
+        self.assertEqual(
+            len(
+                list(
+                    rule.validate_if(
+                        validator, 1, ["Condition", 2], {}, r_fn=rule.maxLength
+                    )
+                )
+            ),
+            0,
+        )

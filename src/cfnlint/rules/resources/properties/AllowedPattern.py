@@ -7,10 +7,10 @@ import regex as re
 
 from cfnlint.helpers import REGEX_DYN_REF
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.BaseJsonSchemaValidator import BaseJsonSchemaValidator
 
 
-class AllowedPattern(CloudFormationLintRule):
+class AllowedPattern(BaseJsonSchemaValidator):
     """Check if properties have a valid value"""
 
     id = "E3031"
@@ -41,14 +41,9 @@ class AllowedPattern(CloudFormationLintRule):
         return False
 
     # pylint: disable=unused-argument
-    def pattern(self, validator, patrn, instance, schema):
-        if isinstance(instance, dict):
-            if len(instance) == 1:
-                for k, v in instance.items():
-                    if k == "Ref":
-                        if self.child_rules.get("W2031"):
-                            yield from self.child_rules["W2031"].validate(v, patrn)
-                        return
+    def validate_value(
+        self, validator, patrn, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
         if validator.is_type(instance, "string"):
             # skip any dynamic reference strings
             if REGEX_DYN_REF.findall(instance):
@@ -56,3 +51,19 @@ class AllowedPattern(CloudFormationLintRule):
             if not re.search(patrn, instance):
                 if not self._is_exception(instance):
                     yield ValidationError(f"{instance!r} does not match {patrn!r}")
+
+    # pylint: disable=unused-argument
+    def validate_ref(
+        self, validator, patrn, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        if self.child_rules.get("W2031"):
+            yield from self.child_rules["W2031"].validate(instance, patrn)
+
+    # pylint: disable=unused-argument
+    def pattern(self, validator, patrn, instance, schema):
+        yield from self.validate_instance(
+            validator=validator,
+            s=patrn,
+            instance=instance,
+            schema=schema,
+        )
