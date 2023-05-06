@@ -11,10 +11,10 @@ import regex as re
 
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules import CloudFormationLintRule
+from cfnlint.rules.BaseJsonSchemaValidator import BaseJsonSchemaValidator
 
 
-class StringSize(CloudFormationLintRule):
+class StringSize(BaseJsonSchemaValidator):
     """Check if a String has a length within the limit"""
 
     id = "E3033"
@@ -22,6 +22,26 @@ class StringSize(CloudFormationLintRule):
     description = "Check strings for its length between the minimum and maximum"
     source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["resources", "property", "string", "size"]
+
+    # pylint: disable=unused-argument
+    def validate_value(
+        self, validator, sS, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        yield from kwargs["fn"](validator, sS, instance, schema)
+
+    # pylint: disable=unused-argument
+    def validate_if(
+        self, validator, sS, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        if validator.is_type(instance, "array") and len(instance) == 3:
+            yield from kwargs["r_fn"](validator, sS, instance[1], schema)
+            yield from kwargs["r_fn"](validator, sS, instance[2], schema)
+
+    # pylint: disable=unused-argument
+    def validate_sub(
+        self, validator, sS, instance, schema, **kwargs
+    ):  # pylint: disable=arguments-renamed
+        yield from kwargs["fn"](validator, sS, kwargs["original_instance"], schema)
 
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
@@ -69,7 +89,7 @@ class StringSize(CloudFormationLintRule):
             yield ValidationError("Item is too short")
 
     # pylint: disable=unused-argument
-    def maxLength(self, validator, mL, instance, schema):
+    def _maxLength(self, validator, mL, instance, schema):
         if (
             validator.is_type(instance, "object")
             and validator.schema.get("type") == "object"
@@ -79,7 +99,7 @@ class StringSize(CloudFormationLintRule):
             yield ValidationError(f"{instance!r} is too long")
 
     # pylint: disable=unused-argument
-    def minLength(self, validator, mL, instance, schema):
+    def _minLength(self, validator, mL, instance, schema):
         if (
             validator.is_type(instance, "object")
             and validator.schema.get("type") == "object"
@@ -87,3 +107,25 @@ class StringSize(CloudFormationLintRule):
             yield from self._non_string_min_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) < mL:
             yield ValidationError(f"{instance!r} is too short")
+
+    # pylint: disable=unused-argument
+    def maxLength(self, validator, enums, instance, schema):
+        yield from self.validate_instance(
+            validator=validator,
+            s=enums,
+            instance=instance,
+            schema=schema,
+            fn=self._maxLength,
+            r_fn=self.maxLength,
+        )
+
+    # pylint: disable=unused-argument
+    def minLength(self, validator, enums, instance, schema):
+        yield from self.validate_instance(
+            validator=validator,
+            s=enums,
+            instance=instance,
+            schema=schema,
+            fn=self._minLength,
+            r_fn=self.minLength,
+        )
