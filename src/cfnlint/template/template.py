@@ -1013,7 +1013,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if path == fn_if[0 : len(path)]:
                     # This needs to handle items only below the Path
                     result = self.get_conditions_from_path(
-                        self.template, fn_if[0:-1], False, include_if_in_function
+                        self.template, fn_if[0:-1], True, include_if_in_function
                     )
                     for condition_name, condition_values in result.items():
                         if condition_name in results:
@@ -1021,7 +1021,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         else:
                             results[condition_name] = condition_values
 
-        return list(self.conditions.build_scenarios(list(results.keys()), region))
+        return list(self.conditions.build_scenarios(results, region))
 
     def get_conditions_scenarios_from_object(self, objs, region=None):
         """
@@ -1071,7 +1071,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     else:
                         con = con.union(get_conditions_from_property(v))
 
-        return list(self.conditions.build_scenarios(list(con), region))
+        return list(self.conditions.build_scenarios(dict.fromkeys(list(con)), region))
 
     def get_conditions_from_path(
         self,
