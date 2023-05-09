@@ -1,3 +1,10 @@
+### v1.0.0.rc2
+###### Fixes
+- Rewrite JSON schema validators to better handle CloudFormation functions (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
+- Fix an issue when the resource type isn't available for an output (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
+- Update JSON schema for resource configuration to handle Language Extensions for `DeletionPolicy` (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
+- Update condition logic to include resource level conditions (pull #[2737](https://github.com/aws-cloudformation/cfn-lint/issues/2737))
+
 ### v1.0.0.rc1
 ###### Fixes
 - Test schemas and patch as needed (pull #[2725](https://github.com/aws-cloudformation/cfn-lint/issues/2725))
