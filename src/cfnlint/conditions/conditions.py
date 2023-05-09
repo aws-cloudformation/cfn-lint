@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 import itertools
 import logging
 import traceback
-from typing import Any, Dict, Iterator, List, Tuple
+from typing import Any, Dict, Iterator, List, Set, Tuple
 
 from sympy import And, Implies, Not, Symbol
 from sympy.assumptions.cnf import EncodedCNF
@@ -154,7 +154,7 @@ class Conditions:
         return (cnf, equal_vars)
 
     def build_scenarios(
-        self, condition_names: List[str], region: None = None
+        self, conditions: Dict[str, Set[bool]], region: None = None
     ) -> Iterator[Dict[str, bool]]:
         """Given a list of condition names this function will yield scenarios that represent
         those conditions and there result (True/False)
@@ -166,8 +166,31 @@ class Conditions:
             Iterator[Dict[str, bool]]: yield dict objects of {ConditionName: True/False}
         """
         # nothing to yield if there are no conditions
-        if len(condition_names) == 0:
+        if len(conditions) == 0:
             return
+
+        c_cnf = self._cnf.copy()
+        condition_names = []
+        conditions_set = {}
+        for condition_name, values in conditions.items():
+            if condition_name in self._conditions:
+                if values == {True}:
+                    c_cnf.add_prop(
+                        self._conditions[condition_name].build_true_cnf(
+                            self._solver_params
+                        )
+                    )
+                    conditions_set[condition_name] = True
+                    continue
+                if values == {False}:
+                    c_cnf.add_prop(
+                        self._conditions[condition_name].build_false_cnf(
+                            self._solver_params
+                        )
+                    )
+                    conditions_set[condition_name] = False
+                    continue
+            condition_names.append(condition_name)
 
         try:
             # build a large matric of True/False options based on the provided conditions
@@ -198,7 +221,7 @@ class Conditions:
 
                 # if the scenario can be satisfied then return it
                 if satisfiable(cnf):
-                    yield params
+                    yield {**params, **conditions_set}
                     scenarios_returned += 1
 
                 # On occassions people will use a lot of non-related conditions
