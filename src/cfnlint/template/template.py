@@ -991,7 +991,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if path == fn_if[0 : len(path)]:
                     # This needs to handle items only below the Path
                     result = self.get_conditions_from_path(
-                        self.template, fn_if[0:-1], False, include_if_in_function
+                        self.template, fn_if[0:-1], True, include_if_in_function
                     )
                     for condition_name, condition_values in result.items():
                         if condition_name in results:
@@ -999,7 +999,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         else:
                             results[condition_name] = condition_values
 
-        return list(self.conditions.build_scenarios(list(results.keys())))
+        return list(self.conditions.build_scenarios(results))
 
     def get_conditions_scenarios_from_object(self, objs):
         """
@@ -1049,7 +1049,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     else:
                         con = con.union(get_conditions_from_property(v))
 
-        return list(self.conditions.build_scenarios(list(con)))
+        return list(self.conditions.build_scenarios(dict.fromkeys(list(con))))
 
     def get_conditions_from_path(
         self,
