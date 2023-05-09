@@ -29,7 +29,8 @@ class TestConditions(TestCase):
         # test coverage for KeyErrors in the following functions
         self.assertTrue(cfn.conditions.check_implies({"Test": True}, "IsUsEast1"))
         self.assertEqual(
-            list(cfn.conditions.build_scenarios(["IsProd", "IsUsEast1"])), []
+            list(cfn.conditions.build_scenarios({"IsProd": None, "IsUsEast1": None})),
+            [],
         )
 
     def test_run_away_scenarios(self):
@@ -38,7 +39,7 @@ class TestConditions(TestCase):
             "Parameters": {},
             "Conditions": {},
         }
-        condition_names = []
+        condition_names = {}
         for p in string.ascii_letters[0:10]:
             template["Parameters"][f"{p}Parameter"] = {
                 "Type": "String",
@@ -46,7 +47,7 @@ class TestConditions(TestCase):
             template["Conditions"][f"{p}Condition"] = {
                 "Fn::Equals": [{"Ref": f"{p}Parameter"}, "{p}"]
             }
-            condition_names.append(f"{p}Condition")
+            condition_names[(f"{p}Condition")] = None
 
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 10)
@@ -120,7 +121,7 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         self.assertListEqual(
-            list(cfn.conditions.build_scenarios(["IsProd", "IsDev"])),
+            list(cfn.conditions.build_scenarios({"IsProd": None, "IsDev": None})),
             [
                 {"IsProd": True, "IsDev": False},
                 {"IsProd": False, "IsDev": True},
@@ -144,9 +145,22 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         self.assertListEqual(
-            list(cfn.conditions.build_scenarios(["IsProd", "IsDev"])),
+            list(cfn.conditions.build_scenarios({"IsProd": None, "IsDev": None})),
             [
                 {"IsProd": True, "IsDev": False},
+                {"IsProd": False, "IsDev": True},
+                {"IsProd": False, "IsDev": False},
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios({"IsProd": {True}, "IsDev": None})),
+            [
+                {"IsProd": True, "IsDev": False},
+            ],
+        )
+        self.assertListEqual(
+            list(cfn.conditions.build_scenarios({"IsProd": {False}, "IsDev": None})),
+            [
                 {"IsProd": False, "IsDev": True},
                 {"IsProd": False, "IsDev": False},
             ],
@@ -169,13 +183,13 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 2)
         self.assertListEqual(
-            list(cfn.conditions.build_scenarios(["IsGamma", "IsBeta"])),
+            list(cfn.conditions.build_scenarios({"IsGamma": None, "IsBeta": None})),
             [
                 {"IsBeta": False, "IsGamma": False},
             ],
         )
         self.assertListEqual(
-            list(cfn.conditions.build_scenarios(["IsGamma"])),
+            list(cfn.conditions.build_scenarios({"IsGamma": None})),
             [
                 {"IsGamma": False},
             ],
