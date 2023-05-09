@@ -49,8 +49,12 @@ class BaseJsonSchema(CloudFormationLintRule):
                 if e.rule:
                     e_rule = e.rule
             if not e_rule:
-                e_rule = self.child_rules.get(self.rule_set.get(e.validator), self)
-
+                rs_rule = self.child_rules.get(self.rule_set.get(e.validator), self)
+                # if the value is None it means the rule was disabled
+                # so we continue
+                if rs_rule is None:
+                    continue
+                e_rule = rs_rule
             matches.append(
                 RuleMatch(
                     e_path,
