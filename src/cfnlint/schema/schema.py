@@ -36,6 +36,7 @@ class Schema:
 
         return schema
 
+    @property
     def json_schema(self) -> Dict:
         """Return the JSON Schema version of the CFN Schema
 
@@ -55,6 +56,7 @@ class Schema:
         """
         jsonpatch.JsonPatch(patches).apply(self._json_schema, in_place=True)
 
+    @property
     def get_atts(self) -> Dict[str, GetAtt]:
         """Get the valid GetAtts for this schema. Schemas are defined in property
             readOnlyProperties and we need to build definitions of those properties
