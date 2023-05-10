@@ -1,0 +1,114 @@
+{
+ "additionalProperties": false,
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A custom key-value pair associated with a resource within your organization.",
+   "properties": {
+    "Key": {
+     "description": "The key identifier, or name, of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The string value that's associated with the key of the tag. You can set the value of a tag to an empty string, but you can't set the value of a tag to null.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "You can use AWS::Organizations::ResourcePolicy to delegate policy management for AWS Organizations to specified member accounts to perform policy actions that are by default available only to the management account.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "organizations:PutResourcePolicy",
+    "organizations:DescribeResourcePolicy",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:DeleteResourcePolicy"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "organizations:DescribeResourcePolicy"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "organizations:DescribeResourcePolicy",
+    "organizations:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "organizations:PutResourcePolicy",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource",
+    "organizations:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of the resource policy.",
+   "pattern": "^arn:aws.*:organizations::\\d{12}:resourcepolicy\\/o-[a-z0-9]{10,32}\\/rp-[0-9a-zA-Z_]{4,128}",
+   "type": "string"
+  },
+  "Content": {
+   "description": "The policy document. For AWS CloudFormation templates formatted in YAML, you can provide the policy in JSON or YAML format. AWS CloudFormation always converts a YAML policy to JSON format before submitting it.",
+   "maxLength": 40000,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": [
+    "object",
+    "string"
+   ]
+  },
+  "Id": {
+   "description": "The unique identifier (ID) associated with this resource policy.",
+   "maxLength": 131,
+   "pattern": "^rp-[0-9a-zA-Z_]{4,128}$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags that you want to attach to the resource policy",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id",
+  "/properties/Arn"
+ ],
+ "required": [
+  "Content"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Organizations::ResourcePolicy"
+}
