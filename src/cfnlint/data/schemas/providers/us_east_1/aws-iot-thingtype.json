@@ -1,0 +1,138 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ThingTypeName",
+  "/properties/ThingTypeProperties"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IoT::ThingType",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:ListTagsForResource",
+    "iot:CreateThingType",
+    "iot:DeprecateThingType",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:DeleteThingType",
+    "iot:DeprecateThingType"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListThingTypes",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:DescribeThingType",
+    "iot:UpdateThingType",
+    "iot:ListTagsForResource",
+    "iot:TagResource",
+    "iot:UntagResource",
+    "iot:DeprecateThingType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ThingTypeName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "DeprecateThingType": {
+   "type": "boolean"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingTypeName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "ThingTypeProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "SearchableAttributes": {
+     "insertionOrder": true,
+     "items": {
+      "maxLength": 128,
+      "pattern": "[a-zA-Z0-9_.,@/:#-]+",
+      "type": "string"
+     },
+     "maxItems": 3,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "ThingTypeDescription": {
+     "maxLength": 2028,
+     "pattern": "[\\p{Graph}\\x20]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ThingType"
+}
