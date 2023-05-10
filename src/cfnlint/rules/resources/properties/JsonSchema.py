@@ -103,15 +103,13 @@ class JsonSchema(BaseJsonSchema):
                     except ResourceNotFoundError as e:
                         LOGGER.info(e)
                         continue
-                    if schema.json_schema():
+                    if schema.json_schema:
                         if t in cached_validation_run or region == REGION_PRIMARY:
                             if schema.is_cached:
                                 # if its cached we already ran the same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
-                        cfn_validator = self.setup_validator(
-                            schema=schema.json_schema()
-                        )
+                        cfn_validator = self.setup_validator(schema=schema.json_schema)
                         path = ["Resources", n, "Properties"]
                         for scenario in cfn.get_object_without_nested_conditions(
                             p, path
