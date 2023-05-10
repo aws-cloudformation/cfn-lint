@@ -43,6 +43,9 @@
     "DescriptiveText": {
      "type": "string"
     },
+    "FileUploaderConfig": {
+     "$ref": "#/definitions/FileUploaderFieldConfig"
+    },
     "IsArray": {
      "type": "boolean"
     },
@@ -159,6 +162,37 @@
      "$ref": "#/definitions/FieldConfig"
     }
    },
+   "type": "object"
+  },
+  "FileUploaderFieldConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "AcceptedFileTypes": {
+     "items": {
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "AccessLevel": {
+     "$ref": "#/definitions/StorageAccessLevel"
+    },
+    "IsResumable": {
+     "type": "boolean"
+    },
+    "MaxFileCount": {
+     "type": "number"
+    },
+    "MaxSize": {
+     "type": "number"
+    },
+    "ShowThumbnails": {
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "AcceptedFileTypes",
+    "AccessLevel"
+   ],
    "type": "object"
   },
   "FixedPosition": {
@@ -292,6 +326,14 @@
     }
    ]
   },
+  "LabelDecorator": {
+   "enum": [
+    "required",
+    "optional",
+    "none"
+   ],
+   "type": "string"
+  },
   "SectionalElement": {
    "additionalProperties": false,
    "properties": {
@@ -327,6 +369,14 @@
     }
    },
    "type": "object"
+  },
+  "StorageAccessLevel": {
+   "enum": [
+    "public",
+    "protected",
+    "private"
+   ],
+   "type": "string"
   },
   "Tags": {
    "additionalProperties": false,
@@ -385,6 +435,20 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "AppId": {
+      "$ref": "resource-schema.json#/properties/AppId"
+     },
+     "EnvironmentName": {
+      "$ref": "resource-schema.json#/properties/EnvironmentName"
+     }
+    },
+    "required": [
+     "AppId",
+     "EnvironmentName"
+    ]
+   },
    "permissions": [
     "amplify:GetApp",
     "amplifyuibuilder:ListForms"
@@ -430,6 +494,9 @@
   "Id": {
    "type": "string"
   },
+  "LabelDecorator": {
+   "$ref": "#/definitions/LabelDecorator"
+  },
   "Name": {
    "maxLength": 255,
    "minLength": 1,
@@ -460,6 +527,7 @@
   "SectionalElements",
   "Style"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-amplifyuibuilder",
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
