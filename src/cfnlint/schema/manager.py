@@ -443,7 +443,7 @@ class ProviderSchemaManager:
             self.get_resource_schema(region=region, resource_type=resource_type)
             self._cache["GetAtts"][region][resource_type] = self._schemas[region][
                 resource_type
-            ].get_atts()
+            ].get_atts
 
         return self._cache["GetAtts"][region][resource_type]
 
