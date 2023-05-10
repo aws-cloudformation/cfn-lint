@@ -1,0 +1,153 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ThingGroupName",
+  "/properties/ParentGroupName"
+ ],
+ "definitions": {
+  "AttributePayload": {
+   "additionalProperties": false,
+   "properties": {
+    "Attributes": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "[a-zA-Z0-9_.,@/:#-]+": {
+       "type": "string"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IoT::ThingGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:ListTagsForResource",
+    "iot:CreateThingGroup",
+    "iot:CreateDynamicThingGroup",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:DeleteThingGroup",
+    "iot:DeleteDynamicThingGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListThingGroups",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeThingGroup",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:ListTagsForResource",
+    "iot:DescribeThingGroup",
+    "iot:UpdateThingGroup",
+    "iot:UpdateDynamicThingGroup",
+    "iot:TagResource",
+    "iot:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ThingGroupName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "ParentGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "QueryString": {
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ThingGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "ThingGroupProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "AttributePayload": {
+     "$ref": "#/definitions/AttributePayload"
+    },
+    "ThingGroupDescription": {
+     "maxLength": 2028,
+     "pattern": "[\\p{Graph}\\x20]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::ThingGroup"
+}

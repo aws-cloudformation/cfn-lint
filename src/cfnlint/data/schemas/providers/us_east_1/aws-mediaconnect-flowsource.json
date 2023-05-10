@@ -30,7 +30,8 @@
      "description": "The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).",
      "enum": [
       "speke",
-      "static-key"
+      "static-key",
+      "srt-password"
      ],
      "type": "string"
     },
@@ -56,7 +57,6 @@
     }
    },
    "required": [
-    "Algorithm",
     "RoleArn"
    ],
    "type": "object"
@@ -132,6 +132,11 @@
    "description": "The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.",
    "type": "integer"
   },
+  "MinLatency": {
+   "default": 2000,
+   "description": "The minimum latency in milliseconds.",
+   "type": "integer"
+  },
   "Name": {
    "description": "The name of the source.",
    "type": "string"
@@ -142,8 +147,18 @@
     "zixi-push",
     "rtp-fec",
     "rtp",
-    "rist"
+    "rist",
+    "srt-listener",
+    "srt-caller"
    ],
+   "type": "string"
+  },
+  "SenderControlPort": {
+   "description": "The port that the flow uses to send outbound requests to initiate connection with the sender for fujitsu-qos protocol.",
+   "type": "integer"
+  },
+  "SenderIpAddress": {
+   "description": "The IP address that the flow communicates with to initiate connection with the sender for fujitsu-qos protocol.",
    "type": "string"
   },
   "SourceArn": {
@@ -153,6 +168,14 @@
   "SourceIngestPort": {
    "description": "The port that the flow will be listening on for incoming content.(ReadOnly)",
    "type": "string"
+  },
+  "SourceListenerAddress": {
+   "description": "Source IP or domain name for SRT-caller protocol.",
+   "type": "string"
+  },
+  "SourceListenerPort": {
+   "description": "Source port for SRT-caller protocol.",
+   "type": "integer"
   },
   "StreamId": {
    "description": "The stream ID that you want to use for this transport. This parameter applies only to Zixi-based streams.",
