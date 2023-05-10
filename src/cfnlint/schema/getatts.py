@@ -84,33 +84,36 @@ class GetAtts:
             return
         for ro_attr in schema.get("readOnlyProperties", []):
             try:
-                self._process_schema_by_pointer(ro_attr, GetAttType.ReadOnly)
+                name = ".".join(ro_attr.split("/")[2:])
+                ro_schema = self._flatten_schema_by_pointer(ro_attr)
+                self._process_schema(name, ro_schema, GetAttType.ReadOnly)
             except KeyError:
                 pass
 
-    def _process_schema_by_pointer(self, ptr: str, getatt_type):
-        name = ".".join(ptr.split("/")[2:])
+    def _flatten_schema(self, schema: Dict[str, Any]) -> Dict[str, Any]:
+        r_schema = schema.copy()
+        for k, v in schema.items():
+            if k == "$ref":
+                r_schema.pop(k)
+                r_schema = {**r_schema, **self._flatten_schema_by_pointer(v)}
+            elif k == "items":
+                r_schema[k] = self._flatten_schema(v)
+        return r_schema
+
+    def _flatten_schema_by_pointer(self, ptr: str) -> Dict[str, Any]:
         schema = resolve_pointer(self._schema, ptr)
-        self._process_schema(name, schema, getatt_type)
+        return self._flatten_schema(schema)
 
     def _process_schema(
         self, name: str, schema: Dict[str, Any], getatt_type: GetAttType
     ):
-        if "$ref" in schema:
-            self._process_schema_by_pointer(schema.get("$ref"), getatt_type)
-        elif schema.get("type") == "object":
+        if schema.get("type") == "object":
             for prop, value in schema.get("properties", {}).items():
                 self._process_schema(f"{name}.{prop}", value, getatt_type)
         elif schema.get("type") == "array":
             # GetAtt doesn't support going into an array of objects or another array
             # so we only look at an array of strings, etc.
-            if schema.get("items", {}).get("type") in [
-                "string",
-                "integer",
-                "number",
-                "boolean",
-            ]:
-                self._attrs[name] = GetAtt(schema, getatt_type)
+            self._attrs[name] = GetAtt(schema, getatt_type)
         else:
             self._attrs[name] = GetAtt(schema, getatt_type)
 
