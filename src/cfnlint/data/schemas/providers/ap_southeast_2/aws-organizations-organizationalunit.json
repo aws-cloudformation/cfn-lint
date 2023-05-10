@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ParentId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A custom key-value pair associated with a resource within your organization.",
+   "properties": {
+    "Key": {
+     "description": "The key identifier, or name, of the tag.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The string value that's associated with the key of the tag. You can set the value of a tag to an empty string, but you can't set the value of a tag to null.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "You can use organizational units (OUs) to group accounts together to administer as a single unit. This greatly simplifies the management of your accounts. For example, you can attach a policy-based control to an OU, and all accounts within the OU automatically inherit the policy. You can create multiple OUs within a single organization, and you can create OUs within other OUs. Each OU can contain multiple accounts, and you can move accounts from one OU to another. However, OU names must be unique within a parent OU or root.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "organizations:CreateOrganizationalUnit",
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "organizations:DeleteOrganizationalUnit"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "organizations:ListOrganizationalUnitsForParent"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "organizations:DescribeOrganizationalUnit",
+    "organizations:ListParents",
+    "organizations:ListTagsForResource",
+    "organizations:TagResource",
+    "organizations:UntagResource",
+    "organizations:UpdateOrganizationalUnit"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/Id"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The Amazon Resource Name (ARN) of this OU.",
+   "pattern": "^arn:aws.*:organizations::\\d{12}:ou/o-[a-z0-9]{10,32}/ou-[0-9a-z]{4,32}-[0-9a-z]{8,32}",
+   "type": "string"
+  },
+  "Id": {
+   "description": "The unique identifier (ID) associated with this OU.",
+   "maxLength": 68,
+   "pattern": "^ou-[0-9a-z]{4,32}-[a-z0-9]{8,32}$",
+   "type": "string"
+  },
+  "Name": {
+   "description": "The friendly name of this OU.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[\\s\\S]*",
+   "type": "string"
+  },
+  "ParentId": {
+   "description": "The unique identifier (ID) of the parent root or OU that you want to create the new OU in.",
+   "maxLength": 100,
+   "pattern": "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "A list of tags that you want to attach to the newly created OU.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "required": [
+  "Name",
+  "ParentId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::Organizations::OrganizationalUnit"
+}
