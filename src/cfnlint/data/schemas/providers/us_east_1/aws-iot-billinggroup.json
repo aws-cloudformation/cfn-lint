@@ -1,0 +1,120 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/BillingGroupName"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::IoT::BillingGroup",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iot:DescribeBillingGroup",
+    "iot:ListTagsForResource",
+    "iot:CreateBillingGroup",
+    "iot:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iot:DescribeBillingGroup",
+    "iot:DeleteBillingGroup"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iot:ListBillingGroups",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iot:DescribeBillingGroup",
+    "iot:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iot:DescribeBillingGroup",
+    "iot:UpdateBillingGroup",
+    "iot:ListTagsForResource",
+    "iot:TagResource",
+    "iot:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/BillingGroupName"
+ ],
+ "properties": {
+  "Arn": {
+   "type": "string"
+  },
+  "BillingGroupName": {
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9:_-]+",
+   "type": "string"
+  },
+  "BillingGroupProperties": {
+   "additionalProperties": false,
+   "properties": {
+    "BillingGroupDescription": {
+     "maxLength": 2028,
+     "pattern": "[\\p{Graph}\\x20]*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "Id": {
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/Id"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoT::BillingGroup"
+}
