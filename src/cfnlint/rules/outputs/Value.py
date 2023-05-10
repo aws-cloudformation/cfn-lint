@@ -46,7 +46,7 @@ class Value(CloudFormationLintRule):
                                 )
                             except ResourceNotFoundError:
                                 continue
-                            attribute = res_schema.get_atts().get(obj[1])
+                            attribute = res_schema.get_atts.get(obj[1])
                             # Bad schema or bad attribute.  Skip if either is true
                             if attribute:
                                 if attribute.type == "array":
