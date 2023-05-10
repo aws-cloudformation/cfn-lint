@@ -39,3 +39,78 @@ class TestGetAtts(BaseTestCase):
 
         with self.assertRaises(ValueError):
             getatts.match("us-east-1", "NoMatch.Attribute")
+
+    def test_getatt_resource_with_list(self):
+        getatts = GetAtts(["us-east-1"])
+        getatts.add("Resource", "AWS::NetworkFirewall::Firewall")
+        results = getatts.match("us-east-1", "Resource.EndpointIds")
+        self.assertEqual(results.type, "array")
+        self.assertEqual(results.getatt_type, GetAttType.ReadOnly)
+
+        self.assertDictEqual(
+            getatts.json_schema("us-east-1"),
+            {
+                "oneOf": [
+                    {
+                        "type": "array",
+                        "items": [
+                            {"type": "string", "enum": ["Resource"]},
+                            {"type": ["string", "object"]},
+                        ],
+                        "allOf": [
+                            {
+                                "if": {
+                                    "items": [
+                                        {"type": "string", "const": "Resource"},
+                                        {"type": ["string", "object"]},
+                                    ]
+                                },
+                                "then": {
+                                    "if": {
+                                        "items": [
+                                            {"type": "string", "const": "Resource"},
+                                            {"type": "string"},
+                                        ]
+                                    },
+                                    "then": {
+                                        "items": [
+                                            {"type": "string", "const": "Resource"},
+                                            {
+                                                "type": "string",
+                                                "enum": [
+                                                    "FirewallArn",
+                                                    "FirewallId",
+                                                    "EndpointIds",
+                                                ],
+                                            },
+                                        ]
+                                    },
+                                    "else": {
+                                        "items": [
+                                            {"type": "string", "const": "Resource"},
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "Ref": {"type": "string"}
+                                                },
+                                                "required": ["Ref"],
+                                                "additionalProperties": False,
+                                            },
+                                        ]
+                                    },
+                                },
+                                "else": {},
+                            }
+                        ],
+                    },
+                    {
+                        "type": "string",
+                        "enum": [
+                            "Resource.FirewallArn",
+                            "Resource.FirewallId",
+                            "Resource.EndpointIds",
+                        ],
+                    },
+                ]
+            },
+        )
