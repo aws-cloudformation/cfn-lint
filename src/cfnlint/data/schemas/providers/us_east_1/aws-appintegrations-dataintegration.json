@@ -6,6 +6,68 @@
   "/properties/SourceURI"
  ],
  "definitions": {
+  "FileConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for what files should be pulled from the source.",
+   "properties": {
+    "Filters": {
+     "additionalProperties": false,
+     "description": "Restrictions for what files should be pulled from the source.",
+     "patternProperties": {
+      "^[A-Za-z]": {
+       "items": {
+        "maxLength": 255,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 2048,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    },
+    "Folders": {
+     "description": "Identifiers for the source folders to pull all files from recursively.",
+     "items": {
+      "maxLength": 200,
+      "minLength": 1,
+      "pattern": ".*\\S.*",
+      "type": "string"
+     },
+     "maxItems": 10,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "Folders"
+   ],
+   "type": "object"
+  },
+  "ObjectConfiguration": {
+   "additionalProperties": false,
+   "description": "The configuration for what data should be pulled from the source.",
+   "patternProperties": {
+    "^.+$": {
+     "additionalProperties": false,
+     "patternProperties": {
+      "^[A-Za-z]": {
+       "items": {
+        "maxLength": 255,
+        "minLength": 1,
+        "type": "string"
+       },
+       "maxItems": 2048,
+       "minItems": 1,
+       "type": "array"
+      }
+     },
+     "type": "object"
+    }
+   },
+   "type": "object"
+  },
   "ScheduleConfig": {
    "additionalProperties": false,
    "properties": {
@@ -32,8 +94,6 @@
     }
    },
    "required": [
-    "FirstExecutionFrom",
-    "Object",
     "ScheduleExpression"
    ],
    "type": "object"
@@ -148,6 +208,10 @@
    "minLength": 1,
    "type": "string"
   },
+  "FileConfiguration": {
+   "$ref": "#/definitions/FileConfiguration",
+   "description": "The configuration for what files should be pulled from the source."
+  },
   "Id": {
    "description": "The unique identifer of the data integration.",
    "maxLength": 255,
@@ -169,15 +233,19 @@
    "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
    "type": "string"
   },
+  "ObjectConfiguration": {
+   "$ref": "#/definitions/ObjectConfiguration",
+   "description": "The configuration for what data should be pulled from the source."
+  },
   "ScheduleConfig": {
    "$ref": "#/definitions/ScheduleConfig",
    "description": "The name of the data and how often it should be pulled from the source."
   },
   "SourceURI": {
    "description": "The URI of the data source.",
-   "maxLength": 255,
+   "maxLength": 1000,
    "minLength": 1,
-   "pattern": "^\\w+\\:\\/\\/\\w+\\/[\\w/!@#+=.-]+$",
+   "pattern": "^(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+$)|(\\w+\\:\\/\\/[\\w.-]+[\\w/!@#+=.-]+[\\w/!@#+=.-]+[\\w/!@#+=.,-]+$)",
    "type": "string"
   },
   "Tags": {

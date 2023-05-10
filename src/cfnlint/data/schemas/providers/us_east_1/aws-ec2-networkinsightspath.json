@@ -11,11 +11,43 @@
   "/properties/Source",
   "/properties/Destination",
   "/properties/Protocol",
-  "/properties/DestinationPort"
+  "/properties/DestinationPort",
+  "/properties/FilterAtSource",
+  "/properties/FilterAtDestination"
  ],
  "definitions": {
+  "FilterPortRange": {
+   "additionalProperties": false,
+   "properties": {
+    "FromPort": {
+     "type": "integer"
+    },
+    "ToPort": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
   "IpAddress": {
    "type": "string"
+  },
+  "PathFilter": {
+   "additionalProperties": false,
+   "properties": {
+    "DestinationAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "DestinationPortRange": {
+     "$ref": "#/definitions/FilterPortRange"
+    },
+    "SourceAddress": {
+     "$ref": "#/definitions/IpAddress"
+    },
+    "SourcePortRange": {
+     "$ref": "#/definitions/FilterPortRange"
+    }
+   },
+   "type": "object"
   },
   "Port": {
    "type": "integer"
@@ -98,6 +130,12 @@
   },
   "DestinationPort": {
    "$ref": "#/definitions/Port"
+  },
+  "FilterAtDestination": {
+   "$ref": "#/definitions/PathFilter"
+  },
+  "FilterAtSource": {
+   "$ref": "#/definitions/PathFilter"
   },
   "NetworkInsightsPathArn": {
    "type": "string"
