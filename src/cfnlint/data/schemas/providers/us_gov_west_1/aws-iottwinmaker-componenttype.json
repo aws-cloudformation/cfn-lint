@@ -1,0 +1,522 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceId",
+  "/properties/ComponentTypeId"
+ ],
+ "definitions": {
+  "DataConnector": {
+   "additionalProperties": false,
+   "description": "The data connector.",
+   "properties": {
+    "IsNative": {
+     "description": "A Boolean value that specifies whether the data connector is native to IoT TwinMaker.",
+     "type": "boolean"
+    },
+    "Lambda": {
+     "$ref": "#/definitions/LambdaFunction",
+     "description": "The Lambda function associated with this data connector."
+    }
+   },
+   "type": "object"
+  },
+  "DataType": {
+   "additionalProperties": false,
+   "description": "An object that specifies the data type of a property.",
+   "properties": {
+    "AllowedValues": {
+     "description": "The allowed values for this data type.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DataValue"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "NestedType": {
+     "$ref": "#/definitions/DataType",
+     "description": "The nested type in the data type."
+    },
+    "Relationship": {
+     "$ref": "#/definitions/Relationship",
+     "description": "A relationship that associates a component with another component."
+    },
+    "Type": {
+     "description": "The underlying type of the data type.",
+     "enum": [
+      "RELATIONSHIP",
+      "STRING",
+      "LONG",
+      "BOOLEAN",
+      "INTEGER",
+      "DOUBLE",
+      "LIST",
+      "MAP"
+     ],
+     "type": "string"
+    },
+    "UnitOfMeasure": {
+     "description": "The unit of measure used in this data type.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Type"
+   ],
+   "type": "object"
+  },
+  "DataValue": {
+   "additionalProperties": false,
+   "description": "An object that specifies a value for a property.",
+   "properties": {
+    "BooleanValue": {
+     "description": "A Boolean value.",
+     "type": "boolean"
+    },
+    "DoubleValue": {
+     "description": "A double value.",
+     "type": "number"
+    },
+    "Expression": {
+     "description": "An expression that produces the value.",
+     "maxLength": 316,
+     "minLength": 1,
+     "pattern": "(^\\$\\{Parameters\\.[a-zA-z]+([a-zA-z_0-9]*)}$)",
+     "type": "string"
+    },
+    "IntegerValue": {
+     "description": "An integer value.",
+     "type": "integer"
+    },
+    "ListValue": {
+     "description": "A list of multiple values.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/DataValue"
+     },
+     "maxItems": 50,
+     "minItems": 0,
+     "type": "array",
+     "uniqueItems": false
+    },
+    "LongValue": {
+     "description": "A long value.",
+     "type": "number"
+    },
+    "MapValue": {
+     "additionalProperties": false,
+     "description": "An object that maps strings to multiple DataValue objects. \n\n",
+     "patternProperties": {
+      "[a-zA-Z_\\-0-9]+": {
+       "$ref": "#/definitions/DataValue"
+      }
+     },
+     "type": "object"
+    },
+    "RelationshipValue": {
+     "additionalProperties": false,
+     "description": "A value that relates a component to another component.",
+     "properties": {
+      "TargetComponentName": {
+       "maxLength": 256,
+       "minLength": 1,
+       "pattern": "[a-zA-Z_\\-0-9]+",
+       "type": "string"
+      },
+      "TargetEntityId": {
+       "maxLength": 128,
+       "minLength": 1,
+       "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|^[a-zA-Z0-9][a-zA-Z_\\-0-9.:]*[a-zA-Z0-9]+",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "StringValue": {
+     "description": "A string value.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  },
+  "Function": {
+   "additionalProperties": false,
+   "description": "The function of component type.",
+   "properties": {
+    "ImplementedBy": {
+     "$ref": "#/definitions/DataConnector",
+     "description": "The data connector."
+    },
+    "RequiredProperties": {
+     "description": "The required properties of the function.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/RequiredProperty"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Scope": {
+     "description": "The scope of the function.",
+     "enum": [
+      "ENTITY",
+      "WORKSPACE"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "LambdaFunction": {
+   "additionalProperties": false,
+   "properties": {
+    "Arn": {
+     "maxLength": 128,
+     "minLength": 1,
+     "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):lambda:[a-z0-9-]+:[0-9]{12}:function:[\\/a-zA-Z0-9_-]+",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Arn"
+   ],
+   "type": "object"
+  },
+  "ParentComponentType": {
+   "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+   "type": "string"
+  },
+  "PropertyDefinition": {
+   "additionalProperties": false,
+   "description": "An object that sets information about a property.",
+   "properties": {
+    "Configurations": {
+     "additionalProperties": false,
+     "description": "An object that specifies information about a property.",
+     "patternProperties": {
+      "[a-zA-Z_\\-0-9]+": {
+       "maxLength": 256,
+       "minLength": 1,
+       "pattern": "[a-zA-Z_\\-0-9]+",
+       "type": "string"
+      }
+     },
+     "type": "object"
+    },
+    "DataType": {
+     "$ref": "#/definitions/DataType",
+     "description": "An object that contains information about the data type."
+    },
+    "DefaultValue": {
+     "$ref": "#/definitions/DataValue",
+     "description": "An object that contains the default value."
+    },
+    "IsExternalId": {
+     "description": "A Boolean value that specifies whether the property ID comes from an external data store.",
+     "type": "boolean"
+    },
+    "IsRequiredInEntity": {
+     "description": "A Boolean value that specifies whether the property is required.",
+     "type": "boolean"
+    },
+    "IsStoredExternally": {
+     "description": "A Boolean value that specifies whether the property is stored externally.",
+     "type": "boolean"
+    },
+    "IsTimeSeries": {
+     "description": "A Boolean value that specifies whether the property consists of time series data.",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyGroup": {
+   "additionalProperties": false,
+   "description": "An object that sets information about a property group.",
+   "properties": {
+    "GroupType": {
+     "description": "The type of property group.",
+     "enum": [
+      "TABULAR"
+     ],
+     "type": "string"
+    },
+    "PropertyNames": {
+     "description": "The list of property names in the property group.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/PropertyName"
+     },
+     "maxItems": 256,
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "PropertyName": {
+   "pattern": "[a-zA-Z_\\-0-9]+",
+   "type": "string"
+  },
+  "Relationship": {
+   "additionalProperties": false,
+   "description": "The type of the relationship.",
+   "properties": {
+    "RelationshipType": {
+     "description": "The type of the relationship.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": ".*",
+     "type": "string"
+    },
+    "TargetComponentTypeId": {
+     "description": "The ID of the target component type associated with this relationship.",
+     "maxLength": 256,
+     "minLength": 1,
+     "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "RequiredProperty": {
+   "pattern": "[a-zA-Z_\\-0-9]+",
+   "type": "string"
+  },
+  "Status": {
+   "additionalProperties": false,
+   "properties": {
+    "Error": {
+     "anyOf": [
+      {
+       "additionalProperties": false,
+       "description": "Empty Error object.",
+       "type": "object"
+      },
+      {
+       "additionalProperties": false,
+       "description": "Error object with Message and Code.",
+       "properties": {
+        "Code": {
+         "enum": [
+          "VALIDATION_ERROR",
+          "INTERNAL_FAILURE"
+         ],
+         "type": "string"
+        },
+        "Message": {
+         "maxLength": 2048,
+         "minLength": 0,
+         "type": "string"
+        }
+       },
+       "type": "object"
+      }
+     ],
+     "type": "object"
+    },
+    "State": {
+     "enum": [
+      "CREATING",
+      "UPDATING",
+      "DELETING",
+      "ACTIVE",
+      "ERROR"
+     ],
+     "type": "string"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource schema for AWS::IoTTwinMaker::ComponentType",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iottwinmaker:CreateComponentType",
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteComponentType",
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListComponentTypes",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iottwinmaker:GetComponentType",
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource",
+    "iottwinmaker:UntagResource",
+    "iottwinmaker:UpdateComponentType"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId",
+  "/properties/ComponentTypeId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The ARN of the component type.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "ComponentTypeId": {
+   "description": "The ID of the component type.",
+   "maxLength": 256,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_\\.\\-0-9:]+",
+   "type": "string"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat",
+   "description": "The date and time when the component type was created."
+  },
+  "Description": {
+   "description": "The description of the component type.",
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "ExtendsFrom": {
+   "description": "Specifies the parent component type to extend.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ParentComponentType"
+   },
+   "maxItems": 256,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Functions": {
+   "additionalProperties": false,
+   "description": "a Map of functions in the component type. Each function's key must be unique to this map.",
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/Function"
+    }
+   },
+   "type": "object"
+  },
+  "IsAbstract": {
+   "description": "A Boolean value that specifies whether the component type is abstract.",
+   "type": "boolean"
+  },
+  "IsSchemaInitialized": {
+   "description": "A Boolean value that specifies whether the component type has a schema initializer and that the schema initializer has run.",
+   "type": "boolean"
+  },
+  "IsSingleton": {
+   "description": "A Boolean value that specifies whether an entity can have more than one component of this type.\n\n",
+   "type": "boolean"
+  },
+  "PropertyDefinitions": {
+   "additionalProperties": false,
+   "description": "An map of the property definitions in the component type. Each property definition's key must be unique to this map.",
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/PropertyDefinition"
+    }
+   },
+   "type": "object"
+  },
+  "PropertyGroups": {
+   "additionalProperties": false,
+   "description": "An map of the property groups in the component type. Each property group's key must be unique to this map.",
+   "patternProperties": {
+    "[a-zA-Z_\\-0-9]+": {
+     "$ref": "#/definitions/PropertyGroup"
+    }
+   },
+   "type": "object"
+  },
+  "Status": {
+   "$ref": "#/definitions/Status",
+   "description": "The current status of the component type."
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A map of key-value pairs to associate with a resource.",
+   "maxProperties": 50,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat",
+   "description": "The last date and time when the component type was updated."
+  },
+  "WorkspaceId": {
+   "description": "The ID of the workspace that contains the component type.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime",
+  "/properties/Status",
+  "/properties/IsAbstract",
+  "/properties/IsSchemaInitialized"
+ ],
+ "required": [
+  "WorkspaceId",
+  "ComponentTypeId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::ComponentType"
+}
