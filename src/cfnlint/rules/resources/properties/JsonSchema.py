@@ -73,16 +73,21 @@ class JsonSchema(BaseJsonSchema):
                 if not err:
                     return
                 err.message = cfn_schema.get("description")
+                err.validator = "cfnSchema"
                 yield err
                 return
 
-            yield from cfn_validator.iter_errors(instance)
+            for e in cfn_validator.iter_errors(instance):
+                e.validator = "cfnSchema"
+                yield e
 
     # pylint: disable=unused-argument
     def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
-        yield from self._cfnSchema(
+        for e in self._cfnSchema(
             validator, schema_paths, instance, schema, self.region
-        )
+        ):
+            e.validator = "cfnRegionSchema"
+            yield e
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
