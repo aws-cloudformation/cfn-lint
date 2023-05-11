@@ -49,6 +49,11 @@
     },
     "Owner": {
      "cfnSchema": "aws_config_configrule/boto_owner_enum",
+     "enum": [
+      "CUSTOM_LAMBDA",
+      "AWS",
+      "CUSTOM_POLICY"
+     ],
      "type": "string"
     },
     "SourceDetails": {
@@ -72,14 +77,30 @@
    "properties": {
     "EventSource": {
      "cfnSchema": "aws_config_configrule/boto_eventsource_enum",
+     "enum": [
+      "aws.config"
+     ],
      "type": "string"
     },
     "MaximumExecutionFrequency": {
      "cfnSchema": "aws_config_configrule/boto_maximumexecutionfrequency_enum",
+     "enum": [
+      "One_Hour",
+      "Three_Hours",
+      "Six_Hours",
+      "Twelve_Hours",
+      "TwentyFour_Hours"
+     ],
      "type": "string"
     },
     "MessageType": {
      "cfnSchema": "aws_config_configrule/boto_messagetype_enum",
+     "enum": [
+      "ConfigurationItemChangeNotification",
+      "ConfigurationSnapshotDeliveryCompleted",
+      "ScheduledNotification",
+      "OversizedConfigurationItemChangeNotification"
+     ],
      "type": "string"
     }
    },
@@ -114,6 +135,8 @@
   },
   "Description": {
    "cfnSchema": "aws_config_configrule/description_integer",
+   "maxLength": 256,
+   "minLength": 1,
    "type": "string"
   },
   "InputParameters": {

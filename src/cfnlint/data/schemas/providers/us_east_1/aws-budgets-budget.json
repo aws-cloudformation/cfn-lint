@@ -33,6 +33,14 @@
     },
     "BudgetType": {
      "cfnSchema": "aws_budgets_budget/boto_budgettype_enum",
+     "enum": [
+      "USAGE",
+      "COST",
+      "RI_UTILIZATION",
+      "RI_COVERAGE",
+      "SAVINGS_PLANS_UTILIZATION",
+      "SAVINGS_PLANS_COVERAGE"
+     ],
      "type": "string"
     },
     "CostFilters": {
@@ -49,6 +57,12 @@
     },
     "TimeUnit": {
      "cfnSchema": "aws_budgets_budget/boto_timeunit_enum",
+     "enum": [
+      "DAILY",
+      "MONTHLY",
+      "QUARTERLY",
+      "ANNUALLY"
+     ],
      "type": "string"
     }
    },
@@ -114,18 +128,33 @@
    "properties": {
     "ComparisonOperator": {
      "cfnSchema": "aws_budgets_budget/boto_comparisonoperator_enum",
+     "enum": [
+      "GREATER_THAN",
+      "LESS_THAN",
+      "EQUAL_TO"
+     ],
      "type": "string"
     },
     "NotificationType": {
      "cfnSchema": "aws_budgets_budget/boto_notificationtype_enum",
+     "enum": [
+      "ACTUAL",
+      "FORECASTED"
+     ],
      "type": "string"
     },
     "Threshold": {
      "cfnSchema": "aws_budgets_budget/threshold_number",
+     "maximum": 1000000000,
+     "minimum": 0.1,
      "type": "number"
     },
     "ThresholdType": {
      "cfnSchema": "aws_budgets_budget/boto_thresholdtype_enum",
+     "enum": [
+      "PERCENTAGE",
+      "ABSOLUTE_VALUE"
+     ],
      "type": "string"
     }
    },
@@ -180,6 +209,10 @@
     },
     "SubscriptionType": {
      "cfnSchema": "aws_budgets_budget/boto_subscriptiontype_enum",
+     "enum": [
+      "SNS",
+      "EMAIL"
+     ],
      "type": "string"
     }
    },

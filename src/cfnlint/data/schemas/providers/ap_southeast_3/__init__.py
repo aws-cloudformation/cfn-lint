@@ -1,5 +1,4 @@
-from typing import List  # pylint: disable=too-many-lines
-
+from typing import List# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::Shield::DRTAccess",

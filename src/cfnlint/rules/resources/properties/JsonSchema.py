@@ -4,9 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
-from jsonschema.exceptions import best_match
-
-from cfnlint.helpers import REGION_PRIMARY, load_resource
+from cfnlint.helpers import REGION_PRIMARY
 from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
@@ -26,7 +24,6 @@ class JsonSchema(BaseJsonSchema):
         """Init"""
         super().__init__()
         self.validators = {
-            "cfnSchema": self._cfnSchema,
             "cfnRegionSchema": self._cfnRegionSchema,
         }
         self.rule_set = {
@@ -51,44 +48,28 @@ class JsonSchema(BaseJsonSchema):
             "cfnRegionSchema": "E3018",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self.regions = [REGION_PRIMARY]
 
-    # pylint: disable=unused-argument
-    def _cfnSchema(self, validator, schema_paths, instance, schema, region=None):
-        if isinstance(schema_paths, str):
-            schema_paths = [schema_paths]
-
-        for schema_path in schema_paths:
-            schema_details = schema_path.split("/")
-            cfn_schema = load_resource(
-                f"cfnlint.data.schemas.extensions.{schema_details[0]}",
-                filename=f"{schema_details[1]}.json",
-            )
-            cfn_validator = self.setup_validator(schema=cfn_schema)
-
-            # if the schema has a description will only replace the message with that
-            # description and use the best error for the location information
-            if cfn_schema.get("description"):
-                err = best_match(list(cfn_validator.iter_errors(instance)))
-                # best_match will return None if the list is empty.
-                # There is no best match
-                if not err:
-                    return
-                err.message = cfn_schema.get("description")
-                err.validator = "cfnSchema"
-                yield err
-                return
-
-            for e in cfn_validator.iter_errors(instance):
-                e.validator = "cfnSchema"
-                yield e
+    def initialize(self, cfn):
+        self.regions = cfn.regions
+        return super().initialize(cfn)
 
     # pylint: disable=unused-argument
     def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
-        for e in self._cfnSchema(
-            validator, schema_paths, instance, schema, self.region
-        ):
-            e.validator = "cfnRegionSchema"
-            yield e
+        # when its the primary region we do this check once against
+        # all regions
+        if self.region != self.regions[0]:
+            return
+        if not self.child_rules.get("E3018"):
+            return
+        for region in self.regions:
+            yield from self.child_rules.get("E3018").validate(
+                validator,
+                schema_paths,
+                instance,
+                schema,
+                region,
+            )
 
     def match(self, cfn):
         """Check CloudFormation Properties"""

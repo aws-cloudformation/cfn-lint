@@ -411,7 +411,9 @@ def format_json_string(json_string):
     )
 
 
-def create_rules(mod):
+def create_rules(
+    mod, name="CloudFormationLintRule", modules=("cfnlint", "cfnlint.rules")
+):
     """Create and return an instance of each CloudFormationLintRule subclass
     from the given module."""
     result = []
@@ -422,11 +424,15 @@ def create_rules(mod):
         ):
             continue
         method_resolution = inspect.getmro(clazz)
+        if method_resolution[1].__name__ == "CfnSchema":
+            clz = method_resolution[1]
+            print(clz.__name__, clz.__name__ == name)
+            print(clz.__name__, clz.__module__ in ("cfnlint", "cfnlint.rules"))
+            print(clz.__module__)
         if [
             clz
             for clz in method_resolution[1:]
-            if clz.__module__ in ("cfnlint", "cfnlint.rules")
-            and clz.__name__ == "CloudFormationLintRule"
+            if clz.__module__ in modules and clz.__name__ == name
         ]:
             # create and instance of subclasses of CloudFormationLintRule
             obj = clazz()
@@ -456,7 +462,9 @@ def import_filename(pluginname, root):
     return None
 
 
-def load_plugins(directory):
+def load_plugins(
+    directory, name="CloudFormationLintRule", modules=("cfnlint", "cfnlint.rules")
+):
     """Load plugins"""
     result = []
 
@@ -468,7 +476,7 @@ def load_plugins(directory):
         for filename in fnmatch.filter(filenames, "[A-Za-z]*.py"):
             mod = import_filename(filename.replace(".py", ""), root)
             if mod is not None:
-                result.extend(create_rules(mod))
+                result.extend(create_rules(mod, name, modules))
 
     return result
 

@@ -57,6 +57,7 @@
     },
     "Id": {
      "cfnSchema": "aws_cloudwatch_alarm/metricdataquery_id_pattern",
+     "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
      "type": "string"
     },
     "Label": {
@@ -113,8 +114,12 @@
    "cfnSchema": "aws_cloudwatch_alarm/alarmactions_array",
    "items": {
     "cfnSchema": "aws_cloudwatch_alarm/alarmaction_integer",
+    "maximum": 1024,
+    "minimum": 1,
     "type": "string"
    },
+   "maxItems": 5,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": false
   },
@@ -129,6 +134,15 @@
   },
   "ComparisonOperator": {
    "cfnSchema": "aws_cloudwatch_alarm/boto_comparisonoperator_enum",
+   "enum": [
+    "GreaterThanOrEqualToThreshold",
+    "GreaterThanThreshold",
+    "LessThanThreshold",
+    "LessThanOrEqualToThreshold",
+    "LessThanLowerOrGreaterThanUpperThreshold",
+    "LessThanLowerThreshold",
+    "GreaterThanUpperThreshold"
+   ],
    "type": "string"
   },
   "DatapointsToAlarm": {
@@ -185,6 +199,13 @@
   },
   "Statistic": {
    "cfnSchema": "aws_cloudwatch_alarm/boto_statistic_enum",
+   "enum": [
+    "SampleCount",
+    "Average",
+    "Sum",
+    "Minimum",
+    "Maximum"
+   ],
    "type": "string"
   },
   "Threshold": {
@@ -195,10 +216,45 @@
   },
   "TreatMissingData": {
    "cfnSchema": "aws_cloudwatch_alarm/treatmissingdata_enum",
+   "enum": [
+    "breaching",
+    "ignore",
+    "missing",
+    "notBreaching"
+   ],
    "type": "string"
   },
   "Unit": {
    "cfnSchema": "aws_cloudwatch_alarm/boto_standardunit_enum",
+   "enum": [
+    "Seconds",
+    "Microseconds",
+    "Milliseconds",
+    "Bytes",
+    "Kilobytes",
+    "Megabytes",
+    "Gigabytes",
+    "Terabytes",
+    "Bits",
+    "Kilobits",
+    "Megabits",
+    "Gigabits",
+    "Terabits",
+    "Percent",
+    "Count",
+    "Bytes/Second",
+    "Kilobytes/Second",
+    "Megabytes/Second",
+    "Gigabytes/Second",
+    "Terabytes/Second",
+    "Bits/Second",
+    "Kilobits/Second",
+    "Megabits/Second",
+    "Gigabits/Second",
+    "Terabits/Second",
+    "Count/Second",
+    "None"
+   ],
    "type": "string"
   }
  },

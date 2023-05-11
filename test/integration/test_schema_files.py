@@ -111,7 +111,7 @@ class TestSchemaFiles(TestCase):
             validator=jsonschema.Draft7Validator,
             validators={
                 "cfnSchema": self.cfn_schema,
-                "cfnRegionalSchema": self.cfn_schema,
+                "cfnRegionSchema": self.cfn_schema,
                 "pattern": self.pattern,
             },
         )(schema=store["provider.definition.schema.v1.json"]).evolve(resolver=resolver)
