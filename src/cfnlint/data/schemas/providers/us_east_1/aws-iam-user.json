@@ -61,7 +61,6 @@
    "type": "string"
   },
   "Groups": {
-   "cfnSchema": "aws_iam_user/groupnames_array",
    "items": {
     "type": "string"
    },
@@ -77,16 +76,17 @@
    "$ref": "#/definitions/LoginProfile"
   },
   "ManagedPolicyArns": {
-   "cfnSchema": "aws_iam_managedpolicy/arns_array",
    "items": {
-    "cfnSchema": "aws_iam_managedpolicy/arn_pattern",
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
     "type": "string"
    },
+   "maxItems": 20,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": true
   },
   "Path": {
-   "cfnSchema": "aws_iam_path/path_pattern",
+   "pattern": "^/(.+/)*$",
    "type": "string"
   },
   "PermissionsBoundary": {

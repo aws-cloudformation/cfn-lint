@@ -62,7 +62,14 @@
      "description": "Environment variable key-value pairs.",
      "patternProperties": {
       "[a-zA-Z][a-zA-Z0-9_]+": {
-       "type": "string"
+       "type": [
+        "string",
+        "number",
+        "integer",
+        "object",
+        "array",
+        "boolean"
+       ]
       }
      },
      "type": "object"
@@ -359,7 +366,6 @@
    "description": "A dead letter queue configuration that specifies the queue or topic where Lambda sends asynchronous events when they fail processing."
   },
   "Description": {
-   "cfnSchema": "aws_lambda_function/description_string",
    "description": "A description of the function.",
    "maxLength": 256,
    "minLength": 1,
@@ -382,14 +388,12 @@
    "type": "array"
   },
   "FunctionName": {
-   "cfnSchema": "aws_lambda_function/functionname_string",
    "description": "The name of the Lambda function, up to 64 characters in length. If you don't specify a name, AWS CloudFormation generates one.",
    "maxLength": 64,
    "minLength": 1,
    "type": "string"
   },
   "Handler": {
-   "cfnSchema": "aws_lambda_function/handler_string",
    "description": "The name of the method within your code that Lambda calls to execute your function. The format includes the file name. It can also include namespaces and other qualifiers, depending on the runtime",
    "maxLength": 128,
    "minLength": 1,
@@ -414,7 +418,6 @@
    "uniqueItems": false
   },
   "MemorySize": {
-   "cfnSchema": "aws_lambda_function/memorysize_integer",
    "description": "The amount of memory that your function has access to. Increasing the function's memory also increases its CPU allocation. The default value is 128 MB. The value must be a multiple of 64 MB.",
    "maximum": 10240,
    "minimum": 128,
@@ -439,7 +442,6 @@
    "type": "string"
   },
   "Runtime": {
-   "cfnSchema": "aws_lambda_function/boto_runtime_enum",
    "description": "The identifier of the function's runtime.",
    "enum": [
     "nodejs",
@@ -497,7 +499,6 @@
    "uniqueItems": true
   },
   "Timeout": {
-   "cfnSchema": "aws_lambda_function/timeout_integer",
    "description": "The amount of time that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds.",
    "maximum": 900,
    "minimum": 1,

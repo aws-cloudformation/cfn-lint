@@ -100,7 +100,6 @@
      "uniqueItems": false
     },
     "ViewerProtocolPolicy": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_viewerprotocolpolicy_enum",
      "enum": [
       "allow-all",
       "https-only",
@@ -137,16 +136,17 @@
   },
   "CustomErrorResponse": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/customerrorresponse_responsecode_inclusive"
-   ],
+   "dependencies": {
+    "ResponseCode": [
+     "ResponsePagePath"
+    ]
+   },
    "properties": {
     "ErrorCachingMinTTL": {
      "default": 300,
      "type": "number"
     },
     "ErrorCode": {
-     "cfnSchema": "aws_cloudfront_distribution/errorcode_enum",
      "enum": [
       400,
       403,
@@ -163,7 +163,6 @@
      "type": "integer"
     },
     "ResponseCode": {
-     "cfnSchema": "aws_cloudfront_distribution/responsecode_enum",
      "enum": [
       200,
       400,
@@ -217,7 +216,6 @@
       "SSLv3"
      ],
      "items": {
-      "cfnSchema": "aws_cloudfront_distribution/boto_sslprotocol_enum",
       "enum": [
        "SSLv3",
        "TLSv1",
@@ -396,7 +394,6 @@
      "type": "boolean"
     },
     "HttpVersion": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_httpversion_enum",
      "default": "http1.1",
      "enum": [
       "http1.1",
@@ -423,7 +420,6 @@
      "uniqueItems": false
     },
     "PriceClass": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_priceclass_enum",
      "default": "PriceClass_All",
      "enum": [
       "PriceClass_100",
@@ -499,7 +495,6 @@
    "additionalProperties": false,
    "properties": {
     "EventType": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_eventtype_enum",
      "enum": [
       "viewer-request",
       "viewer-response",
@@ -519,7 +514,6 @@
    "properties": {
     "Locations": {
      "items": {
-      "cfnSchema": "aws_cloudfront_distribution/location_enum",
       "enum": [
        "AD",
        "AE",
@@ -777,7 +771,6 @@
      "uniqueItems": false
     },
     "RestrictionType": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_georestrictiontype_enum",
      "enum": [
       "blacklist",
       "whitelist",
@@ -821,7 +814,6 @@
      "type": "integer"
     },
     "OriginProtocolPolicy": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_originprotocolpolicy_enum",
      "enum": [
       "http-only",
       "match-viewer",
@@ -888,9 +880,13 @@
   },
   "Origin": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/origin_onlyone"
-   ],
+   "dependencies": {
+    "CustomOriginConfig": {
+     "properties": {
+      "S3OriginConfig": false
+     }
+    }
+   },
    "properties": {
     "ConnectionAttempts": {
      "type": "integer"
@@ -1105,10 +1101,65 @@
   },
   "ViewerCertificate": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/viewercertificate_acmcertificatearn_inclusive",
-    "aws_cloudfront_distribution/viewercertificate_iamcertificateid_inclusive",
-    "aws_cloudfront_distribution/viewercertificate_onlyone"
+   "dependencies": {
+    "AcmCertificateArn": [
+     "SslSupportMethod"
+    ],
+    "IamCertificateId": [
+     "SslSupportMethod"
+    ]
+   },
+   "oneOf": [
+    {
+     "properties": {
+      "CloudFrontDefaultCertificate": false,
+      "IamCertificateId": false
+     },
+     "required": [
+      "AcmCertificateArn"
+     ]
+    },
+    {
+     "properties": {
+      "AcmCertificateArn": false,
+      "IamCertificateId": false
+     },
+     "required": [
+      "CloudFrontDefaultCertificate"
+     ]
+    },
+    {
+     "properties": {
+      "AcmCertificateArn": false,
+      "CloudFrontDefaultCertificate": false
+     },
+     "required": [
+      "IamCertificateId"
+     ]
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     }
+    }
    ],
    "properties": {
     "AcmCertificateArn": {
@@ -1121,7 +1172,6 @@
      "type": "string"
     },
     "MinimumProtocolVersion": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_minimumprotocolversion_enum",
      "enum": [
       "SSLv3",
       "TLSv1",
@@ -1134,7 +1184,6 @@
      "type": "string"
     },
     "SslSupportMethod": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_sslsupportmethod_enum",
      "enum": [
       "sni-only",
       "vip",

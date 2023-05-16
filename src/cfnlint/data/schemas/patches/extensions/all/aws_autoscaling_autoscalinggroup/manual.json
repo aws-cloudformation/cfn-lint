@@ -6,5 +6,77 @@
    "EC2",
    "ELB"
   ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/LaunchTemplateSpecification/oneOf",
+  "value": [
+   {
+    "properties": {
+     "LaunchTemplateName": false
+    },
+    "required": [
+     "LaunchTemplateID"
+    ]
+   },
+   {
+    "properties": {
+     "LaunchTemplateID": false
+    },
+    "required": [
+     "LaunchTemplateName"
+    ]
+   },
+   {
+    "maxProperties": 1,
+    "minProperties": 1,
+    "propertyNames": {
+     "enum": [
+      "Fn::Base64",
+      "Fn::GetAtt",
+      "Fn::GetAZs",
+      "Fn::ImportValue",
+      "Fn::Join",
+      "Fn::Split",
+      "Fn::FindInMap",
+      "Fn::Select",
+      "Ref",
+      "Fn::If",
+      "Fn::Contains",
+      "Fn::Sub",
+      "Fn::Cidr",
+      "Fn::Length",
+      "Fn::ToJsonString"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/dependencies",
+  "value": {
+   "InstanceId": {
+    "properties": {
+     "LaunchConfigurationName": false,
+     "LaunchTemplate": false,
+     "MixedInstancesPolicy": false
+    }
+   },
+   "LaunchConfigurationName": {
+    "properties": {
+     "InstanceId": false,
+     "LaunchTemplate": false,
+     "MixedInstancesPolicy": false
+    }
+   },
+   "LaunchTemplate": {
+    "properties": {
+     "InstanceId": false,
+     "LaunchConfigurationName": false,
+     "MixedInstancesPolicy": false
+    }
+   }
+  }
  }
 ]

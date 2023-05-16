@@ -1,6 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": "aws_codepipeline_pipeline/artifactstore_onlyone",
  "createOnlyProperties": [
   "/properties/Name"
  ],
@@ -48,7 +47,6 @@
    "additionalProperties": false,
    "properties": {
     "Category": {
-     "cfnSchema": "aws_codepipeline_pipeline/boto_actioncategory_enum",
      "enum": [
       "Source",
       "Build",
@@ -60,7 +58,6 @@
      "type": "string"
     },
     "Owner": {
-     "cfnSchema": "aws_codepipeline_pipeline/boto_actionowner_enum",
      "enum": [
       "AWS",
       "ThirdParty",
@@ -93,7 +90,6 @@
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_codepipeline_pipeline/boto_artifactstoretype_enum",
      "enum": [
       "S3"
      ],
@@ -113,7 +109,6 @@
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_codepipeline_pipeline/boto_blockertype_enum",
      "enum": [
       "Schedule"
      ],
@@ -211,6 +206,47 @@
   }
  },
  "description": "Resource Type definition for AWS::CodePipeline::Pipeline",
+ "oneOf": [
+  {
+   "properties": {
+    "ArtifactStores": false
+   },
+   "required": [
+    "ArtifactStore"
+   ]
+  },
+  {
+   "properties": {
+    "ArtifactStore": false
+   },
+   "required": [
+    "ArtifactStores"
+   ]
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   }
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

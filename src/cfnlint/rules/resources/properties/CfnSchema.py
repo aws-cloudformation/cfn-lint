@@ -4,12 +4,11 @@ SPDX-License-Identifier: MIT-0
 """
 import pathlib
 
-from jsonschema.exceptions import best_match
-
 from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.jsonschema._utils import Unset
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.jsonschema.exceptions import best_match
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
 class CfnSchema(BaseJsonSchema):
@@ -19,6 +18,7 @@ class CfnSchema(BaseJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
+        super().__init__()
         root_dir = pathlib.Path(__file__).parent.parent
         rules = load_plugins(
             str(root_dir),
@@ -27,7 +27,6 @@ class CfnSchema(BaseJsonSchema):
         )
         for rule in rules:
             self.child_rules[rule.id] = rule
-        super().__init__()
 
     # pylint: disable=unused-argument
     def cfnSchema(self, validator, schema_paths, instance, schema, region=None):
@@ -51,12 +50,15 @@ class BaseCfnSchema(BaseJsonSchema):
                 f"cfnlint.data.schemas.extensions.{schema_split[0]}",
                 filename=(f"{schema_split[1]}.json"),
             )
-            self.cfn_validator = self.setup_validator(schema=self.cfn_schema)
+            self.cfn_validator = None
 
     def validate(self, instance):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
-        err = best_match(list(self.cfn_validator.iter_errors(instance)))
+        cfn_validator = self.setup_validator(
+            validator=StandardValidator, schema=self.cfn_schema
+        )
+        err = best_match(list(cfn_validator.iter_errors(instance)))
         if err is not None:
             yield ValidationError(
                 message=self.shortdesc,

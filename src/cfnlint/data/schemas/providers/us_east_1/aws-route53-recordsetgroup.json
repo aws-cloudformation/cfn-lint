@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_route53_recordsetgroup/hostedzone_onlyone"
- ],
  "createOnlyProperties": [
   "/properties/HostedZoneName",
   "/properties/HostedZoneId"
@@ -68,7 +65,6 @@
      "$ref": "#/definitions/CidrRoutingConfig"
     },
     "Failover": {
-     "cfnSchema": "aws_route53_recordsetgroup/boto_resourcerecordsetfailover_enum",
      "enum": [
       "PRIMARY",
       "SECONDARY"
@@ -110,7 +106,6 @@
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_route53_recordsetgroup/boto_rrtype_enum",
      "enum": [
       "SOA",
       "A",
@@ -140,6 +135,47 @@
   }
  },
  "description": "Resource Type definition for AWS::Route53::RecordSetGroup",
+ "oneOf": [
+  {
+   "properties": {
+    "HostedZoneName": false
+   },
+   "required": [
+    "HostedZoneId"
+   ]
+  },
+  {
+   "properties": {
+    "HostedZoneId": false
+   },
+   "required": [
+    "HostedZoneName"
+   ]
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   }
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

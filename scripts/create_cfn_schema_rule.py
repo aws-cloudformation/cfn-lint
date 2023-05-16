@@ -3,21 +3,13 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import fnmatch
-import json
-import os
-from unittest import TestCase
-import logging
-import sys
 import argparse
+import logging
 import pathlib
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-import jsonpatch
-
-import cfnlint
-import cfnlint.core
-from cfnlint.helpers import load_plugins, ToPy
+from cfnlint.helpers import ToPy, load_plugins
 
 LOGGER = logging.getLogger("cfnlint")
 

@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_autoscaling_autoscalinggroup/onlyone"
- ],
  "createOnlyProperties": [
   "/properties/InstanceId",
   "/properties/AutoScalingGroupName"
@@ -214,8 +211,46 @@
   },
   "LaunchTemplateSpecification": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_autoscaling_autoscalinggroup/launchtemplatespecification_onlyone"
+   "oneOf": [
+    {
+     "properties": {
+      "LaunchTemplateName": false
+     },
+     "required": [
+      "LaunchTemplateID"
+     ]
+    },
+    {
+     "properties": {
+      "LaunchTemplateID": false
+     },
+     "required": [
+      "LaunchTemplateName"
+     ]
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     }
+    }
    ],
    "properties": {
     "LaunchTemplateId": {
@@ -410,6 +445,29 @@
    "type": "object"
   }
  },
+ "dependencies": {
+  "InstanceId": {
+   "properties": {
+    "LaunchConfigurationName": false,
+    "LaunchTemplate": false,
+    "MixedInstancesPolicy": false
+   }
+  },
+  "LaunchConfigurationName": {
+   "properties": {
+    "InstanceId": false,
+    "LaunchTemplate": false,
+    "MixedInstancesPolicy": false
+   }
+  },
+  "LaunchTemplate": {
+   "properties": {
+    "InstanceId": false,
+    "LaunchConfigurationName": false,
+    "MixedInstancesPolicy": false
+   }
+  }
+ },
  "description": "Resource Type definition for AWS::AutoScaling::AutoScalingGroup",
  "primaryIdentifier": [
   "/properties/Id"
@@ -449,9 +507,6 @@
    "type": "integer"
   },
   "HealthCheckType": {
-   "cfnSchema": [
-    "aws_autoscaling_autoscalinggroup/healthchecktype_enum"
-   ],
    "enum": [
     "EC2",
     "ELB"

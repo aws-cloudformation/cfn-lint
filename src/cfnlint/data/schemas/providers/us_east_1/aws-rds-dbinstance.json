@@ -1,7 +1,6 @@
 {
  "additionalProperties": false,
  "cfnSchema": [
-  "aws_rds_dbinstance/sourcedbinstanceidentifier_exclusive",
   "aws_rds_dbinstance/aurora_exclusive"
  ],
  "conditionalCreateOnlyProperties": [
@@ -145,6 +144,16 @@
    "type": "object"
   }
  },
+ "dependencies": {
+  "SourceDBInstanceIdentifier": {
+   "properties": {
+    "CharacterSetName": false,
+    "MasterUserPassword": false,
+    "MasterUsername": false,
+    "StorageEncrypted": false
+   }
+  }
+ },
  "deprecatedProperties": [
   "/properties/TdeCredentialArn",
   "/properties/TdeCredentialPassword"
@@ -269,7 +278,6 @@
    "type": "string"
   },
   "BackupRetentionPeriod": {
-   "cfnSchema": "aws_rds_dbinstance/backupretentionperiod_integer",
    "default": 1,
    "description": "The number of days for which automated backups are retained. Setting this parameter to a positive number enables backups. Setting this parameter to 0 disables automated backups.",
    "maximum": 35,
@@ -314,7 +322,6 @@
   },
   "DBInstanceClass": {
    "cfnRegionSchema": "aws_rds_dbinstance/dbinstanceclass_enum",
-   "cfnRegionalSchema": "aws_rds_dbinstance/dbinstanceclass_enum",
    "description": "The compute and memory capacity of the DB instance, for example, db.m4.large. Not all DB instance classes are available in all AWS Regions, or for all database engines.",
    "type": "string"
   },
@@ -466,7 +473,6 @@
    "type": "string"
   },
   "PerformanceInsightsRetentionPeriod": {
-   "cfnSchema": "aws_rds_dbinstance/performanceinsightsretentionperiod_enum",
    "description": "The amount of time, in days, to retain Performance Insights data. Valid values are 7 or 731 (2 years).",
    "enum": [
     7,
@@ -518,7 +524,6 @@
    "type": "array"
   },
   "PromotionTier": {
-   "cfnSchema": "aws_rds_dbinstance/promotiontier_integer",
    "default": 1,
    "description": "A value that specifies the order in which an Aurora Replica is promoted to the primary instance after a failure of the existing primary instance.",
    "maximum": 15,

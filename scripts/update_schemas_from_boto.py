@@ -10,7 +10,7 @@ import os
 import tempfile
 import zipfile
 from collections import namedtuple
-from typing import Dict, List
+from typing import List
 
 import requests
 
@@ -1051,7 +1051,7 @@ def build_resource_type_patches(dir: str, resource_patches: ResourcePatch):
             with open(os.path.join(dir, *service_path), "r") as f:
                 boto_d = json.load(f)
 
-            enums = boto_d.get("shapes").get(patch.shape).get("enum")
+            enums = boto_d.get("shapes").get(patch.shape).get("enum")  # type: ignore
             d.append(
                 {
                     "op": "add",
@@ -1067,6 +1067,7 @@ def build_resource_type_patches(dir: str, resource_patches: ResourcePatch):
             separators=(",", ": "),
             sort_keys=True,
         )
+        fh.write("\n")
 
 
 def build_patches(dir: str):

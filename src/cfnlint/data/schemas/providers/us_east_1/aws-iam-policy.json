@@ -1,6 +1,22 @@
 {
  "additionalProperties": false,
- "cfnSchema": "aws_iam_policy/required",
+ "anyOf": [
+  {
+   "required": [
+    "Users"
+   ]
+  },
+  {
+   "required": [
+    "Groups"
+   ]
+  },
+  {
+   "required": [
+    "Roles"
+   ]
+  }
+ ],
  "description": "Resource Type definition for AWS::IAM::Policy",
  "primaryIdentifier": [
   "/properties/Id"
@@ -21,7 +37,9 @@
    "type": "object"
   },
   "PolicyName": {
-   "cfnSchema": "aws_iam_policy/policyname_string",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9+=,.@\\-_]+$",
    "type": "string"
   },
   "Roles": {

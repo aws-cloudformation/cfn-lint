@@ -7,7 +7,9 @@ from cfnlint.rules.resources.properties.CfnSchema import BaseCfnSchema
 
 class HealthCheckHealthCheckConfigTypeInclusive(BaseCfnSchema):
     id = "E3661"
-    shortdesc = "Validate Route53 health check has AlarmIdentifier when using CloudWatch"
+    shortdesc = (
+        "Validate Route53 health check has AlarmIdentifier when using CloudWatch"
+    )
     description = (
         "When 'Type' is 'CLOUDWATCH_METRIC' you must specify 'AlarmIdentifier'"
     )

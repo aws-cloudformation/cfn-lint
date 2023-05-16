@@ -1,6 +1,15 @@
 [
  {
   "op": "add",
+  "path": "/dependencies",
+  "value": {
+   "SecurityGroupEgress": [
+    "VpcId"
+   ]
+  }
+ },
+ {
+  "op": "add",
   "path": "/properties/GroupDescription/maxLength",
   "value": 255
  },
@@ -13,5 +22,158 @@
   "op": "add",
   "path": "/properties/GroupDescription/pattern",
   "value": "^([a-z,A-Z,0-9,. _\\-:/()#,@[\\]+=&;\\{\\}!$*])*$"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/Egress/oneOf",
+  "value": [
+   {
+    "properties": {
+     "CidrIpv6": false,
+     "DestinationPrefixListId": false,
+     "DestinationSecurityGroupId": false
+    },
+    "required": [
+     "CidrIp"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "DestinationPrefixListId": false,
+     "DestinationSecurityGroupId": false
+    },
+    "required": [
+     "CidrIpv6"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "CidrIpv6": false,
+     "DestinationPrefixListId": false
+    },
+    "required": [
+     "DestinationSecurityGroupId"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "CidrIpv6": false,
+     "DestinationSecurityGroupId": false
+    },
+    "required": [
+     "DestinationPrefixListId"
+    ]
+   },
+   {
+    "maxProperties": 1,
+    "minProperties": 1,
+    "propertyNames": {
+     "enum": [
+      "Fn::Base64",
+      "Fn::GetAtt",
+      "Fn::GetAZs",
+      "Fn::ImportValue",
+      "Fn::Join",
+      "Fn::Split",
+      "Fn::FindInMap",
+      "Fn::Select",
+      "Ref",
+      "Fn::If",
+      "Fn::Contains",
+      "Fn::Sub",
+      "Fn::Cidr",
+      "Fn::Length",
+      "Fn::ToJsonString"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/Ingress/oneOf",
+  "value": [
+   {
+    "properties": {
+     "CidrIpv6": false,
+     "SourcePrefixListId": false,
+     "SourceSecurityGroupId": false,
+     "SourceSecurityGroupName": false
+    },
+    "required": [
+     "CidrIp"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "SourcePrefixListId": false,
+     "SourceSecurityGroupId": false,
+     "SourceSecurityGroupName": false
+    },
+    "required": [
+     "CidrIpv6"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "CidrIpv6": false,
+     "SourceSecurityGroupId": false,
+     "SourceSecurityGroupName": false
+    },
+    "required": [
+     "SourcePrefixListId"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "CidrIpv6": false,
+     "SourcePrefixListId": false,
+     "SourceSecurityGroupName": false
+    },
+    "required": [
+     "SourceSecurityGroupId"
+    ]
+   },
+   {
+    "properties": {
+     "CidrIp": false,
+     "CidrIpv6": false,
+     "SourcePrefixListId": false,
+     "SourceSecurityGroupId": false
+    },
+    "required": [
+     "SourceSecurityGroupName"
+    ]
+   },
+   {
+    "maxProperties": 1,
+    "minProperties": 1,
+    "propertyNames": {
+     "enum": [
+      "Fn::Base64",
+      "Fn::GetAtt",
+      "Fn::GetAZs",
+      "Fn::ImportValue",
+      "Fn::Join",
+      "Fn::Split",
+      "Fn::FindInMap",
+      "Fn::Select",
+      "Ref",
+      "Fn::If",
+      "Fn::Contains",
+      "Fn::Sub",
+      "Fn::Cidr",
+      "Fn::Length",
+      "Fn::ToJsonString"
+     ]
+    }
+   }
+  ]
  }
 ]

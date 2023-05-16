@@ -1,8 +1,6 @@
 {
  "additionalProperties": false,
  "cfnSchema": [
-  "aws_rds_dbcluster/sourcedbclusteridentifier_exclusive",
-  "aws_rds_dbcluster/snapshotidentifier_exclusive",
   "aws_rds_dbcluster/serverless_exclusive"
  ],
  "conditionalCreateOnlyProperties": [
@@ -157,6 +155,21 @@
    "type": "object"
   }
  },
+ "dependencies": {
+  "SnapshotIdentifier": {
+   "properties": {
+    "MasterUserPassword": false,
+    "MasterUsername": false
+   }
+  },
+  "SourceDBClusterIdentifier": {
+   "properties": {
+    "MasterUserPassword": false,
+    "MasterUsername": false,
+    "StorageEncrypted": false
+   }
+  }
+ },
  "description": "The AWS::RDS::DBCluster resource creates an Amazon Aurora DB cluster.",
  "handlers": {
   "create": {
@@ -253,7 +266,6 @@
    "type": "integer"
   },
   "BackupRetentionPeriod": {
-   "cfnRegionalSchema": "aws_rds_dbcluster/backupretentionperiod_integer",
    "default": 1,
    "description": "The number of days for which automated backups are retained.",
    "maximum": 35,

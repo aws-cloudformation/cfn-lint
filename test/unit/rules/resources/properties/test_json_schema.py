@@ -8,6 +8,7 @@ from unittest.mock import Mock
 
 from cfnlint.decode.cfn_json import Mark
 from cfnlint.decode.node import str_node
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules import RuleMatch
 from cfnlint.rules.resources.properties import AllowedPattern as RuleStringPattern
 from cfnlint.rules.resources.properties import AllowedValue as RuleAllowedValue
@@ -41,8 +42,6 @@ class TestJsonSchema(BaseRuleTestCase):
             build_key("F"): 5,
             build_key("G"): ["A", "A"],
         }
-        self.ruleset = self.rule.rule_set.copy()
-
         self.rule.child_rules = {
             "E3002": RuleProperties.Properties(),
             "E3003": RuleRequired.Required(),
@@ -55,6 +54,7 @@ class TestJsonSchema(BaseRuleTestCase):
             "E3037": RuleListDuplicates.ListDuplicates(),
             "E2523": RuleOneOf.OnlyOne(),
         }
+
         self.cfn = Mock()
         self.cfn.get_valid_refs = {}
         self.path = ["Resources", "Table", "Properties"]
@@ -76,13 +76,19 @@ class TestJsonSchema(BaseRuleTestCase):
         )
 
     def validate(self, schema, expected, object=None):
-        validator = self.rule.setup_validator(schema=schema)
+        validator = self.rule.setup_validator(
+            validator=CfnTemplateValidator, schema=schema
+        )
         if object is None:
             object = self.table
 
         matches = self.rule.json_schema_validate(validator, object, self.path)
 
-        self.assertListEqual(list(map(vars, expected)), list(map(vars, matches)))
+        self.assertListEqual(
+            list(map(vars, expected)),
+            list(map(vars, matches)),
+            list(map(vars, matches)),
+        )
 
     def test_required_empty(self):
         schema = {
@@ -156,11 +162,13 @@ class TestJsonSchema(BaseRuleTestCase):
         expected = [
             self.build_result(
                 "E3002",
-                "Additional properties are not allowed (D unexpected)",
+                "Additional properties are not allowed ('D' was unexpected)",
                 ["B", "D"],
             ),
             self.build_result(
-                "E3002", "Additional properties are not allowed (E unexpected)", ["E"]
+                "E3002",
+                "Additional properties are not allowed ('E' was unexpected)",
+                ["E"],
             ),
         ]
 
@@ -353,7 +361,7 @@ class TestJsonSchema(BaseRuleTestCase):
         }
 
         expected = [
-            self.build_result("E3033", "'string' is too short", ["E"]),
+            self.build_result("E3033", "'string' is shorter than 10", ["E"]),
         ]
 
         self.validate(schema, expected)
@@ -369,7 +377,7 @@ class TestJsonSchema(BaseRuleTestCase):
         }
 
         expected = [
-            self.build_result("E3033", "'string' is too long", ["E"]),
+            self.build_result("E3033", "'string' is longer than 3", ["E"]),
         ]
 
         self.validate(schema, expected)
@@ -401,8 +409,8 @@ class TestJsonSchema(BaseRuleTestCase):
                 "E3012",
                 "'string' is not of type 'array'",
                 ["E"],
-                actual_type="str",
-                expected_type="'array'",
+                actual_type="string",
+                expected_type="array",
             ),
         ]
 

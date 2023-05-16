@@ -3,57 +3,148 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-
-"""
-    Updates our patches from boto enums
-"""
-from typing import List
 import json
 import logging
 import os
 from collections import namedtuple
+from typing import Any, Dict, List, Sequence
+
+from cfnlint.helpers import FUNCTIONS
 
 LOGGER = logging.getLogger("cfnlint")
 
-patch = namedtuple("Patch", ["values", "path"])
-resource_patch = namedtuple("ResourcePatch", ["resource_type", "patches"])
-patches: List[resource_patch] = []
+Patch = namedtuple("Patch", ["values", "path"])
+ResourcePatch = namedtuple("ResourcePatch", ["resource_type", "patches"])
+patches: List[ResourcePatch] = []
+
+
+def make_only_one(props: Sequence[str]) -> Dict[str, Any]:
+    dependencies = {}
+    for i in range(0, len(props) - 1):
+        props_false = dict.fromkeys(props, False)
+        del props_false[props[i]]
+        dependencies[props[i]] = {
+            "properties": props_false,
+        }
+
+    return dependencies
+
+
+def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
+    results = []
+    for item in props:
+        non_required = dict.fromkeys(props, False)
+        non_required.pop(item)
+        result = {
+            "required": [item],
+            "properties": non_required,
+        }
+        results.append(result)
+
+    # fn helper
+    results.append(
+        {
+            "propertyNames": {"enum": FUNCTIONS},
+            "minProperties": 1,  # type: ignore
+            "maxProperties": 1,  # type: ignore
+        }
+    )
+
+    return results
+
+
+common_patches = {
+    "BlockDeviceMapping": {
+        "oneOf": make_only_one_required(["VirtualName", "Ebs", "NoDevice"]),
+    }
+}
+
 patches.extend(
     [
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::ApplicationAutoScaling::ScalingPolicy",
+            patches=[
+                Patch(
+                    path="/",
+                    values={
+                        "oneOf": [
+                            {"required": ["ScalingTargetId"]},
+                            {
+                                "required": [
+                                    "ResourceId",
+                                    "ScalableDimension",
+                                    "ServiceNamespace",
+                                ]
+                            },
+                        ]
+                    },
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::AppStream::Fleet",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 360000, "minimum": 60},
                     path="/properties/DisconnectTimeoutInSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 3600, "minimum": 0},
                     path="/properties/IdleDisconnectTimeoutInSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 360000, "minimum": 600},
                     path="/properties/MaxUserDurationInSeconds",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::AutoScaling::AutoScalingGroup",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["EC2", "ELB"]},
                     path="/properties/HealthCheckType",
                 ),
+                Patch(
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["LaunchTemplateID", "LaunchTemplateName"]
+                        )
+                    },
+                    path="/definitions/LaunchTemplateSpecification",
+                ),
+                Patch(
+                    values={
+                        "dependencies": make_only_one(
+                            [
+                                "InstanceId",
+                                "LaunchConfigurationName",
+                                "LaunchTemplate",
+                                "MixedInstancesPolicy",
+                            ]
+                        ),
+                    },
+                    path="/",
+                ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::AutoScaling::LaunchConfiguration",
+            patches=[
+                Patch(
+                    values=common_patches.get("BlockDeviceMapping"),
+                    path="/definitions/BlockDeviceMapping",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::AutoScaling::LifecycleHook",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["ABANDON", "CONTINUE"]},
                     path="/properties/DefaultResult",
                 ),
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "autoscaling:EC2_INSTANCE_LAUNCHING",
@@ -64,10 +155,10 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::AutoScaling::ScalingPolicy",
             patches=[
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "ChangeInCapacity",
@@ -77,11 +168,11 @@ patches.extend(
                     },
                     path="/properties/AdjustmentType",
                 ),
-                patch(
+                Patch(
                     values={"enum": ["Average", "Maximum", "Minimum"]},
                     path="/properties/MetricAggregationType",
                 ),
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "PredictiveScaling",
@@ -94,10 +185,10 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Budgets::Budget",
             patches=[
-                patch(
+                Patch(
                     values={
                         "maximum": 1000000000,
                         "minimum": 0.1,
@@ -106,25 +197,58 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CloudFormation::WaitCondition",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 43200, "minimum": 0},
                     path="/properties/Timeout",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CloudFront::Distribution",
             patches=[
-                patch(
+                Patch(
+                    path="/definitions/ViewerCertificate",
+                    values={
+                        "oneOf": make_only_one_required(
+                            [
+                                "AcmCertificateArn",
+                                "CloudFrontDefaultCertificate",
+                                "IamCertificateId",
+                            ]
+                        )
+                    },
+                ),
+                Patch(
+                    path="/definitions/Origin",
+                    values={
+                        "dependencies": make_only_one(
+                            ["CustomOriginConfig", "S3OriginConfig"]
+                        )
+                    },
+                ),
+                Patch(
+                    path="/definitions/CustomErrorResponse",
+                    values={"dependencies": {"ResponseCode": ["ResponsePagePath"]}},
+                ),
+                Patch(
+                    path="/definitions/ViewerCertificate",
+                    values={
+                        "dependencies": {
+                            "AcmCertificateArn": ["SslSupportMethod"],
+                            "IamCertificateId": ["SslSupportMethod"],
+                        }
+                    },
+                ),
+                Patch(
                     values={
                         "enum": [400, 403, 404, 405, 414, 416, 500, 501, 502, 503, 504]
                     },
                     path="/definitions/CustomErrorResponse/properties/ErrorCode",
                 ),
-                patch(
+                Patch(
                     values={
                         "enum": [
                             200,
@@ -143,7 +267,7 @@ patches.extend(
                     },
                     path="/definitions/CustomErrorResponse/properties/ResponseCode",
                 ),
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "AD",
@@ -401,10 +525,10 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CloudTrail::Trail",
             patches=[
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "AWS::Lambda::Function",
@@ -422,44 +546,68 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CloudWatch::Alarm",
             patches=[
-                patch(
+                Patch(
+                    values={
+                        "oneOf": [
+                            {
+                                "required": ["Metrics"],
+                                "properties": {
+                                    "MetricName": False,
+                                    "Dimensions": False,
+                                    "Period": False,
+                                    "Namespace": False,
+                                    "Statistic": False,
+                                    "ExtendedStatistic": False,
+                                    "Unit": False,
+                                },
+                            },
+                            {"required": ["MetricName"]},
+                        ],
+                        "dependencies": {
+                            **make_only_one(["Statistic", "ExtendedStatistic"]),
+                            **make_only_one(["Threshold", "ThresholdMetricId"]),
+                        },
+                    },
+                    path="/",
+                ),
+                Patch(
                     values={"maximum": 1024, "minimum": 1},
                     path="/properties/AlarmActions/items",
                 ),
-                patch(
+                Patch(
                     values={"maxItems": 5, "minItems": 0},
                     path="/properties/AlarmActions",
                 ),
-                patch(
+                Patch(
                     values={"pattern": "^([a-z])([A-Za-z0-9\\_]*)$"},
                     path="/definitions/MetricDataQuery/properties/Id",
                 ),
-                patch(
+                Patch(
                     values={"enum": ["breaching", "ignore", "missing", "notBreaching"]},
                     path="/properties/TreatMissingData",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CodeBuild::Project",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 480, "minimum": 5},
                     path="/properties/QueuedTimeoutInMinutes",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 480, "minimum": 5},
                     path="/properties/TimeoutInMinutes",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::CodeCommit::Repository",
             patches=[
-                patch(
+                Patch(
                     values={
                         "maximum": 100,
                         "minimum": 1,
@@ -469,23 +617,23 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
-            resource_type="AWS::CodeCommit::Repository",
+        ResourcePatch(
+            resource_type="AWS::CodePipeline::Pipeline",
             patches=[
-                patch(
+                Patch(
                     values={
-                        "maximum": 100,
-                        "minimum": 1,
-                        "pattern": "^[a-zA-Z0-9._\\-]+(?<!\\.git)$",
+                        "oneOf": make_only_one_required(
+                            ["ArtifactStore", "ArtifactStores"]
+                        )
                     },
-                    path="/properties/RepositoryName",
+                    path="/",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Cognito::UserPoolClient",
             patches=[
-                patch(
+                Patch(
                     values={
                         "maximum": 3650,
                         "minimum": 0,
@@ -494,41 +642,101 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Config::ConfigRule",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 256, "minLength": 1},
                     path="/properties/Description",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::DocDB::DBCluster",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["3.6.0", "4.0", "4.0.0"]},
                     path="/properties/EngineVersion",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 35, "minimum": 1},
                     path="/properties/BackupRetentionPeriod",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::EC2::DHCPOptions",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["1", "2", "4", "8"]},
                     path="/properties/NetbiosNodeType",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::EC2::Instance",
+            patches=[
+                Patch(
+                    values=common_patches.get("BlockDeviceMapping"),
+                    path="/definitions/BlockDeviceMapping",
+                ),
+                Patch(
+                    values={
+                        "allOf": [
+                            {
+                                "anyOf": [
+                                    {"required": ["ImageId"]},
+                                    {"required": ["LaunchTemplate"]},
+                                ],
+                            }
+                        ],
+                        "dependencies": make_only_one(
+                            ["NetworkInterfaces", "SubnetId"]
+                        ),
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::EC2::LaunchTemplate",
+            patches=[
+                Patch(
+                    values=common_patches.get("BlockDeviceMapping"),
+                    path="/definitions/BlockDeviceMapping",
+                ),
+                Patch(
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["SecurityGroups", "SecurityGroupIds", "NetworkInterfaces"]
+                        )
+                    },
+                    path="/definitions/LaunchTemplateData",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::EC2::NetworkAclEntry",
+            patches=[
+                Patch(
+                    values={
+                        "anyOf": [
+                            {"required": ["Ipv6CidrBlock"]},
+                            {"required": ["CidrBlock"]},
+                        ],
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::EC2::SecurityGroup",
             patches=[
-                patch(
+                Patch(
+                    path="/",
+                    values={"dependencies": {"SecurityGroupEgress": ["VpcId"]}},
+                ),
+                Patch(
                     values={
                         "maxLength": 255,
                         "minLength": 0,
@@ -536,109 +744,211 @@ patches.extend(
                     },
                     path="/properties/GroupDescription",
                 ),
+                Patch(
+                    path="/definitions/Egress",
+                    values={
+                        "oneOf": make_only_one_required(
+                            [
+                                "CidrIp",
+                                "CidrIpv6",
+                                "DestinationSecurityGroupId",
+                                "DestinationPrefixListId",
+                            ]
+                        ),
+                    },
+                ),
+                Patch(
+                    path="/definitions/Ingress",
+                    values={
+                        "oneOf": make_only_one_required(
+                            [
+                                "CidrIp",
+                                "CidrIpv6",
+                                "SourcePrefixListId",
+                                "SourceSecurityGroupId",
+                                "SourceSecurityGroupName",
+                            ]
+                        ),
+                    },
+                ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::EC2::SecurityGroupIngress",
+            patches=[
+                Patch(
+                    path="/",
+                    values={
+                        "oneOf": make_only_one_required(
+                            [
+                                "CidrIp",
+                                "CidrIpv6",
+                                "SourcePrefixListId",
+                                "SourceSecurityGroupId",
+                                "SourceSecurityGroupName",
+                            ]
+                        ),
+                    },
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::EC2::SpotFleet",
+            patches=[
+                Patch(
+                    path="/definitions/BlockDeviceMapping",
+                    values=common_patches.get("BlockDeviceMapping"),
+                ),
+                Patch(
+                    path="/",
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["LaunchSpecifications", "LaunchTemplateConfigs"]
+                        )
+                    },
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::EC2::VPC",
+            patches=[
+                Patch(
+                    path="/",
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["CidrBlock", "Ipv4IpamPoolId"]
+                        ),
+                        "dependencies": {"Ipv4IpamPoolId": ["Ipv4NetmaskLength"]},
+                    },
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::ElastiCache::ReplicationGroup",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 5, "minimum": 0},
                     path="/properties/ReplicasPerNodeGroup",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 6, "minimum": 1},
                     path="/properties/NumCacheClusters",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::ElasticLoadBalancingV2::ListenerRule",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 50000, "minimum": 1},
                     path="/properties/Priority",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::ElasticLoadBalancingV2::LoadBalancer",
+            patches=[
+                Patch(
+                    values={
+                        "oneOf": make_only_one_required(["SubnetMappings", "Subnets"])
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::ElasticLoadBalancingV2::TargetGroup",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 10, "minimum": 2},
                     path="/properties/UnhealthyThresholdCount",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 300, "minimum": 5},
                     path="/properties/HealthCheckIntervalSeconds",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Events::EventBusPolicy",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["aws:PrincipalOrgID"]},
                     path="/definitions/Condition/properties/Key",
                 ),
-                patch(
+                Patch(
                     values={"enum": ["StringEquals"]},
                     path="/definitions/Condition/properties/Type",
                 ),
-                patch(
+                Patch(
                     values={"enum": ["events:PutEvents"]},
                     path="/properties/Action",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::Events::Rule",
+            patches=[
+                Patch(
+                    values={
+                        "anyOf": [
+                            {"required": ["EventPattern"]},
+                            {"required": ["ScheduleExpression"]},
+                        ],
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::FSx::FileSystem",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 65536, "minimum": 32},
                     path="/properties/StorageCapacity",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Glue::Job",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 299, "minimum": 0},
                     path="/properties/NumberOfWorkers",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Glue::MLTransform",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 100, "minimum": 1},
                     path="/properties/MaxCapacity",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Glue::Table",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["EXTERNAL_TABLE", "VIRTUAL_VIEW"]},
                     path="/definitions/TableInput/properties/TableType",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Glue::Trigger",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["SUCCEEDED", "STOPPED", "TIMEOUT", "FAILED"]},
                     path="/definitions/Condition/properties/State",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::GuardDuty::Member",
             patches=[
-                patch(
+                Patch(
                     values={
                         "enum": [
                             "Created",
@@ -653,55 +963,66 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::Group",
             patches=[
-                patch(
+                Patch(
                     values={"pattern": "^/(.+/)*$"},
                     path="/properties/Path",
                 ),
-                patch(
+                Patch(
+                    # ruff: noqa: E501
                     values={
                         "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+"
                     },
                     path="/properties/ManagedPolicyArns/items",
                 ),
-                patch(
+                Patch(
                     values={"maxItems": 20, "minItems": 0},
                     path="/properties/ManagedPolicyArns",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::InstanceProfile",
             patches=[
-                patch(
+                Patch(
                     values={"maxItems": 1, "minItems": 1},
                     path="/properties/Roles",
                 ),
-                patch(
+                Patch(
                     values={"pattern": "[a-zA-Z0-9+=,.@\\-_]+"},
                     path="/properties/Roles/items",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::ManagedPolicy",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 6144},
                     path="/properties/PolicyDocument",
                 ),
-                patch(
+                Patch(
                     values={"pattern": "^/(.+/)*$"},
                     path="/properties/Path",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::Policy",
             patches=[
-                patch(
+                Patch(
+                    values={
+                        "anyOf": [
+                            {"required": ["Users"]},
+                            {"required": ["Groups"]},
+                            {"required": ["Roles"]},
+                        ],
+                    },
+                    path="/",
+                ),
+                Patch(
                     values={
                         "maxLength": 128,
                         "minLength": 1,
@@ -711,64 +1032,65 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::User",
             patches=[
-                patch(
+                Patch(
                     values={"maxItems": 10, "minItems": 0},
                     path="/properties/Groups",
                 ),
-                patch(
+                Patch(
                     values={"pattern": "^/(.+/)*$"},
                     path="/properties/Path",
                 ),
-                patch(
+                Patch(
                     values={
+                        # ruff: noqa: E501
                         "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+"
                     },
                     path="/properties/ManagedPolicyArns/items",
                 ),
-                patch(
+                Patch(
                     values={"maxItems": 20, "minItems": 0},
                     path="/properties/ManagedPolicyArns",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IAM::Role",
             patches=[
-                patch(
+                Patch(
                     values={"pattern": "^/(.+/)*$"},
                     path="/properties/Path",
                 ),
-                patch(
+                Patch(
                     values={"maxLength": 2048},
                     path="/properties/AssumeRolePolicyDocument",
                 ),
-                patch(
+                Patch(
                     values={
                         "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+"
                     },
                     path="/properties/ManagedPolicyArns/items",
                 ),
-                patch(
+                Patch(
                     values={"maxItems": 20, "minItems": 0},
                     path="/properties/ManagedPolicyArns",
                 ),
-                patch(
+                Patch(
                     values={"maxLength": 64, "minLength": 1},
                     path="/properties/RoleName",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 43200, "minimum": 3600},
                     path="/properties/MaxSessionDuration",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::IdentityStore::GroupMembership",
             patches=[
-                patch(
+                Patch(
                     values={
                         "maxLength": 47,
                         "minLength": 1,
@@ -778,148 +1100,185 @@ patches.extend(
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Inspector::AssessmentTemplate",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 86400, "minimum": 180},
                     path="/properties/DurationInSeconds",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Kinesis::Stream",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 100000, "minimum": 1},
                     path="/properties/ShardCount",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 8760, "minimum": 1},
                     path="/properties/RetentionPeriodHours",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::KMS::Key",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 30, "minimum": 7},
                     path="/properties/PendingWindowInDays",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Lambda::EventSourceMapping",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 10000, "minimum": 1},
                     path="/properties/BatchSize",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 300, "minimum": 0},
                     path="/properties/MaximumBatchingWindowInSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 604800, "minimum": -1},
                     path="/properties/MaximumRecordAgeInSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 10000, "minimum": -1},
                     path="/properties/MaximumRetryAttempts",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 10, "minimum": 1},
                     path="/properties/ParallelizationFactor",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Lambda::Function",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 256, "minLength": 1},
                     path="/properties/Description",
                 ),
-                patch(
+                Patch(
                     values={"maxLength": 64, "minLength": 1},
                     path="/properties/FunctionName",
                 ),
-                patch(
+                Patch(
                     values={"maxLength": 128, "minLength": 1},
                     path="/properties/Handler",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 10240, "minimum": 128},
                     path="/properties/MemorySize",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 900, "minimum": 1},
                     path="/properties/Timeout",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Lambda::LayerVersion",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 140, "minLength": 1},
                     path="/properties/LayerName",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Logs::LogGroup",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 512, "minLength": 1},
                     path="/properties/LogGroupName",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Logs::MetricFilter",
             patches=[
-                patch(
+                Patch(
                     values={"pattern": "^(([0-9]*)|(\\$.*))$"},
                     path="/definitions/MetricTransformation/properties/MetricValue",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::M2::Application",
             patches=[
-                patch(
+                Patch(
                     values={"pattern": "^\\S{1,2000}$"},
                     path="/definitions/Definition/oneOf/0/properties/S3Location",
                 ),
-                patch(
+                Patch(
                     values={"maxLength": 6500, "minLength": 1},
                     path="/definitions/Definition/oneOf/1/properties/Content",
                 ),
             ],
         ),
-        resource_patch(
-            resource_type="AWS::RDS::DBCluster",
+        ResourcePatch(
+            resource_type="AWS::OpsWorks::Instance",
             patches=[
-                patch(
-                    values={"maximum": 35, "minimum": 1},
-                    path="/properties/BackupRetentionPeriod",
+                Patch(
+                    values=common_patches.get("BlockDeviceMapping"),
+                    path="/definitions/BlockDeviceMapping",
                 ),
             ],
         ),
-        resource_patch(
-            resource_type="AWS::RDS::DBInstance",
+        ResourcePatch(
+            resource_type="AWS::OpsWorks::Stack",
             patches=[
-                patch(
-                    values={"maximum": 15, "minimum": 0},
-                    path="/properties/PromotionTier",
+                Patch(
+                    path="/", values={"dependencies": {"VpcId": ["DefaultSubnetId"]}}
                 ),
-                patch(
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::RDS::DBCluster",
+            patches=[
+                Patch(
                     values={"maximum": 35, "minimum": 1},
                     path="/properties/BackupRetentionPeriod",
                 ),
-                patch(
+                Patch(
+                    values={
+                        "dependencies": {
+                            "SnapshotIdentifier": {
+                                "properties": {
+                                    "MasterUsername": False,
+                                    "MasterUserPassword": False,
+                                }
+                            },
+                            "SourceDBClusterIdentifier": {
+                                "properties": {
+                                    "StorageEncrypted": False,
+                                    "MasterUsername": False,
+                                    "MasterUserPassword": False,
+                                }
+                            },
+                        }
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::RDS::DBInstance",
+            patches=[
+                Patch(
+                    values={"maximum": 15, "minimum": 0},
+                    path="/properties/PromotionTier",
+                ),
+                Patch(
+                    values={"maximum": 35, "minimum": 1},
+                    path="/properties/BackupRetentionPeriod",
+                ),
+                Patch(
                     values={
                         "enum": [
                             7,
@@ -951,30 +1310,71 @@ patches.extend(
                     },
                     path="/properties/PerformanceInsightsRetentionPeriod",
                 ),
+                Patch(
+                    values={
+                        "dependencies": {
+                            "SourceDBInstanceIdentifier": {
+                                "properties": {
+                                    "StorageEncrypted": False,
+                                    "MasterUsername": False,
+                                    "MasterUserPassword": False,
+                                    "CharacterSetName": False,
+                                }
+                            }
+                        }
+                    },
+                    path="/",
+                ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::RDS::DBProxyEndpoint",
             patches=[
-                patch(
+                Patch(
                     values={"enum": ["READ_WRITE", "READ_ONLY"]},
                     path="/properties/TargetRole",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::Redshift::Cluster",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 100, "minimum": 1},
                     path="/properties/NumberOfNodes",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::Route53::RecordSet",
+            patches=[
+                Patch(
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["HostedZoneId", "HostedZoneName"]
+                        )
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
+            resource_type="AWS::Route53::RecordSetGroup",
+            patches=[
+                Patch(
+                    values={
+                        "oneOf": make_only_one_required(
+                            ["HostedZoneId", "HostedZoneName"]
+                        )
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::S3::Bucket",
             patches=[
-                patch(
+                Patch(
                     values={
                         "maxLength": 63,
                         "minLength": 3,
@@ -982,81 +1382,117 @@ patches.extend(
                     },
                     path="/properties/BucketName",
                 ),
+                Patch(
+                    values={
+                        "anyOf": [
+                            {"required": ["HttpErrorCodeReturnedEquals"]},
+                            {"required": ["KeyPrefixEquals"]},
+                        ],
+                    },
+                    path="/definitions/RoutingRuleCondition",
+                ),
+                Patch(
+                    values={
+                        "dependencies": {
+                            "RedirectAllRequestsTo": {
+                                "properties": {
+                                    "ErrorDocument": False,
+                                    "IndexDocument": False,
+                                    "RoutingRules": False,
+                                }
+                            }
+                        }
+                    },
+                    path="/definitions/RedirectAllRequestsTo",
+                ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::SageMaker::NotebookInstance",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 16384, "minimum": 5},
                     path="/properties/VolumeSizeInGB",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
+            resource_type="AWS::ServiceDiscovery::Service",
+            patches=[
+                Patch(
+                    values={
+                        "dependencies": make_only_one(
+                            ["HealthCheckConfig", "HealthCheckCustomConfig"]
+                        ),
+                    },
+                    path="/",
+                ),
+            ],
+        ),
+        ResourcePatch(
             resource_type="AWS::SNS::Topic",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 256, "minLength": 1},
                     path="/properties/TopicName",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::SQS::Queue",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 1209600, "minimum": 1024},
                     path="/properties/MessageRetentionPeriod",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 900, "minimum": 0},
                     path="/properties/DelaySeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 20, "minimum": 0},
                     path="/properties/ReceiveMessageWaitTimeSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 86400, "minimum": 60},
                     path="/properties/KmsDataKeyReusePeriodSeconds",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 43200, "minimum": 0},
                     path="/properties/VisibilityTimeout",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 262144, "minimum": 1024},
                     path="/properties/MaximumMessageSize",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::SSM::MaintenanceWindow",
             patches=[
-                patch(
+                Patch(
                     values={"maximum": 24, "minimum": 1},
                     path="/properties/Duration",
                 ),
-                patch(
+                Patch(
                     values={"maximum": 23, "minimum": 0},
                     path="/properties/Cutoff",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::WAFRegional::RegexPatternSet",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 200, "minLength": 0},
                     path="/properties/RegexPatternStrings/items",
                 ),
             ],
         ),
-        resource_patch(
+        ResourcePatch(
             resource_type="AWS::WAFv2::RegexPatternSet",
             patches=[
-                patch(
+                Patch(
                     values={"maxLength": 200, "minLength": 0},
                     path="/properties/RegularExpressionList/items",
                 ),
@@ -1083,7 +1519,7 @@ def configure_logging():
     LOGGER.addHandler(ch)
 
 
-def build_resource_type_patches(resource_patches: resource_patch):
+def build_resource_type_patches(resource_patches: ResourcePatch):
     LOGGER.info(f"Applying patches for {resource_patches.resource_type}")
 
     resource_name = resource_patches.resource_type.lower().replace("::", "_")
@@ -1101,7 +1537,7 @@ def build_resource_type_patches(resource_patches: resource_patch):
                 d.append(
                     {
                         "op": "add",
-                        "path": f"{patch.path}/{k}",
+                        "path": f"{patch.path if not patch.path == '/' else ''}/{k}",
                         "value": v,
                     }
                 )
@@ -1112,6 +1548,7 @@ def build_resource_type_patches(resource_patches: resource_patch):
             separators=(",", ": "),
             sort_keys=True,
         )
+        fh.write("\n")
 
 
 def build_patches():
@@ -1128,5 +1565,5 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except (ValueError, TypeError) as e:
+    except (ValueError, TypeError):
         LOGGER.error(ValueError)

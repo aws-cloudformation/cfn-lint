@@ -42,8 +42,57 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_launchtemplate/blockdevicemapping_virtualname"
+   "oneOf": [
+    {
+     "properties": {
+      "Ebs": false,
+      "NoDevice": false
+     },
+     "required": [
+      "VirtualName"
+     ]
+    },
+    {
+     "properties": {
+      "NoDevice": false,
+      "VirtualName": false
+     },
+     "required": [
+      "Ebs"
+     ]
+    },
+    {
+     "properties": {
+      "Ebs": false,
+      "VirtualName": false
+     },
+     "required": [
+      "NoDevice"
+     ]
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     }
+    }
    ],
    "properties": {
     "DeviceName": {
@@ -134,7 +183,6 @@
      "type": "integer"
     },
     "VolumeType": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_volumetype_enum",
      "enum": [
       "standard",
       "io1",
@@ -192,7 +240,6 @@
    "additionalProperties": false,
    "properties": {
     "MarketType": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_markettype_enum",
      "enum": [
       "spot"
      ],
@@ -340,8 +387,57 @@
   },
   "LaunchTemplateData": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_launchtemplate/launchtemplatedata_securitygroups_onlyone"
+   "oneOf": [
+    {
+     "properties": {
+      "NetworkInterfaces": false,
+      "SecurityGroupIds": false
+     },
+     "required": [
+      "SecurityGroups"
+     ]
+    },
+    {
+     "properties": {
+      "NetworkInterfaces": false,
+      "SecurityGroups": false
+     },
+     "required": [
+      "SecurityGroupIds"
+     ]
+    },
+    {
+     "properties": {
+      "SecurityGroupIds": false,
+      "SecurityGroups": false
+     },
+     "required": [
+      "NetworkInterfaces"
+     ]
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     }
+    }
    ],
    "properties": {
     "BlockDeviceMappings": {
@@ -396,7 +492,6 @@
      "type": "string"
     },
     "InstanceInitiatedShutdownBehavior": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_shutdownbehavior_enum",
      "enum": [
       "stop",
       "terminate"
@@ -713,7 +808,6 @@
      "type": "string"
     },
     "Tenancy": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_tenancy_enum",
      "enum": [
       "default",
       "dedicated",
@@ -758,7 +852,6 @@
      "type": "integer"
     },
     "InstanceInterruptionBehavior": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_spotinstanceinterruptionbehavior_enum",
      "enum": [
       "hibernate",
       "stop",
@@ -770,7 +863,6 @@
      "type": "string"
     },
     "SpotInstanceType": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_spotinstancetype_enum",
      "enum": [
       "one-time",
       "persistent"
@@ -803,7 +895,6 @@
    "additionalProperties": false,
    "properties": {
     "ResourceType": {
-     "cfnSchema": "aws_ec2_launchtemplate/boto_resourcetype_enum",
      "enum": [
       "capacity-reservation",
       "client-vpn-endpoint",

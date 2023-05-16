@@ -1,9 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_ec2_vpc/cidr_oneof",
-  "aws_ec2_vpc/ipam_pool"
- ],
  "createOnlyProperties": [
   "/properties/Ipv4IpamPoolId",
   "/properties/Ipv4NetmaskLength",
@@ -27,7 +23,53 @@
    "type": "object"
   }
  },
+ "dependencies": {
+  "Ipv4IpamPoolId": [
+   "Ipv4NetmaskLength"
+  ]
+ },
  "description": "Resource Type definition for AWS::EC2::VPC",
+ "oneOf": [
+  {
+   "properties": {
+    "Ipv4IpamPoolId": false
+   },
+   "required": [
+    "CidrBlock"
+   ]
+  },
+  {
+   "properties": {
+    "CidrBlock": false
+   },
+   "required": [
+    "Ipv4IpamPoolId"
+   ]
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   }
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

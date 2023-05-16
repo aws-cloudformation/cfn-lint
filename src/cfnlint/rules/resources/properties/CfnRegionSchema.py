@@ -3,13 +3,13 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import pathlib
-
-from jsonschema.exceptions import best_match
+from typing import Sequence
 
 from cfnlint.helpers import load_plugins, load_resource
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.jsonschema._utils import Unset
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.jsonschema.exceptions import best_match
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
 class CfnRegionSchema(BaseJsonSchema):
@@ -23,6 +23,7 @@ class CfnRegionSchema(BaseJsonSchema):
     tags = ["resources"]
 
     def __init__(self) -> None:
+        super().__init__()
         root_dir = pathlib.Path(__file__).parent.parent
         rules = load_plugins(
             str(root_dir),
@@ -31,18 +32,17 @@ class CfnRegionSchema(BaseJsonSchema):
         )
         for rule in rules:
             self.child_rules[rule.id] = rule
-        self.regions = []
-        super().__init__()
+        self.regions: Sequence[str] = []
 
     # pylint: disable=unused-argument
-    def validate(self, validator, schema_paths, instance, schema, region=None):
+    def cfnRegionSchema(self, validator, schema_paths, instance, schema):
         if isinstance(schema_paths, str):
             schema_paths = [schema_paths]
 
         for schema_path in schema_paths:
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
-                    yield from rule.validate(instance, region)
+                    yield from rule.validate(instance, validator.context.region)
 
 
 class BaseCfnRegionSchema(BaseJsonSchema):
@@ -88,7 +88,8 @@ class BaseCfnRegionSchema(BaseJsonSchema):
         # if the schema has a description will only replace the message with that
         # description and use the best error for the location information
         self.cfn_validator = self.setup_validator(
-            schema=self.cfn_schema.get(region, {})
+            validator=CfnTemplateValidator,
+            schema=self.cfn_schema.get(region, {}),
         )
         err = best_match(list(self.cfn_validator.iter_errors(instance)))
         if err is not None:

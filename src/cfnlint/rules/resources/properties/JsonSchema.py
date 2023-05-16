@@ -5,7 +5,8 @@ SPDX-License-Identifier: MIT-0
 import logging
 
 from cfnlint.helpers import REGION_PRIMARY
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.jsonschema import CfnTemplateValidator, Context
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
 LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")
@@ -23,9 +24,6 @@ class JsonSchema(BaseJsonSchema):
     def __init__(self):
         """Init"""
         super().__init__()
-        self.validators = {
-            "cfnRegionSchema": self._cfnRegionSchema,
-        }
         self.rule_set = {
             "additionalProperties": "E3002",
             "properties": "E3002",
@@ -54,23 +52,6 @@ class JsonSchema(BaseJsonSchema):
         self.regions = cfn.regions
         return super().initialize(cfn)
 
-    # pylint: disable=unused-argument
-    def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
-        # when its the primary region we do this check once against
-        # all regions
-        if self.region != self.regions[0]:
-            return
-        if not self.child_rules.get("E3018"):
-            return
-        for region in self.regions:
-            yield from self.child_rules.get("E3018").validate(
-                validator,
-                schema_paths,
-                instance,
-                schema,
-                region,
-            )
-
     def match(self, cfn):
         """Check CloudFormation Properties"""
         matches = []
@@ -97,15 +78,13 @@ class JsonSchema(BaseJsonSchema):
                                 # same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
-                        cfn_validator = self.setup_validator(schema=schema.json_schema)
+                        cfn_validator = self.setup_validator(
+                            validator=CfnTemplateValidator,
+                            schema=schema.json_schema,
+                        ).evolve(context=Context(region), cfn=cfn)
                         path = ["Resources", n, "Properties"]
-                        for scenario in cfn.get_object_without_nested_conditions(
-                            p, path
-                        ):
-                            matches.extend(
-                                self.json_schema_validate(
-                                    cfn_validator, scenario.get("Object"), path
-                                )
-                            )
+                        matches.extend(
+                            self.json_schema_validate(cfn_validator, p, path)
+                        )
 
         return matches

@@ -1,6 +1,94 @@
 [
  {
   "op": "add",
+  "path": "/definitions/ViewerCertificate/oneOf",
+  "value": [
+   {
+    "properties": {
+     "CloudFrontDefaultCertificate": false,
+     "IamCertificateId": false
+    },
+    "required": [
+     "AcmCertificateArn"
+    ]
+   },
+   {
+    "properties": {
+     "AcmCertificateArn": false,
+     "IamCertificateId": false
+    },
+    "required": [
+     "CloudFrontDefaultCertificate"
+    ]
+   },
+   {
+    "properties": {
+     "AcmCertificateArn": false,
+     "CloudFrontDefaultCertificate": false
+    },
+    "required": [
+     "IamCertificateId"
+    ]
+   },
+   {
+    "maxProperties": 1,
+    "minProperties": 1,
+    "propertyNames": {
+     "enum": [
+      "Fn::Base64",
+      "Fn::GetAtt",
+      "Fn::GetAZs",
+      "Fn::ImportValue",
+      "Fn::Join",
+      "Fn::Split",
+      "Fn::FindInMap",
+      "Fn::Select",
+      "Ref",
+      "Fn::If",
+      "Fn::Contains",
+      "Fn::Sub",
+      "Fn::Cidr",
+      "Fn::Length",
+      "Fn::ToJsonString"
+     ]
+    }
+   }
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/Origin/dependencies",
+  "value": {
+   "CustomOriginConfig": {
+    "properties": {
+     "S3OriginConfig": false
+    }
+   }
+  }
+ },
+ {
+  "op": "add",
+  "path": "/definitions/CustomErrorResponse/dependencies",
+  "value": {
+   "ResponseCode": [
+    "ResponsePagePath"
+   ]
+  }
+ },
+ {
+  "op": "add",
+  "path": "/definitions/ViewerCertificate/dependencies",
+  "value": {
+   "AcmCertificateArn": [
+    "SslSupportMethod"
+   ],
+   "IamCertificateId": [
+    "SslSupportMethod"
+   ]
+  }
+ },
+ {
+  "op": "add",
   "path": "/definitions/CustomErrorResponse/properties/ErrorCode/enum",
   "value": [
    400,

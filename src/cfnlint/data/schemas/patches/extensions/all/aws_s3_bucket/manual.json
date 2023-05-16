@@ -13,5 +13,34 @@
   "op": "add",
   "path": "/properties/BucketName/pattern",
   "value": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$"
+ },
+ {
+  "op": "add",
+  "path": "/definitions/RoutingRuleCondition/anyOf",
+  "value": [
+   {
+    "required": [
+     "HttpErrorCodeReturnedEquals"
+    ]
+   },
+   {
+    "required": [
+     "KeyPrefixEquals"
+    ]
+   }
+  ]
+ },
+ {
+  "op": "add",
+  "path": "/definitions/RedirectAllRequestsTo/dependencies",
+  "value": {
+   "RedirectAllRequestsTo": {
+    "properties": {
+     "ErrorDocument": false,
+     "IndexDocument": false,
+     "RoutingRules": false
+    }
+   }
+  }
  }
 ]

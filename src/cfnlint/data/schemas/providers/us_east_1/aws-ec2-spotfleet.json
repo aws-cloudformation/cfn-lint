@@ -60,9 +60,57 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_spotfleet/blockdevicemapping_virtualname",
-    "aws_ec2_spotfleet/blockdevicemapping_onlyone"
+   "oneOf": [
+    {
+     "properties": {
+      "Ebs": false,
+      "NoDevice": false
+     },
+     "required": [
+      "VirtualName"
+     ]
+    },
+    {
+     "properties": {
+      "NoDevice": false,
+      "VirtualName": false
+     },
+     "required": [
+      "Ebs"
+     ]
+    },
+    {
+     "properties": {
+      "Ebs": false,
+      "VirtualName": false
+     },
+     "required": [
+      "NoDevice"
+     ]
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     }
+    }
    ],
    "properties": {
     "DeviceName": {
@@ -130,7 +178,6 @@
      "type": "integer"
     },
     "VolumeType": {
-     "cfnSchema": "aws_ec2_spotfleet/boto_volumetype_enum",
      "enum": [
       "standard",
       "io1",
@@ -640,9 +687,6 @@
   },
   "SpotFleetRequestConfigData": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_spotfleet/spotfleetrequestconfigdata_onlyone"
-   ],
    "properties": {
     "AllocationStrategy": {
      "enum": [
@@ -668,7 +712,6 @@
     },
     "IamFleetRole": {
      "awsType": "IamRoleArn",
-     "cfnSchema": "aws_iam_role/arn_pattern",
      "type": "string"
     },
     "InstanceInterruptionBehavior": {
@@ -956,6 +999,47 @@
    ]
   }
  },
+ "oneOf": [
+  {
+   "properties": {
+    "LaunchTemplateConfigs": false
+   },
+   "required": [
+    "LaunchSpecifications"
+   ]
+  },
+  {
+   "properties": {
+    "LaunchSpecifications": false
+   },
+   "required": [
+    "LaunchTemplateConfigs"
+   ]
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   }
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

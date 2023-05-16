@@ -7,9 +7,7 @@ from cfnlint.rules.resources.properties.CfnSchema import BaseCfnSchema
 
 class TableBillingModeExclusive(BaseCfnSchema):
     id = "E3638"
-    shortdesc = (
-        "Validate DynamoDB BillingMode pay per request configuration"
-    )
+    shortdesc = "Validate DynamoDB BillingMode pay per request configuration"
     description = (
         "When 'BillingMode' is 'PAY_PER_REQUEST' don't specify 'ProvisionedThroughput'"
     )

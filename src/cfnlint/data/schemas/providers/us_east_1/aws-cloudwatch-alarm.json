@@ -1,10 +1,6 @@
 {
  "additionalProperties": false,
  "cfnSchema": [
-  "aws_cloudwatch_alarm/metric_onlyone",
-  "aws_cloudwatch_alarm/metrics_exclusive",
-  "aws_cloudwatch_alarm/statistic_exclusive",
-  "aws_cloudwatch_alarm/thresholdmetric_exclusive",
   "aws_cloudwatch_alarm/aws_namespace_period"
  ],
  "createOnlyProperties": [
@@ -56,7 +52,6 @@
      "type": "string"
     },
     "Id": {
-     "cfnSchema": "aws_cloudwatch_alarm/metricdataquery_id_pattern",
      "pattern": "^([a-z])([A-Za-z0-9\\_]*)$",
      "type": "string"
     },
@@ -102,7 +97,40 @@
    "type": "object"
   }
  },
+ "dependencies": {
+  "Statistic": {
+   "properties": {
+    "ExtendedStatistic": false
+   }
+  },
+  "Threshold": {
+   "properties": {
+    "ThresholdMetricId": false
+   }
+  }
+ },
  "description": "Resource Type definition for AWS::CloudWatch::Alarm",
+ "oneOf": [
+  {
+   "properties": {
+    "Dimensions": false,
+    "ExtendedStatistic": false,
+    "MetricName": false,
+    "Namespace": false,
+    "Period": false,
+    "Statistic": false,
+    "Unit": false
+   },
+   "required": [
+    "Metrics"
+   ]
+  },
+  {
+   "required": [
+    "MetricName"
+   ]
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -111,9 +139,7 @@
    "type": "boolean"
   },
   "AlarmActions": {
-   "cfnSchema": "aws_cloudwatch_alarm/alarmactions_array",
    "items": {
-    "cfnSchema": "aws_cloudwatch_alarm/alarmaction_integer",
     "maximum": 1024,
     "minimum": 1,
     "type": "string"
@@ -133,7 +159,6 @@
    "type": "string"
   },
   "ComparisonOperator": {
-   "cfnSchema": "aws_cloudwatch_alarm/boto_comparisonoperator_enum",
    "enum": [
     "GreaterThanOrEqualToThreshold",
     "GreaterThanThreshold",
@@ -198,7 +223,6 @@
    "type": "integer"
   },
   "Statistic": {
-   "cfnSchema": "aws_cloudwatch_alarm/boto_statistic_enum",
    "enum": [
     "SampleCount",
     "Average",
@@ -215,7 +239,6 @@
    "type": "string"
   },
   "TreatMissingData": {
-   "cfnSchema": "aws_cloudwatch_alarm/treatmissingdata_enum",
    "enum": [
     "breaching",
     "ignore",
@@ -225,7 +248,6 @@
    "type": "string"
   },
   "Unit": {
-   "cfnSchema": "aws_cloudwatch_alarm/boto_standardunit_enum",
    "enum": [
     "Seconds",
     "Microseconds",
