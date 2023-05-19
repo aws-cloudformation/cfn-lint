@@ -729,7 +729,12 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
             else:
                 all_filenames.extend(add_filenames)
 
-        return all_filenames
+        # update all paths to os format
+        all_filenames_os = []
+        for all_filename in all_filenames:
+            all_filename_os = Path(all_filename)
+            all_filenames_os.append(str(all_filename_os))
+        return all_filenames_os
 
     @property
     def append_rules(self):
