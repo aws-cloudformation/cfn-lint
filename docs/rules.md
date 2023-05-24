@@ -27,7 +27,7 @@ Informational results start with the letter `I`. Informational alert you when th
 | (E&#124;W&#124;I)9xxx | Reserved for users rules |
 
 *Warning*
-Rule `E3012` is used to check the types for value of a resource property. A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error. cfn-lint doesn't have an exception process so all instances of this issue are considered errors. You can disable this rule using `--ignore-checks` if it is not required for your internal best practices.
+Rule `E3012` is used to check the types for value of a resource property. A number is a number, string is a string, etc.  There are occasions where this could be just a warning and other times it could be an error. cfn-lint doesn't have an exception process so all instances of this issue are considered errors. You can disable this rule using `--ignore-checks` if it is not required for your internal best practices. Conversely, strict typing is **NOT** enforced by default for this rule, so if strict adherence to value resource value types is necessary for your use case, you can use `--configure-rule E3012:strict=true` to enforce the rule.
 
 ## Experimental rules
 Sometimes there are (new) rules that might be complex, that doesn't have enough solid test templates and examples and/or might have unexpected results. We support adding in these rules so they can be tested, tweaked and improved before they become generally available.
