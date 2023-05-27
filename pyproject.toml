@@ -1,3 +1,87 @@
+[build-system]
+requires = [
+  "setuptools >= 65.5.1",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.dynamic]
+version = {attr = "cfnlint.version.__version__"}
+readme = {file = ["README.md"], content-type = "text/markdown"}
+
+[project]
+name = "cfn-lint"
+description = "Checks CloudFormation templates for practices and behaviour that could potentially be improved"
+requires-python = ">=3.7"
+license = {text = "MIT no attribution"}
+keywords = ["aws", "lint"]
+authors = [
+  {email = "kddejong@amazon.com"},
+  {name = "Kevin DeJong"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+dynamic = ["version", "readme"]
+dependencies = [
+    "pyyaml>5.4",
+    "aws-sam-translator>=1.65.0",
+    "jsonpatch",
+    "networkx>=2.4,<4",
+    "junit-xml~=1.9",
+    "jschema_to_python~=1.2.3",
+    "sarif-om~=1.0.4",
+    "sympy>=1.0.0",
+    "regex",
+]
+
+[project.optional-dependencies]
+test = [
+    "coverage>=7.2.1",
+    "pydot",
+    "jsonschema<4.18",
+]
+lint = [
+    "black",
+    "pylint",
+    "flake8",
+    "bandit",
+    "bandit[toml]",
+    "isort",
+    "mypy",
+    "types-PyYAML",
+    "types-regex",
+]
+ci = [
+    "cfn-lint[test]",
+    "cfn-lint[lint]"
+]
+
+[project.scripts]
+cfn-lint = "cfnlint.__main__:main"
+
+[tool.setuptools.package-data]
+cfnlint = ["*.json"]
+
+[project.urls]
+Homepage = "https://github.com/aws-cloudformation/cfn-lint"
+Documentation = "https://github.com/aws-cloudformation/cfn-lint"
+Issues = "https://github.com/aws-cloudformation/cfn-lint/issues"
+Changelog = "https://github.com/aws-cloudformation/cfn-lint/blob/main/CHANGELOG.md"
+Source = "https://github.com/aws-cloudformation/cfn-lint"
+
 [tool.isort]
 profile = "black"
 
