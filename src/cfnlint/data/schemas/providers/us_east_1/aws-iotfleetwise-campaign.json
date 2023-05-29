@@ -87,6 +87,43 @@
    ],
    "type": "object"
   },
+  "DataDestinationConfig": {
+   "oneOf": [
+    {
+     "additionalProperties": false,
+     "properties": {
+      "S3Config": {
+       "$ref": "#/definitions/S3Config"
+      }
+     },
+     "required": [
+      "S3Config"
+     ],
+     "title": "S3Config",
+     "type": "object"
+    },
+    {
+     "additionalProperties": false,
+     "properties": {
+      "TimestreamConfig": {
+       "$ref": "#/definitions/TimestreamConfig"
+      }
+     },
+     "required": [
+      "TimestreamConfig"
+     ],
+     "title": "TimestreamConfig",
+     "type": "object"
+    }
+   ]
+  },
+  "DataFormat": {
+   "enum": [
+    "JSON",
+    "PARQUET"
+   ],
+   "type": "string"
+  },
   "DiagnosticsMode": {
    "default": "OFF",
    "enum": [
@@ -94,6 +131,33 @@
     "SEND_ACTIVE_DTCS"
    ],
    "type": "string"
+  },
+  "S3Config": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketArn": {
+     "maxLength": 100,
+     "minLength": 16,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):s3:::.+$",
+     "type": "string"
+    },
+    "DataFormat": {
+     "$ref": "#/definitions/DataFormat"
+    },
+    "Prefix": {
+     "maxLength": 512,
+     "minLength": 1,
+     "pattern": "^[a-zA-Z0-9-_:./!*'()]+$",
+     "type": "string"
+    },
+    "StorageCompressionFormat": {
+     "$ref": "#/definitions/StorageCompressionFormat"
+    }
+   },
+   "required": [
+    "BucketArn"
+   ],
+   "type": "object"
   },
   "SignalInformation": {
    "additionalProperties": false,
@@ -128,6 +192,13 @@
    ],
    "type": "string"
   },
+  "StorageCompressionFormat": {
+   "enum": [
+    "NONE",
+    "GZIP"
+   ],
+   "type": "string"
+  },
   "Tag": {
    "additionalProperties": false,
    "properties": {
@@ -159,6 +230,28 @@
    },
    "required": [
     "PeriodMs"
+   ],
+   "type": "object"
+  },
+  "TimestreamConfig": {
+   "additionalProperties": false,
+   "properties": {
+    "ExecutionRoleArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):iam::(\\d{12})?:(role((\\u002F)|(\\u002F[\\u0021-\\u007F]+\\u002F))[\\w+=,.@-]+)$",
+     "type": "string"
+    },
+    "TimestreamTableArn": {
+     "maxLength": 2048,
+     "minLength": 20,
+     "pattern": "^arn:(aws[a-zA-Z0-9-]*):timestream:[a-zA-Z0-9-]+:[0-9]{12}:database\\/[a-zA-Z0-9_.-]+\\/table\\/[a-zA-Z0-9_.-]+$",
+     "type": "string"
+    }
+   },
+   "required": [
+    "TimestreamTableArn",
+    "ExecutionRoleArn"
    ],
    "type": "object"
   },
@@ -232,6 +325,15 @@
   "CreationTime": {
    "format": "date-time",
    "type": "string"
+  },
+  "DataDestinationConfigs": {
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/DataDestinationConfig"
+   },
+   "maxItems": 1,
+   "minItems": 1,
+   "type": "array"
   },
   "DataExtraDimensions": {
    "insertionOrder": false,

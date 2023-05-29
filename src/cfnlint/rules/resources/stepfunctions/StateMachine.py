@@ -96,7 +96,10 @@ class StateMachine(CloudFormationLintRule):
 
         for req_key in common_state_required_keys:
             if req_key not in def_json:
-                message = f"State Machine Definition required key ({req_key}) for State ({state_name}) is missing"
+                message = (
+                    f"State Machine Definition required key ({req_key}) for State"
+                    f" ({state_name}) is missing"
+                )
                 matches.append(RuleMatch(path, message))
                 return matches
 
@@ -107,13 +110,19 @@ class StateMachine(CloudFormationLintRule):
                 if state_key not in common_state_keys + state_key_types.get(
                     state_type, []
                 ):
-                    message = f"State Machine Definition key ({state_key}) for State ({state_name}) of Type ({state_type}) is not valid"
+                    message = (
+                        f"State Machine Definition key ({state_key}) for State"
+                        f" ({state_name}) of Type ({state_type}) is not valid"
+                    )
                     matches.append(RuleMatch(path, message))
             for req_key in common_state_required_keys + state_required_types.get(
                 state_type, []
             ):
                 if req_key not in def_json:
-                    message = f"State Machine Definition required key ({req_key}) for State ({state_name}) of Type ({state_type}) is missing"
+                    message = (
+                        f"State Machine Definition required key ({req_key}) for State"
+                        f" ({state_name}) of Type ({state_type}) is missing"
+                    )
                     matches.append(RuleMatch(path, message))
                     return matches
         else:
@@ -152,7 +161,10 @@ class StateMachine(CloudFormationLintRule):
         # pylint: disable=W0703
         except Exception as err:
             if fail_on_loads:
-                message = f"State Machine Definition needs to be formatted as JSON. Error {err}"
+                message = (
+                    "State Machine Definition needs to be formatted as JSON. Error"
+                    f" {err}"
+                )
                 matches.append(RuleMatch(path, message))
                 return matches
 

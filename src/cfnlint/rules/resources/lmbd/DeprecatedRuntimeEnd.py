@@ -28,7 +28,10 @@ class DeprecatedRuntimeEnd(DeprecatedRuntime):
         runtime = self.deprecated_runtimes.get(runtime_value)
         if runtime:
             if datetime.strptime(runtime["deprecated"], "%Y-%m-%d") < self.current_date:
-                message = "Deprecated runtime ({0}) specified. Updating disabled since {1}. Please consider updating to {2}"
+                message = (
+                    "Deprecated runtime ({0}) specified. Updating disabled since {1}."
+                    " Please consider updating to {2}"
+                )
                 matches.append(
                     RuleMatch(
                         path,

@@ -3,8 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
+from typing import List
 
-import cfnlint.config
 from cfnlint.rules import RulesCollection
 from cfnlint.runner import Runner
 
@@ -12,7 +12,7 @@ from cfnlint.runner import Runner
 class BaseRuleTestCase(BaseTestCase):
     """Used for Testing Rules"""
 
-    success_templates = []
+    success_templates: List[str] = []
 
     def setUp(self):
         """Setup"""
