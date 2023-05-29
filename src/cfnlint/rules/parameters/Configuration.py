@@ -84,21 +84,33 @@ class Configuration(CloudFormationLintRule):
                             )
                         )
                 else:
-                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
+                    message = (
+                        f'Property {"/".join(map(str, path))} should be of type'
+                        f" {prop_type}"
+                    )
                     results.append(RuleMatch(path, message))
             if prop_type in ["String"]:
                 if isinstance(value, (dict, list)):
-                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
+                    message = (
+                        f'Property {"/".join(map(str, path))} should be of type'
+                        f" {prop_type}"
+                    )
                     results.append(RuleMatch(path, message))
                 str(value)
             elif prop_type in ["Boolean"]:
                 if not isinstance(value, bool):
                     if value not in ["True", "true", "False", "false"]:
-                        message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
+                        message = (
+                            f'Property {"/".join(map(str, path))} should be of type'
+                            f" {prop_type}"
+                        )
                         results.append(RuleMatch(path, message))
             elif prop_type in ["Integer"]:
                 if isinstance(value, bool):
-                    message = f'Property {"/".join(map(str, path))} should be of type {prop_type}'
+                    message = (
+                        f'Property {"/".join(map(str, path))} should be of type'
+                        f" {prop_type}"
+                    )
                     results.append(RuleMatch(path, message))
                 else:  # has to be a Double
                     int(value)
@@ -137,7 +149,10 @@ class Configuration(CloudFormationLintRule):
                         valid_for = props.get("ValidForTypes")
                         if valid_for is not None:
                             if paramvalue.get("Type") not in valid_for:
-                                message = "Parameter {0} has property {1} which is only valid for {2}"
+                                message = (
+                                    "Parameter {0} has property {1} which is only valid"
+                                    " for {2}"
+                                )
                                 matches.append(
                                     RuleMatch(
                                         ["Parameters", paramname, propname],

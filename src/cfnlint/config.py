@@ -47,7 +47,8 @@ def configure_logging(debug_logging, info_logging):
 class ConfigFileArgs:
     """
     Config File arguments.
-    Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml in the Home and Project folder.
+    Parses .cfnlintrc OR .cfnlintrc.yaml OR .cfnlintrc.yml
+    in the Home and Project folder.
     """
 
     file_args: Dict = {}
@@ -326,7 +327,9 @@ class CliArgs:
                 self.exit(32, f"{self.prog}: error: {message}\n")
 
         class ExtendAction(argparse.Action):
-            """Support argument types that are lists and can be specified multiple times."""
+            """Support argument types that are lists and can
+            be specified multiple times.
+            """
 
             def __call__(self, parser, namespace, values, option_string=None):
                 items = getattr(namespace, self.dest)
@@ -420,8 +423,10 @@ class CliArgs:
             default=[],
             type=comma_separated_arg,
             action="extend",
-            help="specify one or more rules directories using "
-            "one or more --append-rules arguments. ",
+            help=(
+                "specify one or more rules directories using "
+                "one or more --append-rules arguments. "
+            ),
         )
         standard.add_argument(
             "-i",
@@ -451,7 +456,10 @@ class CliArgs:
             default=[],
             type=comma_separated_arg,
             action="extend",
-            help="always check rules whose id match these values, regardless of template exclusions",
+            help=(
+                "always check rules whose id match these values, regardless of template"
+                " exclusions"
+            ),
         )
         standard.add_argument(
             "-e",
@@ -466,7 +474,10 @@ class CliArgs:
             nargs="+",
             default={},
             action=RuleConfigurationAction,
-            help="Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=true",
+            help=(
+                "Provide configuration for a rule. Format RuleId:key=value. Example:"
+                " E3012:strict=true"
+            ),
         )
         standard.add_argument(
             "--config-file",
@@ -488,7 +499,10 @@ class CliArgs:
         advanced.add_argument(
             "-g",
             "--build-graph",
-            help="Creates a file in the same directory as the template that models the template's resources in DOT format",
+            help=(
+                "Creates a file in the same directory as the template that models the"
+                " template's resources in DOT format"
+            ),
             action="store_true",
         )
         advanced.add_argument(
@@ -620,8 +634,9 @@ class ConfigMixIn(TemplateArgs, CliArgs, ConfigFileArgs):
                 # the CLI will always have an empty list when the item is a list
                 # we will use that to evaluate if we need to merge the lists
                 if isinstance(cli_value, list):
-                    # Use a copy here, otherwise we will accumulate template level config
-                    # into the cli_value which will  persist between template files
+                    # Use a copy here, otherwise we will
+                    # accumulate template level config
+                    # into the cli_value which will persist between template files
                     result = cli_value.copy()
                     if isinstance(template_value, list):
                         result.extend(template_value)

@@ -9,11 +9,17 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class EqualsIsUseful(CloudFormationLintRule):
-    """Validate that the Equals will return true/false and not always be true or false"""
+    """
+    Validate that the Equals will return
+    true/false and not always be true or false
+    """
 
     id = "W8003"
     shortdesc = "Fn::Equals will always return true or false"
-    description = "Validate Fn::Equals to see if its comparing two strings or two equal items. While this works it may not be intended."
+    description = (
+        "Validate Fn::Equals to see if its comparing two strings or two equal items."
+        " While this works it may not be intended."
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-equals"
     tags = ["functions", "equals"]
 

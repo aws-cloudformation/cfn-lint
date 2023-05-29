@@ -1,4 +1,11 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/ConnectAttachmentId",
+   "/properties/CoreNetworkAddress",
+   "/properties/InsideCidrBlocks"
+  ]
+ ],
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/PeerAddress",
@@ -23,15 +30,19 @@
    "description": "Bgp configuration for connect peer",
    "properties": {
     "CoreNetworkAddress": {
+     "description": "The address of a core network.",
      "type": "string"
     },
     "CoreNetworkAsn": {
+     "description": "The ASN of the Coret Network.",
      "type": "number"
     },
     "PeerAddress": {
+     "description": "The address of a core network Connect peer.",
      "type": "string"
     },
     "PeerAsn": {
+     "description": "The ASN of the Connect peer.",
      "type": "number"
     }
    },
@@ -48,9 +59,11 @@
      "type": "array"
     },
     "CoreNetworkAddress": {
+     "description": "The IP address of a core network.",
      "type": "string"
     },
     "InsideCidrBlocks": {
+     "description": "The inside IP addresses used for a Connect peer configuration.",
      "insertionOrder": false,
      "items": {
       "type": "string"
@@ -58,6 +71,7 @@
      "type": "array"
     },
     "PeerAddress": {
+     "description": "The IP address of the Connect peer.",
      "type": "string"
     },
     "Protocol": {
@@ -183,7 +197,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -203,14 +218,13 @@
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
   "taggable": true
  },
  "typeName": "AWS::NetworkManager::ConnectPeer",
  "writeOnlyProperties": [
-  "/properties/PeerAddress",
   "/properties/CoreNetworkAddress",
-  "/properties/BgpOptions",
-  "/properties/InsideCidrBlocks"
+  "/properties/BgpOptions"
  ]
 }
