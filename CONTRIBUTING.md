@@ -21,7 +21,7 @@ reported the issue. Please try to include as much information as you can. Detail
 
 ## Development Environment
 
-1. You will need Python 3 >= 3.5. Verify which version you have by running `python --version`. 
+1. You will need Python 3 >= 3.5. Verify which version you have by running `python --version`.
 
     > If you don't have it installed, download it [here](https://www.python.org/downloads/). When you do this, `pip` should be installed automatically.
 

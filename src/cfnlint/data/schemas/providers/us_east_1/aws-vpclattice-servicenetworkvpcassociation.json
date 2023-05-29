@@ -2,6 +2,10 @@
  "additionalIdentifiers": [
   [
    "/properties/Id"
+  ],
+  [
+   "/properties/ServiceNetworkIdentifier",
+   "/properties/VpcIdentifier"
   ]
  ],
  "additionalProperties": false,
@@ -50,6 +54,23 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ServiceNetworkIdentifier": {
+      "maxLength": 2048,
+      "minLength": 20,
+      "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
+      "type": "string"
+     },
+     "VpcIdentifier": {
+      "maxLength": 2048,
+      "minLength": 5,
+      "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
+      "type": "string"
+     }
+    },
+    "required": []
+   },
    "permissions": [
     "vpc-lattice:ListServiceNetworkVpcAssociations"
    ]

@@ -35,11 +35,14 @@
    "additionalProperties": false,
    "description": "Resource mapping is used to map logical resources from template to physical resource",
    "properties": {
+    "EksSourceName": {
+     "type": "string"
+    },
     "LogicalStackName": {
      "type": "string"
     },
     "MappingType": {
-     "pattern": "CfnStack|Resource|Terraform",
+     "pattern": "CfnStack|Resource|Terraform|EKS",
      "type": "string"
     },
     "PhysicalResourceId": {
@@ -86,6 +89,7 @@
     "apigateway:GET",
     "ec2:Describe*",
     "ecs:DescribeServices",
+    "eks:DescribeCluster",
     "elasticfilesystem:DescribeFileSystems",
     "elasticloadbalancing:DescribeLoadBalancers",
     "lambda:GetFunction",
@@ -128,6 +132,7 @@
     "apigateway:GET",
     "ec2:Describe*",
     "ecs:DescribeServices",
+    "eks:DescribeCluster",
     "elasticfilesystem:DescribeFileSystems",
     "elasticloadbalancing:DescribeLoadBalancers",
     "lambda:GetFunction",
@@ -161,7 +166,7 @@
    "description": "A string containing full ResilienceHub app template body.",
    "maxLength": 5000,
    "minLength": 0,
-   "pattern": "^[\\w\\s:,-\\.'{}\\[\\]:\"]+$",
+   "pattern": "^[\\w\\s:,-\\.'\\/{}\\[\\]:\"]+$",
    "type": "string"
   },
   "Description": {

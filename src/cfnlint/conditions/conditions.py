@@ -23,13 +23,11 @@ LOGGER = logging.getLogger(__name__)
 class Conditions:
     """Conditions provides the logic for relating individual condition together"""
 
-    _conditions: Dict[str, ConditionNamed]
-    _parameters: Dict[str, List[str]]  # Dict of parameters with AllowedValues hashed
     _max_scenarios: int = 128  # equivalent to 2^7
 
-    def __init__(self, cfn):
-        self._conditions = {}
-        self._parameters = {}
+    def __init__(self, cfn) -> None:
+        self._conditions: Dict[str, ConditionNamed] = {}
+        self._parameters: Dict[str, List[str]] = {}
         self._init_conditions(cfn=cfn)
         self._init_parameters(cfn=cfn)
         self._cnf, self._solver_params = self._build_cnf(list(self._conditions.keys()))
@@ -103,8 +101,9 @@ class Conditions:
                     for param in c_equal.parameters:
                         for e_hash, e_equals in equals.items():
                             if param in e_equals.parameters:
-                                # equivalent to NAND logic. We want to make sure that both equals
-                                # are not both True at the same time
+                                # equivalent to NAND logic. We want to make
+                                # sure that both equals are not both True
+                                # at the same time
                                 cnf.add_prop(
                                     ~(equal_vars[c_equal.hash] & equal_vars[e_hash])
                                 )
@@ -113,7 +112,8 @@ class Conditions:
         # Determine if a set of conditions can never be all false
         allowed_values = self._parameters.copy()
         if allowed_values:
-            # iteration 1 cleans up all the hash values from allowed_values to know if we
+            # iteration 1 cleans up all the hash values
+            # from allowed_values to know if we
             # used them all
             for _, equal_1 in equals.items():
                 for param in equal_1.parameters:
@@ -156,8 +156,9 @@ class Conditions:
     def build_scenarios(
         self, conditions: Dict[str, Set[bool]], region: None = None
     ) -> Iterator[Dict[str, bool]]:
-        """Given a list of condition names this function will yield scenarios that represent
-        those conditions and there result (True/False)
+        """Given a list of condition names this function will
+        yield scenarios that represent those conditions and
+        there result (True/False)
 
         Args:
             condition_names (List[str]): A list of condition names
@@ -193,7 +194,8 @@ class Conditions:
             condition_names.append(condition_name)
 
         try:
-            # build a large matric of True/False options based on the provided conditions
+            # build a large matric of True/False options
+            # based on the provided conditions
             scenarios_returned = 0
             if region:
                 products = itertools.starmap(
@@ -239,8 +241,9 @@ class Conditions:
         solver, solver_params = self._build_solver(list(scenarios.keys()) + [implies])
 
         Args:
-            scenarios (Dict[str, bool]): A list of condition names and if they are True or False
-            implies: the condition name that we are implying will also be True
+            scenarios (Dict[str, bool]): A list of condition names
+            and if they are True or False implies: the condition name that
+            we are implying will also be True
 
         Returns:
             bool: if the implied condition will be True if the scenario is True

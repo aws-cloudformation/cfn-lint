@@ -52,7 +52,10 @@ class SubNotJoin(CloudFormationLintRule):
                                 matches.append(
                                     RuleMatch(
                                         join_obj[0:-1],
-                                        "Prefer using Fn::Sub over Fn::Join with an empty delimiter",
+                                        (
+                                            "Prefer using Fn::Sub over Fn::Join with an"
+                                            " empty delimiter"
+                                        ),
                                     )
                                 )
         return matches

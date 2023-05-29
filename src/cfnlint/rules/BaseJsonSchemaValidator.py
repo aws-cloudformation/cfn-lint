@@ -198,7 +198,8 @@ class BaseJsonSchemaValidator(CloudFormationLintRule):
         if isinstance(instance, dict):
             if len(instance) == 1:
                 for k, v in instance.items():
-                    # If this is a function we shouldn't fall back to a check_value check
+                    # If this is a function we shouldn't fall
+                    # back to a check_value check
                     if k in FUNCTIONS:
                         # convert the function name from camel case to underscore
                         # Example: Fn::FindInMap becomes check_find_in_map

@@ -77,8 +77,10 @@ class Graph:
     __supported_types: List[str] = ["Resources", "Parameters", "Outputs"]
 
     def __init__(self, cfn):
-        """Builds a graph where resources are nodes and edges are explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
-        relationships between resources"""
+        """Builds a graph where resources are nodes and edges are
+        explicit (DependsOn) or implicit (Fn::GetAtt, Fn::Sub, Ref)
+        relationships between resources
+        """
 
         self.settings = DefaultGraphSettings()
 
@@ -158,7 +160,7 @@ class Graph:
             ref_type, source_id = ref_path[:2]
             source_path = ref_path[2:-2]
             target_id = ref_path[-1]
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -171,13 +173,14 @@ class Graph:
 
     def _add_getatts(self, cfn: Any) -> None:
         # add edges for "Fn::GetAtt" tags.
-        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] } or { "!GetAtt" : "logicalNameOfResource.attributeName" }
+        # { "Fn::GetAtt" : [ "logicalNameOfResource", "attributeName" ] }
+        # or { "!GetAtt" : "logicalNameOfResource.attributeName" }
         getatt_paths = cfn.search_deep_keys("Fn::GetAtt")
         for getatt_path in getatt_paths:
             ref_type, source_id = getatt_path[:2]
             source_path = getatt_path[2:-2]
             value = getatt_path[-1]
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -201,7 +204,8 @@ class Graph:
                     )
 
     def _add_subs(self, cfn: Any) -> None:
-        # add edges for "Fn::Sub" tags. E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
+        # add edges for "Fn::Sub" tags.
+        # E.g. { "Fn::Sub": "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:vpc/${vpc}" }
         sub_objs = cfn.search_deep_keys("Fn::Sub")
         for sub_obj in sub_objs:
             sub_parameters = []
@@ -210,7 +214,7 @@ class Graph:
             source_path = sub_obj[2:-2]
             ref_type, source_id = sub_obj[:2]
 
-            if not ref_type in self.__supported_types:
+            if ref_type not in self.__supported_types:
                 continue
 
             if ref_type in ["Parameters", "Outputs"]:
@@ -276,15 +280,12 @@ class Graph:
         """Export the graph to a file with DOT format"""
         view = self.settings.subgraph_view(self.graph)
         try:
-            import pygraphviz  # pylint: disable=unused-import
-
             networkx.drawing.nx_agraph.write_dot(view, path)
         except ImportError:
             try:
                 with warnings.catch_warnings():
                     warnings.simplefilter("ignore", category=PendingDeprecationWarning)
                     warnings.simplefilter("ignore", category=DeprecationWarning)
-                    import pydot  # pylint: disable=unused-import
 
                     networkx.drawing.nx_pydot.write_dot(view, path)
             except ImportError as e:

@@ -8,7 +8,6 @@ from unittest import TestCase
 from cfnlint.api import lint, lint_all
 from cfnlint.core import get_rules
 from cfnlint.helpers import REGIONS
-from cfnlint.rules import RulesCollection
 
 
 class TestLint(TestCase):

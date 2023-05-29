@@ -12,7 +12,10 @@ class LimitDescription(CloudFormationLintRule):
 
     id = "I6012"
     shortdesc = "Output description limit"
-    description = "Check the size of Output description in the template is approaching the upper limit"
+    description = (
+        "Check the size of Output description in the template is approaching the upper"
+        " limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs", "limits"]
 
@@ -27,7 +30,10 @@ class LimitDescription(CloudFormationLintRule):
                     < len(description)
                     <= LIMITS["Outputs"]["description"]
                 ):
-                    message = "The length of output description ({0}) is approaching the limit ({1})"
+                    message = (
+                        "The length of output description ({0}) is approaching the"
+                        " limit ({1})"
+                    )
                     matches.append(
                         RuleMatch(
                             path,

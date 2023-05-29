@@ -11,8 +11,10 @@ class Elb(CloudFormationLintRule):
 
     id = "E2503"
     shortdesc = "Resource ELB Properties"
-    description = "See if Elb Resource Properties are set correctly \
-HTTPS has certificate HTTP has no certificate"
+    description = (
+        "See if Elb Resource Properties are set correctly HTTPS has certificate HTTP"
+        " has no certificate"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-elb-listener.html"
     tags = ["properties", "elb"]
 
@@ -33,8 +35,8 @@ HTTPS has certificate HTTP has no certificate"
                     RuleMatch(
                         path,
                         message.format(
-                            (", ".join(kwargs["accepted_protocols"])),
-                            ("/".join(map(str, path))),
+                            ", ".join(kwargs["accepted_protocols"]),
+                            "/".join(map(str, path)),
                         ),
                     )
                 )
@@ -44,7 +46,7 @@ HTTPS has certificate HTTP has no certificate"
                         "Certificates should be specified when using HTTPS for {0}"
                     )
                     matches.append(
-                        RuleMatch(path, message.format(("/".join(map(str, path)))))
+                        RuleMatch(path, message.format("/".join(map(str, path))))
                     )
 
         return matches
@@ -66,7 +68,10 @@ HTTPS has certificate HTTP has no certificate"
             if isinstance(subnets, list):
                 if len(subnets) < 2:
                     if scenario:
-                        message = 'You must specify at least two Subnets for load balancers with type "application" {0}'
+                        message = (
+                            "You must specify at least two Subnets for load balancers"
+                            ' with type "application" {0}'
+                        )
                         scenario_text = " and ".join(
                             [
                                 f'when condition "{k}" is {v}'
@@ -78,14 +83,20 @@ HTTPS has certificate HTTP has no certificate"
                         matches.append(
                             RuleMatch(
                                 path[:] + ["Subnets"],
-                                'You must specify at least two Subnets for load balancers with type "application"',
+                                (
+                                    "You must specify at least two Subnets for load"
+                                    ' balancers with type "application"'
+                                ),
                             )
                         )
             subnet_mappings = properties.get("SubnetMappings")
             if isinstance(subnet_mappings, list):
                 if len(subnet_mappings) < 2:
                     if scenario:
-                        message = 'You must specify at least two SubnetMappings for load balancers with type "application" {0}'
+                        message = (
+                            "You must specify at least two SubnetMappings for load"
+                            ' balancers with type "application" {0}'
+                        )
                         scenario_text = " and ".join(
                             [
                                 f'when condition "{k}" is {v}'
@@ -97,7 +108,10 @@ HTTPS has certificate HTTP has no certificate"
                         matches.append(
                             RuleMatch(
                                 path[:] + ["SubnetMappings"],
-                                'You must specify at least two SubnetMappings for load balancers with type "application"',
+                                (
+                                    "You must specify at least two SubnetMappings for"
+                                    ' load balancers with type "application"'
+                                ),
                             )
                         )
 
@@ -158,7 +172,6 @@ HTTPS has certificate HTTP has no certificate"
         scenarios = cfn.get_object_without_nested_conditions(resource_properties, path)
         for scenario in scenarios:
             properties = scenario.get("Object")
-
             matches.extend(
                 self.check_alb_subnets(properties, path, scenario.get("Scenario"))
             )
