@@ -94,7 +94,7 @@ class ProviderSchemaManager:
                     schema = Schema(json.load(fh))
                     self._registry_schemas[schema.type_name] = schema
 
-    @lru_cache
+    @lru_cache(maxsize=None)
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
         """Get the provider resource shcema and cache it to speed up future lookups
 
@@ -144,7 +144,7 @@ class ProviderSchemaManager:
             return self._schemas[reg.name][rt.name]
         return schema
 
-    @lru_cache
+    @lru_cache(maxsize=None)
     def get_resource_types(self, region: str) -> List[str]:
         """Get the resource types for a region
 
@@ -434,7 +434,7 @@ class ProviderSchemaManager:
                 continue
             schema.patch(patches=patches)
 
-    @lru_cache
+    @lru_cache(maxsize=None)
     def get_type_getatts(self, resource_type: str, region: str) -> Dict[str, GetAtt]:
         """Get the GetAtts for a type in a region
 
