@@ -30,7 +30,7 @@ class NestedStackParameters(CloudFormationLintRule):
     def __get_template_parameters(self, filename):
         try:
             (tmp, matches) = decode(filename)
-        except:  # pylint: disable=bare-except
+        except:  # ruff: noqa: E722
             return None
         if matches:
             return None
@@ -41,7 +41,10 @@ class NestedStackParameters(CloudFormationLintRule):
         matches = []
         for key in set(template_parameters.keys()) - set(nested_parameters.keys()):
             if scenario is None:
-                message = 'Specified parameter "{0}" doesn\'t exist in nested stack template at {1}'
+                message = (
+                    'Specified parameter "{0}" doesn\'t exist in nested stack template'
+                    " at {1}"
+                )
                 matches.append(
                     RuleMatch(
                         path + [key],
@@ -49,7 +52,10 @@ class NestedStackParameters(CloudFormationLintRule):
                     )
                 )
             else:
-                message = 'Specified parameter "{0}" doesn\'t exist in nested stack template {1}'
+                message = (
+                    'Specified parameter "{0}" doesn\'t exist in nested stack'
+                    " template {1}"
+                )
                 scenario_text = " and ".join(
                     [f'when condition "{k}" is {v}' for (k, v) in scenario.items()]
                 )

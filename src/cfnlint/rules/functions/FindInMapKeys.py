@@ -30,7 +30,10 @@ class FindInMapKeys(CloudFormationLintRule):
                     if isinstance(first_key, (str, int)):
                         if isinstance(map_name, (str)):
                             if mapping.get(first_key) is None:
-                                message = 'FindInMap first key "{0}" doesn\'t exist in map "{1}" at {3}'
+                                message = (
+                                    'FindInMap first key "{0}" doesn\'t exist in map'
+                                    ' "{1}" at {3}'
+                                )
                                 matches.append(
                                     RuleMatch(
                                         tree[:] + [1],
@@ -45,7 +48,10 @@ class FindInMapKeys(CloudFormationLintRule):
                         if mapping.get(first_key):
                             # Don't double error if they first key doesn't exist
                             if mapping.get(first_key, {}).get(second_key) is None:
-                                message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
+                                message = (
+                                    'FindInMap second key "{0}" doesn\'t exist in map'
+                                    ' "{1}" under "{2}" at {3}'
+                                )
                                 matches.append(
                                     RuleMatch(
                                         tree[:] + [2],
@@ -60,7 +66,10 @@ class FindInMapKeys(CloudFormationLintRule):
                     else:
                         for key, value in mapping.items():
                             if value.get(second_key) is None:
-                                message = 'FindInMap second key "{0}" doesn\'t exist in map "{1}" under "{2}" at {3}'
+                                message = (
+                                    'FindInMap second key "{0}" doesn\'t exist in map'
+                                    ' "{1}" under "{2}" at {3}'
+                                )
                                 matches.append(
                                     RuleMatch(
                                         tree[:] + [2],

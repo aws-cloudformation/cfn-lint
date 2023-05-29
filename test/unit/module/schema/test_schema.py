@@ -2,10 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
 import logging
 from unittest import TestCase
-from unittest.mock import ANY, MagicMock, Mock, call, mock_open, patch
 
 from cfnlint.schema.schema import Schema
 

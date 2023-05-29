@@ -76,7 +76,10 @@ class RecordSet(CloudFormationLintRule):
             items = value.split(" ", 2)
             # Check if the 3 settings are given.
             if len(items) != 3:
-                message = 'CAA record must contain 3 settings (flags tag "value"), record contains {} settings.'
+                message = (
+                    'CAA record must contain 3 settings (flags tag "value"), record'
+                    " contains {} settings."
+                )
                 matches.append(RuleMatch(path, message.format(len(items))))
             else:
                 # Check the flag value
@@ -91,17 +94,26 @@ class RecordSet(CloudFormationLintRule):
                     )
                 else:
                     if int(items[0]) not in [0, 128]:
-                        message = "Invalid CAA record flag setting ({}) given, must be 0 or 128."
+                        message = (
+                            "Invalid CAA record flag setting ({}) given, must be 0 or"
+                            " 128."
+                        )
                         matches.append(RuleMatch(path, message.format(items[0])))
 
                 # Check the tag value
                 if not re.match(REGEX_ALPHANUMERIC, items[1]):
-                    message = "Invalid CAA record tag setting {}. Value has to be alphanumeric."
+                    message = (
+                        "Invalid CAA record tag setting {}. Value has to be"
+                        " alphanumeric."
+                    )
                     matches.append(RuleMatch(path, message.format(items[1])))
 
                 # Check the value
                 if not items[2].startswith('"') or not items[2].endswith('"'):
-                    message = 'CAA record value setting has to be enclosed in double quotation marks (").'
+                    message = (
+                        "CAA record value setting has to be enclosed in double"
+                        ' quotation marks (").'
+                    )
                     matches.append(RuleMatch(path, message))
 
         return matches
@@ -131,7 +143,10 @@ class RecordSet(CloudFormationLintRule):
 
             # Check if the 3 settings are given.
             if len(items) != 2:
-                message = "MX record must contain 2 settings (priority domainname), record contains {} settings."
+                message = (
+                    "MX record must contain 2 settings (priority domainname), record"
+                    " contains {} settings."
+                )
                 matches.append(RuleMatch(path, message.format(len(items), value)))
             else:
                 # Check the priority value
@@ -148,7 +163,10 @@ class RecordSet(CloudFormationLintRule):
                     )
                 else:
                     if not 0 <= int(items[0]) <= 65535:
-                        message = "Invalid MX record priority setting ({}) given, must be between 0 and 65535."
+                        message = (
+                            "Invalid MX record priority setting ({}) given, must be"
+                            " between 0 and 65535."
+                        )
                         matches.append(RuleMatch(path, message.format(items[0], value)))
 
                 # Check the domainname value
@@ -173,8 +191,8 @@ class RecordSet(CloudFormationLintRule):
 
         if not isinstance(value, dict) and not re.match(self.REGEX_TXT, value):
             message = (
-                "TXT record is not structured as one or more items up to 255 characters "
-                "enclosed in double quotation marks at {0}"
+                "TXT record is not structured as one or more items up to 255 characters"
+                " enclosed in double quotation marks at {0}"
             )
             matches.append(
                 RuleMatch(

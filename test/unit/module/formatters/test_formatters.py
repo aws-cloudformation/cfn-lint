@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 
+import defusedxml.ElementTree as ET
 import jsonschema
 
 import cfnlint.core
@@ -37,7 +38,11 @@ class TestFormatters(BaseTestCase):
                 10,
                 self.filename,
                 UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(),
-                "The default action when replacing/removing a resource is to delete it. Set explicit values for UpdateReplacePolicy / DeletionPolicy on potentially stateful resource: Resources/myTable",
+                (
+                    "The default action when replacing/removing a resource is to delete"
+                    " it. Set explicit values for UpdateReplacePolicy / DeletionPolicy"
+                    " on potentially stateful resource: Resources/myTable"
+                ),
             ),
             Match(
                 9,
@@ -46,7 +51,10 @@ class TestFormatters(BaseTestCase):
                 16,
                 self.filename,
                 SubUnneeded(),
-                "Fn::Sub isn't needed because there are no variables at Resources/myTable/Properties/TableName/Fn::Sub",
+                (
+                    "Fn::Sub isn't needed because there are no variables at"
+                    " Resources/myTable/Properties/TableName/Fn::Sub"
+                ),
             ),
             Match(
                 18,
@@ -140,9 +148,13 @@ class TestFormatters(BaseTestCase):
 
         for i in range(3):
             # Check the errors
+            # ruff: noqa: E501
             self.assertEqual(
                 a_results[i],
-                f"{self.results[i].rule.id}: {self.results[i].rule.shortdesc} {self.results[i].filename}:{self.results[i].linenumber}",
+                (
+                    f"{self.results[i].rule.id}:"
+                    f" {self.results[i].rule.shortdesc} {self.results[i].filename}:{self.results[i].linenumber}"
+                ),
             )
 
     def test_parseable_formatter(self):
@@ -200,30 +212,53 @@ class TestFormatters(BaseTestCase):
             self.assertEqual(a_results[0], f"\x1b[4m{self.filename}\x1b[0m")
             self.assertEqual(
                 a_results[1],
-                f"\x1b[0m{self.results[2].linenumber}:{self.results[2].columnnumber}:               \x1b[0m\x1b[31m{self.results[2].rule.id}     \x1b[0m{self.results[2].message}",
+                (
+                    f"\x1b[0m{self.results[2].linenumber}:{self.results[2].columnnumber}:"
+                    f"               \x1b[0m\x1b[31m{self.results[2].rule.id}    "
+                    f" \x1b[0m{self.results[2].message}"
+                ),
             )
             self.assertEqual(
                 a_results[2],
-                f"\x1b[0m{self.results[1].linenumber}:{self.results[1].columnnumber}:                \x1b[0m\x1b[33m{self.results[1].rule.id}     \x1b[0m{self.results[1].message}",
+                (
+                    f"\x1b[0m{self.results[1].linenumber}:{self.results[1].columnnumber}:"
+                    f"                \x1b[0m\x1b[33m{self.results[1].rule.id}    "
+                    f" \x1b[0m{self.results[1].message}"
+                ),
             )
             self.assertEqual(
                 a_results[3],
-                f"\x1b[0m{self.results[0].linenumber}:{self.results[0].columnnumber}:                \x1b[0m\x1b[34m{self.results[0].rule.id}     \x1b[0m{self.results[0].message}",
+                (
+                    f"\x1b[0m{self.results[0].linenumber}:{self.results[0].columnnumber}:"
+                    f"                \x1b[0m\x1b[34m{self.results[0].rule.id}    "
+                    f" \x1b[0m{self.results[0].message}"
+                ),
             )
         else:
             # Check the errors
             self.assertEqual(a_results[0], self.filename)
             self.assertEqual(
                 a_results[1],
-                f"{self.results[2].linenumber}:{self.results[2].columnnumber}:               {self.results[2].rule.id}     {self.results[2].message}",
+                (
+                    f"{self.results[2].linenumber}:{self.results[2].columnnumber}:     "
+                    f"          {self.results[2].rule.id}     {self.results[2].message}"
+                ),
             )
             self.assertEqual(
                 a_results[2],
-                f"{self.results[1].linenumber}:{self.results[1].columnnumber}:                {self.results[1].rule.id}     {self.results[1].message}",
+                (
+                    f"{self.results[1].linenumber}:{self.results[1].columnnumber}:     "
+                    f"           {self.results[1].rule.id}    "
+                    f" {self.results[1].message}"
+                ),
             )
             self.assertEqual(
                 a_results[3],
-                f"{self.results[0].linenumber}:{self.results[0].columnnumber}:                {self.results[0].rule.id}     {self.results[0].message}",
+                (
+                    f"{self.results[0].linenumber}:{self.results[0].columnnumber}:     "
+                    f"           {self.results[0].rule.id}    "
+                    f" {self.results[0].message}"
+                ),
             )
 
     def test_json_formatter(self):

@@ -35,23 +35,6 @@ class TestTransform(BaseTestCase):
             },
         )
 
-    def test_conversion_of_step_function_definition_uri(self):
-        """Tests that the a serverless step function can convert a local path to a s3 path"""
-        filename = (
-            "test/fixtures/templates/good/transform/step_function_local_definition.yaml"
-        )
-        region = "us-east-1"
-        template = cfn_yaml.load(filename)
-        transformed_template = Transform(filename, template, region)
-        transformed_template.transform_template()
-        self.assertDictEqual(
-            transformed_template._template.get("Resources")
-            .get("StateMachine")
-            .get("Properties")
-            .get("DefinitionS3Location"),
-            {"Bucket": "bucket", "Key": "value"},
-        )
-
     def test_conversion_of_application_location(self):
         """Tests if serverless application converts location to string when dict"""
         filename = "test/fixtures/templates/good/transform/applications_location.yaml"
@@ -75,7 +58,10 @@ class TestTransform(BaseTestCase):
         )
 
     def test_conversion_of_step_function_definition_uri(self):
-        """Tests that the a serverless step function can convert a local path to a s3 path"""
+        """
+        Tests that the a serverless step function can convert
+        a local path to a s3 path
+        """
         filename = (
             "test/fixtures/templates/good/transform/step_function_local_definition.yaml"
         )

@@ -42,14 +42,16 @@ class Match(_Match):
 
 
 @refactored(
-    "RulesCollection is refactored and deprecated. Please use cfnlint.rules.RulesCollection"
+    "RulesCollection is refactored and deprecated. "
+    "Please use cfnlint.rules.RulesCollection"
 )
 class RulesCollection(_RulesCollection):
     """Refactored class Rules Collection"""
 
 
 @refactored(
-    "CloudFormationLintRule is refactored and deprecated. Please use cfnlint.rules.CloudFormationLintRule"
+    "CloudFormationLintRule is refactored and deprecated. "
+    "Please use cfnlint.rules.CloudFormationLintRule"
 )
 class CloudFormationLintRule(_CloudFormationLintRule):
     """Refactored class Rules CloudFormationLintRule"""
@@ -63,7 +65,8 @@ class ParseError(_ParseError):
 
 
 @refactored(
-    "TransformError is refactored and deprecated. Please use cfnlint.rules.TransformError"
+    "TransformError is refactored and deprecated. "
+    "Please use cfnlint.rules.TransformError"
 )
 class TransformError(_TransformError):
     """Refactored class Rules TransformError"""

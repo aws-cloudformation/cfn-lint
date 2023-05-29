@@ -11,7 +11,10 @@ class ImportValue(CloudFormationLintRule):
 
     id = "W6001"
     shortdesc = "Check Outputs using ImportValue"
-    description = "Check if the Output value is set using ImportValue, so creating an Output of an Output"
+    description = (
+        "Check if the Output value is set using ImportValue, so creating an Output of"
+        " an Output"
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["outputs", "importvalue"]
 
@@ -33,7 +36,10 @@ class ImportValue(CloudFormationLintRule):
             if importvalue_tree[2] == "Value":
                 # ImportValue can be used within other intrinic function, exclude those
                 if importvalue_tree[3] == "Fn::ImportValue":
-                    message = "The value of output ({0}) is imported from another output ({1})"
+                    message = (
+                        "The value of output ({0}) is imported from another output"
+                        " ({1})"
+                    )
                     matches.append(
                         RuleMatch(
                             importvalue_tree,
