@@ -1,4 +1,10 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkId",
+   "/properties/VpcArn"
+  ]
+ ],
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/CoreNetworkId",
@@ -23,7 +29,8 @@
      "items": {
       "$ref": "#/definitions/Tag"
      },
-     "type": "array"
+     "type": "array",
+     "uniqueItems": true
     }
    },
    "type": "object"
@@ -31,7 +38,6 @@
   "Tag": {
    "additionalProperties": false,
    "description": "A key-value pair to associate with a resource.",
-   "insertionOrder": false,
    "properties": {
     "Key": {
      "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
@@ -72,7 +78,6 @@
    "permissions": [
     "networkmanager:CreateVpcAttachment",
     "networkmanager:GetVpcAttachment",
-    "networkmanager:TagResource",
     "ec2:DescribeRegions",
     "iam:CreateServiceLinkedRole"
    ],
@@ -179,7 +184,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": true
   },
   "UpdatedAt": {
    "description": "Last update time of the attachment.",
@@ -200,7 +206,6 @@
   "/properties/OwnerAccountId",
   "/properties/EdgeLocation",
   "/properties/AttachmentPolicyRuleNumber",
-  "/properties/ProposedSegmentChange",
   "/properties/SegmentName",
   "/properties/ResourceArn"
  ],
@@ -213,6 +218,7 @@
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
   "taggable": true
  },

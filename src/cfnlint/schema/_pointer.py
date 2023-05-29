@@ -2,7 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Dict
+from typing import Any, Dict
 
 
 def resolve_pointer(obj, pointer) -> Dict:
@@ -42,7 +42,7 @@ class SchemaPointer:
 
         return obj
 
-    def walk(self, obj: Dict, part: str) -> Dict:
+    def walk(self, obj: Dict, part: str) -> Any:
         """Walks one step in doc and returns the referenced part
 
         Args:

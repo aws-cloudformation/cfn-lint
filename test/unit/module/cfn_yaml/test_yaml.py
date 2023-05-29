@@ -2,10 +2,9 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
-
-from six import StringIO
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401

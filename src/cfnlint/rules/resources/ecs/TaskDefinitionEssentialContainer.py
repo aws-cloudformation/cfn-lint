@@ -6,7 +6,10 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class TaskDefinitionEssentialContainer(CloudFormationLintRule):
-    """Check ECS TaskDefinition ContainerDefinitions Property Specifies at least one Essential Container"""
+    """
+    Check ECS TaskDefinition ContainerDefinitions Property
+    Specifies at least one Essential Container
+    """
 
     id = "E3042"
     shortdesc = "Check at least one essential container is specified"
@@ -37,7 +40,8 @@ class TaskDefinitionEssentialContainer(CloudFormationLintRule):
                     else:
                         pass
                 else:
-                    # If 'Essential' is not specified, it defaults to an essential container
+                    # If 'Essential' is not specified,
+                    # it defaults to an essential container
                     has_essential_container = True
 
             if not has_essential_container:
