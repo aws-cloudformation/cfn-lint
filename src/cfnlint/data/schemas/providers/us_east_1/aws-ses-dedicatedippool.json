@@ -1,8 +1,10 @@
 {
  "additionalProperties": false,
- "createOnlyProperties": [
-  "/properties/PoolName",
+ "conditionalCreateOnlyProperties": [
   "/properties/ScalingMode"
+ ],
+ "createOnlyProperties": [
+  "/properties/PoolName"
  ],
  "description": "Resource Type definition for AWS::SES::DedicatedIpPool",
  "handlers": {
@@ -27,6 +29,12 @@
    "permissions": [
     "ses:GetDedicatedIpPool",
     "ses:GetDedicatedIps"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ses:PutDedicatedIpPoolScalingAttributes",
+    "ses:GetDedicatedIpPool"
    ]
   }
  },

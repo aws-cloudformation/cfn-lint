@@ -11,7 +11,10 @@ class UpdateReplacePolicyDeletionPolicy(CloudFormationLintRule):
 
     id = "W3011"
     shortdesc = "Check resources with UpdateReplacePolicy/DeletionPolicy have both"
-    description = "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources from deletion"
+    description = (
+        "Both UpdateReplacePolicy and DeletionPolicy are needed to protect resources"
+        " from deletion"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-deletionpolicy.html"
     tags = ["resources", "updatereplacepolicy", "deletionpolicy"]
 
@@ -34,7 +37,10 @@ class UpdateReplacePolicyDeletionPolicy(CloudFormationLintRule):
                     and r_values.get("UpdateReplacePolicy") != "Delete"
                 ):
                     path = ["Resources", r_name]
-                    message = f'Both UpdateReplacePolicy and DeletionPolicy are needed to protect {"/".join(path)} from deletion'
+                    message = (
+                        "Both UpdateReplacePolicy and DeletionPolicy are needed to"
+                        f" protect {'/'.join(path)} from deletion"
+                    )
                     matches.append(RuleMatch(path, message))
 
         return matches

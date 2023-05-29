@@ -20,23 +20,24 @@
   },
   "ProposedSegmentChange": {
    "additionalProperties": false,
-   "description": "A key-value pair to associate with a resource.",
+   "description": "The attachment to move from one segment to another.",
    "properties": {
     "AttachmentPolicyRuleNumber": {
-     "description": "New policy rule number of the attachment",
+     "description": "The rule number in the policy document that applies to this change.",
      "type": "integer"
     },
     "SegmentName": {
-     "description": "Proposed segment name",
+     "description": "The name of the segment to change.",
      "type": "string"
     },
     "Tags": {
-     "description": "Proposed tags for the Segment.",
+     "description": "The list of key-value tags that changed for the segment.",
      "insertionOrder": false,
      "items": {
       "$ref": "#/definitions/Tag"
      },
-     "type": "array"
+     "type": "array",
+     "uniqueItems": true
     }
    },
    "type": "object"
@@ -159,7 +160,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": true
   },
   "TransportAttachmentId": {
    "description": "Id of transport attachment",
@@ -180,7 +182,6 @@
   "/properties/AttachmentId",
   "/properties/OwnerAccountId",
   "/properties/AttachmentPolicyRuleNumber",
-  "/properties/ProposedSegmentChange",
   "/properties/SegmentName"
  ],
  "required": [
@@ -193,6 +194,7 @@
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
   "taggable": true
  },

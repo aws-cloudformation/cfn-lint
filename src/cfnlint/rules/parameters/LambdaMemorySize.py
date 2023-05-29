@@ -44,7 +44,7 @@ class LambdaMemorySize(CloudFormationLintRule):
                     "or AllowedValues at {0}"
                 )
                 matches.append(
-                    RuleMatch(param_path, message.format(("/".join(param_path))))
+                    RuleMatch(param_path, message.format("/".join(param_path)))
                 )
 
         return matches

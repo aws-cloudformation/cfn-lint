@@ -5,8 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
+# ruff: noqa: E501
 from cfnlint.rules.resources.RetentionPeriodOnResourceTypesWithAutoExpiringContent import (
-    RetentionPeriodOnResourceTypesWithAutoExpiringContent,  # pylint: disable=E0401
+    RetentionPeriodOnResourceTypesWithAutoExpiringContent,
 )
 
 
