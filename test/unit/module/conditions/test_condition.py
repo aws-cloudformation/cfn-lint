@@ -2,12 +2,9 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import string
 from unittest import TestCase
 
 from cfnlint.conditions.condition import ConditionNot, ConditionUnnammed
-from cfnlint.decode import decode_str
-from cfnlint.template import Template
 
 
 class TestCondition(TestCase):

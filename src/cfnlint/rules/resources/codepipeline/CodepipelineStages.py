@@ -29,7 +29,10 @@ class CodepipelineStages(CloudFormationLintRule):
         matches = []
 
         if len(stages) < 2:
-            message = f"CodePipeline has {len(stages)} stages. There must be at least two stages."
+            message = (
+                f"CodePipeline has {len(stages)} stages. There must be at least two"
+                " stages."
+            )
             matches.append(
                 RuleMatch(path, self._format_error_message(message, scenario))
             )
@@ -97,7 +100,10 @@ class CodepipelineStages(CloudFormationLintRule):
                     )
 
         if not categories - set(["Source"]):
-            message = "At least one stage in pipeline must contain an action that is not a source action."
+            message = (
+                "At least one stage in pipeline must contain an action that is not a"
+                " source action."
+            )
             matches.append(
                 RuleMatch(path, self._format_error_message(message, scenario))
             )
@@ -112,7 +118,10 @@ class CodepipelineStages(CloudFormationLintRule):
             stage_name = stage.get("Name")
             if isinstance(stage_name, str):
                 if stage_name in stage_names:
-                    message = f"All stage names within a pipeline must be unique. ({stage_name})"
+                    message = (
+                        "All stage names within a pipeline must be unique."
+                        f" ({stage_name})"
+                    )
                     matches.append(
                         RuleMatch(
                             path + [sidx, "Name"],
@@ -160,8 +169,10 @@ class CodepipelineStages(CloudFormationLintRule):
                     )
                 except AttributeError as err:
                     self.logger.debug(
-                        "Got AttributeError. Should have been caught by generic linting. "
-                        "Ignoring the error here: %s",
+                        (
+                            "Got AttributeError. Should have been caught by generic"
+                            " linting. Ignoring the error here: %s"
+                        ),
                         str(err),
                     )
 

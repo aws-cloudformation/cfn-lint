@@ -52,6 +52,7 @@ Morbi sagittis pretium ligula in tristique. Suspendisse odio lectus, condimentum
 Resources:\n"""
         )
         for n in range(1, 300):
+            # ruff: noqa: E501
             f.write(
                 "  Resource"
                 + str(n)

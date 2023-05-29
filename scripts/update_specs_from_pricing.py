@@ -2,14 +2,10 @@
 """
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
-"""
 
+Updates our dynamic patches from the pricing API
+This script requires Boto3 and Credentials to call the Pricing API
 """
-    Updates our dynamic patches from the pricing API
-    This script requires Boto3 and Credentials to call the Pricing API
-"""
-
-
 import json
 import logging
 

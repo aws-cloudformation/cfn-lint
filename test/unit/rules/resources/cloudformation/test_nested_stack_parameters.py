@@ -18,11 +18,6 @@ class TestNestedStackParameters(BaseRuleTestCase):
         logger = logging.getLogger("cfnlint.decode.decode")
         logger.disabled = False
 
-    def tearDown(self) -> None:
-        super().tearDown()
-        logger = logging.getLogger("cfnlint.decode.decode")
-        logger.disabled = False
-
     def setUp(self):
         """Setup"""
         super(TestNestedStackParameters, self).setUp()
