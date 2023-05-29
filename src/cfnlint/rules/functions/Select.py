@@ -35,7 +35,10 @@ class Select(CloudFormationLintRule):
                         "Fn::FindInMap",
                         "Fn::Select",
                     ]:
-                        message = "Select index should be an Integer or a function Ref, Fn::FindInMap, or Fn::Select for {0}"
+                        message = (
+                            "Select index should be an Integer or a function Ref,"
+                            " Fn::FindInMap, or Fn::Select for {0}"
+                        )
                         matches.append(
                             RuleMatch(
                                 path,
@@ -43,7 +46,10 @@ class Select(CloudFormationLintRule):
                             )
                         )
             else:
-                message = "Select index should be an Integer or a function Ref, Fn::FindInMap, or Fn::Select for {0}"
+                message = (
+                    "Select index should be an Integer or a function Ref,"
+                    " Fn::FindInMap, or Fn::Select for {0}"
+                )
                 matches.append(
                     RuleMatch(
                         path,
@@ -54,7 +60,10 @@ class Select(CloudFormationLintRule):
             try:
                 int(index_obj)
             except (ValueError, TypeError):
-                message = "Select index should be an Integer or a function of Ref, Fn::FindInMap, or Fn::Select for {0}"
+                message = (
+                    "Select index should be an Integer or a function of Ref,"
+                    " Fn::FindInMap, or Fn::Select for {0}"
+                )
                 matches.append(
                     RuleMatch(path, message.format("/".join(map(str, path))))
                 )

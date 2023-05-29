@@ -15,7 +15,7 @@ from cfnlint.runner import Runner
 class TestCloudFormationRuleChild(BaseTestCase):
     """Test CloudFormation Rule"""
 
-    def test_child_rules(self):
+    def test_child_rules(self) -> None:
         class TestRuleParent(CloudFormationLintRule):
             """Def Rule"""
 
@@ -48,14 +48,16 @@ class TestCloudFormationRuleChild(BaseTestCase):
         rule_collection.register(test_rule_child)
 
         template, _ = decode_str('{"key": "value"}')
-        runner = Runner(rule_collection, None, template, ["us-east-1"], [])
-        failures = runner.run()
+        self.assertIsNotNone(template)
+        if template is not None:
+            runner = Runner(rule_collection, None, template, ["us-east-1"], [])
+            failures = runner.run()
 
-        self.assertListEqual(
-            failures, [Match(1, 2, 1, 7, None, test_rule_child, "failure")]
-        )
+            self.assertListEqual(
+                failures, [Match(1, 2, 1, 7, None, test_rule_child, "failure")]
+            )
 
-    def test_child_rules_suppressed(self):
+    def test_child_rules_suppressed(self) -> None:
         class TestRuleParent(CloudFormationLintRule):
             """Def Rule"""
 
@@ -90,12 +92,14 @@ class TestCloudFormationRuleChild(BaseTestCase):
         rule_collection.register(test_rule_child)
 
         template, _ = decode_str('{"key": "value"}')
-        runner = Runner(rule_collection, None, template, ["us-east-1"], [])
-        failures = runner.run()
+        self.assertIsNotNone(template)
+        if template is not None:
+            runner = Runner(rule_collection, None, template, ["us-east-1"], [])
+            failures = runner.run()
 
-        self.assertListEqual(failures, [])
+            self.assertListEqual(failures, [])
 
-    def test_child_rules_configured(self):
+    def test_child_rules_configured(self) -> None:
         class TestRuleParent(CloudFormationLintRule):
             """Def Rule"""
 
@@ -137,7 +141,9 @@ class TestCloudFormationRuleChild(BaseTestCase):
         rule_collection.configure(configure_rules={"E1001": {"pass": False}})
 
         template, _ = decode_str('{"key": "value"}')
-        runner = Runner(rule_collection, None, template, ["us-east-1"], [])
-        failures = runner.run()
+        self.assertIsNotNone(template)
+        if template is not None:
+            runner = Runner(rule_collection, None, template, ["us-east-1"], [])
+            failures = runner.run()
 
-        self.assertListEqual(failures, [])
+            self.assertListEqual(failures, [])

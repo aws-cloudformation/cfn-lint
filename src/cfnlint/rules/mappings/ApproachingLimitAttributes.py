@@ -12,7 +12,10 @@ class LimitAttributes(CloudFormationLintRule):
 
     id = "I7012"
     shortdesc = "Mapping attribute limit"
-    description = "Check if the amount of Mapping attributes in the template is approaching the upper limit"
+    description = (
+        "Check if the amount of Mapping attributes in the template is approaching the"
+        " upper limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["mappings", "limits"]
 
@@ -26,7 +29,10 @@ class LimitAttributes(CloudFormationLintRule):
                     < len(mapping_attribute)
                     <= LIMITS["Mappings"]["attributes"]
                 ):
-                    message = "The amount of mapping attributes ({0}) is approaching the limit ({1})"
+                    message = (
+                        "The amount of mapping attributes ({0}) is approaching the"
+                        " limit ({1})"
+                    )
                     matches.append(
                         RuleMatch(
                             path,
