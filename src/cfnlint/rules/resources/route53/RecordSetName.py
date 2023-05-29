@@ -10,7 +10,10 @@ class RecordSetName(CloudFormationLintRule):
 
     id = "E3041"
     shortdesc = "RecordSet HostedZoneName is a superdomain of Name"
-    description = "In a RecordSet, the HostedZoneName must be a superdomain of the Name being validated"
+    description = (
+        "In a RecordSet, the HostedZoneName must be a superdomain of the Name being"
+        " validated"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-route53-recordset.html#cfn-route53-recordset-name"
     tags = ["resource", "properties", "route53"]
 

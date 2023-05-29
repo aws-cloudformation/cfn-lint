@@ -83,7 +83,10 @@ class AttributeMismatch(CloudFormationLintRule):
         )
 
         if attributes != keys:
-            message = "The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1} must match at {2}"
+            message = (
+                "The set of Attributes in AttributeDefinitions: {0} and KeySchemas: {1}"
+                " must match at {2}"
+            )
             matches.append(
                 RuleMatch(
                     path,

@@ -40,7 +40,10 @@ class KeyName(CloudFormationLintRule):
             message = "Mapping key ({0}) has to be a string."
             matches.append(RuleMatch(path[:], message.format(key)))
         elif not re.match("^[a-zA-Z0-9.-]{1,255}$", key) and key != "Fn::Transform":
-            message = "Mapping key ({0}) has invalid name. Name has to be alphanumeric, '-' or '.'"
+            message = (
+                "Mapping key ({0}) has invalid name. Name has to be alphanumeric, '-'"
+                " or '.'"
+            )
             matches.append(RuleMatch(path[:], message.format(key)))
 
         return matches

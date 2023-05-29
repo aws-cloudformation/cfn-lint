@@ -9,7 +9,10 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 class NoEcho(CloudFormationLintRule):
     id = "W4002"
     shortdesc = "Check for NoEcho References"
-    description = "Check if there is a NoEcho enabled parameter referenced within a resources Metadata section"
+    description = (
+        "Check if there is a NoEcho enabled parameter referenced within a resources"
+        " Metadata section"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html#parameters-section-structure-properties"
     tags = ["resources", "NoEcho"]
 
@@ -37,8 +40,8 @@ class NoEcho(CloudFormationLintRule):
                                 'As the resource "metadata" section contains '
                                 + 'reference to a "NoEcho" parameter '
                                 + str(ref[-1])
-                                + ", CloudFormation will display the parameter value in "
-                                + "plaintext",
+                                + ", CloudFormation will display the parameter"
+                                " value in " + "plaintext",
                             )
                         )
 
@@ -61,8 +64,8 @@ class NoEcho(CloudFormationLintRule):
                                         'As the resource "metadata" section contains '
                                         + 'reference to a "NoEcho" parameter '
                                         + str(param)
-                                        + ", CloudFormation will display the parameter value in "
-                                        + "plaintext",
+                                        + ", CloudFormation will display the parameter"
+                                        " value in " + "plaintext",
                                     )
                                 )
 

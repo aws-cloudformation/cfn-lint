@@ -3,9 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import patch
-
-from six import StringIO
 
 import cfnlint.decode.cfn_yaml  # pylint: disable=E0401
 from cfnlint.core import DEFAULT_RULESDIR  # pylint: disable=E0401
@@ -141,7 +138,7 @@ class TestCustomRuleParsing(BaseTestCase):
         for _, values in self.filenames.items():
             filename = values.get("filename")
             template = cfnlint.decode.cfn_yaml.load(filename)
-            cfn = Template(filename, template, ["us-east-1"])
+            Template(filename, template, ["us-east-1"])
             rules = RulesCollection(None, None, None, False, None)
             rules.create_from_custom_rules_file(rulename)
             runner = cfnlint.runner.Runner(rules, filename, template, None, None)
