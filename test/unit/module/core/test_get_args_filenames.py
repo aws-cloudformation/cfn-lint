@@ -3,11 +3,9 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import sys
+from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
-
-from six import StringIO
 
 import cfnlint.config  # pylint: disable=E0401
 import cfnlint.core  # pylint: disable=E0401
@@ -307,7 +305,7 @@ class TestArgsFilenamesAndRules(BaseTestCase):
         isatty_mock.side_effect = [True]
 
         with self.assertRaises(SystemExit) as se:
-            test = cfnlint.core.get_args_filenames([])
+            cfnlint.core.get_args_filenames([])
 
         self.assertEqual(se.exception.code, 1)
         parser_mock.assert_called_once()

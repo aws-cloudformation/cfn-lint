@@ -2,6 +2,9 @@
  "additionalIdentifiers": [
   [
    "/properties/CoreNetworkArn"
+  ],
+  [
+   "/properties/GlobalNetworkId"
   ]
  ],
  "additionalProperties": false,
@@ -84,7 +87,6 @@
     "networkmanager:CreateCoreNetwork",
     "networkmanager:GetCoreNetwork",
     "networkmanager:GetCoreNetworkPolicy",
-    "networkmanager:TagResource",
     "ec2:DescribeRegions"
    ],
    "timeoutInMinutes": 720
@@ -183,7 +185,8 @@
    "items": {
     "$ref": "#/definitions/Tag"
    },
-   "type": "array"
+   "type": "array",
+   "uniqueItems": true
   }
  },
  "readOnlyProperties": [
@@ -202,6 +205,7 @@
  "tagging": {
   "cloudFormationSystemTags": false,
   "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
   "tagUpdatable": true,
   "taggable": true
  },

@@ -5,9 +5,10 @@ SPDX-License-Identifier: MIT-0
 import json
 import logging
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import ANY, MagicMock, Mock, call, mock_open, patch
+from unittest.mock import MagicMock, call, mock_open, patch
 
 from cfnlint.schema.manager import ProviderSchemaManager, ResourceNotFoundError
+from cfnlint.schema.patch import SchemaPatch
 
 LOGGER = logging.getLogger("cfnlint.schema.manager")
 LOGGER.disabled = True
@@ -21,7 +22,6 @@ class TestUpdateResourceSchemas(BaseTestCase):
 
         self.schema_zip = "test/fixtures/registry/schema.zip"
         self.manager = ProviderSchemaManager()
-        self.manager._patch_path = "test/fixtures/registry/patch/"
         self.schemas = dict.fromkeys(["aws-lambda-codesigningconfig"])
         for resource in self.schemas:
             with open(f"test/fixtures/registry/schemas/{resource}.json") as fh:
@@ -202,7 +202,6 @@ class TestManagerPatch(BaseTestCase):
         super().setUp()
 
         self.manager = ProviderSchemaManager()
-        self.manager._patch_path = "test/fixtures/registry/patch/"
         self.schemas = dict.fromkeys(["aws-lambda-codesigningconfig"])
         for resource in self.schemas:
             with open(f"test/fixtures/registry/schemas/{resource}.json") as fh:
@@ -266,7 +265,8 @@ class TestManagerGetResourceSchema(BaseTestCase):
 
     def test_removed_types(self):
         rt = "AWS::EC2::VPC"
-        self.manager._cache["RemovedTypes"].append(rt)
+        region = "us-east-1"
+        self.manager._patch(SchemaPatch([], [rt], {}), region)
 
         with self.assertRaises(ResourceNotFoundError):
-            self.manager.get_resource_schema("us-east-1", rt)
+            self.manager.get_resource_schema(region, rt)
