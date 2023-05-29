@@ -127,14 +127,15 @@
      "type": "string"
     },
     "Value": {
-     "description": "An optional string, which you can use to describe or define the tag.",
+     "description": "String which you can use to describe or define the tag.",
      "maxLength": 256,
      "minLength": 1,
      "type": "string"
     }
    },
    "required": [
-    "Key"
+    "Key",
+    "Value"
    ],
    "type": "object"
   }
@@ -165,6 +166,8 @@
   "update": {
    "permissions": [
     "cloudwatch:PutMetricStream",
+    "cloudwatch:TagResource",
+    "cloudwatch:UntagResource",
     "iam:PassRole"
    ]
   }
@@ -286,6 +289,7 @@
   "OutputFormat"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudwatch.git",
+ "taggable": true,
  "typeName": "AWS::CloudWatch::MetricStream",
  "writeOnlyProperties": [
   "/properties/Tags"

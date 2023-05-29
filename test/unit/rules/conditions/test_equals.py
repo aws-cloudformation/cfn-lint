@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
+from typing import List
 
 from cfnlint.rules.conditions.Equals import Equals  # pylint: disable=E0401
 
@@ -15,7 +16,7 @@ class TestEquals(BaseRuleTestCase):
         super(TestEquals, self).setUp()
         self.collection.register(Equals())
 
-    success_templates = []
+    success_templates: List[str] = []
 
     def test_file_positive(self):
         """Test Positive"""

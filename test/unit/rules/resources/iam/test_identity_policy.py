@@ -63,7 +63,11 @@ class TestIdentityPolicies(TestCase):
         self.assertEqual(len(errs), 1, errs)
         self.assertEqual(
             errs[0].message,
-            "{'Effect': 'Allow', 'NotAction': '*', 'Action': ['cloudformation:*'], 'Resource': '*'} is valid under each of {'required': ['NotAction']}, {'required': ['Action']}",
+            (
+                "{'Effect': 'Allow', 'NotAction': '*', 'Action': ['cloudformation:*'],"
+                " 'Resource': '*'} is valid under each of {'required': ['NotAction']},"
+                " {'required': ['Action']}"
+            ),
         )
         self.assertListEqual(list(errs[0].path), ["Statement", 0])
 
@@ -107,7 +111,11 @@ class TestIdentityPolicies(TestCase):
         self.assertListEqual(list(errs[0].path), ["Statement", 0, "Effect"])
         self.assertEqual(
             errs[1].message,
-            "{'NotValid': ['arn:${AWS::Partition}:iam::123456789012/role/cep-publish-role']} is not of type 'string'",
+            (
+                "{'NotValid':"
+                " ['arn:${AWS::Partition}:iam::123456789012/role/cep-publish-role']} is"
+                " not of type 'string'"
+            ),
         )
         self.assertListEqual(list(errs[1].path), ["Statement", 0, "Resource", 1])
 
@@ -115,6 +123,7 @@ class TestIdentityPolicies(TestCase):
         """Test Positive"""
         validator = Draft7Validator(schema={})
 
+        # ruff: noqa: E501
         policy = """
             {
                 "Version": "2012-10-18",
@@ -143,7 +152,11 @@ class TestIdentityPolicies(TestCase):
         self.assertEqual(len(errs), 2, errs)
         self.assertEqual(
             errs[0].message,
-            "{'Fn::Sub': ['arn:${AWS::Partition}:iam::123456789012/role/cep-publish-role']} is not of type 'string'",
+            (
+                "{'Fn::Sub':"
+                " ['arn:${AWS::Partition}:iam::123456789012/role/cep-publish-role']} is"
+                " not of type 'string'"
+            ),
         )
         self.assertListEqual(list(errs[0].path), ["Statement", 0, "Resource", 1])
         self.assertEqual(
