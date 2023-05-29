@@ -54,14 +54,20 @@ class CacheClusterFailover(CloudFormationLintRule):
             if bool_compare(automatic_failover, False):
                 pathmessage = path[:] + ["AutomaticFailoverEnabled"]
                 if scenario is None:
-                    message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster at {0}'
+                    message = (
+                        '"AutomaticFailoverEnabled" must be misssing or True when'
+                        " setting up a cluster at {0}"
+                    )
                     results.append(
                         RuleMatch(
                             pathmessage, message.format("/".join(map(str, pathmessage)))
                         )
                     )
                 else:
-                    message = '"AutomaticFailoverEnabled" must be misssing or True when setting up a cluster when {0} at {1}'
+                    message = (
+                        '"AutomaticFailoverEnabled" must be misssing or True when'
+                        " setting up a cluster when {0} at {1}"
+                    )
                     scenario_text = " and ".join(
                         [f'when condition "{k}" is {v}' for (k, v) in scenario.items()]
                     )
@@ -80,7 +86,10 @@ class CacheClusterFailover(CloudFormationLintRule):
                 if num_cache_nodes <= 1:
                     pathmessage = path[:] + ["NumCacheClusters"]
                     if scenario is None:
-                        message = '"NumCacheClusters" must be greater than one when creating a cluster at {0}'
+                        message = (
+                            '"NumCacheClusters" must be greater than one when creating'
+                            " a cluster at {0}"
+                        )
                         results.append(
                             RuleMatch(
                                 pathmessage,
@@ -88,7 +97,10 @@ class CacheClusterFailover(CloudFormationLintRule):
                             )
                         )
                     else:
-                        message = '"NumCacheClusters" must be greater than one when creating a cluster when {0} at {1}'
+                        message = (
+                            '"NumCacheClusters" must be greater than one when creating'
+                            " a cluster when {0} at {1}"
+                        )
                         scenario_text = " and ".join(
                             [
                                 f'when condition "{k}" is {v}'

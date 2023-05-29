@@ -64,7 +64,7 @@ def _decode(
 
         if matches:
             return (None, matches)
-    except UnicodeDecodeError as _:
+    except UnicodeDecodeError:
         LOGGER.error("Cannot read file contents: %s", filename)
         matches.append(
             create_match_file_error(filename, "Cannot read file contents: {filename}")
@@ -109,7 +109,10 @@ def _decode(
                     [
                         create_match_file_error(
                             filename,
-                            f"Tried to parse {filename} as JSON but got error: {str(json_err)}",
+                            (
+                                f"Tried to parse {filename} as JSON but got error:"
+                                f" {str(json_err)}"
+                            ),
                         )
                     ],
                 )
