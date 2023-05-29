@@ -2,12 +2,16 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
 
-from cfnlint.conditions.equals import Equal, EqualParameter
+from cfnlint.conditions.equals import Equal
+from cfnlint.helpers import FUNCTION_CONDITIONS
+
+# we leave the type hinting here
+_CONDITION = Dict[str, Union[str, Sequence["_CONDITION"]]]
 
 
 class Condition:
@@ -18,19 +22,26 @@ class Condition:
         self._condition: Optional[Union[ConditionList, ConditionNamed]] = None
 
     def _init_condition(
-        self, condition: Dict[str, dict], all_conditions: Dict[str, dict]
+        self,
+        condition: _CONDITION,
+        all_conditions: Dict[str, dict],
     ) -> None:
         if len(condition) == 1:
             for k, v in condition.items():
-                if k == "Fn::Equals":
-                    self._fn_equals = Equal(v)
-                elif k == "Fn::And":
-                    self._condition = ConditionAnd(v, all_conditions)
-                elif k == "Fn::Or":
-                    self._condition = ConditionOr(v, all_conditions)
-                elif k == "Fn::Not":
-                    self._condition = ConditionNot(v, all_conditions)
+                if k in FUNCTION_CONDITIONS:
+                    if not isinstance(v, list):
+                        raise ValueError(f"{k} value should be an array")
+                    if k == "Fn::Equals":
+                        self._fn_equals = Equal(v)
+                    elif k == "Fn::And":
+                        self._condition = ConditionAnd(v, all_conditions)
+                    elif k == "Fn::Or":
+                        self._condition = ConditionOr(v, all_conditions)
+                    elif k == "Fn::Not":
+                        self._condition = ConditionNot(v, all_conditions)
                 elif k == "Condition":
+                    if not isinstance(v, str):
+                        raise ValueError(f"Condition value {v!r} must be a string")
                     self._condition = ConditionNamed(v, all_conditions)
                 else:
                     raise ValueError(f"Unknown key ({k}) in condition")
@@ -39,12 +50,13 @@ class Condition:
 
     @property
     def equals(self) -> List[Equal]:
-        """Returns a List of the Equals that make up the Condition
+        """Returns a Sequence of the Equals that make up the Condition
 
         Args: None
 
         Returns:
-            List[Equal]: The Equal that are part of the condition
+            Union[Sequence[EqualParameter], Sequence[Equal]]:
+                The Equal that are part of the condition
         """
         if self._fn_equals:
             return [self._fn_equals]
@@ -76,7 +88,9 @@ class ConditionList(Condition):
     List conditions are And, Or, Not
     """
 
-    def __init__(self, conditions: List[dict], all_conditions) -> None:
+    def __init__(
+        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+    ) -> None:
         super().__init__()
         self._conditions: List[ConditionUnnammed] = []
         self._prefix_path: str = ""
@@ -84,7 +98,7 @@ class ConditionList(Condition):
             self._conditions.append(ConditionUnnammed(condition, all_conditions))
 
     @property
-    def equals(self) -> List[EqualParameter]:
+    def equals(self) -> List[Equal]:
         """Returns a List of the Equals that make up the Condition
 
         Args: None
@@ -101,7 +115,9 @@ class ConditionList(Condition):
 class ConditionAnd(ConditionList):
     """Represents the logic specific to an And Condition"""
 
-    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
+    def __init__(
+        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+    ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::And"
 
@@ -123,7 +139,9 @@ class ConditionAnd(ConditionList):
 class ConditionNot(ConditionList):
     """Represents the logic specific to an Not Condition"""
 
-    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
+    def __init__(
+        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+    ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Not"
         if len(conditions) != 1:
@@ -143,7 +161,9 @@ class ConditionNot(ConditionList):
 class ConditionOr(ConditionList):
     """Represents the logic specific to an Or Condition"""
 
-    def __init__(self, conditions: List[dict], all_conditions: Dict) -> None:
+    def __init__(
+        self, conditions: Sequence[_CONDITION], all_conditions: Dict[str, dict]
+    ) -> None:
         super().__init__(conditions, all_conditions)
         self._prefix_path = "Fn::Or"
 
@@ -164,9 +184,8 @@ class ConditionOr(ConditionList):
 class ConditionUnnammed(Condition):
     """Represents an unnamed condition which is basically a nested Equals"""
 
-    def __init__(self, condition: Any, all_conditions: Dict) -> None:
+    def __init__(self, condition: Any, all_conditions: Dict[str, dict]) -> None:
         super().__init__()
-        self._equals = []
         if isinstance(condition, dict):
             self._init_condition(condition, all_conditions)
         else:
@@ -176,9 +195,8 @@ class ConditionUnnammed(Condition):
 class ConditionNamed(Condition):
     """The parent condition that directly represents a named condition in a template"""
 
-    def __init__(self, name: str, all_conditions: Dict) -> None:
+    def __init__(self, name: str, all_conditions: Dict[str, dict]) -> None:
         super().__init__()
-        self._equals = []
         condition = all_conditions.get(name)
         if isinstance(condition, dict):
             self._name = name

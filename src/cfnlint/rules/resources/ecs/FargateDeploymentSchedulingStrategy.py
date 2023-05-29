@@ -32,6 +32,9 @@ class FargateDeploymentSchedulingStrategy(CloudFormationLintRule):
                             isinstance(scheduling_strategy, str)
                             and scheduling_strategy != "REPLICA"
                         ):
-                            error_message = f"Fargate service only support REPLICA as scheduling strategy at {'/'.join(map(str, path))}"
+                            error_message = (
+                                "Fargate service only support REPLICA as scheduling"
+                                f" strategy at {'/'.join(map(str, path))}"
+                            )
                             matches.append(RuleMatch(path, error_message))
         return matches

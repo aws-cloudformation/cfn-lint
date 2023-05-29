@@ -49,7 +49,10 @@ class Cidr(CloudFormationLintRule):
                                     )
                                 )
                         else:
-                            message = "Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}"
+                            message = (
+                                "Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or"
+                                " Select for {0}"
+                            )
                             matches.append(
                                 RuleMatch(
                                     path, message.format("/".join(map(str, value)))
@@ -168,7 +171,10 @@ class Cidr(CloudFormationLintRule):
                 max_value = parameter_obj.get("MaxValue")
                 min_value = parameter_obj.get("MinValue")
                 if (not min_value) or min_value < 1 or min_value > 256:
-                    message = "Parameter for Cidr count have MinValue between 1 and 256 at {0}"
+                    message = (
+                        "Parameter for Cidr count have MinValue between 1 and 256"
+                        " at {0}"
+                    )
                     matches.append(
                         RuleMatch(
                             tree + ["MinValue"],
@@ -176,7 +182,10 @@ class Cidr(CloudFormationLintRule):
                         )
                     )
                 if (not max_value) or max_value < 1 or max_value > 256:
-                    message = "Parameter for Cidr count have MaxValue between 1 and 256 at {0}"
+                    message = (
+                        "Parameter for Cidr count have MaxValue between 1 and 256"
+                        " at {0}"
+                    )
                     matches.append(
                         RuleMatch(
                             tree + ["MaxValue"],

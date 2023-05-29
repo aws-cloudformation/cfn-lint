@@ -70,7 +70,7 @@ A custom error message can be used to override the existing fallback messages. (
 
 ## Example
 This following example shows how a you can create a custom rule.
- 
+
 This rule validates all EC2 instances in a template aren’t using the instance type “p3.2xlarge”.
 
 ```
@@ -84,5 +84,3 @@ AWS::Lambda::Function Environment.Variables.NODE_ENV IS DEFINED
 ```
 
 To include this rules, include your custom rules text file using the `-z custom_rules.txt` argument when running cfn-lint.
-
-

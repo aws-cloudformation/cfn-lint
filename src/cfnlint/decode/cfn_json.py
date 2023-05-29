@@ -73,7 +73,10 @@ class JSONDecodeError(ValueError):
         if isinstance(errors, cfnlint.rules.Match):
             errors = [errors]
 
-        errmsg = f"{errors[0].message}: line {errors[0].linenumber} column {errors[0].linenumber} (char {pos})"
+        errmsg = (
+            f"{errors[0].message}: line {errors[0].linenumber} column"
+            f" {errors[0].linenumber} (char {pos})"
+        )
         ValueError.__init__(self, errmsg)
         self.msg = errors[0].message
         self.doc = doc

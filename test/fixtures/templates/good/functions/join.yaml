@@ -4,23 +4,23 @@ Parameters:
     Type: String
   Partitions:
     Type: List<String>
-Resources: 
+Resources:
   myVPC:
     Type: AWS::EC2::VPC
     Properties:
       CidrBlock: 10.0.0.0/16
       InstanceTenancy: dedicated
-  RolePolicies: 
+  RolePolicies:
     Type: "AWS::IAM::ManagedPolicy"
-    Properties: 
+    Properties:
       ManagedPolicyName: "root"
-      PolicyDocument: 
+      PolicyDocument:
         Version: "2012-10-17"
-        Statement: 
-          - 
+        Statement:
+          -
             Effect: "Allow"
             Action: "*"
-            Resource: 
+            Resource:
             - Fn::Join:
                 - ''
                 - - !Sub "${AWS::AccountId}-test"   # Sub returns a string and shoule work here
@@ -67,4 +67,3 @@ Resources:
       Tags:
         - Key: BucketUsers
           Value: !Join [":", !GetAtt CustomResource.ListOutput]
-

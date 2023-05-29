@@ -2,8 +2,7 @@
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/FlowName",
-  "/properties/KMSArn",
-  "/properties/TriggerConfig/ActivateFlowOnCreate"
+  "/properties/KMSArn"
  ],
  "definitions": {
   "AggregationConfig": {
@@ -1376,10 +1375,6 @@
    "additionalProperties": false,
    "description": "Trigger settings of the flow.",
    "properties": {
-    "ActivateFlowOnCreate": {
-     "description": "Active 'Scheduled' or 'Event' flow after creation. Without activation the default state of such flows upon creation is DRAFT.",
-     "type": "boolean"
-    },
     "TriggerProperties": {
      "$ref": "#/definitions/ScheduledTriggerProperties",
      "description": "Details required based on the type of trigger"
@@ -1601,6 +1596,8 @@
   "update": {
    "permissions": [
     "appflow:UpdateFlow",
+    "appflow:StartFlow",
+    "appflow:StopFlow",
     "appflow:TagResource",
     "appflow:UntagResource",
     "appflow:ListTagsForResource",
@@ -1642,6 +1639,14 @@
    "maxLength": 256,
    "minLength": 1,
    "pattern": "[a-zA-Z0-9][\\w!@#.-]+",
+   "type": "string"
+  },
+  "FlowStatus": {
+   "description": "Flow activation status for Scheduled- and Event-triggered flows",
+   "enum": [
+    "Active",
+    "Suspended"
+   ],
    "type": "string"
   },
   "KMSArn": {
