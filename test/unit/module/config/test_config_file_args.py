@@ -77,7 +77,10 @@ class TestConfigFileArgs(BaseTestCase):
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
     def test_config_parser_fail_on_config_rules(self, yaml_mock):
-        """test the read call to the config parser is parsing configure rules correctly"""
+        """
+        test the read call to the config parser is
+        parsing configure rules correctly
+        """
 
         yaml_mock.side_effect = [{"configure_rules": {"E3012": {"strict": False}}}, {}]
 

@@ -28,6 +28,6 @@ def equal(one, two) -> bool:
     try:
         one = str(one)
         two = str(two)
-        return one == two
+        return bool(one == two)
     except ValueError:
         return True
