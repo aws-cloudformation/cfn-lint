@@ -66,7 +66,10 @@ class UpdateReplacePolicy(CloudFormationLintRule):
                     )
                 )
             if key == "Snapshot" and res_type not in valid_snapshot_types:
-                message = "UpdateReplacePolicy cannot be Snapshot for resources of type {0} at {1}"
+                message = (
+                    "UpdateReplacePolicy cannot be Snapshot for resources of type {0}"
+                    " at {1}"
+                )
                 matches.append(
                     RuleMatch(path, message.format(res_type, "/".join(map(str, path))))
                 )

@@ -109,6 +109,8 @@ FUNCTION_NOT = "Fn::Not"
 FUNCTION_EQUALS = "Fn::Equals"
 FUNCTION_FOR_EACH = re.compile(r"^Fn::ForEach::[a-zA-Z0-9]+$")
 
+FUNCTION_CONDITIONS = [FUNCTION_AND, FUNCTION_OR, FUNCTION_NOT, FUNCTION_EQUALS]
+
 PSEUDOPARAMS_SINGLE = [
     "AWS::AccountId",
     "AWS::Partition",
@@ -287,7 +289,8 @@ def url_has_newer_version(url):
         # We should force an update
         return True
 
-    # The ETag value of the remote resource does not match the local one, so a newer version is available
+    # The ETag value of the remote resource does not
+    # match the local one, so a newer version is available
     return True
 
 
@@ -358,6 +361,7 @@ def save_metadata(metadata, filename):
 
     with open(filename, "w", encoding="utf-8") as metadata_file:
         json.dump(metadata, metadata_file)
+        metadata_file.write("\n")
 
 
 def load_resource(package, filename="us-east-1.json"):

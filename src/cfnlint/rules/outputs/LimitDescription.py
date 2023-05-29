@@ -11,7 +11,10 @@ class LimitDescription(CloudFormationLintRule):
 
     id = "E6012"
     shortdesc = "Output description limit not exceeded"
-    description = "Check the size of Output description in the template is less than the upper limit"
+    description = (
+        "Check the size of Output description in the template is less than the upper"
+        " limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html"
     tags = ["outputs", "limits"]
 

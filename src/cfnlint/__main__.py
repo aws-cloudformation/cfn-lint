@@ -14,22 +14,28 @@ LOGGER = logging.getLogger("cfnlint")
 def main():
     if sys.version_info[:2] == (3, 4):
         warnings.warn(
-            "Python 3.4 has reached end of life. "
-            "cfn-lint has ended support for python 3.4 as of July 1st, 2020.",
+            (
+                "Python 3.4 has reached end of life. "
+                "cfn-lint has ended support for python 3.4 as of July 1st, 2020."
+            ),
             Warning,
             stacklevel=3,
         )
     elif sys.version_info[:2] == (3, 5):
         warnings.warn(
-            "Python 3.5 has reached end of life. "
-            "cfn-lint has ended support for python 3.5 as of August 1st, 2021.",
+            (
+                "Python 3.5 has reached end of life. "
+                "cfn-lint has ended support for python 3.5 as of August 1st, 2021."
+            ),
             Warning,
             stacklevel=3,
         )
     elif sys.version_info[:2] == (2, 7):
         warnings.warn(
-            "Python 2.7 has reached end of life. "
-            "cfn-lint will end support for python 2.7 on June 1st, 2020.",
+            (
+                "Python 2.7 has reached end of life. "
+                "cfn-lint will end support for python 2.7 on June 1st, 2020."
+            ),
             Warning,
             stacklevel=3,
         )
