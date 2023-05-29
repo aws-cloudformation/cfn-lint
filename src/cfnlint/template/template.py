@@ -49,9 +49,11 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             self.graph = Graph(self)
         except KeyError as err:
             LOGGER.debug(
-                "Encountered KeyError error while building graph. Ignored as this "
-                "should be caught by other rules and is more than likely a template "
-                "formatting error: %s",
+                (
+                    "Encountered KeyError error while building graph. Ignored as this"
+                    " should be caught by other rules and is more than likely a"
+                    " template formatting error: %s"
+                ),
                 err,
             )
         except Exception as err:  # pylint: disable=broad-except
@@ -73,7 +75,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             LOGGER.info("DOT representation of the graph written to %s", path)
         except ImportError:
             LOGGER.error(
-                "Could not write the graph in DOT format. Please install either `pygraphviz` or `pydot` modules."
+                "Could not write the graph in DOT format. Please install either"
+                " `pygraphviz` or `pydot` modules."
             )
 
     def has_language_extensions_transform(self):
@@ -354,7 +357,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def search_deep_class(self, searchClass, includeGlobals=True):
         """
         Search for a key in all parts of the template.
-        :return if searchText is "Ref", an array like ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
+        :return if searchText is "Ref", an array like
+        ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
         """
         results = []
         if searchClass in self.__cache_search_deep_class:
@@ -409,7 +413,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     def search_deep_keys(self, searchText, includeGlobals=True):
         """
         Search for a key in all parts of the template.
-        :return if searchText is "Ref", an array like ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
+        :return if searchText is "Ref", an array like
+        ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
         """
         LOGGER.debug("Search for key %s as far down as the template goes", searchText)
         results = []
@@ -462,7 +467,8 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                     result["Value"] = item
                     matches.append(result)
             else:
-                # Length longer than 1 means a list or object that should be fully returned
+                # Length longer than 1 means a list or
+                # object that should be fully returned
                 result["Value"] = item
                 matches.append(result)
 
@@ -695,10 +701,14 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 else:
                     if len(value) == 1:
                         for dict_name, _ in value.items():
-                            # If this is a function we shouldn't fall back to a check_value check
+                            # If this is a function we shouldn't fall back
+                            # to a check_value check
                             if dict_name in cfnlint.helpers.FUNCTIONS:
-                                # convert the function name from camel case to underscore
-                                # Example: Fn::FindInMap becomes check_find_in_map
+                                # convert the function name from
+                                # camel case to underscore
+                                # Example: Fn::FindInMap becomes
+                                # check_find_in_map
+                                # ruff: noqa: E501
                                 function_name = f'check_{camel_to_snake(dict_name.replace("Fn::", ""))}'
                                 if function_name == "check_ref":
                                     if check_ref:
@@ -765,17 +775,20 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             if not path_conditions:
                 return [{resource_condition: False}]
 
-            # resource conditions are always true.  If the same resource condition exists in the path
+            # resource conditions are always true.
+            # If the same resource condition exists in the path
             # with the True then nothing else matters
             if True in path_conditions.get(resource_condition, {False}):
                 return []
 
-            # resource conditions are always true.  If the same resource condition exists in the path
+            # resource conditions are always true.
+            # If the same resource condition exists in the path
             # with the False then nothing else matters
             if False in path_conditions.get(resource_condition, {True}):
                 return [path_conditions]
 
-            # if any condition paths loop back on themselves with the opposite then its unreachable code
+            # if any condition paths loop back on themselves with the
+            # opposite then its unreachable code
             scenario = {}
             for condition_name, condition_bool in path_conditions.items():
                 if len(condition_bool) > 1:
@@ -1116,7 +1129,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         results[c_r_k] = set()
                     results[c_r_k] = results[c_r_k].union(c_r_v)
 
-        except KeyError as _:
+        except KeyError:
             pass
 
         return results

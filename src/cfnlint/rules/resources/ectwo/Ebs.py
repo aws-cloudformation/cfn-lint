@@ -29,7 +29,10 @@ class Ebs(CloudFormationLintRule):
                         if volume_type in ("io1", "io2"):
                             if iops_obj is None:
                                 pathmessage = path[:] + ["VolumeType"]
-                                message = "VolumeType {0} requires Iops to be specified for {1}"
+                                message = (
+                                    "VolumeType {0} requires Iops to be specified"
+                                    " for {1}"
+                                )
                                 matches.append(
                                     RuleMatch(
                                         pathmessage,
@@ -80,7 +83,10 @@ class Ebs(CloudFormationLintRule):
                             r"^ephemeral([0-9]|[1][0-9]|[2][0-3])$", virtual_name
                         ):
                             pathmessage = path[:] + [index, "VirtualName"]
-                            message = "Property VirtualName should be of type ephemeral(n) for {0}"
+                            message = (
+                                "Property VirtualName should be of type ephemeral(n)"
+                                " for {0}"
+                            )
                             matches.append(
                                 RuleMatch(
                                     pathmessage,

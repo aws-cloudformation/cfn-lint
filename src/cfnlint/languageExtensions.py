@@ -9,8 +9,10 @@ class LanguageExtensions:
     ):
         if not has_language_extensions_transform:
             message = (
-                "Missing Transform: Declare the AWS::LanguageExtensions Transform globally to enable use"
-                " of the intrinsic function " + intrinsic_function + " at {0}"
+                "Missing Transform: Declare the AWS::LanguageExtensions Transform"
+                " globally to enable use of the intrinsic function "
+                + intrinsic_function
+                + " at {0}"
             )
             matches.append(RuleMatch(tree[:], message.format("/".join(map(str, tree)))))
         return matches

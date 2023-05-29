@@ -62,5 +62,8 @@ class TestExitCodes(BaseTestCase):
                 self.assertEqual(
                     cfnlint.core.get_exit_code(matches, level),
                     exit_code,
-                    f"{match_names} matches with {level} level should yield {exit_code}",
+                    (
+                        f"{match_names} matches with {level} level should yield"
+                        f" {exit_code}"
+                    ),
                 )

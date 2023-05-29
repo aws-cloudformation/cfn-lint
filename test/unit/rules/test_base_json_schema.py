@@ -2,10 +2,7 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Generator
 from unittest import TestCase
-
-from jsonschema import Draft7Validator
 
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules.BaseJsonSchema import BaseJsonSchema

@@ -98,7 +98,7 @@ class JUnitFormatter(BaseFormatter):
 
         test_cases = []
         for rule in rules.all_rules.values():
-            if not rule.id in rules.used_rules:
+            if rule.id not in rules.used_rules:
                 if not rule.id:
                     continue
                 test_case = TestCase(name=f"{rule.id} {rule.shortdesc}")
@@ -219,6 +219,7 @@ class PrettyFormatter(BaseFormatter):
     def print_matches(self, matches, rules=None, filenames=None):
         results = self._format_matches(matches)
 
+        # ruff: noqa: E501
         results.append(
             f"Cfn-lint scanned {colored(len(filenames), color.bold_reset)} templates against "
             f"{colored(len(rules.used_rules), color.bold_reset)} rules and found "

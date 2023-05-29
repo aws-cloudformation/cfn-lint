@@ -162,7 +162,10 @@ class FindInMap(CloudFormationLintRule):
         elif isinstance(map_name, dict):
             return self.validate_intrinsic_function(map_name, tree)
         else:
-            error_message = "Map Name should be an intrinsic function that resolves to a string, or a string at {0}"
+            error_message = (
+                "Map Name should be an intrinsic function that resolves to a string, or"
+                " a string at {0}"
+            )
             matches.append(
                 RuleMatch(tree[:] + [0], error_message.format("/".join(map(str, tree))))
             )
@@ -174,7 +177,10 @@ class FindInMap(CloudFormationLintRule):
             return matches
         if isinstance(key, dict):
             return self.validate_intrinsic_function(key, tree)
-        error_message = "FindInMap {0} should be a string, int or an intrinsic function resolves to a string or int at {1}"
+        error_message = (
+            "FindInMap {0} should be a string, int or an intrinsic function resolves to"
+            " a string or int at {1}"
+        )
         matches.append(
             RuleMatch(
                 tree[:] + [key_index],
@@ -185,7 +191,10 @@ class FindInMap(CloudFormationLintRule):
 
     def validate_default_value_shape(self, default_value, tree):
         matches = []
-        error_message = "Fn::FindInMap default value must be an object whose key is 'DefaultValue' at {0}"
+        error_message = (
+            "Fn::FindInMap default value must be an object whose key is 'DefaultValue'"
+            " at {0}"
+        )
         if (not isinstance(default_value, dict)) or (len(default_value) != 1):
             matches.append(
                 RuleMatch(tree[:], error_message.format("/".join(map(str, tree))))
@@ -217,7 +226,10 @@ class FindInMap(CloudFormationLintRule):
                 elif isinstance(value, (int, float, str)):
                     continue
                 else:
-                    error_message = "Elements in Fn::FindInMap default value must be a string, number or an intrinsic function resolves to string at {0}"
+                    error_message = (
+                        "Elements in Fn::FindInMap default value must be a string,"
+                        " number or an intrinsic function resolves to string at {0}"
+                    )
                     matches.append(
                         RuleMatch(
                             tree[:], error_message.format("/".join(map(str, tree)))

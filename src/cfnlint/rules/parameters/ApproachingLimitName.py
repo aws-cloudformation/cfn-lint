@@ -11,7 +11,10 @@ class LimitName(CloudFormationLintRule):
 
     id = "I2011"
     shortdesc = "Parameter name limit"
-    description = "Check the size of Parameter names in the template is approaching the upper limit"
+    description = (
+        "Check the size of Parameter names in the template is approaching the upper"
+        " limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["parameters", "limits"]
 

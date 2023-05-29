@@ -61,7 +61,7 @@ class JsonSchema(BaseJsonSchema):
             schema_details = schema_path.split("/")
             cfn_schema = load_resource(
                 f"cfnlint.data.schemas.extensions.{schema_details[0]}",
-                filename=(f"{schema_details[1]}.json"),
+                filename=f"{schema_details[1]}.json",
             )
             cfn_validator = self.setup_validator(schema=cfn_schema)
 
@@ -69,7 +69,8 @@ class JsonSchema(BaseJsonSchema):
             # description and use the best error for the location information
             if cfn_schema.get("description"):
                 err = best_match(list(cfn_validator.iter_errors(instance)))
-                # best_match will return None if the list is empty.  There is no best match
+                # best_match will return None if the list is empty.
+                # There is no best match
                 if not err:
                     return
                 err.message = cfn_schema.get("description")
@@ -111,7 +112,8 @@ class JsonSchema(BaseJsonSchema):
                     if schema.json_schema:
                         if t in cached_validation_run or region == REGION_PRIMARY:
                             if schema.is_cached:
-                                # if its cached we already ran the same validation lets not run it again
+                                # if its cached we already ran the
+                                # same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
                         cfn_validator = self.setup_validator(schema=schema.json_schema)

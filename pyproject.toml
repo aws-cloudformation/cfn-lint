@@ -52,21 +52,10 @@ test = [
     "coverage>=7.2.1",
     "pydot",
     "jsonschema<4.18",
-]
-lint = [
-    "black",
-    "pylint",
-    "flake8",
-    "bandit",
-    "bandit[toml]",
-    "isort",
-    "mypy",
-    "types-PyYAML",
-    "types-regex",
+    "defusedxml",
 ]
 ci = [
-    "cfn-lint[test]",
-    "cfn-lint[lint]"
+    "cfn-lint[test]"
 ]
 
 [project.scripts]
@@ -87,6 +76,47 @@ profile = "black"
 
 [tool.black]
 skip-string-normalization = false
+line-length = 88
 
 [tool.bandit]
 skips = ["B101", "B303", "B310", "B110", "B112", "B324", "B404", "B603", "B607"]
+exclude_dirs = ["tests", "scripts"]
+
+[tool.ruff]
+# Enable pycodestyle (`E`) and Pyflakes (`F`) codes by default.
+select = ["E", "F"]
+ignore = []
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+# Same as Black.
+line-length = 88
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]

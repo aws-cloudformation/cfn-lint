@@ -2,10 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-import json
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.helpers
 from cfnlint.rules import RulesCollection
 from cfnlint.rules.resources.properties.JsonSchema import (
     JsonSchema,  # pylint: disable=E0401
@@ -15,7 +13,6 @@ from cfnlint.rules.resources.properties.Required import (
 )
 from cfnlint.runner import Runner
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
-from cfnlint.schema.patch import SchemaPatch
 
 
 class TestOverrideRequired(BaseTestCase):

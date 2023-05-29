@@ -4,19 +4,41 @@ repos:
     hooks:
       - id: check-ast
       - id: check-json
+        exclude: "(test/fixtures/templates/bad/json_parse.json|test/fixtures/templates/bad/core/config_invalid_json.json|test/fixtures/templates/bad/duplicate.json)"
       - id: check-toml
       - id: check-vcs-permalinks
       - id: check-yaml
+        exclude: "test/fixtures/templates/"
+        args: [--unsafe]
       - id: debug-statements
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args: [--fix, lf]
       - id: trailing-whitespace
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+    - id: black
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.12.0
+    hooks:
+    - id: isort
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: "v0.0.269"
     hooks:
       - id: ruff
-  - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+  - repo: https://github.com/PyCQA/bandit
+    rev: "1.7.5"
     hooks:
-      - id: isort
+      - id: bandit
+        additional_dependencies:
+        - "bandit[toml]"
+        args: ["-c", "pyproject.toml"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.3.0"
+    hooks:
+    - id: mypy
+      additional_dependencies:
+        - "types-PyYAML"
+        - "types-regex"
+        - "types-requests"
