@@ -1,0 +1,74 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/IpamPoolId",
+  "/properties/Cidr",
+  "/properties/NetmaskLength"
+ ],
+ "description": "Resource Schema of AWS::EC2::IPAMPoolCidr Type",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:ProvisionIpamPoolCidr",
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DeprovisionIpamPoolCidr",
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:GetIpamPoolCidrs"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:GetIpamPoolCidrs"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/IpamPoolId",
+  "/properties/IpamPoolCidrId"
+ ],
+ "properties": {
+  "Cidr": {
+   "description": "Represents a single IPv4 or IPv6 CIDR",
+   "type": "string"
+  },
+  "IpamPoolCidrId": {
+   "description": "Id of the IPAM Pool Cidr.",
+   "type": "string"
+  },
+  "IpamPoolId": {
+   "description": "Id of the IPAM Pool.",
+   "type": "string"
+  },
+  "NetmaskLength": {
+   "description": "The desired netmask length of the provision. If set, IPAM will choose a block of free space with this size and return the CIDR representing it.",
+   "type": "integer"
+  },
+  "State": {
+   "description": "Provisioned state of the cidr.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/IpamPoolCidrId",
+  "/properties/State"
+ ],
+ "required": [
+  "IpamPoolId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::EC2::IPAMPoolCidr"
+}

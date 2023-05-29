@@ -12,7 +12,10 @@ class LimitValue(CloudFormationLintRule):
 
     id = "I2012"
     shortdesc = "Parameter value limit"
-    description = "Check if the size of Parameter values in the template is approaching the upper limit"
+    description = (
+        "Check if the size of Parameter values in the template is approaching the upper"
+        " limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["parameters", "limits"]
 
@@ -34,7 +37,10 @@ class LimitValue(CloudFormationLintRule):
                     <= value_limit
                 ):
                     path = ["Parameters", paramname, "Default"]
-                    message = "The length of parameter default value ({0}) is approaching the limit ({1})"
+                    message = (
+                        "The length of parameter default value ({0}) is approaching the"
+                        " limit ({1})"
+                    )
                     matches.append(
                         RuleMatch(path, message.format(len(default_value), value_limit))
                     )
@@ -52,7 +58,10 @@ class LimitValue(CloudFormationLintRule):
             if isinstance(max_length, int):
                 if LIMITS["threshold"] * value_limit < max_length <= value_limit:
                     path = ["Parameters", paramname, "MaxLength"]
-                    message = "The MaxLength of parameter ({0}) is approaching the limit ({1})"
+                    message = (
+                        "The MaxLength of parameter ({0}) is approaching the limit"
+                        " ({1})"
+                    )
                     matches.append(
                         RuleMatch(path, message.format(max_length, value_limit))
                     )
@@ -68,7 +77,10 @@ class LimitValue(CloudFormationLintRule):
                         <= value_limit
                     ):
                         path = ["Parameters", paramname, "AllowedValues"]
-                        message = "The length of parameter allowed value ({0}) is approaching the limit ({1})"
+                        message = (
+                            "The length of parameter allowed value ({0}) is approaching"
+                            " the limit ({1})"
+                        )
                         matches.append(
                             RuleMatch(
                                 path, message.format(len(allowed_value), value_limit)

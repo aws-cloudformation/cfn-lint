@@ -6,7 +6,7 @@ SPDX-License-Identifier: MIT-0
 import json
 import logging
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import yaml
 from yaml.scanner import ScannerError

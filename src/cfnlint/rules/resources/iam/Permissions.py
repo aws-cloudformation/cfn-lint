@@ -55,7 +55,8 @@ class Permissions(CloudFormationLintRule):
             service = properties["StringPrefix"].lower()
             actions = [x.lower() for x in properties["Actions"]]
 
-            # Some services have the same name for different generations; like elasticloadbalancing.
+            # Some services have the same name for different
+            # generations; like elasticloadbalancing.
             if service in policy_service_map:
                 policy_service_map[service] += actions
             else:
@@ -70,7 +71,7 @@ class Permissions(CloudFormationLintRule):
         if isinstance(value, str):
             try:
                 value = convert_dict(json.loads(value), start_mark, end_mark)
-            except Exception as ex:  # pylint: disable=W0703,W0612
+            except Exception:  # pylint: disable=W0703,W0612
                 message = "IAM Policy Documents need to be JSON"
                 matches.append(RuleMatch(path[:], message))
                 return matches
@@ -112,7 +113,8 @@ class Permissions(CloudFormationLintRule):
             return matches
 
         service, permission = action.split(":", 1)
-        # Get lowercase so we can check case insenstive. Keep the original values for the message
+        # Get lowercase so we can check case insenstive.
+        # Keep the original values for the message
         service_value = service.lower()
         permission_value = permission.lower()
 

@@ -74,7 +74,10 @@ class RelationshipConditions(CloudFormationLintRule):
                                 for (k, v) in scenario.items()
                             ]
                         )
-                        message = 'GetAtt to resource "{0}" that may not be available {1} at {2}'
+                        message = (
+                            'GetAtt to resource "{0}" that may not be available {1}'
+                            " at {2}"
+                        )
                         matches.append(
                             RuleMatch(
                                 getatt_obj[:-1],
@@ -116,7 +119,10 @@ class RelationshipConditions(CloudFormationLintRule):
                                     for (k, v) in scenario.items()
                                 ]
                             )
-                            message = 'Fn::Sub to resource "{0}" that may not be available {1} at {2}'
+                            message = (
+                                'Fn::Sub to resource "{0}" that may not be available'
+                                " {1} at {2}"
+                            )
                             matches.append(
                                 RuleMatch(
                                     sub_obj[:-1],

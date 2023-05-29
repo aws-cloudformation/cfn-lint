@@ -13,7 +13,10 @@ class Default(CloudFormationLintRule):
 
     id = "E2015"
     shortdesc = "Default value is within parameter constraints"
-    description = "Making sure the parameters have a default value inside AllowedValues, MinValue, MaxValue, AllowedPattern"
+    description = (
+        "Making sure the parameters have a default value inside AllowedValues,"
+        " MinValue, MaxValue, AllowedPattern"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html"
     tags = ["parameters"]
 

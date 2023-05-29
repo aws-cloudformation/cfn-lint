@@ -7,10 +7,8 @@ from test.unit.rules import BaseRuleTestCase
 
 import jsonschema
 
-from cfnlint.rules.resources.properties.ValuePrimitiveType import (  # pylint: disable=E0401
-    ValidationError,
-    ValuePrimitiveType,
-)
+# ruff: noqa: E501
+from cfnlint.rules.resources.properties.ValuePrimitiveType import ValuePrimitiveType
 from cfnlint.template import Template
 
 
