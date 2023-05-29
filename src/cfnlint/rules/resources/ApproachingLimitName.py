@@ -11,7 +11,10 @@ class LimitName(CloudFormationLintRule):
 
     id = "I3012"
     shortdesc = "Resource name limit"
-    description = "Check the size of Resource names in the template is approaching the upper limit"
+    description = (
+        "Check the size of Resource names in the template is approaching the upper"
+        " limit"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html"
     tags = ["resources", "limits"]
 

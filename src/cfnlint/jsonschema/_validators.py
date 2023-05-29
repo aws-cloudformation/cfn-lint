@@ -66,7 +66,7 @@ def exclusiveMinimum(validator, m, instance, schema):
 
     if t_instance <= m:
         yield ValidationError(
-            f"{instance!r} is less than or equal to " f"the minimum of {m!r}",
+            f"{instance!r} is less than or equal to the minimum of {m!r}",
         )
 
 
@@ -83,7 +83,7 @@ def exclusiveMaximum(validator, m, instance, schema):
 
     if t_instance >= m:
         yield ValidationError(
-            f"{instance!r} is greater than or equal " f"to the maximum of {m!r}",
+            f"{instance!r} is greater than or equal to the maximum of {m!r}",
         )
 
 
@@ -121,7 +121,7 @@ def maximum(validator, m, instance, schema):
     if validator.is_type(t_instance, "string"):
         try:
             t_instance = float(t_instance)
-        except:  # pylint: disable=bare-except
+        except:  # ruff: noqa: E722
             return
     if not validator.is_type(t_instance, "number"):
         return

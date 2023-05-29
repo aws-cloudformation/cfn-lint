@@ -50,13 +50,13 @@ class GetAttType(enum.Enum):
 class GetAtt:
     def __init__(self, schema: Dict[str, Any], getatt_type: GetAttType) -> None:
         self._getatt_type: GetAttType = getatt_type
-        self._type: str = schema.get("type")
+        self._type: Optional[str] = schema.get("type")
         self._item_type: Optional[str]
         if self._type == "array":
-            self._item_type: Optional[str] = schema.get("items", {}).get("type")
+            self._item_type = schema.get("items", {}).get("type")
 
     @property
-    def type(self) -> str:
+    def type(self) -> Optional[str]:
         return self._type
 
     @property
@@ -72,7 +72,7 @@ class GetAtts:
     """Class for helping with GetAtt logic"""
 
     _attrs: Dict[str, GetAtt] = {}
-    _schema = {}
+    _schema: Dict[str, Any] = {}
 
     def __init__(self, schema: Dict[str, Any]) -> None:
         self._attrs = {}

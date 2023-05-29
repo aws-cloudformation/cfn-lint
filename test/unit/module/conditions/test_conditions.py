@@ -47,7 +47,7 @@ class TestConditions(TestCase):
             template["Conditions"][f"{p}Condition"] = {
                 "Fn::Equals": [{"Ref": f"{p}Parameter"}, "{p}"]
             }
-            condition_names[(f"{p}Condition")] = None
+            condition_names[f"{p}Condition"] = None
 
         cfn = Template("", template)
         self.assertEqual(len(cfn.conditions._conditions), 10)

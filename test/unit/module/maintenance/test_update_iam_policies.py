@@ -3,7 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
-import sys
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
@@ -21,7 +20,10 @@ class TestUpdateIamPolicies(BaseTestCase):
     def test_update_iam_policies(self, mock_json_dump, mock_content):
         """Success update iam policies"""
 
-        mock_content.return_value = 'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
+        mock_content.return_value = (
+            'app.PolicyEditorConfig={"serviceMap":{"Manage Amazon API'
+            ' Gateway":{"Actions":[]},"Amazon Kinesis Video Streams":{"Actions":[]}}}'
+        )
 
         builtin_module_name = "builtins"
 

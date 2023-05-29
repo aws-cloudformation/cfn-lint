@@ -3,10 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
-import os
-import sys
 from test.testlib.testcase import BaseTestCase
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import mock_open, patch
 
 import cfnlint.helpers
 
@@ -38,7 +36,7 @@ class TestDownloadsMetadata(BaseTestCase):
         builtin_module_name = "builtins"
 
         mo = mock_open(read_data=json.dumps(file_contents))
-        with patch("{}.open".format(builtin_module_name), mo) as mock_builtin_open:
+        with patch("{}.open".format(builtin_module_name), mo):
             result = cfnlint.helpers.load_metadata(filename)
 
             self.assertEqual(result, file_contents)
@@ -62,7 +60,7 @@ class TestDownloadsMetadata(BaseTestCase):
         builtin_module_name = "builtins"
 
         mo = mock_open()
-        with patch("{}.open".format(builtin_module_name), mo) as mock_builtin_open:
+        with patch("{}.open".format(builtin_module_name), mo):
             cfnlint.helpers.save_metadata(file_contents, filename)
             mock_mkdir.assert_called_with(filedir)
             mock_json_dump.assert_called_once

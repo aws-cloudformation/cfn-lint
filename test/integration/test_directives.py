@@ -31,9 +31,14 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": "Additional properties are not allowed (BucketName1 unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed (BucketName1 unexpected)"
+                    ),
                     "Rule": {
-                        "Description": "Making sure that resources properties are properly configured",
+                        "Description": (
+                            "Making sure that resources properties are properly"
+                            " configured"
+                        ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
                         "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
@@ -52,9 +57,14 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 28},
                     },
-                    "Message": "Additional properties are not allowed (BadKey unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed (BadKey unexpected)"
+                    ),
                     "Rule": {
-                        "Description": "Making sure that resources properties are properly configured",
+                        "Description": (
+                            "Making sure that resources properties are properly"
+                            " configured"
+                        ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
                         "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
@@ -72,12 +82,19 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 32},
                     },
-                    "Message": "Additional properties are not allowed (BadProperty unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed (BadProperty unexpected)"
+                    ),
                     "Rule": {
-                        "Description": "Making sure the basic CloudFormation resources are properly configured",
+                        "Description": (
+                            "Making sure the basic CloudFormation resources are"
+                            " properly configured"
+                        ),
                         "Id": "E3001",
                         "ShortDescription": "Basic CloudFormation Resource Check",
-                        "Source": "https://github.com/aws-cloudformation/cfn-python-lint",
+                        "Source": (
+                            "https://github.com/aws-cloudformation/cfn-python-lint"
+                        ),
                     },
                 },
                 {
@@ -93,9 +110,14 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 35},
                     },
-                    "Message": "Additional properties are not allowed (BadKey unexpected)",
+                    "Message": (
+                        "Additional properties are not allowed (BadKey unexpected)"
+                    ),
                     "Rule": {
-                        "Description": "Making sure that resources properties are properly configured",
+                        "Description": (
+                            "Making sure that resources properties are properly"
+                            " configured"
+                        ),
                         "Id": "E3002",
                         "ShortDescription": "Resource properties are invalid",
                         "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#properties",
@@ -117,7 +139,10 @@ class TestDirectives(BaseCliTestCase):
                     },
                     "Message": "'Enabled1' is not one of ['Enabled', 'Suspended']",
                     "Rule": {
-                        "Description": "Check if properties have a valid value in case of an enumator",
+                        "Description": (
+                            "Check if properties have a valid value in case of an"
+                            " enumator"
+                        ),
                         "Id": "E3030",
                         "ShortDescription": "Check if properties have a valid value",
                         "Source": "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedvalue",

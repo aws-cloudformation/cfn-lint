@@ -3,7 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 from copy import deepcopy
-from typing import Dict, List
+from typing import Any, Dict, List, Optional
 
 import jsonpatch
 
@@ -16,17 +16,19 @@ from cfnlint.schema.getatts import GetAtt, GetAtts
 class Schema:
     _json_schema: Dict
 
-    def __init__(self, schema: Dict, is_cached: bool = False) -> None:
+    def __init__(self, schema: Dict[str, Any], is_cached: bool = False) -> None:
         self.is_cached = is_cached
         self.schema = deepcopy(schema)
         self._json_schema = self._cleanse_schema(schema=deepcopy(schema))
         self.type_name = schema["typeName"]
         self._getatts = GetAtts(self.schema)
 
-    def _cleanse_schema(self, schema) -> Dict:
+    def _cleanse_schema(self, schema: Dict[str, Any]) -> Dict:
         for ro_prop in schema.get("readOnlyProperties", []):
-            sub_schema = schema
+            sub_schema: Optional[Dict[str, Any]] = schema
             for p in ro_prop.split("/")[1:-1]:
+                if not isinstance(sub_schema, dict):
+                    raise ValueError(f"Should be an object for: {sub_schema!r}")
                 sub_schema = sub_schema.get(p)
                 if sub_schema is None:
                     break
