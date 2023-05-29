@@ -110,7 +110,7 @@ class Join(CloudFormationLintRule):
             if getatt.type == "array" or getatt.type is None:
                 return True
             return False
-        except:  # pylint: disable=bare-except
+        except:  # ruff: noqa: E722
             # this means we can't match the get_att.  This is
             # covered by another rule
             return None

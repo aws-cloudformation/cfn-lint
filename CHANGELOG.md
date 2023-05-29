@@ -668,7 +668,7 @@
 ###### Fixes
 - Suppress `PendingDeprecationWarning` for `pydot` in the `pygraphviz` package (pull #[2289](https://github.com/aws-cloudformation/cfn-lint/pull/2289))
 - Update descriptiosn on rule [E1021](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1021), [E1015](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1015), [E1016](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1016), [E1020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1020), and [E1017](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1017) (pull #[2284](https://github.com/aws-cloudformation/cfn-lint/pull/2284))
-- Update rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to ignore dynamic references for string length (pull #[2281](https://github.com/aws-cloudformation/cfn-lint/pull/2281)) 
+- Update rule [E3033](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3033) to ignore dynamic references for string length (pull #[2281](https://github.com/aws-cloudformation/cfn-lint/pull/2281))
 
 ### v0.61.0
 ###### Features
@@ -1197,7 +1197,7 @@
 - Update CloudFormation specs to 14.4.0 (pull #[1555](https://github.com/aws-cloudformation/cfn-python-lint/pull/1555))
 - Add allowed patterns and values for properties in `AWS::S3::Bucket.InventoryConfiguration` (pull #[1551](https://github.com/aws-cloudformation/cfn-python-lint/pull/1551))
 ###### Fixes
-- Update Transform logic to support local files for the state machine defintion (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562)) 
+- Update Transform logic to support local files for the state machine defintion (pull #[1562](https://github.com/aws-cloudformation/cfn-python-lint/pull/1562))
 
 ### v0.32.1
 ###### Features
@@ -2207,7 +2207,7 @@ samtranslator 1.10.0
 ###### Features
 - Update formatters to be similar from JSON and text outputs and modularize for easier growth later
 - Don't raise an error with [E3020](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3020) when doing ACM DNS validation registration
-- Add rule [E7003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E7003) to validate that mapping keys are strings.  
+- Add rule [E7003](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E7003) to validate that mapping keys are strings.
 - Add rule [E1027](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1027) to validate that dynamic reference secure strings are to supported properties
 - Add rule [E1004](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1004) to validate that the Template Description is only a string
 - Add rule [E6005](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E6005) to validate that an Output Description is only a string

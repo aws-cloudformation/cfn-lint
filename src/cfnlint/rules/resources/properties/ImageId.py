@@ -45,12 +45,15 @@ class ImageId(CloudFormationLintRule):
                                     ):
                                         message = (
                                             f"Parameter {paramname} should be of type "
-                                            f'[{", ".join(map(str, allowed_types))}]'
+                                            f"[{', '.join(map(str, allowed_types))}]"
                                         )
                                         tree = ["Parameters", paramname]
                                         matches.append(RuleMatch(tree, message))
                 else:
-                    message = f'Inappropriate map found for ImageId on {"/".join(map(str, imageidtree[:-1]))}'
+                    message = (
+                        "Inappropriate map found for ImageId on"
+                        f" {'/'.join(map(str, imageidtree[:-1]))}"
+                    )
                     matches.append(RuleMatch(imageidtree[:-1], message))
 
         return matches
