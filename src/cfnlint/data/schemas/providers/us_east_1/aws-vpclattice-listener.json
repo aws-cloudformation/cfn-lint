@@ -1,4 +1,11 @@
 {
+ "additionalIdentifiers": [
+  [
+   "/properties/ServiceIdentifier",
+   "/properties/Name",
+   "/properties/Port"
+  ]
+ ],
  "additionalProperties": false,
  "createOnlyProperties": [
   "/properties/ServiceIdentifier",
@@ -109,6 +116,19 @@
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ServiceIdentifier": {
+      "maxLength": 2048,
+      "minLength": 21,
+      "pattern": "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$",
+      "type": "string"
+     }
+    },
+    "required": [
+     "ServiceIdentifier"
+    ]
+   },
    "permissions": [
     "vpc-lattice:ListListeners"
    ]

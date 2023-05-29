@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.template.getatts import GetAtt, GetAtts, GetAttType
+from cfnlint.template.getatts import GetAtts, GetAttType
 
 
 class TestGetAtts(BaseTestCase):

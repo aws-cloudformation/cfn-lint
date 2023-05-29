@@ -5,9 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import json
 import subprocess
-import sys
 from pathlib import Path
 from test.testlib.testcase import BaseTestCase
+from typing import Any, Dict, List
 
 import cfnlint.core
 
@@ -15,7 +15,7 @@ import cfnlint.core
 class BaseCliTestCase(BaseTestCase):
     """Used for Testing CLI"""
 
-    scenarios = []
+    scenarios: List[Dict[str, Any]] = []
 
     def setUp(self):
         """Common Settings"""

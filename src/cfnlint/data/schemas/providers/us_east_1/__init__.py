@@ -1,4 +1,5 @@
-# pylint: disable=too-many-lines
+from typing import List  # pylint: disable=too-many-lines
+
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -6,10 +7,12 @@ types = [
     "AWS::Connect::UserHierarchyGroup",
     "AWS::ApiGatewayV2::ApiMapping",
     "AWS::CE::AnomalySubscription",
+    "AWS::Shield::DRTAccess",
     "AWS::SSO::Assignment",
     "AWS::Glue::Partition",
     "AWS::EC2::TransitGatewayRouteTablePropagation",
     "AWS::SSM::ResourcePolicy",
+    "AWS::Shield::ProactiveEngagement",
     "AWS::ApiGateway::BasePathMapping",
     "AWS::WAFRegional::GeoMatchSet",
     "AWS::RoboMaker::Robot",
@@ -323,6 +326,7 @@ types = [
     "AWS::RoboMaker::RobotApplicationVersion",
     "AWS::AppStream::AppBlock",
     "AWS::IoTWireless::ServiceProfile",
+    "AWS::Shield::Protection",
     "AWS::SES::VdmAttributes",
     "AWS::IdentityStore::GroupMembership",
     "AWS::AppSync::FunctionConfiguration",
@@ -604,6 +608,7 @@ types = [
     "AWS::EC2::VPNConnection",
     "AWS::WAF::WebACL",
     "AWS::ServiceDiscovery::PublicDnsNamespace",
+    "AWS::Shield::ProtectionGroup",
     "AWS::NetworkManager::VpcAttachment",
     "AWS::IAM::User",
     "AWS::EMR::InstanceGroupConfig",
@@ -773,6 +778,7 @@ types = [
     "AWS::Athena::PreparedStatement",
     "AWS::AutoScaling::ScheduledAction",
     "AWS::Omics::SequenceStore",
+    "AWS::Cognito::IdentityPoolPrincipalTag",
     "AWS::ApiGatewayV2::Route",
     "AWS::LakeFormation::Resource",
     "AWS::Detective::MemberInvitation",
@@ -829,6 +835,7 @@ types = [
     "AWS::Cognito::IdentityPool",
     "AWS::NimbleStudio::StudioComponent",
     "AWS::EC2::TrafficMirrorTarget",
+    "AWS::Connect::Prompt",
     "AWS::StepFunctions::StateMachine",
     "AWS::RDS::DBClusterParameterGroup",
     "AWS::WAF::XssMatchSet",
@@ -849,6 +856,7 @@ types = [
     "AWS::Config::RemediationConfiguration",
     "AWS::Greengrass::LoggerDefinition",
     "AWS::Greengrass::DeviceDefinitionVersion",
+    "AWS::Detective::OrganizationAdmin",
     "AWS::SimSpaceWeaver::Simulation",
     "AWS::Events::Connection",
     "AWS::Athena::DataCatalog",
@@ -913,6 +921,7 @@ types = [
     "AWS::SES::ReceiptFilter",
     "AWS::DirectoryService::MicrosoftAD",
     "AWS::MemoryDB::SubnetGroup",
+    "AWS::AppSync::SourceApiAssociation",
     "AWS::DataSync::LocationObjectStorage",
     "AWS::ECS::CapacityProvider",
     "AWS::ElastiCache::CacheCluster",
@@ -961,6 +970,7 @@ types = [
     "AWS::Pinpoint::BaiduChannel",
     "AWS::MediaPackage::Channel",
     "AWS::ApiGatewayV2::RouteResponse",
+    "AWS::QuickSight::Topic",
     "AWS::CloudWatch::MetricStream",
     "AWS::Location::GeofenceCollection",
     "AWS::SSM::Parameter",
@@ -1066,4 +1076,4 @@ types = [
     "AWS::GlobalAccelerator::Accelerator",
     "AWS::EKS::Addon",
 ]
-cached = []
+cached: List[str] = []
