@@ -36,7 +36,10 @@ class RefWithPath(CloudFormationLintRule):
             return matches
 
         if iam_path != "/":
-            message = "When using a Ref to IAM resource the Path must be '/'.  Switch to GetAtt if the Path has to be '{}'."
+            message = (
+                "When using a Ref to IAM resource the Path must be '/'.  Switch to"
+                " GetAtt if the Path has to be '{}'."
+            )
             matches.append(RuleMatch(path, message.format(iam_path)))
 
         return matches

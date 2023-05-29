@@ -20,7 +20,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
 
     id = "E3012"
     shortdesc = "Check resource properties values"
-    description = "Checks resource property values with Primitive Types for values that match those types."
+    description = (
+        "Checks resource property values with Primitive Types for values that match"
+        " those types."
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#valueprimitivetype"
     tags = ["resources"]
 
@@ -114,8 +117,10 @@ class ValuePrimitiveType(CloudFormationLintRule):
             if validator.is_type(instance, "object"):
                 if len(instance) == 1:
                     for k, v in instance.items():
-                        # Most conditions should be eliminated but sometimes they trickle through because
-                        # of different issues including a person providing a condition name that doesn't exist
+                        # Most conditions should be eliminated but sometimes
+                        # they trickle through because of different issues
+                        # including a person providing a condition
+                        # name that doesn't exist
                         if k == "Fn::If":
                             if len(v) == 3:
                                 for i in range(1, 3):
