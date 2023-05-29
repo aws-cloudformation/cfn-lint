@@ -13,7 +13,9 @@ class TestTransformIgnore(BaseCliTestCase):
 
     scenarios = [
         {
-            "filename": "test/fixtures/templates/bad/transform_serverless_template.yaml",
+            "filename": (
+                "test/fixtures/templates/bad/transform_serverless_template.yaml"
+            ),
             "exit_code": 0,
         },
     ]

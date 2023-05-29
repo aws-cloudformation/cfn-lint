@@ -13,7 +13,10 @@ class Base(CloudFormationLintRule):
 
     id = "E1001"
     shortdesc = "Basic CloudFormation Template Configuration"
-    description = "Making sure the basic CloudFormation template components are properly configured"
+    description = (
+        "Making sure the basic CloudFormation template components are properly"
+        " configured"
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["base"]
 

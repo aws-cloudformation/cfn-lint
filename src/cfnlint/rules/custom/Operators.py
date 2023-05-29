@@ -223,7 +223,8 @@ def CreateCustomIsDefinedRule(rule_id, resourceType, prop, value, error_message)
                 else self._check_value_not_defined
             )
             matches = []
-            # here does nothing when the value is not defined, this is checked separately below
+            # here does nothing when the value is not defined,
+            # this is checked separately below
             matches.extend(
                 cfn.check_value(
                     properties,
@@ -251,7 +252,10 @@ def CreateCustomIsDefinedRule(rule_id, resourceType, prop, value, error_message)
         value,
         error_message,
         shortdesc=f"Custom rule to check for value is {value}",
-        description=f"Created from the custom rules parameter. This rule will check if a property value is {value}",
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            f" property value is {value}"
+        ),
     )
 
 
@@ -274,7 +278,10 @@ def CreateEqualsRule(rule_id, resourceType, prop, value, error_message):
         value,
         error_message,
         shortdesc="Custom rule to check for equal values",
-        description="Created from the custom rules parameter. This rule will check if a property value is equal to the specified value.",
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is equal to the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -298,7 +305,10 @@ def CreateNotEqualsRule(rule_id, resourceType, prop, value, error_message):
         value,
         error_message,
         shortdesc="Custom rule to check for not equal values",
-        description="Created from the custom rules parameter. This rule will check if a property value is NOT equal to the specified value.",
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is NOT equal to the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -320,7 +330,10 @@ def CreateRegexMatchRule(rule_id, resourceType, prop, value, error_message):
         value,
         error_message,
         shortdesc="Custom rule to check for regex match",
-        description="Created from the custom rules parameter. This rule will check if a property value match the provided regex pattern.",
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value match the provided regex pattern."
+        ),
         rule_func=rule_func,
     )
 
@@ -350,8 +363,13 @@ def CreateGreaterEqualRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value is greater than the specified value",
-        description="Created from the custom rules parameter. This rule will check if a property value is greater than the specified value.",
+        shortdesc=(
+            "Custom rule to check for if a value is greater than the specified value"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is greater than the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -381,8 +399,13 @@ def CreateGreaterRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value is greater than the specified value",
-        description="Created from the custom rules parameter. This rule will check if a property value is greater than the specified value.",
+        shortdesc=(
+            "Custom rule to check for if a value is greater than the specified value"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is greater than the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -412,8 +435,13 @@ def CreateLesserRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value is lesser than the specified value",
-        description="Created from the custom rules parameter. This rule will check if a property value is lesser than the specified value.",
+        shortdesc=(
+            "Custom rule to check for if a value is lesser than the specified value"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is lesser than the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -443,8 +471,13 @@ def CreateLesserEqualRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value is lesser than the specified value",
-        description="Created from the custom rules parameter. This rule will check if a property value is lesser than the specified value.",
+        shortdesc=(
+            "Custom rule to check for if a value is lesser than the specified value"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value is lesser than the specified value."
+        ),
         rule_func=rule_func,
     )
 
@@ -465,8 +498,13 @@ def CreateInSetRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value exists in a list of specified values",
-        description="Created from the custom rules parameter. This rule will check if a property value exists inside a list of specified values.",
+        shortdesc=(
+            "Custom rule to check for if a value exists in a list of specified values"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value exists inside a list of specified values."
+        ),
         rule_func=rule_func,
     )
 
@@ -489,8 +527,14 @@ def CreateNotInSetRule(rule_id, resourceType, prop, value, error_message):
         prop,
         value,
         error_message,
-        shortdesc="Custom rule to check for if a value does not exist in a list of specified values",
-        description="Created from the custom rules parameter. This rule will check if a property value does not exist inside a list of specified values.",
+        shortdesc=(
+            "Custom rule to check for if a value does not exist in a list of specified"
+            " values"
+        ),
+        description=(
+            "Created from the custom rules parameter. This rule will check if a"
+            " property value does not exist inside a list of specified values."
+        ),
         rule_func=rule_func,
     )
 
@@ -501,7 +545,10 @@ def CreateInvalidRule(rule_id, operator):
             super().__init__()
             self.id = rule_id
             self.operator = operator
-            self.description = "Created from the custom rule parameter. This rule is the result of an invalid configuration of a custom rule."
+            self.description = (
+                "Created from the custom rule parameter. This rule is the result of an"
+                " invalid configuration of a custom rule."
+            )
             self.shortdesc = "Invalid custom rule configuration"
 
         def match(self, _):

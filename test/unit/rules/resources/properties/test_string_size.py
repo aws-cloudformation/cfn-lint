@@ -4,10 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 
 import datetime
-from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from jsonschema import Draft7Validator, ValidationError
+from jsonschema import Draft7Validator
 
 from cfnlint.rules.resources.properties.StringSize import (
     StringSize,  # pylint: disable=E0401

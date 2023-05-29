@@ -10,15 +10,18 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class DynamicReferenceSecureString(CloudFormationLintRule):
-    """Check if Dynamic Reference Secure Strings are only used in the correct locations"""
+    """
+    Check if Dynamic Reference Secure Strings are
+    only used in the correct locations
+    """
 
     id = "E1027"
     shortdesc = "Check dynamic references secure strings are in supported locations"
     description = (
-        "Dynamic References Secure Strings are only supported for a small set of resource properties.  "
-        "Validate that they are being used in the correct location when checking values "
-        "and Fn::Sub in resource properties. Currently doesn't check outputs, maps, conditions, "
-        "parameters, and descriptions."
+        "Dynamic References Secure Strings are only supported for a small set of"
+        " resource properties.  Validate that they are being used in the correct"
+        " location when checking values and Fn::Sub in resource properties. Currently"
+        " doesn't check outputs, maps, conditions, parameters, and descriptions."
     )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/dynamic-references.html"
     tags = ["functions", "dynamic reference"]

@@ -137,7 +137,8 @@ def create_dict_node_class(cls):
                 # if default is None and value is None return empty list
                 return []
 
-            # if the value is the default make sure that the default value is of type_t when specified
+            # if the value is the default make sure that the default
+            # value is of type_t when specified
             if bool(type_t) and value == default and not isinstance(default, type_t):
                 raise ValueError('"default" type should be of "type_t"')
 
@@ -173,7 +174,8 @@ def create_dict_node_class(cls):
                             if len(v) == 3:
                                 for i, if_v in enumerate(v[1:]):
                                     if isinstance(if_v, dict):
-                                        # yield from if_v.items_safe(path[:] + [k, i - 1])
+                                        # yield from
+                                        # if_v.items_safe(path[:] + [k, i - 1])
                                         # Python 2.7 support
                                         for items, p in if_v.items_safe(
                                             path[:] + [k, i + 1]
@@ -263,7 +265,8 @@ def create_sub_node_class(cls):
 
         def get_defined_vars(self):
             # Returns that are in the second part of a list Fn::Sub
-            # This function will not return implied variables from a String Ref and GetAtt
+            # This function will not return implied variables
+            # from a String Ref and GetAtt
             if self.is_valid():
                 return self.__cache_sub_vars
 

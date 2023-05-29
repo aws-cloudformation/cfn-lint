@@ -5,12 +5,12 @@ SPDX-License-Identifier: MIT-0
 import fnmatch
 import json
 import os
-from typing import Any, Generator
+from typing import List
 from unittest import TestCase
 
 import jsonschema
 import regex as re
-from jsonschema._utils import ensure_list, extras_msg, find_additional_properties
+from jsonschema._utils import ensure_list
 from jsonschema.validators import extend
 
 import cfnlint
@@ -22,7 +22,7 @@ from cfnlint.schema._pointer import resolve_pointer
 class TestSchemaFiles(TestCase):
     """Test schema files"""
 
-    used_cfn_schemas = []
+    used_cfn_schemas: List[str] = []
 
     def setUp(self) -> None:
         schema_path = os.path.join(os.path.dirname(cfnlint.__file__), "data", "schemas")
@@ -58,7 +58,7 @@ class TestSchemaFiles(TestCase):
     def pattern(self, validator, patrn, instance, schema):
         try:
             re.compile(patrn)
-        except Exception as e:
+        except Exception:
             yield jsonschema.ValidationError(f"Pattern doesn't compile: {patrn}")
 
     def cfn_schema(self, validator, cSs, schemas, schema):
@@ -91,7 +91,7 @@ class TestSchemaFiles(TestCase):
             for prop in d.get(section, []):
                 try:
                     self.assertIsNotNone(resolve_pointer(d, prop))
-                except KeyError as e:
+                except KeyError:
                     self.fail(f"Can't find prop {prop} for {section} in {filepath}")
 
     def test_data_module_specs(self):
