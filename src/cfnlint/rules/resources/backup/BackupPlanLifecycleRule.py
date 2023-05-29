@@ -6,11 +6,17 @@ from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
 class BackupPlanLifecycleRule(CloudFormationLintRule):
-    """Check Backup Plan rules with lifecycle has minimum period between cold and delete"""
+    """
+    Check Backup Plan rules with lifecycle has minimum
+    period between cold and delete
+    """
 
     id = "E3504"
     shortdesc = "Check minimum 90 period is met between BackupPlan cold and delete"
-    description = "Check that Backup plans with lifecycle rules have >= 90 days between cold and delete"
+    description = (
+        "Check that Backup plans with lifecycle rules have >= 90 days between cold and"
+        " delete"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-backup-backupplan-lifecycleresourcetype.html"
     tags = ["properties", "backup", "plan", "lifecycle"]
 
@@ -23,7 +29,8 @@ class BackupPlanLifecycleRule(CloudFormationLintRule):
 
         for result in results:
             backup_rule = result["Value"]
-            # if 'MoveToColdStorageAfterDays' in backup_rule and 'DeleteAfterDays' in backup_rule:
+            # if 'MoveToColdStorageAfterDays' in backup_rule
+            # and 'DeleteAfterDays' in backup_rule:
             if isinstance(
                 backup_rule.get("MoveToColdStorageAfterDays"), int
             ) and isinstance(backup_rule.get("DeleteAfterDays"), int):
@@ -32,7 +39,10 @@ class BackupPlanLifecycleRule(CloudFormationLintRule):
                     - backup_rule["MoveToColdStorageAfterDays"]
                     < 90
                 ):
-                    message = "DeleteAfterDays in {0} must be at least 90 days after MoveToColdStorageAfterDays"
+                    message = (
+                        "DeleteAfterDays in {0} must be at least 90 days after"
+                        " MoveToColdStorageAfterDays"
+                    )
                     rule_match = RuleMatch(
                         result["Path"],
                         message.format("/".join(map(str, result["Path"]))),

@@ -10,7 +10,10 @@ class DomainValidationOptions(CloudFormationLintRule):
 
     id = "E3503"
     shortdesc = "ValidationDomain is superdomain of DomainName"
-    description = "In ValidationDomainOptions, the ValidationDomain must be a superdomain of the DomainName being validated"
+    description = (
+        "In ValidationDomainOptions, the ValidationDomain must be a superdomain of the"
+        " DomainName being validated"
+    )
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-certificatemanager-certificate-domainvalidationoption.html#cfn-certificatemanager-certificate-domainvalidationoption-validationdomain"
     tags = [
         "certificate",

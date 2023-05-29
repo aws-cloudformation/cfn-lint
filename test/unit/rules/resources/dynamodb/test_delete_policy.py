@@ -4,8 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
+# ruff: noqa: E501
 from cfnlint.rules.resources.UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes import (
-    UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes,  # pylint: disable=E0401
+    UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes,
 )
 
 

@@ -47,7 +47,10 @@ class Equals(CloudFormationLintRule):
                     if valid_ref:
                         if valid_ref.get("From") == "Parameters":
                             if valid_ref.get("Type") in VALID_PARAMETER_TYPES_LIST:
-                                message = "Every Fn::Equals object requires a list of 2 string parameters"
+                                message = (
+                                    "Every Fn::Equals object requires a list of 2"
+                                    " string parameters"
+                                )
                                 matches.append(RuleMatch(path, message))
         else:
             message = self.function + " element must be a supported function ({0})"
@@ -83,7 +86,8 @@ class Equals(CloudFormationLintRule):
                         elif not isinstance(element, (str, bool, int, float)):
                             message = (
                                 self.function
-                                + " element must be a String, Boolean, Number, or supported function ({0})"
+                                + " element must be a String, Boolean, Number, or"
+                                " supported function ({0})"
                             )
                             matches.append(
                                 RuleMatch(

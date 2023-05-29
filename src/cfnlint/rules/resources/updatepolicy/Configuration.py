@@ -180,7 +180,10 @@ class Configuration(CloudFormationLintRule):
             up_type_spec = self.valid_attributes.get("main").get(up_type)
             if up_type_spec:
                 if resource_type not in up_type_spec.get("ResourceTypes"):
-                    message = "UpdatePolicy only supports this type for resources of type ({0})"
+                    message = (
+                        "UpdatePolicy only supports this type for resources of type"
+                        " ({0})"
+                    )
                     matches.append(
                         RuleMatch(
                             up_path,
