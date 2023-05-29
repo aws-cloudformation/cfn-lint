@@ -26,7 +26,10 @@ class RefInCondition(CloudFormationLintRule):
                 value = ref_obj[-1]
                 if isinstance(value, (str, int)):
                     if value in resource_names:
-                        message = "Cannot reference resource {0} in the Conditions block of the template at {1}"
+                        message = (
+                            "Cannot reference resource {0} in the Conditions block of"
+                            " the template at {1}"
+                        )
                         matches.append(
                             RuleMatch(
                                 ref_obj[:-1],

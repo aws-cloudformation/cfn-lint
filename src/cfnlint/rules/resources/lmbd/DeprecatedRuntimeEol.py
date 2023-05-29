@@ -33,7 +33,10 @@ class DeprecatedRuntimeEol(DeprecatedRuntime):
                 and datetime.strptime(runtime["deprecated"], "%Y-%m-%d")
                 > self.current_date
             ):
-                message = "EOL runtime ({0}) specified. Runtime is EOL since {1} and updating will be disabled at {2}. Please consider updating to {3}"
+                message = (
+                    "EOL runtime ({0}) specified. Runtime is EOL since {1} and updating"
+                    " will be disabled at {2}. Please consider updating to {3}"
+                )
                 matches.append(
                     RuleMatch(
                         path,

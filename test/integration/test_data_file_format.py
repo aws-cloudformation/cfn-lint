@@ -44,4 +44,4 @@ class TestDataFileFormat(TestCase):
 
                     pretty_content = format_json_string(json.loads(string_content))
 
-                    self.assertEqual(string_content, pretty_content)
+                    self.assertEqual(string_content, f"{pretty_content}\n")

@@ -521,6 +521,11 @@
    "pattern": "\\S+",
    "type": "string"
   },
+  "JwtToken": {
+   "maxLength": 8000,
+   "pattern": "^[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_=]+\\.[A-Za-z0-9-_.+/=]*$",
+   "type": "string"
+  },
   "Key": {
    "maxLength": 512,
    "pattern": "\\S+",
@@ -592,7 +597,8 @@
   "OAuth2GrantType": {
    "enum": [
     "CLIENT_CREDENTIALS",
-    "AUTHORIZATION_CODE"
+    "AUTHORIZATION_CODE",
+    "JWT_BEARER"
    ],
    "type": "string"
   },
@@ -849,6 +855,14 @@
     "ConnectorOAuthRequest": {
      "$ref": "#/definitions/ConnectorOAuthRequest",
      "description": "The oauth needed to request security tokens from the connector endpoint."
+    },
+    "JwtToken": {
+     "$ref": "#/definitions/JwtToken",
+     "description": "The credentials used to access your Salesforce records"
+    },
+    "OAuth2GrantType": {
+     "$ref": "#/definitions/OAuth2GrantType",
+     "description": "The grant types to fetch an access token"
     },
     "RefreshToken": {
      "$ref": "#/definitions/RefreshToken",

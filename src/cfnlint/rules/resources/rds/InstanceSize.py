@@ -49,7 +49,8 @@ class InstanceSize(CloudFormationLintRule):
         ).items():
             path = ["Resources", resource_name, "Properties"]
             properties = resource_values.get("Properties")
-            # Properties items_safe heps remove conditions and focusing on the actual values and scenarios
+            # Properties items_safe heps remove conditions and
+            # focusing on the actual values and scenarios
             for prop_safe, prop_path_safe in properties.items_safe(path):
                 engine = prop_safe.get("Engine")
                 inst_class = prop_safe.get("DBInstanceClass")
@@ -71,11 +72,13 @@ class InstanceSize(CloudFormationLintRule):
                         )
                     else:
                         self.logger.debug(
-                            "Skip evaluation based on [LicenseModel] not being a string."
+                            "Skip evaluation based on [LicenseModel] not being a"
+                            " string."
                         )
                 else:
                     self.logger.debug(
-                        "Skip evaluation based on [Engine] or [DBInstanceClass] not being strings."
+                        "Skip evaluation based on [Engine] or [DBInstanceClass] not"
+                        " being strings."
                     )
 
         return results
@@ -94,7 +97,11 @@ class InstanceSize(CloudFormationLintRule):
                         db_instance_class
                         not in self.valid_instance_types[db_license][db_engine][region]
                     ):
-                        message = 'DBInstanceClass "{0}" is not compatible with engine type "{1}" and LicenseModel "{2}" in region "{3}". Use instance types [{4}]'
+                        message = (
+                            'DBInstanceClass "{0}" is not compatible with engine type'
+                            ' "{1}" and LicenseModel "{2}" in region "{3}". Use'
+                            " instance types [{4}]"
+                        )
                         matches.append(
                             RuleMatch(
                                 properties.get("Path") + ["DBInstanceClass"],
