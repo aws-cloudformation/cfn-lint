@@ -44,7 +44,12 @@ class UpdateReplacePolicyDeletionPolicyOnStatefulResourceTypes(CloudFormationLin
                     "UpdateReplacePolicy"
                 ):
                     path = ["Resources", r_name]
-                    message = f'The default action when replacing/removing a resource is to delete it. Set explicit values for UpdateReplacePolicy / DeletionPolicy on potentially stateful resource: {"/".join(path)}'
+                    message = (
+                        "The default action when replacing/removing a resource is to"
+                        " delete it. Set explicit values for UpdateReplacePolicy /"
+                        " DeletionPolicy on potentially stateful resource:"
+                        f" {'/'.join(path)}"
+                    )
                     matches.append(RuleMatch(path, message))
 
         return matches

@@ -25,7 +25,10 @@ class LimitDescription(CloudFormationLintRule):
             < len(description)
             <= LIMITS["template"]["description"]
         ):
-            message = "The template description ({0} bytes) is approaching the limit ({1} bytes)"
+            message = (
+                "The template description ({0} bytes) is approaching the limit ({1}"
+                " bytes)"
+            )
             matches.append(
                 RuleMatch(
                     ["Description"],

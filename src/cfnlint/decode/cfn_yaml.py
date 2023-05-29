@@ -94,14 +94,20 @@ class NodeConstructor(SafeConstructor):
                             [
                                 build_match(
                                     filename=self.filename,
-                                    message=f'Duplicate found "{key}" (line {key_dup.start_mark.line + 1})',
+                                    message=(
+                                        f'Duplicate found "{key}" (line'
+                                        f" {key_dup.start_mark.line + 1})"
+                                    ),
                                     line_number=key_dup.start_mark.line,
                                     column_number=key_dup.start_mark.column,
                                     key=key,
                                 ),
                                 build_match(
                                     filename=self.filename,
-                                    message=f'Duplicate found "{key}" (line {key_node.start_mark.line + 1})',
+                                    message=(
+                                        f'Duplicate found "{key}" (line'
+                                        f" {key_node.start_mark.line + 1})"
+                                    ),
                                     line_number=key_node.start_mark.line,
                                     column_number=key_node.start_mark.column,
                                     key=key,
@@ -112,7 +118,10 @@ class NodeConstructor(SafeConstructor):
                         matches.append(
                             build_match(
                                 filename=self.filename,
-                                message=f'Duplicate found "{key}" (line {key_node.start_mark.line + 1})',
+                                message=(
+                                    f'Duplicate found "{key}" (line'
+                                    f" {key_node.start_mark.line + 1})"
+                                ),
                                 line_number=key_node.start_mark.line,
                                 column_number=key_node.start_mark.column,
                                 key=key,
@@ -126,7 +135,10 @@ class NodeConstructor(SafeConstructor):
                     [
                         build_match(
                             filename=self.filename,
-                            message=f'Unhashable type "{key}" (line {key.start_mark.line + 1})',
+                            message=(
+                                f'Unhashable type "{key}" (line'
+                                f" {key.start_mark.line + 1})"
+                            ),
                             line_number=key.start_mark.line,
                             column_number=key.start_mark.column,
                             key=key,

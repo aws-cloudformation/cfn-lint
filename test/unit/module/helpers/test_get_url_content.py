@@ -3,12 +3,6 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import gzip
-import sys
-
-try:
-    import StringIO
-except:
-    pass
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import MagicMock, patch
 
@@ -88,7 +82,6 @@ class TestGetUrlContent(BaseTestCase):
     ):
         """Test success run"""
 
-        input_buffer = '{"key": "value"}'
         etag = "ETAG_ONE"
         url = "http://foo.com"
 
@@ -111,7 +104,6 @@ class TestGetUrlContent(BaseTestCase):
     def test_url_has_newer_version_negative(self, mock_load_metadata, mocked_urlopen):
         """Test success run"""
 
-        input_buffer = '{"key": "value"}'
         # Generate a random ETag to test with
         etag = "ETAG_ONE"
         etag2 = "ETAG_TWO"

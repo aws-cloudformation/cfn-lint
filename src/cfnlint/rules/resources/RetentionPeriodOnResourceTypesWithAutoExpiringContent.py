@@ -15,9 +15,10 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
         "Check resources with auto expiring content have explicit retention period"
     )
     description = (
-        "The behaviour for data retention is different across AWS Services."
-        "If no retention period is specified the default for some services is to delete the data after a period of time."
-        "This check requires you to explicitly set the retention period for those resources to avoid unexpected data losses"
+        "The behaviour for data retention is different across AWS Services.If no"
+        " retention period is specified the default for some services is to delete the"
+        " data after a period of time.This check requires you to explicitly set the"
+        " retention period for those resources to avoid unexpected data losses"
     )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["resources", "retentionperiod"]
@@ -87,12 +88,22 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
                     for property_set, path in property_sets:
                         error_path = ["Resources", r_name] + path
                         if not property_set:
-                            message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in error_path)}'
+                            message = (
+                                "The default retention period will delete the data"
+                                " after a pre-defined time. Set an explicit values to"
+                                " avoid data loss on resource :"
+                                f" {'/'.join(str(x) for x in error_path)}"
+                            )
                             matches.append(RuleMatch(error_path, message))
                         else:
                             value = property_set.get(attr_def.get("Attribute"))
                             if not value:
-                                message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in error_path)}'
+                                message = (
+                                    "The default retention period will delete the data"
+                                    " after a pre-defined time. Set an explicit values"
+                                    " to avoid data loss on resource :"
+                                    f" {'/'.join(str(x) for x in error_path)}"
+                                )
                                 if attr_def.get("CheckAttribute"):
                                     if self._validate_property(
                                         property_set.get(
@@ -112,7 +123,13 @@ class RetentionPeriodOnResourceTypesWithAutoExpiringContent(CloudFormationLintRu
                                 )
                                 for ref in refs:
                                     if ref[-1] == "AWS::NoValue":
-                                        message = f'The default retention period will delete the data after a pre-defined time. Set an explicit values to avoid data loss on resource : {"/".join(str(x) for x in ref[0:-1])}'
+                                        message = (
+                                            "The default retention period will delete"
+                                            " the data after a pre-defined time. Set"
+                                            " an explicit values to avoid data loss on"
+                                            " resource :"
+                                            f" {'/'.join(str(x) for x in ref[0:-1])}"
+                                        )
                                         matches.append(RuleMatch(ref[0:-1], message))
 
         return matches
