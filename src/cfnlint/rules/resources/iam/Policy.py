@@ -68,7 +68,7 @@ class Policy(CloudFormationLintRule):
         if isinstance(value, str):
             try:
                 value = convert_dict(json.loads(value), start_mark, end_mark)
-            except Exception as ex:  # pylint: disable=W0703,W0612
+            except Exception:  # pylint: disable=W0703,W0612
                 message = "IAM Policy Documents need to be JSON"
                 matches.append(RuleMatch(path[:], message))
                 return matches
@@ -85,7 +85,10 @@ class Policy(CloudFormationLintRule):
                     matches.append(RuleMatch(path[:] + p_p + [parent_key], message))
                 if parent_key == "Version":
                     if parent_value not in valid_versions:
-                        message = f'IAM Policy Version needs to be one of ({", ".join(map(str, ["2012-10-17", "2008-10-17"]))}).'
+                        message = (
+                            "IAM Policy Version needs to be one of"
+                            f" ({', '.join(map(str, ['2012-10-17', '2008-10-17']))})."
+                        )
                         matches.append(RuleMatch(p_p + [parent_key], message))
                 if parent_key == "Statement":
                     if isinstance(parent_value, list):
@@ -152,11 +155,17 @@ class Policy(CloudFormationLintRule):
             matches.append(RuleMatch(branch[:], message))
         if is_identity_policy:
             if "Principal" in statement or "NotPrincipal" in statement:
-                message = "IAM Resource Policy statement shouldn't have Principal or NotPrincipal"
+                message = (
+                    "IAM Resource Policy statement shouldn't have Principal or"
+                    " NotPrincipal"
+                )
                 matches.append(RuleMatch(branch[:], message))
         else:
             if "Principal" not in statement and "NotPrincipal" not in statement:
-                message = "IAM Resource Policy statement should have Principal or NotPrincipal"
+                message = (
+                    "IAM Resource Policy statement should have Principal or"
+                    " NotPrincipal"
+                )
                 matches.append(RuleMatch(branch[:] + ["Principal"], message))
         if not resource_exceptions:
             if "Resource" not in statement and "NotResource" not in statement:

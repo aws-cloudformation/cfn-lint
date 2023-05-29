@@ -78,7 +78,10 @@ class RuleScheduleExpression(CloudFormationLintRule):
             items = cron_expression.split(" ")
 
             if len(items) != 6:
-                message = "Cron expression must contain 6 elements (Minutes Hours Day-of-month Month Day-of-week Year), cron contains {} elements"
+                message = (
+                    "Cron expression must contain 6 elements (Minutes Hours"
+                    " Day-of-month Month Day-of-week Year), cron contains {} elements"
+                )
                 matches.append(RuleMatch(path, message.format(len(items))))
                 return matches
 
@@ -87,7 +90,10 @@ class RuleScheduleExpression(CloudFormationLintRule):
                 matches.append(
                     RuleMatch(
                         path,
-                        "Don't specify the Day-of-month and Day-of-week fields in the same cron expression",
+                        (
+                            "Don't specify the Day-of-month and Day-of-week fields in"
+                            " the same cron expression"
+                        ),
                     )
                 )
 
@@ -103,7 +109,10 @@ class RuleScheduleExpression(CloudFormationLintRule):
         elif value.startswith("cron(") and value.endswith(")"):
             matches.extend(self.check_cron(value, path))
         else:
-            message = "Invalid ScheduledExpression specified ({}). Value has to be either cron() or rate()"
+            message = (
+                "Invalid ScheduledExpression specified ({}). Value has to be either"
+                " cron() or rate()"
+            )
             matches.append(RuleMatch(path, message.format(value)))
 
         return matches

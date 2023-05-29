@@ -4,7 +4,6 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 import os
-from argparse import ArgumentError
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 

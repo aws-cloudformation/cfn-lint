@@ -13,7 +13,8 @@ import shutil
 import sys
 import zipfile
 from copy import copy
-from typing import Any, Dict, List, Sequence, Union
+from functools import lru_cache
+from typing import Any, Dict, List, Sequence
 
 import jsonpatch
 
@@ -45,10 +46,6 @@ class _FileLocation:
 
 
 class ProviderSchemaManager:
-    _schemas: Dict[str, Dict[str, Schema]] = {}
-    _provider_schema_modules: Dict[str, Any] = {}
-    _cache: Dict[str, Union[Sequence, str]] = {}
-
     def __init__(self) -> None:
         self._root = _FileLocation(
             [
@@ -66,22 +63,22 @@ class ProviderSchemaManager:
         )
         self._region_primary = ToPy(REGION_PRIMARY)
         self._registry_schemas: Dict[str, Schema] = {}
+        self._provider_schema_modules: Dict[str, Any] = {}
         self.reset()
 
-    def reset(self):
+    def reset(self) -> None:
         """
         Reset's the cache so specs can be reloaded.
         Important function when processing many templates
         and using spec patching
         """
         self._schemas: Dict[str, Dict[str, Schema]] = {}
-        self._cache["ResourceTypes"] = {}
-        self._cache["GetAtts"] = {}
-        self._cache["RemovedTypes"] = []
         for region in REGIONS:
             self._schemas[region] = {}
-            self._cache["ResourceTypes"][region] = []
-            self._cache["GetAtts"][region] = {}
+        self._removed_types: List[str] = []
+        self.get_resource_schema.cache_clear()
+        self.get_resource_types.cache_clear()
+        self.get_type_getatts.cache_clear()
 
     def load_registry_schemas(self, path: str) -> None:
         """Load extra registry schemas from a directory
@@ -97,6 +94,7 @@ class ProviderSchemaManager:
                     schema = Schema(json.load(fh))
                     self._registry_schemas[schema.type_name] = schema
 
+    @lru_cache(maxsize=None)
     def get_resource_schema(self, region: str, resource_type: str) -> Schema:
         """Get the provider resource shcema and cache it to speed up future lookups
 
@@ -106,13 +104,13 @@ class ProviderSchemaManager:
         Returns:
             dict: returns the schema
         """
-        if resource_type in self._cache["RemovedTypes"]:
+        if resource_type in self._removed_types:
             raise ResourceNotFoundError(resource_type, region)
 
         reg = ToPy(region)
         rt = ToPy(resource_type)
 
-        schema = self._schemas[region].get(resource_type)
+        schema = self._schemas[reg.name].get(resource_type)
         if schema is None:
             # dynamically import the modules as needed
             self._provider_schema_modules[reg.name] = __import__(
@@ -138,7 +136,7 @@ class ProviderSchemaManager:
                 self._schemas[reg.name][rt.name] = Schema(
                     load_resource(
                         self._provider_schema_modules[reg.name],
-                        filename=(f"{rt.provider}.json"),
+                        filename=f"{rt.provider}.json",
                     )
                 )
             except Exception as e:
@@ -146,6 +144,7 @@ class ProviderSchemaManager:
             return self._schemas[reg.name][rt.name]
         return schema
 
+    @lru_cache(maxsize=None)
     def get_resource_types(self, region: str) -> List[str]:
         """Get the resource types for a region
 
@@ -160,24 +159,22 @@ class ProviderSchemaManager:
             self._provider_schema_modules[self._region_primary.name] = __import__(
                 f"{self._root.module}.{self._region_primary.py}", fromlist=[""]
             )
-        if not self._cache["ResourceTypes"][region]:
-            if reg.name not in self._provider_schema_modules:
-                self._provider_schema_modules[region] = __import__(
-                    f"{self._root.module}.{reg.py}", fromlist=[""]
-                )
-            self._cache["ResourceTypes"][reg.name].extend(
-                rt
-                for rt in self._provider_schema_modules[reg.name].types
-                if rt not in self._cache["RemovedTypes"]
+        resource_types: List[str] = []
+        if reg.name not in self._provider_schema_modules:
+            self._provider_schema_modules[region] = __import__(
+                f"{self._root.module}.{reg.py}", fromlist=[""]
             )
-            self._cache["ResourceTypes"][reg.name].extend(
-                list(self._registry_schemas.keys())
-            )
+        resource_types.extend(
+            rt
+            for rt in self._provider_schema_modules[reg.name].types
+            if rt not in self._removed_types
+        )
+        resource_types.extend(list(self._registry_schemas.keys()))
 
-        return self._cache["ResourceTypes"][reg.name].copy()
+        return resource_types
 
     def update(self, force: bool) -> None:
-        """Update ever regions provider schemas
+        """Update every regions provider schemas
 
         Args:
             force (bool): force the schemas to be downloaded
@@ -261,6 +258,7 @@ class ProviderSchemaManager:
                         separators=(",", ": "),
                         sort_keys=True,
                     )
+                    fh.write("\n")
                     # Resize doc as needed
                     fh.truncate()
 
@@ -280,7 +278,8 @@ class ProviderSchemaManager:
                         except FileNotFoundError:
                             pass
                         except Exception as e:  # pylint: disable=broad-except
-                            # Exceptions will typically be the file doesn't exist in primary region
+                            # Exceptions will typically be the file
+                            # doesn't exist in primary region
                             LOGGER.info(
                                 "Issuing comparing %s into %s: %s",
                                 f"{directory}{filename}",
@@ -288,19 +287,23 @@ class ProviderSchemaManager:
                                 e,
                             )
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
+                    f.write("from typing import List")
                     f.write("# pylint: disable=too-many-lines\ntypes = [\n")
                     for rt in all_types:
                         f.write(f'    "{rt}",\n')
-                    f.write("]\n\n# pylint: disable=too-many-lines\ncached = [\n")
+                    f.write(
+                        "]\n\n# pylint: disable=too-many-lines\ncached: List[str] = [\n"
+                    )
                     for cache_file in cached:
                         f.write(f'    "{cache_file}",\n')
                     f.write("]\n")
             else:
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
+                    f.write("from typing import List")
                     f.write("# pylint: disable=too-many-lines\ntypes = [\n")
                     for rt in all_types:
                         f.write(f'    "{rt}",\n')
-                    f.write("]\ncached = []\n")
+                    f.write("]\ncached: List[str] = []\n")
 
         except Exception as e:  # pylint: disable=broad-except
             LOGGER.info("Issuing updating schemas for %s: %s", region, e)
@@ -414,10 +417,12 @@ class ProviderSchemaManager:
                 resource_types.remove(match)
 
         # Remove unsupported resources
-        for resource in all_resource_types:
-            if resource not in resource_types:
-                self._cache["RemovedTypes"].append(resource)
-                self._cache["ResourceTypes"][region].remove(resource)
+        removed_types = list(set(all_resource_types) - set(resource_types))
+        if removed_types:
+            for removed_type in removed_types:
+                self._removed_types.append(removed_type)
+            self.get_resource_schema.cache_clear()
+            self.get_resource_types.cache_clear()
 
         for resource_type, patches in patch.patches.items():
             try:
@@ -429,6 +434,7 @@ class ProviderSchemaManager:
                 continue
             schema.patch(patches=patches)
 
+    @lru_cache(maxsize=None)
     def get_type_getatts(self, resource_type: str, region: str) -> Dict[str, GetAtt]:
         """Get the GetAtts for a type in a region
 
@@ -439,13 +445,8 @@ class ProviderSchemaManager:
             Dict(str, Dict): Returns a Dict where the keys are the attributes and the
                 value is the CloudFormation schema description of the attribute
         """
-        if resource_type not in self._cache["GetAtts"][region]:
-            self.get_resource_schema(region=region, resource_type=resource_type)
-            self._cache["GetAtts"][region][resource_type] = self._schemas[region][
-                resource_type
-            ].get_atts
-
-        return self._cache["GetAtts"][region][resource_type]
+        self.get_resource_schema(region=region, resource_type=resource_type)
+        return self._schemas[region][resource_type].get_atts
 
 
 PROVIDER_SCHEMA_MANAGER: ProviderSchemaManager = ProviderSchemaManager()

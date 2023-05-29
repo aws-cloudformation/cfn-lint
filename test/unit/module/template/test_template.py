@@ -35,6 +35,7 @@ class TestTemplate(BaseTestCase):
 
         dot = "test/fixtures/templates/good/generic.yaml.dot"
 
+        # ruff: noqa: E501
         expected_content = """digraph "template" {
 MyModule [color=black, label="MyModule\\n<My::Organization::Custom::MODULE>", shape=ellipse, type=Resource];
 RootRole [color=black, label="RootRole\\n<AWS::IAM::Role>", shape=ellipse, type=Resource];

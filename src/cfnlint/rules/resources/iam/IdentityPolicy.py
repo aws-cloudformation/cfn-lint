@@ -19,7 +19,10 @@ class IdentityPolicy(BaseJsonSchema):
 
     id = "E3510"
     shortdesc = "Validate identity based IAM polices"
-    description = "IAM identity polices are embedded JSON in CloudFormation. This rule validates those embedded policies."
+    description = (
+        "IAM identity polices are embedded JSON in CloudFormation. This rule validates"
+        " those embedded policies."
+    )
     source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
     tags = ["parameters", "availabilityzone"]
 
