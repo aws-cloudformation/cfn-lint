@@ -322,7 +322,10 @@ def run_checks(
     if regions:
         if not set(regions).issubset(set(REGIONS)):
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
-            msg = f"Regions {unsupported_regions} are unsupported. Supported regions are {REGIONS}"
+            msg = (
+                f"Regions {unsupported_regions} are unsupported. Supported regions are"
+                f" {REGIONS}"
+            )
             raise InvalidRegionException(msg, 32)
 
     errors: Matches = []

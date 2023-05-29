@@ -47,8 +47,11 @@ class Length(CloudFormationLintRule):
                 self.addMatch(
                     matches,
                     tree,
-                    f"Fn::Length expects either an array, a Ref to an array or {', '.join(self.supported_functions)}, "
-                    "but found unexpected object under Fn::Length at {0}",
+                    (
+                        "Fn::Length expects either an array, a Ref to an array or"
+                        f" {', '.join(self.supported_functions)}, but found unexpected"
+                        " object under Fn::Length at {0}"
+                    ),
                 )
                 return
 

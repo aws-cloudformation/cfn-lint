@@ -23,7 +23,8 @@ class TestHardCodedArnProperties(BaseRuleTestCase):
 
     def test_file_positive(self):
         """Test Positive"""
-        self.helper_file_positive()  # By default, a set of "correct" templates are checked
+        # By default, a set of "correct" templates are checked
+        self.helper_file_positive()
 
     def test_file_negative_partition(self):
         self.helper_file_rule_config(
