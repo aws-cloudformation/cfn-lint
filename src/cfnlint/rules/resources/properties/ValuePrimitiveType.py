@@ -25,7 +25,9 @@ class ValuePrimitiveType(CloudFormationLintRule):
         super().__init__()
         self.resource_specs = []
         self.property_specs = []
-        self.config_definition = {"strict": {"default": False, "type": "boolean"}} #Strict mode is set to false by default
+        self.config_definition = {
+            "strict": {"default": False, "type": "boolean"}
+        }  # Strict mode is set to false by default
         self.configure()
 
     def initialize(self, cfn):
