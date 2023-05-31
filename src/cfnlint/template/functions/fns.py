@@ -3,12 +3,12 @@ from typing import Any, Dict, Iterable
 
 from cfnlint.helpers import FUNCTIONS, ToPy
 from cfnlint.template import functions
-from cfnlint.template.functions._typing import Fn
+from cfnlint.template.functions._protocols import Fn
 from cfnlint.template.functions.exceptions import Unpredictable
 
 
 class Fns:
-    def __init__(self, template) -> None:
+    def __init__(self, template: Any) -> None:
         self.functions: Dict[int, Fn] = {}
         for fn in list(set(FUNCTIONS) - set(["Fn::Contains"])):
             fn_py = ToPy(fn)

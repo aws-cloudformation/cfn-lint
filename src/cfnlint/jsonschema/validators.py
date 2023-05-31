@@ -6,6 +6,7 @@ SPDX-License-Identifier: MIT-0
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator
 
@@ -34,7 +35,7 @@ _meta_schema: Dict[str, Any] = load_resource(draft7, "schema.json")
 
 
 def create(
-    validators: Dict[str, V] | None = None,
+    validators: Mapping[str, V] | None = None,
     function_filter: FunctionFilter | None = None,
 ):
     validators_arg = validators or {}
@@ -56,18 +57,24 @@ def create(
         _meta_schema: Dict[str, Any] = field(
             init=False, default_factory=lambda: _meta_schema
         )
-        _type_checker: TypeChecker = field(init=False, default=cfn_type_checker)
-        _format_checker: FormatChecker = field(init=False, default=cfn_format_checker)
+        _type_checker: TypeChecker = field(
+            init=False, default_factory=lambda: cfn_type_checker
+        )
+        _format_checker: FormatChecker = field(
+            init=False, default_factory=lambda: cfn_format_checker
+        )
 
         #: The schema that will be used to validate instances
-        schema: Any = field(repr=True, default=True)
-        validators: Dict[str, V] = field(
+        schema: Mapping | bool = field(repr=True, default=True)
+        validators: Mapping[str, V] = field(
             init=False, default_factory=lambda: validators_arg
         )
         resolver: RefResolver = field(default=None, repr=False)  # type: ignore
-        function_filter: FunctionFilter = field(init=True, default=function_filter_arg)
+        function_filter: FunctionFilter = field(
+            init=True, default_factory=lambda: function_filter_arg
+        )
         cfn: Template | None = field(default=None)
-        context: Context = field(default=Context())
+        context: Context = field(default_factory=Context)
 
         def __post_init__(self):
             if self.function_filter is None:

@@ -7,7 +7,11 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import Any, ClassVar, Deque, Dict, Iterator, Protocol, Type
+from typing import Any, ClassVar, Deque, Dict, Iterator, Type
+
+# for python 3.7 support can be removed when we
+# drop support
+from typing_extensions import Protocol
 
 from cfnlint.jsonschema._context import Context
 from cfnlint.jsonschema._filter import FunctionFilter

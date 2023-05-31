@@ -6,6 +6,7 @@ import unittest
 from collections import namedtuple
 from typing import List
 
+from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 from cfnlint.template.functions import Unpredictable
 
@@ -303,3 +304,12 @@ class TestCfnPredictedValues(Base):
     def test_standard_values(self):
         # all these checks should return true as there is one good value
         self.build_execute_tests({"Ref": "Foo"}, "integer", [1, "2"])
+
+
+class TestCfnTypeFailure(Base):
+    def test_cfn_type_failure(self):
+        with self.assertRaises(UnknownType) as err:
+            CfnTemplateValidator({}).is_type("foo", "bar")
+        self.assertIn(
+            "Unknown type 'bar' for validator with schema", str(err.exception)
+        )

@@ -7,9 +7,8 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import numbers
-from collections import Mapping
 from dataclasses import dataclass, field
-from typing import Any, Callable
+from typing import Any, Callable, Dict
 
 from cfnlint.jsonschema.exceptions import UndefinedTypeCheck
 
@@ -69,7 +68,7 @@ class TypeChecker:
             The initial mapping of types to their checking functions.
     """
 
-    type_checkers: Mapping[str, Callable[[TypeChecker, Any], bool]] = field(
+    type_checkers: Dict[str, Callable[[TypeChecker, Any], bool]] = field(
         init=True, default_factory=dict
     )
 

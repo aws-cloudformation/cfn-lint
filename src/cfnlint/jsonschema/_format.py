@@ -72,7 +72,7 @@ class FormatChecker:
     checkers: dict[
         str,
         tuple[_FormatCheckCallable, _RaisesType],
-    ] = field()
+    ] = field(default_factory=dict)
 
     def __repr__(self):
         return f"<FormatChecker checkers={sorted(self.checkers)}>"

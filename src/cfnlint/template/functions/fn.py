@@ -1,8 +1,8 @@
 import json
 from typing import Any, Iterable, Optional
 
+from cfnlint.template.functions._protocols import Fns
 from cfnlint.template.functions.exceptions import Unpredictable
-from cfnlint.template.functions.fns import Fns
 
 
 class Fn:

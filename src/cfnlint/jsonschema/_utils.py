@@ -144,7 +144,6 @@ def uniq(container):
         seen = []
         for e in c:
             e = unbool(e)
-
             for i in seen:
                 if equal(i, e):
                     return False

@@ -2,9 +2,9 @@ import json
 from typing import Any, Iterable, Optional
 
 from cfnlint.helpers import AVAILABILITY_ZONES
+from cfnlint.template.functions._protocols import Fns
 from cfnlint.template.functions.exceptions import Unpredictable
 from cfnlint.template.functions.fn import Fn
-from cfnlint.template.functions.fns import Fns
 
 
 class FnGetAZs(Fn):
