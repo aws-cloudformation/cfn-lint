@@ -340,7 +340,7 @@ class CliArgs:
         usage = (
             "\nBasic: cfn-lint test.yaml\n"
             "Ignore a rule: cfn-lint -i E3012 -- test.yaml\n"
-            "Configure a rule: cfn-lint -x E3012:strict=false -t test.yaml\n"
+            "Configure a rule: cfn-lint -x E3012:strict=true -t test.yaml\n"
             "Lint all yaml files in a folder: cfn-lint dir/**/*.yaml"
         )
 
@@ -465,7 +465,7 @@ class CliArgs:
             nargs="+",
             default={},
             action=RuleConfigurationAction,
-            help="Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false",
+            help="Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=true",
         )
         standard.add_argument(
             "--config-file",
