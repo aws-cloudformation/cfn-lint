@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -1026,7 +1027,6 @@ cached: List[str] = [
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-cognito-userpoolusertogroupattachment.json",
@@ -1120,7 +1120,6 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-gamelift-gameservergroup.json",
@@ -1383,6 +1382,7 @@ cached: List[str] = [
     "aws-ec2-routetable.json",
     "aws-rds-dbproxyendpoint.json",
     "aws-datasync-locationsmb.json",
+    "aws-resiliencehub-app.json",
     "aws-rolesanywhere-crl.json",
     "aws-connect-evaluationform.json",
     "aws-redshift-clusterparametergroup.json",
@@ -1655,6 +1655,7 @@ cached: List[str] = [
     "aws-ec2-instance.json",
     "aws-networkmanager-device.json",
     "aws-proton-environmentaccountconnection.json",
+    "aws-ec2-subnetcidrblock.json",
     "aws-mediapackage-asset.json",
     "aws-elasticbeanstalk-applicationversion.json",
     "aws-appmesh-virtualgateway.json",

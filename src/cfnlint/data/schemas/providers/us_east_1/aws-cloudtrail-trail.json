@@ -4,6 +4,127 @@
   "/properties/TrailName"
  ],
  "definitions": {
+  "AdvancedEventSelector": {
+   "additionalProperties": false,
+   "description": "Advanced event selectors let you create fine-grained selectors for the following AWS CloudTrail event record \ufb01elds. They help you control costs by logging only those events that are important to you.",
+   "properties": {
+    "FieldSelectors": {
+     "description": "Contains all selector statements in an advanced event selector.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/AdvancedFieldSelector"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Name": {
+     "description": "An optional, descriptive name for an advanced event selector, such as \"Log data events for only two S3 buckets\".",
+     "maxLength": 1000,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "FieldSelectors"
+   ],
+   "type": "object"
+  },
+  "AdvancedFieldSelector": {
+   "additionalProperties": false,
+   "description": "A single selector statement in an advanced event selector.",
+   "properties": {
+    "EndsWith": {
+     "description": "An operator that includes events that match the last few characters of the event record field specified as the value of Field.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Equals": {
+     "description": "An operator that includes events that match the exact value of the event record field specified as the value of Field. This is the only valid operator that you can use with the readOnly, eventCategory, and resources.type fields.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "Field": {
+     "description": "A field in an event record on which to filter events to be logged. Supported fields include readOnly, eventCategory, eventSource (for management events), eventName, resources.type, and resources.ARN.",
+     "maxLength": 1000,
+     "minLength": 1,
+     "pattern": "([\\w|\\d|\\.|_]+)",
+     "type": "string"
+    },
+    "NotEndsWith": {
+     "description": "An operator that excludes events that match the last few characters of the event record field specified as the value of Field.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotEquals": {
+     "description": "An operator that excludes events that match the exact value of the event record field specified as the value of Field.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "NotStartsWith": {
+     "description": "An operator that excludes events that match the first few characters of the event record field specified as the value of Field.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    },
+    "StartsWith": {
+     "description": "An operator that includes events that match the first few characters of the event record field specified as the value of Field.",
+     "insertionOrder": false,
+     "items": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "(.+)",
+      "type": "string"
+     },
+     "minItems": 1,
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "required": [
+    "Field"
+   ],
+   "type": "object"
+  },
   "DataResource": {
    "additionalProperties": false,
    "description": "CloudTrail supports data event logging for Amazon S3 objects and AWS Lambda functions. You can specify up to 250 resources for an individual event selector, but the total number of data resources cannot exceed 250 across all event selectors in a trail. This limit does not apply if you configure resource logging for all data events.",
@@ -171,6 +292,15 @@
   "/properties/TrailName"
  ],
  "properties": {
+  "AdvancedEventSelectors": {
+   "description": "The advanced event selectors that were used to select events for the data store.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AdvancedEventSelector"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
   "Arn": {
    "type": "string"
   },
@@ -269,5 +399,11 @@
   "IsLogging"
  ],
  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagUpdatable": true,
+  "taggable": true
+ },
  "typeName": "AWS::CloudTrail::Trail"
 }

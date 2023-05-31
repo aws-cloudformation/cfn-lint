@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -1084,7 +1085,6 @@ cached: List[str] = [
     "aws-servicecatalog-portfolioprincipalassociation.json",
     "aws-ram-resourceshare.json",
     "aws-memorydb-cluster.json",
-    "aws-dynamodb-table.json",
     "aws-amazonmq-configurationassociation.json",
     "aws-wafregional-ipset.json",
     "aws-redshiftserverless-namespace.json",
@@ -1123,7 +1123,6 @@ cached: List[str] = [
     "aws-lex-botversion.json",
     "aws-servicecatalog-launchnotificationconstraint.json",
     "aws-opensearchserverless-vpcendpoint.json",
-    "aws-quicksight-datasource.json",
     "aws-iot-cacertificate.json",
     "aws-ec2-networkaclentry.json",
     "aws-robomaker-simulationapplicationversion.json",
@@ -1179,6 +1178,7 @@ cached: List[str] = [
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
+    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-cognito-userpoolusertogroupattachment.json",
@@ -1286,6 +1286,7 @@ cached: List[str] = [
     "aws-datasync-locationfsxlustre.json",
     "aws-sagemaker-app.json",
     "aws-ec2-vpcgatewayattachment.json",
+    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-gamelift-gameservergroup.json",
@@ -1654,7 +1655,6 @@ cached: List[str] = [
     "aws-cloudfront-monitoringsubscription.json",
     "aws-iotevents-alarmmodel.json",
     "aws-efs-mounttarget.json",
-    "aws-quicksight-dataset.json",
     "aws-ec2-vpnconnection.json",
     "aws-waf-webacl.json",
     "aws-servicediscovery-publicdnsnamespace.json",

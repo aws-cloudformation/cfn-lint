@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -1039,8 +1040,6 @@ cached: List[str] = [
     "aws-ecs-service.json",
     "aws-servicecatalog-portfolioprincipalassociation.json",
     "aws-ram-resourceshare.json",
-    "aws-memorydb-cluster.json",
-    "aws-dynamodb-table.json",
     "aws-amazonmq-configurationassociation.json",
     "aws-wafregional-ipset.json",
     "aws-redshiftserverless-namespace.json",
@@ -1097,7 +1096,6 @@ cached: List[str] = [
     "aws-gamelift-build.json",
     "aws-apigateway-requestvalidator.json",
     "aws-autoscaling-warmpool.json",
-    "aws-applicationautoscaling-scalabletarget.json",
     "aws-apigatewayv2-model.json",
     "aws-config-storedquery.json",
     "aws-acmpca-permission.json",
@@ -1131,6 +1129,7 @@ cached: List[str] = [
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
+    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-cognito-userpoolusertogroupattachment.json",
@@ -1233,6 +1232,7 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
+    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-gamelift-gameservergroup.json",
@@ -1670,7 +1670,6 @@ cached: List[str] = [
     "aws-kinesisanalyticsv2-applicationreferencedatasource.json",
     "aws-lambda-eventinvokeconfig.json",
     "aws-mediaconnect-flowoutput.json",
-    "aws-lambda-layerversion.json",
     "aws-kinesisvideo-stream.json",
     "aws-rum-appmonitor.json",
     "aws-rds-optiongroup.json",
@@ -1913,7 +1912,6 @@ cached: List[str] = [
     "aws-rds-dbsecuritygroup.json",
     "aws-pinpoint-baiduchannel.json",
     "aws-mediapackage-channel.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-quicksight-topic.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",
