@@ -28,27 +28,31 @@ class FnSplit(Fn):
             return
 
         instance = list(instance)
-        self.delimiter = instance[0]
-        if not isinstance(self.delimiter, str):
+        self._delimiter = instance[0]
+        if not isinstance(self._delimiter, str):
             return
 
         self._string = None
         source = instance[1]
         if isinstance(source, str):
             self._string = source
-            self._is_valid = True
         if isinstance(source, dict):
             if len(source) == 1:
-                for k, v in source.items():
+                for k in source.keys():
                     if k in self._supported_functions:
                         self._fn = hash(json.dumps(source))
-                        self._is_valid = True
+
+    @property
+    def is_valid(self) -> bool:
+        return self._delimiter is not None and (
+            self._string is not None or self._fn is not None
+        )
 
     def get_value(self, fns, region: str) -> Iterable[Any]:
-        if not self._is_valid:
+        if not self.is_valid:
             raise Unpredictable(f"Fn::Split is not valid {self._instance!r}")
         if self._string:
-            yield self._string.split(self.delimiter)
+            yield self._string.split(self._delimiter)
             return
 
         if self._fn not in fns:
@@ -58,7 +62,7 @@ class FnSplit(Fn):
         success_ct = 0
         for value in values:
             if isinstance(value, str):
-                yield value.split(self.delimiter)
+                yield value.split(self._delimiter)
                 success_ct += 1
         if success_ct > 0:
             return

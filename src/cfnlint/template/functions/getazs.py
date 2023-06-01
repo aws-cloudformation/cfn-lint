@@ -17,17 +17,19 @@ class FnGetAZs(Fn):
 
         if isinstance(instance, str):
             self._region = instance
-            self._is_valid = True
             return
         if isinstance(instance, dict):
             if len(instance) == 1:
                 if "Ref" in instance:
                     self._ref = hash(json.dumps(instance))
-                    self._is_valid = True
                     return
 
+    @property
+    def is_valid(self) -> bool:
+        return self._ref is not None or self._region is not None
+
     def get_value(self, fns: Fns, region: str) -> Iterable[Any]:
-        if not self._is_valid:
+        if not self.is_valid:
             raise Unpredictable(f"Fn::GetAZs is not valid {self._instance!r}")
         if self._region:
             try:
@@ -35,12 +37,13 @@ class FnGetAZs(Fn):
                 return
             except KeyError:
                 raise Unpredictable(f"Fn::GetAZs got unknown region: {region!r}")
+
+        # we are either valid, _region or _ref
         if self._ref:
             for v in fns.get_value_by_hash(self._ref, region):
                 try:
+                    print(AVAILABILITY_ZONES)
                     yield AVAILABILITY_ZONES.get(v)
                 except (TypeError, ValueError, KeyError):
                     raise Unpredictable(f"Fn::GetAZs got bad value: {v!r}")
             return
-
-        raise Unpredictable("Fn::GetAZs unknown error")
