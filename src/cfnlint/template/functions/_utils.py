@@ -13,7 +13,9 @@ def add_to_lists(
     for add_item in add_list:
         if not isinstance(add_item, types):
             raise Unpredictable(f"Fn::Join can only join strings {add_item!r}")
-        for i, item in enumerate(lists):
+        if not lists:
+            results.append([fn(add_item)])
+            return results
+        for item in lists:
             results.append(item[:] + [fn(add_item)])
-
     return results

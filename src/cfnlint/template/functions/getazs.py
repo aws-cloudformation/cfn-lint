@@ -40,9 +40,10 @@ class FnGetAZs(Fn):
 
         # we are either valid, _region or _ref
         if self._ref:
-            for v in fns.get_value_by_hash(self._ref, region):
+            if self._ref not in fns:
+                raise Unpredictable(f"{self._ref!r} not in functions list")
+            for v in fns.get(self._ref).get_value(fns, region):  # type: ignore
                 try:
-                    print(AVAILABILITY_ZONES)
                     yield AVAILABILITY_ZONES.get(v)
                 except (TypeError, ValueError, KeyError):
                     raise Unpredictable(f"Fn::GetAZs got bad value: {v!r}")

@@ -1,5 +1,6 @@
 import json
 import unittest
+from collections import UserDict
 from typing import Any, Iterable
 
 from cfnlint.template.functions import Fn, FnSplit
@@ -56,11 +57,14 @@ class TestFnSplit(unittest.TestCase):
             def get_value(self, fns, region: str) -> Iterable[Any]:
                 yield []
 
-        fns = {hash(json.dumps(source)): Foo(source)}
+        class Fns(UserDict):
+            def __init__(self) -> None:
+                super().__init__()
+                self.data[hash(json.dumps(source))] = Foo(source)
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):
-            list(split.get_value(fns, "us-east-1"))
+            list(split.get_value(Fns(), "us-east-1"))
 
     def test_split_nested_fn_raise(self):
         source = {"Ref": "Foo"}
@@ -80,32 +84,34 @@ class TestFnSplit(unittest.TestCase):
         source = {"Ref": "Foo"}
         split = FnSplit(["-", source])
 
-        fns = {}
+        class Fns(UserDict):
+            def __init__(self) -> None:
+                super().__init__()
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):
-            list(split.get_value(fns, "us-east-1"))
+            list(split.get_value(Fns(), "us-east-1"))
 
     def test_split_invalid(self):
         # bad function
         split = FnSplit(["-", {"Foo": "Bar"}])
-        self.assertFalse(split._is_valid)
+        self.assertFalse(split.is_valid)
 
         # dict
         split = FnSplit(["-", {"Foo": "Foo", "Bar": "Bar"}])
-        self.assertFalse(split._is_valid)
+        self.assertFalse(split.is_valid)
 
         # wrong sized list
         split = FnSplit(["-"])
-        self.assertFalse(split._is_valid)
+        self.assertFalse(split.is_valid)
 
         # bad delimiter
         split = FnSplit([[], "Foo"])
-        self.assertFalse(split._is_valid)
+        self.assertFalse(split.is_valid)
 
         # split object
         split = FnSplit({"Foo": "Bar"})
-        self.assertFalse(split._is_valid)
+        self.assertFalse(split.is_valid)
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):

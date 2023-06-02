@@ -9,7 +9,6 @@ from cfnlint.template.functions.exceptions import Unpredictable
 class TestFnjoin(unittest.TestCase):
     def test_join_list(self):
         join = FnJoin([",", ["foo", "bar"]])
-
         self.assertListEqual(list(join.get_value(None, "us-east-1")), ["foo,bar"])
 
     def test_join_nested_fn(self):
@@ -115,31 +114,31 @@ class TestFnjoin(unittest.TestCase):
     def test_join_invalid(self):
         # bad function
         join = FnJoin([",", {"Foo": "Bar"}])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # dict
         join = FnJoin([",", {"Foo": "Foo", "Bar": "Bar"}])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # wrong sized list
         join = FnJoin([","])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # bad delimiter
         join = FnJoin([[], "Foo"])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # join object
         join = FnJoin({"Foo": "Bar"})
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # join nested object
         join = FnJoin([",", [{"Foo": "Foo", "Bar": "Bar"}]])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # join with list
         join = FnJoin([",", [[], ""]])
-        self.assertFalse(join._is_valid)
+        self.assertFalse(join.is_valid)
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):

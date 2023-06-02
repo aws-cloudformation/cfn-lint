@@ -1,8 +1,25 @@
+from __future__ import annotations
+
 import json
-from typing import Any, Callable, Dict, Iterable, Optional
+from dataclasses import dataclass, field
+from typing import Any, Callable, Iterable, Iterator, List, Optional
 
 from cfnlint.template.functions._protocols import Fns
 from cfnlint.template.functions.exceptions import Unpredictable
+
+
+@dataclass
+class Value:
+    _value: Any = field(init=True, default=None)
+    _fn: int | None = field(init=True, default=None)
+
+    def values(self, fns: Fns, region: str) -> Iterator[Any]:
+        if self._fn is not None:
+            if self._fn not in fns:
+                raise Unpredictable(f"{self._fn!r} not in functions list")
+            yield from fns.get(self._fn).get_value(fns, region)  # type: ignore
+        else:
+            yield self._value
 
 
 class Fn:
@@ -28,13 +45,26 @@ class FnArray(Fn):
         self,
         instance: Any,
         length: int,
-        value_validators: Dict[int, Callable[[], bool]],
+        value_validators: List[Callable[[Any], Optional[Value]]],
         template: Any = None,
     ) -> None:
         super().__init__(instance, template)
-
+        self.items: List[Value] = []
+        self._length: int = length
         if not isinstance(instance, list):
             return
 
-        if len(instance) != length:
+        if len(instance) != self._length:
             return
+
+        for i, item in enumerate(instance):
+            value = value_validators[i](item)
+            if value is None:
+                return
+            self.items.append(value)
+
+    @property
+    def is_valid(self) -> bool:
+        if not self.items:
+            return False
+        return len(self.items) == self._length

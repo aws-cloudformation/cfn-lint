@@ -8,12 +8,17 @@ class Ref(Fn):
     def __init__(self, instance: Any, template: Any = None) -> None:
         super().__init__(instance)
         self._supported_functions: List[str] = []
-        if not isinstance(instance, str):
+        if not isinstance(self._instance, str):
             return
 
         self._value = instance
         self._account_id = "123456789012"
-        self._is_valid = True
+
+    @property
+    def is_valid(self) -> bool:
+        if not isinstance(self._instance, str):
+            return False
+        return True
 
     def _get_aws_partition(self, region: str) -> str:
         if region in ("us-gov-east-1", "us-gov-west-1"):
@@ -30,8 +35,8 @@ class Ref(Fn):
         return "amazonaws.com"
 
     def get_value(self, fns, region: str) -> Iterable[Any]:
-        if not self._is_valid:
-            raise Unpredictable(f"Fn::Join is not valid {self._instance!r}")
+        if not self.is_valid:
+            raise Unpredictable(f"Ref is not valid {self._instance!r}")
 
         if self._value == "AWS::Region":
             yield region

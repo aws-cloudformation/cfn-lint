@@ -1,15 +1,36 @@
-import json
-from collections import namedtuple
-from typing import Any, Iterable, List, Union
+from __future__ import annotations
 
+import json
+from dataclasses import dataclass
+from typing import Any, Iterable, Iterator, List, Optional
+
+from cfnlint.template.functions._protocols import Fns
 from cfnlint.template.functions._utils import add_to_lists
 from cfnlint.template.functions.exceptions import Unpredictable
-from cfnlint.template.functions.fn import Fn
-
-_JoinItem = namedtuple("_JoinItem", ["string", "fn"])
+from cfnlint.template.functions.fn import FnArray, Value
 
 
-class FnJoin(Fn):
+@dataclass
+class _JoinSource(Value):
+    def values(self, fns: Fns, region: str) -> Iterator[Any]:
+        if self._fn is not None:
+            if self._fn not in fns:
+                raise Unpredictable(f"{self._fn!r} not in functions list")
+            yield from fns.get(self._fn).get_value(fns, region)  # type: ignore
+        else:
+            lists: List[List[str]] = []
+            for item in self._value:
+                n_items = list(item.values(fns, region))
+                lists = add_to_lists(
+                    lists, n_items, (str, int, float), lambda x: str(x)
+                )
+            yield from iter(lists)
+
+    def add(self, Value):
+        self._value.append(Value)
+
+
+class FnJoin(FnArray):
     _multiple_functions = [
         "Fn::Cidr",
         "Fn::FindInMap",
@@ -34,76 +55,57 @@ class FnJoin(Fn):
     ]
 
     def __init__(self, instance: Any) -> None:
-        super().__init__(instance)
-        if not isinstance(instance, list):
-            return
-        if len(instance) != 2:
-            return
+        self._length = 2
+        super().__init__(
+            instance,
+            self._length,
+            value_validators=[
+                self._get_delimiter,
+                self._get_source,
+            ],
+        )
 
-        instance = list(instance)
-        self._delimiter: str = instance[0]
-        if not isinstance(self._delimiter, str):
-            return
+    def _get_delimiter(self, instance: Any) -> Optional[Value]:
+        if not isinstance(instance, str):
+            return None
 
-        self._items: Union[List[_JoinItem], int] = []
-        source = instance[1]
-        if isinstance(source, list):
-            for item in source:
+        return Value(_value=instance)
+
+    def _get_source(self, instance: Any) -> Optional[Value]:
+        if isinstance(instance, dict):
+            if len(instance) == 1:
+                for k in instance.keys():
+                    if k in self._multiple_functions:
+                        return _JoinSource(_fn=hash(json.dumps(instance)))
+
+        if isinstance(instance, list):
+            join_source = _JoinSource(_value=[])
+            for item in instance:
                 if isinstance(item, (str, int, float)):
-                    self._items.append(_JoinItem(item, None))
+                    join_source.add(Value(_value=item))
                 elif isinstance(item, dict):
                     if len(item) != 1:
-                        break
-                    for k, v in item.items():
+                        return None
+                    for k in item.keys():
                         if k in self._singular_functions:
-                            self._items.append(
-                                _JoinItem(None, hash(json.dumps({k: v})))
-                            )
-                            continue
+                            join_source.add(Value(_fn=hash(json.dumps(item))))
+                        else:
+                            return None
                 else:
-                    break
-            else:
-                self._is_valid = True
-        elif isinstance(source, dict):
-            if len(source) == 1:
-                for k, v in source.items():
-                    if k in self._multiple_functions:
-                        self._items = hash(json.dumps(source))
-                        self._is_valid = True
+                    return None
+            return join_source
+        return None
 
     def get_value(self, fns, region: str) -> Iterable[Any]:
-        if not self._is_valid:
+        if not self.is_valid:
             raise Unpredictable(f"Fn::Join is not valid {self._instance!r}")
 
-        lists: List[List[str]] = [[]]
-        if isinstance(self._items, int):
-            if self._items not in fns:
-                raise Unpredictable(f"Fn::Join cannot be resolved {self._instance!r}")
-            for n_item in fns[self._items].get_value(fns, region):
-                if not isinstance(n_item, (list)):
-                    raise Unpredictable(
-                        f"Fn::Join can only join lists {self._instance!r}"
-                    )
-                yield self._delimiter.join(n_item)
-            return
-        else:
-            for item in self._items:
-                if item.fn:
-                    if item.fn not in fns:
-                        raise Unpredictable(
-                            f"Fn::Join cannot be resolved {self._instance!r}"
-                        )
-                    n_items = list(fns[item.fn].get_value(fns, region))
-                    lists = add_to_lists(
-                        lists, n_items, (str, int, float), lambda x: str(x)
-                    )
-                else:
-                    lists = add_to_lists(
-                        lists, [item.string], (str, int, float), lambda x: str(x)
-                    )
-
-        if len(lists) > 0:
-            for l_item in lists:
-                yield self._delimiter.join(l_item)
+        success_ct = 0
+        for delimiter in self.items[0].values(fns, region):
+            for source in self.items[1].values(fns, region):
+                if isinstance(source, list):
+                    yield delimiter.join(source)
+                    success_ct += 1
+        if success_ct > 0:
             return
         raise Unpredictable(f"Fn::Join cannot be resolved {self._instance!r}")

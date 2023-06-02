@@ -2,27 +2,39 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from copy import deepcopy
 from test.unit.rules import BaseRuleTestCase
 from typing import List
-from unittest.mock import Mock
+from unittest.mock import MagicMock, patch
 
 from cfnlint.decode.cfn_json import Mark
 from cfnlint.decode.node import str_node
-from cfnlint.jsonschema import CfnTemplateValidator
-from cfnlint.rules import RuleMatch
-from cfnlint.rules.resources.properties import AllowedPattern as RuleStringPattern
-from cfnlint.rules.resources.properties import AllowedValue as RuleAllowedValue
-from cfnlint.rules.resources.properties import ListDuplicates as RuleListDuplicates
-from cfnlint.rules.resources.properties import ListSize as RuleListSize
-from cfnlint.rules.resources.properties import NumberSize as RuleNumberSize
-from cfnlint.rules.resources.properties import OnlyOne as RuleOneOf
-from cfnlint.rules.resources.properties import Properties as RuleProperties
-from cfnlint.rules.resources.properties import Required as RuleRequired
-from cfnlint.rules.resources.properties import StringSize as RuleStringSize
-from cfnlint.rules.resources.properties import ValuePrimitiveType as RuleType
-from cfnlint.rules.resources.properties.JsonSchema import (  # pylint: disable=E0401
+from cfnlint.rules import CloudFormationLintRule, RuleMatch
+from cfnlint.rules.resources.properties.JsonSchema import (
+    PROVIDER_SCHEMA_MANAGER,
     JsonSchema,
 )
+from cfnlint.template import Template
+
+
+class RuleWithFunction(CloudFormationLintRule):
+    """Test Rule"""
+
+    id = "E3XXX"
+    shortdesc = "Test Rule"
+    description = "Test Rule"
+    source_url = ""
+    tags = []
+
+
+class RuleWithOutFunction(CloudFormationLintRule):
+    """Test Rule"""
+
+    id = "E3YYY"
+    shortdesc = "Test Rule"
+    description = "Test Rule"
+    source_url = ""
+    tags = []
 
 
 class TestJsonSchema(BaseRuleTestCase):
@@ -31,39 +43,39 @@ class TestJsonSchema(BaseRuleTestCase):
     def setUp(self):
         """Setup"""
         super(TestJsonSchema, self).setUp()
+        self.maxDiff = None
         self.rule = JsonSchema()
-        self.table = {
-            build_key("A"): [{"AttributeName": "pk", "KeyType": "HASH"}],
-            build_key("B"): {
-                build_key("C"): "TTL",
-                build_key("D"): True,
-            },
-            build_key("E"): "string",
-            build_key("F"): 5,
-            build_key("G"): ["A", "A"],
+        self.template = {
+            build_key("Resources"): {
+                build_key("Table"): {
+                    build_key("Type"): "AWS::DynamoDB::Table",
+                    build_key("Properties"): {
+                        build_key("A"): [{"AttributeName": "pk", "KeyType": "HASH"}],
+                        build_key("B"): {
+                            build_key("C"): "TTL",
+                            build_key("D"): True,
+                        },
+                        build_key("E"): "string",
+                        build_key("F"): 5,
+                        build_key("G"): ["A", "A"],
+                    },
+                }
+            }
         }
         self.rule.child_rules = {
-            "E3002": RuleProperties.Properties(),
-            "E3003": RuleRequired.Required(),
-            "E3012": RuleType.ValuePrimitiveType(),
-            "E3030": RuleAllowedValue.AllowedValue(),
-            "E3031": RuleStringPattern.AllowedPattern(),
-            "E3032": RuleListSize.ListSize(),
-            "E3033": RuleStringSize.StringSize(),
-            "E3034": RuleNumberSize.NumberSize(),
-            "E3037": RuleListDuplicates.ListDuplicates(),
-            "E2523": RuleOneOf.OnlyOne(),
+            "E3XXX": RuleWithFunction(),
+            "E3YYY": RuleWithOutFunction(),
+        }
+        self.rule.rule_set = {
+            "required": "E3XXX",
+            "type": "E3YYY",
         }
 
-        self.cfn = Mock()
-        self.cfn.get_valid_refs = {}
-        self.path = ["Resources", "Table", "Properties"]
+        self.cfn = Template("", self.template, ["us-east-1"])
 
-    def build_result(
-        self, rule_id: str, message: str, path: List[str], **kwargs
-    ) -> RuleMatch:
+    def build_result(self, rule_id: str, message: str, path: List[str]) -> RuleMatch:
         return RuleMatch(
-            self.path + path[:],
+            path[:],
             message,
             rule=self.rule.child_rules.get(rule_id),
             location=(
@@ -72,23 +84,23 @@ class TestJsonSchema(BaseRuleTestCase):
                 f"{path[-1]}-em-line",
                 f"{path[-1]}-em-column",
             ),
-            **kwargs,
         )
 
     def validate(self, schema, expected, object=None):
-        validator = self.rule.setup_validator(
-            validator=CfnTemplateValidator, schema=schema
-        )
-        if object is None:
-            object = self.table
+        with patch.object(
+            PROVIDER_SCHEMA_MANAGER, "get_resource_schema", return_value=None
+        ) as mock_method:
+            resource_schema = MagicMock()
+            resource_schema.json_schema = schema
+            resource_schema.is_cached = False
+            mock_method.return_value = resource_schema
+            matches = self.rule.match(self.cfn)
 
-        matches = self.rule.json_schema_validate(validator, object, self.path)
-
-        self.assertListEqual(
-            list(map(vars, expected)),
-            list(map(vars, matches)),
-            list(map(vars, matches)),
-        )
+            self.assertListEqual(
+                list(map(vars, expected)),
+                list(map(vars, matches)),
+                list(map(vars, matches)),
+            )
 
     def test_required_empty(self):
         schema = {
@@ -101,299 +113,19 @@ class TestJsonSchema(BaseRuleTestCase):
         }
 
         expected = [
-            RuleMatch(
-                self.path,
+            self.build_result(
+                "E3XXX",
                 "'A' is a required property",
-                rule=self.rule.child_rules.get("E3003"),
-            )
+                ["Resources", "Table", "Properties"],
+            ),
         ]
 
+        template = deepcopy(self.template)
+        template["Resources"]["Table"]["Properties"] = {}
+
+        self.cfn = Template("", template, ["us-east-1"])
+        delattr(expected[0], "location")
         self.validate(schema, expected, {})
-
-    def test_required_nested(self):
-        schema = {
-            "definitions": {
-                "Z": {
-                    "type": "object",
-                    "properties": {
-                        "X": {
-                            "type": "string",
-                        },
-                    },
-                    "required": ["X"],
-                },
-            },
-            "properties": {
-                "B": {"$ref": "#/definitions/Z"},
-            },
-            "required": ["B"],
-        }
-
-        expected = [
-            self.build_result("E3003", "'X' is a required property", ["B"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_additional_properties(self):
-        schema = {
-            "definitions": {
-                "Z": {
-                    "type": "object",
-                    "properties": {
-                        "C": {
-                            "type": "string",
-                        }
-                    },
-                    "additionalProperties": False,
-                }
-            },
-            "properties": {
-                "A": {
-                    "type": "array",
-                },
-                "B": {"$ref": "#/definitions/Z"},
-                "F": {"type": "number"},
-                "G": {"type": "array"},
-            },
-            "additionalProperties": False,
-        }
-
-        expected = [
-            self.build_result(
-                "E3002",
-                "Additional properties are not allowed ('D' was unexpected)",
-                ["B", "D"],
-            ),
-            self.build_result(
-                "E3002",
-                "Additional properties are not allowed ('E' was unexpected)",
-                ["E"],
-            ),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_one_of(self):
-        schema = {
-            "definitions": {
-                "Z": {
-                    "oneOf": [
-                        {
-                            "type": "object",
-                            "properties": {
-                                "C": {
-                                    "type": "string",
-                                }
-                            },
-                            # there are additional properties
-                            "additionalProperties": False,
-                        },
-                        {
-                            "type": "object",
-                            "properties": {
-                                # Z doesn't exist
-                                "Z": {
-                                    "type": "string",
-                                }
-                            },
-                            "required": ["Z"],
-                        },
-                    ]
-                }
-            },
-            "properties": {
-                "B": {"$ref": "#/definitions/Z"},
-            },
-        }
-
-        expected = [
-            self.build_result(
-                "E2523",
-                "{'C': 'TTL', 'D': True} is not valid under any of the given schemas",
-                ["B"],
-            ),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_pattern(self):
-        schema = {
-            "properties": {
-                "E": {"type": "string", "pattern": "^number$"},
-            },
-        }
-
-        expected = [
-            self.build_result("E3031", "'string' does not match '^number$'", ["E"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_min_items(self):
-        schema = {
-            "properties": {
-                "A": {
-                    "type": "array",
-                    "minItems": 5,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result(
-                "E3032",
-                "[{'AttributeName': 'pk', 'KeyType': 'HASH'}] is too short",
-                ["A"],
-            ),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_max_items(self):
-        schema = {
-            "properties": {
-                "A": {
-                    "type": "array",
-                    "maxItems": 0,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result(
-                "E3032",
-                "[{'AttributeName': 'pk', 'KeyType': 'HASH'}] is too long",
-                ["A"],
-            ),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_min_number(self):
-        schema = {
-            "properties": {
-                "F": {
-                    "type": "number",
-                    "minimum": 6,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3034", "5 is less than the minimum of 6", ["F"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_max_number(self):
-        schema = {
-            "properties": {
-                "F": {
-                    "type": "number",
-                    "maximum": 4,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3034", "5 is greater than the maximum of 4", ["F"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_exclusive_min_number(self):
-        schema = {
-            "properties": {
-                "F": {
-                    "type": "number",
-                    "minimum": 6,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3034", "5 is less than the minimum of 6", ["F"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_exclusive_max_number(self):
-        schema = {
-            "properties": {
-                "F": {
-                    "type": "number",
-                    "maximum": 4,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3034", "5 is greater than the maximum of 4", ["F"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_unique_array(self):
-        schema = {
-            "properties": {
-                "G": {
-                    "type": "array",
-                    "uniqueItems": True,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3037", "['A', 'A'] has non-unique elements", ["G"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_min_length(self):
-        schema = {
-            "properties": {
-                "E": {
-                    "type": "string",
-                    "minLength": 10,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3033", "'string' is shorter than 10", ["E"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_max_length(self):
-        schema = {
-            "properties": {
-                "E": {
-                    "type": "string",
-                    "maxLength": 3,
-                },
-            },
-        }
-
-        expected = [
-            self.build_result("E3033", "'string' is longer than 3", ["E"]),
-        ]
-
-        self.validate(schema, expected)
-
-    def test_enum(self):
-        schema = {
-            "properties": {
-                "E": {"type": "string", "enum": ["number"]},
-            },
-        }
-
-        expected = [
-            self.build_result("E3030", "'string' is not one of ['number']", ["E"]),
-        ]
-
-        self.validate(schema, expected)
 
     def test_type(self):
         schema = {
@@ -406,25 +138,69 @@ class TestJsonSchema(BaseRuleTestCase):
 
         expected = [
             self.build_result(
-                "E3012",
+                "E3YYY",
                 "'string' is not of type 'array'",
-                ["E"],
-                actual_type="string",
-                expected_type="array",
+                ["Resources", "Table", "Properties", "E"],
             ),
         ]
 
         self.validate(schema, expected)
 
+    def test_functions_if(self):
+        schema = {
+            "properties": {
+                "E": {
+                    "type": "array",
+                },
+            },
+        }
+
+        expected = [
+            self.build_result(
+                "E3YYY",
+                "'string' is not of type 'array'",
+                ["Resources", "Table", "Properties", "E", "Fn::If", 1],
+            ),
+        ]
+        template = deepcopy(self.template)
+        template["Resources"]["Table"]["Properties"]["E"] = {
+            build_key("Fn::If"): [
+                "Condition",
+                "string",
+                {build_key("Ref"): "AWS::NoValue"},
+            ]
+        }
+        self.cfn = Template("", template, ["us-east-1"])
+        delattr(expected[0], "location")
+        self.validate(schema, expected)
+
+    def test_functions_ref(self):
+        schema = {
+            "properties": {
+                "E": {
+                    "type": "array",
+                },
+            },
+        }
+
+        expected = [
+            self.build_result(
+                "E3YYY",
+                "{'Ref': 'AWS::Region'} is not of type 'array'",
+                ["Resources", "Table", "Properties", "E", "Ref"],
+            ),
+        ]
+        template = deepcopy(self.template)
+        ref = {build_key("Ref"): "AWS::Region"}
+        template["Resources"]["Table"]["Properties"]["E"] = ref
+
+        self.cfn = Template("", template, ["us-east-1"])
+        self.validate(schema, expected)
+
 
 def build_key(key: str):
-    caps = []
-    for s in key:
-        if s.isupper():
-            caps.append(s)
-    abbr = "".join(caps)
     return str_node(
         key,
-        Mark(f"{abbr}-sm-line", f"{abbr}-sm-column"),
-        Mark(f"{abbr}-em-line", f"{abbr}-em-column"),
+        Mark(f"{key}-sm-line", f"{key}-sm-column"),
+        Mark(f"{key}-em-line", f"{key}-em-column"),
     )

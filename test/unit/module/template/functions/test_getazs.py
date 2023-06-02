@@ -1,20 +1,20 @@
 import json
 import unittest
+from collections import UserDict
 from typing import Any, Iterable
 from unittest import mock
 
 from cfnlint.helpers import AVAILABILITY_ZONES
 from cfnlint.template.functions import FnGetAZs
 from cfnlint.template.functions.exceptions import Unpredictable
+from cfnlint.template.functions.fn import Fn
 
 
-def create_fns(instance, yield_value, raise_error=False):
-    class Fns:
-        def get_value_by_hash(self, hash_, region) -> Iterable[Any]:
-            if hash(json.dumps(instance)) != hash_:
-                yield yield_value
-            if raise_error:
-                raise Unpredictable("Error")
+def create_fns(instance, fn):
+    class Fns(UserDict):
+        def __init__(self) -> None:
+            super().__init__()
+            self.data[hash(json.dumps(instance))] = fn(instance)
 
     return Fns
 
@@ -34,20 +34,32 @@ class TestFnGetAZs(unittest.TestCase):
         instance = {"Ref": "AWS::Region"}
         fn = FnGetAZs(instance)
 
-        fns = create_fns(instance=instance, yield_value="us-east-1")()
+        class Foo(Fn):
+            def __init__(self, instance: Any) -> None:
+                super().__init__(instance)
+
+            def get_value(self, fns, region: str) -> Iterable[Any]:
+                yield "us-east-1"
+
+        fns = create_fns(instance=instance, fn=Foo)()
 
         with mock.patch.dict(
             AVAILABILITY_ZONES, {"us-east-1": ["foo", "bar"]}, clear=True
         ):
-            print("start")
             self.assertListEqual(list(fn.get_value(fns, "us-east-1")), [["foo", "bar"]])
-            print("end")
 
     def test_fn_nested_fn_no_value(self):
         instance = {"Ref": "Foo"}
         fn = FnGetAZs(instance)
 
-        fns = create_fns(instance=instance, yield_value="us-east-1", raise_error=True)()
+        class Foo(Fn):
+            def __init__(self, instance: Any) -> None:
+                super().__init__(instance)
+
+            def get_value(self, fns, region: str) -> Iterable[Any]:
+                raise Unpredictable("Error")
+
+        fns = create_fns(instance=instance, fn=Foo)()
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):
@@ -57,7 +69,14 @@ class TestFnGetAZs(unittest.TestCase):
         instance = {"Ref": "Foo"}
         fn = FnGetAZs(instance)
 
-        fns = create_fns(instance=instance, yield_value=[], raise_error=True)()
+        class Foo(Fn):
+            def __init__(self, instance: Any) -> None:
+                super().__init__(instance)
+
+            def get_value(self, fns, region: str) -> Iterable[Any]:
+                yield []
+
+        fns = create_fns(instance=instance, fn=Foo)()
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):

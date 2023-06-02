@@ -33,9 +33,7 @@ def additionalProperties(
             yield err
 
 
-def _fn(
-    validator: Validator, schema: Any, instance: Any, path: Any
-) -> Iterator[ValidationError]:
+def _fn(validator: Validator, schema: Any, instance: Any) -> Iterator[ValidationError]:
     if not validator.cfn:
         return
     try:
@@ -47,7 +45,7 @@ def _fn(
                 schema,
             ):
                 err.message = err.message.replace(f"{err.instance!r}", f"{instance!r}")
-                err.path.extendleft(path)
+                err.path.extendleft(list(instance.keys()))
                 yield err
     except Unpredictable:
         evolved = validator.evolve(
@@ -62,63 +60,63 @@ def ref(
 ) -> Iterator[ValidationError]:
     if instance == {"Ref": "AWS::NoValue"}:
         return
-    yield from _fn(validator, s, instance, path=["Ref"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_getatt(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn:GetAtt"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_base64(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Base64"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_getazs(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::GetAZs"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_importvalue(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::ImportValue"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_join(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Join"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_split(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Split"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_findinmap(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::FindInMap"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_select(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Select"])
+    yield from _fn(validator, s, instance)
 
 
 def fn_if(
@@ -139,28 +137,28 @@ def fn_if(
 def fn_sub(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Sub"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_cidr(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Cidr"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_length(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::Length"])
+    yield from _fn(validator, s, instance)
 
 
 # pylint: disable=unused-argument
 def fn_tojsonstring(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance, path=["Fn::ToJsonString"])
+    yield from _fn(validator, s, instance)
 
 
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:

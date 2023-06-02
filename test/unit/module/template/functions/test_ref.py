@@ -46,7 +46,7 @@ class TestRef(unittest.TestCase):
     def test_ref_invalid(self):
         # dict
         ref = Ref({"Foo": "Bar"})
-        self.assertFalse(ref._is_valid)
+        self.assertFalse(ref.is_valid)
 
         # invalid should raise unpredictable
         with self.assertRaises(Unpredictable):
