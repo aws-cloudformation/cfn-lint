@@ -4,8 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
-from jsonschema import Draft7Validator
-
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.properties.AllowedPattern import AllowedPattern
 
 
@@ -17,10 +16,16 @@ class TestAllowedPattern(BaseRuleTestCase):
         self.rule = AllowedPattern()
 
     def test_allowed_pattern(self):
-        validator = Draft7Validator({"type": "string"})
+        validator = CfnTemplateValidator(schema={"type": "string"})
 
-        self.assertEqual(len(list(self.rule.pattern(validator, ".*", "foo", {}))), 0)
-        self.assertEqual(len(list(self.rule.pattern(validator, "foo", "bar", {}))), 1)
+        self.assertEqual(
+            len(list(self.rule.pattern(validator, ".*", "foo", {}))),
+            0,
+        )
+        self.assertEqual(
+            len(list(self.rule.pattern(validator, "foo", "bar", {}))),
+            1,
+        )
         self.assertEqual(
             len(
                 list(
@@ -41,7 +46,10 @@ class TestAllowedPattern(BaseRuleTestCase):
             len(
                 list(
                     self.rule.pattern(
-                        validator, "foo", "{{resolve:ssm:S3AccessControl:2}}", {}
+                        validator,
+                        "foo",
+                        "{{resolve:ssm:S3AccessControl:2}}",
+                        {},
                     )
                 )
             ),
@@ -49,7 +57,7 @@ class TestAllowedPattern(BaseRuleTestCase):
         )
 
     def test_allowed_pattern_exceptions(self):
-        validator = Draft7Validator({"type": "string"})
+        validator = CfnTemplateValidator(schema={"type": "string"})
 
         self.rule.configure({"exceptions": ["AWS::"]})
 
