@@ -287,7 +287,7 @@ class ProviderSchemaManager:
                                 e,
                             )
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
-                    f.write("from typing import List")
+                    f.write("from typing import List\n\n")
                     f.write("# pylint: disable=too-many-lines\ntypes = [\n")
                     for rt in all_types:
                         f.write(f'    "{rt}",\n')
@@ -299,7 +299,7 @@ class ProviderSchemaManager:
                     f.write("]\n")
             else:
                 with open(f"{directory}__init__.py", encoding="utf-8", mode="w") as f:
-                    f.write("from typing import List")
+                    f.write("from typing import List\n\n")
                     f.write("# pylint: disable=too-many-lines\ntypes = [\n")
                     for rt in all_types:
                         f.write(f'    "{rt}",\n')

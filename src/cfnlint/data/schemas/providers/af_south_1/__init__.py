@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -521,6 +522,7 @@ types = [
     "AWS::FSx::Snapshot",
     "AWS::Route53::KeySigningKey",
     "AWS::Config::RemediationConfiguration",
+    "AWS::Detective::OrganizationAdmin",
     "AWS::Events::Connection",
     "AWS::Athena::DataCatalog",
     "AWS::Glue::Workflow",
@@ -713,7 +715,6 @@ cached: List[str] = [
     "aws-route53-recordset.json",
     "aws-elasticache-securitygroup.json",
     "aws-backup-framework.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-sagemaker-coderepository.json",
@@ -766,7 +767,6 @@ cached: List[str] = [
     "aws-rds-globalcluster.json",
     "aws-cloudformation-moduledefaultversion.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-glue-table.json",
     "aws-logs-metricfilter.json",
@@ -775,7 +775,6 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
@@ -954,6 +953,7 @@ cached: List[str] = [
     "aws-ec2-routetable.json",
     "aws-rds-dbproxyendpoint.json",
     "aws-datasync-locationsmb.json",
+    "aws-resiliencehub-app.json",
     "aws-rolesanywhere-crl.json",
     "aws-connect-evaluationform.json",
     "aws-redshift-clusterparametergroup.json",
@@ -1118,6 +1118,7 @@ cached: List[str] = [
     "aws-fsx-snapshot.json",
     "aws-route53-keysigningkey.json",
     "aws-config-remediationconfiguration.json",
+    "aws-detective-organizationadmin.json",
     "aws-events-connection.json",
     "aws-athena-datacatalog.json",
     "aws-glue-workflow.json",
@@ -1125,6 +1126,7 @@ cached: List[str] = [
     "aws-ec2-prefixlist.json",
     "aws-ec2-instance.json",
     "aws-networkmanager-device.json",
+    "aws-ec2-subnetcidrblock.json",
     "aws-elasticbeanstalk-applicationversion.json",
     "aws-appmesh-virtualgateway.json",
     "aws-waf-sqlinjectionmatchset.json",
@@ -1173,7 +1175,6 @@ cached: List[str] = [
     "aws-groundstation-config.json",
     "aws-ecr-registrypolicy.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-ssm-parameter.json",
     "aws-apigatewayv2-apigatewaymanagedoverrides.json",
