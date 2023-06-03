@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_servicediscovery_service/healthcheckconfig_exclusive"
- ],
  "createOnlyProperties": [
   "/properties/HealthCheckCustomConfig",
   "/properties/Name",
@@ -39,7 +36,12 @@
      "type": "number"
     },
     "Type": {
-     "cfnSchema": "aws_servicediscovery_service/boto_recordtype_enum",
+     "enum": [
+      "SRV",
+      "A",
+      "AAAA",
+      "CNAME"
+     ],
      "type": "string"
     }
    },
@@ -59,7 +61,11 @@
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_servicediscovery_service/boto_healthchecktype_enum",
+     "enum": [
+      "HTTP",
+      "HTTPS",
+      "TCP"
+     ],
      "type": "string"
     }
    },
@@ -91,6 +97,14 @@
     "Value",
     "Key"
    ],
+   "type": "object"
+  }
+ },
+ "dependencies": {
+  "HealthCheckConfig": {
+   "properties": {
+    "HealthCheckCustomConfig": false
+   },
    "type": "object"
   }
  },

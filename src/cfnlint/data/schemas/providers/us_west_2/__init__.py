@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -754,6 +755,7 @@ types = [
     "AWS::AppSync::GraphQLApi",
     "AWS::GameLift::MatchmakingRuleSet",
     "AWS::EC2::EgressOnlyInternetGateway",
+    "AWS::Athena::CapacityReservation",
     "AWS::Config::ConformancePack",
     "AWS::EC2::VPCCidrBlock",
     "AWS::APS::Workspace",
@@ -1083,8 +1085,6 @@ cached: List[str] = [
     "aws-ecs-service.json",
     "aws-servicecatalog-portfolioprincipalassociation.json",
     "aws-ram-resourceshare.json",
-    "aws-memorydb-cluster.json",
-    "aws-dynamodb-table.json",
     "aws-amazonmq-configurationassociation.json",
     "aws-wafregional-ipset.json",
     "aws-redshiftserverless-namespace.json",
@@ -1179,6 +1179,7 @@ cached: List[str] = [
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
+    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-cognito-userpoolusertogroupattachment.json",
@@ -1286,6 +1287,7 @@ cached: List[str] = [
     "aws-datasync-locationfsxlustre.json",
     "aws-sagemaker-app.json",
     "aws-ec2-vpcgatewayattachment.json",
+    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-gamelift-gameservergroup.json",
@@ -1809,6 +1811,7 @@ cached: List[str] = [
     "aws-appsync-graphqlapi.json",
     "aws-gamelift-matchmakingruleset.json",
     "aws-ec2-egressonlyinternetgateway.json",
+    "aws-athena-capacityreservation.json",
     "aws-config-conformancepack.json",
     "aws-ec2-vpccidrblock.json",
     "aws-aps-workspace.json",
@@ -2032,7 +2035,6 @@ cached: List[str] = [
     "aws-greengrass-loggerdefinitionversion.json",
     "aws-quicksight-dashboard.json",
     "aws-servicecatalog-tagoptionassociation.json",
-    "aws-ec2-ipam.json",
     "aws-databrew-job.json",
     "aws-ec2-transitgatewaypeeringattachment.json",
     "aws-quicksight-template.json",

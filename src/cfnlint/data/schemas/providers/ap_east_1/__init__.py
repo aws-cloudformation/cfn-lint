@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -558,6 +559,7 @@ types = [
     "AWS::Route53::KeySigningKey",
     "AWS::EventSchemas::Registry",
     "AWS::Config::RemediationConfiguration",
+    "AWS::Detective::OrganizationAdmin",
     "AWS::Events::Connection",
     "AWS::Athena::DataCatalog",
     "AWS::MediaConnect::FlowVpcInterface",
@@ -767,7 +769,6 @@ cached: List[str] = [
     "aws-elasticache-securitygroup.json",
     "aws-backup-framework.json",
     "aws-opsworks-layer.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-sagemaker-coderepository.json",
@@ -829,7 +830,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-glue-table.json",
@@ -840,7 +840,6 @@ cached: List[str] = [
     "aws-datasync-locationfsxlustre.json",
     "aws-sagemaker-app.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
@@ -1030,6 +1029,7 @@ cached: List[str] = [
     "aws-ec2-routetable.json",
     "aws-rds-dbproxyendpoint.json",
     "aws-datasync-locationsmb.json",
+    "aws-resiliencehub-app.json",
     "aws-rolesanywhere-crl.json",
     "aws-redshift-clusterparametergroup.json",
     "aws-organizations-policy.json",
@@ -1215,6 +1215,7 @@ cached: List[str] = [
     "aws-route53-keysigningkey.json",
     "aws-eventschemas-registry.json",
     "aws-config-remediationconfiguration.json",
+    "aws-detective-organizationadmin.json",
     "aws-events-connection.json",
     "aws-athena-datacatalog.json",
     "aws-mediaconnect-flowvpcinterface.json",
@@ -1282,7 +1283,6 @@ cached: List[str] = [
     "aws-ecr-registrypolicy.json",
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-ssm-parameter.json",
     "aws-apigatewayv2-apigatewaymanagedoverrides.json",

@@ -7,11 +7,8 @@ import logging
 import re
 from typing import Dict, Union
 
-from jsonschema import Draft7Validator
-from jsonschema.exceptions import best_match
-from jsonschema.validators import extend
-
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import StandardValidator, ValidationError
+from cfnlint.jsonschema.exceptions import best_match
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 from cfnlint.template import Template
 
@@ -69,8 +66,7 @@ class GetAtt(CloudFormationLintRule):
                         )
 
                     if validator_schema:
-                        validator = extend(
-                            validator=Draft7Validator,
+                        validator = StandardValidator({}).extend(
                             validators={
                                 "enum": self._enum,
                             },

@@ -3,16 +3,8 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-import json
-from typing import Any, List
-
-from cfnlint.helpers import (
-    FUNCTIONS,
-    FUNCTIONS_MULTIPLE,
-    PSEUDOPARAMS_MULTIPLE,
-    PSEUDOPARAMS_SINGLE,
-)
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema._utils import ensure_list
+from cfnlint.jsonschema._validators_cfn import cfn_type
 from cfnlint.rules import CloudFormationLintRule
 
 
@@ -46,180 +38,17 @@ class ValuePrimitiveType(CloudFormationLintRule):
         self.cfn = cfn
         return super().initialize(cfn)
 
-    # pylint: disable=too-many-return-statements
-    def _schema_value_check(
-        self, value: Any, item_type: str, strict_check: bool
-    ) -> bool:
-        """Checks non strict"""
-        if not strict_check:
-            try:
-                if item_type in ["string"]:
-                    return isinstance(value, (str, bool, int, float))
-                if item_type in ["boolean"]:
-                    if value not in ["True", "true", "False", "false"]:
-                        return False
-                elif item_type in ["integer", "number"]:
-                    if isinstance(value, bool):
-                        return False
-                    if item_type in ["integer"]:
-                        int(value)
-                    else:  # has to be a Double
-                        float(value)
-                else:
-                    return False
-            except Exception:  # pylint: disable=W0703
-                return False
-        else:
-            return False
-
-        return True
-
-    def _schema_check_primitive_type(self, value: Any, types: List[str]) -> bool:
-        """Chec item type"""
-        strict_check = self.config.get("strict")
-        result = False
-        for t in types:
-            if t == "string":
-                if not isinstance(value, (str)):
-                    if self._schema_value_check(value, "string", strict_check):
-                        result = True
-                else:
-                    result = True
-            elif t == "boolean":
-                if not isinstance(value, (bool)):
-                    if self._schema_value_check(value, "boolean", strict_check):
-                        result = True
-                else:
-                    result = True
-            elif t == "number":
-                if not isinstance(value, (float, int)) or isinstance(value, (bool)):
-                    if self._schema_value_check(value, "number", strict_check):
-                        result = True
-                else:
-                    result = True
-            elif t == "integer":
-                # bool is an int in python
-                if not isinstance(value, (int)) or isinstance(value, (bool)):
-                    if self._schema_value_check(value, "integer", strict_check):
-                        result = True
-                else:
-                    result = True
-            elif isinstance(value, list):
-                if self._schema_value_check(value, "list", strict_check):
-                    result = True
-
-        return result
-
     # pylint: disable=unused-argument
     def type(self, validator, types, instance, schema):
         types = ensure_list(types)
-        reprs = ", ".join(repr(type) for type in types)
-        if not any(validator.is_type(instance, type) for type in types):
-            if validator.is_type(instance, "object"):
-                if len(instance) == 1:
-                    for k, v in instance.items():
-                        # Most conditions should be eliminated but sometimes
-                        # they trickle through because of different issues
-                        # including a person providing a condition
-                        # name that doesn't exist
-                        if k == "Fn::If":
-                            if len(v) == 3:
-                                for i in range(1, 3):
-                                    for v_err in self.type(
-                                        validator=validator,
-                                        types=types,
-                                        instance=v[i],
-                                        schema=schema,
-                                    ):
-                                        v_err.path.append("Fn::If")
-                                        v_err.path.append(i)
-                                        yield v_err
-                            return
-                        if k == "Ref":
-                            valid_refs = self.cfn.get_valid_refs()
-                            for t in types:
-                                if t == "array":
-                                    if v in valid_refs:
-                                        ref_type = valid_refs.get(v).get("Type")
-                                        ref_from = valid_refs.get(v).get("From")
-                                        if ref_from == "Pseudo":
-                                            if v in PSEUDOPARAMS_MULTIPLE:
-                                                return
-                                        if (
-                                            "List" in ref_type
-                                            and ref_from == "Parameters"
-                                        ):
-                                            return
-                                elif t in ["string", "number", "integer", "boolean"]:
-                                    if v in valid_refs:
-                                        ref_type = valid_refs.get(v).get("Type")
-                                        ref_from = valid_refs.get(v).get("From")
-                                        if ref_from == "Pseudo":
-                                            if v in PSEUDOPARAMS_SINGLE:
-                                                return
-                                        if ref_from == "Resources":
-                                            # Ref to resource are always singular
-                                            return
-                                        if (
-                                            "List" not in ref_type
-                                            and ref_from == "Parameters"
-                                        ):
-                                            return
-                            if v not in valid_refs:
-                                # Picked up by another rule
-                                return
-                            yield ValidationError(
-                                f"{instance!r} is not of type {reprs}", extra_args={}
-                            )
-                            return
-                        if k in FUNCTIONS_MULTIPLE:
-                            for t in types:
-                                if t == "array":
-                                    return
-                            yield ValidationError(
-                                f"{instance!r} is not of type {reprs}", extra_args={}
-                            )
-                            return
-                        if k in FUNCTIONS:
-                            for t in types:
-                                if t in ["string", "integer", "boolean"]:
-                                    return
-                            yield ValidationError(
-                                f"{instance!r} is not of type {reprs}", extra_args={}
-                            )
-                            return
-                        yield ValidationError(
-                            f"{instance!r} is not of type {reprs}", extra_args={}
-                        )
-                        return
-            if not self._schema_check_primitive_type(instance, types):
-                extra_args = {
-                    "actual_type": type(instance).__name__,
-                    "expected_type": reprs,
-                }
-                # JSON types are listed as objects but will take a string
-                if "object" in types and "properties" not in schema:
-                    if validator.is_type(instance, "string"):
-                        try:
-                            json.loads(instance)
-                        except json.JSONDecodeError:
-                            yield ValidationError(
-                                f"{instance!r} is not of type {reprs}",
-                                extra_args=extra_args,
-                            )
-                        return
-                yield ValidationError(
-                    f"{instance!r} is not of type {reprs}",
-                    extra_args=extra_args,
-                )
-
-
-def ensure_list(thing):
-    """
-    Wrap ``thing`` in a list if it's a single str.
-    Otherwise, return it unchanged.
-    """
-
-    if isinstance(thing, str):
-        return [thing]
-    return thing
+        for err in cfn_type(
+            validator, types, instance, schema, self.config.get("strict")
+        ):
+            for t in ["object", "array", "boolean", "integer", "number", "string"]:
+                if validator.is_type(instance, t):
+                    err.extra_args = {
+                        "actual_type": t,
+                        "expected_type": types[0],
+                    }
+                    yield err
+                    break
