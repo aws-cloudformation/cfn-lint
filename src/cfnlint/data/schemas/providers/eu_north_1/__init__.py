@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -580,6 +581,7 @@ types = [
     "AWS::EC2::ClientVpnTargetNetworkAssociation",
     "AWS::AppSync::GraphQLApi",
     "AWS::EC2::EgressOnlyInternetGateway",
+    "AWS::Athena::CapacityReservation",
     "AWS::Config::ConformancePack",
     "AWS::EC2::VPCCidrBlock",
     "AWS::APS::Workspace",
@@ -896,7 +898,6 @@ cached: List[str] = [
     "aws-elasticache-securitygroup.json",
     "aws-backup-framework.json",
     "aws-opsworks-layer.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-mediaconvert-queue.json",
@@ -967,7 +968,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-resourceexplorer2-index.json",
@@ -979,7 +979,6 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-ec2-internetgateway.json",
@@ -1362,6 +1361,7 @@ cached: List[str] = [
     "aws-ec2-clientvpntargetnetworkassociation.json",
     "aws-appsync-graphqlapi.json",
     "aws-ec2-egressonlyinternetgateway.json",
+    "aws-athena-capacityreservation.json",
     "aws-config-conformancepack.json",
     "aws-ec2-vpccidrblock.json",
     "aws-aps-workspace.json",
@@ -1503,7 +1503,6 @@ cached: List[str] = [
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
     "aws-mediapackage-channel.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",
     "aws-ssm-parameter.json",

@@ -26,14 +26,21 @@
      "type": "boolean"
     },
     "Packaging": {
-     "cfnSchema": "aws_codebuild_project/boto_artifactpackaging_enum",
+     "enum": [
+      "NONE",
+      "ZIP"
+     ],
      "type": "string"
     },
     "Path": {
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_codebuild_project/boto_artifactstype_enum",
+     "enum": [
+      "CODEPIPELINE",
+      "S3",
+      "NO_ARTIFACTS"
+     ],
      "type": "string"
     }
    },
@@ -95,7 +102,12 @@
      "type": "string"
     },
     "ComputeType": {
-     "cfnSchema": "aws_codebuild_project/boto_computetype_enum",
+     "enum": [
+      "BUILD_GENERAL1_SMALL",
+      "BUILD_GENERAL1_MEDIUM",
+      "BUILD_GENERAL1_LARGE",
+      "BUILD_GENERAL1_2XLARGE"
+     ],
      "type": "string"
     },
     "EnvironmentVariables": {
@@ -109,7 +121,10 @@
      "type": "string"
     },
     "ImagePullCredentialsType": {
-     "cfnSchema": "aws_codebuild_project/boto_imagepullcredentialstype_enum",
+     "enum": [
+      "CODEBUILD",
+      "SERVICE_ROLE"
+     ],
      "type": "string"
     },
     "PrivilegedMode": {
@@ -119,7 +134,13 @@
      "$ref": "#/definitions/RegistryCredential"
     },
     "Type": {
-     "cfnSchema": "aws_codebuild_project/boto_environmenttype_enum",
+     "enum": [
+      "WINDOWS_CONTAINER",
+      "LINUX_CONTAINER",
+      "LINUX_GPU_CONTAINER",
+      "ARM_CONTAINER",
+      "WINDOWS_SERVER_2019_CONTAINER"
+     ],
      "type": "string"
     }
    },
@@ -212,7 +233,11 @@
      "uniqueItems": false
     },
     "Type": {
-     "cfnSchema": "aws_codebuild_project/boto_cachetype_enum",
+     "enum": [
+      "NO_CACHE",
+      "S3",
+      "LOCAL"
+     ],
      "type": "string"
     }
    },
@@ -347,7 +372,15 @@
      "type": "string"
     },
     "Type": {
-     "cfnSchema": "aws_codebuild_project/boto_sourcetype_enum",
+     "enum": [
+      "CODECOMMIT",
+      "CODEPIPELINE",
+      "GITHUB",
+      "S3",
+      "BITBUCKET",
+      "GITHUB_ENTERPRISE",
+      "NO_SOURCE"
+     ],
      "type": "string"
     }
    },
@@ -460,7 +493,8 @@
    "type": "string"
   },
   "QueuedTimeoutInMinutes": {
-   "cfnSchema": "aws_codebuild_project/queuedtimeoutinminutes_integer",
+   "maximum": 480,
+   "minimum": 5,
    "type": "integer"
   },
   "ResourceAccessRole": {
@@ -504,7 +538,8 @@
    "uniqueItems": false
   },
   "TimeoutInMinutes": {
-   "cfnSchema": "aws_codebuild_project/timeoutinminutes_integer",
+   "maximum": 480,
+   "minimum": 5,
    "type": "integer"
   },
   "Triggers": {

@@ -41,7 +41,11 @@
     },
     "Events": {
      "items": {
-      "cfnSchema": "aws_codedeploy_deploymentgroup/boto_autorollbackevent_enum",
+      "enum": [
+       "DEPLOYMENT_FAILURE",
+       "DEPLOYMENT_STOP_ON_ALARM",
+       "DEPLOYMENT_STOP_ON_REQUEST"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -111,11 +115,17 @@
    "additionalProperties": false,
    "properties": {
     "DeploymentOption": {
-     "cfnSchema": "aws_codedeploy_deploymentgroup/boto_deploymentoption_enum",
+     "enum": [
+      "WITH_TRAFFIC_CONTROL",
+      "WITHOUT_TRAFFIC_CONTROL"
+     ],
      "type": "string"
     },
     "DeploymentType": {
-     "cfnSchema": "aws_codedeploy_deploymentgroup/boto_deploymenttype_enum",
+     "enum": [
+      "IN_PLACE",
+      "BLUE_GREEN"
+     ],
      "type": "string"
     }
    },
@@ -381,8 +391,19 @@
    "additionalProperties": false,
    "properties": {
     "TriggerEvents": {
+     "enum": [
+      "DeploymentStart",
+      "DeploymentSuccess",
+      "DeploymentFailure",
+      "DeploymentStop",
+      "DeploymentRollback",
+      "DeploymentReady",
+      "InstanceStart",
+      "InstanceSuccess",
+      "InstanceFailure",
+      "InstanceReady"
+     ],
      "items": {
-      "cfnSchema": "aws_codedeploy_deploymentgroup/boto_triggereventtype_enum",
       "type": "string"
      },
      "type": "array",
