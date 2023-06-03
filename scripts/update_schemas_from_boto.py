@@ -10,7 +10,7 @@ import os
 import tempfile
 import zipfile
 from collections import namedtuple
-from typing import Dict, List
+from typing import List
 
 import requests
 
@@ -204,7 +204,7 @@ patches.extend(
                 Patch(
                     source=["acm", "2015-12-08"],
                     shape="ValidationMethod",
-                    path="/properties/PermissionModel",
+                    path="/properties/ValidationMethod",
                 ),
             ],
         ),
@@ -269,7 +269,7 @@ patches.extend(
                 Patch(
                     source=["cloudfront", "2020-05-31"],
                     shape="SSLSupportMethod",
-                    path="/definitions/ViewerCertificate/properties/SSLSupportMethod",
+                    path="/definitions/ViewerCertificate/properties/SslSupportMethod",
                 ),
             ],
         ),
@@ -299,12 +299,12 @@ patches.extend(
                 Patch(
                     source=["codebuild", "2016-10-06"],
                     shape="ArtifactPackaging",
-                    path="/definitions/Artifact/properties/Packaging",
+                    path="/definitions/Artifacts/properties/Packaging",
                 ),
                 Patch(
                     source=["codebuild", "2016-10-06"],
                     shape="ArtifactsType",
-                    path="/definitions/Artifact/properties/Type",
+                    path="/definitions/Artifacts/properties/Type",
                 ),
                 Patch(
                     source=["codebuild", "2016-10-06"],
@@ -474,7 +474,7 @@ patches.extend(
                 Patch(
                     source=["cognito-idp", "2016-04-18"],
                     shape="MessageActionType",
-                    path="/properties/MessageAction/items",
+                    path="/properties/MessageAction",
                 ),
             ],
         ),
@@ -504,12 +504,12 @@ patches.extend(
                 Patch(
                     source=["config", "2014-11-12"],
                     shape="MaximumExecutionFrequency",
-                    path="/properties/SourceDetail/properties/MaximumExecutionFrequency",
+                    path="/definitions/SourceDetail/properties/MaximumExecutionFrequency",
                 ),
                 Patch(
                     source=["config", "2014-11-12"],
                     shape="MessageType",
-                    path="/properties/SourceDetail/properties/MessageType",
+                    path="/definitions/SourceDetail/properties/MessageType",
                 ),
             ],
         ),
@@ -869,7 +869,7 @@ patches.extend(
                 Patch(
                     source=["iam", "2010-05-08"],
                     shape="statusType",
-                    path="/properties/Active",
+                    path="/properties/Status",
                 ),
             ],
         ),
@@ -999,12 +999,12 @@ patches.extend(
                 Patch(
                     source=["workspaces", "2015-04-08"],
                     shape="RunningMode",
-                    path="/properties/RunningMode",
+                    path="/definitions/WorkspaceProperties/properties/RunningMode",
                 ),
                 Patch(
                     source=["workspaces", "2015-04-08"],
                     shape="Compute",
-                    path="/properties/ComputeTypeName",
+                    path="/definitions/WorkspaceProperties/properties/ComputeTypeName",
                 ),
             ],
         ),
@@ -1029,77 +1029,45 @@ def configure_logging():
     LOGGER.addHandler(ch)
 
 
-def create_output(resource_type: str, shape: str, patch: Dict[str, List[str]]):
-    """update outputs with appropriate results"""
-    output_dir = os.path.join("src/cfnlint/data/schemas/extensions/")
-    output_file = os.path.join(
-        output_dir,
-        resource_type.lower().replace("::", "_"),
-        f"boto_{shape.lower()}_enum.json",
-    )
-    with open(output_file, "w") as fh:
-        json.dump(
-            patch,
-            fh,
-            indent=1,
-            separators=(",", ": "),
-            sort_keys=True,
-        )
-
-
 def build_resource_type_patches(dir: str, resource_patches: ResourcePatch):
     LOGGER.info(f"Applying patches for {resource_patches.resource_type}")
-    for patch in resource_patches.patches:
-        service_path = (
-            ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
-        )
-        with open(os.path.join(dir, *service_path), "r") as f:
-            d = json.load(f)
-            create_output(
-                resource_patches.resource_type,
-                patch.shape,
-                {"enum": d.get("shapes").get(patch.shape).get("enum")},
-            )
 
     resource_name = resource_patches.resource_type.lower().replace("::", "_")
     output_dir = os.path.join("src/cfnlint/data/schemas/patches/extensions/all/")
     output_file = os.path.join(
         output_dir,
-        f"{resource_name}.json",
+        resource_name,
+        "boto.json",
     )
 
-    mode = "r+" if os.path.exists(output_file) else "w+"
-    with open(output_file, mode) as fh:
-        fh.seek(0)
-        try:
-            d = json.load(fh)
-        except ValueError:
-            d = []
-        write_file = False
+    with open(output_file, "w+") as fh:
+        d = []
+        boto_d = {}
         for patch in resource_patches.patches:
-            patch_path = f"{resource_name}/boto_{patch.shape.lower()}_enum"
-            for d_patch in d:
-                if d_patch.get("value") == patch_path:
-                    break
-            else:
-                d.append(
-                    {
-                        "op": "add",
-                        "path": f"{patch.path}/cfnSchema",
-                        "value": patch_path,
-                    }
-                )
-                write_file = True
-
-        fh.seek(0)
-        if write_file:
-            json.dump(
-                d,
-                fh,
-                indent=1,
-                separators=(",", ": "),
-                sort_keys=True,
+            enums = []
+            service_path = (
+                ["botocore-master/botocore/data"] + patch.source + ["service-2.json"]
             )
+            with open(os.path.join(dir, *service_path), "r") as f:
+                boto_d = json.load(f)
+
+            enums = boto_d.get("shapes").get(patch.shape).get("enum")  # type: ignore
+            d.append(
+                {
+                    "op": "add",
+                    "path": f"{patch.path}/enum",
+                    "value": enums,
+                }
+            )
+
+        json.dump(
+            d,
+            fh,
+            indent=1,
+            separators=(",", ": "),
+            sort_keys=True,
+        )
+        fh.write("\n")
 
 
 def build_patches(dir: str):

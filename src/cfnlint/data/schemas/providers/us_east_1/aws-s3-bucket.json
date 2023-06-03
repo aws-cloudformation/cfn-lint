@@ -729,7 +729,15 @@
   },
   "RedirectAllRequestsTo": {
    "additionalProperties": false,
-   "cfnSchema": "aws_s3_bucket/websiteconfiguration_redirectallrequeststo_exclusive",
+   "dependencies": {
+    "RedirectAllRequestsTo": {
+     "properties": {
+      "ErrorDocument": false,
+      "IndexDocument": false,
+      "RoutingRules": false
+     }
+    }
+   },
    "description": "Specifies the redirect behavior of all requests to a website endpoint of an Amazon S3 bucket.",
    "properties": {
     "HostName": {
@@ -803,7 +811,7 @@
    "description": "A container for replication rules. You can add up to 1,000 rules. The maximum size of a replication configuration is 2 MB.",
    "properties": {
     "Role": {
-     "cfnSchema": "aws_iam_role/arn_pattern",
+     "awsType": "IamRoleArn",
      "description": "The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) role that Amazon S3 assumes when replicating objects.",
      "type": "string"
     },
@@ -994,7 +1002,18 @@
   },
   "RoutingRuleCondition": {
    "additionalProperties": false,
-   "cfnSchema": "aws_s3_bucket/routingrulecondition_required",
+   "anyOf": [
+    {
+     "required": [
+      "HttpErrorCodeReturnedEquals"
+     ]
+    },
+    {
+     "required": [
+      "KeyPrefixEquals"
+     ]
+    }
+   ],
    "description": "A container for describing a condition that must be met for the specified redirect to apply.You must specify at least one of HttpErrorCodeReturnedEquals and KeyPrefixEquals",
    "properties": {
     "HttpErrorCodeReturnedEquals": {
@@ -1484,11 +1503,10 @@
    "$ref": "#/definitions/BucketEncryption"
   },
   "BucketName": {
-   "cfnSchema": "aws_s3_bucket/bucketname_string",
    "description": "A name for the bucket. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the bucket name.",
    "maxLength": 63,
    "minLength": 3,
-   "pattern": "^[a-z0-9][a-z0-9//.//-]*[a-z0-9]$",
+   "pattern": "^[a-z0-9][a-z0-9.-]*[a-z0-9]$",
    "type": "string"
   },
   "CorsConfiguration": {
