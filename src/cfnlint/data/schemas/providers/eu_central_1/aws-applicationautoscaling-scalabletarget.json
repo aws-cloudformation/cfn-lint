@@ -1,0 +1,173 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "definitions": {
+  "ScalableTargetAction": {
+   "additionalProperties": false,
+   "description": "specifies the minimum and maximum capacity",
+   "properties": {
+    "MaxCapacity": {
+     "type": "integer"
+    },
+    "MinCapacity": {
+     "type": "integer"
+    }
+   },
+   "type": "object"
+  },
+  "ScheduledAction": {
+   "additionalProperties": false,
+   "description": "specifies a scheduled action for a scalable target",
+   "properties": {
+    "EndTime": {
+     "type": "string"
+    },
+    "ScalableTargetAction": {
+     "$ref": "#/definitions/ScalableTargetAction"
+    },
+    "Schedule": {
+     "type": "string"
+    },
+    "ScheduledActionName": {
+     "type": "string"
+    },
+    "StartTime": {
+     "type": "string"
+    },
+    "Timezone": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "ScheduledActionName",
+    "Schedule"
+   ],
+   "type": "object"
+  },
+  "SuspendedState": {
+   "additionalProperties": false,
+   "description": "specifies whether the scaling activities for a scalable target are in a suspended state",
+   "properties": {
+    "DynamicScalingInSuspended": {
+     "type": "boolean"
+    },
+    "DynamicScalingOutSuspended": {
+     "type": "boolean"
+    },
+    "ScheduledScalingSuspended": {
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  }
+ },
+ "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalableTarget",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:RegisterScalableTarget",
+    "application-autoscaling:DescribeScheduledActions",
+    "application-autoscaling:PutScheduledAction"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "application-autoscaling:DeregisterScalableTarget"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:DescribeScheduledActions"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "application-autoscaling:RegisterScalableTarget",
+    "application-autoscaling:DescribeScalableTargets",
+    "application-autoscaling:DescribeScheduledActions",
+    "application-autoscaling:DeleteScheduledAction",
+    "application-autoscaling:PutScheduledAction"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ResourceId",
+  "/properties/ScalableDimension",
+  "/properties/ServiceNamespace"
+ ],
+ "properties": {
+  "Id": {
+   "description": "This value can be returned by using the Ref function. Ref returns the Cloudformation generated ID of the resource in format - ResourceId|ScalableDimension|ServiceNamespace",
+   "type": "string"
+  },
+  "MaxCapacity": {
+   "description": "The maximum value that you plan to scale in to. When a scaling policy is in effect, Application Auto Scaling can scale in (contract) as needed to the minimum capacity limit in response to changing demand",
+   "type": "integer"
+  },
+  "MinCapacity": {
+   "description": "The minimum value that you plan to scale in to. When a scaling policy is in effect, Application Auto Scaling can scale in (contract) as needed to the minimum capacity limit in response to changing demand",
+   "type": "integer"
+  },
+  "ResourceId": {
+   "description": "The identifier of the resource associated with the scalable target",
+   "type": "string"
+  },
+  "RoleARN": {
+   "description": "Specify the Amazon Resource Name (ARN) of an Identity and Access Management (IAM) role that allows Application Auto Scaling to modify the scalable target on your behalf. ",
+   "type": "string"
+  },
+  "ScalableDimension": {
+   "description": "The scalable dimension associated with the scalable target. This string consists of the service namespace, resource type, and scaling property",
+   "type": "string"
+  },
+  "ScheduledActions": {
+   "description": "The scheduled actions for the scalable target. Duplicates aren't allowed.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/ScheduledAction"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "ServiceNamespace": {
+   "description": "The namespace of the AWS service that provides the resource, or a custom-resource",
+   "type": "string"
+  },
+  "SuspendedState": {
+   "$ref": "#/definitions/SuspendedState",
+   "description": "An embedded object that contains attributes and attribute values that are used to suspend and resume automatic scaling. Setting the value of an attribute to true suspends the specified scaling activities. Setting it to false (default) resumes the specified scaling activities."
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Id"
+ ],
+ "required": [
+  "ResourceId",
+  "ServiceNamespace",
+  "ScalableDimension",
+  "MinCapacity",
+  "MaxCapacity"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::ApplicationAutoScaling::ScalableTarget",
+ "writeOnlyProperties": [
+  "/properties/RoleARN"
+ ]
+}

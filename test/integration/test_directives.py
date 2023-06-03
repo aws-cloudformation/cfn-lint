@@ -8,6 +8,7 @@ from test.integration import BaseCliTestCase
 class TestDirectives(BaseCliTestCase):
     """Test Directives"""
 
+    # ruff: noqa: E501
     scenarios = [
         {
             "filename": "test/fixtures/templates/good/core/directives.yaml",
@@ -31,9 +32,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BucketName1 unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -57,9 +56,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 28},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadKey unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -82,9 +79,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 32},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadProperty unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"
@@ -110,9 +105,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 35},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadKey unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"

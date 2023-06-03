@@ -100,7 +100,11 @@
      "uniqueItems": false
     },
     "ViewerProtocolPolicy": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_viewerprotocolpolicy_enum",
+     "enum": [
+      "allow-all",
+      "https-only",
+      "redirect-to-https"
+     ],
      "type": "string"
     }
    },
@@ -132,20 +136,47 @@
   },
   "CustomErrorResponse": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/customerrorresponse_responsecode_inclusive"
-   ],
+   "dependencies": {
+    "ResponseCode": [
+     "ResponsePagePath"
+    ]
+   },
    "properties": {
     "ErrorCachingMinTTL": {
      "default": 300,
      "type": "number"
     },
     "ErrorCode": {
-     "cfnSchema": "aws_cloudfront_distribution/errorcode_enum",
+     "enum": [
+      400,
+      403,
+      404,
+      405,
+      414,
+      416,
+      500,
+      501,
+      502,
+      503,
+      504
+     ],
      "type": "integer"
     },
     "ResponseCode": {
-     "cfnSchema": "aws_cloudfront_distribution/responsecode_enum",
+     "enum": [
+      200,
+      400,
+      403,
+      404,
+      405,
+      414,
+      416,
+      500,
+      501,
+      502,
+      503,
+      504
+     ],
      "type": "integer"
     },
     "ResponsePagePath": {
@@ -185,7 +216,12 @@
       "SSLv3"
      ],
      "items": {
-      "cfnSchema": "aws_cloudfront_distribution/boto_sslprotocol_enum",
+      "enum": [
+       "SSLv3",
+       "TLSv1",
+       "TLSv1.1",
+       "TLSv1.2"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -358,8 +394,13 @@
      "type": "boolean"
     },
     "HttpVersion": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_httpversion_enum",
      "default": "http1.1",
+     "enum": [
+      "http1.1",
+      "http2",
+      "http3",
+      "http2and3"
+     ],
      "type": "string"
     },
     "IPV6Enabled": {
@@ -379,8 +420,12 @@
      "uniqueItems": false
     },
     "PriceClass": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_priceclass_enum",
      "default": "PriceClass_All",
+     "enum": [
+      "PriceClass_100",
+      "PriceClass_200",
+      "PriceClass_All"
+     ],
      "type": "string"
     },
     "Restrictions": {
@@ -450,7 +495,12 @@
    "additionalProperties": false,
    "properties": {
     "EventType": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_eventtype_enum",
+     "enum": [
+      "viewer-request",
+      "viewer-response",
+      "origin-request",
+      "origin-response"
+     ],
      "type": "string"
     },
     "FunctionARN": {
@@ -464,14 +514,268 @@
    "properties": {
     "Locations": {
      "items": {
-      "cfnSchema": "aws_cloudfront_distribution/location_enum",
+      "enum": [
+       "AD",
+       "AE",
+       "AF",
+       "AG",
+       "AI",
+       "AL",
+       "AM",
+       "AO",
+       "AQ",
+       "AR",
+       "AS",
+       "AT",
+       "AU",
+       "AW",
+       "AX",
+       "AZ",
+       "BA",
+       "BB",
+       "BD",
+       "BE",
+       "BF",
+       "BG",
+       "BH",
+       "BI",
+       "BJ",
+       "BL",
+       "BM",
+       "BN",
+       "BO",
+       "BQ",
+       "BR",
+       "BS",
+       "BT",
+       "BV",
+       "BW",
+       "BY",
+       "BZ",
+       "CA",
+       "CC",
+       "CD",
+       "CF",
+       "CG",
+       "CH",
+       "CI",
+       "CK",
+       "CL",
+       "CM",
+       "CN",
+       "CO",
+       "CR",
+       "CU",
+       "CV",
+       "CW",
+       "CX",
+       "CY",
+       "CZ",
+       "DE",
+       "DJ",
+       "DK",
+       "DM",
+       "DO",
+       "DZ",
+       "EC",
+       "EE",
+       "EG",
+       "EH",
+       "ER",
+       "ES",
+       "ET",
+       "FI",
+       "FJ",
+       "FK",
+       "FM",
+       "FO",
+       "FR",
+       "GA",
+       "GB",
+       "GD",
+       "GE",
+       "GF",
+       "GG",
+       "GH",
+       "GI",
+       "GL",
+       "GM",
+       "GN",
+       "GP",
+       "GQ",
+       "GR",
+       "GS",
+       "GT",
+       "GU",
+       "GW",
+       "GY",
+       "HK",
+       "HM",
+       "HN",
+       "HR",
+       "HT",
+       "HU",
+       "ID",
+       "IE",
+       "IL",
+       "IM",
+       "IN",
+       "IO",
+       "IQ",
+       "IR",
+       "IS",
+       "IT",
+       "JE",
+       "JM",
+       "JO",
+       "JP",
+       "KE",
+       "KG",
+       "KH",
+       "KI",
+       "KM",
+       "KN",
+       "KP",
+       "KR",
+       "KW",
+       "KY",
+       "KZ",
+       "LA",
+       "LB",
+       "LC",
+       "LI",
+       "LK",
+       "LR",
+       "LS",
+       "LT",
+       "LU",
+       "LV",
+       "LY",
+       "MA",
+       "MC",
+       "MD",
+       "ME",
+       "MF",
+       "MG",
+       "MH",
+       "MK",
+       "ML",
+       "MM",
+       "MN",
+       "MO",
+       "MP",
+       "MQ",
+       "MR",
+       "MS",
+       "MT",
+       "MU",
+       "MV",
+       "MW",
+       "MX",
+       "MY",
+       "MZ",
+       "NA",
+       "NC",
+       "NE",
+       "NF",
+       "NG",
+       "NI",
+       "NL",
+       "NO",
+       "NP",
+       "NR",
+       "NU",
+       "NZ",
+       "OM",
+       "PA",
+       "PE",
+       "PF",
+       "PG",
+       "PH",
+       "PK",
+       "PL",
+       "PM",
+       "PN",
+       "PR",
+       "PS",
+       "PT",
+       "PW",
+       "PY",
+       "QA",
+       "RE",
+       "RO",
+       "RS",
+       "RU",
+       "RW",
+       "SA",
+       "SB",
+       "SC",
+       "SD",
+       "SE",
+       "SG",
+       "SH",
+       "SI",
+       "SJ",
+       "SK",
+       "SL",
+       "SM",
+       "SN",
+       "SO",
+       "SR",
+       "SS",
+       "ST",
+       "SV",
+       "SX",
+       "SY",
+       "SZ",
+       "TC",
+       "TD",
+       "TF",
+       "TG",
+       "TH",
+       "TJ",
+       "TK",
+       "TL",
+       "TM",
+       "TN",
+       "TO",
+       "TR",
+       "TT",
+       "TV",
+       "TW",
+       "TZ",
+       "UA",
+       "UG",
+       "UM",
+       "US",
+       "UY",
+       "UZ",
+       "VA",
+       "VC",
+       "VE",
+       "VG",
+       "VI",
+       "VN",
+       "VU",
+       "WF",
+       "WS",
+       "YE",
+       "YT",
+       "ZA",
+       "ZM",
+       "ZW"
+      ],
       "type": "string"
      },
      "type": "array",
      "uniqueItems": false
     },
     "RestrictionType": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_georestrictiontype_enum",
+     "enum": [
+      "blacklist",
+      "whitelist",
+      "none"
+     ],
      "type": "string"
     }
    },
@@ -510,11 +814,21 @@
      "type": "integer"
     },
     "OriginProtocolPolicy": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_originprotocolpolicy_enum",
+     "enum": [
+      "http-only",
+      "match-viewer",
+      "https-only"
+     ],
      "type": "string"
     },
     "OriginSSLProtocols": {
      "items": {
+      "enum": [
+       "SSLv3",
+       "TLSv1",
+       "TLSv1.1",
+       "TLSv1.2"
+      ],
       "type": "string"
      },
      "type": "array",
@@ -566,9 +880,14 @@
   },
   "Origin": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/origin_onlyone"
-   ],
+   "dependencies": {
+    "CustomOriginConfig": {
+     "properties": {
+      "S3OriginConfig": false
+     },
+     "type": "object"
+    }
+   },
    "properties": {
     "ConnectionAttempts": {
      "type": "integer"
@@ -783,10 +1102,69 @@
   },
   "ViewerCertificate": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_cloudfront_distribution/viewercertificate_acmcertificatearn_inclusive",
-    "aws_cloudfront_distribution/viewercertificate_iamcertificateid_inclusive",
-    "aws_cloudfront_distribution/viewercertificate_onlyone"
+   "dependencies": {
+    "AcmCertificateArn": [
+     "SslSupportMethod"
+    ],
+    "IamCertificateId": [
+     "SslSupportMethod"
+    ]
+   },
+   "oneOf": [
+    {
+     "properties": {
+      "CloudFrontDefaultCertificate": false,
+      "IamCertificateId": false
+     },
+     "required": [
+      "AcmCertificateArn"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "AcmCertificateArn": false,
+      "IamCertificateId": false
+     },
+     "required": [
+      "CloudFrontDefaultCertificate"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "AcmCertificateArn": false,
+      "CloudFrontDefaultCertificate": false
+     },
+     "required": [
+      "IamCertificateId"
+     ],
+     "type": "object"
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     },
+     "type": "object"
+    }
    ],
    "properties": {
     "AcmCertificateArn": {
@@ -799,11 +1177,23 @@
      "type": "string"
     },
     "MinimumProtocolVersion": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_minimumprotocolversion_enum",
+     "enum": [
+      "SSLv3",
+      "TLSv1",
+      "TLSv1_2016",
+      "TLSv1.1_2016",
+      "TLSv1.2_2018",
+      "TLSv1.2_2019",
+      "TLSv1.2_2021"
+     ],
      "type": "string"
     },
     "SslSupportMethod": {
-     "cfnSchema": "aws_cloudfront_distribution/boto_sslsupportmethod_enum",
+     "enum": [
+      "sni-only",
+      "vip",
+      "static-ip"
+     ],
      "type": "string"
     }
    },

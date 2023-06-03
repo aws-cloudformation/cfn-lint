@@ -4,56 +4,22 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 
-from jsonschema import RefResolver
-from jsonschema.exceptions import best_match
-
 from cfnlint.helpers import load_resource
-from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._validators import cfn_type as validator_cfn_type
-from cfnlint.jsonschema._validators import type as validator_type
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.jsonschema import (
+    CfnTemplateValidator,
+    RefResolver,
+    StandardValidator,
+    ValidationError,
+)
+from cfnlint.jsonschema.exceptions import best_match
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
-class IdentityPolicy(BaseJsonSchema):
-    """Check IAM identity Policies"""
-
-    id = "E3510"
-    shortdesc = "Validate identity based IAM polices"
-    description = (
-        "IAM identity polices are embedded JSON in CloudFormation. This rule validates"
-        " those embedded policies."
-    )
-    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
-    tags = ["parameters", "availabilityzone"]
-
-    def __init__(self):
-        super().__init__()
-        self.cfn = None
-        self.validators = {
-            "anyOf": self._any_of,
-            "oneOf": self._one_of,
-            "type": validator_cfn_type,
-        }
-        policy_schema = load_resource("cfnlint.data.schemas.other.iam", "policy.json")
-        self.identity_schema = load_resource(
-            "cfnlint.data.schemas.other.iam", "policy_identity.json"
-        )
-        store = {
-            "policy": policy_schema,
-            "identity": self.identity_schema,
-        }
-        # To reduce reduntant schemas use a schema resolver
-        # this is deprecated in 4.18 of jsonschema
-        self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
-
-    def initialize(self, cfn):
-        self.cfn = cfn
-        return super().initialize(cfn)
-
+class _BestOf:
     def _match_longer_path(self, error):
         return len(error.path)
 
-    def _one_of(self, validator, oO, instance, schema):
+    def oneOf(self, validator, oO, instance, schema):
         subschemas = enumerate(oO)
         all_errors = []
         for index, subschema in subschemas:
@@ -80,7 +46,7 @@ class IdentityPolicy(BaseJsonSchema):
             yield ValidationError(f"{instance!r} is valid under each of {reprs}")
 
     # pylint: disable=unused-argument
-    def _any_of(self, validator, aO, instance, schema):
+    def anyOf(self, validator, aO, instance, schema):
         all_errors = []
         for index, subschema in enumerate(aO):
             errs = list(validator.descend(instance, subschema, schema_path=index))
@@ -91,6 +57,42 @@ class IdentityPolicy(BaseJsonSchema):
             best_err = best_match(all_errors, key=self._match_longer_path)
             yield best_err
 
+
+class IdentityPolicy(BaseJsonSchema):
+    """Check IAM identity Policies"""
+
+    id = "E3510"
+    shortdesc = "Validate identity based IAM polices"
+    description = (
+        "IAM identity polices are embedded JSON in CloudFormation. "
+        "This rule validates those embedded policies."
+    )
+    source_url = "https://github.com/aws-cloudformation/cfn-python-lint"
+    tags = ["parameters", "availabilityzone"]
+
+    def __init__(self):
+        super().__init__()
+        self.cfn = None
+        self.validators = {
+            "anyOf": _BestOf().anyOf,
+            "oneOf": _BestOf().oneOf,
+        }
+        policy_schema = load_resource("cfnlint.data.schemas.other.iam", "policy.json")
+        self.identity_schema = load_resource(
+            "cfnlint.data.schemas.other.iam", "policy_identity.json"
+        )
+        store = {
+            "policy": policy_schema,
+            "identity": self.identity_schema,
+        }
+        # To reduce reduntant schemas use a schema resolver
+        # this is deprecated in 4.18 of jsonschema
+        self.resolver = RefResolver.from_schema(self.identity_schema, store=store)
+
+    def initialize(self, cfn):
+        self.cfn = cfn
+        return super().initialize(cfn)
+
     # pylint: disable=unused-argument
     def iamidentitypolicy(self, validator, policy_type, policy, schema):
         # First time child rules are configured against the rule
@@ -98,17 +100,15 @@ class IdentityPolicy(BaseJsonSchema):
 
         if validator.is_type(policy, "string"):
             try:
-                # Since the policy is a string we cannot
-                # use functions so switch the type
-                # validator to the stricter type validation
-                self.validators["type"] = validator_type
+                validator = StandardValidator
                 policy = json.loads(policy)
             except json.JSONDecodeError:
                 return
         elif validator.is_type(policy, "object"):
-            self.validators["type"] = validator_cfn_type
+            validator = CfnTemplateValidator
 
         iam_validator = self.setup_validator(
+            validator=validator,
             schema=self.identity_schema,
         ).evolve(resolver=self.resolver)
 

@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -717,6 +718,7 @@ types = [
     "AWS::Route53::KeySigningKey",
     "AWS::EventSchemas::Registry",
     "AWS::Config::RemediationConfiguration",
+    "AWS::Detective::OrganizationAdmin",
     "AWS::Events::Connection",
     "AWS::Athena::DataCatalog",
     "AWS::DocDB::DBCluster",
@@ -994,7 +996,6 @@ cached: List[str] = [
     "aws-pinpoint-emailchannel.json",
     "aws-rekognition-collection.json",
     "aws-opsworks-layer.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-ec2-networkinsightsaccessscope.json",
     "aws-mediaconvert-queue.json",
@@ -1082,7 +1083,6 @@ cached: List[str] = [
     "aws-datasync-locationfsxlustre.json",
     "aws-sagemaker-app.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-kafkaconnect-connector.json",
     "aws-gamelift-gameservergroup.json",
@@ -1337,7 +1337,6 @@ cached: List[str] = [
     "aws-comprehend-flywheel.json",
     "aws-systemsmanagersap-application.json",
     "aws-dms-replicationtask.json",
-    "aws-panorama-applicationinstance.json",
     "aws-ec2-routetable.json",
     "aws-rds-dbproxyendpoint.json",
     "aws-datasync-locationsmb.json",
@@ -1386,6 +1385,7 @@ cached: List[str] = [
     "aws-gamelift-gamesessionqueue.json",
     "aws-databrew-dataset.json",
     "aws-ec2-vpngatewayroutepropagation.json",
+    "aws-glue-crawler.json",
     "aws-cloudfront-function.json",
     "aws-apigateway-method.json",
     "aws-wafregional-regexpatternset.json",
@@ -1593,6 +1593,7 @@ cached: List[str] = [
     "aws-route53-keysigningkey.json",
     "aws-eventschemas-registry.json",
     "aws-config-remediationconfiguration.json",
+    "aws-detective-organizationadmin.json",
     "aws-events-connection.json",
     "aws-athena-datacatalog.json",
     "aws-docdb-dbcluster.json",
@@ -1676,7 +1677,6 @@ cached: List[str] = [
     "aws-ecr-registrypolicy.json",
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-quicksight-topic.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",

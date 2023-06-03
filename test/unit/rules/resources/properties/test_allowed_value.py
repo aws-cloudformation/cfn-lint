@@ -4,8 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
-from jsonschema import Draft7Validator
-
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.parameters.AllowedValue import AllowedValue as ParameterAllowedValue
 from cfnlint.rules.resources.properties.AllowedValue import (
     AllowedValue,  # pylint: disable=E0401
@@ -34,10 +33,17 @@ class TestAllowedValue(BaseRuleTestCase):
 
     def test_allowed_value(self):
         """Test Positive"""
-
-        validator = Draft7Validator({"type": "string", "enum": ["a", "b"]})
-        self.assertEqual(len(list(self.rule.enum(validator, ["a", "b"], "a", {}))), 0)
-        self.assertEqual(len(list(self.rule.enum(validator, ["a", "b"], "c", {}))), 1)
+        validator = CfnTemplateValidator().extend(validators={})(
+            schema={"type": "string", "enum": ["a", "b"]}
+        )
+        self.assertEqual(
+            len(list(self.rule.enum(validator, ["a", "b"], "a", {}))),
+            0,
+        )
+        self.assertEqual(
+            len(list(self.rule.enum(validator, ["a", "b"], "c", {}))),
+            1,
+        )
         self.assertEqual(len(list(self.rule.enum(validator, [0, 2], 0, {}))), 0)
         self.assertEqual(len(list(self.rule.enum(validator, [0, 2], 1, {}))), 1)
 
@@ -50,7 +56,8 @@ class TestAllowedValue(BaseRuleTestCase):
         self.assertEqual(len(list(self.rule.enum(validator, [False], 1, {}))), 1)
 
         self.assertEqual(
-            len(list(self.rule.enum(validator, [0], {"Ref": "Foo"}, {}))), 1
+            len(list(self.rule.enum(validator, [0], {"Ref": "Foo"}, {}))),
+            1,
         )
 
         ## fall back to enum validation and not doing Ref
@@ -66,31 +73,4 @@ class TestAllowedValue(BaseRuleTestCase):
                 )
             ),
             1,
-        )
-        self.assertEqual(
-            len(
-                list(
-                    self.rule.enum(
-                        validator, ["Bar"], {"Fn::GetAtt": "ResourceName"}, {}
-                    )
-                )
-            ),
-            0,
-        )
-
-    def test_list_if(self):
-        """Test if"""
-        rule = AllowedValue()
-        validator = Draft7Validator({"type": "string", "enum": ["a", "b"]})
-        self.assertEqual(
-            len(
-                list(
-                    rule.validate_if(validator, ["a", "b"], ["Condition", "c", "d"], {})
-                )
-            ),
-            2,
-        )
-        self.assertEqual(
-            len(list(rule.validate_if(validator, 1, ["Condition", 2], {}))),
-            0,
         )
