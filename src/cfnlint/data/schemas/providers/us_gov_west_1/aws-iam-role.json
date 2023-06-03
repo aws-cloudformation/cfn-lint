@@ -54,20 +54,22 @@
    "type": "string"
   },
   "ManagedPolicyArns": {
-   "cfnSchema": "aws_iam_managedpolicy/arns_array",
    "items": {
-    "cfnSchema": "aws_iam_managedpolicy/arn_pattern",
+    "pattern": "arn:(aws[a-zA-Z-]*)?:iam::(\\d{12}|aws):policy/[a-zA-Z_0-9+=,.@\\-_/]+",
     "type": "string"
    },
+   "maxItems": 20,
+   "minItems": 0,
    "type": "array",
    "uniqueItems": true
   },
   "MaxSessionDuration": {
-   "cfnSchema": "aws_iam_role/maxsessionduration_integer",
+   "maximum": 43200,
+   "minimum": 3600,
    "type": "integer"
   },
   "Path": {
-   "cfnSchema": "aws_iam_path/path_pattern",
+   "pattern": "^/(.+/)*$",
    "type": "string"
   },
   "PermissionsBoundary": {
@@ -84,7 +86,8 @@
    "type": "string"
   },
   "RoleName": {
-   "cfnSchema": "aws_iam_role/rolename_string",
+   "maxLength": 64,
+   "minLength": 1,
    "type": "string"
   },
   "Tags": {

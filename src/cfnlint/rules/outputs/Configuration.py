@@ -19,7 +19,7 @@ class Configuration(CloudFormationLintRule):
     valid_keys = ["Value", "Export", "Description", "Condition"]
 
     # Map can be singular or multiple for this case we are going to skip
-    valid_funcs = FUNCTIONS_SINGLE + ["Fn::FindInMap", "Fn::Transform"]
+    valid_funcs = list(FUNCTIONS_SINGLE) + ["Fn::FindInMap", "Fn::Transform"]
 
     def check_func(self, value, path):
         """Check that a value is using the correct functions"""
