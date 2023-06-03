@@ -765,6 +765,7 @@ types = [
     "AWS::AppSync::GraphQLApi",
     "AWS::GameLift::MatchmakingRuleSet",
     "AWS::EC2::EgressOnlyInternetGateway",
+    "AWS::Athena::CapacityReservation",
     "AWS::Config::ConformancePack",
     "AWS::EC2::VPCCidrBlock",
     "AWS::APS::Workspace",

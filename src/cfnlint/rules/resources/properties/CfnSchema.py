@@ -23,7 +23,7 @@ class CfnSchema(BaseJsonSchema):
         rules = load_plugins(
             str(root_dir),
             "BaseCfnSchema",
-            "cfnlint.rules.resources.properties.CfnSchema",
+            "cfnlint.rules.resources",
         )
         for rule in rules:
             self.child_rules[rule.id] = rule
@@ -36,6 +36,7 @@ class CfnSchema(BaseJsonSchema):
         for schema_path in schema_paths:
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
+                    print(schema_path)
                     yield from rule.validate(instance)
 
 
@@ -50,7 +51,6 @@ class BaseCfnSchema(BaseJsonSchema):
                 f"cfnlint.data.schemas.extensions.{schema_split[0]}",
                 filename=(f"{schema_split[1]}.json"),
             )
-            self.cfn_validator = None
 
     def validate(self, instance):
         # if the schema has a description will only replace the message with that

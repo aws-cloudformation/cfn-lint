@@ -668,7 +668,6 @@ cached: List[str] = [
     "aws-rds-globalcluster.json",
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-glue-table.json",
     "aws-logs-metricfilter.json",

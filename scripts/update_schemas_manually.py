@@ -25,6 +25,7 @@ def make_only_one(props: Sequence[str]) -> Dict[str, Any]:
         del props_false[props[i]]
         dependencies[props[i]] = {
             "properties": props_false,
+            "type": "object",
         }
 
     return dependencies
@@ -38,6 +39,7 @@ def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
         result = {
             "required": [item],
             "properties": non_required,
+            "type": "object",
         }
         results.append(result)
 
@@ -47,6 +49,7 @@ def make_only_one_required(props: Sequence[str]) -> Sequence[Dict[str, Any]]:
             "propertyNames": {"enum": FUNCTIONS},
             "minProperties": 1,  # type: ignore
             "maxProperties": 1,  # type: ignore
+            "type": "object",
         }
     )
 
