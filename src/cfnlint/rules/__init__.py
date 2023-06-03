@@ -118,18 +118,27 @@ class CloudFormationLintRule:
     source_url: str = ""
     tags: List[str] = []
     experimental: bool = False
-    child_rules: Dict[str, Any] = {}
 
     logger = logging.getLogger(__name__)
 
-    def __init__(self):
-        self.resource_property_types = []
-        self.resource_sub_property_types = []
-        self.config = {}  # `-X E3012:strict=false`... Show more
-        self.config_definition = {}
+    def __init__(self) -> None:
+        self.resource_property_types: List[str] = []
+        self.resource_sub_property_types: List[str] = []
+        self.config: Dict[str, Any] = {}  # `-X E3012:strict=false`... Show more
+        self.config_definition: Dict[str, Any] = {}
+        self._child_rules: Dict[str, "CloudFormationLintRule"] = {}
+        super().__init__()
 
     def __repr__(self):
         return f"{self.id}: {self.shortdesc}"
+
+    @property
+    def child_rules(self):
+        return self._child_rules
+
+    @child_rules.setter
+    def child_rules(self, rules: Dict[str, "CloudFormationLintRule"]):
+        self._child_rules = rules
 
     @property
     def severity(self):
