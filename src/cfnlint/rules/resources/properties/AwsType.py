@@ -26,6 +26,7 @@ class AwsType(CloudFormationLintRule):
             "AvailabilityZone": "W3010",
             "AvailabilityZones": "W3010",
             "IamIdentityPolicy": "E3510",
+            "IamRoleArn": "E3511",
         }
 
     def initialize(self, cfn):

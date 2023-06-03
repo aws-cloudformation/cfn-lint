@@ -4,10 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
-from jsonschema.exceptions import best_match
-
-from cfnlint.helpers import REGION_PRIMARY, load_resource
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.helpers import REGION_PRIMARY
+from cfnlint.jsonschema import CfnTemplateValidator, Context
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 
 LOGGER = logging.getLogger("cfnlint.rules.resources.properties.JsonSchema")
@@ -25,10 +24,6 @@ class JsonSchema(BaseJsonSchema):
     def __init__(self):
         """Init"""
         super().__init__()
-        self.validators = {
-            "cfnSchema": self._cfnSchema,
-            "cfnRegionSchema": self._cfnRegionSchema,
-        }
         self.rule_set = {
             "additionalProperties": "E3002",
             "properties": "E3002",
@@ -51,44 +46,11 @@ class JsonSchema(BaseJsonSchema):
             "cfnRegionSchema": "E3018",
         }
         self.child_rules = dict.fromkeys(list(self.rule_set.values()))
+        self.regions = [REGION_PRIMARY]
 
-    # pylint: disable=unused-argument
-    def _cfnSchema(self, validator, schema_paths, instance, schema, region=None):
-        if isinstance(schema_paths, str):
-            schema_paths = [schema_paths]
-
-        for schema_path in schema_paths:
-            schema_details = schema_path.split("/")
-            cfn_schema = load_resource(
-                f"cfnlint.data.schemas.extensions.{schema_details[0]}",
-                filename=f"{schema_details[1]}.json",
-            )
-            cfn_validator = self.setup_validator(schema=cfn_schema)
-
-            # if the schema has a description will only replace the message with that
-            # description and use the best error for the location information
-            if cfn_schema.get("description"):
-                err = best_match(list(cfn_validator.iter_errors(instance)))
-                # best_match will return None if the list is empty.
-                # There is no best match
-                if not err:
-                    return
-                err.message = cfn_schema.get("description")
-                err.validator = "cfnSchema"
-                yield err
-                return
-
-            for e in cfn_validator.iter_errors(instance):
-                e.validator = "cfnSchema"
-                yield e
-
-    # pylint: disable=unused-argument
-    def _cfnRegionSchema(self, validator, schema_paths, instance, schema):
-        for e in self._cfnSchema(
-            validator, schema_paths, instance, schema, self.region
-        ):
-            e.validator = "cfnRegionSchema"
-            yield e
+    def initialize(self, cfn):
+        self.regions = cfn.regions
+        return super().initialize(cfn)
 
     def match(self, cfn):
         """Check CloudFormation Properties"""
@@ -116,15 +78,13 @@ class JsonSchema(BaseJsonSchema):
                                 # same validation lets not run it again
                                 continue
                             cached_validation_run.append(t)
-                        cfn_validator = self.setup_validator(schema=schema.json_schema)
+                        cfn_validator = self.setup_validator(
+                            validator=CfnTemplateValidator,
+                            schema=schema.json_schema,
+                        ).evolve(context=Context(region), cfn=cfn)
                         path = ["Resources", n, "Properties"]
-                        for scenario in cfn.get_object_without_nested_conditions(
-                            p, path
-                        ):
-                            matches.extend(
-                                self.json_schema_validate(
-                                    cfn_validator, scenario.get("Object"), path
-                                )
-                            )
+                        matches.extend(
+                            self.json_schema_validate(cfn_validator, p, path)
+                        )
 
         return matches

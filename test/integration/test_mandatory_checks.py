@@ -11,6 +11,7 @@ from typing import Any, Dict, List
 class TestDirectives(BaseCliTestCase):
     """Test Directives"""
 
+    # ruff: noqa: E501
     scenarios: List[Dict[str, Any]] = [
         {
             "filename": str(
@@ -33,9 +34,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BucketName1 unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -61,9 +60,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 23},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadKey unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -88,9 +85,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 27},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadProperty unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"
@@ -118,9 +113,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 30},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadKey unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadKey' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -173,9 +166,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 13},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BucketName1 unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
@@ -200,9 +191,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 5, "LineNumber": 19},
                     },
-                    "Message": (
-                        "Additional properties are not allowed (BadProperty unexpected)"
-                    ),
+                    "Message": "Additional properties are not allowed ('BadProperty' was unexpected)",
                     "Rule": {
                         "Description": (
                             "Making sure the basic CloudFormation resources are"

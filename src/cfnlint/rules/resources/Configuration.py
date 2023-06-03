@@ -5,11 +5,9 @@ SPDX-License-Identifier: MIT-0
 
 import cfnlint.helpers
 from cfnlint.data.schemas.other import resource
-from cfnlint.jsonschema import ValidationError
-from cfnlint.jsonschema._validators import additionalProperties
-from cfnlint.jsonschema._validators import type as validator_type
+from cfnlint.jsonschema import StandardValidator, ValidationError
 from cfnlint.rules import RuleMatch
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER
 
 
@@ -30,11 +28,9 @@ class Configuration(BaseJsonSchema):
         self.regions = []
         self.cfn = None
         self.validators = {
-            "awsType": self._awsType,
-            "type": validator_type,
-            "additionalProperties": additionalProperties,
+            "awsType": self.awsType,
         }
-        self.validator = self.setup_validator(schema=schema)
+        self.validator = self.setup_validator(StandardValidator, schema)
 
     def initialize(self, cfn):
         super().initialize(cfn)
@@ -42,7 +38,7 @@ class Configuration(BaseJsonSchema):
         self.cfn = cfn
 
     # pylint: disable=unused-argument
-    def _awsType(self, validator, iT, instance, schema):
+    def awsType(self, validator, iT, instance, schema):
         resource_type = instance.get("Type")
         if not validator.is_type(resource_type, "string"):
             return
@@ -109,9 +105,6 @@ class Configuration(BaseJsonSchema):
             for resource_name, resource_values in cfn.template.get(
                 "Resources", {}
             ).items():
-                self.logger.debug(
-                    "Validating resource %s base configuration", resource_name
-                )
                 matches.extend(self._check_resource(resource_name, resource_values))
 
         return matches
