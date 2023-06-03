@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -969,7 +970,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-resourceexplorer2-index.json",
@@ -1512,7 +1512,6 @@ cached: List[str] = [
     "aws-redshift-scheduledaction.json",
     "aws-rds-dbsecuritygroup.json",
     "aws-mediapackage-channel.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",
     "aws-ssm-parameter.json",
