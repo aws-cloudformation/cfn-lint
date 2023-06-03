@@ -24,13 +24,24 @@
                 "$ref": "#/definitions/properties"
             }
         },
+        "dependencies": {
+            "$comment": "Redefined to capture our properties override.",
+            "type": "object",
+            "additionalProperties": {
+                "anyOf": [
+                    {
+                        "$ref": "#/definitions/properties"
+                    },
+                    {
+                        "$ref": "http://json-schema.org/draft-07/schema#/definitions/stringArray"
+                    }
+                ]
+            }
+        },
         "validations": {
             "dependencies": {
                 "enum": {
-                    "$comment": "Enforce that properties are strongly typed when enum, or const is specified.",
-                    "required": [
-                        "type"
-                    ]
+                    "$comment": "Enforce that properties are strongly typed when enum, or const is specified."
                 },
                 "const": {
                     "required": [
@@ -54,7 +65,7 @@
                 },
                 {
                     "$comment": "The following subset of draft-07 property references is supported for resource definitions. Nested properties are disallowed and should be specified as a $ref to a definitions block.",
-                    "type": "object",
+                    "type": ["object", "boolean"],
                     "properties": {
                         "insertionOrder": {
                             "description": "When set to true, this flag indicates that the order of insertion of the array will be honored, and that changing the order of the array would indicate a diff",
@@ -153,6 +164,9 @@
                             "type": "boolean",
                             "const": false
                         },
+                        "propertyNames": {
+                            "$ref": "#/definitions/properties"
+                        },
                         "patternProperties": {
                             "$comment": "patternProperties allow providers to introduce a specification for key-value pairs, or Map inputs.",
                             "type": "object",
@@ -161,18 +175,7 @@
                             }
                         },
                         "dependencies": {
-                            "$comment": "Redefined to capture our properties override.",
-                            "type": "object",
-                            "additionalProperties": {
-                                "anyOf": [
-                                    {
-                                        "$ref": "#/definitions/properties"
-                                    },
-                                    {
-                                        "$ref": "http://json-schema.org/draft-07/schema#/definitions/stringArray"
-                                    }
-                                ]
-                            }
+                            "$ref": "#/definitions/dependencies"
                         },
                         "const": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/const"
@@ -199,7 +202,7 @@
                             "type": ["string", "array"],
                             "cfnSchema": "true"
                         },
-                        "cfnRegionalSchema": {
+                        "cfnRegionSchema": {
                             "type": ["string", "array"],
                             "cfnSchema": "true"
                         },

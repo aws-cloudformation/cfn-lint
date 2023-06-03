@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -710,6 +711,7 @@ types = [
     "AWS::AppSync::GraphQLApi",
     "AWS::GameLift::MatchmakingRuleSet",
     "AWS::EC2::EgressOnlyInternetGateway",
+    "AWS::Athena::CapacityReservation",
     "AWS::Config::ConformancePack",
     "AWS::EC2::VPCCidrBlock",
     "AWS::APS::Workspace",
@@ -1187,7 +1189,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-resourceexplorer2-index.json",
@@ -1690,6 +1691,7 @@ cached: List[str] = [
     "aws-appsync-graphqlapi.json",
     "aws-gamelift-matchmakingruleset.json",
     "aws-ec2-egressonlyinternetgateway.json",
+    "aws-athena-capacityreservation.json",
     "aws-config-conformancepack.json",
     "aws-ec2-vpccidrblock.json",
     "aws-aps-workspace.json",
@@ -1938,7 +1940,6 @@ cached: List[str] = [
     "aws-cloudformation-resourceversion.json",
     "aws-sagemaker-modelexplainabilityjobdefinition.json",
     "aws-apigatewayv2-stage.json",
-    "aws-panorama-packageversion.json",
     "aws-chatbot-microsoftteamschannelconfiguration.json",
     "aws-rds-dbproxy.json",
     "aws-pinpoint-apnschannel.json",
