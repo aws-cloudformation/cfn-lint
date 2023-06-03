@@ -7,11 +7,11 @@ import sys
 from test.testlib.testcase import BaseTestCase
 
 import defusedxml.ElementTree as ET
-import jsonschema
 
 import cfnlint.core
 import cfnlint.formatters
 import cfnlint.helpers
+from cfnlint.jsonschema import StandardValidator
 from cfnlint.rules import Match
 from cfnlint.rules.functions.SubUnneeded import SubUnneeded
 from cfnlint.rules.resources.properties.ValuePrimitiveType import ValuePrimitiveType
@@ -403,7 +403,8 @@ class TestFormatters(BaseTestCase):
 
         # Fetch the SARIF schema
         schema = json.loads(cfnlint.helpers.get_url_content(sarif["$schema"], False))
-        jsonschema.validate(sarif, schema)
+        validator = StandardValidator(schema=schema)
+        validator.validate(sarif)
 
         sarif_results = sarif["runs"][0]["results"]
         # Check the 3 errors again

@@ -1,6 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": "aws_applicationautoscaling_scalingpolicy/scalingpolicy",
  "createOnlyProperties": [
   "/properties/ResourceId",
   "/properties/ScalableDimension",
@@ -59,7 +58,31 @@
    "additionalProperties": false,
    "properties": {
     "PredefinedMetricType": {
-     "cfnSchema": "aws_applicationautoscaling_scalingpolicy/boto_metrictype_enum",
+     "enum": [
+      "DynamoDBReadCapacityUtilization",
+      "DynamoDBWriteCapacityUtilization",
+      "ALBRequestCountPerTarget",
+      "RDSReaderAverageCPUUtilization",
+      "RDSReaderAverageDatabaseConnections",
+      "EC2SpotFleetRequestAverageCPUUtilization",
+      "EC2SpotFleetRequestAverageNetworkIn",
+      "EC2SpotFleetRequestAverageNetworkOut",
+      "SageMakerVariantInvocationsPerInstance",
+      "ECSServiceAverageCPUUtilization",
+      "ECSServiceAverageMemoryUtilization",
+      "AppStreamAverageCapacityUtilization",
+      "ComprehendInferenceUtilization",
+      "LambdaProvisionedConcurrencyUtilization",
+      "CassandraReadCapacityUtilization",
+      "CassandraWriteCapacityUtilization",
+      "KafkaBrokerStorageUtilization",
+      "ElastiCachePrimaryEngineCPUUtilization",
+      "ElastiCacheReplicaEngineCPUUtilization",
+      "ElastiCacheDatabaseMemoryUsageCountedForEvictPercentage",
+      "NeptuneReaderAverageCPUUtilization",
+      "SageMakerVariantProvisionedConcurrencyUtilization",
+      "ElastiCacheDatabaseCapacityUsageCountedForEvictPercentage"
+     ],
      "type": "string"
     },
     "ResourceLabel": {
@@ -143,6 +166,20 @@
   }
  },
  "description": "Resource Type definition for AWS::ApplicationAutoScaling::ScalingPolicy",
+ "oneOf": [
+  {
+   "required": [
+    "ScalingTargetId"
+   ]
+  },
+  {
+   "required": [
+    "ResourceId",
+    "ScalableDimension",
+    "ServiceNamespace"
+   ]
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
@@ -154,7 +191,10 @@
    "type": "string"
   },
   "PolicyType": {
-   "cfnSchema": "aws_applicationautoscaling_scalingpolicy/boto_policytype_enum",
+   "enum": [
+    "StepScaling",
+    "TargetTrackingScaling"
+   ],
    "type": "string"
   },
   "ResourceId": {
