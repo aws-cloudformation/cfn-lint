@@ -60,9 +60,61 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_spotfleet/blockdevicemapping_virtualname",
-    "aws_ec2_spotfleet/blockdevicemapping_onlyone"
+   "oneOf": [
+    {
+     "properties": {
+      "Ebs": false,
+      "NoDevice": false
+     },
+     "required": [
+      "VirtualName"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "NoDevice": false,
+      "VirtualName": false
+     },
+     "required": [
+      "Ebs"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "Ebs": false,
+      "VirtualName": false
+     },
+     "required": [
+      "NoDevice"
+     ],
+     "type": "object"
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     },
+     "type": "object"
+    }
    ],
    "properties": {
     "DeviceName": {
@@ -130,15 +182,14 @@
      "type": "integer"
     },
     "VolumeType": {
-     "cfnSchema": "aws_ec2_spotfleet/boto_volumetype_enum",
      "enum": [
-      "gp2",
-      "gp3",
+      "standard",
       "io1",
       "io2",
+      "gp2",
       "sc1",
       "st1",
-      "standard"
+      "gp3"
      ],
      "type": "string"
     }
@@ -640,9 +691,6 @@
   },
   "SpotFleetRequestConfigData": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_ec2_spotfleet/spotfleetrequestconfigdata_onlyone"
-   ],
    "properties": {
     "AllocationStrategy": {
      "enum": [
@@ -667,7 +715,7 @@
      "type": "string"
     },
     "IamFleetRole": {
-     "cfnSchema": "aws_iam_role/arn_pattern",
+     "awsType": "IamRoleArn",
      "type": "string"
     },
     "InstanceInterruptionBehavior": {
@@ -955,6 +1003,50 @@
    ]
   }
  },
+ "oneOf": [
+  {
+   "properties": {
+    "LaunchTemplateConfigs": false
+   },
+   "required": [
+    "LaunchSpecifications"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "LaunchSpecifications": false
+   },
+   "required": [
+    "LaunchTemplateConfigs"
+   ],
+   "type": "object"
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   },
+   "type": "object"
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

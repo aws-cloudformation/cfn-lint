@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -644,7 +645,6 @@ cached: List[str] = [
     "aws-route53-recordset.json",
     "aws-elasticache-securitygroup.json",
     "aws-opsworks-layer.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-sagemaker-coderepository.json",
     "aws-imagebuilder-component.json",
@@ -693,7 +693,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-resourceexplorer2-index.json",
@@ -704,7 +703,6 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
@@ -848,7 +846,6 @@ cached: List[str] = [
     "aws-codedeploy-deploymentconfig.json",
     "aws-networkmanager-globalnetwork.json",
     "aws-networkmanager-site.json",
-    "aws-glue-database.json",
     "aws-backup-backupvault.json",
     "aws-ec2-customergateway.json",
     "aws-scheduler-schedule.json",
@@ -860,6 +857,7 @@ cached: List[str] = [
     "aws-rds-dbproxyendpoint.json",
     "aws-datasync-locationsmb.json",
     "aws-rolesanywhere-crl.json",
+    "aws-redshift-clusterparametergroup.json",
     "aws-organizations-policy.json",
     "aws-glue-trigger.json",
     "aws-globalaccelerator-listener.json",
@@ -1057,7 +1055,6 @@ cached: List[str] = [
     "aws-resourceexplorer2-defaultviewassociation.json",
     "aws-ecr-registrypolicy.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-ssm-parameter.json",
     "aws-apigatewayv2-apigatewaymanagedoverrides.json",

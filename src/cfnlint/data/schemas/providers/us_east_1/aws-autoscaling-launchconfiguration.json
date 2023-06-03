@@ -51,8 +51,16 @@
      "type": "integer"
     },
     "VolumeType": {
-     "cfnSchema": "aws_autoscaling_launchconfiguration/boto_volumetype_enum",
      "description": "The volume type.",
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "sc1",
+      "st1",
+      "gp3"
+     ],
      "type": "string"
     }
    },
@@ -60,11 +68,63 @@
   },
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_autoscaling_launchconfiguration/blockdevicemapping_virtualname_exlusive",
-    "aws_autoscaling_launchconfiguration/blockdevicemapping_onlyone"
-   ],
    "description": "BlockDeviceMapping is a property of AWS::AutoScaling::LaunchConfiguration that describes a block device mapping for an Auto Scaling group.",
+   "oneOf": [
+    {
+     "properties": {
+      "Ebs": false,
+      "NoDevice": false
+     },
+     "required": [
+      "VirtualName"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "NoDevice": false,
+      "VirtualName": false
+     },
+     "required": [
+      "Ebs"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "Ebs": false,
+      "VirtualName": false
+     },
+     "required": [
+      "NoDevice"
+     ],
+     "type": "object"
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     },
+     "type": "object"
+    }
+   ],
    "properties": {
     "DeviceName": {
      "description": "The device name exposed to the EC2 instance (for example, /dev/sdh or xvdh). ",
