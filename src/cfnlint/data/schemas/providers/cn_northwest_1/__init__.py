@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -649,7 +650,6 @@ cached: List[str] = [
     "aws-rds-globalcluster.json",
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-glue-table.json",
     "aws-lambda-function.json",
@@ -657,7 +657,6 @@ cached: List[str] = [
     "aws-backup-backupselection.json",
     "aws-datasync-locationfsxlustre.json",
     "aws-ec2-vpcgatewayattachment.json",
-    "aws-cloudtrail-trail.json",
     "aws-gamelift-gameservergroup.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
@@ -941,6 +940,7 @@ cached: List[str] = [
     "aws-iot-accountauditconfiguration.json",
     "aws-ec2-prefixlist.json",
     "aws-ec2-instance.json",
+    "aws-ec2-subnetcidrblock.json",
     "aws-elasticbeanstalk-applicationversion.json",
     "aws-waf-sqlinjectionmatchset.json",
     "aws-ec2-transitgatewayvpcattachment.json",
@@ -983,7 +983,6 @@ cached: List[str] = [
     "aws-lakeformation-datalakesettings.json",
     "aws-autoscaling-scalingpolicy.json",
     "aws-rds-dbsecuritygroup.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-cloudwatch-metricstream.json",
     "aws-ssm-parameter.json",
     "aws-apigatewayv2-apigatewaymanagedoverrides.json",

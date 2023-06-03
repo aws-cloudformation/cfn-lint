@@ -1,11 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_ec2_securitygroupingress/cidrip_exclusive",
-  "aws_ec2_securitygroupingress/cidripv6_exclusive",
-  "aws_ec2_securitygroupingress/groupid_exclusive",
-  "aws_ec2_securitygroupingress/sourcesecuritygroupid_exclusive"
- ],
  "createOnlyProperties": [
   "/properties/GroupName",
   "/properties/IpProtocol",
@@ -20,6 +14,92 @@
   "/properties/CidrIpv6"
  ],
  "description": "Resource Type definition for AWS::EC2::SecurityGroupIngress",
+ "oneOf": [
+  {
+   "properties": {
+    "CidrIpv6": false,
+    "SourcePrefixListId": false,
+    "SourceSecurityGroupId": false,
+    "SourceSecurityGroupName": false
+   },
+   "required": [
+    "CidrIp"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "CidrIp": false,
+    "SourcePrefixListId": false,
+    "SourceSecurityGroupId": false,
+    "SourceSecurityGroupName": false
+   },
+   "required": [
+    "CidrIpv6"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "CidrIp": false,
+    "CidrIpv6": false,
+    "SourceSecurityGroupId": false,
+    "SourceSecurityGroupName": false
+   },
+   "required": [
+    "SourcePrefixListId"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "CidrIp": false,
+    "CidrIpv6": false,
+    "SourcePrefixListId": false,
+    "SourceSecurityGroupName": false
+   },
+   "required": [
+    "SourceSecurityGroupId"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "CidrIp": false,
+    "CidrIpv6": false,
+    "SourcePrefixListId": false,
+    "SourceSecurityGroupId": false
+   },
+   "required": [
+    "SourceSecurityGroupName"
+   ],
+   "type": "object"
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   },
+   "type": "object"
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],

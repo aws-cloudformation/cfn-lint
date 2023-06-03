@@ -1,8 +1,5 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_elasticloadbalancingv2_loadbalancer/subnets_onlyone"
- ],
  "createOnlyProperties": [
   "/properties/Name",
   "/properties/Type",
@@ -60,6 +57,50 @@
   }
  },
  "description": "Resource Type definition for AWS::ElasticLoadBalancingV2::LoadBalancer",
+ "oneOf": [
+  {
+   "properties": {
+    "Subnets": false
+   },
+   "required": [
+    "SubnetMappings"
+   ],
+   "type": "object"
+  },
+  {
+   "properties": {
+    "SubnetMappings": false
+   },
+   "required": [
+    "Subnets"
+   ],
+   "type": "object"
+  },
+  {
+   "maxProperties": 1,
+   "minProperties": 1,
+   "propertyNames": {
+    "enum": [
+     "Fn::Base64",
+     "Fn::GetAtt",
+     "Fn::GetAZs",
+     "Fn::ImportValue",
+     "Fn::Join",
+     "Fn::Split",
+     "Fn::FindInMap",
+     "Fn::Select",
+     "Ref",
+     "Fn::If",
+     "Fn::Contains",
+     "Fn::Sub",
+     "Fn::Cidr",
+     "Fn::Length",
+     "Fn::ToJsonString"
+    ]
+   },
+   "type": "object"
+  }
+ ],
  "primaryIdentifier": [
   "/properties/Id"
  ],
