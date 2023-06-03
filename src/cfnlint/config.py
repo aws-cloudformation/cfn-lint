@@ -13,10 +13,9 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Sequence
 
-import jsonschema
-
 import cfnlint.decode.cfn_yaml
 from cfnlint.helpers import REGIONS
+from cfnlint.jsonschema import StandardValidator
 from cfnlint.version import __version__
 
 # pylint: disable=too-many-public-methods
@@ -170,7 +169,8 @@ class ConfigFileArgs:
         LOGGER.debug("Schema used: %s", schema)
         LOGGER.debug("Config used: %s", config)
 
-        jsonschema.validate(config, schema)
+        validator = StandardValidator(schema=schema)
+        validator.validate(config)
         LOGGER.debug("CFNLINTRC looks valid!")
 
     def merge_config(self, user_config, project_config):

@@ -11,10 +11,10 @@ import regex as re
 
 from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.BaseJsonSchemaValidator import BaseJsonSchemaValidator
+from cfnlint.rules import CloudFormationLintRule
 
 
-class StringSize(BaseJsonSchemaValidator):
+class StringSize(CloudFormationLintRule):
     """Check if a String has a length within the limit"""
 
     id = "E3033"
@@ -24,29 +24,21 @@ class StringSize(BaseJsonSchemaValidator):
     tags = ["resources", "property", "string", "size"]
 
     # pylint: disable=unused-argument
-    def validate_value(
-        self, validator, sS, instance, schema, **kwargs
+    def validate_fn_sub(
+        self, validator, sS, instance, schema, fn
     ):  # pylint: disable=arguments-renamed
-        yield from kwargs["fn"](validator, sS, instance, schema)
-
-    # pylint: disable=unused-argument
-    def validate_if(
-        self, validator, sS, instance, schema, **kwargs
-    ):  # pylint: disable=arguments-renamed
-        if validator.is_type(instance, "array") and len(instance) == 3:
-            yield from kwargs["r_fn"](validator, sS, instance[1], schema)
-            yield from kwargs["r_fn"](validator, sS, instance[2], schema)
-
-    # pylint: disable=unused-argument
-    def validate_sub(
-        self, validator, sS, instance, schema, **kwargs
-    ):  # pylint: disable=arguments-renamed
-        yield from kwargs["fn"](validator, sS, kwargs["original_instance"], schema)
+        if isinstance(instance, str):
+            yield from fn(validator, sS, self._fix_sub_string(instance), schema)
+        elif isinstance(instance, list) and len(instance) == 2:
+            yield from fn(validator, sS, self._fix_sub_string(instance[0]), schema)
 
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
         return json.JSONEncoder.default(self, o=obj)
+
+    def _fix_sub_string(self, instance):
+        return re.sub(r"\${[a-zA-Z0-9._-]{1,255}}", "", instance)
 
     # pylint: disable=too-many-return-statements
     def _remove_functions(self, obj: Any) -> Any:
@@ -58,9 +50,9 @@ class StringSize(BaseJsonSchemaValidator):
                     if k in FUNCTIONS:
                         if k == "Fn::Sub":
                             if isinstance(v, str):
-                                return re.sub(r"\${.*}", "", v)
+                                return self._fix_sub_string(v)
                             if isinstance(v, list):
-                                return re.sub(r"\${.*}", "", v[0])
+                                return self._fix_sub_string(v[0])
                         else:
                             return ""
                     else:
@@ -88,44 +80,22 @@ class StringSize(BaseJsonSchemaValidator):
         if len(json.dumps(j, separators=(",", ":"), default=self._serialize_date)) < mL:
             yield ValidationError("Item is too short")
 
-    # pylint: disable=unused-argument
-    def _maxLength(self, validator, mL, instance, schema):
+    # pylint: disable=unused-argument, arguments-renamed
+    def maxLength(self, validator, mL, instance, schema):
         if (
             validator.is_type(instance, "object")
             and validator.schema.get("type") == "object"
         ):
             yield from self._non_string_max_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) > mL:
-            yield ValidationError(f"{instance!r} is too long")
+            yield ValidationError(f"{instance!r} is longer than {mL}")
 
-    # pylint: disable=unused-argument
-    def _minLength(self, validator, mL, instance, schema):
+    # pylint: disable=unused-argument, arguments-renamed
+    def minLength(self, validator, mL, instance, schema):
         if (
             validator.is_type(instance, "object")
             and validator.schema.get("type") == "object"
         ):
             yield from self._non_string_min_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) < mL:
-            yield ValidationError(f"{instance!r} is too short")
-
-    # pylint: disable=unused-argument
-    def maxLength(self, validator, enums, instance, schema):
-        yield from self.validate_instance(
-            validator=validator,
-            s=enums,
-            instance=instance,
-            schema=schema,
-            fn=self._maxLength,
-            r_fn=self.maxLength,
-        )
-
-    # pylint: disable=unused-argument
-    def minLength(self, validator, enums, instance, schema):
-        yield from self.validate_instance(
-            validator=validator,
-            s=enums,
-            instance=instance,
-            schema=schema,
-            fn=self._minLength,
-            r_fn=self.minLength,
-        )
+            yield ValidationError(f"{instance!r} is shorter than {mL}")

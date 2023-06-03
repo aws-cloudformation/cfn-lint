@@ -20,28 +20,6 @@
    },
    "type": "object"
   },
-  "DeltaTarget": {
-   "additionalProperties": false,
-   "properties": {
-    "ConnectionName": {
-     "type": "string"
-    },
-    "CreateNativeDeltaTable": {
-     "type": "boolean"
-    },
-    "DeltaTables": {
-     "items": {
-      "type": "string"
-     },
-     "type": "array",
-     "uniqueItems": false
-    },
-    "WriteManifest": {
-     "type": "boolean"
-    }
-   },
-   "type": "object"
-  },
   "DynamoDBTarget": {
    "additionalProperties": false,
    "properties": {
@@ -132,11 +110,18 @@
    "additionalProperties": false,
    "properties": {
     "DeleteBehavior": {
-     "cfnSchema": "aws_glue_crawler/boto_deletebehavior_enum",
+     "enum": [
+      "LOG",
+      "DELETE_FROM_DATABASE",
+      "DEPRECATE_IN_DATABASE"
+     ],
      "type": "string"
     },
     "UpdateBehavior": {
-     "cfnSchema": "aws_glue_crawler/boto_updatebehavior_enum",
+     "enum": [
+      "LOG",
+      "UPDATE_IN_DATABASE"
+     ],
      "type": "string"
     }
    },
@@ -148,13 +133,6 @@
     "CatalogTargets": {
      "items": {
       "$ref": "#/definitions/CatalogTarget"
-     },
-     "type": "array",
-     "uniqueItems": false
-    },
-    "DeltaTargets": {
-     "items": {
-      "$ref": "#/definitions/DeltaTarget"
      },
      "type": "array",
      "uniqueItems": false
