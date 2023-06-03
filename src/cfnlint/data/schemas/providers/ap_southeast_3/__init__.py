@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::Shield::DRTAccess",
@@ -504,7 +505,6 @@ cached: List[str] = [
     "aws-controltower-enabledcontrol.json",
     "aws-route53-recordset.json",
     "aws-elasticache-securitygroup.json",
-    "aws-cloudtrail-eventdatastore.json",
     "aws-kinesisfirehose-deliverystream.json",
     "aws-sagemaker-coderepository.json",
     "aws-imagebuilder-component.json",
@@ -548,6 +548,7 @@ cached: List[str] = [
     "aws-sns-topic.json",
     "aws-backup-backupselection.json",
     "aws-ec2-vpcgatewayattachment.json",
+    "aws-cloudtrail-trail.json",
     "aws-ec2-vpnconnectionroute.json",
     "aws-ec2-internetgateway.json",
     "aws-ec2-gatewayroutetableassociation.json",
@@ -697,6 +698,7 @@ cached: List[str] = [
     "aws-chatbot-slackchannelconfiguration.json",
     "aws-cloudfront-distribution.json",
     "aws-elasticache-subnetgroup.json",
+    "aws-xray-group.json",
     "aws-oam-link.json",
     "aws-sagemaker-endpoint.json",
     "aws-ses-template.json",
@@ -774,6 +776,7 @@ cached: List[str] = [
     "aws-athena-datacatalog.json",
     "aws-ec2-prefixlist.json",
     "aws-ec2-instance.json",
+    "aws-ec2-subnetcidrblock.json",
     "aws-appmesh-virtualgateway.json",
     "aws-waf-sqlinjectionmatchset.json",
     "aws-ec2-transitgatewayvpcattachment.json",
@@ -783,6 +786,7 @@ cached: List[str] = [
     "aws-cloudfront-responseheaderspolicy.json",
     "aws-msk-clusterpolicy.json",
     "aws-kms-alias.json",
+    "aws-xray-samplingrule.json",
     "aws-transfer-connector.json",
     "aws-appmesh-virtualnode.json",
     "aws-wafv2-webaclassociation.json",
