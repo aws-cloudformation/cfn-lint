@@ -29,7 +29,7 @@ class TestYamlParse(BaseTestCase):
             },
             "generic_bad": {
                 "filename": "test/fixtures/templates/bad/generic.yaml",
-                "failures": 27,
+                "failures": 40,
             },
         }
 

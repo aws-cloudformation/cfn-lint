@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -1117,7 +1118,6 @@ cached: List[str] = [
     "aws-cloudformation-moduledefaultversion.json",
     "aws-ce-costcategory.json",
     "aws-sso-permissionset.json",
-    "aws-glue-job.json",
     "aws-servicecatalog-cloudformationprovisionedproduct.json",
     "aws-route53-hostedzone.json",
     "aws-resourceexplorer2-index.json",
@@ -1613,6 +1613,7 @@ cached: List[str] = [
     "aws-appstream-fleet.json",
     "aws-greengrass-subscriptiondefinitionversion.json",
     "aws-appconfig-extension.json",
+    "aws-elasticloadbalancingv2-listenerrule.json",
     "aws-glue-registry.json",
     "aws-ec2-keypair.json",
     "aws-fsx-filesystem.json",
@@ -1736,7 +1737,6 @@ cached: List[str] = [
     "aws-rds-dbsecuritygroup.json",
     "aws-pinpoint-baiduchannel.json",
     "aws-mediapackage-channel.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-quicksight-topic.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",
@@ -1820,6 +1820,7 @@ cached: List[str] = [
     "aws-s3outposts-bucketpolicy.json",
     "aws-batch-jobqueue.json",
     "aws-lightsail-alarm.json",
+    "aws-elasticloadbalancingv2-listener.json",
     "aws-redshift-eventsubscription.json",
     "aws-iotfleethub-application.json",
     "aws-connect-user.json",
