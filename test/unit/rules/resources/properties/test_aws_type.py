@@ -4,9 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 from test.unit.rules import BaseRuleTestCase
 
-from jsonschema import Draft7Validator
-
-from cfnlint.jsonschema import ValidationError
+from cfnlint.jsonschema import CfnTemplateValidator, ValidationError
 from cfnlint.rules import CloudFormationLintRule
 from cfnlint.rules.resources.properties.AwsType import AwsType  # pylint: disable=E0401
 
@@ -31,6 +29,12 @@ class TestAwsType(BaseRuleTestCase):
         self.rule.types = {"foo": "AnId"}
 
     def test_aws_type(self):
-        validator = Draft7Validator({})
-        self.assertEqual(len(list(self.rule.awsType(validator, "foo", "bar", {}))), 0)
-        self.assertEqual(len(list(self.rule.awsType(validator, "foo", "foo", {}))), 1)
+        validator = CfnTemplateValidator
+        self.assertEqual(
+            len(list(self.rule.awsType(validator, "foo", "bar", {}))),
+            0,
+        )
+        self.assertEqual(
+            len(list(self.rule.awsType(validator, "foo", "foo", {}))),
+            1,
+        )

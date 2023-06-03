@@ -43,5 +43,6 @@ class TestDataFileFormat(TestCase):
                         string_content = "".join(input_file.readlines())
 
                     pretty_content = format_json_string(json.loads(string_content))
-
-                    self.assertEqual(string_content, f"{pretty_content}\n")
+                    self.assertEqual(
+                        string_content, f"{pretty_content}\n", f"{dirpath}/{filename}"
+                    )

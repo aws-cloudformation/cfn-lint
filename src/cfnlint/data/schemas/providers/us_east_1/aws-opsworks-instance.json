@@ -15,9 +15,61 @@
  "definitions": {
   "BlockDeviceMapping": {
    "additionalProperties": false,
-   "cfnSchema": [
-    "aws_opsworks_instance/blockdevicemapping_virtualname_exclusive",
-    "aws_opsworks_instance/blockdevicemapping_onlyone"
+   "oneOf": [
+    {
+     "properties": {
+      "Ebs": false,
+      "NoDevice": false
+     },
+     "required": [
+      "VirtualName"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "NoDevice": false,
+      "VirtualName": false
+     },
+     "required": [
+      "Ebs"
+     ],
+     "type": "object"
+    },
+    {
+     "properties": {
+      "Ebs": false,
+      "VirtualName": false
+     },
+     "required": [
+      "NoDevice"
+     ],
+     "type": "object"
+    },
+    {
+     "maxProperties": 1,
+     "minProperties": 1,
+     "propertyNames": {
+      "enum": [
+       "Fn::Base64",
+       "Fn::GetAtt",
+       "Fn::GetAZs",
+       "Fn::ImportValue",
+       "Fn::Join",
+       "Fn::Split",
+       "Fn::FindInMap",
+       "Fn::Select",
+       "Ref",
+       "Fn::If",
+       "Fn::Contains",
+       "Fn::Sub",
+       "Fn::Cidr",
+       "Fn::Length",
+       "Fn::ToJsonString"
+      ]
+     },
+     "type": "object"
+    }
    ],
    "properties": {
     "DeviceName": {
@@ -51,7 +103,15 @@
      "type": "integer"
     },
     "VolumeType": {
-     "cfnSchema": "aws_opsworks_instance/boto_volumetype_enum",
+     "enum": [
+      "standard",
+      "io1",
+      "io2",
+      "gp2",
+      "sc1",
+      "st1",
+      "gp3"
+     ],
      "type": "string"
     }
    },
