@@ -1,5 +1,6 @@
-from typing import List  # pylint: disable=too-many-lines
+from typing import List
 
+# pylint: disable=too-many-lines
 types = [
     "AWS::CDK::Metadata",
     "AWS::ApiGatewayV2::Integration",
@@ -725,6 +726,7 @@ types = [
     "AWS::AppSync::GraphQLApi",
     "AWS::GameLift::MatchmakingRuleSet",
     "AWS::EC2::EgressOnlyInternetGateway",
+    "AWS::Athena::CapacityReservation",
     "AWS::Config::ConformancePack",
     "AWS::EC2::VPCCidrBlock",
     "AWS::APS::Workspace",
@@ -1728,6 +1730,7 @@ cached: List[str] = [
     "aws-appsync-graphqlapi.json",
     "aws-gamelift-matchmakingruleset.json",
     "aws-ec2-egressonlyinternetgateway.json",
+    "aws-athena-capacityreservation.json",
     "aws-config-conformancepack.json",
     "aws-ec2-vpccidrblock.json",
     "aws-aps-workspace.json",
@@ -1777,6 +1780,7 @@ cached: List[str] = [
     "aws-appconfig-extension.json",
     "aws-lex-resourcepolicy.json",
     "aws-osis-pipeline.json",
+    "aws-elasticloadbalancingv2-listenerrule.json",
     "aws-glue-registry.json",
     "aws-ec2-keypair.json",
     "aws-fsx-filesystem.json",
@@ -1915,7 +1919,6 @@ cached: List[str] = [
     "aws-rds-dbsecuritygroup.json",
     "aws-pinpoint-baiduchannel.json",
     "aws-mediapackage-channel.json",
-    "aws-apigatewayv2-routeresponse.json",
     "aws-quicksight-topic.json",
     "aws-cloudwatch-metricstream.json",
     "aws-location-geofencecollection.json",

@@ -5,8 +5,7 @@ SPDX-License-Identifier: MIT-0
 
 from test.unit.rules import BaseRuleTestCase
 
-from jsonschema import Draft7Validator
-
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.resources.properties.AvailabilityZone import (
     AvailabilityZone,  # pylint: disable=E0401
 )
@@ -20,7 +19,7 @@ class TestAvailabilityZone(BaseRuleTestCase):
         self.rule = AvailabilityZone()
 
     def test_availability_zones(self):
-        validator = Draft7Validator({})
+        validator = CfnTemplateValidator({})
 
         # hard coded string
         self.assertEqual(
