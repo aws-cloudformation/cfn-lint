@@ -4,8 +4,8 @@ SPDX-License-Identifier: MIT-0
 """
 from unittest import TestCase
 
-from cfnlint.jsonschema import ValidationError
-from cfnlint.rules.BaseJsonSchema import BaseJsonSchema
+from cfnlint.jsonschema import StandardValidator, ValidationError
+from cfnlint.rules.jsonschema.base import BaseJsonSchema
 
 
 class Rule(BaseJsonSchema):
@@ -50,7 +50,9 @@ class TestBaseJsonSchema(TestCase):
             "type": "string",
             "enum": ["foo"],
         }
-        validator = self.rule.setup_validator(schema=schema)
+        validator = self.rule.setup_validator(
+            validator=StandardValidator, schema=schema
+        )
 
         self.assertEqual(self.rule.json_schema_validate(validator, "bar", []), [])
 
@@ -60,7 +62,9 @@ class TestBaseJsonSchema(TestCase):
             "pattern": "foo",
         }
         self.rule.child_rules["E3004"] = PatternRule()
-        validator = self.rule.setup_validator(schema=schema)
+        validator = self.rule.setup_validator(
+            validator=StandardValidator, schema=schema
+        )
 
         self.assertEqual(
             len(list(self.rule.json_schema_validate(validator, "bar", []))), 1
@@ -76,7 +80,9 @@ class TestBaseJsonSchema(TestCase):
             "enum": ["foo"],
         }
         self.rule.child_rules["E3003"] = EnumRule()
-        validator = self.rule.setup_validator(schema=schema)
+        validator = self.rule.setup_validator(
+            validator=StandardValidator, schema=schema
+        )
 
         self.assertEqual(
             list(self.rule.json_schema_validate(validator, "bar", []))[0].rule.id,

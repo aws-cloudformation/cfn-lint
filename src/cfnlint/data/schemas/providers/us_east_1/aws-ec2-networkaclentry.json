@@ -1,7 +1,16 @@
 {
  "additionalProperties": false,
- "cfnSchema": [
-  "aws_ec2_networkaclentry/required"
+ "anyOf": [
+  {
+   "required": [
+    "Ipv6CidrBlock"
+   ]
+  },
+  {
+   "required": [
+    "CidrBlock"
+   ]
+  }
  ],
  "createOnlyProperties": [
   "/properties/Egress",
@@ -91,8 +100,11 @@
    "type": "integer"
   },
   "RuleAction": {
-   "cfnSchema": "aws_ec2_networkaclentry/boto_ruleaction_enum",
    "description": "Indicates whether to allow or deny the traffic that matches the rule",
+   "enum": [
+    "allow",
+    "deny"
+   ],
    "type": "string"
   },
   "RuleNumber": {
