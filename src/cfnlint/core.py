@@ -324,7 +324,7 @@ def run_checks(
             unsupported_regions = list(set(regions).difference(set(REGIONS)))
             msg = (
                 f"Regions {unsupported_regions} are unsupported. Supported regions are"
-                f" {REGIONS}"
+                f" {set(REGIONS)}"
             )
             raise InvalidRegionException(msg, 32)
 

@@ -6,6 +6,7 @@
  ],
  "definitions": {
   "CalculatedColumn": {
+   "additionalProperties": false,
    "description": "<p>A calculated column for a dataset.</p>",
    "properties": {
     "ColumnId": {
@@ -35,6 +36,7 @@
    "type": "object"
   },
   "CastColumnTypeOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that casts a column to a different type.</p>",
    "properties": {
     "ColumnName": {
@@ -69,6 +71,7 @@
    "type": "string"
   },
   "ColumnDescription": {
+   "additionalProperties": false,
    "description": "<p>Metadata that contains a description for a column.</p>",
    "properties": {
     "Text": {
@@ -81,6 +84,7 @@
    "type": "object"
   },
   "ColumnGroup": {
+   "additionalProperties": false,
    "description": "<p>Groupings of columns that work together in certain Amazon QuickSight features. This is\n            a variant type structure. For this structure to be valid, only one of the attributes can\n            be non-null.</p>",
    "properties": {
     "GeoSpatialColumnGroup": {
@@ -90,6 +94,7 @@
    "type": "object"
   },
   "ColumnLevelPermissionRule": {
+   "additionalProperties": false,
    "properties": {
     "ColumnNames": {
      "items": {
@@ -110,6 +115,7 @@
    "type": "object"
   },
   "ColumnTag": {
+   "additionalProperties": false,
    "description": "<p>A tag for a column in a <a>TagColumnOperation</a> structure. This is a\n            variant type structure. For this structure to be valid, only one of the attributes can\n            be non-null.</p>",
    "properties": {
     "ColumnDescription": {
@@ -122,6 +128,7 @@
    "type": "object"
   },
   "CreateColumnsOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that creates calculated columns. Columns created in one such\n            operation form a lexical closure.</p>",
    "properties": {
     "Columns": {
@@ -140,6 +147,7 @@
    "type": "object"
   },
   "CustomSql": {
+   "additionalProperties": false,
    "description": "<p>A physical table type built from the results of the custom SQL query.</p>",
    "properties": {
     "Columns": {
@@ -183,7 +191,18 @@
    ],
    "type": "string"
   },
+  "DataSetRefreshProperties": {
+   "additionalProperties": false,
+   "description": "<p>The dataset refresh properties for the dataset.</p>",
+   "properties": {
+    "RefreshConfiguration": {
+     "$ref": "#/definitions/RefreshConfiguration"
+    }
+   },
+   "type": "object"
+  },
   "DataSetUsageConfiguration": {
+   "additionalProperties": false,
    "description": "<p>The dataset usage configuration for the dataset.</p>",
    "properties": {
     "DisableUseAsDirectQuerySource": {
@@ -195,7 +214,140 @@
    },
    "type": "object"
   },
+  "DatasetParameter": {
+   "additionalProperties": false,
+   "description": "<p>A parameter created in the dataset that could be of any one data type such as string, integer, decimal or datetime.</p>",
+   "properties": {
+    "DateTimeDatasetParameter": {
+     "$ref": "#/definitions/DateTimeDatasetParameter"
+    },
+    "DecimalDatasetParameter": {
+     "$ref": "#/definitions/DecimalDatasetParameter"
+    },
+    "IntegerDatasetParameter": {
+     "$ref": "#/definitions/IntegerDatasetParameter"
+    },
+    "StringDatasetParameter": {
+     "$ref": "#/definitions/StringDatasetParameter"
+    }
+   },
+   "type": "object"
+  },
+  "DatasetParameterId": {
+   "description": "<p>Identifier of the parameter created in the dataset.</p>",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9-]+$",
+   "type": "string"
+  },
+  "DatasetParameterName": {
+   "description": "<p>Name of the parameter created in the dataset.</p>",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9]+$",
+   "type": "string"
+  },
+  "DatasetParameterValueType": {
+   "description": "<p>Every parameter value could be either a single value or multi value which helps to validate before evaluation.</p>",
+   "enum": [
+    "MULTI_VALUED",
+    "SINGLE_VALUED"
+   ],
+   "type": "string"
+  },
+  "DateTimeDatasetParameter": {
+   "additionalProperties": false,
+   "description": "<p>A parameter created in the dataset of date time data type.</p>",
+   "properties": {
+    "DefaultValues": {
+     "$ref": "#/definitions/DateTimeDatasetParameterDefaultValues"
+    },
+    "Id": {
+     "$ref": "#/definitions/DatasetParameterId"
+    },
+    "Name": {
+     "$ref": "#/definitions/DatasetParameterName"
+    },
+    "TimeGranularity": {
+     "$ref": "#/definitions/TimeGranularity"
+    },
+    "ValueType": {
+     "$ref": "#/definitions/DatasetParameterValueType"
+    }
+   },
+   "required": [
+    "Id",
+    "Name",
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "DateTimeDatasetParameterDefaultValues": {
+   "additionalProperties": false,
+   "description": "<p>List of default values defined for a given string date time parameter type. Currently only static values are supported.</p>",
+   "properties": {
+    "StaticValues": {
+     "$ref": "#/definitions/DateTimeDatasetParameterValueList",
+     "description": "<p>List of static default values defined for a given string date time parameter type.</p>"
+    }
+   },
+   "type": "object"
+  },
+  "DateTimeDatasetParameterValueList": {
+   "items": {
+    "description": "<p>Default value defined for the dataset parameter of date time type.</p>",
+    "type": "string"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
+  "DecimalDatasetParameter": {
+   "additionalProperties": false,
+   "description": "<p>A parameter created in the dataset of decimal data type.</p>",
+   "properties": {
+    "DefaultValues": {
+     "$ref": "#/definitions/DecimalDatasetParameterDefaultValues"
+    },
+    "Id": {
+     "$ref": "#/definitions/DatasetParameterId"
+    },
+    "Name": {
+     "$ref": "#/definitions/DatasetParameterName"
+    },
+    "ValueType": {
+     "$ref": "#/definitions/DatasetParameterValueType"
+    }
+   },
+   "required": [
+    "Id",
+    "Name",
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "DecimalDatasetParameterDefaultValues": {
+   "additionalProperties": false,
+   "description": "<p>List of default values defined for a given decimal dataset parameter type. Currently only static values are supported.</p>",
+   "properties": {
+    "StaticValues": {
+     "$ref": "#/definitions/DecimalDatasetParameterValueList",
+     "description": "<p>List of static default values defined for a given decimal dataset parameter type.</p>"
+    }
+   },
+   "type": "object"
+  },
+  "DecimalDatasetParameterValueList": {
+   "items": {
+    "description": "<p>Default value defined for the dataset parameter of decimal type.</p>",
+    "type": "number"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
   "FieldFolder": {
+   "additionalProperties": false,
    "properties": {
     "Columns": {
      "items": {
@@ -214,6 +366,7 @@
    "type": "object"
   },
   "FieldFolderMap": {
+   "additionalProperties": false,
    "patternProperties": {
     ".+": {
      "$ref": "#/definitions/FieldFolder"
@@ -233,6 +386,7 @@
    "type": "string"
   },
   "FilterOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that filters rows based on a condition.</p>",
    "properties": {
     "ConditionExpression": {
@@ -248,6 +402,7 @@
    "type": "object"
   },
   "GeoSpatialColumnGroup": {
+   "additionalProperties": false,
    "description": "<p>Geospatial column group that denotes a hierarchy.</p>",
    "properties": {
     "Columns": {
@@ -296,7 +451,18 @@
    ],
    "type": "string"
   },
+  "IncrementalRefresh": {
+   "additionalProperties": false,
+   "description": "<p>Incremental Refresh</p>",
+   "properties": {
+    "LookbackWindow": {
+     "$ref": "#/definitions/LookbackWindow"
+    }
+   },
+   "type": "object"
+  },
   "IngestionWaitPolicy": {
+   "additionalProperties": false,
    "description": "<p>Wait policy to use when creating/updating dataset. Default is to wait for SPICE ingestion to finish with timeout of 36 hours.</p>",
    "properties": {
     "IngestionWaitTimeInHours": {
@@ -315,6 +481,7 @@
    "type": "object"
   },
   "InputColumn": {
+   "additionalProperties": false,
    "description": "<p>Metadata for a column that is used as the input of a transform operation.</p>",
    "properties": {
     "Name": {
@@ -345,7 +512,52 @@
    ],
    "type": "string"
   },
+  "IntegerDatasetParameter": {
+   "additionalProperties": false,
+   "description": "<p>A parameter created in the dataset of integer data type.</p>",
+   "properties": {
+    "DefaultValues": {
+     "$ref": "#/definitions/IntegerDatasetParameterDefaultValues"
+    },
+    "Id": {
+     "$ref": "#/definitions/DatasetParameterId"
+    },
+    "Name": {
+     "$ref": "#/definitions/DatasetParameterName"
+    },
+    "ValueType": {
+     "$ref": "#/definitions/DatasetParameterValueType"
+    }
+   },
+   "required": [
+    "Id",
+    "Name",
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "IntegerDatasetParameterDefaultValues": {
+   "additionalProperties": false,
+   "description": "<p>List of default values defined for a given integer dataset parameter type. Currently only static values are supported.</p>",
+   "properties": {
+    "StaticValues": {
+     "$ref": "#/definitions/IntegerDatasetParameterValueList",
+     "description": "<p>List of static default values defined for a given integer dataset parameter type.</p>"
+    }
+   },
+   "type": "object"
+  },
+  "IntegerDatasetParameterValueList": {
+   "items": {
+    "description": "<p>Default value defined for the dataset parameter of integer type.</p>",
+    "type": "number"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
   "JoinInstruction": {
+   "additionalProperties": false,
    "description": "<p>Join instruction.</p>",
    "properties": {
     "LeftJoinKeyProperties": {
@@ -387,6 +599,7 @@
    "type": "object"
   },
   "JoinKeyProperties": {
+   "additionalProperties": false,
    "properties": {
     "UniqueKey": {
      "type": "boolean"
@@ -404,6 +617,7 @@
    "type": "string"
   },
   "LogicalTable": {
+   "additionalProperties": false,
    "description": "<p>A <i>logical table</i> is a unit that joins and that data\n            transformations operate on. A logical table has a source, which can be either a physical\n            table or result of a join. When a logical table points to a physical table, the logical\n            table acts as a mutable copy of that physical table through transform operations.</p>",
    "properties": {
     "Alias": {
@@ -432,6 +646,7 @@
    "type": "object"
   },
   "LogicalTableMap": {
+   "additionalProperties": false,
    "maxProperties": 64,
    "minProperties": 1,
    "patternProperties": {
@@ -442,6 +657,7 @@
    "type": "object"
   },
   "LogicalTableSource": {
+   "additionalProperties": false,
    "description": "<p>Information about the source of a logical table. This is a variant type structure. For\n            this structure to be valid, only one of the attributes can be non-null.</p>",
    "properties": {
     "DataSetArn": {
@@ -461,7 +677,44 @@
    },
    "type": "object"
   },
+  "LookbackWindow": {
+   "additionalProperties": false,
+   "properties": {
+    "ColumnName": {
+     "description": "<p>Column Name</p>",
+     "type": "string"
+    },
+    "Size": {
+     "description": "<p>Size</p>",
+     "minimum": 1,
+     "type": "number"
+    },
+    "SizeUnit": {
+     "$ref": "#/definitions/SizeUnit"
+    }
+   },
+   "type": "object"
+  },
+  "NewDefaultValues": {
+   "additionalProperties": false,
+   "properties": {
+    "DateTimeStaticValues": {
+     "$ref": "#/definitions/DateTimeDatasetParameterValueList"
+    },
+    "DecimalStaticValues": {
+     "$ref": "#/definitions/DecimalDatasetParameterValueList"
+    },
+    "IntegerStaticValues": {
+     "$ref": "#/definitions/IntegerDatasetParameterValueList"
+    },
+    "StringStaticValues": {
+     "$ref": "#/definitions/StringDatasetParameterValueList"
+    }
+   },
+   "type": "object"
+  },
   "OutputColumn": {
+   "additionalProperties": false,
    "description": "<p>Output column.</p>",
    "properties": {
     "Description": {
@@ -482,7 +735,30 @@
    },
    "type": "object"
   },
+  "OverrideDatasetParameterOperation": {
+   "additionalProperties": false,
+   "description": "<p>A transform operation that overrides the dataset parameter values defined in another dataset.</p>",
+   "properties": {
+    "NewDefaultValues": {
+     "$ref": "#/definitions/NewDefaultValues",
+     "description": "<p>The new default values for the parameter.</p>"
+    },
+    "NewParameterName": {
+     "$ref": "#/definitions/DatasetParameterName",
+     "description": "<p>The new name for the parameter.</p>"
+    },
+    "ParameterName": {
+     "$ref": "#/definitions/DatasetParameterName",
+     "description": "<p>The name of the parameter to be overridden with different values.</p>"
+    }
+   },
+   "required": [
+    "ParameterName"
+   ],
+   "type": "object"
+  },
   "PhysicalTable": {
+   "additionalProperties": false,
    "description": "<p>A view of a data source that contains information about the shape of the data in the\n            underlying source. This is a variant type structure. For this structure to be valid,\n            only one of the attributes can be non-null.</p>",
    "properties": {
     "CustomSql": {
@@ -498,8 +774,9 @@
    "type": "object"
   },
   "PhysicalTableMap": {
+   "additionalProperties": false,
    "maxProperties": 32,
-   "minProperties": 1,
+   "minProperties": 0,
    "patternProperties": {
     "[0-9a-zA-Z-]*": {
      "$ref": "#/definitions/PhysicalTable"
@@ -508,6 +785,7 @@
    "type": "object"
   },
   "ProjectOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that projects columns. Operations that come after a projection\n            can only refer to projected columns.</p>",
    "properties": {
     "ProjectedColumns": {
@@ -525,7 +803,18 @@
    ],
    "type": "object"
   },
+  "RefreshConfiguration": {
+   "additionalProperties": false,
+   "description": "<p> Refresh Configuration.</p>",
+   "properties": {
+    "IncrementalRefresh": {
+     "$ref": "#/definitions/IncrementalRefresh"
+    }
+   },
+   "type": "object"
+  },
   "RelationalTable": {
+   "additionalProperties": false,
    "description": "<p>A physical table type for relational data sources.</p>",
    "properties": {
     "Catalog": {
@@ -568,6 +857,7 @@
    "type": "object"
   },
   "RenameColumnOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that renames a column.</p>",
    "properties": {
     "ColumnName": {
@@ -590,6 +880,7 @@
    "type": "object"
   },
   "ResourcePermission": {
+   "additionalProperties": false,
    "description": "<p>Permission for the resource.</p>",
    "properties": {
     "Actions": {
@@ -615,6 +906,7 @@
    "type": "object"
   },
   "RowLevelPermissionDataSet": {
+   "additionalProperties": false,
    "description": "<p>The row-level security configuration for the dataset.</p>",
    "properties": {
     "Arn": {
@@ -633,6 +925,9 @@
     },
     "PermissionPolicy": {
      "$ref": "#/definitions/RowLevelPermissionPolicy"
+    },
+    "Status": {
+     "$ref": "#/definitions/Status"
     }
    },
    "required": [
@@ -655,7 +950,81 @@
    ],
    "type": "string"
   },
+  "RowLevelPermissionTagConfiguration": {
+   "additionalProperties": false,
+   "description": "<p>The configuration of tags on a dataset to set row-level security.</p>",
+   "properties": {
+    "Status": {
+     "$ref": "#/definitions/Status"
+    },
+    "TagRuleConfigurations": {
+     "description": "<p>A list of tag configuration rules to apply to a dataset. All tag configurations have the OR condition. Tags within each tile will be joined (AND). At least one rule in this structure must have all tag values assigned to it to apply Row-level security (RLS) to the dataset.</p>",
+     "items": {
+      "$ref": "#/definitions/RowLevelPermissionTagRuleConfiguration"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    },
+    "TagRules": {
+     "description": "<p>A set of rules associated with row-level security, such as the tag names and columns that they are assigned to.</p>",
+     "items": {
+      "$ref": "#/definitions/RowLevelPermissionTagRule"
+     },
+     "maxItems": 50,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "TagRules"
+   ],
+   "type": "object"
+  },
+  "RowLevelPermissionTagRule": {
+   "additionalProperties": false,
+   "description": "<p>Permission for the resource.</p>",
+   "properties": {
+    "ColumnName": {
+     "description": "<p>The column name that a tag key is assigned to.</p>",
+     "type": "string"
+    },
+    "MatchAllValue": {
+     "description": "<p>A string that you want to use to filter by all the values in a column in the dataset and don\u2019t want to list the values one by one. For example, you can use an asterisk as your match all value.</p>",
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TagKey": {
+     "description": "<p>The unique key for a tag.</p>",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "TagMultiValueDelimiter": {
+     "description": "<p>A string that you want to use to delimit the values when you pass the values at run time. For example, you can delimit the values with a comma.</p>",
+     "maxLength": 10,
+     "type": "string"
+    }
+   },
+   "required": [
+    "ColumnName",
+    "TagKey"
+   ],
+   "type": "object"
+  },
+  "RowLevelPermissionTagRuleConfiguration": {
+   "items": {
+    "maxLength": 128,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 50,
+   "minItems": 1,
+   "type": "array"
+  },
   "S3Source": {
+   "additionalProperties": false,
    "description": "<p>A physical table type for as S3 data source.</p>",
    "properties": {
     "DataSourceArn": {
@@ -681,7 +1050,67 @@
    ],
    "type": "object"
   },
+  "SizeUnit": {
+   "enum": [
+    "HOUR",
+    "DAY",
+    "WEEK"
+   ],
+   "type": "string"
+  },
+  "Status": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "StringDatasetParameter": {
+   "additionalProperties": false,
+   "description": "<p>A parameter created in the dataset of string data type.</p>",
+   "properties": {
+    "DefaultValues": {
+     "$ref": "#/definitions/StringDatasetParameterDefaultValues"
+    },
+    "Id": {
+     "$ref": "#/definitions/DatasetParameterId"
+    },
+    "Name": {
+     "$ref": "#/definitions/DatasetParameterName"
+    },
+    "ValueType": {
+     "$ref": "#/definitions/DatasetParameterValueType"
+    }
+   },
+   "required": [
+    "Id",
+    "Name",
+    "ValueType"
+   ],
+   "type": "object"
+  },
+  "StringDatasetParameterDefaultValues": {
+   "additionalProperties": false,
+   "description": "<p>List of default values defined for a given string dataset parameter type. Currently only static values are supported.</p>",
+   "properties": {
+    "StaticValues": {
+     "$ref": "#/definitions/StringDatasetParameterValueList",
+     "description": "<p>List of static default values defined for a given string dataset parameter type.</p>"
+    }
+   },
+   "type": "object"
+  },
+  "StringDatasetParameterValueList": {
+   "items": {
+    "description": "<p>Default value defined for the dataset parameter of string type.</p>",
+    "type": "string"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
+  },
   "Tag": {
+   "additionalProperties": false,
    "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
    "properties": {
     "Key": {
@@ -704,6 +1133,7 @@
    "type": "object"
   },
   "TagColumnOperation": {
+   "additionalProperties": false,
    "description": "<p>A transform operation that tags a column with additional information.</p>",
    "properties": {
     "ColumnName": {
@@ -735,7 +1165,22 @@
    ],
    "type": "string"
   },
+  "TimeGranularity": {
+   "enum": [
+    "YEAR",
+    "QUARTER",
+    "MONTH",
+    "WEEK",
+    "DAY",
+    "HOUR",
+    "MINUTE",
+    "SECOND",
+    "MILLISECOND"
+   ],
+   "type": "string"
+  },
   "TransformOperation": {
+   "additionalProperties": false,
    "description": "<p>A data transformation on a logical table. This is a variant type structure. For this\n            structure to be valid, only one of the attributes can be non-null.</p>",
    "properties": {
     "CastColumnTypeOperation": {
@@ -746,6 +1191,9 @@
     },
     "FilterOperation": {
      "$ref": "#/definitions/FilterOperation"
+    },
+    "OverrideDatasetParameterOperation": {
+     "$ref": "#/definitions/OverrideDatasetParameterOperation"
     },
     "ProjectOperation": {
      "$ref": "#/definitions/ProjectOperation"
@@ -760,6 +1208,7 @@
    "type": "object"
   },
   "UploadSettings": {
+   "additionalProperties": false,
    "description": "<p>Information about the format for a source file or files.</p>",
    "properties": {
     "ContainsHeader": {
@@ -806,7 +1255,9 @@
     "quicksight:DescribeDataSet",
     "quicksight:DeleteDataSet",
     "quicksight:ListTagsForResource",
-    "quicksight:DescribeIngestion"
+    "quicksight:DescribeIngestion",
+    "quicksight:DeleteDataSetRefreshProperties",
+    "quicksight:DescribeDataSetRefreshProperties"
    ]
   },
   "list": {
@@ -835,7 +1286,10 @@
     "quicksight:CancelIngestion",
     "quicksight:TagResource",
     "quicksight:UntagResource",
-    "quicksight:ListTagsForResource"
+    "quicksight:ListTagsForResource",
+    "quicksight:PutDataSetRefreshProperties",
+    "quicksight:DescribeDataSetRefreshProperties",
+    "quicksight:DeleteDataSetRefreshProperties"
    ]
   }
  },
@@ -882,8 +1336,20 @@
   "DataSetId": {
    "type": "string"
   },
+  "DataSetRefreshProperties": {
+   "$ref": "#/definitions/DataSetRefreshProperties"
+  },
   "DataSetUsageConfiguration": {
    "$ref": "#/definitions/DataSetUsageConfiguration"
+  },
+  "DatasetParameters": {
+   "description": "<p>The parameters declared in the dataset.</p>",
+   "items": {
+    "$ref": "#/definitions/DatasetParameter"
+   },
+   "maxItems": 32,
+   "minItems": 1,
+   "type": "array"
   },
   "FieldFolders": {
    "$ref": "#/definitions/FieldFolderMap"
@@ -929,6 +1395,9 @@
   },
   "RowLevelPermissionDataSet": {
    "$ref": "#/definitions/RowLevelPermissionDataSet"
+  },
+  "RowLevelPermissionTagConfiguration": {
+   "$ref": "#/definitions/RowLevelPermissionTagConfiguration"
   },
   "Tags": {
    "description": "<p>Contains a map of the key-value pairs for the resource tag or tags assigned to the dataset.</p>",

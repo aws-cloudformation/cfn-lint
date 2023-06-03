@@ -8,9 +8,8 @@ from pathlib import Path
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
 
-import jsonschema
-
 import cfnlint.config  # pylint: disable=E0401
+from cfnlint.jsonschema import ValidationError
 
 LOGGER = logging.getLogger("cfnlint")
 
@@ -72,7 +71,7 @@ class TestConfigFileArgs(BaseTestCase):
 
         yaml_mock.side_effect = [{"regions": True}, {}]
 
-        with self.assertRaises(jsonschema.exceptions.ValidationError):
+        with self.assertRaises(ValidationError):
             cfnlint.config.ConfigFileArgs()
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
