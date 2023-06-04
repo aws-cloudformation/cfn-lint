@@ -170,7 +170,7 @@ def create(
                         if validator is None:
                             continue
 
-                        errors = validator(self, v, instance, _schema) or ()
+                        errors = validator(self, v, _instance, _schema) or ()
                         for error in errors:
                             # set details if not already set by the called fn
                             error._set(
