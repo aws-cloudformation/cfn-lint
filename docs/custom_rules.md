@@ -13,7 +13,8 @@ The template used for each custom rules have been included below. Angle brackets
 
 * The ruleID is auto-generated based on the line number. The E9XXX and W9XXX blocks are allocated towards custom rules.
     * As an example, custom rule on line 4 of the rules file which has error level “ERROR” would become E9004
-* Comments are supported through the use of the # symbol at the beginning of a line (e.g `#This is a comment`)
+* Comments are supported through the use of the # symbol at the beginning of a line (e.g `# This is a comment`)
+* New lines are supported throughout the rules file
 * The syntax is "quote-flexible" and will support all permutations shown below
 ```
 AWS::EC2::Instance Property EQUALS "Cloud Formation"
@@ -69,6 +70,7 @@ Pre-Requisites: The Custom Error Message requires an error level to be specified
 A custom error message can be used to override the existing fallback messages. (e.g `Show me this custom message`)
 
 ## Example
+
 This following example shows how a you can create a custom rule.
  
 This rule validates all EC2 instances in a template aren’t using the instance type “p3.2xlarge”.
@@ -84,5 +86,3 @@ AWS::Lambda::Function Environment.Variables.NODE_ENV IS DEFINED
 ```
 
 To include this rules, include your custom rules text file using the `-z custom_rules.txt` argument when running cfn-lint.
-
-
