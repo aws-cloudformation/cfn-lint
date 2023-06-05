@@ -1,3 +1,7 @@
+### v0.77.7
+###### Fixes
+- Fix usage of comments and new lines in custom rules(pull #[2757](https://github.com/aws-cloudformation/cfn-lint/pull/2757))
+
 ### v0.77.6
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `124.0.0` (pull #[2736](https://github.com/aws-cloudformation/cfn-lint/pull/2736))
