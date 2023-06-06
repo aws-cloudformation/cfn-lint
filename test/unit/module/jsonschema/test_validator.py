@@ -603,3 +603,9 @@ class TestNoErrorMessage(unittest.TestCase):
             instance={},
             schema={"uniqueItems": True},
         )
+
+    def test_uniqueItems_ignore_no_value(self):
+        self.no_error(
+            instance=[{"Ref": "AWS::NoValue"}, {"Ref": "AWS::NoValue"}],
+            schema={"uniqueItems": True},
+        )
