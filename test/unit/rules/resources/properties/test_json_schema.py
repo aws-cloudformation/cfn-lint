@@ -157,7 +157,7 @@ class TestJsonSchema(BaseRuleTestCase):
         ]
 
         template = deepcopy(self.template)
-        template["Resources"]["Table"]["Properties"] = {}
+        template["Resources"]["Table"]["Properties"] = build_dict({})
 
         self.cfn = Template("", template, ["us-east-1"])
         delattr(expected[0], "location")

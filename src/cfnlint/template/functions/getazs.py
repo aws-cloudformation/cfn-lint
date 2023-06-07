@@ -1,3 +1,7 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 import json
 from typing import Any, Iterable, Optional
 
@@ -10,7 +14,7 @@ from cfnlint.template.functions.fn import Fn
 class FnGetAZs(Fn):
     _type = "Fn::GetAZs"
 
-    def __init__(self, instance: Any) -> None:
+    def __init__(self, instance: Any, template: Any) -> None:
         super().__init__(instance)
         self._region: Optional[str] = None
         self._ref: Optional[int] = None

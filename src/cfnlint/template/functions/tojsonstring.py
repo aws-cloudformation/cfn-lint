@@ -1,3 +1,7 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 from typing import Any
 
 from cfnlint.template.functions.fn import Fn

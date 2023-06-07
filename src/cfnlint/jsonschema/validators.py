@@ -10,8 +10,6 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator
 
-from cfnlint.data.schemas.other import draft7
-from cfnlint.helpers import load_resource
 from cfnlint.jsonschema import _validators, _validators_cfn
 from cfnlint.jsonschema._context import Context
 from cfnlint.jsonschema._filter import (
@@ -30,8 +28,6 @@ from cfnlint.jsonschema.exceptions import (
     ValidationError,
 )
 from cfnlint.template import Template
-
-_meta_schema: Dict[str, Any] = load_resource(draft7, "schema.json")
 
 
 def create(
@@ -54,9 +50,6 @@ def create(
                 an invalid schema can lead to undefined behavior.
         """
 
-        _meta_schema: Dict[str, Any] = field(
-            init=False, default_factory=lambda: _meta_schema
-        )
         _type_checker: TypeChecker = field(
             init=False, default_factory=lambda: cfn_type_checker
         )

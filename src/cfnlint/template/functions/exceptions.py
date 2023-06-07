@@ -1,3 +1,9 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
+
+
 class Unpredictable(Exception):
     """
     We cannot resolve the value for this function

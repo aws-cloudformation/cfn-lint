@@ -18,6 +18,7 @@ from cfnlint.jsonschema._validators import (
     additionalProperties as additionalPropertiesStandard,
 )
 from cfnlint.template.functions.exceptions import Unpredictable
+from cfnlint.template.functions.value import ValueType
 
 _singular_types = ["string", "boolean", "number", "integer"]
 
@@ -41,10 +42,12 @@ def _fn(validator: Validator, schema: Any, instance: Any) -> Iterator[Validation
             instance, validator.context.region
         ):
             for err in validator.descend(
-                value,
+                value.value,
                 schema,
             ):
                 err.message = err.message.replace(f"{err.instance!r}", f"{instance!r}")
+                if value.value_type == ValueType.PATH:
+                    err.path_override = value.path
                 err.path.extendleft(list(instance.keys()))
                 yield err
     except Unpredictable:

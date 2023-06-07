@@ -35,6 +35,7 @@ class FunctionFilter:
             "required",
             "minProperties",
             "maxProperties",
+            "uniqueItems",
         ],
     )
 
