@@ -186,7 +186,7 @@ Optional parameters:
 | -c, --include-checks | | INCLUDE_CHECKS [INCLUDE_CHECKS ...] | Include rules whose id match these values
 | -m, --mandatory-checks | | | Rules to check regardless of ignore configuration |
 | --non-zero-exit-code | | informational (default), warning, error, none] | Exit code will be non zero from the specified rule class and higher |
-| -x,  --configure-rule | | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=false
+| -x,  --configure-rule | | CONFIGURE_RULES [CONFIGURE_RULES ...] | Provide configuration for a rule. Format RuleId:key=value. Example: E3012:strict=true
 | -D, --debug |  |  | Specify to enable debug logging. Debug logging outputs detailed information about rules processing, useful for debugging rules. |
 | -I, --info |  |  | Specify to enable logging. Outputs additional information about the template processing. |
 | -u, --update-specs | | | Update the [CloudFormation Resource Specifications](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html).  You may need sudo to run this.  You will need internet access when running this command |
@@ -243,7 +243,7 @@ cfn-lint applies configurations from several sources. The rules at lower levels 
 
 Certain rules support configuration properties. You can configure these rules by using `configure_rules` parameter.
 
-From the command line the format is `RuleId:key=value`, for example: `E3012:strict=false`.
+From the command line the format is `RuleId:key=value`, for example: `E3012:strict=true`.
 From the cfnlintrc or Metadata section the format is
 
 ```yaml
@@ -324,7 +324,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.77.5  # The version of cfn-lint to use
+  rev: v0.77.7  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -334,7 +334,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.77.5 # The version of cfn-lint to use
+  rev: v0.77.7 # The version of cfn-lint to use
   hooks:
     - id: cfn-lint-rc
 ```

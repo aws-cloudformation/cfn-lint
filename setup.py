@@ -44,7 +44,7 @@ that could potentially be improved'),
     zip_safe=False,
     install_requires=[
         'pyyaml>5.4',
-        'aws-sam-translator>=1.65.0',
+        'aws-sam-translator>=1.68.0',
         'jsonpatch',
         'jsonschema>=3.0,<5',
         'networkx>=2.4,<4',

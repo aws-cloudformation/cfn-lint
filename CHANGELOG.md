@@ -1,3 +1,14 @@
+### v0.77.7
+###### Fixes
+- Fix usage of comments and new lines in custom rules(pull #[2757](https://github.com/aws-cloudformation/cfn-lint/pull/2757))
+
+### v0.77.6
+###### CloudFormation Specifications
+- Update CloudFormation specs to `124.0.0` (pull #[2736](https://github.com/aws-cloudformation/cfn-lint/pull/2736))
+- Add `AWS::KMS::Key` to stateful resource list (pull #[2751](https://github.com/aws-cloudformation/cfn-lint/pull/2751))
+###### Fixes
+- Update [E3012](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E3012) documentation changes for more clarity (pull #[2747](https://github.com/aws-cloudformation/cfn-lint/pull/2747))
+
 ### v0.77.5
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `121.0.0` (pull #[2723](https://github.com/aws-cloudformation/cfn-lint/pull/2723))

@@ -42,73 +42,79 @@ def make_rule(line, lineNumber):
         return raw_value
 
     line = line.rstrip()
-    rule_id = lineNumber + 9000
-    line = line.split(" ", 3)
-    error_level = "E"
-    if len(line) == 4:
-        resourceType = line[0]
-        prop = line[1]
-        operator = line[2]
-        value = None
-        error_message = None
-        if "WARN" in line[3]:
-            error_level = "W"
-            value, error_message = set_arguments(line[3], "WARN")
-        elif "ERROR" in line[3]:
-            error_level = "E"
-            value, error_message = set_arguments(line[3], "ERROR")
-        else:
-            value = process_sets(line[3])
-            value = get_value(line[3])
+    # check line is not a comment or empty line
+    if not line.startswith("#") and line != "":
+        rule_id = lineNumber + 9000
+        line = line.split(" ", 3)
+        error_level = "E"
+        if len(line) == 4:
+            resourceType = line[0]
+            prop = line[1]
+            operator = line[2]
+            value = None
+            error_message = None
+            if "WARN" in line[3]:
+                error_level = "W"
+                value, error_message = set_arguments(line[3], "WARN")
+            elif "ERROR" in line[3]:
+                error_level = "E"
+                value, error_message = set_arguments(line[3], "ERROR")
+            else:
+                value = process_sets(line[3])
+                value = get_value(line[3])
 
-        if isinstance(value, str):
-            value = value.strip().strip('"')
+            if isinstance(value, str):
+                value = value.strip().strip('"')
 
-        if operator in ["EQUALS", "=="]:
-            return cfnlint.rules.custom.Operators.CreateEqualsRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator in ["NOT_EQUALS", "!="]:
-            return cfnlint.rules.custom.Operators.CreateNotEqualsRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "REGEX_MATCH":
-            return cfnlint.rules.custom.Operators.CreateRegexMatchRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "IN":
-            return cfnlint.rules.custom.Operators.CreateInSetRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "NOT_IN":
-            return cfnlint.rules.custom.Operators.CreateNotInSetRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == ">":
-            return cfnlint.rules.custom.Operators.CreateGreaterRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == ">=":
-            return cfnlint.rules.custom.Operators.CreateGreaterEqualRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "<":
-            return cfnlint.rules.custom.Operators.CreateLesserRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "<=":
-            return cfnlint.rules.custom.Operators.CreateLesserEqualRule(
-                error_level + str(rule_id), resourceType, prop, value, error_message
-            )
-        if operator == "IS":
-            if value in ["DEFINED", "NOT_DEFINED"]:
-                return cfnlint.rules.custom.Operators.CreateCustomIsDefinedRule(
+            if operator in ["EQUALS", "=="]:
+                return cfnlint.rules.custom.Operators.CreateEqualsRule(
                     error_level + str(rule_id), resourceType, prop, value, error_message
                 )
-            return cfnlint.rules.custom.Operators.CreateInvalidRule(
-                "E" + str(rule_id), f"{operator} {value}"
-            )
+            if operator in ["NOT_EQUALS", "!="]:
+                return cfnlint.rules.custom.Operators.CreateNotEqualsRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "REGEX_MATCH":
+                return cfnlint.rules.custom.Operators.CreateRegexMatchRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "IN":
+                return cfnlint.rules.custom.Operators.CreateInSetRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "NOT_IN":
+                return cfnlint.rules.custom.Operators.CreateNotInSetRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == ">":
+                return cfnlint.rules.custom.Operators.CreateGreaterRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == ">=":
+                return cfnlint.rules.custom.Operators.CreateGreaterEqualRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "<":
+                return cfnlint.rules.custom.Operators.CreateLesserRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "<=":
+                return cfnlint.rules.custom.Operators.CreateLesserEqualRule(
+                    error_level + str(rule_id), resourceType, prop, value, error_message
+                )
+            if operator == "IS":
+                if value in ["DEFINED", "NOT_DEFINED"]:
+                    return cfnlint.rules.custom.Operators.CreateCustomIsDefinedRule(
+                        error_level + str(rule_id),
+                        resourceType,
+                        prop,
+                        value,
+                        error_message,
+                    )
+                return cfnlint.rules.custom.Operators.CreateInvalidRule(
+                    "E" + str(rule_id), f"{operator} {value}"
+                )
 
-    return cfnlint.rules.custom.Operators.CreateInvalidRule(
-        "E" + str(rule_id), operator
-    )
+        return cfnlint.rules.custom.Operators.CreateInvalidRule(
+            "E" + str(rule_id), operator
+        )
