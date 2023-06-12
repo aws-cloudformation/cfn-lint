@@ -7,9 +7,9 @@ from __future__ import annotations
 from collections import deque
 from typing import Any, Iterable, List
 
+from cfnlint.context import Value, ValueType
 from cfnlint.template.functions.exceptions import Unpredictable
 from cfnlint.template.functions.fn import Fn
-from cfnlint.template.functions.value import Value, ValueType
 
 
 class Ref(Fn):
@@ -38,7 +38,7 @@ class Ref(Fn):
             self._values.append(
                 Value(
                     value=p_default,
-                    value_type=ValueType.PATH,
+                    value_type=ValueType.FUNCTION,
                     path=deque(["Parameters", self._instance, "Default"]),
                 )
             )
@@ -49,7 +49,7 @@ class Ref(Fn):
                 self._values.append(
                     Value(
                         value=av,
-                        value_type=ValueType.PATH,
+                        value_type=ValueType.FUNCTION,
                         path=deque(["Resources", self._instance, "AllowedValues", i]),
                     )
                 )

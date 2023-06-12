@@ -6,12 +6,13 @@ SPDX-License-Identifier: MIT-0
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py
 from __future__ import annotations
 
+from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator
 
+from cfnlint.context import Context
 from cfnlint.jsonschema import _validators, _validators_cfn
-from cfnlint.jsonschema._context import Context
 from cfnlint.jsonschema._filter import (
     FunctionFilter,
     cfn_function_filter,
@@ -206,19 +207,12 @@ def create(
             path: Deque | None = None,
             schema_path: Deque | None = None,
         ) -> Iterator[ValidationError]:
-            if schema is True:
-                return
-            elif schema is False:
-                yield ValidationError(
-                    f"False schema does not allow {instance!r}",
-                    validator=None,
-                    validator_value=None,
-                    instance=instance,
-                    schema=schema,
-                )
-                return
-
-            for error in self.evolve(schema=schema).iter_errors(instance):
+            for error in self.evolve(
+                schema=schema,
+                context=self.context.evolve(
+                    path=deque([path]),
+                ),
+            ).iter_errors(instance):
                 if path is not None:
                     error.path.appendleft(path)
                 if schema_path is not None:

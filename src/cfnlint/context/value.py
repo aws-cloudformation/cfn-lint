@@ -11,14 +11,15 @@ from typing import Any
 
 
 class ValueType(Enum):
-    PATH = 1
+    STANDARD = 0
+    FUNCTION = 1
     PSEUDO_PARAMETER = 2
 
 
 @dataclass
 class Value:
     value: Any = field(init=True)
-    value_type: ValueType = field(init=True, default=ValueType.PATH)
+    value_type: ValueType = field(init=True, default=ValueType.STANDARD)
     path: deque[str | int] = field(init=True, default_factory=deque)
 
     def __repr__(self):

@@ -13,7 +13,7 @@ from cfnlint.template.functions.exceptions import Unpredictable
 
 
 @dataclass
-class Value:
+class FnValue:
     _value: Any = field(init=True, default=None)
     _fn: int | None = field(init=True, default=None)
 
@@ -49,11 +49,11 @@ class FnArray(Fn):
         self,
         instance: Any,
         length: int,
-        value_validators: List[Callable[[Any], Optional[Value]]],
+        value_validators: List[Callable[[Any], Optional[FnValue]]],
         template: Any = None,
     ) -> None:
         super().__init__(instance, template)
-        self.items: List[Value] = []
+        self.items: List[FnValue] = []
         self._length: int = length
         if not isinstance(instance, list):
             return

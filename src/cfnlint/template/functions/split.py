@@ -3,10 +3,12 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import json
+from collections import deque
 from typing import Any, Iterable, Optional
 
+from cfnlint.context.value import Value, ValueType
 from cfnlint.template.functions.exceptions import Unpredictable
-from cfnlint.template.functions.fn import FnArray, Value
+from cfnlint.template.functions.fn import FnArray, FnValue
 
 
 class FnSplit(FnArray):
@@ -24,7 +26,7 @@ class FnSplit(FnArray):
         "Fn::ToJsonString",
     ]
 
-    def __init__(self, instance: Any) -> None:
+    def __init__(self, instance: Any, template: Any = None) -> None:
         self._length = 2
         super().__init__(
             instance,
@@ -35,23 +37,23 @@ class FnSplit(FnArray):
             ],
         )
 
-    def _get_delimiter(self, instance: Any) -> Optional[Value]:
+    def _get_delimiter(self, instance: Any) -> Optional[FnValue]:
         if not isinstance(instance, str):
             return None
 
-        return Value(_value=instance)
+        return FnValue(_value=instance)
 
-    def _get_source(self, instance: Any) -> Optional[Value]:
+    def _get_source(self, instance: Any) -> Optional[FnValue]:
         if isinstance(instance, str):
-            return Value(_value=instance)
+            return FnValue(_value=instance)
         if isinstance(instance, dict):
             if len(instance) == 1:
                 for k in instance.keys():
                     if k in self._supported_functions:
-                        return Value(_fn=hash(json.dumps(instance)))
+                        return FnValue(_fn=hash(json.dumps(instance)))
         return None
 
-    def get_value(self, fns, region: str) -> Iterable[Any]:
+    def get_value(self, fns, region: str) -> Iterable[Value]:
         if not self.is_valid:
             raise Unpredictable(f"Fn::Split is not valid {self._instance!r}")
 
@@ -59,7 +61,11 @@ class FnSplit(FnArray):
         for delimiter in self.items[0].values(fns, region):
             for source in self.items[1].values(fns, region):
                 if isinstance(source, str):
-                    yield source.split(delimiter)
+                    yield Value(
+                        value=source.split(delimiter),
+                        value_type=ValueType.FUNCTION,
+                        path=deque([]),
+                    )
                     success_ct += 1
         if success_ct > 0:
             return
