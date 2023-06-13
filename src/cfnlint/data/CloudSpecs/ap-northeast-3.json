@@ -747,6 +747,7 @@
   "AWS::AppSync::Resolver.LambdaConflictHandlerConfig": "CACHED",
   "AWS::AppSync::Resolver.PipelineConfig": "CACHED",
   "AWS::AppSync::Resolver.SyncConfig": "CACHED",
+  "AWS::AppSync::SourceApiAssociation.SourceApiAssociationConfig": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget.ScalableTargetAction": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget.ScheduledAction": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget.SuspendedState": "CACHED",
@@ -964,6 +965,8 @@
   "AWS::CloudTrail::Channel.Destination": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedEventSelector": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedEventSelector": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector": "CACHED",
   "AWS::CloudTrail::Trail.DataResource": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector": "CACHED",
   "AWS::CloudTrail::Trail.InsightSelector": "CACHED",
@@ -1499,6 +1502,9 @@
   "AWS::Elasticsearch::Domain.SnapshotOptions": "CACHED",
   "AWS::Elasticsearch::Domain.VPCOptions": "CACHED",
   "AWS::Elasticsearch::Domain.ZoneAwarenessConfig": "CACHED",
+  "AWS::EventSchemas::Discoverer.TagsEntry": "CACHED",
+  "AWS::EventSchemas::Registry.TagsEntry": "CACHED",
+  "AWS::EventSchemas::Schema.TagsEntry": "CACHED",
   "AWS::Events::Endpoint.EndpointEventBus": "CACHED",
   "AWS::Events::Endpoint.FailoverConfig": "CACHED",
   "AWS::Events::Endpoint.Primary": "CACHED",
@@ -1682,7 +1688,6 @@
     }
    }
   },
-  "AWS::Glue::Crawler.DeltaTarget": "CACHED",
   "AWS::Glue::Crawler.DynamoDBTarget": "CACHED",
   "AWS::Glue::Crawler.JdbcTarget": "CACHED",
   "AWS::Glue::Crawler.MongoDBTarget": "CACHED",
@@ -1690,18 +1695,119 @@
   "AWS::Glue::Crawler.S3Target": "CACHED",
   "AWS::Glue::Crawler.Schedule": "CACHED",
   "AWS::Glue::Crawler.SchemaChangePolicy": "CACHED",
-  "AWS::Glue::Crawler.Targets": "CACHED",
+  "AWS::Glue::Crawler.Targets": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html",
+   "Properties": {
+    "CatalogTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-catalogtargets",
+     "ItemType": "CatalogTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "DynamoDBTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-dynamodbtargets",
+     "ItemType": "DynamoDBTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "JdbcTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-jdbctargets",
+     "ItemType": "JdbcTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "MongoDBTargets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-mongodbtargets",
+     "ItemType": "MongoDBTarget",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "S3Targets": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-crawler-targets.html#cfn-glue-crawler-targets-s3targets",
+     "ItemType": "S3Target",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::DataCatalogEncryptionSettings.ConnectionPasswordEncryption": "CACHED",
   "AWS::Glue::DataCatalogEncryptionSettings.DataCatalogEncryptionSettings": "CACHED",
   "AWS::Glue::DataCatalogEncryptionSettings.EncryptionAtRest": "CACHED",
   "AWS::Glue::Database.DataLakePrincipal": "CACHED",
   "AWS::Glue::Database.DatabaseIdentifier": "CACHED",
-  "AWS::Glue::Database.DatabaseInput": "CACHED",
-  "AWS::Glue::Database.FederatedDatabase": "CACHED",
+  "AWS::Glue::Database.DatabaseInput": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html",
+   "Properties": {
+    "CreateTableDefaultPermissions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-createtabledefaultpermissions",
+     "ItemType": "PrincipalPrivileges",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "LocationUri": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-locationuri",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Parameters": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-parameters",
+     "PrimitiveType": "Json",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "TargetDatabase": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-database-databaseinput.html#cfn-glue-database-databaseinput-targetdatabase",
+     "Required": false,
+     "Type": "DatabaseIdentifier",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Database.PrincipalPrivileges": "CACHED",
   "AWS::Glue::Job.ConnectionsList": "CACHED",
   "AWS::Glue::Job.ExecutionProperty": "CACHED",
-  "AWS::Glue::Job.JobCommand": "CACHED",
+  "AWS::Glue::Job.JobCommand": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html",
+   "Properties": {
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html#cfn-glue-job-jobcommand-name",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "PythonVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html#cfn-glue-job-jobcommand-pythonversion",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ScriptLocation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-glue-job-jobcommand.html#cfn-glue-job-jobcommand-scriptlocation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::Glue::Job.NotificationProperty": "CACHED",
   "AWS::Glue::MLTransform.FindMatchesParameters": "CACHED",
   "AWS::Glue::MLTransform.GlueTables": "CACHED",
@@ -2659,6 +2765,26 @@
   "AWS::SecretsManager::RotationSchedule.RotationRules": "CACHED",
   "AWS::SecretsManager::Secret.GenerateSecretString": "CACHED",
   "AWS::SecretsManager::Secret.ReplicaRegion": "CACHED",
+  "AWS::SecurityHub::Standard.StandardsControl": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html",
+   "Properties": {
+    "Reason": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html#cfn-securityhub-standard-standardscontrol-reason",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "StandardsControlArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html#cfn-securityhub-standard-standardscontrol-standardscontrolarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn"
+     }
+    }
+   }
+  },
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -2897,7 +3023,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "124.0.0",
+ "ResourceSpecificationVersion": "126.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -3674,6 +3800,7 @@
   "AWS::AppSync::GraphQLApi": "CACHED",
   "AWS::AppSync::GraphQLSchema": "CACHED",
   "AWS::AppSync::Resolver": "CACHED",
+  "AWS::AppSync::SourceApiAssociation": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget": "CACHED",
   "AWS::ApplicationAutoScaling::ScalingPolicy": "CACHED",
   "AWS::ApplicationInsights::Application": "CACHED",
@@ -4106,6 +4233,9 @@
   "AWS::ElasticLoadBalancingV2::LoadBalancer": "CACHED",
   "AWS::ElasticLoadBalancingV2::TargetGroup": "CACHED",
   "AWS::Elasticsearch::Domain": "CACHED",
+  "AWS::EventSchemas::Discoverer": "CACHED",
+  "AWS::EventSchemas::Registry": "CACHED",
+  "AWS::EventSchemas::Schema": "CACHED",
   "AWS::Events::Archive": "CACHED",
   "AWS::Events::Endpoint": "CACHED",
   "AWS::Events::EventBus": "CACHED",
@@ -4591,7 +4721,52 @@
    }
   },
   "AWS::Lambda::Function": "CACHED",
-  "AWS::Lambda::LayerVersion": "CACHED",
+  "AWS::Lambda::LayerVersion": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html",
+   "Properties": {
+    "CompatibleArchitectures": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-compatiblearchitectures",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "CompatibleRuntimes": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-compatibleruntimes",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Immutable"
+    },
+    "Content": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-content",
+     "Required": true,
+     "Type": "Content",
+     "UpdateType": "Immutable"
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "LayerName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-layername",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::Lambda::LayerVersion.LayerName"
+     }
+    },
+    "LicenseInfo": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-layerversion.html#cfn-lambda-layerversion-licenseinfo",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::Lambda::LayerVersionPermission": "CACHED",
   "AWS::Lambda::Permission": "CACHED",
   "AWS::Lambda::Url": "CACHED",
@@ -4646,44 +4821,7 @@
   "AWS::RDS::GlobalCluster": "CACHED",
   "AWS::RDS::OptionGroup": "CACHED",
   "AWS::Redshift::Cluster": "CACHED",
-  "AWS::Redshift::ClusterParameterGroup": {
-   "Attributes": {
-    "ParameterGroupName": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html",
-   "Properties": {
-    "Description": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html#cfn-redshift-clusterparametergroup-description",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "ParameterGroupFamily": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html#cfn-redshift-clusterparametergroup-parametergroupfamily",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Parameters": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html#cfn-redshift-clusterparametergroup-parameters",
-     "DuplicatesAllowed": true,
-     "ItemType": "Parameter",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-clusterparametergroup.html#cfn-redshift-clusterparametergroup-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::Redshift::ClusterParameterGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroup": "CACHED",
   "AWS::Redshift::ClusterSecurityGroupIngress": "CACHED",
   "AWS::Redshift::ClusterSubnetGroup": "CACHED",
@@ -4908,6 +5046,33 @@
   "AWS::SecretsManager::Secret": "CACHED",
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
   "AWS::SecurityHub::Hub": "CACHED",
+  "AWS::SecurityHub::Standard": {
+   "Attributes": {
+    "StandardsSubscriptionArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html",
+   "Properties": {
+    "DisabledStandardsControls": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html#cfn-securityhub-standard-disabledstandardscontrols",
+     "DuplicatesAllowed": false,
+     "ItemType": "StandardsControl",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "StandardsArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html#cfn-securityhub-standard-standardsarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SecurityHub::Standard.StandardsArn"
+     }
+    }
+   }
+  },
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -5227,6 +5392,14 @@
   "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.NotEquals": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.NotStartsWith": "CACHED",
   "AWS::CloudTrail::EventDataStore.AdvancedFieldSelector.StartsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedEventSelector.Name": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.EndsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Equals": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Field": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEndsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEquals": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotStartsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.StartsWith": "CACHED",
   "AWS::CloudTrail::Trail.DataResourceType": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector.ReadWriteType": "CACHED",
   "AWS::CloudTrail::Trail.TrailName": "CACHED",
@@ -6727,6 +6900,12 @@
   "AWS::Scheduler::Schedule.Target.Arn": "CACHED",
   "AWS::Scheduler::Schedule.Target.RoleArn": "CACHED",
   "AWS::Scheduler::ScheduleGroup.Name": "CACHED",
+  "AWS::SecurityHub::Standard.StandardsArn": {
+   "AllowedPatternRegex": "arn:aws\\S*:securityhub:\\S"
+  },
+  "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": {
+   "AllowedPatternRegex": "arn:aws\\S*:securityhub:\\S*"
+  },
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",

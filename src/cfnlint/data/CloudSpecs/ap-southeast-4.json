@@ -574,7 +574,47 @@
   "AWS::AppFlow::ConnectorProfile.TokenUrlCustomProperties": "CACHED",
   "AWS::AppFlow::Flow.CustomProperties": "CACHED",
   "AWS::ApplicationAutoScaling::ScalableTarget.ScalableTargetAction": "CACHED",
-  "AWS::ApplicationAutoScaling::ScalableTarget.ScheduledAction": "CACHED",
+  "AWS::ApplicationAutoScaling::ScalableTarget.ScheduledAction": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html",
+   "Properties": {
+    "EndTime": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-endtime",
+     "PrimitiveType": "Timestamp",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "ScalableTargetAction": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-scalabletargetaction",
+     "Required": false,
+     "Type": "ScalableTargetAction",
+     "UpdateType": "Mutable"
+    },
+    "Schedule": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-schedule",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ScheduledActionName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-scheduledactionname",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "StartTime": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-starttime",
+     "PrimitiveType": "Timestamp",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Timezone": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalabletarget-scheduledaction.html#cfn-applicationautoscaling-scalabletarget-scheduledaction-timezone",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApplicationAutoScaling::ScalableTarget.SuspendedState": "CACHED",
   "AWS::ApplicationAutoScaling::ScalingPolicy.CustomizedMetricSpecification": "CACHED",
   "AWS::ApplicationAutoScaling::ScalingPolicy.MetricDimension": "CACHED",
@@ -917,6 +957,7 @@
   "AWS::Batch::SchedulingPolicy.FairsharePolicy": "CACHED",
   "AWS::Batch::SchedulingPolicy.ShareAttributes": "CACHED",
   "AWS::CertificateManager::Certificate.DomainValidationOption": "CACHED",
+  "AWS::CloudFormation::HookVersion.LoggingConfig": "CACHED",
   "AWS::CloudFormation::StackSet.AutoDeployment": "CACHED",
   "AWS::CloudFormation::StackSet.DeploymentTargets": "CACHED",
   "AWS::CloudFormation::StackSet.ManagedExecution": "CACHED",
@@ -1028,108 +1069,8 @@
   "AWS::CloudFront::ResponseHeadersPolicy.ServerTimingHeadersConfig": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.StrictTransportSecurity": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.XSSProtection": "CACHED",
-  "AWS::CloudTrail::Trail.AdvancedEventSelector": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html",
-   "Properties": {
-    "FieldSelectors": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html#cfn-cloudtrail-trail-advancedeventselector-fieldselectors",
-     "DuplicatesAllowed": false,
-     "ItemType": "AdvancedFieldSelector",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedeventselector.html#cfn-cloudtrail-trail-advancedeventselector-name",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedEventSelector.Name"
-     }
-    }
-   }
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html",
-   "Properties": {
-    "EndsWith": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-endswith",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.EndsWith"
-     }
-    },
-    "Equals": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-equals",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.Equals"
-     }
-    },
-    "Field": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-field",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.Field"
-     }
-    },
-    "NotEndsWith": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notendswith",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEndsWith"
-     }
-    },
-    "NotEquals": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notequals",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEquals"
-     }
-    },
-    "NotStartsWith": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-notstartswith",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotStartsWith"
-     }
-    },
-    "StartsWith": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudtrail-trail-advancedfieldselector.html#cfn-cloudtrail-trail-advancedfieldselector-startswith",
-     "DuplicatesAllowed": false,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.AdvancedFieldSelector.StartsWith"
-     }
-    }
-   }
-  },
+  "AWS::CloudTrail::Trail.AdvancedEventSelector": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector": "CACHED",
   "AWS::CloudTrail::Trail.DataResource": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector": "CACHED",
   "AWS::CloudTrail::Trail.InsightSelector": "CACHED",
@@ -2420,6 +2361,9 @@
    }
   },
   "AWS::EC2::Subnet.PrivateDnsNameOptionsOnLaunch": "CACHED",
+  "AWS::EC2::TransitGatewayAttachment.Options": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastDomain.Options": "CACHED",
+  "AWS::EC2::TransitGatewayVpcAttachment.Options": "CACHED",
   "AWS::EC2::VPNConnection.VpnTunnelOptionsSpecification": "CACHED",
   "AWS::ECR::ReplicationConfiguration.ReplicationConfiguration": "CACHED",
   "AWS::ECR::ReplicationConfiguration.ReplicationDestination": "CACHED",
@@ -4080,6 +4024,26 @@
   "AWS::SecretsManager::RotationSchedule.RotationRules": "CACHED",
   "AWS::SecretsManager::Secret.GenerateSecretString": "CACHED",
   "AWS::SecretsManager::Secret.ReplicaRegion": "CACHED",
+  "AWS::SecurityHub::Standard.StandardsControl": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html",
+   "Properties": {
+    "Reason": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html#cfn-securityhub-standard-standardscontrol-reason",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "StandardsControlArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-securityhub-standard-standardscontrol.html#cfn-securityhub-standard-standardscontrol-standardscontrolarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn"
+     }
+    }
+   }
+  },
   "AWS::ServiceCatalog::CloudFormationProduct.CodeStarParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ConnectionParameters": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct.ProvisioningArtifactProperties": "CACHED",
@@ -4276,7 +4240,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "124.0.0",
+ "ResourceSpecificationVersion": "126.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -5025,7 +4989,61 @@
   "AWS::AppConfig::Extension": "CACHED",
   "AWS::AppConfig::ExtensionAssociation": "CACHED",
   "AWS::AppConfig::HostedConfigurationVersion": "CACHED",
-  "AWS::ApplicationAutoScaling::ScalableTarget": "CACHED",
+  "AWS::ApplicationAutoScaling::ScalableTarget": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html",
+   "Properties": {
+    "MaxCapacity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-maxcapacity",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "MinCapacity": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-mincapacity",
+     "PrimitiveType": "Integer",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ResourceId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-resourceid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "RoleARN": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-rolearn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "ScalableDimension": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-scalabledimension",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "ScheduledActions": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-scheduledactions",
+     "DuplicatesAllowed": false,
+     "ItemType": "ScheduledAction",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ServiceNamespace": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-servicenamespace",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "SuspendedState": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalabletarget.html#cfn-applicationautoscaling-scalabletarget-suspendedstate",
+     "Required": false,
+     "Type": "SuspendedState",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::ApplicationAutoScaling::ScalingPolicy": "CACHED",
   "AWS::AutoScaling::AutoScalingGroup": "CACHED",
   "AWS::AutoScaling::LaunchConfiguration": {
@@ -5458,6 +5476,9 @@
   "AWS::Chatbot::MicrosoftTeamsChannelConfiguration": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration": "CACHED",
   "AWS::CloudFormation::CustomResource": "CACHED",
+  "AWS::CloudFormation::HookDefaultVersion": "CACHED",
+  "AWS::CloudFormation::HookTypeConfig": "CACHED",
+  "AWS::CloudFormation::HookVersion": "CACHED",
   "AWS::CloudFormation::Macro": "CACHED",
   "AWS::CloudFormation::Stack": "CACHED",
   "AWS::CloudFormation::StackSet": "CACHED",
@@ -5475,126 +5496,7 @@
   "AWS::CloudFront::PublicKey": "CACHED",
   "AWS::CloudFront::RealtimeLogConfig": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy": "CACHED",
-  "AWS::CloudTrail::Trail": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    },
-    "SnsTopicArn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html",
-   "Properties": {
-    "AdvancedEventSelectors": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-advancedeventselectors",
-     "DuplicatesAllowed": false,
-     "ItemType": "AdvancedEventSelector",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "CloudWatchLogsLogGroupArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-cloudwatchlogsloggrouparn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "CloudWatchLogsRoleArn": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-cloudwatchlogsrolearn",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EnableLogFileValidation": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-enablelogfilevalidation",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "EventSelectors": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-eventselectors",
-     "DuplicatesAllowed": false,
-     "ItemType": "EventSelector",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "IncludeGlobalServiceEvents": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-includeglobalserviceevents",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "InsightSelectors": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-insightselectors",
-     "DuplicatesAllowed": false,
-     "ItemType": "InsightSelector",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "IsLogging": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-islogging",
-     "PrimitiveType": "Boolean",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "IsMultiRegionTrail": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-ismultiregiontrail",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "IsOrganizationTrail": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-isorganizationtrail",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "KMSKeyId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-kmskeyid",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "S3BucketName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-s3bucketname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "S3KeyPrefix": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-s3keyprefix",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "SnsTopicName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-snstopicname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TrailName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-cloudtrail-trail.html#cfn-cloudtrail-trail-trailname",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::CloudTrail::Trail.TrailName"
-     }
-    }
-   }
-  },
+  "AWS::CloudTrail::Trail": "CACHED",
   "AWS::CloudWatch::Alarm": "CACHED",
   "AWS::CloudWatch::AnomalyDetector": "CACHED",
   "AWS::CloudWatch::CompositeAlarm": "CACHED",
@@ -6453,6 +6355,120 @@
   "AWS::EC2::SubnetCidrBlock": "CACHED",
   "AWS::EC2::SubnetNetworkAclAssociation": "CACHED",
   "AWS::EC2::SubnetRouteTableAssociation": "CACHED",
+  "AWS::EC2::TransitGateway": {
+   "Attributes": {
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "TransitGatewayArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html",
+   "Properties": {
+    "AmazonSideAsn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-amazonsideasn",
+     "PrimitiveType": "Integer",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "AssociationDefaultRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-associationdefaultroutetableid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "AutoAcceptSharedAttachments": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-autoacceptsharedattachments",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TransitGatewayEnabled"
+     }
+    },
+    "DefaultRouteTableAssociation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-defaultroutetableassociation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TransitGatewayEnabled"
+     }
+    },
+    "DefaultRouteTablePropagation": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-defaultroutetablepropagation",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TransitGatewayEnabled"
+     }
+    },
+    "Description": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-description",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "DnsSupport": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-dnssupport",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TransitGatewayEnabled"
+     }
+    },
+    "MulticastSupport": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-multicastsupport",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "PropagationDefaultRouteTableId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-propagationdefaultroutetableid",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "TransitGatewayCidrBlocks": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-transitgatewaycidrblocks",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "VpnEcmpSupport": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-transitgateway.html#cfn-ec2-transitgateway-vpnecmpsupport",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "TransitGatewayEnabled"
+     }
+    }
+   }
+  },
+  "AWS::EC2::TransitGatewayAttachment": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastDomain": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastDomainAssociation": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastGroupMember": "CACHED",
+  "AWS::EC2::TransitGatewayMulticastGroupSource": "CACHED",
+  "AWS::EC2::TransitGatewayRoute": "CACHED",
+  "AWS::EC2::TransitGatewayRouteTable": "CACHED",
+  "AWS::EC2::TransitGatewayRouteTableAssociation": "CACHED",
+  "AWS::EC2::TransitGatewayRouteTablePropagation": "CACHED",
+  "AWS::EC2::TransitGatewayVpcAttachment": "CACHED",
   "AWS::EC2::VPC": {
    "Attributes": {
     "CidrBlock": {
@@ -8302,6 +8318,33 @@
    }
   },
   "AWS::SecretsManager::SecretTargetAttachment": "CACHED",
+  "AWS::SecurityHub::Standard": {
+   "Attributes": {
+    "StandardsSubscriptionArn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html",
+   "Properties": {
+    "DisabledStandardsControls": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html#cfn-securityhub-standard-disabledstandardscontrols",
+     "DuplicatesAllowed": false,
+     "ItemType": "StandardsControl",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "StandardsArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-securityhub-standard.html#cfn-securityhub-standard-standardsarn",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::SecurityHub::Standard.StandardsArn"
+     }
+    }
+   }
+  },
   "AWS::ServiceCatalog::AcceptedPortfolioShare": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProduct": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct": "CACHED",
@@ -8453,6 +8496,17 @@
   "AWS::Chatbot::SlackChannelConfiguration.SlackWorkspaceId": "CACHED",
   "AWS::Chatbot::SlackChannelConfiguration.SnsTopicArns": "CACHED",
   "AWS::Cloud9::EnvironmentEC2.AutomaticStopTimeMinutes": "CACHED",
+  "AWS::CloudFormation::HookDefaultVersion.TypeName": "CACHED",
+  "AWS::CloudFormation::HookDefaultVersion.TypeVersionArn": "CACHED",
+  "AWS::CloudFormation::HookDefaultVersion.VersionId": "CACHED",
+  "AWS::CloudFormation::HookTypeConfig.Configuration": "CACHED",
+  "AWS::CloudFormation::HookTypeConfig.ConfigurationAlias": "CACHED",
+  "AWS::CloudFormation::HookTypeConfig.TypeArn": "CACHED",
+  "AWS::CloudFormation::HookTypeConfig.TypeName": "CACHED",
+  "AWS::CloudFormation::HookVersion.ExecutionRoleArn": "CACHED",
+  "AWS::CloudFormation::HookVersion.LoggingConfig.LogGroupName": "CACHED",
+  "AWS::CloudFormation::HookVersion.LoggingConfig.LogRoleArn": "CACHED",
+  "AWS::CloudFormation::HookVersion.TypeName": "CACHED",
   "AWS::CloudFormation::StackSet.AdministrationRoleARN": "CACHED",
   "AWS::CloudFormation::StackSet.CallAs": "CACHED",
   "AWS::CloudFormation::StackSet.Capabilities": "CACHED",
@@ -8499,45 +8553,14 @@
   "AWS::CloudFront::RealtimeLogConfig.SamplingRate": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.FrameOptions.FrameOption": "CACHED",
   "AWS::CloudFront::ResponseHeadersPolicy.ReferrerPolicy.ReferrerPolicy": "CACHED",
-  "AWS::CloudTrail::Trail.AdvancedEventSelector.Name": {
-   "StringMax": 1000,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.EndsWith": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Equals": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Field": {
-   "AllowedPatternRegex": "([\\w|\\d|\\.|_]+)",
-   "StringMax": 1000,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEndsWith": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEquals": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotStartsWith": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
-  "AWS::CloudTrail::Trail.AdvancedFieldSelector.StartsWith": {
-   "AllowedPatternRegex": "(.+)",
-   "StringMax": 2048,
-   "StringMin": 1
-  },
+  "AWS::CloudTrail::Trail.AdvancedEventSelector.Name": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.EndsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Equals": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.Field": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEndsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotEquals": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.NotStartsWith": "CACHED",
+  "AWS::CloudTrail::Trail.AdvancedFieldSelector.StartsWith": "CACHED",
   "AWS::CloudTrail::Trail.DataResourceType": "CACHED",
   "AWS::CloudTrail::Trail.EventSelector.ReadWriteType": "CACHED",
   "AWS::CloudTrail::Trail.TrailName": "CACHED",
@@ -9587,6 +9610,12 @@
   "AWS::Scheduler::Schedule.Target.Arn": "CACHED",
   "AWS::Scheduler::Schedule.Target.RoleArn": "CACHED",
   "AWS::Scheduler::ScheduleGroup.Name": "CACHED",
+  "AWS::SecurityHub::Standard.StandardsArn": {
+   "AllowedPatternRegex": "arn:aws\\S*:securityhub:\\S"
+  },
+  "AWS::SecurityHub::Standard.StandardsControl.StandardsControlArn": {
+   "AllowedPatternRegex": "arn:aws\\S*:securityhub:\\S*"
+  },
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.AcceptLanguage": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathId": "CACHED",
   "AWS::ServiceCatalog::CloudFormationProvisionedProduct.PathName": "CACHED",
