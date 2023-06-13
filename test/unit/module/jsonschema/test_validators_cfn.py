@@ -6,6 +6,7 @@ import unittest
 from collections import namedtuple
 from typing import List
 
+from cfnlint.context.value import Value, ValueType
 from cfnlint.jsonschema.exceptions import UnknownType
 from cfnlint.jsonschema.validators import CfnTemplateValidator
 from cfnlint.template.functions import Unpredictable
@@ -295,7 +296,7 @@ class TestCfnPredictedValues(Base):
                 instance,
                 {"type": supported_types},
                 [f"{instance!r} is not of type {supported_types!r}"],
-                [predictions],
+                predictions,
             )
         )
 
@@ -303,7 +304,13 @@ class TestCfnPredictedValues(Base):
 
     def test_standard_values(self):
         # all these checks should return true as there is one good value
-        self.build_execute_tests({"Ref": "Foo"}, "integer", [1, "2"])
+        self.build_execute_tests(
+            {"Ref": "Foo"},
+            "integer",
+            [
+                Value(value=[1, "2"], value_type=ValueType.FUNCTION),
+            ],
+        )
 
 
 class TestCfnTypeFailure(Base):

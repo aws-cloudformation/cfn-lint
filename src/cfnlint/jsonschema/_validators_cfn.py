@@ -2,8 +2,10 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from collections import deque
 from typing import Any, Callable, Dict, Iterator
 
+from cfnlint.context.value import ValueType
 from cfnlint.helpers import (
     FUNCTIONS,
     FUNCTIONS_LIST,
@@ -33,18 +35,26 @@ def additionalProperties(
             yield err
 
 
-def _fn(validator: Validator, schema: Any, instance: Any) -> Iterator[ValidationError]:
+def _fn(
+    validator: Validator, schema: Any, instance: Any, fn: str
+) -> Iterator[ValidationError]:
     if not validator.cfn:
         return
     try:
         for value in validator.cfn.functions.get_value(
             instance, validator.context.region
         ):
-            for err in validator.descend(
-                value,
-                schema,
-            ):
+            evolved = validator.evolve(
+                schema=schema,
+                context=validator.context.evolve(
+                    value=value,
+                    path=deque([fn]),
+                ),
+            )
+            for err in evolved.iter_errors(instance=value.value):
                 err.message = err.message.replace(f"{err.instance!r}", f"{instance!r}")
+                if value.value_type == ValueType.FUNCTION:
+                    err.path_override = value.path
                 err.path.extendleft(list(instance.keys()))
                 yield err
     except Unpredictable:
@@ -60,63 +70,63 @@ def ref(
 ) -> Iterator[ValidationError]:
     if instance == {"Ref": "AWS::NoValue"}:
         return
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Ref")
 
 
 # pylint: disable=unused-argument
 def fn_getatt(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::GetAtt")
 
 
 # pylint: disable=unused-argument
 def fn_base64(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Base64")
 
 
 # pylint: disable=unused-argument
 def fn_getazs(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::GetAZs")
 
 
 # pylint: disable=unused-argument
 def fn_importvalue(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::ImportValue")
 
 
 # pylint: disable=unused-argument
 def fn_join(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Join")
 
 
 # pylint: disable=unused-argument
 def fn_split(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Split")
 
 
 # pylint: disable=unused-argument
 def fn_findinmap(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::FindInMap")
 
 
 # pylint: disable=unused-argument
 def fn_select(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Select")
 
 
 def fn_if(
@@ -137,28 +147,28 @@ def fn_if(
 def fn_sub(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Sub")
 
 
 # pylint: disable=unused-argument
 def fn_cidr(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Cidr")
 
 
 # pylint: disable=unused-argument
 def fn_length(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::Length")
 
 
 # pylint: disable=unused-argument
 def fn_tojsonstring(
     validator: Validator, s: Any, instance: Any, schema: Any
 ) -> Iterator[ValidationError]:
-    yield from _fn(validator, s, instance)
+    yield from _fn(validator, s, instance, "Fn::ToJsonString")
 
 
 def _raw_type(validator: Validator, tS: Any, instance: Any) -> bool:

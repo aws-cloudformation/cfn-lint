@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 import logging
+import os
 from io import StringIO
 from test.testlib.testcase import BaseTestCase
 from unittest.mock import patch
@@ -121,6 +122,16 @@ class TestArgsFilenamesAndRules(BaseTestCase):
             assert filenames == [filename]
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    @patch.dict(
+        os.environ,
+        {
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
     def test_template_config(self, yaml_mock):
         """Test template config"""
         yaml_mock.side_effect = [{}, {}]
@@ -165,6 +176,16 @@ class TestArgsFilenamesAndRules(BaseTestCase):
         self.assertEqual(args.output_file, "test_output.txt")
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    @patch.dict(
+        os.environ,
+        {
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
     def test_positional_template_parameters(self, yaml_mock):
         """Test overriding parameters"""
         yaml_mock.side_effect = [{}, {}]
@@ -191,6 +212,16 @@ class TestArgsFilenamesAndRules(BaseTestCase):
         self.assertEqual(args.update_specs, False)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    @patch.dict(
+        os.environ,
+        {
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
     def test_override_parameters(self, yaml_mock):
         """Test overriding parameters"""
         yaml_mock.side_effect = [{}, {}]
@@ -223,6 +254,16 @@ class TestArgsFilenamesAndRules(BaseTestCase):
         self.assertEqual(args.update_specs, False)
 
     @patch("cfnlint.config.ConfigFileArgs._read_config", create=True)
+    @patch.dict(
+        os.environ,
+        {
+            "HOME": os.environ.get("HOME", ""),
+            "USERPROFILE": os.environ.get("USERPROFILE", ""),
+            "HOMEPATH": os.environ.get("HOMEPATH", ""),
+            "HOMEDRIVE": os.environ.get("HOMEDRIVE", ""),
+        },
+        clear=True,
+    )
     def test_bad_config(self, yaml_mock):
         """Test bad formatting in config"""
         yaml_mock.side_effect = [{}, {}]
