@@ -3,6 +3,7 @@ import unittest
 from collections import UserDict
 from typing import Any, Iterable
 
+from cfnlint.context import Value, ValueType
 from cfnlint.template.functions import Fn, FnSplit
 from cfnlint.template.functions.exceptions import Unpredictable
 
@@ -11,7 +12,12 @@ class TestFnSplit(unittest.TestCase):
     def test_split_string(self):
         split = FnSplit([",", "foo,bar"])
 
-        self.assertListEqual(list(split.get_value(None, "us-east-1")), [["foo", "bar"]])
+        self.assertListEqual(
+            list(split.get_value(None, "us-east-1")),
+            [
+                Value(value=["foo", "bar"], value_type=ValueType.FUNCTION),
+            ],
+        )
 
     def test_split_nested_fn(self):
         source = {"Ref": "Foo"}
@@ -26,7 +32,10 @@ class TestFnSplit(unittest.TestCase):
 
         fns = {hash(json.dumps(source)): Foo(source)}
 
-        self.assertListEqual(list(split.get_value(fns, "us-east-1")), [["foo", "bar"]])
+        self.assertListEqual(
+            list(split.get_value(fns, "us-east-1")),
+            [Value(value=["foo", "bar"], value_type=ValueType.FUNCTION)],
+        )
 
     def test_split_nested_fn_no_value(self):
         source = {"Ref": "Foo"}

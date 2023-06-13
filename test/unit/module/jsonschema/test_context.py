@@ -5,7 +5,7 @@ SPDX-License-Identifier: MIT-0
 import unittest
 from collections import deque
 
-from cfnlint.jsonschema._context import Context
+from cfnlint.context import Context
 
 
 class TestCfnContext(unittest.TestCase):
