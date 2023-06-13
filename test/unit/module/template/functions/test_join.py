@@ -2,6 +2,7 @@ import json
 import unittest
 from typing import Any, Iterable
 
+from cfnlint.context import Value, ValueType
 from cfnlint.template.functions import Fn, FnJoin
 from cfnlint.template.functions.exceptions import Unpredictable
 
@@ -9,7 +10,10 @@ from cfnlint.template.functions.exceptions import Unpredictable
 class TestFnjoin(unittest.TestCase):
     def test_join_list(self):
         join = FnJoin([",", ["foo", "bar"]])
-        self.assertListEqual(list(join.get_value(None, "us-east-1")), ["foo,bar"])
+        self.assertListEqual(
+            list(join.get_value(None, "us-east-1")),
+            [Value(value="foo,bar", value_type=ValueType.FUNCTION)],
+        )
 
     def test_join_nested_fn(self):
         source = {"Ref": "Foo"}
@@ -24,7 +28,10 @@ class TestFnjoin(unittest.TestCase):
 
         fns = {hash(json.dumps(source)): Foo(source)}
 
-        self.assertListEqual(list(fn.get_value(fns, "us-east-1")), ["foo,bar"])
+        self.assertListEqual(
+            list(fn.get_value(fns, "us-east-1")),
+            [Value(value="foo,bar", value_type=ValueType.FUNCTION)],
+        )
 
     def test_join_nested_fn_no_value(self):
         source = {"Ref": "Foo"}
@@ -57,8 +64,13 @@ class TestFnjoin(unittest.TestCase):
                 yield "b2"
 
         fns = {hash(json.dumps(source)): Foo(source)}
-
-        self.assertListEqual(list(fn.get_value(fns, "us-east-1")), ["a,b1,c", "a,b2,c"])
+        self.assertListEqual(
+            list(fn.get_value(fns, "us-east-1")),
+            [
+                Value(value="a,b1,c", value_type=ValueType.FUNCTION),
+                Value(value="a,b2,c", value_type=ValueType.FUNCTION),
+            ],
+        )
 
     def test_join_nested_fn_non_list(self):
         source = {"Ref": "Foo"}
