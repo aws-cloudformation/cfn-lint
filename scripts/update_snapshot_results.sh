@@ -2,7 +2,7 @@
 
 # public/
 cfn-lint test/fixtures/templates/public/lambda-poller.yaml -e -c I --format json > test/fixtures/results/public/lambda-poller.json
-cfn-lint test/fixtures/templates/public/watchmaker.json -e -c I --format json > test/fixtures/results/public/watchmaker.json
+cfn-lint test/fixtures/templates/public/watchmaker.json -e -x E3012:strict=true -c I --format json > test/fixtures/results/public/watchmaker.json
 
 # quickstart/non_strict/
 cfn-lint test/fixtures/templates/quickstart/cis_benchmark.yaml -e -c I --format json > test/fixtures/results/quickstart/non_strict/cis_benchmark.json
