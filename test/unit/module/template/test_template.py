@@ -790,41 +790,43 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_no_value(self):
         """Test Getting condition names in an object/list"""
-        template = {
-            "Conditions": {
-                "CreateAppVolume": {"Fn::Equals": [{"Ref": "myAppVolume"}, "true"]}
-            },
-            "Resources": {
-                "myInstance": {
-                    "Type": "AWS::EC2::Instance",
-                    "Properties": {
-                        "ImageId": "ami-123456",
-                        "BlockDeviceMappings": [
-                            {
-                                "DeviceName": "/dev/hda1",
-                                "Ebs": {
-                                    "DeleteOnTermination": True,
-                                    "VolumeType": "gp2",
-                                },
-                            },
-                            {
-                                "Fn::If": [
-                                    "CreateAppVolume",
-                                    {
-                                        "DeviceName": "/dev/xvdf",
-                                        "Ebs": {
-                                            "DeleteOnTermination": True,
-                                            "VolumeType": "gp2",
-                                        },
+        template = cfnlint.decode.node.convert_dict(
+            {
+                "Conditions": {
+                    "CreateAppVolume": {"Fn::Equals": [{"Ref": "myAppVolume"}, "true"]}
+                },
+                "Resources": {
+                    "myInstance": {
+                        "Type": "AWS::EC2::Instance",
+                        "Properties": {
+                            "ImageId": "ami-123456",
+                            "BlockDeviceMappings": [
+                                {
+                                    "DeviceName": "/dev/hda1",
+                                    "Ebs": {
+                                        "DeleteOnTermination": True,
+                                        "VolumeType": "gp2",
                                     },
-                                    {"Ref": "AWS::NoValue"},
-                                ]
-                            },
-                        ],
-                    },
-                }
-            },
-        }
+                                },
+                                {
+                                    "Fn::If": [
+                                        "CreateAppVolume",
+                                        {
+                                            "DeviceName": "/dev/xvdf",
+                                            "Ebs": {
+                                                "DeleteOnTermination": True,
+                                                "VolumeType": "gp2",
+                                            },
+                                        },
+                                        {"Ref": "AWS::NoValue"},
+                                    ]
+                                },
+                            ],
+                        },
+                    }
+                },
+            }
+        )
         template = Template("test.yaml", template)
 
         results = template.get_object_without_conditions(
@@ -844,10 +846,39 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
             .get("BlockDeviceMappings")
         )
         # when item is a list return empty list
-        self.assertEqual(results, [])
+        self.assertEqual(
+            results,
+            [
+                {
+                    "Object": [
+                        {
+                            "DeviceName": "/dev/hda1",
+                            "Ebs": {"DeleteOnTermination": True, "VolumeType": "gp2"},
+                        },
+                        {
+                            "DeviceName": "/dev/xvdf",
+                            "Ebs": {"DeleteOnTermination": True, "VolumeType": "gp2"},
+                        },
+                    ],
+                    "Scenario": {"CreateAppVolume": True},
+                },
+                {
+                    "Object": [
+                        {
+                            "DeviceName": "/dev/hda1",
+                            "Ebs": {"DeleteOnTermination": True, "VolumeType": "gp2"},
+                        }
+                    ],
+                    "Scenario": {"CreateAppVolume": False},
+                },
+            ],
+        )
 
         # when item is a string return empty list
-        self.assertEqual(template.get_object_without_conditions("String"), [])
+        self.assertEqual(
+            template.get_object_without_conditions("String"),
+            [{"Object": "String", "Scenario": None}],
+        )
 
     def test_get_object_without_conditions_for_list(self):
         """Test Getting condition names in an object/list"""
@@ -923,29 +954,31 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_for_bad_formats(self):
         """Test Getting condition names in an object/list"""
-        template = {
-            "Conditions": {
-                "CreateAppVolume": {"Fn::Equals": [{"Ref": "CreateVolums"}, "true"]}
-            },
-            "Resources": {
-                "myInstance": {
-                    "Type": "AWS::EC2::Instance",
-                    "Properties": {
-                        "ImageId": "ami-123456",
-                        "BlockDeviceMappings": {
-                            "Fn::If": ["CreateAppVolume", {"Ref": "AWS::NoValue"}]
+        template = cfnlint.decode.node.convert_dict(
+            {
+                "Conditions": {
+                    "CreateAppVolume": {"Fn::Equals": [{"Ref": "CreateVolums"}, "true"]}
+                },
+                "Resources": {
+                    "myInstance": {
+                        "Type": "AWS::EC2::Instance",
+                        "Properties": {
+                            "ImageId": "ami-123456",
+                            "BlockDeviceMappings": {
+                                "Fn::If": ["CreateAppVolume", {"Ref": "AWS::NoValue"}]
+                            },
+                        },
+                    },
+                    "myInstance1": {
+                        "Type": "AWS::EC2::Instance",
+                        "Properties": {
+                            "ImageId": "ami-123456",
+                            "BlockDeviceMappings": {"Fn::If": ["CreateAppVolume"]},
                         },
                     },
                 },
-                "myInstance1": {
-                    "Type": "AWS::EC2::Instance",
-                    "Properties": {
-                        "ImageId": "ami-123456",
-                        "BlockDeviceMappings": {"Fn::If": ["CreateAppVolume"]},
-                    },
-                },
-            },
-        }
+            }
+        )
 
         template = Template("test.yaml", template)
 

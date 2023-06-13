@@ -6,13 +6,13 @@ SPDX-License-Identifier: MIT-0
 import json
 import subprocess
 from pathlib import Path
-from test.testlib.testcase import BaseTestCase
+import unittest
 from typing import Any, Dict, List
 
 import cfnlint.core
 
 
-class BaseCliTestCase(BaseTestCase):
+class BaseCliTestCase(unittest.TestCase):
     """Used for Testing CLI"""
 
     scenarios: List[Dict[str, Any]] = []
