@@ -6,14 +6,13 @@ SPDX-License-Identifier: MIT-0
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/validators.py
 from __future__ import annotations
 
+from collections import deque
 from collections.abc import Mapping
 from dataclasses import dataclass, field, fields
 from typing import Any, Deque, Dict, Iterator
 
-from cfnlint.data.schemas.other import draft7
-from cfnlint.helpers import load_resource
+from cfnlint.context import Context
 from cfnlint.jsonschema import _validators, _validators_cfn
-from cfnlint.jsonschema._context import Context
 from cfnlint.jsonschema._filter import (
     FunctionFilter,
     cfn_function_filter,
@@ -30,8 +29,6 @@ from cfnlint.jsonschema.exceptions import (
     ValidationError,
 )
 from cfnlint.template import Template
-
-_meta_schema: Dict[str, Any] = load_resource(draft7, "schema.json")
 
 
 def create(
@@ -54,9 +51,6 @@ def create(
                 an invalid schema can lead to undefined behavior.
         """
 
-        _meta_schema: Dict[str, Any] = field(
-            init=False, default_factory=lambda: _meta_schema
-        )
         _type_checker: TypeChecker = field(
             init=False, default_factory=lambda: cfn_type_checker
         )
@@ -170,7 +164,7 @@ def create(
                         if validator is None:
                             continue
 
-                        errors = validator(self, v, instance, _schema) or ()
+                        errors = validator(self, v, _instance, _schema) or ()
                         for error in errors:
                             # set details if not already set by the called fn
                             error._set(
@@ -213,19 +207,12 @@ def create(
             path: Deque | None = None,
             schema_path: Deque | None = None,
         ) -> Iterator[ValidationError]:
-            if schema is True:
-                return
-            elif schema is False:
-                yield ValidationError(
-                    f"False schema does not allow {instance!r}",
-                    validator=None,
-                    validator_value=None,
-                    instance=instance,
-                    schema=schema,
-                )
-                return
-
-            for error in self.evolve(schema=schema).iter_errors(instance):
+            for error in self.evolve(
+                schema=schema,
+                context=self.context.evolve(
+                    path=deque([path]),
+                ),
+            ).iter_errors(instance):
                 if path is not None:
                     error.path.appendleft(path)
                 if schema_path is not None:
