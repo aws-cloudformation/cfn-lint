@@ -3,6 +3,7 @@ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
+from cfnlint.helpers import FUNCTIONS
 from cfnlint.jsonschema import ValidationError
 from cfnlint.rules import CloudFormationLintRule
 
@@ -33,6 +34,10 @@ class AvailabilityZone(CloudFormationLintRule):
         if zone in self.exceptions:
             return
 
+        if len(validator.context.path) > 0:
+            if validator.context.path[-1] in FUNCTIONS:
+                return
+
         yield ValidationError(
             f"Avoid hardcoding availability zones '{zone}'",
             rule=self,
@@ -46,6 +51,10 @@ class AvailabilityZone(CloudFormationLintRule):
         # Skip rule if CDK
         if validator.template.is_cdk_template():
             return
+
+        if len(validator.context.path) > 0:
+            if validator.context.path[-1] in FUNCTIONS:
+                return
 
         for zone in zones:
             yield from self.availabilityzone(validator, aZ, zone, schema)
