@@ -565,6 +565,12 @@ class TestNoErrorMessage(unittest.TestCase):
             schema={"maxProperties": 2},
         )
 
+    def test_maxProperties_with_no_value(self):
+        self.no_error(
+            instance={"a": {}, "b": {"Ref": "AWS::NoValue"}},
+            schema={"maxProperties": 2},
+        )
+
     def test_maxProperties_wrong_type(self):
         self.no_error(instance=[], schema={"maxProperties": 1})
 
