@@ -13,7 +13,7 @@ from typing import Any, ClassVar, Deque, Dict, Iterator, Type
 # drop support
 from typing_extensions import Protocol
 
-from cfnlint.jsonschema._context import Context
+from cfnlint.context import Context
 from cfnlint.jsonschema._filter import FunctionFilter
 from cfnlint.jsonschema._typing import V
 from cfnlint.jsonschema.exceptions import ValidationError

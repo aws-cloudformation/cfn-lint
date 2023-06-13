@@ -93,6 +93,7 @@ class NestedStackParameters(CloudFormationLintRule):
                 parameter_groups = cfn.get_object_without_conditions(
                     obj=properties, property_names=["TemplateURL", "Parameters"]
                 )
+
                 for parameter_group in parameter_groups:
                     obj = parameter_group.get("Object")
                     template_url = obj.get("TemplateURL")
