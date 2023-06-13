@@ -36,7 +36,6 @@ class CfnSchema(BaseJsonSchema):
         for schema_path in schema_paths:
             for rule in self.child_rules.values():
                 if rule.schema_path == schema_path:
-                    print(schema_path)
                     yield from rule.validate(instance)
 
 

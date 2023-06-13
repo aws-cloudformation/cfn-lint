@@ -4,6 +4,7 @@ from collections import UserDict
 from typing import Any, Iterable
 from unittest import mock
 
+from cfnlint.context import Value, ValueType
 from cfnlint.helpers import AVAILABILITY_ZONES
 from cfnlint.template.functions import FnGetAZs
 from cfnlint.template.functions.exceptions import Unpredictable
@@ -27,7 +28,10 @@ class TestFnGetAZs(unittest.TestCase):
             AVAILABILITY_ZONES, {"us-east-1": ["foo", "bar"]}, clear=True
         ):
             self.assertListEqual(
-                list(split.get_value(None, "us-east-1")), [["foo", "bar"]]
+                list(split.get_value(None, "us-east-1")),
+                [
+                    Value(value=["foo", "bar"], value_type=ValueType.STANDARD),
+                ],
             )
 
     def test_fn_nested_fn(self):
@@ -46,7 +50,12 @@ class TestFnGetAZs(unittest.TestCase):
         with mock.patch.dict(
             AVAILABILITY_ZONES, {"us-east-1": ["foo", "bar"]}, clear=True
         ):
-            self.assertListEqual(list(fn.get_value(fns, "us-east-1")), [["foo", "bar"]])
+            self.assertListEqual(
+                list(fn.get_value(fns, "us-east-1")),
+                [
+                    Value(value=["foo", "bar"], value_type=ValueType.PSEUDO_PARAMETER),
+                ],
+            )
 
     def test_fn_nested_fn_no_value(self):
         instance = {"Ref": "Foo"}

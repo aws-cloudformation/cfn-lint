@@ -1,3 +1,7 @@
+"""
+Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+SPDX-License-Identifier: MIT-0
+"""
 from __future__ import annotations
 
 import json
@@ -26,7 +30,7 @@ class Fns(FnsParent):
             f_fns = template.search_deep_keys(fn_py.name)
 
             for f_fn in f_fns:
-                c = cls(f_fn[-1])
+                c = cls(f_fn[-1], template)
                 self[{fn: f_fn[-1]}] = c
 
     def __getitem__(self, key: Any) -> Fn:
