@@ -4,8 +4,9 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
+from cfnlint.context import Context
 from cfnlint.helpers import REGION_PRIMARY
-from cfnlint.jsonschema import CfnTemplateValidator, Context
+from cfnlint.jsonschema import CfnTemplateValidator
 from cfnlint.rules.jsonschema.base import BaseJsonSchema
 from cfnlint.schema.manager import PROVIDER_SCHEMA_MANAGER, ResourceNotFoundError
 

@@ -937,8 +937,10 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 }
             ]
         """
+        if not isinstance(obj, (dict, list)):
+            return [{"Scenario": None, "Object": obj}]
         property_names = [] if property_names is None else property_names
-        o = {}
+        o = cfnlint.dict_node({}, obj.start_mark, obj.end_mark)
         if property_names:
             for property_name in property_names:
                 o[property_name] = deepcopy(obj.get(property_name))
@@ -946,21 +948,29 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             o = deepcopy(obj)
         results = []
 
-        scenarios = self.get_conditions_scenarios_from_object([o])
-        if not isinstance(obj, dict):
-            return results
+        scenarios = self.get_conditions_scenarios_from_object(o)
+        if isinstance(obj, list):
+            if not scenarios:
+                return [{"Scenario": None, "Object": o}]
+            for scenario in scenarios:
+                result_list = []
+                for o in obj:
+                    result_obj = self.get_value_from_scenario(o, scenario)
+                    if result_obj:
+                        result_list.append(result_obj)
 
-        if not scenarios:
-            if isinstance(obj, dict):
+                results.append({"Scenario": scenario, "Object": result_list})
+        if isinstance(obj, dict):
+            if not scenarios:
                 if len(obj) == 1:
                     if obj.get("Ref") == "AWS::NoValue":
                         return []
-            return [{"Scenario": None, "Object": obj}]
+                return [{"Scenario": None, "Object": obj}]
 
-        for scenario in scenarios:
-            result_obj = self.get_value_from_scenario(obj, scenario)
-            if result_obj:
-                results.append({"Scenario": scenario, "Object": result_obj})
+            for scenario in scenarios:
+                result_obj = self.get_value_from_scenario(o, scenario)
+                if result_obj:
+                    results.append({"Scenario": scenario, "Object": result_obj})
 
         return results
 
