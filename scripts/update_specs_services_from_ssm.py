@@ -204,12 +204,12 @@ def add_spec_missing_services_patch(region, services):
                                 elif standard_spec_type == "ResourceTypes":
                                     print("patch for %s not found" % service)
 
-    if patches:
-        filename = (
-            "src/cfnlint/data/ExtendedSpecs/%s/07_ssm_service_addition.json" % region
-        )
-        with open(filename, "w+", encoding="utf-8") as f:
-            json.dump(patches, f, indent=1, sort_keys=True, separators=(",", ": "))
+    filename = (
+        "src/cfnlint/data/ExtendedSpecs/%s/07_ssm_service_addition.json" % region
+    )
+    with open(filename, "w+", encoding="utf-8") as f:
+        json.dump(patches, f, indent=1, sort_keys=True, separators=(",", ": "))
+            
 
 
 def main():
