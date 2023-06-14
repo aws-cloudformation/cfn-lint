@@ -36,18 +36,19 @@ class StringSize(CloudFormationLintRule):
         if isinstance(obj, dict):
             new_obj = {}
             if len(obj) == 1:
-                for k, v in obj.items():
-                    if k in FUNCTIONS:
-                        if k == "Fn::Sub":
-                            if isinstance(v, str):
-                                return self._fix_sub_string(v)
-                            if isinstance(v, list):
-                                return self._fix_sub_string(v[0])
-                        else:
-                            return ""
+                k = next(iter(obj))
+                v = obj[k]
+                if k in FUNCTIONS:
+                    if k == "Fn::Sub":
+                        if isinstance(v, str):
+                            return self._fix_sub_string(v)
+                        if isinstance(v, list):
+                            return self._fix_sub_string(v[0])
                     else:
-                        new_obj[k] = self._remove_functions(v)
-                        return new_obj
+                        return ""
+                else:
+                    new_obj[k] = self._remove_functions(v)
+                    return new_obj
             else:
                 for k, v in obj.items():
                     new_obj[k] = self._remove_functions(v)
@@ -72,6 +73,10 @@ class StringSize(CloudFormationLintRule):
 
     # pylint: disable=unused-argument, arguments-renamed
     def maxLength(self, validator, mL, instance, schema):
+        if validator.is_type(instance, "string"):
+            if len(instance) > mL:
+                yield ValidationError(f"{instance!r} is longer than {mL}")
+            return
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement
         if validator.is_type(instance, "object") and len(instance) == 1:
@@ -86,13 +91,17 @@ class StringSize(CloudFormationLintRule):
                     yield from self.maxLength(
                         validator, mL, self._fix_sub_string(value[0]), schema
                     )
-            elif validator.schema.get("type") == "object":
-                yield from self._non_string_max_length(instance, mL)
-        elif validator.is_type(instance, "string") and len(instance) > mL:
-            yield ValidationError(f"{instance!r} is longer than {mL}")
+                return
+        if schema.get("type") == "object":
+            yield from self._non_string_max_length(instance, mL)
 
     # pylint: disable=unused-argument, arguments-renamed
     def minLength(self, validator, mL, instance, schema):
+        if validator.is_type(instance, "string"):
+            if len(instance) < mL:
+                yield ValidationError(f"{instance!r} is shorter than {mL}")
+            return
+
         # there are scenarios where Fn::Sub may not predictable so use
         # best judgement
         if validator.is_type(instance, "object") and len(instance) == 1:
@@ -107,7 +116,6 @@ class StringSize(CloudFormationLintRule):
                     yield from self.minLength(
                         validator, mL, self._fix_sub_string(value[0]), schema
                     )
-            elif validator.schema.get("type") == "object":
-                yield from self._non_string_min_length(instance, mL)
-        elif validator.is_type(instance, "string") and len(instance) < mL:
-            yield ValidationError(f"{instance!r} is shorter than {mL}")
+                return
+        if schema.get("type") == "object":
+            yield from self._non_string_min_length(instance, mL)

@@ -32,7 +32,7 @@ class TestDirectives(BaseCliTestCase):
                         ],
                         "Start": {"ColumnNumber": 7, "LineNumber": 17},
                     },
-                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected)",
+                    "Message": "Additional properties are not allowed ('BucketName1' was unexpected. Did you mean 'BucketName'?)",
                     "Rule": {
                         "Description": (
                             "Making sure that resources properties are properly"
