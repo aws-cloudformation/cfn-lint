@@ -1,3 +1,7 @@
+### v0.77.9
+###### CloudFormation Specifications
+- Fix an issue with SSM patching (pull #[2765](https://github.com/aws-cloudformation/cfn-lint/pull/2765))
+
 ### v0.77.8
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `126.0.0` (pull #[2753](https://github.com/aws-cloudformation/cfn-lint/pull/2753))
