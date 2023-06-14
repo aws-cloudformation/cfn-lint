@@ -22,15 +22,6 @@ class StringSize(CloudFormationLintRule):
     source_url = "https://github.com/awslabs/cfn-python-lint/blob/main/docs/cfn-resource-specification.md#allowedpattern"
     tags = ["resources", "property", "string", "size"]
 
-    # pylint: disable=unused-argument
-    def validate_fn_sub(
-        self, validator, sS, instance, schema, fn
-    ):  # pylint: disable=arguments-renamed
-        if isinstance(instance, str):
-            yield from fn(validator, sS, self._fix_sub_string(instance), schema)
-        elif isinstance(instance, list) and len(instance) == 2:
-            yield from fn(validator, sS, self._fix_sub_string(instance[0]), schema)
-
     def _serialize_date(self, obj):
         if isinstance(obj, datetime.date):
             return obj.isoformat()
@@ -81,20 +72,42 @@ class StringSize(CloudFormationLintRule):
 
     # pylint: disable=unused-argument, arguments-renamed
     def maxLength(self, validator, mL, instance, schema):
-        if (
-            validator.is_type(instance, "object")
-            and validator.schema.get("type") == "object"
-        ):
-            yield from self._non_string_max_length(instance, mL)
+        # there are scenarios where Fn::Sub may not predictable so use
+        # best judgement
+        if validator.is_type(instance, "object") and len(instance) == 1:
+            key = list(instance.keys())[0]
+            if key == "Fn::Sub":
+                value = instance[key]
+                if isinstance(value, str):
+                    yield from self.maxLength(
+                        validator, mL, self._fix_sub_string(value), schema
+                    )
+                elif isinstance(value, list) and len(value) == 2:
+                    yield from self.maxLength(
+                        validator, mL, self._fix_sub_string(value[0]), schema
+                    )
+            elif validator.schema.get("type") == "object":
+                yield from self._non_string_max_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) > mL:
             yield ValidationError(f"{instance!r} is longer than {mL}")
 
     # pylint: disable=unused-argument, arguments-renamed
     def minLength(self, validator, mL, instance, schema):
-        if (
-            validator.is_type(instance, "object")
-            and validator.schema.get("type") == "object"
-        ):
-            yield from self._non_string_min_length(instance, mL)
+        # there are scenarios where Fn::Sub may not predictable so use
+        # best judgement
+        if validator.is_type(instance, "object") and len(instance) == 1:
+            key = list(instance.keys())[0]
+            if key == "Fn::Sub":
+                value = instance[key]
+                if isinstance(value, str):
+                    yield from self.minLength(
+                        validator, mL, self._fix_sub_string(value), schema
+                    )
+                elif isinstance(value, list) and len(value) == 2:
+                    yield from self.minLength(
+                        validator, mL, self._fix_sub_string(value[0]), schema
+                    )
+            elif validator.schema.get("type") == "object":
+                yield from self._non_string_min_length(instance, mL)
         elif validator.is_type(instance, "string") and len(instance) < mL:
             yield ValidationError(f"{instance!r} is shorter than {mL}")
