@@ -1,0 +1,170 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/CollaborationIdentifier"
+ ],
+ "definitions": {
+  "MembershipQueryLogStatus": {
+   "enum": [
+    "ENABLED",
+    "DISABLED"
+   ],
+   "type": "string"
+  },
+  "MembershipStatus": {
+   "enum": [
+    "ACTIVE",
+    "REMOVED",
+    "COLLABORATION_DELETED"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "properties": {
+    "Key": {
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Value",
+    "Key"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "Represents an AWS account that is a part of a collaboration",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "cleanrooms:CreateMembership",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:DescribeLogGroups",
+    "logs:DescribeResourcePolicies",
+    "logs:PutResourcePolicy",
+    "logs:CreateLogGroup",
+    "cleanrooms:GetMembership",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:ListMemberships"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "cleanrooms:DeleteMembership",
+    "cleanrooms:GetMembership",
+    "cleanrooms:ListMemberships",
+    "cleanrooms:ListTagsForResource",
+    "logs:ListLogDeliveries",
+    "logs:DescribeLogGroups",
+    "logs:DescribeResourcePolicies",
+    "logs:GetLogDelivery"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "cleanrooms:ListMemberships"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "cleanrooms:GetMembership",
+    "cleanrooms:ListTagsForResource",
+    "logs:ListLogDeliveries",
+    "logs:DescribeLogGroups",
+    "logs:DescribeResourcePolicies",
+    "logs:GetLogDelivery"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "cleanrooms:UpdateMembership",
+    "cleanrooms:GetMembership",
+    "logs:CreateLogDelivery",
+    "logs:GetLogDelivery",
+    "logs:UpdateLogDelivery",
+    "logs:DeleteLogDelivery",
+    "logs:ListLogDeliveries",
+    "logs:DescribeLogGroups",
+    "logs:DescribeResourcePolicies",
+    "logs:PutResourcePolicy",
+    "logs:CreateLogGroup",
+    "cleanrooms:ListTagsForResource",
+    "cleanrooms:TagResource",
+    "cleanrooms:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/MembershipIdentifier"
+ ],
+ "properties": {
+  "Arn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationArn": {
+   "maxLength": 100,
+   "type": "string"
+  },
+  "CollaborationCreatorAccountId": {
+   "maxLength": 12,
+   "minLength": 12,
+   "pattern": "^\\d+$",
+   "type": "string"
+  },
+  "CollaborationIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "MembershipIdentifier": {
+   "maxLength": 36,
+   "minLength": 36,
+   "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+   "type": "string"
+  },
+  "QueryLogStatus": {
+   "$ref": "#/definitions/MembershipQueryLogStatus"
+  },
+  "Tags": {
+   "description": "An arbitrary set of tags (key-value pairs) for this cleanrooms membership.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CollaborationArn",
+  "/properties/CollaborationCreatorAccountId",
+  "/properties/MembershipIdentifier"
+ ],
+ "required": [
+  "CollaborationIdentifier",
+  "QueryLogStatus"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CleanRooms::Membership"
+}

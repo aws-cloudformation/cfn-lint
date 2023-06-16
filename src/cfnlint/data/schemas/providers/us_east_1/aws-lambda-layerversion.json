@@ -13,12 +13,15 @@
    "additionalProperties": false,
    "properties": {
     "S3Bucket": {
+     "description": "The Amazon S3 bucket of the layer archive.",
      "type": "string"
     },
     "S3Key": {
+     "description": "The Amazon S3 key of the layer archive.",
      "type": "string"
     },
     "S3ObjectVersion": {
+     "description": "For versioned objects, the version of the layer archive object to use.",
      "type": "string"
     }
    },
@@ -30,11 +33,35 @@
   }
  },
  "description": "Resource Type definition for AWS::Lambda::LayerVersion",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "lambda:PublishLayerVersion"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "lambda:DeleteLayerVersion"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "lambda:ListLayerVersions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "lambda:GetLayerVersion"
+   ]
+  }
+ },
  "primaryIdentifier": [
-  "/properties/Id"
+  "/properties/LayerVersionArn"
  ],
  "properties": {
   "CompatibleArchitectures": {
+   "description": "A list of compatible instruction set architectures.",
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -42,6 +69,8 @@
    "uniqueItems": false
   },
   "CompatibleRuntimes": {
+   "description": "A list of compatible function runtimes. Used for filtering with ListLayers and ListLayerVersions.",
+   "insertionOrder": false,
    "items": {
     "type": "string"
    },
@@ -49,28 +78,42 @@
    "uniqueItems": false
   },
   "Content": {
-   "$ref": "#/definitions/Content"
+   "$ref": "#/definitions/Content",
+   "description": "The function layer archive."
   },
   "Description": {
-   "type": "string"
-  },
-  "Id": {
+   "description": "The description of the version.",
    "type": "string"
   },
   "LayerName": {
+   "description": "The name or Amazon Resource Name (ARN) of the layer.",
    "maxLength": 140,
    "minLength": 1,
    "type": "string"
   },
+  "LayerVersionArn": {
+   "type": "string"
+  },
   "LicenseInfo": {
+   "description": "The layer's software license.",
    "type": "string"
   }
  },
  "readOnlyProperties": [
-  "/properties/Id"
+  "/properties/LayerVersionArn"
  ],
  "required": [
   "Content"
  ],
- "typeName": "AWS::Lambda::LayerVersion"
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lambda.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::Lambda::LayerVersion",
+ "writeOnlyProperties": [
+  "/properties/Content"
+ ]
 }
