@@ -4,6 +4,18 @@
     "title": "CloudFormation Provider Base Definition MetaSchema",
     "description": "All the basic building blocks for the provider definition schemas are in this schema to maintain consistency among different provider definition schemas. Provider definition schemas could refer to this schema for using basic things like properties, definitions etc.",
     "definitions": {
+        "message": {
+            "type": "object",
+            "additionalItems": false,
+            "propertyNames": {
+                "enum": ["anyOf", "oneOf"]
+            },
+            "patternProperties": {
+                "": {
+                    "type": "string"
+                }
+            }
+        },
         "httpsUrl": {
             "type": "string",
             "pattern": "^https://[0-9a-zA-Z]([-.\\w]*[0-9a-zA-Z])(:[0-9]*)*([?/#].*)?$",
@@ -113,6 +125,9 @@
                         },
                         "exclusiveMinimum": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/exclusiveMinimum"
+                        },
+                        "message": {
+                            "$ref": "#/definitions/message"
                         },
                         "maxLength": {
                             "$ref": "http://json-schema.org/draft-07/schema#/properties/maxLength"
