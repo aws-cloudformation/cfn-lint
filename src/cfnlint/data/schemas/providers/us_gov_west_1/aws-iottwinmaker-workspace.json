@@ -1,0 +1,125 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/WorkspaceId"
+ ],
+ "definitions": {
+  "DateTimeFormat": {
+   "format": "date-time",
+   "type": "string"
+  }
+ },
+ "description": "Resource schema for AWS::IoTTwinMaker::Workspace",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "iam:PassRole",
+    "iottwinmaker:CreateWorkspace",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "iottwinmaker:DeleteWorkspace",
+    "iottwinmaker:GetWorkspace"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:ListWorkspaces"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "iottwinmaker:GetWorkspace",
+    "iottwinmaker:ListTagsForResource",
+    "iottwinmaker:TagResource",
+    "iottwinmaker:UntagResource",
+    "iottwinmaker:UpdateWorkspace"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/WorkspaceId"
+ ],
+ "properties": {
+  "Arn": {
+   "description": "The ARN of the workspace.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
+   "type": "string"
+  },
+  "CreationDateTime": {
+   "$ref": "#/definitions/DateTimeFormat",
+   "description": "The date and time when the workspace was created."
+  },
+  "Description": {
+   "description": "The description of the workspace.",
+   "maxLength": 512,
+   "minLength": 0,
+   "type": "string"
+  },
+  "Role": {
+   "description": "The ARN of the execution role associated with the workspace.",
+   "maxLength": 2048,
+   "minLength": 20,
+   "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iam::[0-9]{12}:role/.*",
+   "type": "string"
+  },
+  "S3Location": {
+   "description": "The ARN of the S3 bucket where resources associated with the workspace are stored.",
+   "type": "string"
+  },
+  "Tags": {
+   "additionalProperties": false,
+   "description": "A map of key-value pairs to associate with a resource.",
+   "maxProperties": 50,
+   "patternProperties": {
+    "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
+     "maxLength": 256,
+     "minLength": 1,
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "UpdateDateTime": {
+   "$ref": "#/definitions/DateTimeFormat",
+   "description": "The date and time of the current update."
+  },
+  "WorkspaceId": {
+   "description": "The ID of the workspace.",
+   "maxLength": 128,
+   "minLength": 1,
+   "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/Arn",
+  "/properties/CreationDateTime",
+  "/properties/UpdateDateTime"
+ ],
+ "required": [
+  "WorkspaceId",
+  "Role",
+  "S3Location"
+ ],
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::IoTTwinMaker::Workspace"
+}

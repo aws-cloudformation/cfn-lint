@@ -5,8 +5,8 @@ SPDX-License-Identifier: MIT-0
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema/blob/main/jsonschema/_validators.py
 
-
 from copy import deepcopy
+from difflib import SequenceMatcher
 
 import regex as re
 
@@ -41,10 +41,24 @@ def additionalProperties(validator, aP, instance, schema):
             yield ValidationError(error)
         else:
             for extra in extras:
-                yield ValidationError(
-                    f"Additional properties are not allowed ({extra!r} was unexpected)",
-                    path=[extra],
-                )
+                for key in schema.get("properties", {}).keys():
+                    if SequenceMatcher(a=extra, b=key).ratio() > 0.8:
+                        yield ValidationError(
+                            (
+                                f"Additional properties are not allowed ({extra!r} "
+                                f"was unexpected. Did you mean {key!r}?)"
+                            ),
+                            path=[extra],
+                        )
+                        break
+                else:
+                    yield ValidationError(
+                        (
+                            f"Additional properties are not allowed ({extra!r} "
+                            "was unexpected)"
+                        ),
+                        path=[extra],
+                    )
 
 
 def allOf(validator, allOf, instance, schema):
