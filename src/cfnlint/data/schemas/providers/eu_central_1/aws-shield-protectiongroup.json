@@ -1,0 +1,147 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ProtectionGroupId"
+ ],
+ "definitions": {
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A tag associated with an AWS resource. Tags are key:value pairs that you can use to categorize and manage your resources, for purposes like billing or other management. Typically, the tag key represents a category, such as \"environment\", and the tag value represents a specific value within that category, such as \"test,\" \"development,\" or \"production\". Or you might set the tag key to \"customer\" and the value to the customer name or ID. You can specify one or more tags to add to each AWS resource, up to 50 tags for a resource.",
+   "properties": {
+    "Key": {
+     "description": "Part of the key:value pair that defines a tag. You can use a tag key to describe a category of information, such as \"customer.\" Tag keys are case-sensitive.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "Part of the key:value pair that defines a tag. You can use a tag value to describe a specific value within a category, such as \"companyA\" or \"companyB.\" Tag values are case-sensitive.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "A grouping of protected resources so they can be handled as a collective. This resource grouping improves the accuracy of detection and reduces false positives.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "shield:CreateProtectionGroup",
+    "shield:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "shield:DeleteProtectionGroup",
+    "shield:UntagResource"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "shield:ListProtectionGroups"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "shield:DescribeProtectionGroup",
+    "shield:ListTagsForResource"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "shield:UpdateProtectionGroup",
+    "shield:ListTagsForResource",
+    "shield:TagResource",
+    "shield:UntagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/ProtectionGroupArn"
+ ],
+ "properties": {
+  "Aggregation": {
+   "description": "Defines how AWS Shield combines resource data for the group in order to detect, mitigate, and report events.\n* Sum - Use the total traffic across the group. This is a good choice for most cases. Examples include Elastic IP addresses for EC2 instances that scale manually or automatically.\n* Mean - Use the average of the traffic across the group. This is a good choice for resources that share traffic uniformly. Examples include accelerators and load balancers.\n* Max - Use the highest traffic from each resource. This is useful for resources that don't share traffic and for resources that share that traffic in a non-uniform way. Examples include Amazon CloudFront and origin resources for CloudFront distributions.",
+   "enum": [
+    "SUM",
+    "MEAN",
+    "MAX"
+   ],
+   "type": "string"
+  },
+  "Members": {
+   "description": "The Amazon Resource Names (ARNs) of the resources to include in the protection group. You must set this when you set `Pattern` to `ARBITRARY` and you must not set it for any other `Pattern` setting.",
+   "insertionOrder": false,
+   "items": {
+    "maxLength": 2048,
+    "minLength": 1,
+    "type": "string"
+   },
+   "maxItems": 10000,
+   "type": "array"
+  },
+  "Pattern": {
+   "description": "The criteria to use to choose the protected resources for inclusion in the group. You can include all resources that have protections, provide a list of resource Amazon Resource Names (ARNs), or include all resources of a specified resource type.",
+   "enum": [
+    "ALL",
+    "ARBITRARY",
+    "BY_RESOURCE_TYPE"
+   ],
+   "type": "string"
+  },
+  "ProtectionGroupArn": {
+   "description": "The ARN (Amazon Resource Name) of the protection group.",
+   "type": "string"
+  },
+  "ProtectionGroupId": {
+   "description": "The name of the protection group. You use this to identify the protection group in lists and to manage the protection group, for example to update, delete, or describe it.",
+   "maxLength": 36,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9\\-]*",
+   "type": "string"
+  },
+  "ResourceType": {
+   "description": "The resource type to include in the protection group. All protected resources of this type are included in the protection group. Newly protected resources of this type are automatically added to the group. You must set this when you set `Pattern` to `BY_RESOURCE_TYPE` and you must not set it for any other `Pattern` setting.",
+   "enum": [
+    "CLOUDFRONT_DISTRIBUTION",
+    "ROUTE_53_HOSTED_ZONE",
+    "ELASTIC_IP_ALLOCATION",
+    "CLASSIC_LOAD_BALANCER",
+    "APPLICATION_LOAD_BALANCER",
+    "GLOBAL_ACCELERATOR"
+   ],
+   "type": "string"
+  },
+  "Tags": {
+   "description": "One or more tag key-value pairs for the Protection object.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 200,
+   "type": "array"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/ProtectionGroupArn"
+ ],
+ "replacementStrategy": "delete_then_create",
+ "required": [
+  "Aggregation",
+  "Pattern",
+  "ProtectionGroupId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-shield.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagProperty": "/properties/Tags",
+  "taggable": true
+ },
+ "typeName": "AWS::Shield::ProtectionGroup"
+}
