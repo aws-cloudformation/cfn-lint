@@ -49,6 +49,19 @@ def find_additional_properties(instance, schema):
             yield property
 
 
+def custom_msg(validator, schema):
+    """
+    Create an error message for custom validation.
+    """
+    if not isinstance(schema, dict):
+        return None
+    messages = schema.get("message")
+    if isinstance(messages, dict):
+        return messages.get(validator)
+
+    return None
+
+
 def extras_msg(extras):
     """
     Create an error message for extra items or properties.

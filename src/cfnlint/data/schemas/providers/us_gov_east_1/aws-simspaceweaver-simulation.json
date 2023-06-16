@@ -1,0 +1,133 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/Name",
+  "/properties/RoleArn",
+  "/properties/SchemaS3Location",
+  "/properties/SnapshotS3Location",
+  "/properties/MaximumDuration"
+ ],
+ "definitions": {
+  "S3Location": {
+   "additionalProperties": false,
+   "properties": {
+    "BucketName": {
+     "description": "The Schema S3 bucket name.",
+     "maxLength": 63,
+     "minLength": 3,
+     "pattern": "[a-zA-Z0-9_\\-]{3,63}$",
+     "type": "string"
+    },
+    "ObjectKey": {
+     "description": "This is the schema S3 object key, which includes the full path of \"folders\" from the bucket root to the schema.",
+     "maxLength": 255,
+     "minLength": 3,
+     "type": "string"
+    }
+   },
+   "required": [
+    "BucketName",
+    "ObjectKey"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::SimSpaceWeaver::Simulation resource creates an AWS Simulation.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "simspaceweaver:StartSimulation",
+    "simspaceweaver:DescribeSimulation",
+    "iam:GetRole",
+    "iam:PassRole"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "simspaceweaver:StopSimulation",
+    "simspaceweaver:DeleteSimulation",
+    "simspaceweaver:DescribeSimulation"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "simspaceweaver:ListSimulations"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "simspaceweaver:DescribeSimulation"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "simspaceweaver:StartSimulation",
+    "simspaceweaver:StopSimulation",
+    "simspaceweaver:DeleteSimulation",
+    "simspaceweaver:DescribeSimulation"
+   ]
+  }
+ },
+ "oneOf": [
+  {
+   "required": [
+    "SchemaS3Location"
+   ]
+  },
+  {
+   "required": [
+    "SnapshotS3Location"
+   ]
+  }
+ ],
+ "primaryIdentifier": [
+  "/properties/Name"
+ ],
+ "properties": {
+  "DescribePayload": {
+   "description": "Json object with all simulation details",
+   "type": "string"
+  },
+  "MaximumDuration": {
+   "description": "The maximum running time of the simulation.",
+   "maxLength": 6,
+   "minLength": 2,
+   "type": "string"
+  },
+  "Name": {
+   "description": "The name of the simulation.",
+   "maxLength": 2048,
+   "minLength": 1,
+   "pattern": "[a-zA-Z0-9_\\-]{1,2048}$",
+   "type": "string"
+  },
+  "RoleArn": {
+   "description": "Role ARN.",
+   "type": "string"
+  },
+  "SchemaS3Location": {
+   "$ref": "#/definitions/S3Location"
+  },
+  "SnapshotS3Location": {
+   "$ref": "#/definitions/S3Location"
+  }
+ },
+ "propertyTransform": {
+  "properties/MaximumDuration": "$uppercase(MaximumDuration)"
+ },
+ "readOnlyProperties": [
+  "/properties/DescribePayload"
+ ],
+ "required": [
+  "Name",
+  "RoleArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
+ "typeName": "AWS::SimSpaceWeaver::Simulation"
+}
