@@ -2,11 +2,12 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+from collections import deque
 from test.unit.rules import BaseRuleTestCase
 
-from cfnlint.rules.parameters.AllowedPattern import (  # pylint: disable=E0401
-    AllowedPattern,
-)
+from cfnlint.context import Context, Value, ValueType
+from cfnlint.jsonschema import CfnTemplateValidator
+from cfnlint.rules.parameters.AllowedPattern import AllowedPattern
 from cfnlint.template.template import Template
 
 
@@ -46,17 +47,25 @@ class TestAllowedPattern(BaseRuleTestCase):
         self.rule.initialize(cfn)
 
     def test_validate(self):
-        self.assertEqual(len(list(self.rule.validate("1", "^[A-Z]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("1", "^[1-9]$"))), 1)
-        self.assertEqual(len(list(self.rule.validate("2", "^[1-9]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("2", "^[A-Z]$"))), 1)
-        # allowed values
-        self.assertEqual(len(list(self.rule.validate("3", "^[A-Z]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("3", "^[1-9]$"))), 2)
-        self.assertEqual(len(list(self.rule.validate("4", "^[1-9]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("4", "^[A-Z]$"))), 2)
+        validator = CfnTemplateValidator(
+            schema={"type": "string"},
+            context=Context(
+                "us-east-1",
+                {},
+                deque(["Parameters", "MyParameter", "Default"]),
+                Value(
+                    "1",
+                    ValueType.STANDARD,
+                    deque(["Parameters", "MyParameter", "Default"]),
+                ),
+            ),
+        )
 
-        # bad structure on parameter
-        self.assertEqual(len(list(self.rule.validate("5", "^[A-Z]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("6", "^[A-Z]$"))), 0)
-        self.assertEqual(len(list(self.rule.validate("7", "^[A-Z]$"))), 0)
+        errs = list(self.rule.pattern(validator, "^[A-Z]$", "1", {}))
+        self.assertEqual(len(errs), 1)
+        for err in errs:
+            self.assertEqual(err.message, "'1' does not match '^[A-Z]$'")
+            self.assertEqual(err.rule, self.rule)
+            self.assertEqual(
+                err.path_override, deque(["Parameters", "MyParameter", "Default"])
+            )
