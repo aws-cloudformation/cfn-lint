@@ -461,11 +461,6 @@ def create_rules(
         ):
             continue
         method_resolution = inspect.getmro(clazz)
-        if method_resolution[1].__name__ == "CfnSchema":
-            clz = method_resolution[1]
-            print(clz.__name__, clz.__name__ == name)
-            print(clz.__name__, clz.__module__ in ("cfnlint", "cfnlint.rules"))
-            print(clz.__module__)
         if [
             clz
             for clz in method_resolution[1:]

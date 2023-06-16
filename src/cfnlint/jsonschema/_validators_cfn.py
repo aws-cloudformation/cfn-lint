@@ -60,8 +60,14 @@ def _fn(
     except Unpredictable:
         evolved = validator.evolve(
             function_filter=validator.function_filter.evolve(functions=[]),
+            schema=schema,
+            context=validator.context.evolve(
+                path=deque([fn]),
+            ),
         )
-        yield from evolved.descend(instance, schema)
+        for err in evolved.iter_errors(instance=instance):
+            err.path.extendleft(list(instance.keys()))
+            yield err
 
 
 # pylint: disable=unused-argument
