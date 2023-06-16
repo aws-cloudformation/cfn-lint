@@ -418,6 +418,7 @@ class TestValidatorCfnConditions(unittest.TestCase):
             schema_patches=jsonpatch.JsonPatch(
                 [
                     {"op": "add", "path": "/properties/Name/pattern", "value": "^bar$"},
+                    {"op": "add", "path": "/properties/Name/enum", "value": ["bar"]},
                 ]
             ),
             expected_errs=[
@@ -428,10 +429,22 @@ class TestValidatorCfnConditions(unittest.TestCase):
                     validator_value="^bar$",
                 ),
                 ValidationError(
+                    message="{'Ref': 'Name'} is not one of ['bar']",
+                    path=deque(["Name", "Ref"]),
+                    validator="enum",
+                    validator_value=["bar"],
+                ),
+                ValidationError(
                     message="{'Ref': 'Name'} does not match '^bar$'",
                     path=deque(["Name", "Ref"]),
                     validator="pattern",
                     validator_value="^bar$",
+                ),
+                ValidationError(
+                    message="{'Ref': 'Name'} is not one of ['bar']",
+                    path=deque(["Name", "Ref"]),
+                    validator="enum",
+                    validator_value=["bar"],
                 ),
             ],
         )
