@@ -22,7 +22,7 @@ from cfnlint.jsonschema._format import FormatChecker, cfn_format_checker
 from cfnlint.jsonschema._resolver import RefResolver
 from cfnlint.jsonschema._types import TypeChecker, cfn_type_checker
 from cfnlint.jsonschema._typing import V
-from cfnlint.jsonschema._utils import id_of
+from cfnlint.jsonschema._utils import custom_msg, id_of
 from cfnlint.jsonschema.exceptions import (
     UndefinedTypeCheck,
     UnknownType,
@@ -166,6 +166,9 @@ def create(
 
                         errors = validator(self, v, _instance, _schema) or ()
                         for error in errors:
+                            msg = custom_msg(k, _schema) or error.message
+                            if msg is not None:
+                                error.message = msg
                             # set details if not already set by the called fn
                             error._set(
                                 validator=k,
