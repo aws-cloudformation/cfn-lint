@@ -20,15 +20,11 @@ class AllowedValue(CloudFormationLintRule):
     }
 
     def enum(self, validator, enums, instance, schema):
+        if len(validator.context.path) > 0:
+            if validator.context.path[-1] == "Ref":
+                if self.child_rules.get("W2030"):
+                    yield from self.child_rules["W2030"].enum(
+                        validator, enums, instance, schema
+                    )
+                return
         yield from enum(validator, enums, instance, schema)
-
-    # pylint: disable=unused-argument
-    def validate_ref(
-        self,
-        validator,
-        enums,
-        instance,
-        schema,
-    ):  # pylint: disable=arguments-renamed
-        if self.child_rules.get("W2030"):
-            yield from self.child_rules["W2030"].validate(instance, enums)

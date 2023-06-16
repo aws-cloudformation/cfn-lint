@@ -44,17 +44,13 @@ class AllowedPattern(CloudFormationLintRule):
 
     # pylint: disable=unused-argument, arguments-renamed
     def pattern(self, validator, patrn, instance, schema):
+        if len(validator.context.path) > 0:
+            if validator.context.path[-1] == "Ref":
+                if self.child_rules.get("W2031"):
+                    yield from self.child_rules["W2031"].pattern(
+                        validator, patrn, instance, schema
+                    )
+                return
         for err in pattern(validator, patrn, instance, schema):
             if not self._is_exception(instance):
                 yield err
-
-    # pylint: disable=unused-argument
-    def validate_ref(
-        self,
-        validator,
-        patrn,
-        instance,
-        schema,
-    ):  # pylint: disable=arguments-renamed
-        if self.child_rules.get("W2031"):
-            yield from self.child_rules["W2031"].validate(instance, patrn)
