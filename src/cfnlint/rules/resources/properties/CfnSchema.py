@@ -23,7 +23,7 @@ class CfnSchema(BaseJsonSchema):
         rules = load_plugins(
             str(root_dir),
             "BaseCfnSchema",
-            "cfnlint.rules.resources",
+            "cfnlint.rules.resources.properties.CfnSchema",
         )
         for rule in rules:
             self.child_rules[rule.id] = rule
