@@ -75,4 +75,10 @@ class SchemaPointer:
                     return resolve_pointer(self.obj, f"{obj.get('$ref')}/{part}")
                 except KeyError as ke:
                     raise ke
+            if obj.get("items", {}).get("$ref"):
+                ref = obj.get("items", {}).get("$ref")
+                try:
+                    return resolve_pointer(self.obj, f"{ref}/{part}")
+                except KeyError as ke:
+                    raise ke
             raise e

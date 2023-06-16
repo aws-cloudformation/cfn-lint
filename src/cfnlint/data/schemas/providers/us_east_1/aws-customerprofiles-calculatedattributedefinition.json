@@ -1,0 +1,322 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/DomainName",
+  "/properties/CalculatedAttributeName"
+ ],
+ "definitions": {
+  "AttributeDetails": {
+   "additionalProperties": false,
+   "description": "Mathematical expression and a list of attribute items specified in that expression.",
+   "properties": {
+    "Attributes": {
+     "$ref": "#/definitions/AttributeList"
+    },
+    "Expression": {
+     "$ref": "#/definitions/Expression"
+    }
+   },
+   "required": [
+    "Attributes",
+    "Expression"
+   ],
+   "type": "object"
+  },
+  "AttributeItem": {
+   "additionalProperties": false,
+   "description": "The details of a single attribute item specified in the mathematical expression.",
+   "properties": {
+    "Name": {
+     "$ref": "#/definitions/AttributeName"
+    }
+   },
+   "required": [
+    "Name"
+   ],
+   "type": "object"
+  },
+  "AttributeList": {
+   "description": "A list of attribute items specified in the mathematical expression.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/AttributeItem"
+   },
+   "maxItems": 2,
+   "minItems": 1,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "AttributeName": {
+   "description": "The name of an attribute defined in a profile object type.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_.-]+$",
+   "type": "string"
+  },
+  "CalculatedAttributeName": {
+   "description": "The unique name of the calculated attribute.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+   "type": "string"
+  },
+  "Conditions": {
+   "additionalProperties": false,
+   "description": "The conditions including range, object count, and threshold for the calculated attribute.",
+   "properties": {
+    "ObjectCount": {
+     "$ref": "#/definitions/ObjectCount"
+    },
+    "Range": {
+     "$ref": "#/definitions/Range"
+    },
+    "Threshold": {
+     "$ref": "#/definitions/Threshold"
+    }
+   },
+   "type": "object"
+  },
+  "Description": {
+   "description": "The description of the calculated attribute.",
+   "maxLength": 1000,
+   "minLength": 1,
+   "type": "string"
+  },
+  "DisplayName": {
+   "description": "The display name of the calculated attribute.",
+   "maxLength": 255,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z_][a-zA-Z_0-9-\\s]*$",
+   "type": "string"
+  },
+  "DomainName": {
+   "description": "The unique name of the domain.",
+   "maxLength": 64,
+   "minLength": 1,
+   "pattern": "^[a-zA-Z0-9_-]+$",
+   "type": "string"
+  },
+  "Expression": {
+   "description": "Mathematical expression that is performed on attribute items provided in the attribute list. Each element in the expression should follow the structure of \"{ObjectTypeName.AttributeName}\".",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  },
+  "ObjectCount": {
+   "description": "The number of profile objects used for the calculated attribute.",
+   "maximum": 100,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Range": {
+   "additionalProperties": false,
+   "description": "The relative time period over which data is included in the aggregation.",
+   "properties": {
+    "Unit": {
+     "$ref": "#/definitions/RangeUnit"
+    },
+    "Value": {
+     "$ref": "#/definitions/RangeValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Unit"
+   ],
+   "type": "object"
+  },
+  "RangeUnit": {
+   "description": "The unit of time.",
+   "enum": [
+    "DAYS"
+   ],
+   "type": "string"
+  },
+  "RangeValue": {
+   "description": "The amount of time of the specified unit.",
+   "maximum": 366,
+   "minimum": 1,
+   "type": "integer"
+  },
+  "Statistic": {
+   "description": "The aggregation operation to perform for the calculated attribute.",
+   "enum": [
+    "FIRST_OCCURRENCE",
+    "LAST_OCCURRENCE",
+    "COUNT",
+    "SUM",
+    "MINIMUM",
+    "MAXIMUM",
+    "AVERAGE",
+    "MAX_OCCURRENCE"
+   ],
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "maxItems": 50,
+   "minItems": 0,
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Threshold": {
+   "additionalProperties": false,
+   "description": "The threshold for the calculated attribute.",
+   "properties": {
+    "Operator": {
+     "$ref": "#/definitions/ThresholdOperator"
+    },
+    "Value": {
+     "$ref": "#/definitions/ThresholdValue"
+    }
+   },
+   "required": [
+    "Value",
+    "Operator"
+   ],
+   "type": "object"
+  },
+  "ThresholdOperator": {
+   "description": "The operator of the threshold.",
+   "enum": [
+    "EQUAL_TO",
+    "GREATER_THAN",
+    "LESS_THAN",
+    "NOT_EQUAL_TO"
+   ],
+   "type": "string"
+  },
+  "ThresholdValue": {
+   "description": "The value of the threshold.",
+   "maxLength": 255,
+   "minLength": 1,
+   "type": "string"
+  }
+ },
+ "description": "A calculated attribute definition for Customer Profiles",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "profile:CreateCalculatedAttributeDefinition",
+    "profile:TagResource"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "profile:DeleteCalculatedAttributeDefinition"
+   ]
+  },
+  "list": {
+   "handlerSchema": {
+    "properties": {
+     "DomainName": {
+      "$ref": "resource-schema.json#/properties/DomainName"
+     }
+    },
+    "required": [
+     "DomainName"
+    ]
+   },
+   "permissions": [
+    "profile:ListCalculatedAttributeDefinitions"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "profile:GetCalculatedAttributeDefinition"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "profile:GetCalculatedAttributeDefinition",
+    "profile:UpdateCalculatedAttributeDefinition",
+    "profile:UntagResource",
+    "profile:TagResource"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/DomainName",
+  "/properties/CalculatedAttributeName"
+ ],
+ "properties": {
+  "AttributeDetails": {
+   "$ref": "#/definitions/AttributeDetails"
+  },
+  "CalculatedAttributeName": {
+   "$ref": "#/definitions/CalculatedAttributeName"
+  },
+  "Conditions": {
+   "$ref": "#/definitions/Conditions"
+  },
+  "CreatedAt": {
+   "description": "The timestamp of when the calculated attribute definition was created.",
+   "type": "string"
+  },
+  "Description": {
+   "$ref": "#/definitions/Description"
+  },
+  "DisplayName": {
+   "$ref": "#/definitions/DisplayName"
+  },
+  "DomainName": {
+   "$ref": "#/definitions/DomainName"
+  },
+  "LastUpdatedAt": {
+   "description": "The timestamp of when the calculated attribute definition was most recently edited.",
+   "type": "string"
+  },
+  "Statistic": {
+   "$ref": "#/definitions/Statistic"
+  },
+  "Tags": {
+   "$ref": "#/definitions/Tags"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CreatedAt",
+  "/properties/LastUpdatedAt"
+ ],
+ "required": [
+  "DomainName",
+  "CalculatedAttributeName",
+  "AttributeDetails",
+  "Statistic"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+ "tagging": {
+  "cloudFormationSystemTags": true,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::CustomerProfiles::CalculatedAttributeDefinition"
+}
