@@ -1027,6 +1027,14 @@ patches.extend(
                 ),
                 Patch(
                     values={
+                        "message": {
+                            "anyOf": "At least one of ['Users', 'Groups', and 'Roles'] is a required property."
+                        }
+                    },
+                    path="/",
+                ),
+                Patch(
+                    values={
                         "maxLength": 128,
                         "minLength": 1,
                         "pattern": "^[a-zA-Z0-9+=,.@\\-_]+$",
