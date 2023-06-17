@@ -1,3 +1,12 @@
+### v1.1.0a1
+###### Fixes
+- Internalize json schema work and customize for CloudFormation purposes (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
+- Fix an issue where disabled rules will result in an error (pull #[2739](https://github.com/aws-cloudformation/cfn-lint/issues/2739))
+- Fix an issue where GetAtts of arrays are dropped (pull #[2740](https://github.com/aws-cloudformation/cfn-lint/issues/2740))
+- Switch to pyproject.toml and pre-commit for lint (pull #[2749](https://github.com/aws-cloudformation/cfn-lint/issues/2749))
+- Move `cfnSchema` into patching as needed (pull #[2752](https://github.com/aws-cloudformation/cfn-lint/issues/2752))
+- Rework how we handle CloudFormation functions (pull #[2760](https://github.com/aws-cloudformation/cfn-lint/issues/2760))
+
 ### v1.0.0.rc2
 ###### Fixes
 - Rewrite JSON schema validators to better handle CloudFormation functions (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
