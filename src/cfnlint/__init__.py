@@ -7,7 +7,7 @@ import logging
 import cfnlint.conditions
 import cfnlint.helpers
 from cfnlint.decode.exceptions import TemplateAttributeError
-from cfnlint.decode.node import dict_node
+from cfnlint.decode.node import dict_node, list_node
 from cfnlint.decorators.refactored import refactored
 from cfnlint.graph import Graph
 from cfnlint.helpers import PSEUDOPARAMS
