@@ -5,31 +5,74 @@
   "/properties/InstanceId",
   "/properties/VolumeId"
  ],
- "description": "Resource Type definition for AWS::EC2::VolumeAttachment",
- "primaryIdentifier": [
-  "/properties/Id"
- ],
- "properties": {
+ "definitions": {
   "Device": {
+   "description": "The device name",
    "type": "string"
   },
   "Id": {
+   "description": "",
    "type": "string"
   },
   "InstanceId": {
+   "description": "The ID of the instance to which the volume attaches",
    "type": "string"
   },
   "VolumeId": {
+   "description": "The ID of the Amazon EBS volume",
    "type": "string"
   }
  },
- "readOnlyProperties": [
-  "/properties/Id"
+ "description": "Resource Type definition for AWS::EC2::VolumeAttachment",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:AttachVolume",
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DetachVolume",
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVolumes"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VolumeId",
+  "/properties/InstanceId"
  ],
+ "properties": {
+  "Device": {
+   "$ref": "#/definitions/Device"
+  },
+  "InstanceId": {
+   "$ref": "#/definitions/InstanceId"
+  },
+  "VolumeId": {
+   "$ref": "#/definitions/VolumeId"
+  }
+ },
  "required": [
   "VolumeId",
-  "InstanceId",
-  "Device"
+  "InstanceId"
  ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": false,
+  "tagUpdatable": false,
+  "taggable": false
+ },
  "typeName": "AWS::EC2::VolumeAttachment"
 }
