@@ -1,3 +1,9 @@
+### v1.1.0a2
+###### CloudFormation Specifications
+- Update CloudFormation schemas from 2023/06/21 (pull #[2774](https://github.com/aws-cloudformation/cfn-lint/pull/2774))
+###### Fixes
+- Move required field for lambda eventsource mappings (pull #[2775](https://github.com/aws-cloudformation/cfn-lint/pull/2775))
+
 ### v1.1.0a1
 ###### Fixes
 - Internalize json schema work and customize for CloudFormation purposes (pull #[2730](https://github.com/aws-cloudformation/cfn-lint/issues/2730))
