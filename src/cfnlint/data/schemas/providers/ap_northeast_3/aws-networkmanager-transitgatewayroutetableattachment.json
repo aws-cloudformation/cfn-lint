@@ -1,0 +1,192 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/PeeringId",
+  "/properties/TransitGatewayRouteTableArn"
+ ],
+ "definitions": {
+  "ProposedSegmentChange": {
+   "additionalProperties": false,
+   "description": "The attachment to move from one segment to another.",
+   "properties": {
+    "AttachmentPolicyRuleNumber": {
+     "description": "The rule number in the policy document that applies to this change.",
+     "type": "integer"
+    },
+    "SegmentName": {
+     "description": "The name of the segment to change.",
+     "type": "string"
+    },
+    "Tags": {
+     "description": "The key-value tags that changed for the segment.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/Tag"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "insertionOrder": false,
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::NetworkManager::TransitGatewayRouteTableAttachment Resource Type definition.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateTransitGatewayRouteTableAttachment",
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:TagResource",
+    "iam:CreateServiceLinkedRole",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:DeleteAttachment",
+    "ec2:DescribeRegions"
+   ]
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListAttachments"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:GetTransitGatewayRouteTableAttachment",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ]
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/AttachmentId"
+ ],
+ "properties": {
+  "AttachmentId": {
+   "description": "The ID of the attachment.",
+   "type": "string"
+  },
+  "AttachmentPolicyRuleNumber": {
+   "description": "The policy rule number associated with the attachment.",
+   "type": "integer"
+  },
+  "AttachmentType": {
+   "description": "The type of attachment.",
+   "type": "string"
+  },
+  "CoreNetworkArn": {
+   "description": "The ARN of a core network for the VPC attachment.",
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "description": "The ID of a core network where you're creating a site-to-site VPN attachment.",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "Creation time of the attachment.",
+   "type": "string"
+  },
+  "EdgeLocation": {
+   "description": "The Region where the edge is located.",
+   "type": "string"
+  },
+  "OwnerAccountId": {
+   "description": "Owner account of the attachment.",
+   "type": "string"
+  },
+  "PeeringId": {
+   "description": "The Id of peering between transit gateway and core network.",
+   "type": "string"
+  },
+  "ProposedSegmentChange": {
+   "$ref": "#/definitions/ProposedSegmentChange",
+   "description": "The attachment to move from one segment to another."
+  },
+  "ResourceArn": {
+   "description": "The ARN of the Resource.",
+   "type": "string"
+  },
+  "SegmentName": {
+   "description": "The name of the segment that attachment is in.",
+   "type": "string"
+  },
+  "State": {
+   "description": "The state of the attachment.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "TransitGatewayRouteTableArn": {
+   "description": "The Arn of transit gateway route table.",
+   "type": "string"
+  },
+  "UpdatedAt": {
+   "description": "Last update time of the attachment.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/CoreNetworkArn",
+  "/properties/CoreNetworkId",
+  "/properties/CreatedAt",
+  "/properties/UpdatedAt",
+  "/properties/AttachmentType",
+  "/properties/State",
+  "/properties/ResourceArn",
+  "/properties/AttachmentId",
+  "/properties/OwnerAccountId",
+  "/properties/EdgeLocation",
+  "/properties/AttachmentPolicyRuleNumber",
+  "/properties/SegmentName"
+ ],
+ "required": [
+  "PeeringId",
+  "TransitGatewayRouteTableArn"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-transitgatewayroutetableattachment",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::TransitGatewayRouteTableAttachment"
+}

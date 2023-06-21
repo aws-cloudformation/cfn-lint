@@ -384,7 +384,7 @@ patches.extend(
                 Patch(
                     source=["codedeploy", "2014-10-06"],
                     shape="TriggerEventType",
-                    path="/definitions/TriggerConfig/properties/TriggerEvents",
+                    path="/definitions/TriggerConfig/properties/TriggerEvents/items",
                 ),
             ],
         ),

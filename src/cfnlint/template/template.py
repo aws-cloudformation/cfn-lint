@@ -2097,7 +2097,17 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         if not isinstance(obj, (dict, list)):
             return [{"Scenario": None, "Object": obj}]
         property_names = [] if property_names is None else property_names
-        o = cfnlint.dict_node({}, obj.start_mark, obj.end_mark)
+        if getattr(obj, "start_mark", None):
+            start_mark = obj.start_mark
+            end_mark = obj.end_mark
+        else:
+            start_mark = (0, 0)
+            end_mark = (0, 0)
+        if isinstance(obj, list):
+            o = cfnlint.list_node([], start_mark=start_mark, end_mark=end_mark)
+        else:
+            o = cfnlint.dict_node({}, start_mark=start_mark, end_mark=end_mark)
+
         if property_names:
             for property_name in property_names:
                 o[property_name] = deepcopy(obj.get(property_name))
