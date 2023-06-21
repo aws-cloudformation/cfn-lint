@@ -1,0 +1,295 @@
+{
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/ApplicationDomain",
+  "/properties/AttachmentType",
+  "/properties/DomainCertificateArn",
+  "/properties/EndpointDomainPrefix",
+  "/properties/EndpointType",
+  "/properties/SecurityGroupIds",
+  "/properties/NetworkInterfaceOptions/NetworkInterfaceId",
+  "/properties/LoadBalancerOptions/LoadBalancerArn"
+ ],
+ "definitions": {
+  "LoadBalancerOptions": {
+   "additionalProperties": false,
+   "description": "The load balancer details if creating the AWS Verified Access endpoint as load-balancertype.",
+   "properties": {
+    "LoadBalancerArn": {
+     "description": "The ARN of the load balancer.",
+     "type": "string"
+    },
+    "Port": {
+     "description": "The IP port number.",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "description": "The IP protocol.",
+     "type": "string"
+    },
+    "SubnetIds": {
+     "description": "The IDs of the subnets.",
+     "insertionOrder": false,
+     "items": {
+      "$ref": "#/definitions/SubnetId"
+     },
+     "type": "array",
+     "uniqueItems": true
+    }
+   },
+   "type": "object"
+  },
+  "NetworkInterfaceOptions": {
+   "additionalProperties": false,
+   "description": "The options for network-interface type endpoint.",
+   "properties": {
+    "NetworkInterfaceId": {
+     "description": "The ID of the network interface.",
+     "type": "string"
+    },
+    "Port": {
+     "description": "The IP port number.",
+     "maximum": 65535,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "Protocol": {
+     "description": "The IP protocol.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "SecurityGroupId": {
+   "description": "The ID of a security group for the endpoint.",
+   "type": "string"
+  },
+  "SubnetId": {
+   "description": "The IDs of the subnet.",
+   "type": "string"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 128,
+     "minLength": 1,
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "maxLength": 256,
+     "minLength": 0,
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "The AWS::EC2::VerifiedAccessEndpoint resource creates an AWS EC2 Verified Access Endpoint.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "ec2:CreateVerifiedAccessEndpoint",
+    "ec2:CreateTags",
+    "iam:CreateServiceLinkedRole",
+    "acm:GetCertificateWithPK",
+    "acm:DescribeCertificate",
+    "acm:CreateCertificateRelation",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "sso:CreateManagedApplicationInstance",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeAccountAttributes",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeListenerCertificates"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "delete": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:DescribeTags",
+    "ec2:DeleteVerifiedAccessEndpoint",
+    "ec2:DeleteTags",
+    "sso:DeleteManagedApplicationInstance",
+    "acm:DeleteCertificateRelation"
+   ],
+   "timeoutInMinutes": 60
+  },
+  "list": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:DescribeTags"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:DescribeTags"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "ec2:ModifyVerifiedAccessEndpoint",
+    "ec2:ModifyVerifiedAccessEndpointPolicy",
+    "ec2:DescribeVerifiedAccessEndpoints",
+    "ec2:GetVerifiedAccessEndpointPolicy",
+    "ec2:DescribeTags",
+    "ec2:DeleteTags",
+    "ec2:CreateTags",
+    "acm:GetCertificateWithPK",
+    "acm:DescribeCertificate",
+    "acm:CreateCertificateRelation",
+    "acm:DeleteCertificateRelation",
+    "sso:GetManagedApplicationInstance",
+    "sso:GetPeregrineStatus",
+    "sso:GetSharedSsoConfiguration",
+    "sso:CreateManagedApplicationInstance",
+    "sso:DeleteManagedApplicationInstance",
+    "ec2:DescribeSubnets",
+    "ec2:DescribeSecurityGroups",
+    "ec2:DescribeNetworkInterfaces",
+    "ec2:DescribeAccountAttributes",
+    "elasticloadbalancing:DescribeLoadBalancers",
+    "elasticloadbalancing:DescribeListeners",
+    "elasticloadbalancing:DescribeListenerCertificates"
+   ],
+   "timeoutInMinutes": 60
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/VerifiedAccessEndpointId"
+ ],
+ "properties": {
+  "ApplicationDomain": {
+   "description": "The DNS name for users to reach your application.",
+   "type": "string"
+  },
+  "AttachmentType": {
+   "description": "The type of attachment used to provide connectivity between the AWS Verified Access endpoint and the application.",
+   "type": "string"
+  },
+  "CreationTime": {
+   "description": "The creation time.",
+   "type": "string"
+  },
+  "Description": {
+   "description": "A description for the AWS Verified Access endpoint.",
+   "type": "string"
+  },
+  "DeviceValidationDomain": {
+   "description": "Returned if endpoint has a device trust provider attached.",
+   "type": "string"
+  },
+  "DomainCertificateArn": {
+   "description": "The ARN of a public TLS/SSL certificate imported into or created with ACM.",
+   "type": "string"
+  },
+  "EndpointDomain": {
+   "description": "A DNS name that is generated for the endpoint.",
+   "type": "string"
+  },
+  "EndpointDomainPrefix": {
+   "description": "A custom identifier that gets prepended to a DNS name that is generated for the endpoint.",
+   "type": "string"
+  },
+  "EndpointType": {
+   "description": "The type of AWS Verified Access endpoint. Incoming application requests will be sent to an IP address, load balancer or a network interface depending on the endpoint type specified.The type of AWS Verified Access endpoint. Incoming application requests will be sent to an IP address, load balancer or a network interface depending on the endpoint type specified.",
+   "type": "string"
+  },
+  "LastUpdatedTime": {
+   "description": "The last updated time.",
+   "type": "string"
+  },
+  "LoadBalancerOptions": {
+   "$ref": "#/definitions/LoadBalancerOptions",
+   "description": "The load balancer details if creating the AWS Verified Access endpoint as load-balancer type."
+  },
+  "NetworkInterfaceOptions": {
+   "$ref": "#/definitions/NetworkInterfaceOptions",
+   "description": "The options for network-interface type endpoint."
+  },
+  "PolicyDocument": {
+   "description": "The AWS Verified Access policy document.",
+   "type": "string"
+  },
+  "PolicyEnabled": {
+   "description": "The status of the Verified Access policy.",
+   "type": "boolean"
+  },
+  "SecurityGroupIds": {
+   "description": "The IDs of the security groups for the endpoint.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/SecurityGroupId"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "Status": {
+   "description": "The endpoint status.",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "An array of key-value pairs to apply to this resource.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  },
+  "VerifiedAccessEndpointId": {
+   "description": "The ID of the AWS Verified Access endpoint.",
+   "type": "string"
+  },
+  "VerifiedAccessGroupId": {
+   "description": "The ID of the AWS Verified Access group.",
+   "type": "string"
+  },
+  "VerifiedAccessInstanceId": {
+   "description": "The ID of the AWS Verified Access instance.",
+   "type": "string"
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/VerifiedAccessEndpointId",
+  "/properties/EndpointDomain",
+  "/properties/CreationTime",
+  "/properties/LastUpdatedTime",
+  "/properties/Status",
+  "/properties/DeviceValidationDomain",
+  "/properties/VerifiedAccessInstanceId"
+ ],
+ "required": [
+  "ApplicationDomain",
+  "AttachmentType",
+  "DomainCertificateArn",
+  "EndpointType",
+  "VerifiedAccessGroupId",
+  "EndpointDomainPrefix"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-verified-access.aws-ec2-verifiedaccessendpoint",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::EC2::VerifiedAccessEndpoint"
+}

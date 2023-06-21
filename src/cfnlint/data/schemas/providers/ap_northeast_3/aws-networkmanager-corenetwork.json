@@ -1,0 +1,214 @@
+{
+ "additionalIdentifiers": [
+  [
+   "/properties/CoreNetworkArn"
+  ],
+  [
+   "/properties/GlobalNetworkId"
+  ]
+ ],
+ "additionalProperties": false,
+ "createOnlyProperties": [
+  "/properties/GlobalNetworkId"
+ ],
+ "definitions": {
+  "CoreNetworkEdge": {
+   "additionalProperties": false,
+   "properties": {
+    "Asn": {
+     "description": "The ASN of a core network edge.",
+     "type": "number"
+    },
+    "EdgeLocation": {
+     "description": "The Region where a core network edge is located.",
+     "type": "string"
+    },
+    "InsideCidrBlocks": {
+     "insertionOrder": false,
+     "items": {
+      "description": "The inside IP addresses used for core network edges.",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "CoreNetworkSegment": {
+   "additionalProperties": false,
+   "properties": {
+    "EdgeLocations": {
+     "insertionOrder": false,
+     "items": {
+      "description": "The Regions where the edges are located.",
+      "type": "string"
+     },
+     "type": "array"
+    },
+    "Name": {
+     "description": "Name of segment",
+     "type": "string"
+    },
+    "SharedSegments": {
+     "insertionOrder": false,
+     "items": {
+      "description": "The shared segments of a core network.",
+      "type": "string"
+     },
+     "type": "array"
+    }
+   },
+   "type": "object"
+  },
+  "Tag": {
+   "additionalProperties": false,
+   "description": "A key-value pair to associate with a resource.",
+   "properties": {
+    "Key": {
+     "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    },
+    "Value": {
+     "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+     "type": "string"
+    }
+   },
+   "required": [
+    "Key",
+    "Value"
+   ],
+   "type": "object"
+  }
+ },
+ "description": "AWS::NetworkManager::CoreNetwork Resource Type Definition.",
+ "handlers": {
+  "create": {
+   "permissions": [
+    "networkmanager:CreateCoreNetwork",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy",
+    "networkmanager:TagResource",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "delete": {
+   "permissions": [
+    "networkmanager:DeleteCoreNetwork",
+    "networkmanager:UntagResource",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 720
+  },
+  "list": {
+   "permissions": [
+    "networkmanager:ListCoreNetworks"
+   ]
+  },
+  "read": {
+   "permissions": [
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:GetCoreNetworkPolicy"
+   ]
+  },
+  "update": {
+   "permissions": [
+    "networkmanager:UpdateCoreNetwork",
+    "networkmanager:GetCoreNetwork",
+    "networkmanager:ListTagsForResource",
+    "networkmanager:PutCoreNetworkPolicy",
+    "networkmanager:GetCoreNetworkPolicy",
+    "networkmanager:ExecuteCoreNetworkChangeSet",
+    "networkmanager:TagResource",
+    "networkmanager:UntagResource",
+    "ec2:DescribeRegions"
+   ],
+   "timeoutInMinutes": 720
+  }
+ },
+ "primaryIdentifier": [
+  "/properties/CoreNetworkId"
+ ],
+ "properties": {
+  "CoreNetworkArn": {
+   "description": "The ARN (Amazon resource name) of core network",
+   "type": "string"
+  },
+  "CoreNetworkId": {
+   "description": "The Id of core network",
+   "type": "string"
+  },
+  "CreatedAt": {
+   "description": "The creation time of core network",
+   "type": "string"
+  },
+  "Description": {
+   "description": "The description of core network",
+   "type": "string"
+  },
+  "Edges": {
+   "description": "The edges within a core network.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkEdge"
+   },
+   "type": "array"
+  },
+  "GlobalNetworkId": {
+   "description": "The ID of the global network that your core network is a part of.",
+   "type": "string"
+  },
+  "OwnerAccount": {
+   "description": "Owner of the core network",
+   "type": "string"
+  },
+  "PolicyDocument": {
+   "description": "Live policy document for the core network, you must provide PolicyDocument in Json Format",
+   "type": "object"
+  },
+  "Segments": {
+   "description": "The segments within a core network.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/CoreNetworkSegment"
+   },
+   "type": "array"
+  },
+  "State": {
+   "description": "The state of core network",
+   "type": "string"
+  },
+  "Tags": {
+   "description": "The tags for the global network.",
+   "insertionOrder": false,
+   "items": {
+    "$ref": "#/definitions/Tag"
+   },
+   "type": "array",
+   "uniqueItems": true
+  }
+ },
+ "readOnlyProperties": [
+  "/properties/OwnerAccount",
+  "/properties/CoreNetworkId",
+  "/properties/CoreNetworkArn",
+  "/properties/CreatedAt",
+  "/properties/State",
+  "/properties/Segments",
+  "/properties/Edges"
+ ],
+ "required": [
+  "GlobalNetworkId"
+ ],
+ "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-corenetwork",
+ "tagging": {
+  "cloudFormationSystemTags": false,
+  "tagOnCreate": true,
+  "tagProperty": "/properties/Tags",
+  "tagUpdatable": true,
+  "taggable": true
+ },
+ "typeName": "AWS::NetworkManager::CoreNetwork"
+}
