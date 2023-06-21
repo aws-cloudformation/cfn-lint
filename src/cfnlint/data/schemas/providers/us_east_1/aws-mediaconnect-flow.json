@@ -103,6 +103,24 @@
    },
    "type": "object"
   },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "description": "The source configuration for cloud flows receiving a stream from a bridge.",
+   "properties": {
+    "BridgeArn": {
+     "description": "The ARN of the bridge feeding this flow.",
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment",
+     "description": "The name of the VPC interface attachment to use for this bridge source."
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
   "Source": {
    "additionalProperties": false,
    "description": "The settings for the source of the flow.",
@@ -118,6 +136,10 @@
     "EntitlementArn": {
      "description": "The ARN of the entitlement that allows you to subscribe to content that comes from another AWS account. The entitlement is set by the content originator and the ARN is generated as part of the originator's flow.",
      "type": "string"
+    },
+    "GatewayBridgeSource": {
+     "$ref": "#/definitions/GatewayBridgeSource",
+     "description": "The source configuration for cloud flows receiving a stream from a bridge."
     },
     "IngestIp": {
      "description": "The IP address that the flow will be listening on for incoming content.",
@@ -192,6 +214,17 @@
     },
     "WhitelistCidr": {
      "description": "The range of IP addresses that should be allowed to contribute content to your source. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.",
+     "type": "string"
+    }
+   },
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "description": "The settings for attaching a VPC interface to an resource.",
+   "properties": {
+    "VpcInterfaceName": {
+     "description": "The name of the VPC interface to use for this resource.",
      "type": "string"
     }
    },
