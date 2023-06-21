@@ -60,6 +60,35 @@
     "RoleArn"
    ],
    "type": "object"
+  },
+  "GatewayBridgeSource": {
+   "additionalProperties": false,
+   "description": "The source configuration for cloud flows receiving a stream from a bridge.",
+   "properties": {
+    "BridgeArn": {
+     "description": "The ARN of the bridge feeding this flow.",
+     "type": "string"
+    },
+    "VpcInterfaceAttachment": {
+     "$ref": "#/definitions/VpcInterfaceAttachment",
+     "description": "The name of the VPC interface attachment to use for this bridge source."
+    }
+   },
+   "required": [
+    "BridgeArn"
+   ],
+   "type": "object"
+  },
+  "VpcInterfaceAttachment": {
+   "additionalProperties": false,
+   "description": "The settings for attaching a VPC interface to an resource.",
+   "properties": {
+    "VpcInterfaceName": {
+     "description": "The name of the VPC interface to use for this resource.",
+     "type": "string"
+    }
+   },
+   "type": "object"
   }
  },
  "description": "Resource schema for AWS::MediaConnect::FlowSource",
@@ -114,6 +143,10 @@
   "FlowArn": {
    "description": "The ARN of the flow.",
    "type": "string"
+  },
+  "GatewayBridgeSource": {
+   "$ref": "#/definitions/GatewayBridgeSource",
+   "description": "The source configuration for cloud flows receiving a stream from a bridge."
   },
   "IngestIp": {
    "description": "The IP address that the flow will be listening on for incoming content.",
