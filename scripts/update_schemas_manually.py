@@ -898,6 +898,9 @@ patches.extend(
                             {"required": ["EventPattern"]},
                             {"required": ["ScheduleExpression"]},
                         ],
+                        "message": {
+                            "anyOf": "Specify either 'EventPattern' or 'ScheduleExpression'"
+                        },
                     },
                     path="/",
                 ),
