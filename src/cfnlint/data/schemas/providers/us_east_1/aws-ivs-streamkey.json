@@ -29,26 +29,42 @@
  "handlers": {
   "create": {
    "permissions": [
+    "ivs:TagResource",
+    "ivs:UntagResource",
     "ivs:CreateStreamKey"
    ]
   },
   "delete": {
    "permissions": [
-    "ivs:DeleteStreamKey"
+    "ivs:DeleteStreamKey",
+    "ivs:UntagResource"
    ]
   },
   "list": {
+   "handlerSchema": {
+    "properties": {
+     "ChannelArn": {
+      "$ref": "resource-schema.json#/properties/ChannelArn"
+     }
+    },
+    "required": [
+     "ChannelArn"
+    ]
+   },
    "permissions": [
-    "ivs:ListStreamKeys"
+    "ivs:ListStreamKeys",
+    "ivs:ListTagsForResource"
    ]
   },
   "read": {
    "permissions": [
-    "ivs:GetStreamKey"
+    "ivs:GetStreamKey",
+    "ivs:ListTagsForResource"
    ]
   },
   "update": {
    "permissions": [
+    "ivs:GetStreamKey",
     "ivs:TagResource",
     "ivs:UntagResource",
     "ivs:ListTagsForResource"
