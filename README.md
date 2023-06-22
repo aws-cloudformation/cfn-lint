@@ -283,7 +283,7 @@ The example below validates `example_template.yml` does not use any EC2 instance
 
 _custom_rule.txt_
 ```
-AWS::EC2::Instance InstanceSize NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
+AWS::EC2::Instance InstanceType NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
 ```
 
 _example_template.yml_
