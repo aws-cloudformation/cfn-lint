@@ -15,7 +15,7 @@ class UpdateReplacePolicy(CloudFormationLintRule):
     source_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html"
     tags = ["resources", "updatereplacepolicy"]
 
-    def check_value(self, key, path, res_type, has_lang_exten_transform):
+    def check_value(self, key, path, res_type):
         """Check resource names for UpdateReplacePolicy"""
         matches = []
 
@@ -25,7 +25,7 @@ class UpdateReplacePolicy(CloudFormationLintRule):
 
         supported_functions_joined = ", ".join(supported_functions)
 
-        if has_lang_exten_transform and isinstance(key, dict):
+        if isinstance(key, dict):
             if len(key) == 1:
                 for index_key, _ in key.items():
                     if index_key not in supported_functions:
@@ -87,14 +87,8 @@ class UpdateReplacePolicy(CloudFormationLintRule):
                         RuleMatch(path, message.format("/".join(map(str, path))))
                     )
                 else:
-                    has_lang_exten_transform = cfn.has_language_extensions_transform()
                     matches.extend(
-                        self.check_value(
-                            updatereplace_policies,
-                            path,
-                            res_type,
-                            has_lang_exten_transform,
-                        )
+                        self.check_value(updatereplace_policies, path, res_type)
                     )
 
         return matches

@@ -17,7 +17,7 @@ class TestResourceDeletionPolicy(BaseRuleTestCase):
         super(TestResourceDeletionPolicy, self).setUp()
         self.collection.register(DeletionPolicy())
         self.success_templates = [
-            "test/fixtures/templates/good/resources_lang_extensions_deletionpolicy.yaml"
+            "test/fixtures/templates/good/resources_deletionpolicy.yaml"
         ]
 
     def test_file_positive(self):
@@ -27,11 +27,5 @@ class TestResourceDeletionPolicy(BaseRuleTestCase):
     def test_file_negative(self):
         """Test failure"""
         self.helper_file_negative(
-            "test/fixtures/templates/bad/resources_deletionpolicy.yaml", 4
-        )
-
-    def test_lang_extensions_file_negative(self):
-        """Test failure"""
-        self.helper_file_negative(
-            "test/fixtures/templates/bad/test_lang_extensions_deletionpolicy.yaml", 3
+            "test/fixtures/templates/bad/resources_deletionpolicy.yaml", 5
         )
