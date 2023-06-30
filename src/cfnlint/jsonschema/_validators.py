@@ -300,7 +300,6 @@ def oneOf(validator, oneOf, instance, schema):
             break
         all_errors.extend(errs)
     else:
-        print(all_errors)
         yield ValidationError(
             f"{instance!r} is not valid under any of the given schemas",
             context=all_errors,

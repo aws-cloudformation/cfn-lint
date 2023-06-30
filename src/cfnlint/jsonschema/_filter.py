@@ -6,7 +6,7 @@ from dataclasses import dataclass, field, fields
 
 # Code is taken from jsonschema package and adapted CloudFormation use
 # https://github.com/python-jsonschema/jsonschema
-from typing import Any, Sequence, Tuple
+from typing import Any, Sequence
 
 from cfnlint.helpers import FUNCTIONS, ToPy
 
@@ -28,36 +28,6 @@ class FunctionFilter:
     """
 
     functions: Sequence[str] = field(default_factory=list)
-    group_functions: Sequence[str] = field(
-        init=False,
-        default_factory=lambda: [
-            "dependencies",
-            "required",
-            "minItems",
-            "minProperties",
-            "maxItems",
-            "maxProperties",
-            "uniqueItems",
-            "anyOf",
-            "oneOf",
-        ],
-    )
-
-    def _filter_schemas(self, schema, validator) -> Tuple[Any, Any]:
-        """
-        Filter the schemas to only include the ones that are required
-        """
-        if validator.cfn is None:
-            return schema, None
-        standard_schema = {}
-        group_schema = {}
-        for key, value in schema.items():
-            if key in self.group_functions:
-                group_schema[key] = value
-            else:
-                standard_schema[key] = value
-
-        return standard_schema, group_schema
 
     def filter(self, validator: Any, instance: Any, schema: Any):
         # dependencies, required, minProperties, maxProperties
