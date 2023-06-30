@@ -38,6 +38,8 @@ class FunctionFilter:
             "maxItems",
             "maxProperties",
             "uniqueItems",
+            "anyOf",
+            "oneOf",
         ],
     )
 
@@ -62,22 +64,25 @@ class FunctionFilter:
         # need to have filtered properties to validate
         # because of Ref: AWS::NoValue
 
-        standard_schema, group_schema = self._filter_schemas(schema, validator)
-
-        if group_schema:
-            scenarios = validator.cfn.get_object_without_conditions(instance)
-            for scenario in scenarios:
-                yield (scenario.get("Object"), group_schema)
-
         if validator.is_type(instance, "object"):
             if len(instance) == 1:
                 k = list(instance.keys())[0]
                 if k in self.functions:
                     k_py = ToPy(k)
-                    yield (instance, {k_py.py: standard_schema})
+                    yield (instance, {k_py.py: schema})
                     return
 
-        yield (instance, standard_schema)
+        if validator.cfn:
+            if validator.is_type(instance, "object") or validator.is_type(
+                instance, "array"
+            ):
+                scenarios = validator.cfn.get_object_without_conditions(instance)
+                for scenario in scenarios:
+                    yield (scenario.get("Object"), schema)
+
+                return
+
+        yield (instance, schema)
 
     def evolve(self, **kwargs) -> "FunctionFilter":
         """

@@ -26,22 +26,33 @@ class JsonSchema(BaseJsonSchema):
         """Init"""
         super().__init__()
         self.rule_set = {
+            # properties
             "additionalProperties": "E3002",
             "properties": "E3002",
             "required": "E3003",
+            "minProperties": "E3002",
+            "maxProperties": "E3002",
+            # array
+            "maxItems": "E3032",
+            "minItems": "E3032",
+            "uniqueItems": "E3037",
+            # generic
             "enum": "E3030",
+            # type
             "type": "E3012",
+            # string
             "minLength": "E3033",
             "maxLength": "E3033",
-            "uniqueItems": "E3037",
+            "pattern": "E3031",
+            # number
             "maximum": "E3034",
             "minimum": "E3034",
             "exclusiveMaximum": "E3034",
             "exclusiveMinimum": "E3034",
-            "maxItems": "E3032",
-            "minItems": "E3032",
-            "pattern": "E3031",
+            # composition
             "oneOf": "E2523",
+            "anyOf": "E2522",
+            # cfn-lint additions
             "awsType": "E3008",
             "cfnSchema": "E3017",
             "cfnRegionSchema": "E3018",

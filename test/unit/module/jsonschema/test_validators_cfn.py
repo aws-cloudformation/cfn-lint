@@ -27,6 +27,9 @@ class _Cfn:
     def __init__(self, resp) -> None:
         self.functions = _Fns(resp)
 
+    def get_object_without_conditions(self, obj, property_names=None):
+        return [{"Scenario": None, "Object": obj}]
+
 
 _T = namedtuple("_T", ["name", "instance", "schema", "errors", "cfn_response"])
 

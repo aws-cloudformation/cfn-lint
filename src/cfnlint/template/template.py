@@ -83,9 +83,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def has_language_extensions_transform(self):
         """Check if the template has language extensions transform declared"""
-        LOGGER.debug(
-            "Check if the template has language extensions transform declaration"
-        )
         lang_extensions_transform = "AWS::LanguageExtensions"
         transform_declaration = self.transform_pre["Transform"]
         transform_type = (
@@ -100,7 +97,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Get Resources
         Filter on type when specified
         """
-        LOGGER.debug("Get resources from template...")
         resources = self.template.get("Resources", {})
         if not isinstance(resources, dict):
             return {}
@@ -118,7 +114,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_parameters(self):
-        LOGGER.debug("Get parameters from template...")
         parameters = self.template.get("Parameters", {})
         if not parameters:
             return {}
@@ -126,7 +121,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return parameters
 
     def get_parameters_valid(self):
-        LOGGER.debug("Get parameters from template...")
         result = {}
         if isinstance(self.template.get("Parameters"), dict):
             parameters = self.template.get("Parameters")
@@ -138,7 +132,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return result
 
     def get_outputs_valid(self):
-        LOGGER.debug("Get outputs from template...")
         result = {}
         if isinstance(self.template.get("Outputs"), dict):
             parameters = self.template.get("Outputs")
@@ -151,7 +144,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_modules(self):
         """Get Modules"""
-        LOGGER.debug("Get modules from template...")
         resources = self.template.get("Resources", {})
         if not resources:
             return {}
@@ -167,7 +159,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_mappings(self):
-        LOGGER.debug("Get mapping from template...")
         mappings = self.template.get("Mappings", {})
         if not mappings:
             return {}
@@ -175,7 +166,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return mappings
 
     def get_resource_names(self):
-        LOGGER.debug("Get the names of all resources from template...")
         results = []
         resources = self.template.get("Resources", {})
         if isinstance(resources, dict):
@@ -185,7 +175,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         return results
 
     def get_parameter_names(self):
-        LOGGER.debug("Get names of all parameters from template...")
         results = []
         parameters = self.template.get("Parameters", {})
         if isinstance(parameters, dict):
@@ -267,7 +256,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
     # pylint: disable=too-many-locals
     def _get_sub_resource_properties(self, keys, properties, path):
         """Used for recursive handling of properties in the keys"""
-        LOGGER.debug("Get Sub Resource Properties from %s", keys)
         if not keys:
             result = {}
             result["Path"] = path
@@ -324,7 +312,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_resource_properties(self, keys):
         """Filter keys of template"""
-        LOGGER.debug("Get Properties from a resource: %s", keys)
         matches = []
         resourcetype = keys.pop(0)
         for resource_name, resource_value in self.get_resources(resourcetype).items():
@@ -418,7 +405,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         :return if searchText is "Ref", an array like
         ['Resources', 'myInstance', 'Properties', 'ImageId', 'Ref', 'Ec2ImageId']
         """
-        LOGGER.debug("Search for key %s as far down as the template goes", searchText)
         results = []
         results.extend(self._search_deep_keys(searchText, self.template, []))
         # Globals are removed during a transform.  They need to be checked manually
@@ -432,7 +418,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def get_condition_values(self, template, path=[]):
         """Evaluates conditions and brings back the values"""
-        LOGGER.debug("Get condition values...")
         matches = []
         if not isinstance(template, list):
             return matches
@@ -485,7 +470,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         Returns the value if its just a string, int, boolean, etc.
 
         """
-        LOGGER.debug("Get the value for key %s in %s", key, obj)
         matches = []
 
         if not isinstance(obj, dict):
@@ -563,7 +547,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
 
     def _loc(self, obj):
         """Return location of object"""
-        LOGGER.debug("Get location of object...")
         return (
             obj.start_mark.line,
             obj.start_mark.column,
@@ -588,7 +571,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         """
         Get the location information
         """
-        LOGGER.debug("Get location of path %s", path)
         result = None
         if not path:
             result = self._loc(text)
@@ -639,7 +621,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         **kwargs,
     ):
         """Check Resource Properties"""
-        LOGGER.debug("Check property %s for %s", resource_property, resource_type)
         matches = []
         resources = self.get_resources(resource_type=resource_type)
         for resource_name, resource_object in resources.items():
@@ -678,7 +659,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         pass_if_null=False,
         **kwargs,
     ):
-        LOGGER.debug("Check value %s for %s", key, obj)
         matches = []
         values_obj = self.get_values(obj=obj, key=key)
         new_path = path[:] + [key]
@@ -1101,7 +1081,6 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                 if its in the True or False part of the path.
                 {'condition': {True}}
         """
-        LOGGER.debug("Get conditions for path %s", path)
         results = {}
 
         def get_condition_name(value, num=None):
