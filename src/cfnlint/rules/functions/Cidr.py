@@ -49,7 +49,10 @@ class Cidr(CloudFormationLintRule):
                                     )
                                 )
                         else:
-                            message = "Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or Select for {0}"
+                            message = (
+                                "Cidr ipBlock should be Cidr Range, Ref, GetAtt, Sub or"
+                                " Select for {0}"
+                            )
                             matches.append(
                                 RuleMatch(
                                     path, message.format("/".join(map(str, value)))
@@ -78,18 +81,16 @@ class Cidr(CloudFormationLintRule):
                             if len(value.get("Fn::If")) == 3 and isinstance(
                                 value.get("Fn::If"), list
                             ):
-                                matches.extend(
-                                    self.check_count(
-                                        value.get("Fn::If")[1],
-                                        path=path[:] + [index_key, 1],
+                                for i in [1, 2]:
+                                    (
+                                        new_count_parameters,
+                                        new_matches,
+                                    ) = self.check_count(
+                                        value.get("Fn::If")[i],
+                                        path=path[:] + [index_key, i],
                                     )
-                                )
-                                matches.extend(
-                                    self.check_count(
-                                        value.get("Fn::If")[2],
-                                        path=path[:] + [index_key, 2],
-                                    )
-                                )
+                                    count_parameters.extend(new_count_parameters)
+                                    matches.extend(new_matches)
                         else:
                             message = "Cidr count should be Int, Ref, or Select for {0}"
                             matches.append(
@@ -168,7 +169,10 @@ class Cidr(CloudFormationLintRule):
                 max_value = parameter_obj.get("MaxValue")
                 min_value = parameter_obj.get("MinValue")
                 if (not min_value) or min_value < 1 or min_value > 256:
-                    message = "Parameter for Cidr count have MinValue between 1 and 256 at {0}"
+                    message = (
+                        "Parameter for Cidr count have MinValue between 1 and 256"
+                        " at {0}"
+                    )
                     matches.append(
                         RuleMatch(
                             tree + ["MinValue"],
@@ -176,7 +180,10 @@ class Cidr(CloudFormationLintRule):
                         )
                     )
                 if (not max_value) or max_value < 1 or max_value > 256:
-                    message = "Parameter for Cidr count have MaxValue between 1 and 256 at {0}"
+                    message = (
+                        "Parameter for Cidr count have MaxValue between 1 and 256"
+                        " at {0}"
+                    )
                     matches.append(
                         RuleMatch(
                             tree + ["MaxValue"],
@@ -258,7 +265,6 @@ class Cidr(CloudFormationLintRule):
                     )
                     count_parameters.extend(new_count_parameters)
                     matches.extend(new_matches)
-
                     new_size_mask_parameters, new_matches = self.check_size_mask(
                         size_mask_obj, tree[:] + [2]
                     )
