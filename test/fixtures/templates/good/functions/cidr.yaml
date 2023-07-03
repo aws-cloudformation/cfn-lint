@@ -13,6 +13,8 @@ Parameters:
     MaxValue: 6
   Size:
     Type: String
+  FirstTierSubnet1CIDR:
+    Type: String
 Mappings:
   CidrBitsMap:
     "2":
@@ -55,7 +57,7 @@ Resources:
                       - 8
                   - Fn::Select:
                     - 15
-                    - Fn::Cidr: 
+                    - Fn::Cidr:
                       - Fn::GetAtt: MyVPC.CidrBlock
                       - 16
                       - 8
@@ -64,3 +66,17 @@ Resources:
             - 2
             - 4
         VpcId: 'vpc-123456'
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !If
+          - IsProd
+          - !Ref FirstTierSubnet1CIDR
+          - !Select
+            - 0
+            - !Cidr
+              - 10.0.0.0/24
+              - !If [IsProd, 16, 8]
+              - 4

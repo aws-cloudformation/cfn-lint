@@ -283,7 +283,7 @@ The example below validates `example_template.yml` does not use any EC2 instance
 
 _custom_rule.txt_
 ```
-AWS::EC2::Instance InstanceSize NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
+AWS::EC2::Instance InstanceType NOT_EQUALS "m4.16xlarge" WARN "This is an expensive instance type, don't use it"
 ```
 
 _example_template.yml_
@@ -324,7 +324,7 @@ If you'd like cfn-lint to be run automatically when making changes to files in y
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.77.9  # The version of cfn-lint to use
+  rev: v0.77.10  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint
       files: path/to/cfn/dir/.*\.(json|yml|yaml)$
@@ -334,7 +334,7 @@ If you are using a `.cfnlintrc` and specifying the `templates` or `ignore_templa
 ```yaml
 repos:
 - repo: https://github.com/aws-cloudformation/cfn-lint
-  rev: v0.77.9  # The version of cfn-lint to use
+  rev: v0.77.10  # The version of cfn-lint to use
   hooks:
     - id: cfn-lint-rc
 ```
