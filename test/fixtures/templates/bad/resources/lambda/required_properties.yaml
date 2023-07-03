@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Missing properties.
+Resources:
+  Function1:
+    Type: AWS::Lambda::Function
+    Properties:
+#      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+#      Runtime: nodejs16.x
+  Function2:
+    Type: AWS::Lambda::Function
+    Properties:
+#      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        S3Bucket: my-bucket
+        S3Key: function.zip
+      Runtime: python3.9
+      PackageType: Zip
+  Function3:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/lambda-role
+      Code:
+        ZipFile: |
+          var aws = require('aws-sdk')
+          exports.handler = function(event, context) {}
+#      Runtime: nodejs16.x
