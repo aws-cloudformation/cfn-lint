@@ -585,6 +585,9 @@ class TemplateArgs:
                         if config_name == "configure_rules":
                             if isinstance(config_value, dict):
                                 defaults["configure_rules"] = config_value
+                        if config_name == "include_experimental":
+                            if isinstance(config_value, bool):
+                                defaults["include_experimental"] = config_value
 
         self._template_args = defaults
 
