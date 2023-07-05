@@ -21,7 +21,7 @@ class TestRulesSplit(BaseRuleTestCase):
 
     def test_file_negative(self):
         """Test failure"""
-        self.helper_file_negative("test/fixtures/templates/bad/functions_split.yaml", 3)
+        self.helper_file_negative("test/fixtures/templates/bad/functions_split.yaml", 4)
 
     def test_split_parts(self):
         rule = Split()

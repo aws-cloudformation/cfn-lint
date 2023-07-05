@@ -2,6 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
+
+import regex as re
+
+from cfnlint.helpers import REGEX_DYN_REF_SSM
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
@@ -34,8 +39,19 @@ class Split(CloudFormationLintRule):
             matches.append(RuleMatch(path, message.format("/".join(map(str, path)))))
         return matches
 
+    def _check_dyn_ref_value(self, value, path):
+        """Chec item type"""
+        matches = []
+        if isinstance(value, str):
+            if re.match(REGEX_DYN_REF_SSM, value):
+                message = f'Fn::Split does not support dynamic references at {"/".join(map(str, path[:]))}'
+                matches.append(RuleMatch(path[:], message))
+
+        return matches
+
     def _test_string(self, s, path):
         matches = []
+        matches.extend(self._check_dyn_ref_value(json.dumps(s), path[:]))
         if isinstance(s, dict):
             if len(s) == 1:
                 for key, _ in s.items():

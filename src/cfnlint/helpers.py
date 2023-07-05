@@ -77,9 +77,9 @@ REGEX_IPV6 = re.compile(
     re.I | re.S,
 )
 REGEX_DYN_REF = re.compile(r"^.*{{resolve:.+}}.*$")
-REGEX_DYN_REF_SSM = re.compile(r"^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+:\d+}}.*$")
+REGEX_DYN_REF_SSM = re.compile(r"^.*{{resolve:ssm:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$")
 REGEX_DYN_REF_SSM_SECURE = re.compile(
-    r"^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+:\d+}}.*$"
+    r"^.*{{resolve:ssm-secure:[a-zA-Z0-9_\.\-/]+(:\d+)?}}.*$"
 )
 
 

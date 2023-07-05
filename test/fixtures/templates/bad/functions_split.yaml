@@ -31,3 +31,10 @@ Resources:
       AvailabilityZone: !Select
       - 0
       - Fn::Split: {Ref: AWS::Region}
+  myInstance4:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: String
+      AvailabilityZone: !Select
+      - 0
+      - !Split [":", "{{resolve:ssm:/vpc/subnets/private}}"]
