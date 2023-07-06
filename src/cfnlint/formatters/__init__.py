@@ -13,7 +13,8 @@ import sarif_om as sarif
 from jschema_to_python.to_json import to_json
 from junit_xml import TestCase, TestSuite, to_xml_report_string
 
-from cfnlint.rules import Match, ParseError, RuleError, RulesCollection, TransformError
+from cfnlint.match import Match
+from cfnlint.rules import ParseError, RuleError, RulesCollection, TransformError
 from cfnlint.version import __version__
 
 Matches = List[Match]

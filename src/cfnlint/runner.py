@@ -5,11 +5,8 @@ SPDX-License-Identifier: MIT-0
 import logging
 from typing import List, Optional, Sequence, Union
 
-from cfnlint.conditions import Conditions
-from cfnlint.graph import Graph
 from cfnlint.rules import Match, RulesCollection
 from cfnlint.template import Template
-from cfnlint.transform import Transform
 
 LOGGER = logging.getLogger(__name__)
 
@@ -34,27 +31,7 @@ class Runner:
 
     def transform(self):
         """Transform logic"""
-        LOGGER.debug("Transform templates if needed")
-        sam_transform = "AWS::Serverless-2016-10-31"
-        matches = []
-        transform_declaration = self.cfn.template.get("Transform", [])
-        transform_type = (
-            transform_declaration
-            if isinstance(transform_declaration, list)
-            else [transform_declaration]
-        )
-        # Don't call transformation if Transform is not specified to prevent
-        # useless execution of the transformation.
-        # Currently locked in to SAM specific
-        if sam_transform not in transform_type:
-            return matches
-        # Save the Globals section so its available for rule processing
-        self.cfn.transform_pre["Globals"] = self.cfn.template.get("Globals", {})
-        transform = Transform(self.filename, self.cfn.template, self.cfn.regions[0])
-        matches = transform.transform_template()
-        self.cfn.template = transform.template()
-        self.cfn.graph = Graph(self.cfn)
-        self.cfn.conditions = Conditions(self.cfn)
+        matches = self.cfn.transform()
         return matches
 
     def run(self) -> List[Match]:

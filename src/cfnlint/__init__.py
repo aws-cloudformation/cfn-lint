@@ -20,7 +20,7 @@ from cfnlint.rules import RulesCollection as _RulesCollection
 from cfnlint.rules import TransformError as _TransformError
 from cfnlint.runner import Runner as _Runner
 from cfnlint.template import Template as _Template
-from cfnlint.transform import Transform
+from cfnlint.template.transforms._sam import Transform
 
 LOGGER = logging.getLogger(__name__)
 

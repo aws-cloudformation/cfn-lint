@@ -6,7 +6,7 @@ import json
 import os
 from test.testlib.testcase import BaseTestCase
 
-import cfnlint.helpers
+from cfnlint.decode import cfn_yaml, convert_dict
 from cfnlint.template import Template  # pylint: disable=E0401
 
 
@@ -182,7 +182,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_is_resource_available(self):
         """Test is resource available"""
-        temp_obj = cfnlint.helpers.convert_dict(
+        temp_obj = convert_dict(
             {
                 "Mappings": {"location": {"us-east-1": {"primary": "True"}}},
                 "Conditions": {
@@ -346,7 +346,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_is_resource_not_available(self):
         """Test is resource available"""
-        temp_obj = cfnlint.helpers.convert_dict(
+        temp_obj = convert_dict(
             {
                 "Mappings": {"location": {"us-east-1": {"primary": "True"}}},
                 "Conditions": {
@@ -441,7 +441,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_conditions_from_path(self):
         """Test is resource available"""
-        temp_obj = cfnlint.helpers.convert_dict(
+        temp_obj = convert_dict(
             {
                 "Resources": {
                     "AMIIDLookup": {
@@ -543,7 +543,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_failure_get_conditions_from_path(self):
         """Test get conditions from path when things arne't formatted correctly"""
-        temp_obj = cfnlint.helpers.convert_dict(
+        temp_obj = convert_dict(
             {
                 "Resources": {
                     "AMIIDLookup": {
@@ -716,7 +716,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions(self):
         """Test Getting condition names in an object/list"""
-        template = cfnlint.helpers.convert_dict(
+        template = convert_dict(
             {
                 "Conditions": {
                     "useAmiId": {"Fn::Not": [{"Fn::Equals": [{"Ref": "myAmiId"}, ""]}]}
@@ -824,7 +824,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_for_list(self):
         """Test Getting condition names in an object/list"""
-        template = cfnlint.helpers.convert_dict(
+        template = convert_dict(
             {
                 "Conditions": {
                     "CreateAppVolume": {"Fn::Equals": [{"Ref": "CreateVolums"}, "true"]}
@@ -948,7 +948,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_nested_conditions(self):
         """Test Getting condition names in an object/list"""
-        template = cfnlint.helpers.convert_dict(
+        template = convert_dict(
             {
                 "Conditions": {
                     "isProduction": {"Fn::Equals": [{"Ref": "myEnvironment"}, "prod"]},
@@ -1220,7 +1220,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
         template = Template(
             "test.yaml",
-            cfnlint.decode.cfn_yaml.loads(
+            cfn_yaml.loads(
                 json.dumps(
                     template_yaml, sort_keys=True, indent=4, separators=(",", ": ")
                 )
