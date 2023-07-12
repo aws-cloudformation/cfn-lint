@@ -1,3 +1,15 @@
+### v0.78.1
+###### Features
+- Update rule [E1018](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1018) to flag splitting dynamic references (pull #[2786](https://github.com/aws-cloudformation/cfn-lint/pull/2786))
+- New rule [W2533](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2533) to validate lambda zip deployment configuration (pull #[2682](https://github.com/aws-cloudformation/cfn-lint/pull/2682))
+- Supporting intrinsic function in `DeletionPolicy` and `UpdateReplacePolicy` (pull #[2784](https://github.com/aws-cloudformation/cfn-lint/pull/2784))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `130.0.0` (pull #[2783](https://github.com/aws-cloudformation/cfn-lint/pull/2783))
+###### Fixes
+- Pin `jsonschema` to be under `4.18` (pull #[2792](https://github.com/aws-cloudformation/cfn-lint/pull/2792))
+- Fix using `include_experimental` in metadata (pull #[2785](https://github.com/aws-cloudformation/cfn-lint/pull/2785))
+- Fix rule [E1024](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1024) to better handle conditions (pull #[2780](https://github.com/aws-cloudformation/cfn-lint/pull/2780))
+
 ### v0.77.10
 ###### CloudFormation Specifications
 - Update CloudFormation specs to `127.0.0` (pull #[2763](https://github.com/aws-cloudformation/cfn-lint/pull/2763))
