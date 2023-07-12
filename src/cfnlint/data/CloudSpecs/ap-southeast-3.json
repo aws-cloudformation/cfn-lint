@@ -822,6 +822,7 @@
   "AWS::Batch::SchedulingPolicy.ShareAttributes": "CACHED",
   "AWS::CertificateManager::Certificate.DomainValidationOption": "CACHED",
   "AWS::CloudFormation::HookVersion.LoggingConfig": "CACHED",
+  "AWS::CloudFormation::ResourceVersion.LoggingConfig": "CACHED",
   "AWS::CloudFormation::StackSet.AutoDeployment": "CACHED",
   "AWS::CloudFormation::StackSet.DeploymentTargets": "CACHED",
   "AWS::CloudFormation::StackSet.ManagedExecution": "CACHED",
@@ -3382,7 +3383,7 @@
   "AWS::XRay::SamplingRule.SamplingRule": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "129.0.0",
+ "ResourceSpecificationVersion": "130.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -4133,6 +4134,8 @@
   "AWS::CloudFormation::Macro": "CACHED",
   "AWS::CloudFormation::ModuleDefaultVersion": "CACHED",
   "AWS::CloudFormation::ModuleVersion": "CACHED",
+  "AWS::CloudFormation::ResourceDefaultVersion": "CACHED",
+  "AWS::CloudFormation::ResourceVersion": "CACHED",
   "AWS::CloudFormation::Stack": "CACHED",
   "AWS::CloudFormation::StackSet": "CACHED",
   "AWS::CloudFormation::WaitCondition": "CACHED",
@@ -4886,48 +4889,7 @@
   "AWS::EC2::IPAMScope": "CACHED",
   "AWS::EC2::Instance": "CACHED",
   "AWS::EC2::InternetGateway": "CACHED",
-  "AWS::EC2::KeyPair": {
-   "Attributes": {
-    "KeyFingerprint": {
-     "PrimitiveType": "String"
-    },
-    "KeyPairId": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html",
-   "Properties": {
-    "KeyName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keyname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "KeyType": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-keytype",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::EC2::KeyPair.KeyType"
-     }
-    },
-    "PublicKeyMaterial": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-publickeymaterial",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-keypair.html#cfn-ec2-keypair-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::EC2::KeyPair": "CACHED",
   "AWS::EC2::LocalGatewayRoute": "CACHED",
   "AWS::EC2::LocalGatewayRouteTable": "CACHED",
   "AWS::EC2::LocalGatewayRouteTableVPCAssociation": "CACHED",
@@ -5534,7 +5496,63 @@
   "AWS::Organizations::ResourcePolicy": "CACHED",
   "AWS::Pipes::Pipe": "CACHED",
   "AWS::RAM::Permission": "CACHED",
-  "AWS::RAM::ResourceShare": "CACHED",
+  "AWS::RAM::ResourceShare": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html",
+   "Properties": {
+    "AllowExternalPrincipals": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-allowexternalprincipals",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Name": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-name",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "PermissionArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-permissionarns",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Principals": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-principals",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "ResourceArns": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-resourcearns",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Sources": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-sources",
+     "PrimitiveItemType": "String",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-tags",
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::RDS::DBCluster": "CACHED",
   "AWS::RDS::DBClusterParameterGroup": "CACHED",
   "AWS::RDS::DBInstance": "CACHED",
@@ -5996,7 +6014,25 @@
   "AWS::SES::VdmAttributes": "CACHED",
   "AWS::SNS::Subscription": "CACHED",
   "AWS::SNS::Topic": "CACHED",
-  "AWS::SNS::TopicPolicy": "CACHED",
+  "AWS::SNS::TopicPolicy": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-policy.html",
+   "Properties": {
+    "PolicyDocument": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-policy.html#cfn-sns-topicpolicy-policydocument",
+     "PrimitiveType": "Json",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "Topics": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-sns-policy.html#cfn-sns-topicpolicy-topics",
+     "DuplicatesAllowed": true,
+     "PrimitiveItemType": "String",
+     "Required": true,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::SQS::Queue": "CACHED",
   "AWS::SQS::QueuePolicy": "CACHED",
   "AWS::SSM::Association": "CACHED",
@@ -6144,6 +6180,7 @@
   "AWS::SageMaker::Domain": "CACHED",
   "AWS::SageMaker::Endpoint": "CACHED",
   "AWS::SageMaker::EndpointConfig": "CACHED",
+  "AWS::SageMaker::Image": "CACHED",
   "AWS::SageMaker::Model": "CACHED",
   "AWS::SageMaker::ModelCard": "CACHED",
   "AWS::SageMaker::NotebookInstance": "CACHED",
@@ -6398,6 +6435,12 @@
   "AWS::CloudFormation::ModuleDefaultVersion.ModuleName": "CACHED",
   "AWS::CloudFormation::ModuleDefaultVersion.VersionId": "CACHED",
   "AWS::CloudFormation::ModuleVersion.ModuleName": "CACHED",
+  "AWS::CloudFormation::ResourceDefaultVersion.TypeName": "CACHED",
+  "AWS::CloudFormation::ResourceDefaultVersion.TypeVersionArn": "CACHED",
+  "AWS::CloudFormation::ResourceDefaultVersion.VersionId": "CACHED",
+  "AWS::CloudFormation::ResourceVersion.LoggingConfig.LogGroupName": "CACHED",
+  "AWS::CloudFormation::ResourceVersion.LoggingConfig.LogRoleArn": "CACHED",
+  "AWS::CloudFormation::ResourceVersion.TypeName": "CACHED",
   "AWS::CloudFormation::StackSet.AdministrationRoleARN": "CACHED",
   "AWS::CloudFormation::StackSet.CallAs": "CACHED",
   "AWS::CloudFormation::StackSet.Capabilities": "CACHED",
@@ -6636,6 +6679,7 @@
   "AWS::EC2::IPAMPool.AwsService": "CACHED",
   "AWS::EC2::IPAMPool.PublicIpSource": "CACHED",
   "AWS::EC2::Instance.Affinity": "CACHED",
+  "AWS::EC2::KeyPair.KeyFormat": "CACHED",
   "AWS::EC2::KeyPair.KeyType": "CACHED",
   "AWS::EC2::PrefixList.AddressFamily": "CACHED",
   "AWS::EC2::PrefixList.Entry.Cidr": "CACHED",
@@ -7478,6 +7522,10 @@
   "AWS::SageMaker::Domain.UserSettings.ExecutionRole": "CACHED",
   "AWS::SageMaker::Domain.UserSettings.SecurityGroups": "CACHED",
   "AWS::SageMaker::Domain.VpcId": "CACHED",
+  "AWS::SageMaker::Image.ImageDescription": "CACHED",
+  "AWS::SageMaker::Image.ImageDisplayName": "CACHED",
+  "AWS::SageMaker::Image.ImageName": "CACHED",
+  "AWS::SageMaker::Image.ImageRoleArn": "CACHED",
   "AWS::SageMaker::ModelCard.EvaluationDetail.Name": "CACHED",
   "AWS::SageMaker::ModelCard.Function.Function": "CACHED",
   "AWS::SageMaker::ModelCard.IntendedUses.RiskRating": "CACHED",

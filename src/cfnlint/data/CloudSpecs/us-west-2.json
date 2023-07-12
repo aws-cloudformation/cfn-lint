@@ -312,6 +312,7 @@
   "AWS::AppFlow::Flow.CustomConnectorDestinationProperties": "CACHED",
   "AWS::AppFlow::Flow.CustomConnectorSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.CustomProperties": "CACHED",
+  "AWS::AppFlow::Flow.DataTransferApi": "CACHED",
   "AWS::AppFlow::Flow.DatadogSourceProperties": "CACHED",
   "AWS::AppFlow::Flow.DestinationConnectorProperties": "CACHED",
   "AWS::AppFlow::Flow.DestinationFlowConfig": "CACHED",
@@ -1996,6 +1997,35 @@
   "AWS::GuardDuty::Filter.Condition": "CACHED",
   "AWS::GuardDuty::Filter.FindingCriteria": "CACHED",
   "AWS::HealthLake::FHIRDatastore.CreatedAt": "CACHED",
+  "AWS::HealthLake::FHIRDatastore.IdentityProviderConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-healthlake-fhirdatastore-identityproviderconfiguration.html",
+   "Properties": {
+    "AuthorizationStrategy": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-healthlake-fhirdatastore-identityproviderconfiguration.html#cfn-healthlake-fhirdatastore-identityproviderconfiguration-authorizationstrategy",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable"
+    },
+    "FineGrainedAuthorizationEnabled": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-healthlake-fhirdatastore-identityproviderconfiguration.html#cfn-healthlake-fhirdatastore-identityproviderconfiguration-finegrainedauthorizationenabled",
+     "PrimitiveType": "Boolean",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "IdpLambdaArn": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-healthlake-fhirdatastore-identityproviderconfiguration.html#cfn-healthlake-fhirdatastore-identityproviderconfiguration-idplambdaarn",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    },
+    "Metadata": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-healthlake-fhirdatastore-identityproviderconfiguration.html#cfn-healthlake-fhirdatastore-identityproviderconfiguration-metadata",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable"
+    }
+   }
+  },
   "AWS::HealthLake::FHIRDatastore.KmsEncryptionConfig": "CACHED",
   "AWS::HealthLake::FHIRDatastore.PreloadDataConfig": "CACHED",
   "AWS::HealthLake::FHIRDatastore.SseConfiguration": "CACHED",
@@ -2050,23 +2080,7 @@
   "AWS::InspectorV2::Filter.PackageFilter": "CACHED",
   "AWS::InspectorV2::Filter.PortRangeFilter": "CACHED",
   "AWS::InspectorV2::Filter.StringFilter": "CACHED",
-  "AWS::InternetMonitor::Monitor.HealthEventsConfig": {
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-internetmonitor-monitor-healtheventsconfig.html",
-   "Properties": {
-    "AvailabilityScoreThreshold": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-internetmonitor-monitor-healtheventsconfig.html#cfn-internetmonitor-monitor-healtheventsconfig-availabilityscorethreshold",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "PerformanceScoreThreshold": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-internetmonitor-monitor-healtheventsconfig.html#cfn-internetmonitor-monitor-healtheventsconfig-performancescorethreshold",
-     "PrimitiveType": "Double",
-     "Required": false,
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::InternetMonitor::Monitor.HealthEventsConfig": "CACHED",
   "AWS::InternetMonitor::Monitor.InternetMeasurementsLogDelivery": "CACHED",
   "AWS::InternetMonitor::Monitor.S3Config": "CACHED",
   "AWS::IoT1Click::Project.DeviceTemplate": "CACHED",
@@ -3312,7 +3326,51 @@
   "AWS::QuickSight::Analysis.ClusterMarker": "CACHED",
   "AWS::QuickSight::Analysis.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.ColorScale": "CACHED",
-  "AWS::QuickSight::Analysis.ColumnConfiguration": "CACHED",
+  "AWS::QuickSight::Analysis.ColorsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-colorsconfiguration.html",
+   "Properties": {
+    "CustomColors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-colorsconfiguration.html#cfn-quicksight-analysis-colorsconfiguration-customcolors",
+     "DuplicatesAllowed": true,
+     "ItemType": "CustomColor",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::QuickSight::Analysis.ColumnConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-columnconfiguration.html",
+   "Properties": {
+    "ColorsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-columnconfiguration.html#cfn-quicksight-analysis-columnconfiguration-colorsconfiguration",
+     "Required": false,
+     "Type": "ColorsConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Column": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-columnconfiguration.html#cfn-quicksight-analysis-columnconfiguration-column",
+     "Required": true,
+     "Type": "ColumnIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "FormatConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-columnconfiguration.html#cfn-quicksight-analysis-columnconfiguration-formatconfiguration",
+     "Required": false,
+     "Type": "FormatConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Role": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-columnconfiguration.html#cfn-quicksight-analysis-columnconfiguration-role",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Analysis.ColumnConfiguration.Role"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Analysis.ColumnHierarchy": "CACHED",
   "AWS::QuickSight::Analysis.ColumnIdentifier": "CACHED",
   "AWS::QuickSight::Analysis.ColumnSort": "CACHED",
@@ -3339,6 +3397,29 @@
   "AWS::QuickSight::Analysis.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Analysis.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Analysis.CustomColor": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-customcolor.html",
+   "Properties": {
+    "Color": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-customcolor.html#cfn-quicksight-analysis-customcolor-color",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "FieldValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-customcolor.html#cfn-quicksight-analysis-customcolor-fieldvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SpecialValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-analysis-customcolor.html#cfn-quicksight-analysis-customcolor-specialvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Analysis.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Analysis.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Analysis.CustomFilterConfiguration": "CACHED",
@@ -3762,7 +3843,51 @@
   "AWS::QuickSight::Dashboard.ClusterMarker": "CACHED",
   "AWS::QuickSight::Dashboard.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.ColorScale": "CACHED",
-  "AWS::QuickSight::Dashboard.ColumnConfiguration": "CACHED",
+  "AWS::QuickSight::Dashboard.ColorsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-colorsconfiguration.html",
+   "Properties": {
+    "CustomColors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-colorsconfiguration.html#cfn-quicksight-dashboard-colorsconfiguration-customcolors",
+     "DuplicatesAllowed": true,
+     "ItemType": "CustomColor",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::QuickSight::Dashboard.ColumnConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-columnconfiguration.html",
+   "Properties": {
+    "ColorsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-columnconfiguration.html#cfn-quicksight-dashboard-columnconfiguration-colorsconfiguration",
+     "Required": false,
+     "Type": "ColorsConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Column": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-columnconfiguration.html#cfn-quicksight-dashboard-columnconfiguration-column",
+     "Required": true,
+     "Type": "ColumnIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "FormatConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-columnconfiguration.html#cfn-quicksight-dashboard-columnconfiguration-formatconfiguration",
+     "Required": false,
+     "Type": "FormatConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Role": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-columnconfiguration.html#cfn-quicksight-dashboard-columnconfiguration-role",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Dashboard.ColumnConfiguration.Role"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.ColumnHierarchy": "CACHED",
   "AWS::QuickSight::Dashboard.ColumnIdentifier": "CACHED",
   "AWS::QuickSight::Dashboard.ColumnSort": "CACHED",
@@ -3789,6 +3914,29 @@
   "AWS::QuickSight::Dashboard.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Dashboard.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Dashboard.CustomColor": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-customcolor.html",
+   "Properties": {
+    "Color": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-customcolor.html#cfn-quicksight-dashboard-customcolor-color",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "FieldValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-customcolor.html#cfn-quicksight-dashboard-customcolor-fieldvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SpecialValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-dashboard-customcolor.html#cfn-quicksight-dashboard-customcolor-specialvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Dashboard.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Dashboard.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Dashboard.CustomFilterConfiguration": "CACHED",
@@ -4303,7 +4451,51 @@
   "AWS::QuickSight::Template.ClusterMarker": "CACHED",
   "AWS::QuickSight::Template.ClusterMarkerConfiguration": "CACHED",
   "AWS::QuickSight::Template.ColorScale": "CACHED",
-  "AWS::QuickSight::Template.ColumnConfiguration": "CACHED",
+  "AWS::QuickSight::Template.ColorsConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-colorsconfiguration.html",
+   "Properties": {
+    "CustomColors": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-colorsconfiguration.html#cfn-quicksight-template-colorsconfiguration-customcolors",
+     "DuplicatesAllowed": true,
+     "ItemType": "CustomColor",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
+  "AWS::QuickSight::Template.ColumnConfiguration": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-columnconfiguration.html",
+   "Properties": {
+    "ColorsConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-columnconfiguration.html#cfn-quicksight-template-columnconfiguration-colorsconfiguration",
+     "Required": false,
+     "Type": "ColorsConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Column": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-columnconfiguration.html#cfn-quicksight-template-columnconfiguration-column",
+     "Required": true,
+     "Type": "ColumnIdentifier",
+     "UpdateType": "Mutable"
+    },
+    "FormatConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-columnconfiguration.html#cfn-quicksight-template-columnconfiguration-formatconfiguration",
+     "Required": false,
+     "Type": "FormatConfiguration",
+     "UpdateType": "Mutable"
+    },
+    "Role": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-columnconfiguration.html#cfn-quicksight-template-columnconfiguration-role",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable",
+     "Value": {
+      "ValueType": "AWS::QuickSight::Template.ColumnConfiguration.Role"
+     }
+    }
+   }
+  },
   "AWS::QuickSight::Template.ColumnGroupColumnSchema": "CACHED",
   "AWS::QuickSight::Template.ColumnGroupSchema": "CACHED",
   "AWS::QuickSight::Template.ColumnHierarchy": "CACHED",
@@ -4333,6 +4525,29 @@
   "AWS::QuickSight::Template.CustomActionNavigationOperation": "CACHED",
   "AWS::QuickSight::Template.CustomActionSetParametersOperation": "CACHED",
   "AWS::QuickSight::Template.CustomActionURLOperation": "CACHED",
+  "AWS::QuickSight::Template.CustomColor": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-customcolor.html",
+   "Properties": {
+    "Color": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-customcolor.html#cfn-quicksight-template-customcolor-color",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Mutable"
+    },
+    "FieldValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-customcolor.html#cfn-quicksight-template-customcolor-fieldvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "SpecialValue": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-quicksight-template-customcolor.html#cfn-quicksight-template-customcolor-specialvalue",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::QuickSight::Template.CustomContentConfiguration": "CACHED",
   "AWS::QuickSight::Template.CustomContentVisual": "CACHED",
   "AWS::QuickSight::Template.CustomFilterConfiguration": "CACHED",
@@ -4939,6 +5154,23 @@
   "AWS::S3Outposts::Bucket.FilterTag": "CACHED",
   "AWS::S3Outposts::Bucket.LifecycleConfiguration": "CACHED",
   "AWS::S3Outposts::Bucket.Rule": "CACHED",
+  "AWS::S3Outposts::Endpoint.FailedReason": {
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3outposts-endpoint-failedreason.html",
+   "Properties": {
+    "ErrorCode": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3outposts-endpoint-failedreason.html#cfn-s3outposts-endpoint-failedreason-errorcode",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    },
+    "Message": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3outposts-endpoint-failedreason.html#cfn-s3outposts-endpoint-failedreason-message",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::S3Outposts::Endpoint.NetworkInterface": "CACHED",
   "AWS::SES::ConfigurationSet.DashboardOptions": "CACHED",
   "AWS::SES::ConfigurationSet.DeliveryOptions": "CACHED",
@@ -5556,7 +5788,7 @@
   "Alexa::ASK::Skill.SkillPackage": "CACHED",
   "Tag": "CACHED"
  },
- "ResourceSpecificationVersion": "129.0.0",
+ "ResourceSpecificationVersion": "130.0.0",
  "ResourceTypes": {
   "AWS::ACMPCA::Certificate": "CACHED",
   "AWS::ACMPCA::CertificateAuthority": "CACHED",
@@ -6489,7 +6721,78 @@
   "AWS::GuardDuty::Master": "CACHED",
   "AWS::GuardDuty::Member": "CACHED",
   "AWS::GuardDuty::ThreatIntelSet": "CACHED",
-  "AWS::HealthLake::FHIRDatastore": "CACHED",
+  "AWS::HealthLake::FHIRDatastore": {
+   "Attributes": {
+    "CreatedAt": {
+     "Type": "CreatedAt"
+    },
+    "CreatedAt.Nanos": {
+     "PrimitiveType": "Integer"
+    },
+    "CreatedAt.Seconds": {
+     "PrimitiveType": "String"
+    },
+    "DatastoreArn": {
+     "PrimitiveType": "String"
+    },
+    "DatastoreEndpoint": {
+     "PrimitiveType": "String"
+    },
+    "DatastoreId": {
+     "PrimitiveType": "String"
+    },
+    "DatastoreStatus": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html",
+   "Properties": {
+    "DatastoreName": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-datastorename",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::HealthLake::FHIRDatastore.DatastoreName"
+     }
+    },
+    "DatastoreTypeVersion": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-datastoretypeversion",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::HealthLake::FHIRDatastore.DatastoreTypeVersion"
+     }
+    },
+    "IdentityProviderConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-identityproviderconfiguration",
+     "Required": false,
+     "Type": "IdentityProviderConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "PreloadDataConfig": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-preloaddataconfig",
+     "Required": false,
+     "Type": "PreloadDataConfig",
+     "UpdateType": "Immutable"
+    },
+    "SseConfiguration": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-sseconfiguration",
+     "Required": false,
+     "Type": "SseConfiguration",
+     "UpdateType": "Immutable"
+    },
+    "Tags": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-healthlake-fhirdatastore.html#cfn-healthlake-fhirdatastore-tags",
+     "DuplicatesAllowed": true,
+     "ItemType": "Tag",
+     "Required": false,
+     "Type": "List",
+     "UpdateType": "Mutable"
+    }
+   }
+  },
   "AWS::IAM::AccessKey": "CACHED",
   "AWS::IAM::Group": "CACHED",
   "AWS::IAM::InstanceProfile": "CACHED",
@@ -6522,117 +6825,7 @@
   "AWS::Inspector::AssessmentTemplate": "CACHED",
   "AWS::Inspector::ResourceGroup": "CACHED",
   "AWS::InspectorV2::Filter": "CACHED",
-  "AWS::InternetMonitor::Monitor": {
-   "Attributes": {
-    "CreatedAt": {
-     "PrimitiveType": "String"
-    },
-    "ModifiedAt": {
-     "PrimitiveType": "String"
-    },
-    "MonitorArn": {
-     "PrimitiveType": "String"
-    },
-    "ProcessingStatus": {
-     "PrimitiveType": "String"
-    },
-    "ProcessingStatusInfo": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html",
-   "Properties": {
-    "HealthEventsConfig": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-healtheventsconfig",
-     "Required": false,
-     "Type": "HealthEventsConfig",
-     "UpdateType": "Mutable"
-    },
-    "InternetMeasurementsLogDelivery": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-internetmeasurementslogdelivery",
-     "Required": false,
-     "Type": "InternetMeasurementsLogDelivery",
-     "UpdateType": "Mutable"
-    },
-    "MaxCityNetworksToMonitor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-maxcitynetworkstomonitor",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.MaxCityNetworksToMonitor"
-     }
-    },
-    "MonitorName": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-monitorname",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.MonitorName"
-     }
-    },
-    "Resources": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resources",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.Resources"
-     }
-    },
-    "ResourcesToAdd": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resourcestoadd",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.ResourcesToAdd"
-     }
-    },
-    "ResourcesToRemove": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-resourcestoremove",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.ResourcesToRemove"
-     }
-    },
-    "Status": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-status",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.Status"
-     }
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-tags",
-     "DuplicatesAllowed": true,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "TrafficPercentageToMonitor": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-internetmonitor-monitor.html#cfn-internetmonitor-monitor-trafficpercentagetomonitor",
-     "PrimitiveType": "Integer",
-     "Required": false,
-     "UpdateType": "Mutable",
-     "Value": {
-      "ValueType": "AWS::InternetMonitor::Monitor.TrafficPercentageToMonitor"
-     }
-    }
-   }
-  },
+  "AWS::InternetMonitor::Monitor": "CACHED",
   "AWS::IoT1Click::Device": "CACHED",
   "AWS::IoT1Click::Placement": "CACHED",
   "AWS::IoT1Click::Project": "CACHED",
@@ -6849,88 +7042,7 @@
   "AWS::NetworkFirewall::LoggingConfiguration": "CACHED",
   "AWS::NetworkFirewall::RuleGroup": "CACHED",
   "AWS::NetworkManager::ConnectAttachment": "CACHED",
-  "AWS::NetworkManager::ConnectPeer": {
-   "Attributes": {
-    "Configuration": {
-     "Type": "ConnectPeerConfiguration"
-    },
-    "Configuration.BgpConfigurations": {
-     "ItemType": "ConnectPeerBgpConfiguration",
-     "Type": "List"
-    },
-    "Configuration.CoreNetworkAddress": {
-     "PrimitiveType": "String"
-    },
-    "Configuration.InsideCidrBlocks": {
-     "PrimitiveItemType": "String",
-     "Type": "List"
-    },
-    "Configuration.PeerAddress": {
-     "PrimitiveType": "String"
-    },
-    "Configuration.Protocol": {
-     "PrimitiveType": "String"
-    },
-    "ConnectPeerId": {
-     "PrimitiveType": "String"
-    },
-    "CoreNetworkId": {
-     "PrimitiveType": "String"
-    },
-    "CreatedAt": {
-     "PrimitiveType": "String"
-    },
-    "EdgeLocation": {
-     "PrimitiveType": "String"
-    },
-    "State": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html",
-   "Properties": {
-    "BgpOptions": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-bgpoptions",
-     "Required": false,
-     "Type": "BgpOptions",
-     "UpdateType": "Immutable"
-    },
-    "ConnectAttachmentId": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-connectattachmentid",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "CoreNetworkAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-corenetworkaddress",
-     "PrimitiveType": "String",
-     "Required": false,
-     "UpdateType": "Immutable"
-    },
-    "InsideCidrBlocks": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-insidecidrblocks",
-     "DuplicatesAllowed": true,
-     "PrimitiveItemType": "String",
-     "Required": true,
-     "Type": "List",
-     "UpdateType": "Immutable"
-    },
-    "PeerAddress": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-peeraddress",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Immutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-networkmanager-connectpeer.html#cfn-networkmanager-connectpeer-tags",
-     "DuplicatesAllowed": false,
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::NetworkManager::ConnectPeer": "CACHED",
   "AWS::NetworkManager::CoreNetwork": "CACHED",
   "AWS::NetworkManager::CustomerGatewayAssociation": "CACHED",
   "AWS::NetworkManager::Device": {
@@ -7089,63 +7201,7 @@
   "AWS::QuickSight::Topic": "CACHED",
   "AWS::QuickSight::VPCConnection": "CACHED",
   "AWS::RAM::Permission": "CACHED",
-  "AWS::RAM::ResourceShare": {
-   "Attributes": {
-    "Arn": {
-     "PrimitiveType": "String"
-    }
-   },
-   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html",
-   "Properties": {
-    "AllowExternalPrincipals": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-allowexternalprincipals",
-     "PrimitiveType": "Boolean",
-     "Required": false,
-     "UpdateType": "Mutable"
-    },
-    "Name": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-name",
-     "PrimitiveType": "String",
-     "Required": true,
-     "UpdateType": "Mutable"
-    },
-    "PermissionArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-permissionarns",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Principals": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-principals",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "ResourceArns": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-resourcearns",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Sources": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-sources",
-     "PrimitiveItemType": "String",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    },
-    "Tags": {
-     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ram-resourceshare.html#cfn-ram-resourceshare-tags",
-     "ItemType": "Tag",
-     "Required": false,
-     "Type": "List",
-     "UpdateType": "Mutable"
-    }
-   }
-  },
+  "AWS::RAM::ResourceShare": "CACHED",
   "AWS::RDS::CustomDBEngineVersion": "CACHED",
   "AWS::RDS::DBCluster": "CACHED",
   "AWS::RDS::DBClusterParameterGroup": "CACHED",
@@ -7230,7 +7286,83 @@
   "AWS::S3Outposts::AccessPoint": "CACHED",
   "AWS::S3Outposts::Bucket": "CACHED",
   "AWS::S3Outposts::BucketPolicy": "CACHED",
-  "AWS::S3Outposts::Endpoint": "CACHED",
+  "AWS::S3Outposts::Endpoint": {
+   "Attributes": {
+    "Arn": {
+     "PrimitiveType": "String"
+    },
+    "CidrBlock": {
+     "PrimitiveType": "String"
+    },
+    "CreationTime": {
+     "PrimitiveType": "String"
+    },
+    "Id": {
+     "PrimitiveType": "String"
+    },
+    "NetworkInterfaces": {
+     "ItemType": "NetworkInterface",
+     "Type": "List"
+    },
+    "Status": {
+     "PrimitiveType": "String"
+    }
+   },
+   "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html",
+   "Properties": {
+    "AccessType": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-accesstype",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::S3Outposts::Endpoint.AccessType"
+     }
+    },
+    "CustomerOwnedIpv4Pool": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-customerownedipv4pool",
+     "PrimitiveType": "String",
+     "Required": false,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::S3Outposts::Endpoint.CustomerOwnedIpv4Pool"
+     }
+    },
+    "FailedReason": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-failedreason",
+     "Required": false,
+     "Type": "FailedReason",
+     "UpdateType": "Mutable"
+    },
+    "OutpostId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-outpostid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::S3Outposts::Endpoint.OutpostId"
+     }
+    },
+    "SecurityGroupId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-securitygroupid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::S3Outposts::Endpoint.SecurityGroupId"
+     }
+    },
+    "SubnetId": {
+     "Documentation": "http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-s3outposts-endpoint.html#cfn-s3outposts-endpoint-subnetid",
+     "PrimitiveType": "String",
+     "Required": true,
+     "UpdateType": "Immutable",
+     "Value": {
+      "ValueType": "AWS::S3Outposts::Endpoint.SubnetId"
+     }
+    }
+   }
+  },
   "AWS::SDB::Domain": "CACHED",
   "AWS::SES::ConfigurationSet": "CACHED",
   "AWS::SES::ConfigurationSetEventDestination": "CACHED",
@@ -7590,6 +7722,8 @@
   "AWS::AppFlow::Flow.CustomConnectorDestinationProperties.EntityName": "CACHED",
   "AWS::AppFlow::Flow.CustomConnectorDestinationProperties.WriteOperationType": "CACHED",
   "AWS::AppFlow::Flow.CustomConnectorSourceProperties.EntityName": "CACHED",
+  "AWS::AppFlow::Flow.DataTransferApi.Name": "CACHED",
+  "AWS::AppFlow::Flow.DataTransferApi.Type": "CACHED",
   "AWS::AppFlow::Flow.DatadogSourceProperties.Object": "CACHED",
   "AWS::AppFlow::Flow.Description": "CACHED",
   "AWS::AppFlow::Flow.DestinationFlowConfig.ApiVersion": "CACHED",
