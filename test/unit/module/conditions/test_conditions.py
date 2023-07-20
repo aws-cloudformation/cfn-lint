@@ -5,6 +5,7 @@ SPDX-License-Identifier: MIT-0
 import string
 from unittest import TestCase
 
+from cfnlint.conditions._utils import get_hash
 from cfnlint.decode import decode_str
 from cfnlint.template import Template
 
@@ -229,3 +230,25 @@ class TestConditions(TestCase):
                 False,
             ],
         )
+
+    def test_test_condition(self):
+        """Get condition and test"""
+        template = decode_str(
+            """
+        Parameters:
+          Environment:
+            Type: String
+            AllowedValues: ["prod", "dev", "stage"]
+        Conditions:
+          IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
+          IsUsWest2: !Equals ["us-west-2", !Ref AWS::Region]
+          IsProd: !Equals [!Ref Environment, "prod"]
+        """
+        )[0]
+
+        h_region = get_hash({"Ref": "AWS::Region"})
+        h_environment = get_hash({"Ref": "Environment"})
+
+        cfn = Template("", template)
+        self.assertTrue(cfn.conditions.get("IsUsEast1").test({h_region: "us-east-1"}))
+        self.assertFalse(cfn.conditions.get("IsProd").test({h_environment: "dev"}))

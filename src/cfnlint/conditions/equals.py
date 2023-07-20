@@ -4,7 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import json
 import logging
-from typing import Any, Dict, List, Tuple, Union
+from typing import Any, Dict, List, Mapping, Tuple, Union
 
 from cfnlint.conditions._utils import get_hash
 
@@ -20,6 +20,8 @@ class EqualParameter:
         self.hash: str = get_hash(value)
 
     def __eq__(self, __o: Any):
+        if isinstance(__o, str):
+            return self.hash == __o
         return self.hash == __o.hash
 
 
@@ -116,3 +118,15 @@ class Equal:
     @property
     def right(self):
         return self._right
+
+    def test(self, scenarios: Mapping[str, str]) -> bool:
+        """Do an equals based on the provided scenario"""
+        for scenario, value in scenarios.items():
+            if isinstance(self._left, EqualParameter):
+                if scenario == self._left:
+                    return value == self._right
+            if isinstance(self._right, EqualParameter):
+                if scenario == self._right:
+                    return value == self._left
+
+        raise ValueError("An appropriate scenario was not found")

@@ -2,7 +2,7 @@
 Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Mapping, Optional, Union
 
 from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
@@ -70,6 +70,13 @@ class Condition:
             return params.get(self._fn_equals.hash)
         return None
 
+    def _test(self, scenarios: Mapping[str, str]) -> bool:
+        if self._fn_equals:
+            return self._fn_equals.test(scenarios)
+        if self._condition:
+            return self._condition.test(scenarios)
+        return False
+
 
 class ConditionList(Condition):
     """The generic class to represent any type of List condition
@@ -119,6 +126,10 @@ class ConditionAnd(ConditionList):
 
         return And(*conditions)
 
+    def _test(self, scenarios: Mapping[str, str]) -> bool:
+        # pylint: disable=W0212
+        return all(condition._test(scenarios) for condition in self._conditions)
+
 
 class ConditionNot(ConditionList):
     """Represents the logic specific to an Not Condition"""
@@ -138,6 +149,10 @@ class ConditionNot(ConditionList):
             BooleanFunction: A Not SymPy BooleanFunction
         """
         return Not(self._conditions[0].build_cnf(params))
+
+    def _test(self, scenarios: Mapping[str, str]) -> bool:
+        # pylint: disable=W0212
+        return not any(condition._test(scenarios) for condition in self._conditions)
 
 
 class ConditionOr(ConditionList):
@@ -159,6 +174,10 @@ class ConditionOr(ConditionList):
         for child in self._conditions:
             conditions.append(child.build_cnf(params))
         return Or(*conditions)
+
+    def _test(self, scenarios: Mapping[str, str]) -> bool:
+        # pylint: disable=W0212
+        return any(condition._test(scenarios) for condition in self._conditions)
 
 
 class ConditionUnnammed(Condition):
@@ -205,3 +224,7 @@ class ConditionNamed(Condition):
             Any: A Not SymPy CNF clause
         """
         return Not(self.build_true_cnf(params))
+
+    def test(self, scenarios: Mapping[str, str]) -> bool:
+        """Test a condition based on a scenario"""
+        return self._test(scenarios)
