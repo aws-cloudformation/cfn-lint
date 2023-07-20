@@ -1413,7 +1413,7 @@
    "StringPrefix": "cloudformation"
   },
   "AWS Cloud Map": {
-   "ARNFormat": "arn:aws:servicediscovery:${Region}:${AccountId}:${ResourceType}/${ResourceName}",
+   "ARNFormat": "arn:aws:servicediscovery:${Region}:${Account}:${ResourceType}/${ResourceName}",
    "ARNRegex": "^arn:aws:servicediscovery:.+",
    "Actions": [
     "CreateHttpNamespace",
@@ -7878,6 +7878,8 @@
     "GenerateSession",
     "GetAccountInfo",
     "GetAccountSettings",
+    "GetAutocompletionMetadata",
+    "GetAutocompletionResource",
     "GetChart",
     "GetConnection",
     "GetNotebook",
@@ -10249,6 +10251,36 @@
     "aws:TagKeys"
    ]
   },
+  "Amazon Bedrock": {
+   "ARNFormat": "arn:aws:bedrock:${Region}:${Account}:${ResourceType}/${ResourceId}",
+   "ARNRegex": "^arn:aws:bedrock:.*:.*:.+",
+   "Actions": [
+    "CreateModelCustomizationJob",
+    "DeleteCustomModel",
+    "DeletePrompt",
+    "GetCustomModel",
+    "GetModelCustomizationJob",
+    "GetPrompt",
+    "InvokeModel",
+    "InvokeModelWithResponseStream",
+    "ListCustomModels",
+    "ListFoundationModels",
+    "ListModelCustomizationJobs",
+    "ListPrompts",
+    "ListTagsForResource",
+    "StopModelCustomizationJob",
+    "TagResource",
+    "UntagResource",
+    "UpdatePrompt"
+   ],
+   "HasResource": true,
+   "StringPrefix": "bedrock",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
+  },
   "Amazon Braket": {
    "ARNFormat": "arn:aws:braket:{$Region}:{$AccountI}>:.+",
    "ARNRegex": "^arn:aws:braket::.+",
@@ -11655,7 +11687,9 @@
     "DeleteInstance",
     "DeleteIntegrationAssociation",
     "DeletePrompt",
+    "DeleteQueue",
     "DeleteQuickConnect",
+    "DeleteRoutingProfile",
     "DeleteRule",
     "DeleteSecurityProfile",
     "DeleteTaskTemplate",
@@ -14018,6 +14052,7 @@
    "Actions": [
     "AssociateFileGateway",
     "AssociateFileSystemAliases",
+    "BypassSnaplockEnterpriseRetention",
     "CancelDataRepositoryTask",
     "CopyBackup",
     "CreateBackup",
@@ -15750,6 +15785,7 @@
     "ListConfigurations",
     "ListTags",
     "ListUsers",
+    "Promote",
     "RebootBroker",
     "UpdateBroker",
     "UpdateConfiguration",
@@ -15949,6 +15985,7 @@
     "DisassociateLicense",
     "ListPermissions",
     "ListTagsForResource",
+    "ListVersions",
     "ListWorkspaces",
     "TagResource",
     "UntagResource",
@@ -18840,6 +18877,7 @@
     "GetModelPackageGroupPolicy",
     "GetRecord",
     "GetSagemakerServicecatalogPortfolioStatus",
+    "GetScalingPolicyConfigurationRecommendation",
     "GetSearchSuggestions",
     "ImportHubContent",
     "InvokeEndpoint",
@@ -19114,14 +19152,22 @@
     "ListDataLakes",
     "ListLogSources",
     "ListSubscribers",
+    "ListTagsForResource",
     "RegisterDataLakeDelegatedAdministrator",
+    "TagResource",
+    "UntagResource",
     "UpdateDataLake",
     "UpdateDataLakeExceptionSubscription",
     "UpdateSubscriber",
     "UpdateSubscriberNotification"
    ],
    "HasResource": true,
-   "StringPrefix": "securitylake"
+   "StringPrefix": "securitylake",
+   "conditionKeys": [
+    "aws:RequestTag/${TagKey}",
+    "aws:ResourceTag/${TagKey}",
+    "aws:TagKeys"
+   ]
   },
   "Amazon Session Manager Message Gateway Service": {
    "Actions": [
