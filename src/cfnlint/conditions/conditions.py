@@ -71,6 +71,10 @@ class Conditions:
                 if isinstance(allowed_value, (str, int, float, bool)):
                     self._parameters[param_hash].append(get_hash(str(allowed_value)))
 
+    def get(self, name: str, default: Any = None) -> ConditionNamed:
+        """Return the conditions"""
+        return self._conditions.get(name, default)
+
     def _build_cnf(
         self, condition_names: List[str]
     ) -> Tuple[EncodedCNF, Dict[str, Any]]:
