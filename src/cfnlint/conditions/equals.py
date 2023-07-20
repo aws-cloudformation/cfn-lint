@@ -48,7 +48,8 @@ class Equal:
             elif isinstance(self._left, EqualParameter) and isinstance(
                 self._right, EqualParameter
             ):
-                self._is_static = self._left == self._right
+                if self._left == self._right:
+                    self._is_static = True
 
             self._is_region = (False, "")
             if isinstance(self._left, EqualParameter):
@@ -121,6 +122,8 @@ class Equal:
 
     def test(self, scenarios: Mapping[str, str]) -> bool:
         """Do an equals based on the provided scenario"""
+        if self._is_static in [True, False]:
+            return self._is_static
         for scenario, value in scenarios.items():
             if isinstance(self._left, EqualParameter):
                 if scenario == self._left:

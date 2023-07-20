@@ -74,7 +74,8 @@ class Condition:
         if self._fn_equals:
             return self._fn_equals.test(scenarios)
         if self._condition:
-            return self._condition.test(scenarios)
+            # pylint: disable=W0212
+            return self._condition._test(scenarios)
         return False
 
 

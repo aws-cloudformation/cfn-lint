@@ -243,6 +243,7 @@ class TestConditions(TestCase):
           IsUsEast1: !Equals [!Ref AWS::Region, "us-east-1"]
           IsUsWest2: !Equals ["us-west-2", !Ref AWS::Region]
           IsProd: !Equals [!Ref Environment, "prod"]
+          IsUsEast1AndProd: !And [!Condition IsUsEast1, !Condition IsProd]
         """
         )[0]
 
@@ -252,3 +253,13 @@ class TestConditions(TestCase):
         cfn = Template("", template)
         self.assertTrue(cfn.conditions.get("IsUsEast1").test({h_region: "us-east-1"}))
         self.assertFalse(cfn.conditions.get("IsProd").test({h_environment: "dev"}))
+        self.assertTrue(
+            cfn.conditions.get("IsUsEast1AndProd").test(
+                {h_region: "us-east-1", h_environment: "prod"}
+            )
+        )
+        self.assertFalse(
+            cfn.conditions.get("IsUsEast1AndProd").test(
+                {h_region: "us-east-1", h_environment: "dev"}
+            )
+        )
