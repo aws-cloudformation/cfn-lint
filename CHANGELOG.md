@@ -1,3 +1,10 @@
+### v0.78.2
+###### Features
+- Add `test` function to test conditions given a scenario (pull #[2801](https://github.com/aws-cloudformation/cfn-lint/pull/2801))
+###### CloudFormation Specifications
+- Update CloudFormation specs to `131.0.0` (pull #[2795](https://github.com/aws-cloudformation/cfn-lint/pull/2795))
+- Updated `DocumentDBEngineVersion` `AllowedValues` (pull #[2800](https://github.com/aws-cloudformation/cfn-lint/pull/2800))
+
 ### v0.78.1
 ###### Features
 - Update rule [E1018](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1018) to flag splitting dynamic references (pull #[2786](https://github.com/aws-cloudformation/cfn-lint/pull/2786))
