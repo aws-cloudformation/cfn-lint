@@ -10,3 +10,4 @@ from cfnlint.decode.decode import (
     decode,
     decode_str,
 )
+from cfnlint.decode.utils import convert_dict

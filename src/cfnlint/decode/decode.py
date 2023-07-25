@@ -11,7 +11,7 @@ from yaml.parser import ParserError
 from yaml.scanner import ScannerError
 
 from cfnlint.decode import cfn_json, cfn_yaml
-from cfnlint.rules import Match, ParseError
+from cfnlint.match import Match
 
 LOGGER = logging.getLogger(__name__)
 
@@ -118,6 +118,9 @@ def _decode(
         matches = [create_match_file_error(filename, str(err))]
 
     if not isinstance(template, dict) and not matches:
+        # pylint: disable=import-outside-toplevel
+        from cfnlint.rules import ParseError
+
         # Template isn't a dict which means nearly nothing will work
         matches = [
             Match(
@@ -135,6 +138,9 @@ def _decode(
 
 def create_match_yaml_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
+    # pylint: disable=import-outside-toplevel
+    from cfnlint.rules import ParseError
+
     lineno = parser_error.problem_mark.line + 1
     colno = parser_error.problem_mark.column + 1
     msg = parser_error.problem
@@ -143,6 +149,9 @@ def create_match_yaml_parser_error(parser_error, filename):
 
 def create_match_file_error(filename, msg):
     """Create a Match for a parser error"""
+    # pylint: disable=import-outside-toplevel
+    from cfnlint.rules import ParseError
+
     return Match(
         linenumber=1,
         columnnumber=1,
@@ -156,6 +165,9 @@ def create_match_file_error(filename, msg):
 
 def create_match_json_parser_error(parser_error, filename):
     """Create a Match for a parser error"""
+    # pylint: disable=import-outside-toplevel
+    from cfnlint.rules import ParseError
+
     lineno = parser_error.lineno
     colno = parser_error.colno
     msg = parser_error.msg

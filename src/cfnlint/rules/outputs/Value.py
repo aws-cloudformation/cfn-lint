@@ -41,7 +41,7 @@ class Value(CloudFormationLintRule):
                         objtype = (
                             template.get("Resources", {}).get(obj[0], {}).get("Type")
                         )
-                        if objtype:
+                        if objtype and isinstance(obj[1], str):
                             attribute = (
                                 self.resourcetypes.get(objtype, {})
                                 .get("Attributes", {})

@@ -192,6 +192,18 @@ class MarkedLoader(Reader, Scanner, Parser, Composer, NodeConstructor, Resolver)
         Resolver.__init__(self)
         NodeConstructor.__init__(self, filename)
 
+    def construct_getatt(self, node):
+        """
+        Reconstruct !GetAtt into a list
+        """
+
+        if isinstance(node.value, (str)):
+            return list_node(node.value.split(".", 1), node.start_mark, node.end_mark)
+        if isinstance(node.value, list):
+            return [self.construct_object(child, deep=False) for child in node.value]
+
+        raise ValueError(f"Unexpected node type: {type(node.value)}")
+
 
 def multi_constructor(loader, tag_suffix, node):
     """
@@ -203,7 +215,7 @@ def multi_constructor(loader, tag_suffix, node):
 
     constructor = None
     if tag_suffix == "Fn::GetAtt":
-        constructor = construct_getatt
+        constructor = loader.construct_getatt
     elif isinstance(node, ScalarNode):
         constructor = loader.construct_scalar
     elif isinstance(node, SequenceNode):
@@ -217,19 +229,6 @@ def multi_constructor(loader, tag_suffix, node):
         return sub_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
 
     return dict_node({tag_suffix: constructor(node)}, node.start_mark, node.end_mark)
-
-
-def construct_getatt(node):
-    """
-    Reconstruct !GetAtt into a list
-    """
-
-    if isinstance(node.value, (str)):
-        return list_node(node.value.split(".", 1), node.start_mark, node.end_mark)
-    if isinstance(node.value, list):
-        return list_node([s.value for s in node.value], node.start_mark, node.end_mark)
-
-    raise ValueError(f"Unexpected node type: {type(node.value)}")
 
 
 def loads(yaml_string, fname=None):
