@@ -98,6 +98,15 @@ class GetAtt(CloudFormationLintRule):
             # only check resname if its set.  if it isn't it is because of bad structure
             # and an error is already provided
             if resname:
+                if not isinstance(resname, str):
+                    message = "Invalid GetAtt structure {0} at {1}"
+                    matches.append(
+                        RuleMatch(
+                            getatt,
+                            message.format(getatt[-1], "/".join(map(str, getatt[:-1]))),
+                        )
+                    )
+                    continue
                 if resname in valid_getatts:
                     if restype is not None:
                         # Check for maps

@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: "AWS::LanguageExtensions"
+Parameters:
+    Environment:
+        Type: String
+Mappings:
+    Buckets:
+        Production:
+            Identifiers: [A, B, C]
+Resources:
+    "Fn::ForEach::Buckets":
+        - Identifier
+        - !FindInMap [Buckets, !Ref Environment, Identifiers]
+        - "S3Bucket${Identifier}":
+              Type: "AWS::S3::Bucket"
+              Properties:
+                  AccessControl: PublicRead
+                  MetricsConfigurations:
+                      - Id: !Sub "EntireBucket${Identifier}"
+                  WebsiteConfiguration:
+                      IndexDocument: index.html
+                      ErrorDocument: error.html
+                      RoutingRules:
+                          - RoutingRuleCondition:
+                                HttpErrorCodeReturnedEquals: "404"
+                                KeyPrefixEquals: out1/
+                            RedirectRule:
+                                HostName: ec2-11-22-333-44.compute-1.amazonaws.com
+                                ReplaceKeyPrefixWith: report-404/
+              DeletionPolicy: Retain
+              UpdateReplacePolicy: Retain
+Outputs:
+    "Fn::ForEach::BucketOutputs":
+        - Identifier
+        - !FindInMap [Buckets, !Ref Environment, Identifiers]
+        - "Fn::ForEach::GetAttLoop":
+              - Property
+              - [Arn, DomainName, WebsiteURL]
+              - "S3Bucket${Identifier}${Property}":
+                    Value: !GetAtt [!Sub "S3Bucket${Identifier}", {"Ref": "Property"}]
