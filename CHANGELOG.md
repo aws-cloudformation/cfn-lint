@@ -1,3 +1,7 @@
+### v0.79.1
+###### Features
+- Add support for `Fn::ForEach` when using `AWS::LanguageExtensions` (pull #[2801](https://github.com/aws-cloudformation/cfn-lint/pull/2801))
+
 ### v0.78.2
 ###### Features
 - Add `test` function to test conditions given a scenario (pull #[2801](https://github.com/aws-cloudformation/cfn-lint/pull/2801))
