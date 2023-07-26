@@ -26,19 +26,19 @@ _SCALAR_TYPES = (str, int, float, bool)
 
 
 class _ResolveError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
 
 class _ValueError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
 
 class _TypeError(Exception):
-    def __init__(self, message: str, key: str) -> None:
+    def __init__(self, message: str, key: Any) -> None:
         super().__init__(message)
         self.key = key
 
@@ -465,7 +465,7 @@ class _ForEachCollection:
         raise _TypeError("Collection must be a list or an object", obj)
 
     def values(
-        self, cfn: Any, collection_cache: MutableMapping[str, str]
+        self, cfn: Any, collection_cache: MutableMapping[str, Any]
     ) -> Iterable[str]:
         if self._collection:
             for item in self._collection:
@@ -486,7 +486,10 @@ class _ForEachCollection:
                                 yield value
                             else:
                                 raise _ValueError(
-                                    f"Fn::ForEach collection value must be a {_SCALAR_TYPES!r}",
+                                    (
+                                        "Fn::ForEach collection value "
+                                        f"must be a {_SCALAR_TYPES!r}"
+                                    ),
                                     self._obj,
                                 )
                         return
@@ -495,8 +498,8 @@ class _ForEachCollection:
                     )
             except _ResolveError:
                 if self._fn.hash in collection_cache:
-                    for item in collection_cache[self._fn.hash]:
-                        yield item
+                    for s in collection_cache[self._fn.hash]:
+                        yield s
                 else:
                     collection_cache[self._fn.hash] = []
                     for _ in range(0, 2):
@@ -534,7 +537,7 @@ class _ForEach:
         self._collection = _ForEachCollection(value[1])
         self._output = _ForEachOutput(value[2])
 
-    def items(self, cfn: Any) -> Iterable[Tuple[str, str]]:
+    def items(self, cfn: Any) -> Iterable[str]:
         items = self._collection.values(cfn, self._collection_cache)
         for item in items:
             yield item
