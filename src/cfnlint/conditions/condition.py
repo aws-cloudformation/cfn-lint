@@ -3,7 +3,7 @@ Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
 
-from typing import Any, Dict, List, Mapping, Optional, Union, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
 
 from sympy import And, Not, Or, Symbol
 from sympy.logic.boolalg import BooleanFunction
