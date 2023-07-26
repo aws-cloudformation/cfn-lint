@@ -4,6 +4,7 @@ SPDX-License-Identifier: MIT-0
 """
 import logging
 
+from cfnlint.languageExtensions import LanguageExtensions
 from cfnlint.rules import CloudFormationLintRule
 
 LOGGER = logging.getLogger("cfnlint")
@@ -18,4 +19,19 @@ class ForEach(CloudFormationLintRule):
 
     # pylint: disable=unused-argument
     def match(self, cfn):
-        return []
+        matches = []
+        intrinsic_function = "Fn::ForEach"
+        for_eaches = cfn.transform_pre["Fn::ForEach"]
+
+        for for_each in for_eaches:
+            has_language_extensions_transform = cfn.has_language_extensions_transform()
+
+            LanguageExtensions.validate_transform_is_declared(
+                self,
+                has_language_extensions_transform,
+                matches,
+                for_each[:-1],
+                intrinsic_function,
+            )
+
+        return matches

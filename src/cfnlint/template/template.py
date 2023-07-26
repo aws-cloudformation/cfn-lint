@@ -46,6 +46,9 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         self.transform_pre["Fn::Sub"] = self.search_deep_keys("Fn::Sub")
         self.transform_pre["Fn::FindInMap"] = self.search_deep_keys("Fn::FindInMap")
         self.transform_pre["Transform"] = self.template.get("Transform", [])
+        self.transform_pre["Fn::ForEach"] = self.search_deep_keys(
+            cfnlint.helpers.FUNCTION_FOR_EACH
+        )
 
         self.conditions = cfnlint.conditions.Conditions(self)
         self.__cache_search_deep_class = {}
@@ -460,12 +463,13 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
                         # dict and list checks
                         pathprop = pathprop[:-1]
                 elif isinstance(searchText, re.Pattern):
-                    if re.match(searchText, key):
-                        pathprop.append(cfndict[key])
-                        keys.append(pathprop)
-                        # pop the last element off for nesting of found elements for
-                        # dict and list checks
-                        pathprop = pathprop[:-1]
+                    if isinstance(key, str):
+                        if re.match(searchText, key):
+                            pathprop.append(cfndict[key])
+                            keys.append(pathprop)
+                            # pop the last element off for nesting of found elements for
+                            # dict and list checks
+                            pathprop = pathprop[:-1]
                 if isinstance(cfndict[key], dict):
                     keys.extend(
                         self._search_deep_keys(searchText, cfndict[key], pathprop)

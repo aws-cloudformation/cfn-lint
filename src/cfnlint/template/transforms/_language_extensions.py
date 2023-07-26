@@ -43,7 +43,6 @@ class _TypeError(Exception):
 def language_extension(cfn: Any) -> TransformResult:
     transform = _Transform()
     try:
-        cfn.transform_pre["Fn::ForEach"] = []
         return transform.transform(cfn)
     except (_ValueError, _TypeError, _ResolveError) as e:
         # pylint: disable=import-outside-toplevel
@@ -115,7 +114,6 @@ class _Transform:
             for k, v in deepcopy(obj).items():
                 # see if key matches Fn::ForEach
                 if re.match(FUNCTION_FOR_EACH, k):
-                    cfn.transform_pre["Fn::ForEach"].append({k: v})
                     # only translate the foreach if its valid
                     foreach = _ForEach(k, v, self._collections)
                     # get the values will flatten the foreach
