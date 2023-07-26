@@ -2,13 +2,8 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
-<<<<<<< HEAD
 
-import cfnlint.helpers
-from cfnlint.rules import CloudFormationLintRule, RuleMatch
-=======
 from cfnlint.rules import CloudFormationLintRule
->>>>>>> 91359e6d4 (Convert to using CloudFormation provider schemas)
 
 
 class Required(CloudFormationLintRule):
