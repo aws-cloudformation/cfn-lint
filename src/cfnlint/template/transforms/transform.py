@@ -5,27 +5,28 @@ SPDX-License-Identifier: MIT-0
 from __future__ import annotations
 
 import logging
-from typing import Any, Mapping
+from typing import Any, Callable, List, Mapping
 
 from cfnlint.conditions import Conditions
 from cfnlint.graph import Graph
+from cfnlint.match import Match
 from cfnlint.template.transforms._language_extensions import language_extension
-from cfnlint.template.transforms._protocols import Transformer
 from cfnlint.template.transforms._sam import sam
+from cfnlint.template.transforms._types import TransformResult
 
 LOGGER = logging.getLogger("cfnlint")
 
 
 class Transform:
     def __init__(self) -> None:
-        self.transforms: Mapping[str, Transformer] = {
+        self.transforms: Mapping[str, Callable[[Any], TransformResult]] = {
             "AWS::Serverless-2016-10-31": sam,
             "AWS::LanguageExtensions": language_extension,
         }
 
-    def transform(self, cfn: Any):
+    def transform(self, cfn: Any) -> List[Match]:
         """Transform logic"""
-        matches = []
+        matches: List[Match] = []
         transform_declaration = cfn.template.get("Transform", [])
         transform_type = (
             transform_declaration
