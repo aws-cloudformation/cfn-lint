@@ -32,8 +32,7 @@ class Used(CloudFormationLintRule):
 
         return False
 
-
-    def match(self, cfn):    
+    def match(self, cfn):
         matches = []
 
         le_refs = None
@@ -65,4 +64,3 @@ class Used(CloudFormationLintRule):
                     )
 
         return matches
-        

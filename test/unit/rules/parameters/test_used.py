@@ -17,6 +17,7 @@ class TestParameterUsed(BaseRuleTestCase):
         self.success_templates = [
             "test/fixtures/templates/good/parameters/used_transforms.yaml",
             "test/fixtures/templates/good/parameters/used_transform_removed.yaml",
+            "test/fixtures/templates/good/parameters/used_transform_language_extension.json",
         ]
 
     def test_file_positive(self):

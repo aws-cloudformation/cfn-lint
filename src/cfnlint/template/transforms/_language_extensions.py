@@ -54,14 +54,14 @@ def language_extension(cfn: Any) -> TransformResult:
 
         message = "Error transforming template: {0}"
         if hasattr(e.key, "start_mark"):
-            sm_line = e.key.start_mark.line + 1
-            sm_column = e.key.start_mark.column + 1
+            sm_line = e.key.start_mark[0] + 1
+            sm_column = e.key.start_mark[1] + 1
         else:
             sm_line = 1
             sm_column = 1
         if hasattr(e.key, "end_mark"):
-            em_line = e.key.end_mark.line + 1
-            em_column = e.key.end_mark.column + 1
+            em_line = e.key.end_mark[0] + 1
+            em_column = e.key.end_mark[1] + 1
         else:
             em_line = 1
             em_column = 1
@@ -214,7 +214,9 @@ class _ForEachValue:
         raise _TypeError(f"Unsupported value {obj!r}", obj)
 
     # pylint: disable=unused-argument
-    def value(self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool=False):
+    def value(
+        self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool = False
+    ):
         return self._value
 
     @property
@@ -242,7 +244,9 @@ class _FnFindInMapDefaultValue(_ForEachValue):
                 )
             self._value = _ForEachValue.create(v)
 
-    def value(self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool=False):
+    def value(
+        self, cfn, params: Optional[Mapping[str, Any]] = None, only_params: bool = False
+    ):
         if params is None:
             params = {}
 
@@ -268,14 +272,21 @@ class _ForEachValueFnFindInMap(_ForEachValue):
 
         self._obj = obj
 
-    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None) -> Any:
+    def value(
+        self,
+        cfn: Any,
+        params: Optional[Mapping[str, Any]] = None,
+        only_params: bool = False,
+    ) -> Any:
         if params is None:
             params = {}
         t_map = deepcopy(self._map)
         mapping = None
 
         try:
-            mapping = cfn.template.get("Mappings", {}).get(t_map[0].value(cfn))
+            mapping = cfn.template.get("Mappings", {}).get(
+                t_map[0].value(cfn, params, only_params)
+            )
         except Exception:  # pylint: disable=broad-exception-caught
             if len(cfn.template.get("Mappings", {}).keys()) == 1:
                 mapping = cfn.template.get("Mappings", {}).get(
@@ -283,7 +294,9 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                 )
 
         try:
-            if mapping is None and isinstance(t_map[1].value(cfn), str):
+            if mapping is None and isinstance(
+                t_map[1].value(cfn, params, only_params), str
+            ):
                 for k, v in cfn.template.get("Mappings", {}).items():
                     if isinstance(v, dict):
                         if t_map[1].value(cfn) in v:
@@ -294,12 +307,14 @@ class _ForEachValueFnFindInMap(_ForEachValue):
             pass
 
         try:
-            if mapping is None and isinstance(t_map[2].value(cfn), str):
+            if mapping is None and isinstance(
+                t_map[2].value(cfn, params, only_params), str
+            ):
                 for m1, mv1 in cfn.template.get("Mappings", {}).items():
                     if isinstance(mv1, dict):
                         for k1, kv1 in mv1.items():
                             if isinstance(kv1, dict):
-                                if t_map[2].value(cfn) in kv1:
+                                if t_map[2].value(cfn, params, only_params) in kv1:
                                     t_map[1] = _ForEachValue.create(k1)
                                     t_map[0] = _ForEachValue.create(m1)
                                     mapping = mv1
@@ -315,23 +330,23 @@ class _ForEachValueFnFindInMap(_ForEachValue):
                     t_map[2].value(cfn)
                     for k, v in mapping.items():
                         if isinstance(v, dict):
-                            if t_map[2].value(cfn) in v:
+                            if t_map[2].value(cfn, params, only_params) in v:
                                 t_map[1] = _ForEachValue.create(k)
                 except _ResolveError:
                     pass
 
         if mapping:
             try:
-                return mapping.get(t_map[1].value(cfn, params), {}).get(
-                    t_map[2].value(cfn, params)
+                return mapping.get(t_map[1].value(cfn, params, only_params), {}).get(
+                    t_map[2].value(cfn, params, only_params)
                 )
             except _ResolveError as e:
                 if len(self._map) == 4:
-                    return self._map[3].value(cfn)
+                    return self._map[3].value(cfn, params, only_params)
                 raise _ResolveError("Can't resolve Fn::FindInMap", self._obj) from e
 
         if len(self._map) == 4:
-            return self._map[3].value(cfn)
+            return self._map[3].value(cfn, params, only_params)
         raise _ResolveError("Can't resolve Fn::FindInMap", self._obj)
 
 
@@ -345,7 +360,12 @@ class _ForEachValueRef(_ForEachValue):
         self._obj = obj
 
     # pylint: disable=too-many-return-statements
-    def value(self, cfn: Any, params: Optional[Mapping[str, Any]] = None, only_params: bool=False) -> Any:
+    def value(
+        self,
+        cfn: Any,
+        params: Optional[Mapping[str, Any]] = None,
+        only_params: bool = False,
+    ) -> Any:
         if params is None:
             params = {}
         v = self._ref.value(cfn)
@@ -355,7 +375,7 @@ class _ForEachValueRef(_ForEachValue):
 
         if v in params:
             return params[v]
-        
+
         if only_params:
             raise _ResolveError("Can't resolve Fn::Ref", self._obj)
 
@@ -437,7 +457,7 @@ class _ForEachCollection:
         if self._collection:
             for item in self._collection:
                 try:
-                    yield item.value(cfn, True)
+                    yield item.value(cfn, {}, False)
                 except _ResolveError:
                     v = "".join(random.choices(string.ascii_letters, k=_N))  # nosec
                     collection_cache[item.hash] = v
@@ -445,7 +465,7 @@ class _ForEachCollection:
             return
         if self._fn:
             try:
-                values = self._fn.value(cfn, True)
+                values = self._fn.value(cfn, {}, False)
                 if values:
                     if isinstance(values, list):
                         for value in values:
