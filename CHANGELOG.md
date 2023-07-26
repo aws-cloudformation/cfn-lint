@@ -1,3 +1,9 @@
+### v0.79.3
+###### Fixes
+- Fix `Conditions` logic to not crash on a condition that isn't found (pull #[2814](https://github.com/aws-cloudformation/cfn-lint/pull/2814))
+- Update rule [E1011](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1011) to better handle `Fn::FindInMap` with `AWS::LanguageExtensions` (pull #[2814](https://github.com/aws-cloudformation/cfn-lint/pull/2814))
+- Update rule [W2001](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#W2001) to better handle `Ref` with `AWS::LanguageExtensions` (pull #[2814](https://github.com/aws-cloudformation/cfn-lint/pull/2814))
+
 ### v0.79.2
 ###### Features
 - Add rule [E1032](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1032) to validate ForEach with transform (pull #[2809](https://github.com/aws-cloudformation/cfn-lint/pull/2809))
