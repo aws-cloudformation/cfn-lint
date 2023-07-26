@@ -2,10 +2,11 @@
 Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 SPDX-License-Identifier: MIT-0
 """
+import json
 import os
 from test.testlib.testcase import BaseTestCase
 
-from cfnlint.decode import convert_dict
+from cfnlint.decode import cfn_yaml, convert_dict
 from cfnlint.template import Template  # pylint: disable=E0401
 
 
@@ -182,11 +183,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_is_resource_available(self):
         """Test is resource available"""
-<<<<<<< HEAD
         temp_obj = convert_dict(
-=======
-        temp_obj = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Mappings": {"location": {"us-east-1": {"primary": "True"}}},
                 "Conditions": {
@@ -350,11 +347,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_is_resource_not_available(self):
         """Test is resource available"""
-<<<<<<< HEAD
         temp_obj = convert_dict(
-=======
-        temp_obj = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Mappings": {"location": {"us-east-1": {"primary": "True"}}},
                 "Conditions": {
@@ -449,11 +442,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_conditions_from_path(self):
         """Test is resource available"""
-<<<<<<< HEAD
         temp_obj = convert_dict(
-=======
-        temp_obj = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Resources": {
                     "AMIIDLookup": {
@@ -555,11 +544,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_failure_get_conditions_from_path(self):
         """Test get conditions from path when things arne't formatted correctly"""
-<<<<<<< HEAD
         temp_obj = convert_dict(
-=======
-        temp_obj = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Resources": {
                     "AMIIDLookup": {
@@ -732,11 +717,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions(self):
         """Test Getting condition names in an object/list"""
-<<<<<<< HEAD
         template = convert_dict(
-=======
-        template = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Conditions": {
                     "useAmiId": {"Fn::Not": [{"Fn::Equals": [{"Ref": "myAmiId"}, ""]}]}
@@ -783,7 +764,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_no_value(self):
         """Test Getting condition names in an object/list"""
-        template = cfnlint.decode.node.convert_dict(
+        template = convert_dict(
             {
                 "Conditions": {
                     "CreateAppVolume": {"Fn::Equals": [{"Ref": "myAppVolume"}, "true"]}
@@ -875,11 +856,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_for_list(self):
         """Test Getting condition names in an object/list"""
-<<<<<<< HEAD
         template = convert_dict(
-=======
-        template = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Conditions": {
                     "CreateAppVolume": {"Fn::Equals": [{"Ref": "CreateVolums"}, "true"]}
@@ -947,7 +924,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_conditions_for_bad_formats(self):
         """Test Getting condition names in an object/list"""
-        template = cfnlint.decode.node.convert_dict(
+        template = convert_dict(
             {
                 "Conditions": {
                     "CreateAppVolume": {"Fn::Equals": [{"Ref": "CreateVolums"}, "true"]}
@@ -1005,11 +982,7 @@ ElasticLoadBalancer -> MyEC2Instance  [color=black, key=0, label=Ref, source_pat
 
     def test_get_object_without_nested_conditions(self):
         """Test Getting condition names in an object/list"""
-<<<<<<< HEAD
         template = convert_dict(
-=======
-        template = cfnlint.decode.node.convert_dict(
->>>>>>> 83f57c754 (Convert to using CloudFormation provider schemas)
             {
                 "Conditions": {
                     "isProduction": {"Fn::Equals": [{"Ref": "myEnvironment"}, "prod"]},
