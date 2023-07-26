@@ -844,7 +844,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
         resource_condition = (
             self.template.get("Resources", {}).get(resource, {}).get("Condition")
         )
-        if resource_condition:
+        if isinstance(resource_condition, str):
             # if path conditions are empty that means its always true
             if not path_conditions:
                 return [{resource_condition: False}]
@@ -1133,7 +1133,7 @@ class Template:  # pylint: disable=R0904,too-many-lines,too-many-instance-attrib
             if len(path) >= 2:
                 if path[0] in ["Resources", "Outputs"]:
                     condition = text.get(path[0], {}).get(path[1], {}).get("Condition")
-                    if condition:
+                    if isinstance(condition, str):
                         if not results.get(condition):
                             results[condition] = set()
                         results[condition].add(True)

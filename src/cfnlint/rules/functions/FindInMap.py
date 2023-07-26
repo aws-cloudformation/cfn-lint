@@ -259,7 +259,7 @@ class FindInMap(CloudFormationLintRule):
 
     def _match_with_language_extensions(self, cfn):
         matches = []
-        find_in_maps = cfn.search_deep_keys("Fn::FindInMap")
+        find_in_maps = cfn.transform_pre["Fn::FindInMap"]
         for in_map in find_in_maps:
             matches.extend(
                 self.validate_enhanced_find_in_map(find_in_map=in_map, cfn=cfn)

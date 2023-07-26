@@ -1,0 +1,62 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Transform": "AWS::LanguageExtensions",
+    "Parameters": {
+        "ParamA": {
+            "Type": "String",
+            "AllowedValues": [
+                "true",
+                "false"
+            ]
+        },
+        "ParamB": {
+            "Type": "String",
+            "AllowedValues": [
+                "true",
+                "false"
+            ]
+        },
+        "ParamC": {
+            "Type": "String",
+            "AllowedValues": [
+                "true",
+                "false"
+            ]
+        },
+        "ParamD": {
+            "Type": "String",
+            "AllowedValues": [
+                "true",
+                "false"
+            ]
+        }
+    },
+    "Conditions": {
+        "Fn::ForEach::CheckTrue": [
+            "Identifier",
+            [
+                "A",
+                "B",
+                "C",
+                "D"
+            ],
+            {
+                "IsParam${Identifier}Enabled": {
+                    "Fn::Equals": [
+                        {
+                            "Ref": {
+                                "Fn::Sub": "Param${Identifier}"
+                            }
+                        },
+                        "true"
+                    ]
+                }
+            }
+        ]
+    },
+    "Resources": {
+        "WaitConditionHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle"
+        }
+    }
+}

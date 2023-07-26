@@ -386,6 +386,16 @@ class TestTransform(TestCase):
         with self.assertRaises(_ValueError):
             transform.transform(cfn)
 
+    def test_transform_error(self):
+        template_obj = deepcopy(self.template_obj)
+        template_obj["Resources"]["Fn::ForEach::Buckets"].append("foo")
+        cfn = Template(filename="", template=template_obj, regions=["us-east-1"])
+
+        matches, template = language_extension(cfn)
+
+        self.assertIsNone(template)
+        self.assertEqual(len(matches), 1)
+
 
 def nested_set(dic, keys, value):
     for key in keys[:-1]:
