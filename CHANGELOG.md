@@ -1,3 +1,9 @@
+### v0.79.2
+###### Features
+- Add rule [E1032](https://github.com/aws-cloudformation/cfn-python-lint/blob/main/docs/rules.md#E1032) to validate ForEach with transform (pull #[2809](https://github.com/aws-cloudformation/cfn-lint/pull/2809))
+###### Fixes
+- Fix `AWS::LanguageExtensions` regex for sub removal to handle pseudo parameters (pull #[2812](https://github.com/aws-cloudformation/cfn-lint/pull/2812))
+
 ### v0.79.1
 ###### Features
 - Add support for `Fn::ForEach` when using `AWS::LanguageExtensions` (pull #[2801](https://github.com/aws-cloudformation/cfn-lint/pull/2801))
